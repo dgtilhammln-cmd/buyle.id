@@ -26,6 +26,9 @@ class ShortLinkRedirectController extends Controller
             AutomationCampaign::where('id', $shortLink->campaign_id)->increment('total_clicks');
             session()->put('ig_automation_campaign_id', $shortLink->campaign_id);
             session()->put('ig_automation_short_link_id', $shortLink->id);
+            session()->put('utm_source', 'instagram');
+            session()->put('utm_medium', 'auto_dm');
+            session()->put('utm_campaign', 'ig_camp_' . $shortLink->campaign_id);
         }
 
         return redirect()->away($shortLink->target_url);

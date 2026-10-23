@@ -221,7 +221,7 @@ class ProcessInstagramCommentJob implements ShouldQueue
                     : "Halo kak {$firstName}! Ketuk tombol di bawah untuk klaim akses:";
             } else {
                 // Jika link custom tanpa produk: Gunakan sapaan di atas, dan bersihkan awalan greeting dari subtitle agar tidak dobel nama
-                $cardTitle = "Halo kak {$firstName}! ✨";
+                $cardTitle = "Halo kak {$firstName}!";
                 $strippedGreeting = preg_replace('/^(halo|hai|hi|hei|selamat\s+\w+)\s+kak\s+[^\s!.,]+[!.,\s]*/i', '', $cleanGreeting);
                 $cardSubtitle = !empty($strippedGreeting)
                     ? mb_substr(trim($strippedGreeting), 0, 80)
@@ -239,7 +239,7 @@ class ProcessInstagramCommentJob implements ShouldQueue
             // Teks Tombol Kustom (Maks. 20 Karakter sesuai aturan Meta)
             $buttonTitle = !empty($matchedCampaign->button_text)
                 ? mb_substr(trim($matchedCampaign->button_text), 0, 20)
-                : 'Buka Akses 🚀';
+                : 'Buka Akses';
 
             $buttonData = [
                 'card_title' => $cardTitle,

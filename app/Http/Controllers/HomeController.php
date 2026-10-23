@@ -106,7 +106,7 @@ class HomeController extends Controller
                 ->whereHas('products', function($q) {
                     $q->where('is_active', true);
                 })
-                ->with(['creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1,bio_config'])
+                ->with(['creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1,store_banner_2,bio_config'])
                 ->withCount('products')
                 ->orderByRaw("
                     CASE

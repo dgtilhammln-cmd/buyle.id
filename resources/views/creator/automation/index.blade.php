@@ -1136,7 +1136,7 @@
                             <span style="font-size:0.7rem; color:#94a3b8; font-weight:600;">Maks. 20 Karakter</span>
                         </label>
                         <div style="position:relative;">
-                            <input type="text" name="button_text" maxlength="20" class="form-input" style="padding:0.55rem 0.85rem 0.55rem 2.15rem; font-size:0.82rem;" placeholder="Contoh: Buka Akses, Beli Sekarang" value="Buka Akses 🚀">
+                            <input type="text" name="button_text" maxlength="20" class="form-input" style="padding:0.55rem 0.85rem 0.55rem 2.15rem; font-size:0.82rem;" placeholder="Contoh: Buka Akses, Beli Sekarang" value="Buka Akses">
                             <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24" style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         </div>
                         <span class="form-desc" style="font-size:0.71rem;">Label pada tombol interaktif yang dikirim langsung di DM Instagram penerima.</span>
@@ -1212,7 +1212,7 @@
                         <input type="checkbox" name="auto_comment_enabled" value="1" id="publicReplyToggle" onchange="togglePublicReply(this.checked)" style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer;" checked>
                     </div>
                     <div id="publicReplyBox">
-                        <textarea name="auto_comment_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Contoh: Cek DM ya kak! Link produk sudah meluncur 📩">Cek DM ya kak! Linknya sudah meluncur ke inbox kamu 📩✨</textarea>
+                        <textarea name="auto_comment_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Contoh: Cek DM ya kak! Link produk sudah dikirimkan">Cek DM ya kak! Linknya sudah dikirimkan ke inbox kamu</textarea>
                     </div>
                 </div>
 
@@ -1632,7 +1632,7 @@
                         <input type="checkbox" name="auto_comment_enabled" id="editAutoCommentToggle" value="1" onchange="toggleEditPublicReply(this.checked)" style="width:15px;height:15px;accent-color:#1eb349;cursor:pointer;">
                     </div>
                     <div id="editPublicReplyBox">
-                        <textarea name="auto_comment_variants[]" id="editAutoCommentText" rows="2" class="form-textarea" style="padding:0.45rem 0.7rem; font-size:0.79rem;" placeholder="Cek DM ya kak! 📩"></textarea>
+                        <textarea name="auto_comment_variants[]" id="editAutoCommentText" rows="2" class="form-textarea" style="padding:0.45rem 0.7rem; font-size:0.79rem;" placeholder="Cek DM ya kak!"></textarea>
                     </div>
                 </div>
 

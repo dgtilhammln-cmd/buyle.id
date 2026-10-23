@@ -225,7 +225,7 @@ class CheckoutService
                 'notes'            => $notes,
                 'utm_source'       => session('utm_source'),
                 'utm_medium'       => session('utm_medium'),
-                'utm_campaign'     => session('utm_campaign'),
+                'utm_campaign'     => session('utm_campaign') ?: (session('ig_automation_campaign_id') ? 'ig_camp_' . session('ig_automation_campaign_id') : null),
                 'utm_term'         => session('utm_term'),
                 'utm_content'      => session('utm_content'),
             ]);

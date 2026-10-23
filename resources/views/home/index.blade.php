@@ -2628,8 +2628,15 @@
                         @php
                             $cp = $creatorUser->creatorProfile;
                             $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
-                            $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
-                            $cBanner = !empty($cp?->store_banner) ? asset('storage/' . $cp->store_banner) : null;
+                            $cBanner = null;
+                            if (!empty($cp?->store_banner_1)) {
+                                $cBanner = asset('storage/' . $cp->store_banner_1);
+                            } elseif (!empty($cp?->store_banner_2)) {
+                                $cBanner = asset('storage/' . $cp->store_banner_2);
+                            } elseif (!empty($cp?->bio_config['cover'])) {
+                                $cover = $cp->bio_config['cover'];
+                                $cBanner = Str::startsWith($cover, ['http://', 'https://']) ? $cover : asset('storage/' . $cover);
+                            }
                             $cSalesCount = $cp?->total_sales ?? ($creatorUser->products_sum_sold_count ?? 0);
                             $cProductCount = $creatorUser->products_count ?? 0;
 

@@ -66,6 +66,29 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             Log::warning("Gagal generate TicketPass for order #{$order->id}: " . $e->getMessage());
         }
 
+        // Catat konversi penjualan & omset untuk Automation Campaign Instagram (jika order berasal dari Auto DM)
+        try {
+            $campaignId = null;
+            if ($order->utm_campaign && str_starts_with($order->utm_campaign, 'ig_camp_')) {
+                $campaignId = (int) substr($order->utm_campaign, 8);
+            } elseif ($order->utm_medium === 'auto_dm' && $order->utm_campaign) {
+                $c = \App\Models\AutomationCampaign::where('name', $order->utm_campaign)->first();
+                if ($c) {
+                    $campaignId = $c->id;
+                }
+            }
+
+            if ($campaignId) {
+                $campaign = \App\Models\AutomationCampaign::find($campaignId);
+                if ($campaign) {
+                    $campaign->increment('total_orders');
+                    $campaign->increment('total_revenue', (float) $order->total);
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning("Gagal mencatat konversi AutomationCampaign: " . $e->getMessage());
+        }
+
         // 3. Generate Magic Login URL (hanya jika user punya akun)
         $magicLoginUrl = route('account.orders');
         if ($user) {

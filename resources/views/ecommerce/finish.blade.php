@@ -318,7 +318,12 @@ body { background-color: #F8FAFC !important; }
                                                         Masuk ke Link Event / Grup →
                                                     </a>
                                                 @endif
-                                                <a href="{{ route('account.order.show', $order->id) }}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.2); color: #fff; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border:1px solid rgba(255,255,255,0.3);">
+                                                @php
+                                                    $ticketLink = (auth()->check() && auth()->id() === $order->user_id)
+                                                        ? route('account.orders.show', $order->id)
+                                                        : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
+                                                @endphp
+                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.2); color: #fff; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border:1px solid rgba(255,255,255,0.3);">
                                                     Lihat E-Tiket Saya
                                                 </a>
                                             </div>
@@ -328,7 +333,12 @@ body { background-color: #F8FAFC !important; }
                                                 <span><b>Venue:</b> {{ $item->product->event_location ?: 'Lokasi Ditentukan Panitia' }}</span>
                                             </div>
                                             <div>
-                                                <a href="{{ route('account.order.show', $order->id) }}" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
+                                                @php
+                                                    $ticketLink = (auth()->check() && auth()->id() === $order->user_id)
+                                                        ? route('account.orders.show', $order->id)
+                                                        : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
+                                                @endphp
+                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
                                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                                     Buka & Unduh E-Tiket (QR Code) →
                                                 </a>
