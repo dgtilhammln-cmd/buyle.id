@@ -826,9 +826,10 @@
                     {{-- Caret Up Arrow --}}
                     <div style="position:absolute; top:-6px; right:16px; width:12px; height:12px; background:#fff; border-left:1px solid #E2E8F0; border-top:1px solid #E2E8F0; transform:rotate(45deg);"></div>
                     
-                    @if(empty($cartItems))
+                        @if(empty($cartItems))
                         <div style="text-align:center; padding:1rem 0;">
-                            <img src="{{ asset('storage/cart-kosong.jpg') }}" alt="Keranjang Kosong" style="width:140px; height:auto; margin:0 auto 1rem;">
+                            <img src="{{ asset('storage/icon/keranjangkosong.png') }}" alt="Keranjang Kosong" style="width:130px; height:auto; margin:0 auto 0.75rem; display:block; filter:drop-shadow(0 4px 16px rgba(30,179,73,0.15)); animation:floatDinoNav 3s ease-in-out infinite;">
+                            <style>@keyframes floatDinoNav { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }</style>
                             <h4 style="font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:0.25rem;">Keranjang Masih Kosong</h4>
                             <p style="font-size:0.8rem; color:#64748B;">Yuk, cari perlengkapan rumah impianmu sekarang!</p>
                         </div>

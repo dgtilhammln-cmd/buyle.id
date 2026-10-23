@@ -528,12 +528,10 @@
 
         @if($summary['items']->isEmpty())
             <div class="empty-state" style="grid-column:1/-1;">
-                <div class="empty-icon-wrap">
-                    <svg width="48" height="48" fill="none" stroke="#1eb349" stroke-width="1.5" viewBox="0 0 24 24">
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                    </svg>
+                <div class="empty-icon-wrap" style="background:none; box-shadow:none; width:auto; margin-bottom:0;">
+                    <img src="{{ asset('storage/icon/keranjangkosong.png') }}"
+                         alt="Keranjang Kosong"
+                         style="width:200px; height:auto; display:block; margin:0 auto 0.5rem; filter:drop-shadow(0 8px 24px rgba(30,179,73,0.15)); animation:floatDino 3s ease-in-out infinite;">
                 </div>
                 <h2>Keranjang Masih Kosong</h2>
                 <p>Yuk cari produk perlengkapan rumah impianmu dan tambahkan ke keranjang!</p>
@@ -546,6 +544,12 @@
                     </svg>
                     Mulai Belanja
                 </a>
+                <style>
+                    @keyframes floatDino {
+                        0%, 100% { transform: translateY(0px); }
+                        50% { transform: translateY(-10px); }
+                    }
+                </style>
             </div>
         @else
             <div class="cart-items-wrap">
