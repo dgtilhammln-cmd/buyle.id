@@ -34,8 +34,8 @@
         }
 
         /* ═══════════════════════════════════════
-                                   PAGE HERO — 100% sama dengan /products
-                                ═══════════════════════════════════════ */
+                                       PAGE HERO — 100% sama dengan /products
+                                    ═══════════════════════════════════════ */
         .sv-hero-premium {
             position: relative;
             padding: 9rem 1.5rem 5rem;
@@ -446,8 +446,8 @@
         }
 
         /* ══════════════════════════════════════════════════════
-                                       PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
-                                    ══════════════════════════════════════════════════════ */
+                                           PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
+                                        ══════════════════════════════════════════════════════ */
         .buyle-orbit-section {
             position: relative;
             padding: 8.5rem 1.5rem 5rem;
@@ -1119,10 +1119,10 @@
         }
 
         /* ── Flow Panels Wrapper – CSS Grid Stacking ──
-                               Kedua panel menempati cell yang sama (grid-area: 1/1)
-                               sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
-                               Visibility dikendalikan via opacity + pointer-events agar
-                               CSS transition dapat berjalan (display:none tidak bisa di-animate). */
+                                   Kedua panel menempati cell yang sama (grid-area: 1/1)
+                                   sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
+                                   Visibility dikendalikan via opacity + pointer-events agar
+                                   CSS transition dapat berjalan (display:none tidak bisa di-animate). */
         .buyle-flow-panels-wrap {
             display: grid;
             grid-template-columns: 1fr;
@@ -3551,64 +3551,52 @@
         </div>
     </section>
 
-    {{-- ════ 2.6 SECTION: CREATOR TIER & REVENUE ROADMAP (SINUSOIDAL WAVE STYLE) ════ --}}
+        {{-- ════ 2.6 SECTION: CREATOR TIER & REVENUE ROADMAP ════ --}}
     @php
         $creatorTiers = [
             [
-                'level'   => 1,
-                'title'   => 'PERINTIS',
+                'level' => 1,
+                'title' => 'PERINTIS',
                 'earning' => 'Rp 1 Juta+',
-                'desc'    => 'Validasi karya pertama & mulai menghasilkan pendapatan mandiri dari aset digital.',
-                'icon'    => 'flag',
-                'align'   => 'bottom',
+                'icon' => 'flag',
             ],
             [
-                'level'   => 2,
-                'title'   => 'PEJUANG / HUSTLER',
+                'level' => 2,
+                'title' => 'PEJUANG / HUSTLER',
                 'earning' => 'Rp 10 Juta+',
-                'desc'    => 'Konsistensi katalog produk & menjangkau ratusan pembeli aktif terverifikasi.',
-                'icon'    => 'trending',
-                'align'   => 'top',
+                'icon' => 'trending',
             ],
             [
-                'level'   => 3,
-                'title'   => 'PENGUSAHA MUDA',
+                'level' => 3,
+                'title' => 'PENGUSAHA MUDA',
                 'earning' => 'Rp 50 Juta+',
-                'desc'    => 'Otomasi penjualan digital, audiens loyal & memanfaatkan jaringan afiliasi mitra.',
-                'icon'    => 'briefcase',
-                'align'   => 'bottom',
+                'icon' => 'briefcase',
             ],
             [
-                'level'   => 4,
-                'title'   => 'EKSEKUTIF MUDA',
+                'level' => 4,
+                'title' => 'EKSEKUTIF MUDA',
                 'earning' => 'Rp 100 Juta+',
-                'desc'    => 'Skalabilitas tinggi dengan omzet harian stabil & lisensi produk berdaya jangkau luas.',
-                'icon'    => 'award',
-                'align'   => 'top',
+                'icon' => 'award',
             ],
             [
-                'level'   => 5,
-                'title'   => 'EKSEKUTIF SENIOR',
+                'level' => 5,
+                'title' => 'EKSEKUTIF SENIOR',
                 'earning' => 'Rp 200 Juta+',
-                'desc'    => 'Pemimpin opini industri kreatif, diversifikasi lini aset & margin maksimal berkelanjutan.',
-                'icon'    => 'shield',
-                'align'   => 'bottom',
+                'icon' => 'shield',
             ],
             [
-                'level'   => 6,
-                'title'   => 'FINANCIAL FREEDOM',
+                'level' => 6,
+                'title' => 'FINANCIAL FREEDOM',
                 'earning' => 'Rp 500 Juta+',
-                'desc'    => 'Puncak ekosistem bisnis digital autopilot 24/7 tanpa batas batas geografis.',
-                'icon'    => 'crown',
-                'align'   => 'top',
+                'icon' => 'crown',
             ],
         ];
     @endphp
 
     <style>
-        /* ── SECTION TIER KREATOR: SINUSOIDAL PROCESS WAVE ── */
+        /* ── SECTION TIER KREATOR: CLEAN PROGRESSION ROADMAP ── */
         .buyle-tier-section {
-            padding: 6rem 1.5rem 7rem;
+            padding: 5.5rem 1.5rem 6.5rem;
             background: #FFFFFF;
             position: relative;
             overflow: hidden;
@@ -3621,17 +3609,17 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 900px;
-            height: 450px;
+            width: 1000px;
+            height: 480px;
             background: radial-gradient(ellipse at center, rgba(30, 179, 73, 0.05) 0%, transparent 70%);
             pointer-events: none;
         }
 
-        /* Section Header (Persis Style Referensi: Process section.) */
+        /* Section Header */
         .buyle-tier-header {
             text-align: center;
             max-width: 820px;
-            margin: 0 auto 4.5rem;
+            margin: 0 auto 4rem;
             position: relative;
             z-index: 2;
         }
@@ -3645,7 +3633,7 @@
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: #64748B;
-            margin-bottom: 1rem;
+            margin-bottom: 0.85rem;
         }
 
         .buyle-tier-sublabel-line {
@@ -3655,12 +3643,12 @@
         }
 
         .buyle-tier-title {
-            font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+            font-size: clamp(2.2rem, 4vw, 3.1rem);
             font-weight: 800;
             color: #0F172A;
             line-height: 1.2;
             letter-spacing: -0.03em;
-            margin-bottom: 1.15rem;
+            margin: 0;
             font-family: var(--font);
         }
 
@@ -3668,341 +3656,289 @@
             color: #1eb349;
         }
 
-        .buyle-tier-desc {
-            font-size: 1.05rem;
-            color: #64748B;
-            line-height: 1.7;
-            margin: 0 auto;
-            max-width: 660px;
-        }
-
-        /* ── Desktop Wave Track & Nodes Arena ── */
-        .buyle-tier-arena-wrap {
+        /* ── Desktop Horizontal Track Layout ── */
+        .buyle-tier-desktop-track {
             max-width: 1220px;
             margin: 0 auto;
             position: relative;
             z-index: 2;
         }
 
-        .buyle-tier-desktop-arena {
-            position: relative;
-            width: 100%;
-            height: 520px;
+        /* Smooth Connecting Horizontal Line (Through Badges) */
+        .buyle-tier-horizontal-line {
+            position: absolute;
+            top: 36px;
+            left: calc(100% / 12);
+            right: calc(100% / 12);
+            height: 3px;
+            background: #E2E8F0;
+            z-index: 1;
+            border-radius: 999px;
+            overflow: hidden;
         }
 
-        /* Continuous SVG Sinusoidal Line */
-        .buyle-tier-svg-wave {
+        .buyle-tier-line-fill {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
             height: 100%;
-            pointer-events: none;
-            overflow: visible;
-            z-index: 1;
-        }
-
-        /* Animated Dashed Glow Pulse along the wave path */
-        .buyle-tier-wave-pulse {
-            stroke-dasharray: 80 240;
-            stroke-dashoffset: 0;
-            animation: buyleTierFlow 7s linear infinite;
-        }
-
-        .buyle-tier-wave-trail {
-            stroke-dasharray: 40 300;
-            stroke-dashoffset: 160;
-            animation: buyleTierFlow 7s linear infinite;
-        }
-
-        @keyframes buyleTierFlow {
-            0% {
-                stroke-dashoffset: 1200;
-            }
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        /* Tier Steps Container (6 Columns Grid for absolute placement) */
-        .buyle-tier-nodes-layer {
-            position: relative;
             width: 100%;
-            height: 100%;
-            z-index: 3;
+            background: linear-gradient(90deg, #1eb349 0%, #10b981 50%, #a5cf37 100%);
+            opacity: 0.85;
         }
 
-        .buyle-tier-step-item {
+        .buyle-tier-line-pulse {
             position: absolute;
-            width: 180px;
-            transform: translateX(-50%);
+            top: 0;
+            left: -30%;
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), #a5cf37, transparent);
+            animation: buyleTierPulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes buyleTierPulse {
+            0% { left: -30%; }
+            100% { left: 100%; }
+        }
+
+        /* 6 Column Grid */
+        .buyle-tier-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.25rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .buyle-tier-col {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* 6 Horizontal Positions along the 1200px coordinate grid */
-        .tier-pos-1 { left: 8.3%;  top: 150px; }
-        .tier-pos-2 { left: 25.0%; top: 30px; }
-        .tier-pos-3 { left: 41.6%; top: 150px; }
-        .tier-pos-4 { left: 58.3%; top: 30px; }
-        .tier-pos-5 { left: 75.0%; top: 150px; }
-        .tier-pos-6 { left: 91.6%; top: 30px; }
+        .buyle-tier-col:hover {
+            transform: translateY(-5px);
+        }
 
-        /* Hexagonal / Squircle Badge Node with Shadow */
-        .buyle-tier-badge-node {
+        /* Floating Badge Node */
+        .buyle-tier-badge-wrap {
             position: relative;
-            width: 60px;
-            height: 60px;
-            border-radius: 18px;
+            z-index: 3;
+            margin-bottom: 1.6rem;
+        }
+
+        .buyle-tier-badge {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
             background: #FFFFFF;
-            border: 1.5px solid rgba(30, 179, 73, 0.3);
-            box-shadow: 0 12px 28px rgba(30, 179, 73, 0.2), 0 2px 6px rgba(0, 0, 0, 0.04);
+            border: 2px solid rgba(30, 179, 73, 0.3);
+            box-shadow: 0 10px 24px rgba(30, 179, 73, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #1eb349;
-            z-index: 4;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .tier-step-align-bottom .buyle-tier-badge-node {
-            order: 1;
-            margin-bottom: 1.25rem;
-            animation: buyleTierFloat1 4.5s ease-in-out infinite;
-        }
-
-        .tier-step-align-top .buyle-tier-badge-node {
-            order: 2;
-            margin-top: 1.25rem;
-            animation: buyleTierFloat2 4.5s ease-in-out infinite 0.75s;
-        }
-
-        .buyle-tier-step-item:hover .buyle-tier-badge-node {
-            transform: scale(1.15) !important;
-            border-color: #1eb349;
-            background: #1eb349;
-            color: #FFFFFF;
-            box-shadow: 0 16px 36px rgba(30, 179, 73, 0.45);
-        }
-
-        .buyle-tier-badge-node svg {
-            transition: transform 0.3s ease;
-        }
-
-        .buyle-tier-step-item:hover .buyle-tier-badge-node svg {
-            transform: scale(1.12);
-        }
-
-        /* Floating keyframes */
-        @keyframes buyleTierFloat1 {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-7px); }
-        }
-
-        @keyframes buyleTierFloat2 {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(7px); }
-        }
-
-        /* Content Text Card */
-        .buyle-tier-card-content {
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            z-index: 3;
-            max-width: 175px;
         }
 
-        .tier-step-align-bottom .buyle-tier-card-content {
-            order: 2;
+        .buyle-tier-col:hover .buyle-tier-badge {
+            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+            color: #FFFFFF;
+            border-color: #1eb349;
+            box-shadow: 0 14px 30px rgba(30, 179, 73, 0.35);
+            transform: scale(1.08);
         }
 
-        .tier-step-align-top .buyle-tier-card-content {
-            order: 1;
-        }
-
-        /* Giant Background Watermark Number (Persis style angka 1, 2, 3 di referensi) */
-        .buyle-tier-watermark-num {
-            position: absolute;
-            font-size: 5.25rem;
-            font-weight: 800;
-            line-height: 1;
-            color: #0F172A;
-            opacity: 0.055;
-            user-select: none;
-            pointer-events: none;
-            z-index: -1;
-            font-family: var(--font);
-            letter-spacing: -0.05em;
-        }
-
-        .tier-step-align-bottom .buyle-tier-watermark-num {
-            top: -20px;
-            right: -10px;
-        }
-
-        .tier-step-align-top .buyle-tier-watermark-num {
-            bottom: -20px;
-            right: -10px;
-        }
-
-        .buyle-tier-card-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #0F172A;
-            letter-spacing: -0.01em;
-            margin: 0 0 0.35rem;
-            font-family: var(--font);
-            transition: color 0.3s ease;
-        }
-
-        .buyle-tier-step-item:hover .buyle-tier-card-title {
-            color: #1eb349;
-        }
-
-        .buyle-tier-earning-pill {
-            display: inline-block;
-            background: rgba(30, 179, 73, 0.08);
-            border: 1px solid rgba(30, 179, 73, 0.25);
-            border-radius: 999px;
-            padding: 0.2rem 0.65rem;
-            color: #16a34a;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            margin-bottom: 0.45rem;
+        /* Compact Card Info (No Description, No Collision) */
+        .buyle-tier-card-info {
+            width: 100%;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 18px;
+            padding: 1.25rem 0.65rem 1.15rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            min-height: 108px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
             transition: all 0.3s ease;
         }
 
-        .buyle-tier-step-item:hover .buyle-tier-earning-pill {
+        .buyle-tier-col:hover .buyle-tier-card-info {
+            background: #FFFFFF;
+            border-color: rgba(30, 179, 73, 0.4);
+            box-shadow: 0 12px 28px rgba(30, 179, 73, 0.1);
+        }
+
+        .buyle-tier-watermark-num {
+            position: absolute;
+            bottom: -12px;
+            right: 6px;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #0F172A;
+            opacity: 0.04;
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+            font-family: var(--font);
+            transition: opacity 0.3s ease;
+        }
+
+        .buyle-tier-col:hover .buyle-tier-watermark-num {
+            opacity: 0.08;
+            color: #1eb349;
+        }
+
+        .buyle-tier-name {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #0F172A;
+            line-height: 1.3;
+            margin: 0;
+            letter-spacing: -0.01em;
+            position: relative;
+            z-index: 2;
+            min-height: 2.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .buyle-tier-earning-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 179, 73, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(30, 179, 73, 0.25);
+            border-radius: 999px;
+            padding: 0.28rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .buyle-tier-col:hover .buyle-tier-earning-pill {
             background: #1eb349;
             color: #FFFFFF;
             border-color: #1eb349;
-            transform: scale(1.05);
         }
 
-        .buyle-tier-card-desc {
-            font-size: 0.8rem;
-            color: #64748B;
-            line-height: 1.45;
-            margin: 0;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* ── Mobile & Tablet Winding Roadmap (Wajib Mobile Friendly) ── */
+        /* ── Mobile & Tablet Roadmap ── */
         .buyle-tier-mobile-roadmap {
             display: none;
         }
 
-        @media (max-width: 1080px) {
-            .buyle-tier-desktop-arena {
+        @media (max-width: 991px) {
+            .buyle-tier-desktop-track {
                 display: none;
             }
 
             .buyle-tier-mobile-roadmap {
                 display: block;
-                max-width: 620px;
-                margin: 0 auto;
                 position: relative;
+                max-width: 540px;
+                margin: 0 auto;
             }
 
-            /* Continuous Vertical S-Curve Connecting Line */
             .buyle-tier-mobile-line {
                 position: absolute;
-                top: 40px;
-                bottom: 40px;
-                left: 35px;
+                top: 36px;
+                bottom: 36px;
+                left: 30px;
                 width: 3px;
                 background: linear-gradient(180deg, #1eb349 0%, #a5cf37 50%, #1eb349 100%);
                 border-radius: 999px;
-                box-shadow: 0 0 14px rgba(30, 179, 73, 0.35);
+                box-shadow: 0 0 12px rgba(30, 179, 73, 0.3);
             }
 
             .buyle-tier-mobile-item {
                 position: relative;
                 display: flex;
-                align-items: flex-start;
-                gap: 1.5rem;
-                padding: 1.5rem 0;
-            }
-
-            .buyle-tier-mobile-node-col {
-                position: relative;
-                z-index: 2;
-                flex-shrink: 0;
+                align-items: center;
+                gap: 1.25rem;
+                padding: 0.85rem 0;
             }
 
             .buyle-tier-mobile-badge {
-                width: 70px;
-                height: 70px;
-                border-radius: 20px;
+                width: 62px;
+                height: 62px;
+                border-radius: 18px;
                 background: #FFFFFF;
                 border: 2px solid rgba(30, 179, 73, 0.3);
-                box-shadow: 0 10px 25px rgba(30, 179, 73, 0.18);
+                box-shadow: 0 8px 20px rgba(30, 179, 73, 0.15);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 color: #1eb349;
+                flex-shrink: 0;
+                position: relative;
+                z-index: 2;
                 transition: all 0.3s ease;
             }
 
             .buyle-tier-mobile-item:hover .buyle-tier-mobile-badge {
                 background: #1eb349;
                 color: #FFFFFF;
-                transform: scale(1.08);
+                transform: scale(1.06);
             }
 
             .buyle-tier-mobile-card {
                 background: #F8FAFC;
                 border: 1px solid #E2E8F0;
-                border-radius: 20px;
-                padding: 1.5rem;
+                border-radius: 18px;
+                padding: 1.15rem 1.25rem;
                 flex-grow: 1;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.75rem;
                 position: relative;
                 overflow: hidden;
-                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-                transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+                transition: all 0.3s ease;
             }
 
             .buyle-tier-mobile-item:hover .buyle-tier-mobile-card {
-                transform: translateY(-3px);
+                background: #FFFFFF;
                 border-color: rgba(30, 179, 73, 0.4);
-                box-shadow: 0 12px 30px rgba(30, 179, 73, 0.1);
+                box-shadow: 0 8px 22px rgba(30, 179, 73, 0.1);
             }
 
             .buyle-tier-mobile-watermark {
                 position: absolute;
-                bottom: -15px;
-                right: 15px;
-                font-size: 5rem;
+                bottom: -12px;
+                right: 10px;
+                font-size: 3.8rem;
                 font-weight: 800;
                 color: #0F172A;
-                opacity: 0.05;
+                opacity: 0.04;
                 line-height: 1;
                 pointer-events: none;
                 user-select: none;
             }
 
-            .buyle-tier-mobile-top {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 0.75rem;
-                flex-wrap: wrap;
-                margin-bottom: 0.5rem;
-            }
-
             .buyle-tier-mobile-title {
-                font-size: 1.05rem;
+                font-size: 0.98rem;
                 font-weight: 800;
                 color: #0F172A;
                 margin: 0;
+                position: relative;
+                z-index: 2;
             }
 
             .buyle-tier-mobile-pill {
@@ -4010,17 +3946,10 @@
                 color: #16a34a;
                 border: 1px solid rgba(30, 179, 73, 0.25);
                 border-radius: 999px;
-                padding: 0.25rem 0.75rem;
+                padding: 0.28rem 0.75rem;
                 font-size: 0.8rem;
                 font-weight: 700;
                 white-space: nowrap;
-            }
-
-            .buyle-tier-mobile-desc {
-                font-size: 0.875rem;
-                color: #64748B;
-                line-height: 1.55;
-                margin: 0;
                 position: relative;
                 z-index: 2;
             }
@@ -4032,7 +3961,7 @@
             }
 
             .buyle-tier-header {
-                margin-bottom: 3rem;
+                margin-bottom: 2.75rem;
             }
 
             .buyle-tier-mobile-line {
@@ -4052,24 +3981,21 @@
 
             .buyle-tier-mobile-item {
                 gap: 1rem;
-                padding: 1.15rem 0;
+                padding: 0.75rem 0;
             }
 
             .buyle-tier-mobile-card {
-                padding: 1.15rem 1.15rem 1.15rem 1.25rem;
+                padding: 1rem 1rem 1rem 1.15rem;
+                border-radius: 16px;
             }
 
             .buyle-tier-mobile-title {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
 
             .buyle-tier-mobile-pill {
                 font-size: 0.75rem;
                 padding: 0.2rem 0.6rem;
-            }
-
-            .buyle-tier-mobile-desc {
-                font-size: 0.82rem;
             }
         }
     </style>
@@ -4077,184 +4003,146 @@
     <section class="buyle-tier-section" id="creator-tier-roadmap">
         <div class="container">
 
-            {{-- Header (Persis Style Referensi: Process section.) --}}
+            {{-- Header: Jenjang Karir Kreator --}}
             <div class="buyle-tier-header" data-aos="fade-up">
                 <div class="buyle-tier-sublabel">
                     <span class="buyle-tier-sublabel-line"></span>
-                    <span>JENJANG KARIR KREATOR</span>
+                    <span>TIER &amp; TAHAPAN</span>
                     <span class="buyle-tier-sublabel-line"></span>
                 </div>
                 <h2 class="buyle-tier-title">
-                    Tahapan Penghasilan Kreator<span class="accent-dot">.</span>
+                    Jenjang Karir Kreator<span class="accent-dot">.</span>
                 </h2>
-                <p class="buyle-tier-desc">
-                    Dari penjualan pertama hingga kebebasan finansial penuh. Setiap tingkatan membuka potensi penghasilan, eksposur katalog, dan fasilitas ekosistem otomatis yang semakin luas di Buyle.id.
-                </p>
             </div>
 
-            {{-- 1. Desktop Interactive Sinusoidal Wave Arena --}}
-            <div class="buyle-tier-arena-wrap" data-aos="fade-up" data-aos-delay="100">
-                <div class="buyle-tier-desktop-arena">
+            {{-- 1. Desktop Interactive Progression Track --}}
+            <div class="buyle-tier-desktop-track" data-aos="fade-up" data-aos-delay="100">
 
-                    {{-- Continuous Sinusoidal Wave SVG Track --}}
-                    <svg class="buyle-tier-svg-wave" viewBox="0 0 1200 420" fill="none" preserveAspectRatio="none">
-                        <defs>
-                            {{-- Wave Line Linear Gradient --}}
-                            <linearGradient id="tierWaveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#1eb349" stop-opacity="0.9" />
-                                <stop offset="35%" stop-color="#10b981" stop-opacity="1" />
-                                <stop offset="70%" stop-color="#a5cf37" stop-opacity="0.95" />
-                                <stop offset="100%" stop-color="#1eb349" stop-opacity="1" />
-                            </linearGradient>
+                {{-- Smooth Horizontal Connecting Line Passing Through Badges --}}
+                <div class="buyle-tier-horizontal-line">
+                    <div class="buyle-tier-line-fill"></div>
+                    <div class="buyle-tier-line-pulse"></div>
+                </div>
 
-                            {{-- Cyan Accent Trail Gradient --}}
-                            <linearGradient id="tierTrailGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
-                                <stop offset="100%" stop-color="#1eb349" stop-opacity="0.9" />
-                            </linearGradient>
+                {{-- 6 Columns Grid --}}
+                <div class="buyle-tier-grid">
+                    @foreach($creatorTiers as $idx => $tier)
+                        <div class="buyle-tier-col">
 
-                            {{-- Glow Filter --}}
-                            <filter id="tierGlow" x="-20%" y="-20%" width="140%" height="140%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
-                        </defs>
-
-                        {{-- 1. Base Subtle Wave Guide Line --}}
-                        <path d="M 30,225 C 130,225 170,110 300,110 C 430,110 470,270 600,270 C 730,270 770,110 900,110 C 1030,110 1070,225 1170,225"
-                              stroke="rgba(30, 179, 73, 0.16)"
-                              stroke-width="3"
-                              stroke-linecap="round" />
-
-                        {{-- 2. Thin Cyan/Lime Parallel Trail (Double line seperti di referensi) --}}
-                        <path d="M 30,229 C 130,229 170,114 300,114 C 430,114 470,274 600,274 C 730,274 770,114 900,114 C 1030,114 1070,229 1170,229"
-                              stroke="url(#tierTrailGradient)"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              opacity="0.4"
-                              class="buyle-tier-wave-trail" />
-
-                        {{-- 3. Animated Flowing Neon Gradient Wave --}}
-                        <path d="M 30,225 C 130,225 170,110 300,110 C 430,110 470,270 600,270 C 730,270 770,110 900,110 C 1030,110 1070,225 1170,225"
-                              stroke="url(#tierWaveGradient)"
-                              stroke-width="3.5"
-                              stroke-linecap="round"
-                              filter="url(#tierGlow)"
-                              class="buyle-tier-wave-pulse" />
-                    </svg>
-
-                    {{-- 6 Step Nodes & Cards Layer --}}
-                    <div class="buyle-tier-nodes-layer">
-                        @foreach($creatorTiers as $idx => $tier)
-                            @php
-                                $posClass = 'tier-pos-' . ($idx + 1);
-                                $alignClass = ($tier['align'] === 'bottom') ? 'tier-step-align-bottom' : 'tier-step-align-top';
-                            @endphp
-                            <div class="buyle-tier-step-item {{ $posClass }} {{ $alignClass }}">
-
-                                {{-- Hexagonal Floating Badge Node --}}
-                                <div class="buyle-tier-badge-node" title="{{ $tier['title'] }}">
+                            {{-- Icon Badge Node (Directly on the track line) --}}
+                            <div class="buyle-tier-badge-wrap">
+                                <div class="buyle-tier-badge" title="{{ $tier['title'] }}">
                                     @if($tier['icon'] === 'flag')
                                         {{-- 1. Flag Icon --}}
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
                                             <line x1="4" y1="22" x2="4" y2="15"></line>
                                         </svg>
                                     @elseif($tier['icon'] === 'trending')
-                                        {{-- 2. Rocket / Trending Icon --}}
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                        {{-- 2. Trending Icon --}}
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                            <polyline points="17 6 23 6 23 12"></polyline>
+                                            <polyline points="23 6 23 12"></polyline>
                                         </svg>
                                     @elseif($tier['icon'] === 'briefcase')
                                         {{-- 3. Briefcase Icon --}}
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                                         </svg>
                                     @elseif($tier['icon'] === 'award')
                                         {{-- 4. Award Icon --}}
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                             <circle cx="12" cy="8" r="7"></circle>
                                             <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                                         </svg>
                                     @elseif($tier['icon'] === 'shield')
                                         {{-- 5. Shield Star Icon --}}
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                            <polygon points="12 8 13.5 11.5 17 11.8 14.3 14.2 15.1 17.6 12 15.8 8.9 17.6 9.7 14.2 7 11.8 10.5 11.5 12 8"></polygon>
+                                            <polygon
+                                                points="12 8 13.5 11.5 17 11.8 14.3 14.2 15.1 17.6 12 15.8 8.9 17.6 9.7 14.2 7 11.8 10.5 11.5 12 8">
+                                            </polygon>
                                         </svg>
                                     @elseif($tier['icon'] === 'crown')
-                                        {{-- 6. Crown / Diamond Icon --}}
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                        {{-- 6. Crown Icon --}}
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"></path>
                                         </svg>
                                     @endif
                                 </div>
-
-                                {{-- Text Card Content with Giant Watermark Number --}}
-                                <div class="buyle-tier-card-content">
-                                    <div class="buyle-tier-watermark-num">{{ $tier['level'] }}</div>
-                                    <h4 class="buyle-tier-card-title">{{ $tier['title'] }}</h4>
-                                    <div class="buyle-tier-earning-pill">{{ $tier['earning'] }}</div>
-                                    <p class="buyle-tier-card-desc">{{ $tier['desc'] }}</p>
-                                </div>
-
                             </div>
-                        @endforeach
-                    </div>
 
+                            {{-- Clean Card Content (No Descriptions) --}}
+                            <div class="buyle-tier-card-info">
+                                <div class="buyle-tier-watermark-num">{{ $tier['level'] }}</div>
+                                <h4 class="buyle-tier-name">{{ $tier['title'] }}</h4>
+                                <div class="buyle-tier-earning-pill">{{ $tier['earning'] }}</div>
+                            </div>
+
+                        </div>
+                    @endforeach
                 </div>
+
             </div>
 
-            {{-- 2. Dedicated Mobile & Tablet Roadmap (Wajib Mobile Friendly) --}}
+            {{-- 2. Dedicated Mobile & Tablet Roadmap --}}
             <div class="buyle-tier-mobile-roadmap" data-aos="fade-up">
                 <div class="buyle-tier-mobile-line"></div>
 
                 @foreach($creatorTiers as $tier)
                     <div class="buyle-tier-mobile-item">
-                        <div class="buyle-tier-mobile-node-col">
-                            <div class="buyle-tier-mobile-badge">
-                                @if($tier['icon'] === 'flag')
-                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                        <line x1="4" y1="22" x2="4" y2="15"></line>
-                                    </svg>
-                                @elseif($tier['icon'] === 'trending')
-                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                        <polyline points="17 6 23 6 23 12"></polyline>
-                                    </svg>
-                                @elseif($tier['icon'] === 'briefcase')
-                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                    </svg>
-                                @elseif($tier['icon'] === 'award')
-                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="8" r="7"></circle>
-                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                    </svg>
-                                @elseif($tier['icon'] === 'shield')
-                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                        <polygon points="12 8 13.5 11.5 17 11.8 14.3 14.2 15.1 17.6 12 15.8 8.9 17.6 9.7 14.2 7 11.8 10.5 11.5 12 8"></polygon>
-                                    </svg>
-                                @elseif($tier['icon'] === 'crown')
-                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"></path>
-                                    </svg>
-                                @endif
-                            </div>
+                        <div class="buyle-tier-mobile-badge">
+                            @if($tier['icon'] === 'flag')
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                                </svg>
+                            @elseif($tier['icon'] === 'trending')
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                    <polyline points="23 6 23 12"></polyline>
+                                </svg>
+                            @elseif($tier['icon'] === 'briefcase')
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                </svg>
+                            @elseif($tier['icon'] === 'award')
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                </svg>
+                            @elseif($tier['icon'] === 'shield')
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <polygon
+                                        points="12 8 13.5 11.5 17 11.8 14.3 14.2 15.1 17.6 12 15.8 8.9 17.6 9.7 14.2 7 11.8 10.5 11.5 12 8">
+                                    </polygon>
+                                </svg>
+                            @elseif($tier['icon'] === 'crown')
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"></path>
+                                </svg>
+                            @endif
                         </div>
 
                         <div class="buyle-tier-mobile-card">
                             <div class="buyle-tier-mobile-watermark">{{ $tier['level'] }}</div>
-                            <div class="buyle-tier-mobile-top">
-                                <h4 class="buyle-tier-mobile-title">{{ $tier['title'] }}</h4>
-                                <span class="buyle-tier-mobile-pill">{{ $tier['earning'] }}</span>
-                            </div>
-                            <p class="buyle-tier-mobile-desc">{{ $tier['desc'] }}</p>
+                            <h4 class="buyle-tier-mobile-title">{{ $tier['title'] }}</h4>
+                            <span class="buyle-tier-mobile-pill">{{ $tier['earning'] }}</span>
                         </div>
                     </div>
                 @endforeach
@@ -4263,7 +4151,7 @@
         </div>
     </section>
 
-    {{-- ════ 3. VISI & MISI ════ --}}
+{{-- ════ 3. VISI & MISI ════ --}}
     <section style="padding: 5rem 1.5rem; background: var(--cv-surface); border-top: 1px solid var(--cv-border);">
         <div class="container">
             <div style="text-align:center; max-width:800px; margin:0 auto 3rem;">
