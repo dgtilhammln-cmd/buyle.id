@@ -814,21 +814,21 @@
 
                                 @include('creator.products.partials.variants-manager', ['product' => $product])
 
-                                <div id="commissionWrap" class="form-group full">
+                                <div id="commissionWrap" class="form-group full" style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
                                     @php $currentCommRate = old('affiliate_commission_rate', $product->affiliate_commission_rate ?? 10); $affOn = ($currentCommRate > 0); @endphp
-                                    <label style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; cursor:pointer;">
+                                    <label style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
                                         <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
                                             <input type="checkbox" id="affiliateCommissionToggle" {{ $affOn ? 'checked' : '' }}
                                                 style="opacity:0; width:0; height:0;"
                                                 onchange="handleAffiliateToggle(this.checked)">
                                             <span class="toggle-slider-s"></span>
                                         </div>
-                                        <div>
-                                            <div style="font-size:0.85rem; font-weight:700; color:#0f172a;">Aktifkan Komisi Affiliate</div>
-                                            <div style="font-size:0.72rem; color:#64748b; line-height:1.4;">Produk ini bisa dipromosikan oleh affiliate dan mereka mendapat komisi.</div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Aktifkan Komisi Affiliate</div>
+                                            <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Produk ini bisa dipromosikan oleh affiliate dan mereka mendapat komisi.</div>
                                         </div>
                                     </label>
-                                    <div id="affiliateRateWrap" style="{{ !$affOn ? 'display:none;' : '' }}">
+                                    <div id="affiliateRateWrap" style="{{ !$affOn ? 'display:none;' : '' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
                                         <label class="form-label">Besaran Komisi Affiliate (%)</label>
                                         <div style="position:relative; display:flex; align-items:center;">
                                             <input type="number" name="affiliate_commission_rate" id="affiliate_commission_rate"

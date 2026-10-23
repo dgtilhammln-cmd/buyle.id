@@ -1,28 +1,20 @@
 {{-- SYARAT KLAIM PRODUK GRATIS (HANYA MUNCUL JIKA HARGA = 0) --}}
-<div id="freeProductRequirementsWrap" class="form-group full" style="display:none; background:#f0fdf4; border:1.5px solid #86efac; border-radius:16px; padding:1.25rem 1.5rem; margin-top:0.75rem; box-sizing:border-box;">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
-        <div style="display:flex; align-items:center; gap:0.75rem;">
-            <div style="width:40px; height:40px; border-radius:12px; background:#dcfce7; display:flex; align-items:center; justify-content:center; color:#166534; flex-shrink:0; border:1px solid #bbf7d0;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <polyline points="9 12 11 14 15 10"/>
-                </svg>
-            </div>
-            <div>
-                <strong style="display:block; font-size:0.92rem; color:#0f172a; font-weight:800; letter-spacing:-0.2px;">Syarat Klaim Produk Gratis (Lead Magnet)</strong>
-                <span style="font-size:0.75rem; color:#166534; font-weight:500;">Kumpulkan followers & anggota komunitas Anda sebelum pembeli mengunduh produk gratis ini.</span>
-            </div>
-        </div>
-        <label style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+<div id="freeProductRequirementsWrap" class="form-group full" style="display:none; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
+    <label style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+        <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
             <input type="checkbox" name="require_follow_join" id="require_follow_join_toggle" value="1"
                 {{ old('require_follow_join', $product->require_follow_join ?? false) ? 'checked' : '' }}
                 onchange="toggleFreeRequirementsFields(this.checked)"
                 style="opacity:0; width:0; height:0;">
             <span class="toggle-slider-s"></span>
-        </label>
-    </div>
+        </div>
+        <div style="flex:1;">
+            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Syarat Klaim Produk Gratis (Lead Magnet)</div>
+            <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Kumpulkan followers & anggota komunitas Anda sebelum pembeli mengunduh produk gratis ini.</div>
+        </div>
+    </label>
 
-    <div id="freeRequirementsFields" style="display:none; border-top:1px dashed #bbf7d0; padding-top:1.25rem; margin-top:1.15rem;">
+    <div id="freeRequirementsFields" style="display:none; border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
         {{-- Banner Edukasi / Info --}}
         <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.6rem;">
             <svg width="18" height="18" fill="none" stroke="#d97706" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">

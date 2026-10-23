@@ -23,13 +23,6 @@
     @endphp
 
     <div class="pd-video-block" style="margin-top: 1.5rem; margin-bottom: 1.25rem;">
-        <div style="display:inline-flex; align-items:center; gap:0.45rem; padding:0.35rem 0.75rem; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.75rem; letter-spacing:0.03em;">
-            <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            <span>VIDEO PRODUK</span>
-        </div>
-
         @if($ytId)
             {{-- Minimalist YouTube 16:9 Embed --}}
             <div style="position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#0f172a; border:1px solid #e2e8f0; box-shadow:0 4px 16px rgba(0,0,0,0.06);">

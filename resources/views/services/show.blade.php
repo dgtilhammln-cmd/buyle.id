@@ -2375,7 +2375,13 @@
                                     border-radius: 8px;
                                     padding: 0.45rem 0.75rem;
                                     margin-top: 0.75rem;
-                                      .bvm-btn-primary {
+                                }
+                                .bvm-footer {
+                                    padding: 0.85rem 1.25rem 1.15rem;
+                                    border-top: 1px solid #f1f5f9;
+                                    background: #ffffff;
+                                }
+                                .bvm-btn-primary {
                                     width: 100%;
                                     padding: 0.8rem 1.5rem;
                                     border-radius: 999px;

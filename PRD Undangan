@@ -1,0 +1,107 @@
+Berikut adalah **Product Requirements Document (PRD)** yang sudah dirangkum secara komprehensif, rapi, dan siap dieksekusi oleh tim developer Anda. 
+
+Dokumen ini membuang semua istilah teknis yang terlalu muluk (AI slop) dan fokus 100% pada *User Experience* (pengalaman pengguna), efisiensi, dan potensi monetisasi.
+
+---
+
+# 📄 PRODUCT REQUIREMENTS DOCUMENT (PRD)
+**Nama Produk:** Modul Wedding buyle.id
+**Status:** Draft / Perencanaan
+**Target Rilis:** [Isi Tanggal]
+**Target Pasar:** Pengantin kelas menengah (desa & kota), Wedding Organizer (WO) skala kecil-menengah.
+**Tujuan Utama:** Memberikan pengalaman undangan digital yang modern, praktis, *anti-ribet* (tidak membebani panitia), dan memiliki daya sebar viral (marketing organik).
+
+---
+
+## 1. SCOPE OF WORK (Lingkup Kerja)
+Modul ini memiliki 4 fitur utama dan 1 fitur darurat:
+1. Smart Guest Book (Buku Tamu Digital)
+2. Amplop Digital (Payment Gateway)
+3. InstaStory Wish Card Generator (Kartu Ucapan 9:16)
+4. Virtual Presence Map (Peta Kehadiran)
+5. Panic Button (Export PDF untuk panitia)
+
+---
+
+## 2. FUNCTIONAL REQUIREMENTS (Kebutuhan Fungsional)
+
+### Fitur 1: Smart Guest Book (Check-in System)
+**Deskripsi:** Sistem pencatatan tamu di meja resepsi yang menggantikan buku tamu kertas. Fleksibel untuk tamu kota (tech-savvy) maupun desa (gaptek).
+
+*   **User Flow Panitia:**
+    *   Panitia membuka dashboard buyle.id di HP/Tablet.
+    *   **Opsi A (Scan QR):** Tamu menunjukkan QR Code unik dari undangan digital mereka. Panitia scan via kamera perangkat.
+    *   **Opsi B (Search Name):** Jika tamu lupa bawa HP/QR error, panitia mengetik nama tamu (fitur *autocomplete/AJAX search* agar muncul instan tanpa *reload* halaman).
+*   **Input Data Kehadiran:**
+    *   Sistem mencatat waktu *check-in*.
+    *   Panitia bisa input: "Hadir bersama siapa?" (Istri/Anak/Rombongan) & "Catatan" (opsional).
+*   **Offline Fallback (Penting):** Jika sinyal di gedung mati, sistem harus bisa menyimpan data *check-in* secara lokal di browser (Local Storage) dan melakukan *sync* otomatis saat internet kembali.
+
+### Fitur 2: Amplop Digital (E-Invitation Integrated)
+**Deskripsi:** Fitur bagi tamu (terutama yang berhalangan hadir atau tidak membawa cash) untuk mengirim hadiah/dana secara digital langsung dari halaman undangan.
+
+*   **Integrasi Payment Gateway:** Menggunakan Midtrans / Xendit.
+*   **Metode Pembayaran Prioritas:** Fokus ke **QRIS** dan **Virtual Account (VA)** karena biaya admin paling murah (bukan kartu kredit).
+*   **Dashboard Pengantin:**
+    *   Rekapitulasi total dana yang masuk secara *real-time*.
+    *   Fitur *Withdraw* (pencairan dana) langsung ke rekening bank pengantin.
+    *   *Log* donasi: (Nama Tamu - Nominal - Pesan).
+
+### Fitur 3: InstaStory Wish Card Generator (Viral Engine)
+**Deskripsi:** Mengubah ucapan tamu menjadi kartu gambar estetik berukuran 9:16 (standar IG Story) yang siap diunggah ke media sosial.
+
+*   **User Flow Tamu (15 Detik):**
+    *   Tamu isi form ucapan di undangan digital.
+    *   Klik "Buat Kartu Story".
+    *   Sistem otomatis menggabungkan (Nama, Kota, Pesan, Foto) dengan desain *frame* pernikahan pengantin.
+    *   **Tombol Aksi:** "Download Gambar" & "Share ke Instagram".
+*   **Teknis (Wajib Diperhatikan):** Gambar di-*render* menggunakan **HTML5 Canvas di sisi browser (client-side)**, bukan di server Laravel. Tujuannya agar tidak membebani *server* dan *zero-cost*.
+*   **Watermark:** Di bagian bawah kartu wajib ada tulisan kecil: *"Created via buyle.id"*. (Ini adalah strategi marketing gratis).
+*   **Dashboard Pengantin:** Bisa melihat dan mengunduh semua kartu ucapan yang dibuat oleh tamu.
+
+### Fitur 4: Virtual Presence Map (Peta Kehadiran)
+**Deskripsi:** Visualisasi peta bagi tamu yang memilih "Berhalangan Hadir" namun tetap mengirim doa.
+
+*   **Deteksi Lokasi:**
+    *   Minta izin GPS otomatis (Browser Geolocation API). Jika diizinkan, tarik koordinat.
+    *   Jika ditolak, tamu pilih manual via dropdown (Provinsi > Kota > Kecamatan).
+*   **Upload:** Tamu bisa upload 1 foto kenangan/selfie (sistem otomatis kompresi ukuran kecil di *backend*).
+*   **Tampilan Peta (Dashboard Undangan):**
+    *   Menggunakan **Leaflet.js + OpenStreetMap** (Gratis, ringan).
+    *   Menampilkan titik (pin) lokasi tamu.
+    *   Jika pin diklik, muncul *pop-up* berisi: Nama, Foto, Kota, Ucapan, dan jarak estimasi (misal: "Mendoakan dari Jakarta - 750km dari lokasi acara").
+
+### Fitur 5: Panic Button (Buku Tamu Darurat)
+**Deskripsi:** Fitur jaring pengaman untuk panitia jika internet mati total atau panitia menyerah menggunakan perangkat digital.
+
+*   **Fungsi:** Tombol "Export ke PDF / Print" di dashboard.
+*   **Output:** Menghasilkan dokumen PDF berisi daftar tamu yang diundang (dan status kehadirannya jika sudah ada), lengkap dengan kolom kosong untuk diisi manual menggunakan pulpen di meja resepsi.
+
+---
+
+## 3. STRATEGI MONETISASI (Pricing Tier)
+
+Sistem buyle.id harus memisahkan fitur berdasarkan paket agar bisa dijual ke berbagai segmen:
+
+*   **Paket Basic (Rp 250.000):**
+    *   Full Fitur
+
+
+---
+
+## 4. NON-FUNCTIONAL REQUIREMENTS (Teknis & Keamanan)
+*   **Responsivitas:** 100% *Mobile-first*. Pengantin, tamu, dan panitia hampir dipastikan mengakses lewat HP. Tampilan di desktop hanya untuk *backup*.
+*   **Keamanan:** URL Undangan harus berupa *slug* acak atau nama yang di-*custom* agar tidak bisa ditebak sembarangan (mencegah *spam* tamu tak diundang).
+*   **Load Speed:** Halaman undangan digital harus *load* di bawah 3 detik (optimasi gambar/aset).
+
+
+---
+
+**Disetujui Oleh:**
+*Founder buyle.id* (Ilham Maulana)
+
+---
+
+Ini adalah dokumen PRD yang sangat solid, *to-the-point*, dan siap diserahkan ke *programmer* atau tim Anda. Tidak ada fitur "AI macam-macam" yang tidak perlu. Semua berorientasi pada pengalaman pengguna dan *revenue*. 
+
+Mau saya bantu buatkan **flowchart/diagram alur** untuk salah satu fitur (misal: alur Amplop Digital atau InstaStory) agar developer makin gampang kerjanya?

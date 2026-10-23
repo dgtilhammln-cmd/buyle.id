@@ -22,30 +22,39 @@
     }
 @endphp
 
-<div class="form-group full" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:18px; padding:1.25rem 1.4rem; margin-top:0.75rem; margin-bottom:1.25rem; box-shadow:0 4px 16px rgba(15,23,42,0.02); width:100%; box-sizing:border-box;">
+<div id="productVariantsWrap" class="form-group full" style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
     
-    {{-- Header --}}
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem; border-bottom:1px dashed #cbd5e1; padding-bottom:0.85rem; flex-wrap:wrap; gap:0.75rem;">
-        <div>
-            <div style="font-size:0.95rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:8px; background:rgba(30,179,73,0.12); color:#1eb349;">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-                </span>
-                Variasi Produk (Opsional)
-                <span id="variantCountBadge" style="font-size:0.72rem; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; padding:0.12rem 0.55rem; border-radius:99px;">0 / 7</span>
-            </div>
-            <span class="form-hint" style="font-size:0.76rem; color:#64748b; margin-top:3px; display:block; line-height:1.4;">
-                Tambahkan pilihan varian (maksimal 7 opsi). Setiap varian dapat memiliki harga dan stok khusus.
-            </span>
+    {{-- Toggle Card Header (Style sama persis Affiliate & Lead Magnet) --}}
+    <label style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+        <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+            <input type="checkbox" id="productVariantsToggle"
+                {{ count($initialVariants) > 0 ? 'checked' : '' }}
+                style="opacity:0; width:0; height:0;"
+                onchange="toggleVariantsSection(this.checked)">
+            <span class="toggle-slider-s"></span>
         </div>
-        
-        <button type="button" onclick="addVariantRow()" id="btnAddVariant"
-            style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; padding:0.5rem 1rem; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(30,179,73,0.22); transition:all 0.2s;"
-            onmouseover="if(!this.disabled) this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            + Tambah Variasi
-        </button>
-    </div>
+        <div style="flex:1;">
+            <div style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
+                Variasi Produk (Opsional)
+                <span id="variantCountBadge" style="font-size:0.7rem; font-weight:700; background:#e2e8f0; color:#475569; padding:0.1rem 0.5rem; border-radius:99px;">{{ count($initialVariants) }} / 7</span>
+            </div>
+            <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Tambahkan pilihan varian (maksimal 7 opsi). Setiap varian dapat memiliki harga dan stok khusus.</div>
+        </div>
+    </label>
+
+    {{-- Content Variasi (muncul saat toggle ON) --}}
+    <div id="variantsContentWrap" style="{{ count($initialVariants) > 0 ? '' : 'display:none;' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem; padding-bottom:0.75rem; border-bottom:1px dashed #e2e8f0; flex-wrap:wrap; gap:0.75rem;">
+            <div style="font-size:0.82rem; font-weight:700; color:#334155;">
+                Daftar Pilihan Varian Produk
+            </div>
+            <button type="button" onclick="addVariantRow()" id="btnAddVariant"
+                style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; padding:0.45rem 0.95rem; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(30,179,73,0.22); transition:all 0.2s;"
+                onmouseover="if(!this.disabled) this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Tambah Variasi
+            </button>
+        </div>
 
     {{-- Contoh Penggunaan Sesuai Tipe Produk yang Dipilih --}}
     <div id="variantTypeExampleBox" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.5rem; font-size:0.76rem; color:#166534; line-height:1.45;">
@@ -80,7 +89,8 @@
     <div id="noVariantsPlaceholder" style="display:none; text-align:center; padding:1.25rem 1rem; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; color:#94a3b8; font-size:0.8rem; margin-top:4px;">
         Belum ada variasi. Klik tombol <b>"+ Tambah Variasi"</b> jika produk memiliki pilihan paket, opsi, ukuran, atau warna.
     </div>
-</div>
+    </div> {{-- end #variantsContentWrap --}}
+</div> {{-- end #productVariantsWrap --}}
 
 <style>
     .variant-tr-row td {
@@ -372,5 +382,26 @@
                 updateVariantTypeExample(this.value);
             });
         }
+
+        // Handle form submit when variants toggle is OFF
+        const pForm = document.querySelector('form.prod-form') || document.getElementById('productForm') || document.querySelector('form[action*="products"]');
+        if (pForm) {
+            pForm.addEventListener('submit', function() {
+                const toggle = document.getElementById('productVariantsToggle');
+                if (toggle && !toggle.checked) {
+                    const inputs = document.querySelectorAll('#variantsContentWrap input, #variantsContentWrap select');
+                    inputs.forEach(inp => inp.disabled = true);
+                }
+            });
+        }
     });
+
+    window.toggleVariantsSection = function(active) {
+        const wrap = document.getElementById('variantsContentWrap');
+        if (!wrap) return;
+        wrap.style.display = active ? 'block' : 'none';
+        if (active && variantsCount === 0) {
+            addVariantRow();
+        }
+    };
 </script>
