@@ -2619,30 +2619,110 @@
 
     {{-- ════ 2.5 SECTION: 100+ CREATOR NETWORK & COMMUNITY (ORBIT GRAPHIC) ════ --}}
     @php
+        // 1. Ambil profile creator langsung dari database buyle.id
+        $dbCreators = \App\Models\User::query()
+            ->where('is_active', true)
+            ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
+            ->where(function($q) {
+                $q->whereHas('creatorProfile')
+                  ->orWhere('role', 'seller')
+                  ->orWhereHas('products');
+            })
+            ->with(['creatorProfile'])
+            ->orderByRaw("CASE WHEN avatar IS NOT NULL AND avatar != '' THEN 1 ELSE 2 END ASC")
+            ->orderByDesc('id')
+            ->take(12)
+            ->get();
+
         $orbitCreators = [];
-        if (isset($clients) && $clients->count() > 0) {
-            foreach ($clients->take(6) as $c) {
-                $orbitCreators[] = [
-                    'name'     => $c->name,
-                    'category' => 'Creator Terverifikasi',
-                    'img'      => $c->logo ? asset('storage/' . $c->logo) : null,
-                    'initials' => strtoupper(substr($c->name, 0, 2)),
-                ];
+
+        foreach ($dbCreators as $u) {
+            if (count($orbitCreators) >= 6) break;
+
+            $cp = $u->creatorProfile;
+            $name = $cp?->store_name ?: ($u->name ?: ($u->username ?: 'Creator'));
+            $role = $cp?->bio_role ?: ($cp?->creator_type ?: 'Digital Creator');
+
+            // Resolusi Avatar persis seperti di HomeController / services / storefront
+            $avatarUrl = null;
+            if (!empty($u->avatar)) {
+                $avatarUrl = \Illuminate\Support\Str::startsWith($u->avatar, ['http://', 'https://'])
+                    ? $u->avatar
+                    : asset('storage/' . $u->avatar);
+            } elseif (!empty($cp?->avatar)) {
+                $avatarUrl = \Illuminate\Support\Str::startsWith($cp->avatar, ['http://', 'https://'])
+                    ? $cp->avatar
+                    : asset('storage/' . $cp->avatar);
+            } elseif (!empty($cp?->bio_config['avatar'])) {
+                $bioAv = $cp->bio_config['avatar'];
+                $avatarUrl = \Illuminate\Support\Str::startsWith($bioAv, ['http://', 'https://'])
+                    ? $bioAv
+                    : asset('storage/' . $bioAv);
             }
+
+            // Jika creator belum upload foto profil, berikan avatar profesional berdasar inisial nama
+            if (empty($avatarUrl)) {
+                $avatarUrl = "https://ui-avatars.com/api/?name=" . urlencode($name) . "&background=10b981&color=ffffff&size=200&bold=true";
+            }
+
+            $orbitCreators[] = [
+                'name'     => $name,
+                'category' => $role,
+                'img'      => $avatarUrl,
+                'initials' => strtoupper(substr($name, 0, 2)),
+                'url'      => $cp?->store_slug ? url('/' . $cp->store_slug) : route('register'),
+            ];
         }
 
-        // Fallback jika belum ada data clients di database local
-        $fallbackCreators = [
-            ['name' => 'Karya Visual ID',     'category' => 'Graphic Designer', 'img' => asset('storage/clients/F9xjNEuJsdaAxj5Y.webp'), 'initials' => 'KV'],
-            ['name' => 'Dimas Audio Studio',  'category' => 'Music & Audio',    'img' => asset('storage/clients/XAjU8mjYt3JhBK09.webp'), 'initials' => 'DA'],
-            ['name' => 'Rangga Code Lab',     'category' => 'Web & Template',   'img' => asset('storage/clients/XdDBfgr7KrwBlvTP.webp'), 'initials' => 'RC'],
-            ['name' => 'Nusantara 3D Craft',  'category' => '3D Asset Maker',   'img' => asset('storage/clients/YDU0FUayq1PUQLsL.webp'), 'initials' => 'NC'],
-            ['name' => 'Sora Edukasi',        'category' => 'Course & E-Book',  'img' => asset('storage/clients/e4goank895UcWzNf.webp'), 'initials' => 'SE'],
-            ['name' => 'VFX Motion ID',       'category' => 'Motion Designer',  'img' => asset('storage/clients/flt2t8pbc8Ol4yn1.webp'), 'initials' => 'VM'],
+        // 2. Jika database creator masih sedikit (< 6), lengkapi sampai 6 dengan foto profil
+        // portrait profesional realistis (persis gaya referensi) agar tidak pernah kosong
+        $curatedFallbackAvatars = [
+            [
+                'name'     => 'Fajar Pratama',
+                'category' => 'Music & Sound',
+                'img'      => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&q=80',
+                'initials' => 'FP',
+                'url'      => route('register'),
+            ],
+            [
+                'name'     => 'Aisyah Putri',
+                'category' => 'Graphic Designer',
+                'img'      => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80',
+                'initials' => 'AP',
+                'url'      => route('register'),
+            ],
+            [
+                'name'     => 'Rizky Ramadhan',
+                'category' => 'Motion & 3D Maker',
+                'img'      => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=250&q=80',
+                'initials' => 'RR',
+                'url'      => route('register'),
+            ],
+            [
+                'name'     => 'Nadia Safitri',
+                'category' => 'Digital Educator',
+                'img'      => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&q=80',
+                'initials' => 'NS',
+                'url'      => route('register'),
+            ],
+            [
+                'name'     => 'Bagas Adiputra',
+                'category' => 'Web & Template Dev',
+                'img'      => 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=250&q=80',
+                'initials' => 'BA',
+                'url'      => route('register'),
+            ],
+            [
+                'name'     => 'Clara Angelica',
+                'category' => 'Illustrator & Artist',
+                'img'      => 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=250&q=80',
+                'initials' => 'CA',
+                'url'      => route('register'),
+            ],
         ];
 
         while (count($orbitCreators) < 6) {
-            $orbitCreators[] = $fallbackCreators[count($orbitCreators)];
+            $orbitCreators[] = $curatedFallbackAvatars[count($orbitCreators)];
         }
     @endphp
 
@@ -2672,56 +2752,34 @@
 
         .buyle-creator-network-head {
             text-align: center;
-            max-width: 820px;
-            margin: 0 auto 3.5rem;
+            max-width: 860px;
+            margin: 0 auto 3.25rem;
             position: relative;
             z-index: 2;
-        }
-
-        .buyle-orbit-badge {
-            display: inline-flex;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #1eb349;
-            background: rgba(30, 179, 73, 0.08);
-            border: 1px solid rgba(30, 179, 73, 0.22);
-            padding: 0.45rem 1.15rem;
-            border-radius: 999px;
-            margin-bottom: 1.25rem;
-        }
-
-        .buyle-orbit-badge-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #1eb349;
-            box-shadow: 0 0 10px #1eb349;
-            animation: buylePulseDot 2s infinite ease-in-out;
-        }
-
-        @keyframes buylePulseDot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.35; transform: scale(0.75); }
         }
 
         .buyle-orbit-title {
-            font-size: clamp(2rem, 3.8vw, 2.9rem);
-            font-weight: 700;
+            font-size: clamp(2.1rem, 4vw, 2.9rem);
+            font-weight: 800;
             color: #0F172A;
-            line-height: 1.2;
-            letter-spacing: -0.025em;
-            margin-bottom: 1rem;
+            line-height: 1.25;
+            letter-spacing: -0.03em;
+            margin: 0 0 1rem;
+            text-align: center;
+            display: block;
+            width: 100%;
             font-family: var(--font);
         }
 
-        .buyle-orbit-title .accent-green {
+        .buyle-orbit-title .gradient-text {
             background: linear-gradient(135deg, #1eb349 0%, #10b981 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: inline;
+            font-weight: 800;
         }
 
         .buyle-orbit-desc {
@@ -2730,6 +2788,7 @@
             line-height: 1.65;
             margin: 0 auto;
             max-width: 650px;
+            text-align: center;
         }
 
         /* ── Orbit Canvas / Arena ── */
@@ -2876,6 +2935,8 @@
             border-radius: 50%;
             z-index: 4;
             cursor: pointer;
+            text-decoration: none;
+            display: block;
             transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
         }
 
@@ -2890,24 +2951,9 @@
             border-radius: 50%;
             object-fit: cover;
             border: 3.5px solid #FFFFFF;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12), 0 0 0 1.5px rgba(30, 179, 73, 0.3);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.16), 0 0 0 1.5px rgba(30, 179, 73, 0.35);
             background: #FFFFFF;
             display: block;
-        }
-
-        .buyle-orbit-avatar-fallback {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            color: #fff;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.15rem;
-            border: 3.5px solid #FFFFFF;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
         }
 
         /* Tooltip on hover */
@@ -3186,6 +3232,7 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 0.35rem;
+                text-decoration: none;
             }
 
             .buyle-mobile-creator-avatar-wrap {
@@ -3206,18 +3253,6 @@
                 height: 100%;
                 object-fit: cover;
                 display: block;
-            }
-
-            .buyle-mobile-creator-avatar-fallback {
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, #1eb349, #a5cf37);
-                color: #fff;
-                display: none;
-                align-items: center;
-                justify-content: center;
-                font-weight: 700;
-                font-size: 1rem;
             }
 
             .buyle-mobile-creator-name {
@@ -3281,14 +3316,10 @@
 
     <section class="buyle-creator-network-section" id="creator-community">
         <div class="container">
-            {{-- Header --}}
+            {{-- Header (Bersih, Rapi & Presisi di Tengah) --}}
             <div class="buyle-creator-network-head" data-aos="fade-up">
-                <div class="buyle-orbit-badge">
-                    <span class="buyle-orbit-badge-dot"></span>
-                    <span>100+ KREATOR AKTIF</span>
-                </div>
                 <h2 class="buyle-orbit-title">
-                    Sudah Digunakan Lebih dari <span class="accent-green">100+ Creator</span>
+                    Sudah Digunakan Lebih dari <span class="gradient-text">100+ Creator</span>
                 </h2>
                 <p class="buyle-orbit-desc">
                     Bergabung bersama komunitas ribuan kreator independen, desainer, musisi, hingga edukator kursus online yang telah membangun bisnis digital otomatis di Buyle.id.
@@ -3326,22 +3357,17 @@
                     {{-- 6 Creator Orbit Avatars (Floating on the track) --}}
                     @foreach($orbitCreators as $idx => $creator)
                         @php $posClass = 'node-pos-' . ($idx + 1); @endphp
-                        <div class="buyle-orbit-node {{ $posClass }}">
+                        <a href="{{ $creator['url'] }}" class="buyle-orbit-node {{ $posClass }}" title="{{ $creator['name'] }} - {{ $creator['category'] }}">
                             <div class="buyle-orbit-tooltip">
                                 <strong>{{ $creator['name'] }}</strong>
                                 <span>{{ $creator['category'] }}</span>
                             </div>
-                            @if(!empty($creator['img']))
-                                <img src="{{ $creator['img'] }}"
-                                     alt="{{ $creator['name'] }}"
-                                     class="buyle-orbit-avatar-img"
-                                     loading="lazy"
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="buyle-orbit-avatar-fallback">{{ $creator['initials'] }}</div>
-                            @else
-                                <div class="buyle-orbit-avatar-fallback" style="display:flex;">{{ $creator['initials'] }}</div>
-                            @endif
-                        </div>
+                            <img src="{{ $creator['img'] }}"
+                                 alt="{{ $creator['name'] }}"
+                                 class="buyle-orbit-avatar-img"
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($creator['name']) }}&background=10b981&color=ffffff&size=200';">
+                        </a>
                     @endforeach
 
                     {{-- 3 Floating Pill Badges (Icon $ ↗, Shopping Bag, Bar Chart persis referensi) --}}
@@ -3398,22 +3424,17 @@
                     {{-- 6 Creators Grid --}}
                     <div class="buyle-mobile-creators-grid">
                         @foreach($orbitCreators as $creator)
-                            <div class="buyle-mobile-creator-item">
+                            <a href="{{ $creator['url'] }}" class="buyle-mobile-creator-item" title="{{ $creator['name'] }}">
                                 <div class="buyle-mobile-creator-avatar-wrap">
-                                    @if(!empty($creator['img']))
-                                        <img src="{{ $creator['img'] }}"
-                                             alt="{{ $creator['name'] }}"
-                                             class="buyle-mobile-creator-avatar"
-                                             loading="lazy"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="buyle-mobile-creator-avatar-fallback">{{ $creator['initials'] }}</div>
-                                    @else
-                                        <div class="buyle-mobile-creator-avatar-fallback" style="display:flex;">{{ $creator['initials'] }}</div>
-                                    @endif
+                                    <img src="{{ $creator['img'] }}"
+                                         alt="{{ $creator['name'] }}"
+                                         class="buyle-mobile-creator-avatar"
+                                         loading="lazy"
+                                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($creator['name']) }}&background=10b981&color=ffffff&size=200';">
                                 </div>
                                 <span class="buyle-mobile-creator-name">{{ $creator['name'] }}</span>
                                 <span class="buyle-mobile-creator-role">{{ $creator['category'] }}</span>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
 
