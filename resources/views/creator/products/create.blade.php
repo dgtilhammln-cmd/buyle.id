@@ -434,7 +434,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Tipe Produk <span>*</span></label>
                                     <select name="product_type" id="productTypeSelect" class="form-input"
-                                        onchange="toggleProductTypeFields(this.value)" required>
+                                        onchange="handleProductTypeSelectChange(this)" required>
                                         <option value="external_link" {{ old('product_type', 'external_link') == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access (Marketplace & Store)</option>
                                         <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>Tiket Event / Wisata / Webinar (Marketplace & Store)</option>
                                         <option value="service" {{ old('product_type') == 'service' ? 'selected' : '' }}>Jasa / Layanan / Service (Khusus Storefront Creator)</option>
@@ -814,6 +814,31 @@
                                     <label class="form-label">Deskripsi Lengkap <span>*</span></label>
                                     @include('admin.partials.rich-editor', ['name' => 'description', 'value' => old('description'), 'height' => '280px'])
                                 </div>
+
+                                {{-- LINK VIDEO OPSIONAL - di dalam section deskripsi --}}
+                                <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
+                                    <div style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
+                                        <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;" onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
+                                            <div style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                                <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link Video <span style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span></div>
+                                                <div style="font-size:0.7rem; color:#64748b;">YouTube, TikTok, dan video lainnya</div>
+                                            </div>
+                                            <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;"><path d="m6 9 6 6 6-6"/></svg>
+                                        </div>
+                                        <div id="videoLinkPanel" style="display:none; padding:1rem;">
+                                            <input type="url" name="youtube_video_url" id="videoUrlInput"
+                                                value="{{ old('youtube_video_url') }}"
+                                                class="form-input" placeholder="Paste link YouTube atau TikTok di sini..."
+                                                oninput="debounceVideoPreview(this.value)"
+                                                style="margin-bottom:0.75rem;">
+                                            <div id="videoPreviewBox" style="display:none; border-radius:12px; overflow:hidden; background:#0f172a;"></div>
+                                            <span class="form-hint" style="margin-top:0.5rem;">Mendukung: YouTube, YouTube Shorts, TikTok. Preview otomatis muncul di bawah saat link diinput.</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -918,16 +943,13 @@
                                     </div>
                                 </div>
                                 <div id="galleryPreview"
-                                    style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1rem;"></div>
+                                    style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.75rem;"></div>
                                 <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
                                     onchange="previewGalleryList(event)" style="display:none;">
+                                <span class="form-hint">Maksimal 6 foto. Preview akan muncul di atas dan Anda dapat menghapus foto menggunakan tombol (✕) sebelum disimpan.</span>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Link Video (Opsional)</label>
-                                <input type="url" name="youtube_video_url" value="{{ old('youtube_video_url') }}"
-                                    class="form-input" placeholder="YouTube, TikTok, dll">
-                            </div>
+                            {{-- Link Video sudah dipindahkan ke section Deskripsi di tab Informasi Dasar --}}
                         </div>
                     </div>
 
@@ -1584,6 +1606,82 @@
                 console.error('Smart Import autofill error:', e);
             }
         });
+        // ── KYC Verification Check on Product Type ──
+        let lastProductType = '{{ old('product_type', 'external_link') }}';
+        const IS_CREATOR_VERIFIED = {{ auth()->user()?->isKycVerified() ? 'true' : 'false' }};
+
+        function handleProductTypeSelectChange(selectEl) {
+            const val = selectEl.value;
+            if (val === 'ticket' && !IS_CREATOR_VERIFIED) {
+                selectEl.value = lastProductType;
+                window.location.href = 'https://buyle.id/creator/event-attendance?tab=settings';
+                return;
+            }
+            lastProductType = val;
+            toggleProductTypeFields(val);
+        }
+
+        // ── Video Link Panel Toggle & Preview ──
+        function toggleVideoLinkPanel() {
+            const panel = document.getElementById('videoLinkPanel');
+            const chevron = document.getElementById('videoLinkChevron');
+            if (!panel) return;
+            const isOpen = panel.style.display !== 'none';
+            panel.style.display = isOpen ? 'none' : 'block';
+            if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            // If opening and there's a value, trigger preview
+            if (!isOpen) {
+                const inp = document.getElementById('videoUrlInput');
+                if (inp && inp.value.trim()) renderVideoPreview(inp.value.trim());
+            }
+        }
+
+        let _videoDebounceTimer = null;
+        function debounceVideoPreview(url) {
+            clearTimeout(_videoDebounceTimer);
+            _videoDebounceTimer = setTimeout(() => renderVideoPreview(url), 700);
+        }
+
+        function renderVideoPreview(url) {
+            const box = document.getElementById('videoPreviewBox');
+            if (!box) return;
+            url = url.trim();
+            if (!url) { box.style.display = 'none'; box.innerHTML = ''; return; }
+
+            // YouTube
+            const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts|live)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i);
+            if (ytMatch) {
+                box.innerHTML = `<div style="position:relative;width:100%;aspect-ratio:16/9;"><iframe src="https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+                box.style.display = 'block';
+                return;
+            }
+
+            // TikTok
+            const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
+            if (ttMatch) {
+                box.innerHTML = `<div style="display:flex;justify-content:center;"><div style="width:100%;max-width:320px;aspect-ratio:9/16;max-height:500px;"><iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>`;
+                box.style.display = 'block';
+                return;
+            }
+
+            // Other URL - show link card
+            box.innerHTML = `<a href="${url}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;background:#1e293b;color:#e2e8f0;text-decoration:none;font-size:0.82rem;"><svg width="18" height="18" fill="none" stroke="#a5cf37" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${url}</span></a>`;
+            box.style.display = 'block';
+        }
+
+        // Auto-open video panel if value exists on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const vidInp = document.getElementById('videoUrlInput');
+            if (vidInp && vidInp.value.trim()) {
+                const panel = document.getElementById('videoLinkPanel');
+                const chevron = document.getElementById('videoLinkChevron');
+                if (panel) panel.style.display = 'block';
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+                renderVideoPreview(vidInp.value.trim());
+            }
+        });
 
     </script>
+
+    @include('creator.products.partials.kyc_modal')
 @endsection

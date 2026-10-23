@@ -126,6 +126,12 @@ class SellerProductController extends Controller
         $pt = $request->input('product_type');
         $validTypes = ['digital', 'physical', 'makanan', 'service', 'ticket', 'external_link'];
         $data['product_type'] = in_array($pt, $validTypes) ? $pt : 'physical';
+
+        if ($data['product_type'] === 'ticket' && !auth()->user()->isKycVerified()) {
+            return redirect()->to(route('ticket.scanner', ['tab' => 'settings']))
+                ->with('error', 'Untuk membuat produk tipe Tiket Event, akun Creator Anda wajib terverifikasi e-KYC terlebih dahulu.');
+        }
+
         $data['stock']        = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '') ? (int) $request->input('stock') : null;
         $data['weight']       = (int) ($data['weight'] ?? 0);
         $data['length']       = (float) ($data['length'] ?? 0);
@@ -260,26 +266,42 @@ class SellerProductController extends Controller
             $data['og_image'] = $request->file('og_image')->store('products/posters', 'public');
         }
 
-        // Handle gallery upload (jika ada file baru)
+        // Handle gallery upload & granular existing gallery deletion
         unset($data['gallery']);
-        $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
-        if ($galleryFiles->isNotEmpty()) {
-            if (is_array($product->gallery)) {
-                foreach ($product->gallery as $oldImg) {
+        $currentGallery = is_array($product->gallery) ? $product->gallery : [];
+
+        if ($request->has('existing_gallery_submitted')) {
+            $keptGallery = $request->input('existing_gallery', []);
+            $keptGallery = is_array($keptGallery) ? $keptGallery : [];
+            // Delete removed images from storage
+            foreach ($currentGallery as $oldImg) {
+                if (!in_array($oldImg, $keptGallery)) {
                     Storage::disk('public')->delete($oldImg);
                 }
             }
-
-            $galleryPaths = [];
-            foreach ($galleryFiles as $gFile) {
-                $galleryPaths[] = $gFile->store('products/gallery', 'public');
-            }
-            $data['gallery'] = $galleryPaths;
+            $finalGallery = array_values($keptGallery);
+        } else {
+            $finalGallery = $currentGallery;
         }
+
+        $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
+        if ($galleryFiles->isNotEmpty()) {
+            foreach ($galleryFiles as $gFile) {
+                if (count($finalGallery) < 6) {
+                    $finalGallery[] = $gFile->store('products/gallery', 'public');
+                }
+            }
+        }
+        $data['gallery'] = $finalGallery;
 
         $pt = $request->input('product_type');
         $validTypes = ['digital', 'physical', 'makanan', 'service', 'ticket', 'external_link'];
         $data['product_type'] = in_array($pt, $validTypes) ? $pt : 'physical';
+
+        if ($data['product_type'] === 'ticket' && !auth()->user()->isKycVerified()) {
+            return redirect()->to(route('ticket.scanner', ['tab' => 'settings']))
+                ->with('error', 'Untuk memilih produk tipe Tiket Event, akun Creator Anda wajib terverifikasi e-KYC terlebih dahulu.');
+        }
         $data['stock']        = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '') ? (int) $request->input('stock') : null;
         $data['weight']       = (int) ($data['weight'] ?? 0);
         $data['length']       = (float) ($data['length'] ?? 0);

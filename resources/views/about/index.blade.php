@@ -34,8 +34,8 @@
         }
 
         /* ═══════════════════════════════════════
-                                       PAGE HERO — 100% sama dengan /products
-                                    ═══════════════════════════════════════ */
+                                           PAGE HERO — 100% sama dengan /products
+                                        ═══════════════════════════════════════ */
         .sv-hero-premium {
             position: relative;
             padding: 9rem 1.5rem 5rem;
@@ -446,8 +446,8 @@
         }
 
         /* ══════════════════════════════════════════════════════
-                                           PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
-                                        ══════════════════════════════════════════════════════ */
+                                               PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
+                                            ══════════════════════════════════════════════════════ */
         .buyle-orbit-section {
             position: relative;
             padding: 8.5rem 1.5rem 5rem;
@@ -1119,10 +1119,10 @@
         }
 
         /* ── Flow Panels Wrapper – CSS Grid Stacking ──
-                                   Kedua panel menempati cell yang sama (grid-area: 1/1)
-                                   sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
-                                   Visibility dikendalikan via opacity + pointer-events agar
-                                   CSS transition dapat berjalan (display:none tidak bisa di-animate). */
+                                       Kedua panel menempati cell yang sama (grid-area: 1/1)
+                                       sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
+                                       Visibility dikendalikan via opacity + pointer-events agar
+                                       CSS transition dapat berjalan (display:none tidak bisa di-animate). */
         .buyle-flow-panels-wrap {
             display: grid;
             grid-template-columns: 1fr;
@@ -1776,15 +1776,13 @@
                 <div class="orbit-bubble-wrap" data-aos="fade-up" data-aos-delay="200">
                     <div class="orbit-speech-bubble">
                         <p class="orbit-bubble-text primary">
-                            Kami menyatukan <strong>Web Builder</strong>, <strong>Kasir POS</strong>, <strong>Ticket
+                            Satu platform terpadu: <strong>Web Builder</strong>, <strong>Kasir POS</strong>, <strong>Ticket
                                 Management</strong>, <strong>Marketplace Digital</strong>, dan <strong>Pembayaran
-                                Terintegrasi</strong> ke dalam satu platform tunggal - dirancang untuk memaksimalkan
-                            efisiensi, pendapatan, dan kemudahan bisnis Anda.
+                                Aman</strong> — dirancang untuk melipatgandakan efisiensi dan omset bisnis digital Anda.
                         </p>
                         <p class="orbit-bubble-text secondary">
-                            Dibangun oleh HVM Digital untuk Indonesia, <strong>Buyle.id</strong> hadir menjawab kebutuhan
-                            ekosistem modern: kendali penuh tanpa koding, otomasi cerdas, dan solusi terintegrasi yang
-                            saling terhubung.
+                            Dikembangkan oleh HVM Digital, <strong>bylee.id</strong> memberikan Anda kendali penuh tanpa
+                            koding, otomasi cerdas, dan infrastruktur transaksi serba instan.
                         </p>
                         {{-- Bubble Pointer Tail --}}
                         <div class="orbit-bubble-tail"></div>
@@ -3551,7 +3549,7 @@
         </div>
     </section>
 
-        {{-- ════ 2.6 SECTION: CREATOR TIER & REVENUE ROADMAP ════ --}}
+    {{-- ════ 2.6 SECTION: CREATOR TIER & REVENUE ROADMAP ════ --}}
     @php
         $creatorTiers = [
             [
@@ -3698,8 +3696,13 @@
         }
 
         @keyframes buyleTierPulse {
-            0% { left: -30%; }
-            100% { left: 100%; }
+            0% {
+                left: -30%;
+            }
+
+            100% {
+                left: 100%;
+            }
         }
 
         /* 6 Column Grid */
@@ -4100,40 +4103,40 @@
                     <div class="buyle-tier-mobile-item">
                         <div class="buyle-tier-mobile-badge">
                             @if($tier['icon'] === 'flag')
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
                                     <line x1="4" y1="22" x2="4" y2="15"></line>
                                 </svg>
                             @elseif($tier['icon'] === 'trending')
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                                     <polyline points="23 6 23 12"></polyline>
                                 </svg>
                             @elseif($tier['icon'] === 'briefcase')
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                                 </svg>
                             @elseif($tier['icon'] === 'award')
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="8" r="7"></circle>
                                     <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                                 </svg>
                             @elseif($tier['icon'] === 'shield')
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                                     <polygon
                                         points="12 8 13.5 11.5 17 11.8 14.3 14.2 15.1 17.6 12 15.8 8.9 17.6 9.7 14.2 7 11.8 10.5 11.5 12 8">
                                     </polygon>
                                 </svg>
                             @elseif($tier['icon'] === 'crown')
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"></path>
                                 </svg>
                             @endif

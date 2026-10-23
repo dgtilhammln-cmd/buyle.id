@@ -1553,26 +1553,14 @@
                                         </a>
                                     </div>
                                 @endforeach
-                                @if($service->tiktok_video_url)
-                                    <div class="swiper-slide pd-tiktok-slide swiper-no-swiping">
-                                        <blockquote class="tiktok-embed" cite="{{ $service->tiktok_video_url }}"
-                                            data-video-id="{{ Str::afterLast(rtrim($service->tiktok_video_url, '/'), '/') }}"
-                                            style="max-width:100%; margin:0; border:none;">
-                                            <section>
-                                                <a target="_blank" href="{{ $service->tiktok_video_url }}">Tonton di TikTok</a>
-                                            </section>
-                                        </blockquote>
-                                        <script async src="https://www.tiktok.com/embed.js"></script>
-                                    </div>
-                                @endif
                             </div>
-                            @if(count($imgs) > 1 || $service->tiktok_video_url)
+                            @if(count($imgs) > 1)
                                 <div class="swiper-button-next"></div>
                                 <div class="swiper-button-prev"></div>
                             @endif
                         </div>
 
-                        @if(count($imgs) > 1 || $service->tiktok_video_url)
+                        @if(count($imgs) > 1)
                             <div class="swiper pd-thumbs" id="pd-swiper-thumbs">
                                 <div class="swiper-wrapper">
                                     @foreach($imgs as $img)
@@ -1580,14 +1568,6 @@
                                             <img src="{{ $img }}" alt="thumb" loading="lazy">
                                         </div>
                                     @endforeach
-                                    @if($service->tiktok_video_url)
-                                        <div class="swiper-slide pd-thumb-item"
-                                            style="background:#000; display:flex; align-items:center; justify-content:center; color:#fff;">
-                                            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M8 5v14l11-7z" />
-                                            </svg>
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -2832,6 +2812,9 @@
                                     <p><b>{{ $service->short_desc }}</b></p>
                                 @endif
                                 {!! $service->description ?? 'Belum ada deskripsi mendetail.' !!}
+
+                                {{-- Video Produk (Minimalist YouTube / TikTok Embed) --}}
+                                @include('partials.product_video', ['videoUrl' => $service->tiktok_video_url])
 
                                 {{-- Poster Landscape Banner (og_image) --}}
                                 @if(!empty($service->og_image))
