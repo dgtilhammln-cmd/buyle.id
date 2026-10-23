@@ -954,6 +954,7 @@
                         <div class="ps-cta-row" style="{{ ($psIsExpired ?? false) ? 'pointer-events:none;opacity:0.45;' : '' }}">
                             <form action="{{ route('cart.add') }}" method="POST" id="bio-cart-form" style="display:contents;" class="ps-add-cart-form">
                                 @csrf
+                                <input type="hidden" name="action" id="bio_action_input" value="cart">
                                 <input type="hidden" name="product_id" value="{{ $prodId }}">
                                 <input type="hidden" name="qty" value="1">
                                 <input type="hidden" name="variant_value_id" id="bio_selected_variant_id" value="">
@@ -1375,11 +1376,21 @@
 
             closeBioVariantModal();
 
+            var form = document.getElementById('bio-cart-form');
+            if (!form) return;
+            var act = document.getElementById('bio_action_input');
+
             if (window._bioCurrentAction === 'cart') {
-                var form = document.getElementById('bio-cart-form');
-                if (form) form.submit();
+                if (act) act.value = 'cart';
+                form.submit();
             } else {
-                doBioDirectCheckout();
+                if (act) act.value = 'buy';
+                var btn = document.querySelector('.ps-btn-checkout');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.7';
+                }
+                form.submit();
             }
         };
 
@@ -1405,6 +1416,8 @@
                 }
             }
             var form = document.getElementById('bio-cart-form');
+            var act = document.getElementById('bio_action_input');
+            if (act) act.value = 'cart';
             if (form) form.submit();
         };
 
@@ -1423,23 +1436,14 @@
                 window.location.href = "{{ route('cart.index') }}";
                 return;
             }
+            var act = document.getElementById('bio_action_input');
+            if (act) act.value = 'buy';
             var btn = document.querySelector('.ps-btn-checkout');
             if (btn) {
                 btn.disabled = true;
                 btn.style.opacity = '0.7';
             }
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            }).then(function() {
-                window.location.href = "{{ route('cart.index') }}";
-            }).catch(function() {
-                window.location.href = "{{ route('cart.index') }}";
-            });
+            form.submit();
         };
 
         document.addEventListener('keydown', function(e) {

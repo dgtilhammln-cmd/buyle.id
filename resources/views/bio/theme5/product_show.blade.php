@@ -1697,6 +1697,7 @@
                         <form action="{{ route('cart.add') }}" method="POST" style="display:contents;"
                             class="t5-add-cart-form">
                             @csrf
+                            <input type="hidden" name="action" id="t5_action_input" value="cart">
                             <input type="hidden" name="product_id" value="{{ $prodId }}">
                             <input type="hidden" name="qty" id="t5_form_qty" value="1">
                             <input type="hidden" name="variant_value_id" id="t5_selected_variant_id" value="">
@@ -2281,8 +2282,20 @@
         // AJAX Add to Cart
         document.addEventListener('submit', function (e) {
             if (e.target && e.target.classList.contains('t5-add-cart-form')) {
-                e.preventDefault();
                 var form = e.target;
+                var act = form.querySelector('input[name="action"]');
+                // If action is 'buy', allow native submission to redirect directly to cart.index
+                if (act && act.value === 'buy') {
+                    return;
+                }
+
+                if (t5HasVariants && !document.getElementById('t5_selected_variant_id').value) {
+                    e.preventDefault();
+                    openT5VariantModal('cart');
+                    return false;
+                }
+
+                e.preventDefault();
                 var btn = form.querySelector('button[type="submit"]');
                 if (btn) btn.disabled = true;
 
@@ -2489,11 +2502,23 @@
 
             closeT5VariantModal();
 
+            var form = document.querySelector('.t5-add-cart-form');
+            if (!form) return;
+            var act = document.getElementById('t5_action_input') || form.querySelector('input[name="action"]');
+
             if (window._t5CurrentAction === 'cart') {
-                var form = document.querySelector('.t5-add-cart-form');
-                if (form) form.submit();
+                if (act) act.value = 'cart';
+                var btn = form.querySelector('button[type="submit"]');
+                if (btn) btn.click();
+                else form.submit();
             } else {
-                doT5DirectCheckout();
+                if (act) act.value = 'buy';
+                var btn = document.querySelector('.ps-btn-checkout');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.7';
+                }
+                form.submit();
             }
         };
 
@@ -2525,23 +2550,14 @@
                 window.location.href = "{{ route('cart.index') }}";
                 return;
             }
+            var act = document.getElementById('t5_action_input') || form.querySelector('input[name="action"]');
+            if (act) act.value = 'buy';
             var btn = document.querySelector('.ps-btn-checkout');
             if (btn) {
                 btn.disabled = true;
                 btn.style.opacity = '0.7';
             }
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            }).then(function () {
-                window.location.href = "{{ route('cart.index') }}";
-            }).catch(function () {
-                window.location.href = "{{ route('cart.index') }}";
-            });
+            form.submit();
         };
 
         document.addEventListener('keydown', function(e) {
