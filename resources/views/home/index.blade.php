@@ -4376,6 +4376,160 @@
         .cv-card-enter {
             animation: cvCardFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+
+        /* ── HOME WELCOME POPUP MODAL (2 DETIK) ── */
+        .home-popup-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+        }
+
+        .home-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .hpp-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .hpp-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 380px;
+            width: 88vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: scale(0.75) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .home-popup-overlay.active .hpp-wrapper {
+            transform: scale(1) translateY(0);
+        }
+
+        .hpp-close-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .hpp-close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: rotate(90deg) scale(1.08);
+        }
+
+        .hpp-image-link {
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            border-radius: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .hpp-image-link:hover {
+            transform: scale(1.02);
+        }
+
+        .hpp-image {
+            width: 100%;
+            height: auto;
+            max-height: 75vh;
+            object-fit: contain;
+            display: block;
+            border-radius: 20px;
+            filter: drop-shadow(0 14px 35px rgba(0, 0, 0, 0.3));
+        }
+
+        @media (max-width: 480px) {
+            .hpp-wrapper {
+                max-width: 320px;
+                width: 84vw;
+            }
+
+            .hpp-close-btn {
+                top: -10px;
+                right: -8px;
+                width: 32px;
+                height: 32px;
+            }
+        }
     </style>
+
+    {{-- POPUP 2 DETIK HOME (POPUP1.PNG) --}}
+    <div id="homeWelcomePopup" class="home-popup-overlay" style="display:none;" aria-hidden="true">
+        <div class="hpp-backdrop" onclick="closeHomePopup()"></div>
+        <div class="hpp-wrapper">
+            <button type="button" class="hpp-close-btn" onclick="closeHomePopup()" aria-label="Tutup Popup">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="hpp-image-link" onclick="closeHomePopup()">
+                <img src="{{ asset('images/popup1.png') }}" 
+                     alt="Selamat Belanja" 
+                     class="hpp-image"
+                     onerror="this.src='{{ asset('storage/icon/popup1.png') }}'">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            setTimeout(function() {
+                var popup = document.getElementById('homeWelcomePopup');
+                if (popup) {
+                    popup.style.display = 'flex';
+                    requestAnimationFrame(function() {
+                        popup.classList.add('active');
+                    });
+                }
+            }, 2000);
+
+            window.closeHomePopup = function() {
+                var popup = document.getElementById('homeWelcomePopup');
+                if (!popup) return;
+                popup.classList.remove('active');
+                setTimeout(function() {
+                    popup.style.display = 'none';
+                }, 300);
+            };
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeHomePopup();
+                }
+            });
+        })();
+    </script>
 
 @endsection
