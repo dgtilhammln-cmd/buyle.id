@@ -373,22 +373,6 @@
             margin: 0 auto 2.5rem;
         }
 
-        .ticket-calc-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #16a34a;
-            background: #F0FDF4;
-            border: 1px solid rgba(30, 179, 73, 0.25);
-            padding: 0.35rem 0.95rem;
-            border-radius: 999px;
-            margin-bottom: 0.85rem;
-        }
-
         .ticket-calc-title {
             font-size: clamp(1.8rem, 3.2vw, 2.4rem);
             font-weight: 800;
@@ -577,18 +561,29 @@
             color: #0F172A;
         }
 
-        /* Right Result Receipt Card */
+        /* Right Result Receipt Card — Clean Buyle Theme with Signature Gradient */
         .ticket-calc-result-card {
-            background: #0F172A;
-            color: #FFFFFF;
+            background: #FFFFFF;
+            color: #0F172A;
+            border: 1.5px solid #E2E8F0;
             border-radius: 20px;
             padding: 2.25rem 2rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.2);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.05);
             overflow: hidden;
+        }
+
+        .ticket-calc-result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
         }
 
         .ticket-calc-result-card::after {
@@ -596,9 +591,9 @@
             position: absolute;
             bottom: -80px;
             right: -80px;
-            width: 240px;
-            height: 240px;
-            background: radial-gradient(circle, rgba(30, 179, 73, 0.25) 0%, transparent 70%);
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(30, 179, 73, 0.08) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -606,24 +601,25 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.75rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #E2E8F0;
         }
 
         .calc-receipt-title {
             font-size: 1.05rem;
             font-weight: 800;
             letter-spacing: -0.01em;
+            color: #0F172A;
         }
 
         .calc-receipt-tag {
             font-size: 0.72rem;
             font-weight: 700;
-            background: rgba(30, 179, 73, 0.2);
-            color: #86efac;
-            border: 1px solid rgba(30, 179, 73, 0.4);
-            padding: 0.2rem 0.65rem;
+            background: #F0FDF4;
+            color: #16a34a;
+            border: 1px solid #BBF7D0;
+            padding: 0.25rem 0.75rem;
             border-radius: 999px;
             text-transform: uppercase;
         }
@@ -644,51 +640,58 @@
         }
 
         .calc-receipt-label {
-            color: #94A3B8;
+            color: #64748B;
             font-weight: 500;
         }
 
         .calc-receipt-val {
             font-weight: 700;
-            color: #FFFFFF;
+            color: #0F172A;
         }
 
         .calc-receipt-divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.15);
+            background: #E2E8F0;
             margin: 0.5rem 0;
         }
 
         .calc-receipt-row.total-row {
-            margin-top: 0.35rem;
+            background: linear-gradient(135deg, rgba(30, 179, 73, 0.07) 0%, rgba(165, 207, 55, 0.07) 100%);
+            border: 1.5px solid rgba(30, 179, 73, 0.22);
+            border-radius: 14px;
+            padding: 1rem 1.15rem;
+            margin-top: 0.4rem;
         }
 
         .calc-total-label {
-            font-size: 1rem;
+            font-size: 0.98rem;
             font-weight: 800;
-            color: #FFFFFF;
+            color: #0F172A;
         }
 
         .calc-total-note {
             font-size: 0.72rem;
-            color: #94A3B8;
+            color: #64748B;
             margin-top: 0.15rem;
         }
 
         .calc-total-val {
-            font-size: 1.75rem;
+            font-size: 1.85rem;
             font-weight: 900;
-            color: #4ade80;
+            color: #1eb349;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             font-family: var(--font);
             letter-spacing: -0.02em;
         }
 
         .calc-creator-takeaway {
-            margin-top: 1.75rem;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-top: 1.5rem;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
             border-radius: 14px;
-            padding: 1rem 1.15rem;
+            padding: 0.95rem 1.15rem;
             position: relative;
             z-index: 2;
         }
@@ -705,32 +708,33 @@
             align-items: center;
             gap: 0.55rem;
             font-size: 0.82rem;
-            color: #CBD5E1;
+            color: #475569;
             font-weight: 600;
         }
 
         .takeaway-left svg {
-            color: #4ade80;
+            color: #1eb349;
             flex-shrink: 0;
         }
 
         .takeaway-val {
             font-size: 1.05rem;
             font-weight: 800;
-            color: #FFFFFF;
+            color: #15803d;
         }
 
         /* ══════════════════════════════════════════════
            SECTION BARU: MULTI-GATE SCANNER & VENUE PLAN
+           (TEMA UNIFORM BUYLE — CLEAN LIGHT & GRADIENT)
            ══════════════════════════════════════════════ */
         .buyle-venue-section {
             padding: 6.5rem 1.5rem 7.5rem;
-            background: #090E17;
+            background: #FFFFFF;
             position: relative;
             overflow: hidden;
             font-family: var(--font);
-            color: #FFFFFF;
-            border-top: 1px solid #1E293B;
+            color: #0F172A;
+            border-top: 1px solid #E2E8F0;
         }
 
         .buyle-venue-section::before {
@@ -739,9 +743,9 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 1200px;
-            height: 550px;
-            background: radial-gradient(ellipse at center, rgba(30, 179, 73, 0.14) 0%, transparent 70%);
+            width: 1100px;
+            height: 520px;
+            background: radial-gradient(ellipse at center, rgba(30, 179, 73, 0.06) 0%, rgba(165, 207, 55, 0.03) 40%, transparent 70%);
             pointer-events: none;
         }
 
@@ -755,54 +759,13 @@
         .venue-header {
             text-align: center;
             max-width: 820px;
-            margin: 0 auto 3rem;
-        }
-
-        /* Up to 10 Scanner Glowing Banner */
-        .venue-capacity-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: rgba(30, 179, 73, 0.15);
-            border: 1.5px solid rgba(30, 179, 73, 0.5);
-            padding: 0.45rem 1.25rem;
-            border-radius: 999px;
-            margin-bottom: 1.25rem;
-            box-shadow: 0 0 24px rgba(30, 179, 73, 0.25);
-        }
-
-        .live-pulse-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #22C55E;
-            box-shadow: 0 0 10px #22C55E;
-            animation: livePulse 1.8s infinite;
-        }
-
-        @keyframes livePulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
-        }
-
-        .badge-bold {
-            font-size: 0.8rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            color: #4ade80;
-            text-transform: uppercase;
-        }
-
-        .badge-sub {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #94A3B8;
+            margin: 0 auto 2.75rem;
         }
 
         .venue-title {
             font-size: clamp(2.2rem, 4.2vw, 3.2rem);
             font-weight: 800;
-            color: #FFFFFF;
+            color: #0F172A;
             line-height: 1.2;
             letter-spacing: -0.03em;
             margin: 0 0 1rem;
@@ -814,10 +777,10 @@
 
         .venue-desc {
             font-size: 1.05rem;
-            color: #94A3B8;
+            color: #64748B;
             line-height: 1.7;
             margin: 0 auto;
-            max-width: 720px;
+            max-width: 760px;
         }
 
         /* Interactive Filter Tabs */
@@ -831,9 +794,9 @@
         }
 
         .venue-tab-btn {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #94A3B8;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            color: #475569;
             font-size: 0.82rem;
             font-weight: 700;
             padding: 0.45rem 1rem;
@@ -847,26 +810,26 @@
         }
 
         .venue-tab-btn:hover {
-            color: #FFFFFF;
-            border-color: rgba(30, 179, 73, 0.4);
-            background: rgba(30, 179, 73, 0.1);
+            color: #1eb349;
+            border-color: #1eb349;
+            background: #F0FDF4;
         }
 
         .venue-tab-btn.active {
-            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #FFFFFF;
-            border-color: #1eb349;
-            box-shadow: 0 4px 16px rgba(30, 179, 73, 0.35);
+            border-color: transparent;
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
         }
 
         /* ── Denah Arena Map Box ── */
         .venue-map-stage-wrap {
             position: relative;
-            background: #0B132B;
-            border: 1.5px solid rgba(51, 65, 85, 0.7);
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
             border-radius: 28px;
             padding: 1.5rem;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(15, 23, 42, 0.8);
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.05);
             overflow: hidden;
         }
 
@@ -906,21 +869,21 @@
 
         .gate-hotspot:hover,
         .gate-hotspot.active {
-            filter: drop-shadow(0 0 14px rgba(74, 222, 128, 0.9));
+            filter: drop-shadow(0 0 12px rgba(30, 179, 73, 0.5));
         }
 
         /* ── Gate Status Live Inspector Card ── */
         .venue-inspector-card {
             margin-top: 2rem;
-            background: #111C33;
-            border: 1.5px solid rgba(30, 179, 73, 0.35);
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
             border-radius: 20px;
             padding: 1.5rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
             transition: all 0.3s ease;
         }
 
@@ -934,25 +897,25 @@
             width: 54px;
             height: 54px;
             border-radius: 16px;
-            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
         }
 
         .inspector-name {
             font-size: 1.2rem;
             font-weight: 800;
-            color: #FFFFFF;
+            color: #0F172A;
             margin: 0 0 0.25rem;
         }
 
         .inspector-desc {
             font-size: 0.85rem;
-            color: #94A3B8;
+            color: #64748B;
             margin: 0;
         }
 
@@ -969,14 +932,14 @@
         .stat-val {
             font-size: 1.25rem;
             font-weight: 800;
-            color: #4ade80;
+            color: #1eb349;
             font-family: var(--font);
         }
 
         .stat-label {
             font-size: 0.72rem;
             font-weight: 600;
-            color: #94A3B8;
+            color: #64748B;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
@@ -1061,7 +1024,7 @@
         }
     </style>
 
-    {{-- Shared SVG Defs for Button Daftar Gradient --}}
+    {{-- Shared SVG Defs for Button Daftar Gradient & Filters --}}
     <svg width="0" height="0" style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
         <defs>
             <linearGradient id="btnDaftarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1070,14 +1033,18 @@
             </linearGradient>
 
             <linearGradient id="stageGlowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#1eb349" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#0F172A" stop-opacity="0" />
+                <stop offset="0%" stop-color="#1eb349" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="#1eb349" stop-opacity="0" />
             </linearGradient>
 
             <linearGradient id="fohGlowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#38bdf8" />
-                <stop offset="100%" stop-color="#1eb349" />
+                <stop offset="0%" stop-color="#1eb349" />
+                <stop offset="100%" stop-color="#a5cf37" />
             </linearGradient>
+
+            <filter id="gateDropShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0F172A" flood-opacity="0.08"/>
+            </filter>
         </defs>
     </svg>
 
@@ -1420,13 +1387,6 @@
             {{-- ════ 2. SIMULASI PERHITUNGAN BIAYA TIKET (INTERACTIVE CALCULATOR) ════ --}}
             <div class="ticket-calc-wrap" id="simulasi-biaya" data-aos="fade-up">
                 <div class="ticket-calc-header">
-                    <div class="ticket-calc-badge">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                        <span>TRANSPARANSI BIAYA</span>
-                    </div>
                     <h2 class="ticket-calc-title">Simulasi Perhitungan Biaya Tiket<span class="accent-dot">.</span></h2>
                     <p class="ticket-calc-subtitle">
                         Hitung rincian biaya tiket secara transparan. Biaya admin payment gateway Rp 5.000 dan platform fee 5% dihitung otomatis.
@@ -1525,18 +1485,13 @@
     <section class="buyle-venue-section" id="venue-scanner-section">
         <div class="buyle-venue-container">
 
-            {{-- Header Multi Gate Scanner --}}
+            {{-- Header Multi Gate Scanner (Tanpa Badge Sesuai Permintaan) --}}
             <div class="venue-header" data-aos="fade-up">
-                <div class="venue-capacity-badge">
-                    <span class="live-pulse-dot"></span>
-                    <span class="badge-bold">UP TO 10 SCANNER AKTIF</span>
-                    <span class="badge-sub">• Sinkronisasi Cloud &lt;0.2s</span>
-                </div>
                 <h2 class="venue-title">
                     Multi-Gate Scanner &amp; Denah Venue Event<span class="accent-dot">.</span>
                 </h2>
                 <p class="venue-desc">
-                    Arsitektur gerbang terdistribusi untuk konser dan festival berkapasitas ribuan penonton. Dilengkapi <strong>FOH (Front of House)</strong> di pusat arena dan 5 Gate check-in strategis di sekeliling venue yang mampu mengoperasikan <strong>hingga 10 scanner serentak</strong> tanpa tabrakan data.
+                    Arsitektur gerbang terdistribusi dengan kapasitas <strong>Up to 10 Scanner Aktif</strong> bersamaan untuk konser dan festival berkapasitas ribuan penonton. Terhubung langsung dengan <strong>FOH (Front of House)</strong> di pusat arena dan sinkronisasi cloud realtime &lt;0.2 detik tanpa tabrakan data.
                 </p>
             </div>
 
@@ -1565,128 +1520,128 @@
                 </button>
             </div>
 
-            {{-- Interactive SVG Denah Venue Map --}}
+            {{-- Interactive SVG Denah Venue Map — Clean Light Stadium Theme --}}
             <div class="venue-map-stage-wrap" data-aos="fade-up" data-aos-delay="150">
                 <svg class="venue-map-svg" viewBox="0 0 1000 700" fill="none" xmlns="http://www.w3.org/2000/svg">
                     {{-- Grid Background Guide --}}
                     <defs>
                         <pattern id="arenaGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30,179,73,0.06)" stroke-width="1"/>
                         </pattern>
                     </defs>
                     <rect width="1000" height="700" fill="url(#arenaGrid)"/>
 
                     {{-- ── Outer Arena Boundary ── --}}
                     <path d="M 120 180 C 120 70, 880 70, 880 180 L 920 540 C 920 660, 80 660, 80 540 Z"
-                        fill="#0E1726" stroke="#1E293B" stroke-width="3" stroke-dasharray="10 6"/>
+                        fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2.5" stroke-dasharray="10 6"/>
 
                     {{-- ── Tribune / Grandstand Seating Area (Barat & Timur) ── --}}
-                    <path d="M 100 240 C 90 350, 90 470, 110 560" stroke="rgba(255,255,255,0.08)" stroke-width="30" stroke-linecap="round"/>
-                    <text x="75" y="380" fill="rgba(255,255,255,0.25)" font-size="11" font-weight="700" letter-spacing="3" transform="rotate(-90 75 380)">TRIBUNE BARAT</text>
+                    <path d="M 100 240 C 90 350, 90 470, 110 560" stroke="#E2E8F0" stroke-width="32" stroke-linecap="round"/>
+                    <text x="75" y="380" fill="#94A3B8" font-size="11" font-weight="800" letter-spacing="3" transform="rotate(-90 75 380)">TRIBUNE BARAT</text>
 
-                    <path d="M 900 240 C 910 350, 910 470, 890 560" stroke="rgba(255,255,255,0.08)" stroke-width="30" stroke-linecap="round"/>
-                    <text x="925" y="380" fill="rgba(255,255,255,0.25)" font-size="11" font-weight="700" letter-spacing="3" transform="rotate(90 925 380)">TRIBUNE TIMUR</text>
+                    <path d="M 900 240 C 910 350, 910 470, 890 560" stroke="#E2E8F0" stroke-width="32" stroke-linecap="round"/>
+                    <text x="925" y="380" fill="#94A3B8" font-size="11" font-weight="800" letter-spacing="3" transform="rotate(90 925 380)">TRIBUNE TIMUR</text>
 
                     {{-- ── Panggung Utama (Stage) ── --}}
                     <g id="venueStage">
                         {{-- Stage Light Spotlight Cones --}}
-                        <polygon points="500 45, 300 240, 700 240" fill="url(#stageGlowGradient)" opacity="0.35"/>
-                        <polygon points="400 45, 200 230, 480 230" fill="url(#stageGlowGradient)" opacity="0.2"/>
-                        <polygon points="600 45, 520 230, 800 230" fill="url(#stageGlowGradient)" opacity="0.2"/>
+                        <polygon points="500 45, 300 240, 700 240" fill="url(#stageGlowGradient)" opacity="0.6"/>
+                        <polygon points="400 45, 200 230, 480 230" fill="url(#stageGlowGradient)" opacity="0.4"/>
+                        <polygon points="600 45, 520 230, 800 230" fill="url(#stageGlowGradient)" opacity="0.4"/>
 
                         {{-- Stage Structure --}}
-                        <path d="M 330 90 Q 500 50 670 90 L 650 140 Q 500 115 350 140 Z" fill="#162032" stroke="#1eb349" stroke-width="2.5"/>
-                        <text x="500" y="105" fill="#4ade80" font-size="13" font-weight="800" text-anchor="middle" letter-spacing="2">PANGGUNG UTAMA / STAGE</text>
-                        <text x="500" y="125" fill="#94A3B8" font-size="9" font-weight="600" text-anchor="middle">PERFORMANCE &amp; LED WALL</text>
+                        <path d="M 330 90 Q 500 50 670 90 L 650 140 Q 500 115 350 140 Z" fill="#F0FDF4" stroke="url(#btnDaftarGradient)" stroke-width="3"/>
+                        <text x="500" y="105" fill="#15803d" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="2">PANGGUNG UTAMA / STAGE</text>
+                        <text x="500" y="125" fill="#64748B" font-size="9" font-weight="600" text-anchor="middle">PERFORMANCE &amp; LED WALL</text>
 
                         {{-- Barricade Pit --}}
-                        <path d="M 280 160 Q 500 135 720 160" stroke="#f59e0b" stroke-width="3" stroke-dasharray="8 4"/>
-                        <text x="500" y="152" fill="#f59e0b" font-size="8.5" font-weight="700" text-anchor="middle" letter-spacing="1">BARRICADE PIT / SOUND BUFFER</text>
+                        <path d="M 280 160 Q 500 135 720 160" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="8 4"/>
+                        <text x="500" y="152" fill="#d97706" font-size="8.5" font-weight="700" text-anchor="middle" letter-spacing="1">BARRICADE PIT / SOUND BUFFER</text>
                     </g>
 
                     {{-- ── VIP / VVIP Area ── --}}
-                    <rect x="310" y="180" width="380" height="85" rx="14" fill="rgba(30, 179, 73, 0.08)" stroke="rgba(30, 179, 73, 0.4)" stroke-width="1.5"/>
-                    <text x="500" y="228" fill="#86efac" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="3">AREA VVIP &amp; VIP SEATING</text>
+                    <rect x="310" y="180" width="380" height="85" rx="14" fill="rgba(30, 179, 73, 0.08)" stroke="rgba(30, 179, 73, 0.45)" stroke-width="2"/>
+                    <text x="500" y="228" fill="#15803d" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="3">AREA VVIP &amp; VIP SEATING</text>
 
                     {{-- ── Festival Standing Area ── --}}
-                    <rect x="220" y="285" width="560" height="235" rx="18" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
-                    <text x="320" y="325" fill="rgba(255,255,255,0.3)" font-size="11" font-weight="700" letter-spacing="2">FESTIVAL A</text>
-                    <text x="680" y="325" fill="rgba(255,255,255,0.3)" font-size="11" font-weight="700" letter-spacing="2">FESTIVAL B</text>
+                    <rect x="220" y="285" width="560" height="235" rx="18" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
+                    <text x="320" y="325" fill="#64748B" font-size="11" font-weight="800" letter-spacing="2">FESTIVAL A</text>
+                    <text x="680" y="325" fill="#64748B" font-size="11" font-weight="800" letter-spacing="2">FESTIVAL B</text>
 
                     {{-- ── Connecting Data Stream Rays (From Gates to FOH) ── --}}
                     <g id="dataRays">
                         {{-- Ray Gate 1 -> FOH --}}
-                        <line x1="170" y1="210" x2="475" y2="395" stroke="#1eb349" stroke-width="2" class="venue-ray" opacity="0.65"/>
+                        <line x1="170" y1="210" x2="475" y2="395" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
                         {{-- Ray Gate 2 -> FOH --}}
-                        <line x1="830" y1="210" x2="525" y2="395" stroke="#1eb349" stroke-width="2" class="venue-ray" opacity="0.65"/>
+                        <line x1="830" y1="210" x2="525" y2="395" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
                         {{-- Ray Gate 3 -> FOH --}}
-                        <line x1="150" y1="430" x2="470" y2="415" stroke="#1eb349" stroke-width="2" class="venue-ray" opacity="0.65"/>
+                        <line x1="150" y1="430" x2="470" y2="415" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
                         {{-- Ray Gate 4 -> FOH --}}
-                        <line x1="850" y1="430" x2="530" y2="415" stroke="#1eb349" stroke-width="2" class="venue-ray" opacity="0.65"/>
+                        <line x1="850" y1="430" x2="530" y2="415" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
                         {{-- Ray Gate 5 -> FOH --}}
-                        <line x1="500" y1="585" x2="500" y2="445" stroke="#1eb349" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
+                        <line x1="500" y1="585" x2="500" y2="445" stroke="url(#btnDaftarGradient)" stroke-width="3" class="venue-ray" opacity="0.95"/>
                     </g>
 
                     {{-- ── PUSAT ARENA: FOH (FRONT OF HOUSE) ── --}}
                     <g id="venueFOH" class="gate-hotspot" data-target="foh">
                         {{-- Concentric Radar Rings --}}
-                        <circle cx="500" cy="415" r="35" fill="none" stroke="rgba(30, 179, 73, 0.4)" stroke-width="2" class="radar-pulse-ring"/>
-                        <circle cx="500" cy="415" r="55" fill="none" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                        <circle cx="500" cy="415" r="35" fill="none" stroke="#1eb349" stroke-width="2" class="radar-pulse-ring"/>
+                        <circle cx="500" cy="415" r="55" fill="none" stroke="rgba(165, 207, 55, 0.45)" stroke-width="1.5" stroke-dasharray="4 4"/>
 
                         {{-- FOH Booth Structure --}}
-                        <rect x="440" y="380" width="120" height="70" rx="14" fill="#0B1528" stroke="url(#fohGlowGradient)" stroke-width="2.5"/>
+                        <rect x="440" y="380" width="120" height="70" rx="14" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="3" filter="url(#gateDropShadow)"/>
                         <circle cx="465" cy="402" r="4" fill="#38bdf8"/>
-                        <circle cx="480" cy="402" r="4" fill="#4ade80"/>
+                        <circle cx="480" cy="402" r="4" fill="#1eb349"/>
                         <circle cx="495" cy="402" r="4" fill="#f59e0b"/>
 
                         {{-- FOH Text --}}
-                        <text x="500" y="425" fill="#FFFFFF" font-size="12" font-weight="900" text-anchor="middle" letter-spacing="1">FOH</text>
-                        <text x="500" y="439" fill="#38bdf8" font-size="8.5" font-weight="700" text-anchor="middle">FRONT OF HOUSE</text>
+                        <text x="500" y="423" fill="#0F172A" font-size="12" font-weight="900" text-anchor="middle" letter-spacing="1">FOH</text>
+                        <text x="500" y="438" fill="#1eb349" font-size="8.5" font-weight="800" text-anchor="middle">FRONT OF HOUSE</text>
                     </g>
 
                     {{-- ── GATE 1: VIP & MEDIA (Barat / Kiri Atas) ── --}}
                     <g id="mapGate1" class="gate-hotspot" data-target="gate1">
                         <circle cx="150" cy="205" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="85" y="180" width="130" height="52" rx="12" fill="#0F172A" stroke="#1eb349" stroke-width="2"/>
-                        <circle cx="106" cy="206" r="8" fill="#22C55E"/>
-                        <text x="122" y="202" fill="#FFFFFF" font-size="11" font-weight="800">GATE 1</text>
-                        <text x="122" y="218" fill="#86efac" font-size="8.5" font-weight="700">VIP (2 SCANNER)</text>
+                        <rect x="85" y="180" width="130" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
+                        <circle cx="106" cy="206" r="8" fill="#1eb349"/>
+                        <text x="122" y="202" fill="#0F172A" font-size="11" font-weight="900">GATE 1</text>
+                        <text x="122" y="218" fill="#15803d" font-size="8.5" font-weight="800">VIP (2 SCANNER)</text>
                     </g>
 
                     {{-- ── GATE 2: SPONSOR & KRU (Timur / Kanan Atas) ── --}}
                     <g id="mapGate2" class="gate-hotspot" data-target="gate2">
                         <circle cx="850" cy="205" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="785" y="180" width="130" height="52" rx="12" fill="#0F172A" stroke="#1eb349" stroke-width="2"/>
-                        <circle cx="806" cy="206" r="8" fill="#22C55E"/>
-                        <text x="822" y="202" fill="#FFFFFF" font-size="11" font-weight="800">GATE 2</text>
-                        <text x="822" y="218" fill="#86efac" font-size="8.5" font-weight="700">KRU (2 SCANNER)</text>
+                        <rect x="785" y="180" width="130" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
+                        <circle cx="806" cy="206" r="8" fill="#1eb349"/>
+                        <text x="822" y="202" fill="#0F172A" font-size="11" font-weight="900">GATE 2</text>
+                        <text x="822" y="218" fill="#15803d" font-size="8.5" font-weight="800">KRU (2 SCANNER)</text>
                     </g>
 
                     {{-- ── GATE 3: FESTIVAL WEST GATE (Barat / Kiri Tengah) ── --}}
                     <g id="mapGate3" class="gate-hotspot" data-target="gate3">
                         <circle cx="130" cy="430" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="65" y="405" width="135" height="52" rx="12" fill="#0F172A" stroke="#1eb349" stroke-width="2"/>
-                        <circle cx="86" cy="431" r="8" fill="#22C55E"/>
-                        <text x="102" y="427" fill="#FFFFFF" font-size="11" font-weight="800">GATE 3</text>
-                        <text x="102" y="443" fill="#86efac" font-size="8.5" font-weight="700">FEST. A (2 SCAN)</text>
+                        <rect x="65" y="405" width="135" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
+                        <circle cx="86" cy="431" r="8" fill="#1eb349"/>
+                        <text x="102" y="427" fill="#0F172A" font-size="11" font-weight="900">GATE 3</text>
+                        <text x="102" y="443" fill="#15803d" font-size="8.5" font-weight="800">FEST. A (2 SCAN)</text>
                     </g>
 
                     {{-- ── GATE 4: FESTIVAL EAST GATE (Timur / Kanan Tengah) ── --}}
                     <g id="mapGate4" class="gate-hotspot" data-target="gate4">
                         <circle cx="870" cy="430" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="800" y="405" width="135" height="52" rx="12" fill="#0F172A" stroke="#1eb349" stroke-width="2"/>
-                        <circle cx="821" cy="431" r="8" fill="#22C55E"/>
-                        <text x="837" y="427" fill="#FFFFFF" font-size="11" font-weight="800">GATE 4</text>
-                        <text x="837" y="443" fill="#86efac" font-size="8.5" font-weight="700">FEST. B (2 SCAN)</text>
+                        <rect x="800" y="405" width="135" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
+                        <circle cx="821" cy="431" r="8" fill="#1eb349"/>
+                        <text x="837" y="427" fill="#0F172A" font-size="11" font-weight="900">GATE 4</text>
+                        <text x="837" y="443" fill="#15803d" font-size="8.5" font-weight="800">FEST. B (2 SCAN)</text>
                     </g>
 
                     {{-- ── GATE 5: MAIN ENTRANCE (Selatan / Bawah Utama) ── --}}
                     <g id="mapGate5" class="gate-hotspot" data-target="gate5">
                         <circle cx="500" cy="610" r="32" fill="rgba(30, 179, 73, 0.2)"/>
-                        <rect x="405" y="585" width="190" height="54" rx="14" fill="#0F172A" stroke="#1eb349" stroke-width="2.5"/>
-                        <circle cx="430" cy="612" r="9" fill="#22C55E"/>
-                        <text x="448" y="608" fill="#FFFFFF" font-size="12" font-weight="900">GATE 5 (MAIN GATE)</text>
-                        <text x="448" y="626" fill="#4ade80" font-size="9" font-weight="700">REGULER • 2 SCANNER</text>
+                        <rect x="405" y="585" width="190" height="54" rx="14" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="3" filter="url(#gateDropShadow)"/>
+                        <circle cx="430" cy="612" r="9" fill="#1eb349"/>
+                        <text x="448" y="608" fill="#0F172A" font-size="12" font-weight="900">GATE 5 (MAIN GATE)</text>
+                        <text x="448" y="626" fill="#15803d" font-size="9" font-weight="800">REGULER • 2 SCANNER</text>
                     </g>
                 </svg>
             </div>
@@ -1717,7 +1672,7 @@
                         <div class="stat-label">Kecepatan Scan</div>
                     </div>
                     <div class="stat-block">
-                        <div class="stat-val" id="inspStatus" style="color:#4ade80;">100% Online</div>
+                        <div class="stat-val" id="inspStatus" style="color:#1eb349;">100% Online</div>
                         <div class="stat-label">Status Jaringan</div>
                     </div>
                 </div>
