@@ -38,7 +38,7 @@
         }
 
         .buyle-ticketing-container {
-            max-width: 1200px;
+            max-width: 1220px;
             margin: 0 auto;
             position: relative;
             z-index: 2;
@@ -136,7 +136,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.65rem;
-            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #FFFFFF;
             font-size: 0.92rem;
             font-weight: 700;
@@ -176,94 +176,161 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
         }
 
-        /* ── Grid 6 Feature Modules ── */
+        /* ── Grid 6 Feature Cards (Style Sesuai Referensi Infographic) ── */
         .ticket-features-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem 2.25rem;
             margin-top: 4.5rem;
         }
 
-        .ticket-card {
-            background: #FFFFFF;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 24px;
-            padding: 2rem 1.75rem;
+        .ticket-card-outer {
             position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            padding: 6px;
         }
 
-        .ticket-card:hover {
-            border-color: rgba(30, 179, 73, 0.4);
-            transform: translateY(-5px);
-            box-shadow: 0 16px 36px rgba(30, 179, 73, 0.1);
-        }
-
-        .ticket-card-badge-num {
+        /* Corner L-Shaped Ribbon Frame */
+        .ticket-corner-svg {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            font-size: 2.75rem;
-            font-weight: 800;
-            color: #0F172A;
-            opacity: 0.04;
-            line-height: 1;
+            width: 100px;
+            height: 100px;
             pointer-events: none;
-            user-select: none;
-            transition: opacity 0.3s ease;
+            z-index: 1;
+            transition: transform 0.35s ease;
         }
 
-        .ticket-card:hover .ticket-card-badge-num {
-            opacity: 0.08;
-            color: #1eb349;
+        .corner-top-left {
+            top: 0;
+            left: 0;
         }
 
-        .ticket-card-icon-wrap {
-            width: 58px;
-            height: 58px;
-            border-radius: 18px;
-            background: #F0FDF4;
-            border: 1.5px solid rgba(30, 179, 73, 0.2);
-            color: #16a34a;
+        .corner-top-right {
+            top: 0;
+            right: 0;
+        }
+
+        .corner-bottom-left {
+            bottom: 0;
+            left: 0;
+        }
+
+        .corner-bottom-right {
+            bottom: 0;
+            right: 0;
+        }
+
+        .ticket-card-outer:hover .ticket-corner-svg {
+            transform: scale(1.04);
+        }
+
+        /* Card Inner Box */
+        .ticket-card-inner {
+            background: #FFFFFF;
+            border-radius: 22px;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+            border: 1.5px solid rgba(226, 232, 240, 0.85);
+            padding: 2.25rem 2rem;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 1.75rem;
+            min-height: 200px;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .ticket-card-outer:hover .ticket-card-inner {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 45px rgba(30, 179, 73, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-color: rgba(30, 179, 73, 0.35);
+        }
+
+        /* Giant Outlined Number */
+        .ticket-num-col {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
+            flex-shrink: 0;
+            width: 95px;
         }
 
-        .ticket-card:hover .ticket-card-icon-wrap {
-            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+        .ticket-big-num {
+            font-size: clamp(5.2rem, 6.5vw, 6.8rem);
+            font-weight: 800;
+            line-height: 0.82;
             color: #FFFFFF;
-            border-color: #1eb349;
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(30, 179, 73, 0.25);
+            -webkit-text-stroke: 2px #1eb349;
+            text-shadow: 0 0 1px #1eb349;
+            font-family: var(--font);
+            user-select: none;
+            letter-spacing: -0.04em;
+            transition: transform 0.35s ease, -webkit-text-stroke-color 0.35s ease;
         }
 
-        .ticket-card-title {
+        .ticket-card-outer:hover .ticket-big-num {
+            -webkit-text-stroke-color: #16a34a;
+            transform: scale(1.08);
+        }
+
+        /* Content Text */
+        .ticket-body-col {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ticket-module-title {
             font-size: 1.15rem;
             font-weight: 800;
             color: #0F172A;
-            margin: 0 0 0.75rem;
-            line-height: 1.35;
+            margin: 0 0 0.55rem;
             letter-spacing: -0.015em;
+            line-height: 1.35;
         }
 
-        .ticket-card-desc {
-            font-size: 0.92rem;
+        .ticket-module-desc {
+            font-size: 0.9rem;
             color: #64748B;
-            line-height: 1.65;
+            line-height: 1.6;
             margin: 0;
             font-weight: 400;
         }
 
+        /* Circular Icon Badge with Gradient Sesuai Button Daftar */
+        .ticket-badge-col {
+            display: flex;
+            align-items: flex-start;
+            flex-shrink: 0;
+            align-self: flex-start;
+        }
+
+        .ticket-circle-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(30, 179, 73, 0.35);
+            flex-shrink: 0;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .ticket-card-outer:hover .ticket-circle-badge {
+            transform: scale(1.12);
+            box-shadow: 0 10px 24px rgba(30, 179, 73, 0.45);
+        }
+
+        /* Layout Alternating: Even Card has Badge on Left, Number on Right */
+        .card-layout-even {
+            justify-content: space-between;
+        }
+
         /* ── Bottom Highlights Bar ── */
         .ticket-highlights-bar {
-            margin-top: 3.5rem;
+            margin-top: 4.5rem;
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
             border-radius: 20px;
@@ -308,10 +375,14 @@
             line-height: 1.35;
         }
 
-        /* Responsive Breakpoints */
-        @media (max-width: 1024px) {
+        /* ── Responsive Breakpoints ── */
+        @media (max-width: 991px) {
             .ticket-features-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+                gap: 1.75rem;
+            }
+            .ticket-card-inner {
+                padding: 1.75rem 1.5rem;
             }
             .ticket-highlights-bar {
                 grid-template-columns: repeat(2, 1fr);
@@ -332,13 +403,23 @@
             .ticket-desc {
                 font-size: 0.95rem;
             }
-            .ticket-features-grid {
-                grid-template-columns: 1fr;
-                gap: 1.15rem;
-                margin-top: 3rem;
-            }
-            .ticket-card {
+            .ticket-card-inner {
                 padding: 1.5rem 1.25rem;
+                gap: 1rem;
+            }
+            .ticket-num-col {
+                width: 70px;
+            }
+            .ticket-big-num {
+                font-size: 4.5rem;
+            }
+            .ticket-circle-badge {
+                width: 38px;
+                height: 38px;
+            }
+            .ticket-circle-badge svg {
+                width: 18px;
+                height: 18px;
             }
             .ticket-highlights-bar {
                 grid-template-columns: 1fr;
@@ -347,6 +428,16 @@
             }
         }
     </style>
+
+    {{-- Shared SVG Defs for Button Daftar Gradient --}}
+    <svg width="0" height="0" style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+        <defs>
+            <linearGradient id="btnDaftarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1eb349" />
+                <stop offset="100%" stop-color="#a5cf37" />
+            </linearGradient>
+        </defs>
+    </svg>
 
     {{-- SEO Schema JSON-LD --}}
     <script type="application/ld+json">
@@ -428,107 +519,173 @@
                 </div>
             </div>
 
-            {{-- 6 Feature Modules Grid --}}
+            {{-- 6 Feature Cards Grid (Sesuai Referensi Infographic) --}}
             <div class="ticket-features-grid">
 
-                {{-- Feature 1: Pembuatan Tiket & Kuota --}}
-                <div class="ticket-card" data-aos="fade-up" data-aos-delay="50">
-                    <div class="ticket-card-badge-num">01</div>
-                    <div class="ticket-card-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
+                {{-- Card 1: Top-Left Frame | Number Left | Badge Right --}}
+                <div class="ticket-card-outer" data-aos="fade-up" data-aos-delay="50">
+                    <svg class="ticket-corner-svg corner-top-left" viewBox="0 0 100 100" fill="none">
+                        <path d="M 90 7 H 26 A 19 19 0 0 0 7 26 V 90" stroke="url(#btnDaftarGradient)" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                    <div class="ticket-card-inner card-layout-odd">
+                        <div class="ticket-num-col">
+                            <span class="ticket-big-num">1</span>
+                        </div>
+                        <div class="ticket-body-col">
+                            <h2 class="ticket-module-title">Kustomisasi Event &amp; Kuota</h2>
+                            <p class="ticket-module-desc">
+                                Atur tiket gratis atau berbayar dengan kuota otomatis, batas waktu penjualan, form peserta kustom, dan multi-tier (Early Bird, VIP, Presale, OTS).
+                            </p>
+                        </div>
+                        <div class="ticket-badge-col">
+                            <div class="ticket-circle-badge" title="Kustomisasi Event">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="ticket-card-title">Kustomisasi Event &amp; Kuota Tiket</h2>
-                    <p class="ticket-card-desc">
-                        Buat tiket gratis atau berbayar dalam hitungan menit. Atur kategori tiket bertingkat (Early Bird, Presale, VIP, OTS), kuota otomatis, batas waktu order, dan formulir data peserta.
-                    </p>
                 </div>
 
-                {{-- Feature 2: E-Tiket PDF Otomatis --}}
-                <div class="ticket-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="ticket-card-badge-num">02</div>
-                    <div class="ticket-card-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="12" y1="18" x2="12" y2="12"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                        </svg>
+                {{-- Card 2: Top-Right Frame | Badge Left | Number Right --}}
+                <div class="ticket-card-outer" data-aos="fade-up" data-aos-delay="100">
+                    <svg class="ticket-corner-svg corner-top-right" viewBox="0 0 100 100" fill="none">
+                        <path d="M 10 7 H 74 A 19 19 0 0 1 93 26 V 90" stroke="url(#btnDaftarGradient)" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                    <div class="ticket-card-inner card-layout-even">
+                        <div class="ticket-badge-col">
+                            <div class="ticket-circle-badge" title="E-Tiket Otomatis">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ticket-body-col">
+                            <h2 class="ticket-module-title">E-Tiket QR PDF Otomatis</h2>
+                            <p class="ticket-module-desc">
+                                File E-Tiket PDF resmi ber-QR Code unik terkirim otomatis ke Email dan WhatsApp pembeli tepat setelah transaksi pembayaran terverifikasi.
+                            </p>
+                        </div>
+                        <div class="ticket-num-col">
+                            <span class="ticket-big-num">2</span>
+                        </div>
                     </div>
-                    <h2 class="ticket-card-title">E-Tiket Otomatis dengan QR Unik</h2>
-                    <p class="ticket-card-desc">
-                        Setiap transaksi sukses langsung menghasilkan file E-Tiket PDF resmi ber-QR Code terenkripsi yang dikirim otomatis ke WhatsApp dan Email pembeli untuk kemudahan cetak atau simpan.
-                    </p>
                 </div>
 
-                {{-- Feature 3: Gate Scanner Panitia --}}
-                <div class="ticket-card" data-aos="fade-up" data-aos-delay="150">
-                    <div class="ticket-card-badge-num">03</div>
-                    <div class="ticket-card-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-                            <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-                            <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-                            <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-                            <rect x="7" y="7" width="10" height="10" rx="1"></rect>
-                        </svg>
+                {{-- Card 3: Top-Left Frame | Number Left | Badge Right --}}
+                <div class="ticket-card-outer" data-aos="fade-up" data-aos-delay="150">
+                    <svg class="ticket-corner-svg corner-top-left" viewBox="0 0 100 100" fill="none">
+                        <path d="M 90 7 H 26 A 19 19 0 0 0 7 26 V 90" stroke="url(#btnDaftarGradient)" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                    <div class="ticket-card-inner card-layout-odd">
+                        <div class="ticket-num-col">
+                            <span class="ticket-big-num">3</span>
+                        </div>
+                        <div class="ticket-body-col">
+                            <h2 class="ticket-module-title">Gate Scanner Bebas Alat Sewa</h2>
+                            <p class="ticket-module-desc">
+                                Panitia validasi tiket langsung lewat browser kamera smartphone tanpa perlu sewa barcode scanner mahal. Respon kilat &lt;0.2 detik bebas antrean.
+                            </p>
+                        </div>
+                        <div class="ticket-badge-col">
+                            <div class="ticket-circle-badge" title="Gate Scanner">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                                    <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="ticket-card-title">Gate Scanner Bebas Alat Khusus</h2>
-                    <p class="ticket-card-desc">
-                        Validasi tiket masuk langsung dari browser kamera smartphone atau webcam tanpa harus sewa barcode scanner mahal. Waktu pemindaian kilat &lt;0.2 detik dengan notifikasi audio visual instan.
-                    </p>
                 </div>
 
-                {{-- Feature 4: Multi-Staff & Proteksi PIN --}}
-                <div class="ticket-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="ticket-card-badge-num">04</div>
-                    <div class="ticket-card-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
+                {{-- Card 4: Top-Right Frame | Badge Left | Number Right --}}
+                <div class="ticket-card-outer" data-aos="fade-up" data-aos-delay="200">
+                    <svg class="ticket-corner-svg corner-top-right" viewBox="0 0 100 100" fill="none">
+                        <path d="M 10 7 H 74 A 19 19 0 0 1 93 26 V 90" stroke="url(#btnDaftarGradient)" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                    <div class="ticket-card-inner card-layout-even">
+                        <div class="ticket-badge-col">
+                            <div class="ticket-circle-badge" title="Multi-Gate PIN">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ticket-body-col">
+                            <h2 class="ticket-module-title">Multi-Gate &amp; Akses Kru PIN</h2>
+                            <p class="ticket-module-desc">
+                                Bagi tugas scan ke puluhan kru lapangan di berbagai pintu masuk cukup dengan otorisasi PIN rahasia. Kuota check-in tersinkronisasi realtime antar gate.
+                            </p>
+                        </div>
+                        <div class="ticket-num-col">
+                            <span class="ticket-big-num">4</span>
+                        </div>
                     </div>
-                    <h2 class="ticket-card-title">Multi-Gate &amp; Akses Kru PIN Aman</h2>
-                    <p class="ticket-card-desc">
-                        Delegasikan tugas scan ke puluhan panitia di berbagai gate (Gate VIP, Reguler, Kru) cukup dengan tautan rahasia dan otorisasi PIN per kru. Kuota check-in tersinkronisasi realtime.
-                    </p>
                 </div>
 
-                {{-- Feature 5: Pembayaran Instan & Escrow --}}
-                <div class="ticket-card" data-aos="fade-up" data-aos-delay="250">
-                    <div class="ticket-card-badge-num">05</div>
-                    <div class="ticket-card-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                            <line x1="1" y1="10" x2="23" y2="10"></line>
-                        </svg>
+                {{-- Card 5: Bottom-Left Frame | Number Left | Badge Right --}}
+                <div class="ticket-card-outer" data-aos="fade-up" data-aos-delay="250">
+                    <svg class="ticket-corner-svg corner-bottom-left" viewBox="0 0 100 100" fill="none">
+                        <path d="M 90 93 H 26 A 19 19 0 0 1 7 74 V 10" stroke="url(#btnDaftarGradient)" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                    <div class="ticket-card-inner card-layout-odd">
+                        <div class="ticket-num-col">
+                            <span class="ticket-big-num">5</span>
+                        </div>
+                        <div class="ticket-body-col">
+                            <h2 class="ticket-module-title">Multi-Payment &amp; Escrow Aman</h2>
+                            <p class="ticket-module-desc">
+                                Mendukung pembayaran QRIS dari semua m-banking &amp; e-wallet, Virtual Account (BCA, Mandiri, BRI, BNI), dan kartu debit. Seluruh perputaran dana terlindungi escrow aman.
+                            </p>
+                        </div>
+                        <div class="ticket-badge-col">
+                            <div class="ticket-circle-badge" title="Multi-Payment">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="ticket-card-title">Multi-Payment &amp; Proteksi Escrow</h2>
-                    <p class="ticket-card-desc">
-                        Mendukung pembayaran QRIS dari semua m-banking &amp; e-wallet, Virtual Account (BCA, Mandiri, BRI, BNI), serta kartu debit. Seluruh perputaran dana diamankan sistem escrow terpercaya.
-                    </p>
                 </div>
 
-                {{-- Feature 6: Realtime Analytics & Export --}}
-                <div class="ticket-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="ticket-card-badge-num">06</div>
-                    <div class="ticket-card-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="20" x2="18" y2="10"></line>
-                            <line x1="12" y1="20" x2="12" y2="4"></line>
-                            <line x1="6" y1="20" x2="6" y2="14"></line>
-                        </svg>
+                {{-- Card 6: Bottom-Right Frame | Badge Left | Number Right --}}
+                <div class="ticket-card-outer" data-aos="fade-up" data-aos-delay="300">
+                    <svg class="ticket-corner-svg corner-bottom-right" viewBox="0 0 100 100" fill="none">
+                        <path d="M 10 93 H 74 A 19 19 0 0 0 93 74 V 10" stroke="url(#btnDaftarGradient)" stroke-width="12" stroke-linecap="round"/>
+                    </svg>
+                    <div class="ticket-card-inner card-layout-even">
+                        <div class="ticket-badge-col">
+                            <div class="ticket-circle-badge" title="Statistik & Rekap">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ticket-body-col">
+                            <h2 class="ticket-module-title">Statistik Penjualan &amp; Rekap Peserta</h2>
+                            <p class="ticket-module-desc">
+                                Pantau grafik penjualan tiket harian, total omzet, sisa kuota, serta unduh data rekap peserta (CSV/Excel) lengkap kapan saja dari dashboard.
+                            </p>
+                        </div>
+                        <div class="ticket-num-col">
+                            <span class="ticket-big-num">6</span>
+                        </div>
                     </div>
-                    <h2 class="ticket-card-title">Statistik Penjualan &amp; Rekap Peserta</h2>
-                    <p class="ticket-card-desc">
-                        Pantau performa penjualan tiket harian, total pendapatan, perbandingan kuota per kategori, dan unduh data rekap peserta lengkap ke dalam format Excel atau CSV kapan saja.
-                    </p>
                 </div>
 
             </div>
