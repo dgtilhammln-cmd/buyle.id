@@ -760,24 +760,31 @@
                                 @include('creator.products.partials.variants-manager')
 
                                 <div id="commissionWrap" class="form-group full">
-                                    <label class="form-label">Komisi Affiliate (%) <span>*</span></label>
-                                    <div style="position:relative; display:flex; align-items:center;">
-                                        <input type="number" name="affiliate_commission_rate" id="affiliate_commission_rate"
-                                            value="{{ old('affiliate_commission_rate', 10) }}" class="form-input" min="5"
-                                            max="100" step="0.5" placeholder="10" required style="padding-right:2.5rem;">
-                                        <span
-                                            style="position:absolute; right:1rem; font-weight:700; color:#64748B;">%</span>
+                                    <label style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; cursor:pointer;">
+                                        <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                            <input type="checkbox" id="affiliateCommissionToggle" checked
+                                                style="opacity:0; width:0; height:0;"
+                                                onchange="handleAffiliateToggle(this.checked)">
+                                            <span class="toggle-slider-s"></span>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:0.85rem; font-weight:700; color:#0f172a;">Aktifkan Komisi Affiliate</div>
+                                            <div style="font-size:0.72rem; color:#64748b; line-height:1.4;">Produk ini bisa dipromosikan oleh affiliate dan mereka mendapat komisi.</div>
+                                        </div>
+                                    </label>
+                                    <div id="affiliateRateWrap">
+                                        <label class="form-label">Besaran Komisi Affiliate (%)</label>
+                                        <div style="position:relative; display:flex; align-items:center;">
+                                            <input type="number" name="affiliate_commission_rate" id="affiliate_commission_rate"
+                                                value="{{ old('affiliate_commission_rate', 10) }}" class="form-input" min="5"
+                                                max="100" step="0.5" placeholder="10" style="padding-right:2.5rem;">
+                                            <span style="position:absolute; right:1rem; font-weight:700; color:#64748B;">%</span>
+                                        </div>
+                                        <span class="form-hint" style="color:#0284C7; font-weight:600; margin-top:0.35rem; display:inline-flex; align-items:center; gap:0.35rem;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
+                                            Minimum 5%, rekomendasi 10% untuk mendorong penjualan.
+                                        </span>
                                     </div>
-                                    <span class="form-hint"
-                                        style="color:#0284C7; font-weight:600; margin-top:0.35rem; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" y1="16" x2="12" y2="12" />
-                                            <line x1="12" y1="8" x2="12.01" y2="8" />
-                                        </svg>
-                                        Minimum 5%, rekomendasi 10% untuk mendorong penjualan.
-                                    </span>
                                 </div>
 
                                 @if(auth()->user()->creatorProfile?->is_exclusive)
@@ -1354,8 +1361,13 @@
             const buyleToggleWrap = document.getElementById('buyleCheckoutToggleWrap');
             const buyleToggle = document.getElementById('isBuyleCheckoutToggle');
 
-            // Always show buyleToggleWrap so creator can choose payment vs WA lead mode
-            if (buyleToggleWrap) buyleToggleWrap.style.display = 'block';
+            // Toggle Pembayaran Buyle: HANYA untuk service, physical, makanan
+            if (isPhysicalOrFood || isService) {
+                if (buyleToggleWrap) buyleToggleWrap.style.display = 'block';
+            } else {
+                // external_link & ticket: selalu checkout Buyle, toggle tidak perlu
+                if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
+            }
 
             if (isPhysicalOrFood) {
                 const isBuyleActive = buyleToggle ? buyleToggle.checked : true;
@@ -1392,8 +1404,9 @@
                 if (categoryWrap) categoryWrap.style.display = 'block';
                 if (groupWrap) groupWrap.style.display = 'block';
                 if (catSelect) catSelect.setAttribute('required', 'required');
+                // Komisi Affiliate hanya untuk digital & tiket
                 if (commissionWrap) commissionWrap.style.display = 'block';
-                if (commissionInput) commissionInput.setAttribute('required', 'required');
+                if (commissionInput) commissionInput.removeAttribute('required'); // tidak required, pakai toggle
             }
 
             if (val === 'ticket') {
@@ -1431,8 +1444,27 @@
             const val = document.getElementById('productTypeSelect')?.value;
             toggleProductTypeFields(val);
         }
+
+        function handleAffiliateToggle(checked) {
+            const rateWrap = document.getElementById('affiliateRateWrap');
+            const rateInput = document.getElementById('affiliate_commission_rate');
+            if (rateWrap) rateWrap.style.display = checked ? 'block' : 'none';
+            // Jika dinonaktifkan, set nilai 0 agar backend tahu affiliate off
+            if (rateInput) {
+                if (!checked) {
+                    rateInput.dataset.prevValue = rateInput.value;
+                    rateInput.value = '0';
+                } else {
+                    rateInput.value = rateInput.dataset.prevValue || '10';
+                }
+            }
+        }
+
         const initPType = document.getElementById('productTypeSelect');
         if (initPType) toggleProductTypeFields(initPType.value);
+        // Init affiliate toggle state
+        const initAffToggle = document.getElementById('affiliateCommissionToggle');
+        if (initAffToggle) handleAffiliateToggle(initAffToggle.checked);
 
         // Smart Import Auto-fill handler
         document.addEventListener('DOMContentLoaded', function () {

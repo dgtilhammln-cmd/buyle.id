@@ -68,6 +68,8 @@ class StoreProductRequest extends FormRequest
             'whitelabel_price'          => ['nullable', 'numeric', 'min:0'],
             'whitelabel_terms'          => ['nullable', 'string', 'max:2000'],
             'affiliate_commission_rate' => ['nullable', 'numeric', 'min:5', 'max:100'],
+            'tiktok_video_url'          => ['nullable', 'string', 'max:500'],
+            'youtube_video_url'         => ['nullable', 'string', 'max:500'],
             'meta_title'                => ['nullable', 'string', 'max:255'],
             'meta_desc'                 => ['nullable', 'string', 'max:1000'],
             'meta_keywords'             => ['nullable', 'string', 'max:500'],
