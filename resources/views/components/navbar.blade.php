@@ -748,7 +748,7 @@
                         <span>Tentang Buyle</span>
                     </a>
 
-                    <a href="{{ url('/ticketing') }}" class="shortcut-menu-item">
+                    <a href="{{ route('ticketing') }}" class="shortcut-menu-item">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
                             <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2"></line>
