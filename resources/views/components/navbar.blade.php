@@ -826,12 +826,13 @@
                     {{-- Caret Up Arrow --}}
                     <div style="position:absolute; top:-6px; right:16px; width:12px; height:12px; background:#fff; border-left:1px solid #E2E8F0; border-top:1px solid #E2E8F0; transform:rotate(45deg);"></div>
                     
-                        @if(empty($cartItems))
-                        <div style="text-align:center; padding:1rem 0;">
-                            <img src="{{ asset('images/keranjangkosong.png') }}" alt="Keranjang Kosong" style="width:130px; height:auto; margin:0 auto 0.75rem; display:block; filter:drop-shadow(0 4px 16px rgba(30,179,73,0.15)); animation:floatDinoNav 3s ease-in-out infinite;">
+                    @if($cartCount == 0)
+                        <div style="text-align:center; padding:1.25rem 0.5rem;">
+                            <img src="{{ asset('images/keranjangkosong.png') }}" alt="Keranjang Kosong"
+                                 style="width:120px; height:auto; display:block; margin:0 auto 0.75rem; filter:drop-shadow(0 4px 16px rgba(30,179,73,0.15)); animation:floatDinoNav 3s ease-in-out infinite;">
                             <style>@keyframes floatDinoNav { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }</style>
-                            <h4 style="font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:0.25rem;">Keranjang Masih Kosong</h4>
-                            <p style="font-size:0.8rem; color:#64748B;">Yuk, cari perlengkapan rumah impianmu sekarang!</p>
+                            <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:0 0 0.25rem;">Keranjang Masih Kosong</h4>
+                            <p style="font-size:0.78rem; color:#64748B; margin:0;">Yuk, cari produk favoritmu sekarang!</p>
                         </div>
                     @else
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
