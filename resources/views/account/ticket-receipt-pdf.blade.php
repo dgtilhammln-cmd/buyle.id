@@ -473,7 +473,7 @@
             @else
                 <div class="brand-text">buyle<span>.id</span></div>
             @endif
-            <div class="brand-sub">Platform Resmi E-Ticket Event</div>
+            <div class="brand-sub">Platform E-Ticket Event</div>
         </div>
         <div class="top-right">
             <div class="ticket-badge">E-Ticket Resmi</div>

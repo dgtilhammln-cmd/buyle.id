@@ -3,17 +3,6 @@
 @section('page_title', 'Web Builder')
 
 @section('topbar_actions')
-    @if($profile->store_slug)
-        <a href="{{ url('/' . $profile->store_slug) }}" target="_blank" class="btn-primary"
-            style="background:transparent; color:#1eb349; border:1.5px solid #1eb349; box-shadow:none;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-            Lihat Bio
-        </a>
-    @endif
     <a href="{{ route('creator.app.index') }}"
         style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#475569; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; text-decoration:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,0.03);"
         onmouseover="this.style.borderColor='#1eb349';this.style.color='#166534';"
@@ -1055,6 +1044,7 @@
                 opacity: 0;
                 transform: scale(0.96) translateY(12px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -1137,7 +1127,8 @@
         .wb-intro-video-container {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 ratio */
+            padding-top: 56.25%;
+            /* 16:9 ratio */
             border-radius: 14px;
             overflow: hidden;
             background: #000000;
@@ -1208,17 +1199,21 @@
             .wb-intro-overlay {
                 padding: 0.65rem;
             }
+
             .wb-intro-header {
                 padding: 0.9rem 1rem;
             }
+
             .wb-intro-body {
                 padding: 0.75rem 1rem;
             }
+
             .wb-intro-footer {
                 padding: 0.85rem 1rem;
                 flex-direction: column-reverse;
                 align-items: stretch;
             }
+
             .wb-intro-btn-start {
                 width: 100%;
                 justify-content: center;
@@ -1239,17 +1234,20 @@
             box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
             font-family: 'Montserrat', sans-serif;
         }
+
         .wb-page-banner-info {
             display: flex;
             flex-direction: column;
             gap: 0.2rem;
         }
+
         .wb-page-banner-title {
             display: flex;
             align-items: center;
             gap: 0.6rem;
             flex-wrap: wrap;
         }
+
         .wb-page-banner-title h2 {
             font-size: 1.08rem;
             font-weight: 800;
@@ -1257,6 +1255,7 @@
             margin: 0;
             letter-spacing: -0.02em;
         }
+
         .wb-page-banner-badge {
             display: inline-flex;
             align-items: center;
@@ -1270,18 +1269,21 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+
         .wb-page-banner-desc {
             font-size: 0.78rem;
             color: #64748b;
             margin: 0;
             line-height: 1.4;
         }
+
         .wb-page-banner-actions {
             display: flex;
             align-items: center;
             gap: 0.6rem;
             flex-shrink: 0;
         }
+
         .wb-btn-tutorial {
             display: inline-flex;
             align-items: center;
@@ -1299,15 +1301,18 @@
             transition: all 0.2s ease;
             white-space: nowrap;
         }
+
         .wb-btn-tutorial:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 18px rgba(30, 179, 73, 0.38);
             background: linear-gradient(135deg, #22c55e 0%, #166534 100%);
             color: #ffffff;
         }
+
         .wb-btn-tutorial svg {
             flex-shrink: 0;
         }
+
         .wb-btn-preview-link {
             display: inline-flex;
             align-items: center;
@@ -1324,6 +1329,7 @@
             transition: all 0.15s ease;
             white-space: nowrap;
         }
+
         .wb-btn-preview-link:hover {
             border-color: #1eb349;
             color: #166534;
@@ -1337,13 +1343,16 @@
                 gap: 0.85rem;
                 padding: 0.9rem 1rem;
             }
+
             .wb-page-banner-actions {
                 width: 100%;
                 display: flex;
                 flex-direction: column;
                 gap: 0.5rem;
             }
-            .wb-btn-tutorial, .wb-btn-preview-link {
+
+            .wb-btn-tutorial,
+            .wb-btn-preview-link {
                 width: 100%;
                 justify-content: center;
                 text-align: center;
@@ -1368,7 +1377,8 @@
                 <h2>Web Builder</h2>
                 <span class="wb-page-banner-badge">Editor Visual</span>
             </div>
-            <p class="wb-page-banner-desc">Kustomisasi halaman web profil Anda secara instan dan tampilkan portofolio serta tautan produk.</p>
+            <p class="wb-page-banner-desc">Kustomisasi halaman web profil Anda secara instan dan tampilkan portofolio serta
+                tautan produk.</p>
         </div>
         <div class="wb-page-banner-actions">
             <button type="button" class="wb-btn-tutorial" onclick="openWebBuilderIntroModal(true)">
@@ -1397,7 +1407,8 @@
             <div class="bio-sidebar-card">
                 <div class="bio-tabs-list">
                     <button class="tab-btn active" data-tab="tab-domain">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" />
                             <path
                                 d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -1406,7 +1417,8 @@
                         <small class="tab-text-mob">Domain</small>
                     </button>
                     <button class="tab-btn" data-tab="tab-theme">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="3" />
                             <path
                                 d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
@@ -1415,7 +1427,8 @@
                         <small class="tab-text-mob">Tema</small>
                     </button>
                     <button class="tab-btn" data-tab="tab-profile">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <circle cx="12" cy="8" r="4" />
                             <path d="M20 21a8 8 0 1 0-16 0" />
                         </svg>
@@ -1423,14 +1436,16 @@
                         <small class="tab-text-mob">Profil</small>
                     </button>
                     <button class="tab-btn" data-tab="tab-social">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <path d="M22 12A10 10 0 1 0 12 22a10 10 0 0 0 10-10zM8 12a4 4 0 0 0-8 0z" />
                         </svg>
                         <span class="tab-text-full">Social Links</span>
                         <small class="tab-text-mob">Social</small>
                     </button>
                     <button class="tab-btn" data-tab="tab-blocks">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <rect x="3" y="3" width="7" height="7" />
                             <rect x="14" y="3" width="7" height="7" />
                             <rect x="14" y="14" width="7" height="7" />
@@ -1440,7 +1455,8 @@
                         <small class="tab-text-mob">Block</small>
                     </button>
                     <button class="tab-btn" data-tab="tab-catalog">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
                             <path d="M16 10a4 4 0 0 1-8 0" />
@@ -1449,7 +1465,8 @@
                         <small class="tab-text-mob">Katalog</small>
                     </button>
                     <button class="tab-btn" data-tab="tab-embed">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                             <circle cx="12" cy="10" r="3" />
                         </svg>
@@ -1502,20 +1519,24 @@
 
             <div id="sidebarSecReorderCard" class="bio-sidebar-card" style="display: none;">
                 {{-- Card Header --}}
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f1f5f9;">
-                    <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700; color: #0f172a;">
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f1f5f9;">
+                    <div
+                        style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700; color: #0f172a;">
                         <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+                            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                         </svg>
                         <span>Urutan Section Homepage</span>
                     </div>
-                    <span style="font-size: 0.65rem; background: #f0fdf4; color: #15803d; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 6px; border: 1px solid #bbf7d0;">
+                    <span
+                        style="font-size: 0.65rem; background: #f0fdf4; color: #15803d; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 6px; border: 1px solid #bbf7d0;">
                         Tema 5
                     </span>
                 </div>
 
                 <p style="font-size: 0.72rem; color: #64748b; margin-bottom: 0.65rem; line-height: 1.35;">
-                    Geser kartu atau tekan tombol panah untuk ubah urutan section. Wajib klik <strong>"Simpan Perubahan"</strong>.
+                    Geser kartu atau tekan tombol panah untuk ubah urutan section. Wajib klik <strong>"Simpan
+                        Perubahan"</strong>.
                 </p>
 
                 <style>
@@ -1524,6 +1545,7 @@
                         flex-direction: column;
                         gap: 0.4rem;
                     }
+
                     .sec-reorder-item-compact {
                         background: #f8fafc;
                         border: 1px solid #e2e8f0;
@@ -1537,17 +1559,20 @@
                         cursor: grab;
                         user-select: none;
                     }
+
                     .sec-reorder-item-compact:hover {
                         border-color: #1eb349;
                         background: #ffffff;
-                        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
                     }
+
                     .sec-reorder-item-compact.dragging {
                         opacity: 0.4;
                         border-style: dashed;
                         border-color: #1eb349;
                         background: #f0fdf4;
                     }
+
                     .sec-reorder-compact-left {
                         display: flex;
                         align-items: center;
@@ -1555,6 +1580,7 @@
                         min-width: 0;
                         flex: 1;
                     }
+
                     .sec-reorder-compact-handle {
                         color: #94a3b8;
                         cursor: grab;
@@ -1562,6 +1588,7 @@
                         align-items: center;
                         flex-shrink: 0;
                     }
+
                     .sec-reorder-compact-title {
                         font-size: 0.75rem;
                         font-weight: 600;
@@ -1570,6 +1597,7 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                     }
+
                     .sec-reorder-compact-btn {
                         width: 22px;
                         height: 22px;
@@ -1586,6 +1614,7 @@
                         transition: all 0.15s ease;
                         padding: 0;
                     }
+
                     .sec-reorder-compact-btn:hover {
                         background: #1eb349;
                         color: #ffffff;
@@ -1600,15 +1629,19 @@
                             <div class="sec-reorder-item-compact" draggable="true" data-sec-key="{{ $secKey }}">
                                 <div class="sec-reorder-compact-left">
                                     <span class="sec-reorder-compact-handle" title="Geser untuk mengubah urutan">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01"/>
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01" />
                                         </svg>
                                     </span>
-                                    <span class="sec-reorder-compact-title" title="{{ $secInfo['label'] }}">{{ $secInfo['label'] }}</span>
+                                    <span class="sec-reorder-compact-title"
+                                        title="{{ $secInfo['label'] }}">{{ $secInfo['label'] }}</span>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:2px; flex-shrink:0;">
-                                    <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'up')" title="Naik">↑</button>
-                                    <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'down')" title="Turun">↓</button>
+                                    <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'up')"
+                                        title="Naik">↑</button>
+                                    <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'down')"
+                                        title="Turun">↓</button>
                                 </div>
                             </div>
                         @endif
@@ -1661,41 +1694,43 @@
 
                 {{-- Status Active Domain if assigned --}}
                 @if(!empty($profile->custom_domain))
-                    @php $isDomainVerified = ($profile->custom_domain_status ?? 'pending') === 'verified'; @endphp
-                    <div class="prof-card" style="border:1.5px solid {{ $isDomainVerified ? '#BBF7D0' : '#FDE68A' }}; background:{{ $isDomainVerified ? '#F0FDF4' : '#FFFBEB' }}; margin-bottom:1.5rem;">
-                        <div class="card-body"
-                            style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
-                            <div>
-                                <span
-                                    style="background:{{ $isDomainVerified ? '#166534' : '#B45309' }}; color:#fff; font-size:0.7rem; font-weight: 700; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                        @php $isDomainVerified = ($profile->custom_domain_status ?? 'pending') === 'verified'; @endphp
+                        <div class="prof-card"
+                            style="border:1.5px solid {{ $isDomainVerified ? '#BBF7D0' : '#FDE68A' }}; background:{{ $isDomainVerified ? '#F0FDF4' : '#FFFBEB' }}; margin-bottom:1.5rem;">
+                            <div class="card-body"
+                                style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+                                <div>
+                                    <span
+                                        style="background:{{ $isDomainVerified ? '#166534' : '#B45309' }}; color:#fff; font-size:0.7rem; font-weight: 700; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path
+                                                d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                        </svg>
+                                        {{ $isDomainVerified ? 'DOMAIN TERVERIFIKASI & AKTIF' : 'VERIFIKASI DNS PENDING' }}
+                                    </span>
+                                    <h3
+                                        style="font-size:1.15rem; font-weight: 700; color:{{ $isDomainVerified ? '#166534' : '#92400E' }}; margin:0.4rem 0 0.1rem;">
+                                        https://{{ $profile->custom_domain }}</h3>
+                                    <p style="font-size:0.78rem; color:{{ $isDomainVerified ? '#15803D' : '#B45309' }}; margin:0;">
+                                        {{ $isDomainVerified
+                    ? 'Domain ini sudah terverifikasi dan aktif mengarah ke halaman toko Anda.'
+                    : 'Pastikan DNS CNAME / ALIAS diatur ke buyle.id.cdn.hstgr.net & domain telah ditambahkan ke hPanel Hostinger.' }}
+                                    </p>
+                                </div>
+                                <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary"
+                                    style="background:{{ $isDomainVerified ? '#166534' : '#B45309' }}; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
+                                    Buka Domain
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <path
-                                            d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                        <polyline points="15 3 21 3 21 9" />
+                                        <line x1="10" y1="14" x2="21" y2="3" />
                                     </svg>
-                                    {{ $isDomainVerified ? 'DOMAIN TERVERIFIKASI & AKTIF' : 'VERIFIKASI DNS PENDING' }}
-                                </span>
-                                <h3 style="font-size:1.15rem; font-weight: 700; color:{{ $isDomainVerified ? '#166534' : '#92400E' }}; margin:0.4rem 0 0.1rem;">
-                                    https://{{ $profile->custom_domain }}</h3>
-                                <p style="font-size:0.78rem; color:{{ $isDomainVerified ? '#15803D' : '#B45309' }}; margin:0;">
-                                    {{ $isDomainVerified 
-                                        ? 'Domain ini sudah terverifikasi dan aktif mengarah ke halaman toko Anda.' 
-                                        : 'Pastikan DNS CNAME / ALIAS diatur ke buyle.id.cdn.hstgr.net & domain telah ditambahkan ke hPanel Hostinger.' }}
-                                </p>
+                                </a>
                             </div>
-                            <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary"
-                                style="background:{{ $isDomainVerified ? '#166534' : '#B45309' }}; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
-                                Buka Domain
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                                    <polyline points="15 3 21 3 21 9" />
-                                    <line x1="10" y1="14" x2="21" y2="3" />
-                                </svg>
-                            </a>
                         </div>
-                    </div>
                 @endif
 
                 {{-- Search & Recommendation Card --}}
@@ -1826,7 +1861,8 @@
                                                         ? 'data:image/jpeg;base64,' . base64_encode(file_get_contents($t5MockupPath))
                                                         : asset('images/theme5-mockup.jpg');
                                                 @endphp
-                                                <img src="{{ $t5MockupSrc }}" alt="Web Profesional" style="width:100%; height:100%; object-fit:cover; object-position:top;">
+                                                <img src="{{ $t5MockupSrc }}" alt="Web Profesional"
+                                                    style="width:100%; height:100%; object-fit:cover; object-position:top;">
                                             @else
                                                 <div class="mockup-avatar"></div>
                                                 <div class="mockup-title"></div>
@@ -1850,214 +1886,214 @@
 
                 {{-- Custom Background & Color Customizer --}}
                 @if($currentTheme !== 'theme5')
-                <div class="prof-card" style="margin-top:0;">
-                    <div class="prof-card-head">
-                        <span>Kustomisasi Background & Warna</span>
-                        <span style="font-size:0.72rem; font-weight:600; color:#64748b;">Override tema (Warna Kustom /
-                            Gambar WebP)</span>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('creator.bio.save-profile') }}" method="POST" id="colorForm"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="bio_name" value="{{ $cfg['name'] ?? '' }}">
-                            <input type="hidden" name="bio_bio" value="{{ $cfg['bio'] ?? '' }}">
-                            <input type="hidden" name="bio_location" value="{{ $cfg['location'] ?? '' }}">
-                            <input type="hidden" name="bio_wa" value="{{ $cfg['wa'] ?? '' }}">
-                            <input type="hidden" name="bio_ig" value="{{ $cfg['ig'] ?? '' }}">
-                            <input type="hidden" name="bio_tiktok" value="{{ $cfg['tiktok'] ?? '' }}">
-                            <input type="hidden" name="bio_youtube" value="{{ $cfg['youtube'] ?? '' }}">
+                    <div class="prof-card" style="margin-top:0;">
+                        <div class="prof-card-head">
+                            <span>Kustomisasi Background & Warna</span>
+                            <span style="font-size:0.72rem; font-weight:600; color:#64748b;">Override tema (Warna Kustom /
+                                Gambar WebP)</span>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('creator.bio.save-profile') }}" method="POST" id="colorForm"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="bio_name" value="{{ $cfg['name'] ?? '' }}">
+                                <input type="hidden" name="bio_bio" value="{{ $cfg['bio'] ?? '' }}">
+                                <input type="hidden" name="bio_location" value="{{ $cfg['location'] ?? '' }}">
+                                <input type="hidden" name="bio_wa" value="{{ $cfg['wa'] ?? '' }}">
+                                <input type="hidden" name="bio_ig" value="{{ $cfg['ig'] ?? '' }}">
+                                <input type="hidden" name="bio_tiktok" value="{{ $cfg['tiktok'] ?? '' }}">
+                                <input type="hidden" name="bio_youtube" value="{{ $cfg['youtube'] ?? '' }}">
 
-                            @php
-                                $curBgType = $cfg['bg_type'] ?? 'color';
-                                $curBgImg = $cfg['bg_image'] ?? null;
-                            @endphp
+                                @php
+                                    $curBgType = $cfg['bg_type'] ?? 'color';
+                                    $curBgImg = $cfg['bg_image'] ?? null;
+                                @endphp
 
-                            {{-- 2 Opsi Background --}}
-                            <div style="margin-bottom: 1.25rem;">
-                                <label class="form-label"
-                                    style="font-weight: 500; margin-bottom:0.5rem; display:block;">Pilih Tipe
-                                    Background</label>
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                                    <label id="bg_mode_card_color" class="bg-mode-card"
-                                        style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'color' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'color' ? '#f0fdf4' : '#fff' }};">
-                                        <input type="radio" name="bg_type" value="color" {{ $curBgType === 'color' ? 'checked' : '' }} onchange="toggleBgMode('color')" style="accent-color:#1eb349;">
-                                        <div>
-                                            <strong
-                                                style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <path
-                                                        d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8 0 2.21-1.79 4-4 4h-1.5c-.83 0-1.5.67-1.5 1.5 0 .39.15.74.39 1.01l.21.24c.4.45.65 1.05.65 1.75 0 1.38-1.12 2.5-2.5 2.5z" />
-                                                    <circle cx="7.5" cy="11.5" r="1.5" />
-                                                    <circle cx="12" cy="7.5" r="1.5" />
-                                                    <circle cx="16.5" cy="11.5" r="1.5" />
-                                                </svg>
-                                                Warna Kustom
-                                            </strong>
-                                            <span style="font-size:0.73rem; color:#64748b;">Warna solid / gradasi</span>
-                                        </div>
-                                    </label>
-                                    <label id="bg_mode_card_image" class="bg-mode-card"
-                                        style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'image' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'image' ? '#f0fdf4' : '#fff' }};">
-                                        <input type="radio" name="bg_type" value="image" {{ $curBgType === 'image' ? 'checked' : '' }} onchange="toggleBgMode('image')" style="accent-color:#1eb349;">
-                                        <div>
-                                            <strong
-                                                style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                                    <polyline points="21 15 16 10 5 21" />
-                                                </svg>
-                                                Gambar Custom
-                                            </strong>
-                                            <span style="font-size:0.73rem; color:#64748b;">Upload (Auto WebP)</span>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            {{-- Sub-panel Warna Background --}}
-                            <div id="bg_color_panel"
-                                style="display: {{ $curBgType === 'color' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
-                                <label class="form-label"
-                                    style="font-weight:600; margin-bottom:0.4rem; display:block;">Pilih Warna
-                                    Background</label>
-                                <div style="display:flex; gap:0.5rem; align-items:center;">
-                                    <input type="color" name="color_bg" id="color_bg_picker"
-                                        value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
-                                        style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
-                                        oninput="syncColor('color_bg', this.value)">
-                                    <input type="text" id="color_bg_text" value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
-                                        class="form-input" style="flex:1;"
-                                        oninput="syncColor('color_bg', this.value, true)">
-                                </div>
-                            </div>
-
-                            {{-- Sub-panel Gambar Background --}}
-                            <div id="bg_image_panel"
-                                style="display: {{ $curBgType === 'image' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
-                                <label class="form-label"
-                                    style="font-weight:600; margin-bottom:0.4rem; display:block;">Upload Gambar Background
-                                    (Otomatis Konversi WebP)</label>
-                                @if(!empty($curBgImg))
-                                    <div
-                                        style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0;">
-                                        <img src="{{ asset('storage/' . $curBgImg) }}" id="bg_image_thumb"
-                                            style="width:50px; height:50px; object-fit:cover; border-radius:6px;">
-                                        <div style="flex:1;">
-                                            <span
-                                                style="font-size:0.78rem; color:#475569; display:block; font-weight:600;">Gambar
-                                                Terpasang (.webp)</span>
-                                            <label
-                                                style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
-                                                <input type="checkbox" name="delete_bg_image" value="1"
-                                                    onchange="previewBgDelete(this)"> Hapus Gambar
-                                            </label>
-                                        </div>
-                                    </div>
-                                @endif
-                                <input type="file" name="bio_bg_image" id="bio_bg_image_input" accept="image/*"
-                                    class="form-input" style="height:auto; padding:0.5rem;"
-                                    onchange="previewUploadedBgImage(this)">
-                                <span
-                                    style="font-size:0.72rem; color:#64748b; margin-top:4px; display:flex; align-items:center; gap:4px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349"
-                                        stroke-width="2">
-                                        <path
-                                            d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z" />
-                                    </svg>
-                                    Semua format gambar (JPG, PNG, WebP) akan otomatis di-convert ke WebP resolusi tinggi
-                                    secara ringan & cepat.
-                                </span>
-                            </div>
-
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                                <div class="form-group" style="margin-bottom:0.75rem;">
-                                    <label class="form-label">Warna Teks</label>
-                                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                                        <input type="color" name="color_text" id="color_text_picker"
-                                            value="{{ $cfg['color_text'] ?? '#ffffff' }}"
-                                            style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
-                                            oninput="syncColor('color_text', this.value)">
-                                        <input type="text" id="color_text_text"
-                                            value="{{ $cfg['color_text'] ?? '#ffffff' }}" class="form-input" style="flex:1;"
-                                            oninput="syncColor('color_text', this.value, true)">
+                                {{-- 2 Opsi Background --}}
+                                <div style="margin-bottom: 1.25rem;">
+                                    <label class="form-label"
+                                        style="font-weight: 500; margin-bottom:0.5rem; display:block;">Pilih Tipe
+                                        Background</label>
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                                        <label id="bg_mode_card_color" class="bg-mode-card"
+                                            style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'color' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'color' ? '#f0fdf4' : '#fff' }};">
+                                            <input type="radio" name="bg_type" value="color" {{ $curBgType === 'color' ? 'checked' : '' }} onchange="toggleBgMode('color')" style="accent-color:#1eb349;">
+                                            <div>
+                                                <strong
+                                                    style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path
+                                                            d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8 0 2.21-1.79 4-4 4h-1.5c-.83 0-1.5.67-1.5 1.5 0 .39.15.74.39 1.01l.21.24c.4.45.65 1.05.65 1.75 0 1.38-1.12 2.5-2.5 2.5z" />
+                                                        <circle cx="7.5" cy="11.5" r="1.5" />
+                                                        <circle cx="12" cy="7.5" r="1.5" />
+                                                        <circle cx="16.5" cy="11.5" r="1.5" />
+                                                    </svg>
+                                                    Warna Kustom
+                                                </strong>
+                                                <span style="font-size:0.73rem; color:#64748b;">Warna solid / gradasi</span>
+                                            </div>
+                                        </label>
+                                        <label id="bg_mode_card_image" class="bg-mode-card"
+                                            style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'image' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'image' ? '#f0fdf4' : '#fff' }};">
+                                            <input type="radio" name="bg_type" value="image" {{ $curBgType === 'image' ? 'checked' : '' }} onchange="toggleBgMode('image')" style="accent-color:#1eb349;">
+                                            <div>
+                                                <strong
+                                                    style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                                        <polyline points="21 15 16 10 5 21" />
+                                                    </svg>
+                                                    Gambar Custom
+                                                </strong>
+                                                <span style="font-size:0.73rem; color:#64748b;">Upload (Auto WebP)</span>
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-bottom:0.75rem;">
-                                    <label class="form-label">Warna Tombol</label>
+
+                                {{-- Sub-panel Warna Background --}}
+                                <div id="bg_color_panel"
+                                    style="display: {{ $curBgType === 'color' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                    <label class="form-label"
+                                        style="font-weight:600; margin-bottom:0.4rem; display:block;">Pilih Warna
+                                        Background</label>
                                     <div style="display:flex; gap:0.5rem; align-items:center;">
-                                        <input type="color" name="color_btn" id="color_btn_picker"
-                                            value="{{ $cfg['color_btn'] ?? '#1eb349' }}"
+                                        <input type="color" name="color_bg" id="color_bg_picker"
+                                            value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
                                             style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
-                                            oninput="syncColor('color_btn', this.value)">
-                                        <input type="text" id="color_btn_text" value="{{ $cfg['color_btn'] ?? '#1eb349' }}"
+                                            oninput="syncColor('color_bg', this.value)">
+                                        <input type="text" id="color_bg_text" value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
                                             class="form-input" style="flex:1;"
-                                            oninput="syncColor('color_btn', this.value, true)">
+                                            oninput="syncColor('color_bg', this.value, true)">
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-bottom:0.75rem;">
-                                    <label class="form-label">Teks Tombol</label>
-                                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                                        <input type="color" name="color_btn_text" id="color_btn_text_picker"
-                                            value="{{ $cfg['color_btn_text'] ?? '#ffffff' }}"
-                                            style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
-                                            oninput="syncColor('color_btn_text', this.value)">
-                                        <input type="text" id="color_btn_text_text"
-                                            value="{{ $cfg['color_btn_text'] ?? '#ffffff' }}" class="form-input"
-                                            style="flex:1;" oninput="syncColor('color_btn_text', this.value, true)">
+
+                                {{-- Sub-panel Gambar Background --}}
+                                <div id="bg_image_panel"
+                                    style="display: {{ $curBgType === 'image' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                    <label class="form-label"
+                                        style="font-weight:600; margin-bottom:0.4rem; display:block;">Upload Gambar Background
+                                        (Otomatis Konversi WebP)</label>
+                                    @if(!empty($curBgImg))
+                                        <div
+                                            style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0;">
+                                            <img src="{{ asset('storage/' . $curBgImg) }}" id="bg_image_thumb"
+                                                style="width:50px; height:50px; object-fit:cover; border-radius:6px;">
+                                            <div style="flex:1;">
+                                                <span
+                                                    style="font-size:0.78rem; color:#475569; display:block; font-weight:600;">Gambar
+                                                    Terpasang (.webp)</span>
+                                                <label
+                                                    style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
+                                                    <input type="checkbox" name="delete_bg_image" value="1"
+                                                        onchange="previewBgDelete(this)"> Hapus Gambar
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <input type="file" name="bio_bg_image" id="bio_bg_image_input" accept="image/*"
+                                        class="form-input" style="height:auto; padding:0.5rem;"
+                                        onchange="previewUploadedBgImage(this)">
+                                    <span
+                                        style="font-size:0.72rem; color:#64748b; margin-top:4px; display:flex; align-items:center; gap:4px;">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349"
+                                            stroke-width="2">
+                                            <path
+                                                d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z" />
+                                        </svg>
+                                        Semua format gambar (JPG, PNG, WebP) akan otomatis di-convert ke WebP resolusi tinggi
+                                        secara ringan & cepat.
+                                    </span>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                    <div class="form-group" style="margin-bottom:0.75rem;">
+                                        <label class="form-label">Warna Teks</label>
+                                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                                            <input type="color" name="color_text" id="color_text_picker"
+                                                value="{{ $cfg['color_text'] ?? '#ffffff' }}"
+                                                style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
+                                                oninput="syncColor('color_text', this.value)">
+                                            <input type="text" id="color_text_text"
+                                                value="{{ $cfg['color_text'] ?? '#ffffff' }}" class="form-input" style="flex:1;"
+                                                oninput="syncColor('color_text', this.value, true)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0.75rem;">
+                                        <label class="form-label">Warna Tombol</label>
+                                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                                            <input type="color" name="color_btn" id="color_btn_picker"
+                                                value="{{ $cfg['color_btn'] ?? '#1eb349' }}"
+                                                style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
+                                                oninput="syncColor('color_btn', this.value)">
+                                            <input type="text" id="color_btn_text" value="{{ $cfg['color_btn'] ?? '#1eb349' }}"
+                                                class="form-input" style="flex:1;"
+                                                oninput="syncColor('color_btn', this.value, true)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0.75rem;">
+                                        <label class="form-label">Teks Tombol</label>
+                                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                                            <input type="color" name="color_btn_text" id="color_btn_text_picker"
+                                                value="{{ $cfg['color_btn_text'] ?? '#ffffff' }}"
+                                                style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
+                                                oninput="syncColor('color_btn_text', this.value)">
+                                            <input type="text" id="color_btn_text_text"
+                                                value="{{ $cfg['color_btn_text'] ?? '#ffffff' }}" class="form-input"
+                                                style="flex:1;" oninput="syncColor('color_btn_text', this.value, true)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0.75rem;">
+                                        <label class="form-label">Warna Aksen</label>
+                                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                                            <input type="color" name="color_accent" id="color_accent_picker"
+                                                value="{{ $cfg['color_accent'] ?? '#1eb349' }}"
+                                                style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
+                                                oninput="syncColor('color_accent', this.value)">
+                                            <input type="text" id="color_accent_text"
+                                                value="{{ $cfg['color_accent'] ?? '#1eb349' }}" class="form-input"
+                                                style="flex:1;" oninput="syncColor('color_accent', this.value, true)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0.75rem;">
+                                        <label class="form-label">Warna Card</label>
+                                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                                            <input type="color" name="color_card" id="color_card_picker"
+                                                value="{{ $cfg['color_card'] ?? '#1a231b' }}"
+                                                style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
+                                                oninput="syncColor('color_card', this.value)">
+                                            <input type="text" id="color_card_text"
+                                                value="{{ $cfg['color_card'] ?? '#1a231b' }}" class="form-input" style="flex:1;"
+                                                oninput="syncColor('color_card', this.value, true)">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-bottom:0.75rem;">
-                                    <label class="form-label">Warna Aksen</label>
-                                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                                        <input type="color" name="color_accent" id="color_accent_picker"
-                                            value="{{ $cfg['color_accent'] ?? '#1eb349' }}"
-                                            style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
-                                            oninput="syncColor('color_accent', this.value)">
-                                        <input type="text" id="color_accent_text"
-                                            value="{{ $cfg['color_accent'] ?? '#1eb349' }}" class="form-input"
-                                            style="flex:1;" oninput="syncColor('color_accent', this.value, true)">
+                                <div style="margin-top:0.75rem; border-radius:14px; overflow:hidden; border:1px solid #e2e8f0;">
+                                    <div id="cpBg"
+                                        style="padding:1.25rem; display:flex; flex-direction:column; align-items:center; gap:0.6rem; {{ $curBgType === 'image' && !empty($curBgImg) ? 'background: url(' . asset('storage/' . $curBgImg) . ') center center / cover no-repeat;' : 'background:' . ($cfg['color_bg'] ?? '#0b120c') . ';' }}">
+                                        <div id="cpCard"
+                                            style="width:46px; height:46px; border-radius:50%; background:{{ $cfg['color_card'] ?? '#1a231b' }}; border:2px solid {{ $cfg['color_accent'] ?? '#1eb349' }};">
+                                        </div>
+                                        <div id="cpText"
+                                            style="font-weight: 500; font-size:0.88rem; color:{{ $cfg['color_text'] ?? '#ffffff' }};">
+                                            Preview Nama Anda</div>
+                                        <div id="cpBtn"
+                                            style="padding:0.45rem 1.25rem; border-radius:999px; font-size:0.78rem; font-weight: 500; background:{{ $cfg['color_btn'] ?? '#1eb349' }}; color:{{ $cfg['color_btn_text'] ?? '#ffffff' }};">
+                                            Tombol Contoh</div>
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-bottom:0.75rem;">
-                                    <label class="form-label">Warna Card</label>
-                                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                                        <input type="color" name="color_card" id="color_card_picker"
-                                            value="{{ $cfg['color_card'] ?? '#1a231b' }}"
-                                            style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
-                                            oninput="syncColor('color_card', this.value)">
-                                        <input type="text" id="color_card_text"
-                                            value="{{ $cfg['color_card'] ?? '#1a231b' }}" class="form-input" style="flex:1;"
-                                            oninput="syncColor('color_card', this.value, true)">
-                                    </div>
+                                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                                    <button type="button" onclick="resetColors()"
+                                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Reset
+                                        Default</button>
+                                    <button type="submit" class="btn-submit-sm">Simpan Kustomisasi</button>
                                 </div>
-                            </div>
-                            <div style="margin-top:0.75rem; border-radius:14px; overflow:hidden; border:1px solid #e2e8f0;">
-                                <div id="cpBg"
-                                    style="padding:1.25rem; display:flex; flex-direction:column; align-items:center; gap:0.6rem; {{ $curBgType === 'image' && !empty($curBgImg) ? 'background: url(' . asset('storage/' . $curBgImg) . ') center center / cover no-repeat;' : 'background:' . ($cfg['color_bg'] ?? '#0b120c') . ';' }}">
-                                    <div id="cpCard"
-                                        style="width:46px; height:46px; border-radius:50%; background:{{ $cfg['color_card'] ?? '#1a231b' }}; border:2px solid {{ $cfg['color_accent'] ?? '#1eb349' }};">
-                                    </div>
-                                    <div id="cpText"
-                                        style="font-weight: 500; font-size:0.88rem; color:{{ $cfg['color_text'] ?? '#ffffff' }};">
-                                        Preview Nama Anda</div>
-                                    <div id="cpBtn"
-                                        style="padding:0.45rem 1.25rem; border-radius:999px; font-size:0.78rem; font-weight: 500; background:{{ $cfg['color_btn'] ?? '#1eb349' }}; color:{{ $cfg['color_btn_text'] ?? '#ffffff' }};">
-                                        Tombol Contoh</div>
-                                </div>
-                            </div>
-                            <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                                <button type="button" onclick="resetColors()"
-                                    style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Reset
-                                    Default</button>
-                                <button type="submit" class="btn-submit-sm">Simpan Kustomisasi</button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                </div>
                 @endif
             </div>
 
@@ -2124,9 +2160,9 @@
                         onclick="switchProfileSubtab('subtab-products-main', this)">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                            <line x1="3" y1="6" x2="21" y2="6"/>
-                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
                         </svg>
                         Halaman Produk
                     </button>
@@ -2134,7 +2170,8 @@
                         onclick="switchProfileSubtab('subtab-contact-main', this)">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                         </svg>
                         Halaman Kontak
                     </button>
@@ -2218,26 +2255,36 @@
                                 </div>
 
                                 {{-- Multi Banner Slider (Max 5 Banners total) --}}
-                                <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.75rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
-                                    <label class="form-label" style="font-weight: 700; color: #0f172a;">Banner Slide Tambahan (Upload Maksimal 5 Banner)</label>
+                                <div class="form-group"
+                                    style="grid-column: 1 / -1; margin-top: 0.75rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+                                    <label class="form-label" style="font-weight: 700; color: #0f172a;">Banner Slide
+                                        Tambahan (Upload Maksimal 5 Banner)</label>
                                     <p style="font-size:0.78rem; color:#64748b; margin-bottom:0.75rem;">
-                                        Slide 1 menampilkan teks overlay hero. Slide 2, 3, 4, 5 hanya menampilkan banner gambar secara bersih dengan animasi pindah otomatis (fade/slide). Semua foto otomatis dikonversi ke WebP.
+                                        Slide 1 menampilkan teks overlay hero. Slide 2, 3, 4, 5 hanya menampilkan banner
+                                        gambar secara bersih dengan animasi pindah otomatis (fade/slide). Semua foto
+                                        otomatis dikonversi ke WebP.
                                     </p>
                                     @php
                                         $bannersList = $cfg['banners'] ?? [];
-                                        if (!is_array($bannersList)) $bannersList = [];
+                                        if (!is_array($bannersList))
+                                            $bannersList = [];
                                     @endphp
                                     @if(!empty($bannersList))
-                                        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem;">
+                                        <div
+                                            style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem;">
                                             @foreach($bannersList as $bIdx => $bItem)
                                                 @php
                                                     $bImg = is_array($bItem) ? ($bItem['image'] ?? null) : $bItem;
                                                 @endphp
                                                 @if($bImg)
-                                                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.5rem; text-align:center;">
-                                                        <img src="{{ Str::startsWith($bImg, ['http://', 'https://']) ? $bImg : asset('storage/' . $bImg) }}" style="width:100%; height:65px; object-fit:cover; border-radius:6px; margin-bottom:0.3rem;">
-                                                        <label style="font-size:0.72rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:2px;">
-                                                            <input type="checkbox" name="delete_banners[]" value="{{ $bIdx }}"> Hapus Slide {{ $bIdx + 2 }}
+                                                    <div
+                                                        style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.5rem; text-align:center;">
+                                                        <img src="{{ Str::startsWith($bImg, ['http://', 'https://']) ? $bImg : asset('storage/' . $bImg) }}"
+                                                            style="width:100%; height:65px; object-fit:cover; border-radius:6px; margin-bottom:0.3rem;">
+                                                        <label
+                                                            style="font-size:0.72rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:2px;">
+                                                            <input type="checkbox" name="delete_banners[]" value="{{ $bIdx }}"> Hapus
+                                                            Slide {{ $bIdx + 2 }}
                                                         </label>
                                                     </div>
                                                 @endif
@@ -2245,8 +2292,10 @@
                                         </div>
                                     @endif
                                     @if(count($bannersList) < 4)
-                                        <input type="file" name="bio_banners[]" accept="image/*" multiple class="form-input" style="height:auto; padding:0.5rem;">
-                                        <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">Pilih gambar banner tambahan (JPG, PNG, WebP — Otomatis Dikonversi ke WebP).</span>
+                                        <input type="file" name="bio_banners[]" accept="image/*" multiple class="form-input"
+                                            style="height:auto; padding:0.5rem;">
+                                        <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">Pilih
+                                            gambar banner tambahan (JPG, PNG, WebP — Otomatis Dikonversi ke WebP).</span>
                                     @endif
                                 </div>
                             </div>
@@ -2263,7 +2312,8 @@
 
                 {{-- SUBTAB 2: HOMEPAGE / BERANDA (TEMA 5) --}}
                 <div class="prof-subtab-pane" id="subtab-homepage-main" style="display:none;">
-                    <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data" id="bioHomepageForm">
+                    <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data"
+                        id="bioHomepageForm">
                         @csrf
                         <input type="hidden" name="about_enabled_present" value="1">
                         <input type="hidden" name="services_enabled_present" value="1">
@@ -2283,6 +2333,7 @@
                                 flex-wrap: nowrap;
                                 scrollbar-width: thin;
                             }
+
                             .hp-subtab-btn {
                                 flex: 1;
                                 display: inline-flex;
@@ -2365,9 +2416,9 @@
                                 onclick="switchHomepageSubSubtab('hpsub-gallery', this)">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                                    <polyline points="21 15 16 10 5 21"/>
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
                                 </svg>
                                 Galeri
                             </button>
@@ -2375,8 +2426,8 @@
                                 onclick="switchHomepageSubSubtab('hpsub-tiktok', this)">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
-                                    <rect x="6" y="2" width="12" height="20" rx="3" ry="3"/>
-                                    <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
+                                    <rect x="6" y="2" width="12" height="20" rx="3" ry="3" />
+                                    <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3" />
                                 </svg>
                                 TikTok
                             </button>
@@ -2384,10 +2435,10 @@
                                 onclick="switchHomepageSubSubtab('hpsub-teams', this)">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                 </svg>
                                 Tim Kami
                             </button>
@@ -2395,8 +2446,8 @@
                                 onclick="switchHomepageSubSubtab('hpsub-footer', this)">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
-                                    <rect x="3" y="14" width="18" height="7" rx="2"/>
-                                    <path d="M3 10h18M3 6h18"/>
+                                    <rect x="3" y="14" width="18" height="7" rx="2" />
+                                    <path d="M3 10h18M3 6h18" />
                                 </svg>
                                 Footer
                             </button>
@@ -2779,16 +2830,20 @@
 
                             {{-- Card Toggle Active --}}
                             <div class="prof-card">
-                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
                                     <span>Status Section Galeri Carousel (Tema 5)</span>
-                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
-                                        <input type="checkbox" name="gallery_enabled" value="1" {{ ($cfg['gallery_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                    <label
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="gallery_enabled" value="1" {{ ($cfg['gallery_enabled'] ?? 1) ? 'checked' : '' }}
+                                            style="width:18px; height:18px; accent-color:#1eb349;">
                                         Aktifkan Section Galeri
                                     </label>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                        Tampilkan section Galeri Portofolio &amp; Dokumentasi Stack Carousel interaktif pada Beranda (Tema 5). 
+                                        Tampilkan section Galeri Portofolio &amp; Dokumentasi Stack Carousel interaktif pada
+                                        Beranda (Tema 5).
                                         Pengunjung dapat melakukan klik / swipe slide foto dengan animasi coverflow modern.
                                     </p>
                                 </div>
@@ -2800,39 +2855,47 @@
                                 <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                                     <div class="form-group" style="grid-column:1/-1;">
                                         <label class="form-label">Judul Utama H2 (Headline)</label>
-                                        <input type="text" name="gallery_headline" value="{{ old('gallery_headline', $cfg['gallery_headline'] ?? 'Popular Beach Holiday Destinations for 2026/2027') }}" class="form-input" placeholder="Misal: Galeri Foto Proyek & Momen Terbaik Kami">
+                                        <input type="text" name="gallery_headline"
+                                            value="{{ old('gallery_headline', $cfg['gallery_headline'] ?? 'Popular Beach Holiday Destinations for 2026/2027') }}"
+                                            class="form-input" placeholder="Misal: Galeri Foto Proyek & Momen Terbaik Kami">
                                     </div>
                                     <div class="form-group" style="grid-column:1/-1;">
                                         <label class="form-label">Deskripsi Ringkas Section</label>
-                                        <textarea name="gallery_description" class="form-input" rows="2" placeholder="Deskripsi umum galeri...">{{ old('gallery_description', $cfg['gallery_description'] ?? 'Browse our most popular beach destinations for UK travellers') }}</textarea>
+                                        <textarea name="gallery_description" class="form-input" rows="2"
+                                            placeholder="Deskripsi umum galeri...">{{ old('gallery_description', $cfg['gallery_description'] ?? 'Browse our most popular beach destinations for UK travellers') }}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             {{-- Card Upload Foto Galeri (Maksimal 10 Foto) --}}
                             <div class="prof-card">
-                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
                                     <span>2. Daftar Foto Galeri (Maksimal 10 Foto - Auto Compress WebP)</span>
-                                    <span style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#f0fdf4; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">✨ WebP Auto Compress Active</span>
+                                    <span
+                                        style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#f0fdf4; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">✨
+                                        WebP Auto Compress Active</span>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">
-                                        Upload hingga 10 foto terbaik Anda. Gambar yang Anda upload akan <strong>secara otomatis dikompresi ke format WebP</strong> untuk menjamin kecepatan load super kencang di HP maupun PC.
+                                        Upload hingga 10 foto terbaik Anda. Gambar yang Anda upload akan <strong>secara
+                                            otomatis dikompresi ke format WebP</strong> untuk menjamin kecepatan load super
+                                        kencang di HP maupun PC.
                                     </p>
 
                                     <div style="display:flex; flex-direction:column; gap:1.25rem;">
                                         @for($i = 1; $i <= 10; $i++)
                                             @php
-                                                $gImg      = $cfg["gallery_{$i}_image"] ?? null;
-                                                $gTitle    = $cfg["gallery_{$i}_title"] ?? null;
+                                                $gImg = $cfg["gallery_{$i}_image"] ?? null;
+                                                $gTitle = $cfg["gallery_{$i}_title"] ?? null;
                                                 $gSubtitle = $cfg["gallery_{$i}_subtitle"] ?? null;
-                                                $gDesc     = $cfg["gallery_{$i}_desc"] ?? null;
-                                                $gLink     = $cfg["gallery_{$i}_link"] ?? null;
+                                                $gDesc = $cfg["gallery_{$i}_desc"] ?? null;
+                                                $gLink = $cfg["gallery_{$i}_link"] ?? null;
 
                                                 if (empty($gImg) && empty($gTitle)) {
-                                                    $sampleTitles    = [1 => 'Indonesia', 2 => 'Italy', 3 => 'Croatia', 4 => 'Malta', 5 => 'Mauritius'];
+                                                    $sampleTitles = [1 => 'Indonesia', 2 => 'Italy', 3 => 'Croatia', 4 => 'Malta', 5 => 'Mauritius'];
                                                     $sampleSubtitles = [1 => 'Bali & Raja Ampat', 2 => 'Amalfi Coast & Sicily', 3 => 'Dubrovnik Old Town', 4 => 'Valletta Blue Lagoon', 5 => 'Le Morne Peninsula'];
-                                                    $sampleDescs     = [
+                                                    $sampleDescs = [
                                                         1 => "Indonesia's tropical paradise featuring pristine beaches, lush rice terraces, and crystal turquoise waters.",
                                                         2 => "Sardinia's white sand, the Amalfi Coast, and Sicily's golden shores. Plan your beach holiday with us.",
                                                         3 => "Explore Croatia's stunning Dalmatian Coast with historic stone villages and clear Adriatic sea.",
@@ -2840,63 +2903,89 @@
                                                         5 => "Mauritius features powder-soft sand, coral reefs, and luxury island retreats."
                                                     ];
                                                     if (isset($sampleTitles[$i])) {
-                                                        $gTitle    = $sampleTitles[$i];
+                                                        $gTitle = $sampleTitles[$i];
                                                         $gSubtitle = $sampleSubtitles[$i];
-                                                        $gDesc     = $sampleDescs[$i];
+                                                        $gDesc = $sampleDescs[$i];
                                                     }
                                                 }
                                             @endphp
 
-                                            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem;">
-                                                    <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
-                                                        <span style="background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.7rem; font-weight:800; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">{{ $i }}</span>
+                                            <div
+                                                style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                                                <div
+                                                    style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem;">
+                                                    <div
+                                                        style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
+                                                        <span
+                                                            style="background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.7rem; font-weight:800; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">{{ $i }}</span>
                                                         Foto Galeri #{{ $i }}
                                                     </div>
                                                     @if($gImg)
-                                                        <label style="font-size:0.75rem; color:#ef4444; font-weight:600; display:flex; align-items:center; gap:0.35rem; cursor:pointer;">
-                                                            <input type="checkbox" name="delete_gallery_{{ $i }}_image" value="1"> Hapus Foto Ini
+                                                        <label
+                                                            style="font-size:0.75rem; color:#ef4444; font-weight:600; display:flex; align-items:center; gap:0.35rem; cursor:pointer;">
+                                                            <input type="checkbox" name="delete_gallery_{{ $i }}_image" value="1">
+                                                            Hapus Foto Ini
                                                         </label>
                                                     @endif
                                                 </div>
 
-                                                <div style="display:grid; grid-template-columns:180px 1fr; gap:1.25rem; align-items:start;">
+                                                <div
+                                                    style="display:grid; grid-template-columns:180px 1fr; gap:1.25rem; align-items:start;">
                                                     {{-- Image Preview & Upload --}}
                                                     <div>
-                                                        <div style="width:100%; height:130px; border-radius:10px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:0.5rem; position:relative;">
+                                                        <div
+                                                            style="width:100%; height:130px; border-radius:10px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:0.5rem; position:relative;">
                                                             @if($gImg)
-                                                                <img src="{{ asset('storage/' . $gImg) }}" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
+                                                                <img src="{{ asset('storage/' . $gImg) }}" alt="Preview"
+                                                                    style="width:100%; height:100%; object-fit:cover;">
                                                             @else
                                                                 <div style="text-align:center; padding:0.5rem;">
-                                                                    <svg width="28" height="28" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 0.25rem;">
-                                                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                                                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                                                                        <polyline points="21 15 16 10 5 21"/>
+                                                                    <svg width="28" height="28" fill="none" stroke="#94a3b8"
+                                                                        stroke-width="1.8" viewBox="0 0 24 24"
+                                                                        style="margin:0 auto 0.25rem;">
+                                                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                                                        <polyline points="21 15 16 10 5 21" />
                                                                     </svg>
-                                                                    <span style="font-size:0.7rem; color:#94a3b8; display:block;">Pilih Foto</span>
+                                                                    <span
+                                                                        style="font-size:0.7rem; color:#94a3b8; display:block;">Pilih
+                                                                        Foto</span>
                                                                 </div>
                                                             @endif
                                                         </div>
-                                                        <input type="file" name="gallery_{{ $i }}_image" accept="image/*" class="form-input" style="height:auto; padding:0.35rem; font-size:0.75rem;">
+                                                        <input type="file" name="gallery_{{ $i }}_image" accept="image/*"
+                                                            class="form-input"
+                                                            style="height:auto; padding:0.35rem; font-size:0.75rem;">
                                                     </div>
 
                                                     {{-- Details Fields --}}
                                                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
                                                         <div>
-                                                            <label class="form-label" style="font-size:0.78rem;">Judul Foto / Tempat</label>
-                                                            <input type="text" name="gallery_{{ $i }}_title" value="{{ old('gallery_' . $i . '_title', $gTitle) }}" class="form-input" placeholder="Contoh: Indonesia">
+                                                            <label class="form-label" style="font-size:0.78rem;">Judul Foto /
+                                                                Tempat</label>
+                                                            <input type="text" name="gallery_{{ $i }}_title"
+                                                                value="{{ old('gallery_' . $i . '_title', $gTitle) }}"
+                                                                class="form-input" placeholder="Contoh: Indonesia">
                                                         </div>
                                                         <div>
-                                                            <label class="form-label" style="font-size:0.78rem;">Sub-Judul / Lokasi / Aksinya</label>
-                                                            <input type="text" name="gallery_{{ $i }}_subtitle" value="{{ old('gallery_' . $i . '_subtitle', $gSubtitle) }}" class="form-input" placeholder="Contoh: Click to learn more">
+                                                            <label class="form-label" style="font-size:0.78rem;">Sub-Judul /
+                                                                Lokasi / Aksinya</label>
+                                                            <input type="text" name="gallery_{{ $i }}_subtitle"
+                                                                value="{{ old('gallery_' . $i . '_subtitle', $gSubtitle) }}"
+                                                                class="form-input" placeholder="Contoh: Click to learn more">
                                                         </div>
                                                         <div style="grid-column:1/-1;">
-                                                            <label class="form-label" style="font-size:0.78rem;">Deskripsi Detail (Tampil di Bawah Carousel)</label>
-                                                            <textarea name="gallery_{{ $i }}_desc" rows="2" class="form-input" placeholder="Deskripsi penjelasan foto...">{!! old('gallery_' . $i . '_desc', $gDesc) !!}</textarea>
+                                                            <label class="form-label" style="font-size:0.78rem;">Deskripsi
+                                                                Detail (Tampil di Bawah Carousel)</label>
+                                                            <textarea name="gallery_{{ $i }}_desc" rows="2" class="form-input"
+                                                                placeholder="Deskripsi penjelasan foto...">{!! old('gallery_' . $i . '_desc', $gDesc) !!}</textarea>
                                                         </div>
                                                         <div style="grid-column:1/-1;">
-                                                            <label class="form-label" style="font-size:0.78rem;">Link URL (Opsional / Saat Foto Diklik)</label>
-                                                            <input type="text" name="gallery_{{ $i }}_link" value="{{ old('gallery_' . $i . '_link', $gLink) }}" class="form-input" placeholder="https://... atau #products">
+                                                            <label class="form-label" style="font-size:0.78rem;">Link URL
+                                                                (Opsional / Saat Foto Diklik)</label>
+                                                            <input type="text" name="gallery_{{ $i }}_link"
+                                                                value="{{ old('gallery_' . $i . '_link', $gLink) }}"
+                                                                class="form-input" placeholder="https://... atau #products">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2913,34 +3002,51 @@
 
                             {{-- Card Toggle Active --}}
                             <div class="prof-card">
-                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
                                     <span>Status Section TikTok Phone Carousel (Tema 5)</span>
-                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
-                                        <input type="checkbox" name="tiktok_section_enabled" value="1" {{ ($cfg['tiktok_section_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                    <label
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="tiktok_section_enabled" value="1" {{ ($cfg['tiktok_section_enabled'] ?? 1) ? 'checked' : '' }}
+                                            style="width:18px; height:18px; accent-color:#1eb349;">
                                         Aktifkan Section TikTok
                                     </label>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                        Tampilkan section video TikTok Phone Reel Carousel interaktif dengan Frame iPhone modern pada Beranda (Tema 5).
+                                        Tampilkan section video TikTok Phone Reel Carousel interaktif dengan Frame iPhone
+                                        modern pada Beranda (Tema 5).
                                     </p>
                                 </div>
                             </div>
 
                             {{-- Panduan Input Link TikTok (Ref Capture 2) --}}
                             <div class="prof-card" style="border: 1.5px solid #1eb349; background: #f0fdf4;">
-                                <div class="prof-card-head" style="background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); color: #ffffff; display: flex; align-items: center; justify-content: space-between;">
+                                <div class="prof-card-head"
+                                    style="background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); color: #ffffff; display: flex; align-items: center; justify-content: space-between;">
                                     <span style="display:flex; align-items:center; gap:0.5rem;">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
                                         Panduan Input Link Video TikTok (Auto Fetch Thumbnail)
                                     </span>
-                                    <span style="font-size:0.7rem; font-weight:700; background:rgba(255,255,255,0.2); padding:0.2rem 0.6rem; border-radius:12px;">Sama Seperti Tema 1</span>
+                                    <span
+                                        style="font-size:0.7rem; font-weight:700; background:rgba(255,255,255,0.2); padding:0.2rem 0.6rem; border-radius:12px;">Sama
+                                        Seperti Tema 1</span>
                                 </div>
                                 <div class="card-body">
-                                    <div style="font-size:0.83rem; color:#166534; line-height:1.65; display:flex; flex-direction:column; gap:0.6rem;">
-                                        <div><strong>📌 Cara Mengambil Link TikTok:</strong> Salin URL video dari aplikasi TikTok atau browser (Contoh: <code>https://www.tiktok.com/@username/video/1234567890</code>).</div>
-                                        <div><strong>⚡ Otomatisasi Thumbnail:</strong> Sistem secara otomatis menarik <strong>Thumbnail Video, Judul, dan Username</strong> dari TikTok oEmbed API secara instan (persis seperti fitur TikTok pada Tema 1).</div>
-                                        <div><strong>📱 Pengaturan Tombol Frame HP:</strong> Anda dapat mengatur teks &amp; link tombol yang muncul di bagian bawah mockup HP (misal: <em>View all</em> atau <em>Lihat Semua Video</em>).</div>
+                                    <div
+                                        style="font-size:0.83rem; color:#166534; line-height:1.65; display:flex; flex-direction:column; gap:0.6rem;">
+                                        <div><strong>📌 Cara Mengambil Link TikTok:</strong> Salin URL video dari aplikasi
+                                            TikTok atau browser (Contoh:
+                                            <code>https://www.tiktok.com/@username/video/1234567890</code>).</div>
+                                        <div><strong>⚡ Otomatisasi Thumbnail:</strong> Sistem secara otomatis menarik
+                                            <strong>Thumbnail Video, Judul, dan Username</strong> dari TikTok oEmbed API
+                                            secara instan (persis seperti fitur TikTok pada Tema 1).</div>
+                                        <div><strong>📱 Pengaturan Tombol Frame HP:</strong> Anda dapat mengatur teks &amp;
+                                            link tombol yang muncul di bagian bawah mockup HP (misal: <em>View all</em> atau
+                                            <em>Lihat Semua Video</em>).</div>
                                     </div>
                                 </div>
                             </div>
@@ -2951,37 +3057,47 @@
                                 <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                                     <div class="form-group" style="grid-column:1/-1;">
                                         <label class="form-label">Judul Utama H2 (Headline)</label>
-                                        <input type="text" name="tiktok_section_headline" value="{{ old('tiktok_section_headline', $cfg['tiktok_section_headline'] ?? 'Find mental health insights & video reels') }}" class="form-input" placeholder="Misal: Find mental health insights">
+                                        <input type="text" name="tiktok_section_headline"
+                                            value="{{ old('tiktok_section_headline', $cfg['tiktok_section_headline'] ?? 'Find mental health insights & video reels') }}"
+                                            class="form-input" placeholder="Misal: Find mental health insights">
                                     </div>
                                     <div class="form-group" style="grid-column:1/-1;">
                                         <label class="form-label">Deskripsi Ringkas Section</label>
-                                        <textarea name="tiktok_section_description" class="form-input" rows="2" placeholder="Deskripsi ringkas video...">{{ old('tiktok_section_description', $cfg['tiktok_section_description'] ?? 'Tonton kumpulan video singkat pilihan dan konten edukasi terbaik kami.') }}</textarea>
+                                        <textarea name="tiktok_section_description" class="form-input" rows="2"
+                                            placeholder="Deskripsi ringkas video...">{{ old('tiktok_section_description', $cfg['tiktok_section_description'] ?? 'Tonton kumpulan video singkat pilihan dan konten edukasi terbaik kami.') }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Teks Tombol Frame HP (Bawah)</label>
-                                        <input type="text" name="tiktok_section_btn_text" value="{{ old('tiktok_section_btn_text', $cfg['tiktok_section_btn_text'] ?? 'View all') }}" class="form-input" placeholder="View all">
+                                        <input type="text" name="tiktok_section_btn_text"
+                                            value="{{ old('tiktok_section_btn_text', $cfg['tiktok_section_btn_text'] ?? 'View all') }}"
+                                            class="form-input" placeholder="View all">
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Link Tombol Frame HP (Bawah)</label>
-                                        <input type="text" name="tiktok_section_btn_link" value="{{ old('tiktok_section_btn_link', $cfg['tiktok_section_btn_link'] ?? '#') }}" class="form-input" placeholder="https://tiktok.com/@username atau #products">
+                                        <input type="text" name="tiktok_section_btn_link"
+                                            value="{{ old('tiktok_section_btn_link', $cfg['tiktok_section_btn_link'] ?? '#') }}"
+                                            class="form-input" placeholder="https://tiktok.com/@username atau #products">
                                     </div>
                                 </div>
                             </div>
 
                             {{-- Card Upload Video TikTok (Maksimal 6 Video) --}}
                             <div class="prof-card">
-                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
                                     <span>2. Daftar Video TikTok (Maksimal 6 Video)</span>
-                                    <span style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#ffffff; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">🎬 3D Phone Reel Carousel</span>
+                                    <span
+                                        style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#ffffff; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">🎬
+                                        3D Phone Reel Carousel</span>
                                 </div>
                                 <div class="card-body">
                                     <div style="display:flex; flex-direction:column; gap:1.25rem;">
                                         @for($i = 1; $i <= 6; $i++)
                                             @php
-                                                $tUrl    = $cfg["tiktok_video_{$i}_url"] ?? null;
-                                                $tTitle  = $cfg["tiktok_video_{$i}_title"] ?? null;
+                                                $tUrl = $cfg["tiktok_video_{$i}_url"] ?? null;
+                                                $tTitle = $cfg["tiktok_video_{$i}_title"] ?? null;
                                                 $tAuthor = $cfg["tiktok_video_{$i}_author"] ?? null;
-                                                $tThumb  = $cfg["tiktok_video_{$i}_thumb"] ?? null;
+                                                $tThumb = $cfg["tiktok_video_{$i}_thumb"] ?? null;
 
                                                 if (empty($tUrl) && empty($tTitle)) {
                                                     $sampleVids = [
@@ -2991,46 +3107,71 @@
                                                         4 => ['title' => 'Financial Freedom & Wellness', 'author' => 'Mindset Daily']
                                                     ];
                                                     if (isset($sampleVids[$i])) {
-                                                        $tTitle  = $sampleVids[$i]['title'];
+                                                        $tTitle = $sampleVids[$i]['title'];
                                                         $tAuthor = $sampleVids[$i]['author'];
                                                     }
                                                 }
                                             @endphp
 
-                                            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem;">
-                                                    <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
-                                                        <span style="background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.7rem; font-weight:800; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">{{ $i }}</span>
+                                            <div
+                                                style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                                                <div
+                                                    style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem;">
+                                                    <div
+                                                        style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
+                                                        <span
+                                                            style="background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.7rem; font-weight:800; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">{{ $i }}</span>
                                                         Video TikTok #{{ $i }}
                                                     </div>
                                                     @if($tThumb)
-                                                        <label style="font-size:0.75rem; color:#ef4444; font-weight:600; display:flex; align-items:center; gap:0.35rem; cursor:pointer;">
-                                                            <input type="checkbox" name="delete_tiktok_video_{{ $i }}_thumb" value="1"> Hapus Custom Thumb
+                                                        <label
+                                                            style="font-size:0.75rem; color:#ef4444; font-weight:600; display:flex; align-items:center; gap:0.35rem; cursor:pointer;">
+                                                            <input type="checkbox" name="delete_tiktok_video_{{ $i }}_thumb"
+                                                                value="1"> Hapus Custom Thumb
                                                         </label>
                                                     @endif
                                                 </div>
 
                                                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                                                     <div style="grid-column:1/-1;">
-                                                        <label class="form-label" style="font-size:0.78rem;">URL Video TikTok</label>
-                                                        <input type="text" name="tiktok_video_{{ $i }}_url" value="{{ old('tiktok_video_' . $i . '_url', $tUrl) }}" class="form-input" placeholder="https://www.tiktok.com/@username/video/1234567890">
-                                                        <small style="color:#94a3b8; font-size:0.7rem;">Thumbnail &amp; judul akan ditarik otomatis dari link jika dikosongkan.</small>
+                                                        <label class="form-label" style="font-size:0.78rem;">URL Video
+                                                            TikTok</label>
+                                                        <input type="text" name="tiktok_video_{{ $i }}_url"
+                                                            value="{{ old('tiktok_video_' . $i . '_url', $tUrl) }}"
+                                                            class="form-input"
+                                                            placeholder="https://www.tiktok.com/@username/video/1234567890">
+                                                        <small style="color:#94a3b8; font-size:0.7rem;">Thumbnail &amp; judul
+                                                            akan ditarik otomatis dari link jika dikosongkan.</small>
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" style="font-size:0.78rem;">Judul Video (Opsional Override)</label>
-                                                        <input type="text" name="tiktok_video_{{ $i }}_title" value="{{ old('tiktok_video_' . $i . '_title', $tTitle) }}" class="form-input" placeholder="Contoh: Top 10 tips to reduce Stress">
+                                                        <label class="form-label" style="font-size:0.78rem;">Judul Video
+                                                            (Opsional Override)</label>
+                                                        <input type="text" name="tiktok_video_{{ $i }}_title"
+                                                            value="{{ old('tiktok_video_' . $i . '_title', $tTitle) }}"
+                                                            class="form-input"
+                                                            placeholder="Contoh: Top 10 tips to reduce Stress">
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" style="font-size:0.78rem;">Nama Author / Subtitle (Opsional Override)</label>
-                                                        <input type="text" name="tiktok_video_{{ $i }}_author" value="{{ old('tiktok_video_' . $i . '_author', $tAuthor) }}" class="form-input" placeholder="Contoh: Dr. Jenni Jacobsen">
+                                                        <label class="form-label" style="font-size:0.78rem;">Nama Author /
+                                                            Subtitle (Opsional Override)</label>
+                                                        <input type="text" name="tiktok_video_{{ $i }}_author"
+                                                            value="{{ old('tiktok_video_' . $i . '_author', $tAuthor) }}"
+                                                            class="form-input" placeholder="Contoh: Dr. Jenni Jacobsen">
                                                     </div>
                                                     <div style="grid-column:1/-1;">
-                                                        <label class="form-label" style="font-size:0.78rem;">Custom Thumbnail Gambar (Opsional Upload - Auto WebP)</label>
-                                                        <input type="file" name="tiktok_video_{{ $i }}_thumb" accept="image/*" class="form-input" style="height:auto; padding:0.35rem; font-size:0.75rem;">
+                                                        <label class="form-label" style="font-size:0.78rem;">Custom Thumbnail
+                                                            Gambar (Opsional Upload - Auto WebP)</label>
+                                                        <input type="file" name="tiktok_video_{{ $i }}_thumb" accept="image/*"
+                                                            class="form-input"
+                                                            style="height:auto; padding:0.35rem; font-size:0.75rem;">
                                                         @if($tThumb)
-                                                            <div style="margin-top:0.4rem; display:flex; align-items:center; gap:0.5rem;">
-                                                                <img src="{{ asset('storage/' . $tThumb) }}" style="height:36px; border-radius:4px; object-fit:cover;">
-                                                                <span style="font-size:0.7rem; color:#1eb349; font-weight:600;">Custom Thumbnail WebP Aktif</span>
+                                                            <div
+                                                                style="margin-top:0.4rem; display:flex; align-items:center; gap:0.5rem;">
+                                                                <img src="{{ asset('storage/' . $tThumb) }}"
+                                                                    style="height:36px; border-radius:4px; object-fit:cover;">
+                                                                <span
+                                                                    style="font-size:0.7rem; color:#1eb349; font-weight:600;">Custom
+                                                                    Thumbnail WebP Aktif</span>
                                                             </div>
                                                         @endif
                                                     </div>
@@ -3048,16 +3189,20 @@
 
                             {{-- Status Section --}}
                             <div class="prof-card">
-                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
                                     <span>Status Section Client Logos &amp; Mitra (Tema 5)</span>
-                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
-                                        <input type="checkbox" name="client_logos_enabled" value="1" {{ ($cfg['client_logos_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                    <label
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="client_logos_enabled" value="1" {{ ($cfg['client_logos_enabled'] ?? 1) ? 'checked' : '' }}
+                                            style="width:18px; height:18px; accent-color:#1eb349;">
                                         Aktifkan Section Client Logos
                                     </label>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                        Tampilkan logo perusahaan, brand, atau mitra kerja sama di bawah Hero Banner (Tema 5). Gambar logo otomatis di-compress ke format WebP agar loading super cepat.
+                                        Tampilkan logo perusahaan, brand, atau mitra kerja sama di bawah Hero Banner (Tema
+                                        5). Gambar logo otomatis di-compress ke format WebP agar loading super cepat.
                                     </p>
                                 </div>
                             </div>
@@ -3068,16 +3213,21 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label class="form-label">Judul Utama H2 (Headline)</label>
-                                        <input type="text" name="client_logos_headline" value="{{ old('client_logos_headline', $cfg['client_logos_headline'] ?? 'Dipercaya Oleh Brand & Mitra Terkemuka') }}" class="form-input" placeholder="Misal: Dipercaya Oleh Perusahaan Terkemuka">
+                                        <input type="text" name="client_logos_headline"
+                                            value="{{ old('client_logos_headline', $cfg['client_logos_headline'] ?? 'Dipercaya Oleh Brand & Mitra Terkemuka') }}"
+                                            class="form-input" placeholder="Misal: Dipercaya Oleh Perusahaan Terkemuka">
                                     </div>
                                 </div>
                             </div>
 
                             {{-- Card Upload Client Logos (Maksimal 10 Slot) --}}
                             <div class="prof-card">
-                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
                                     <span>2. Daftar Logo Client &amp; Mitra (Maksimal 10 Slot)</span>
-                                    <span style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#ffffff; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">⚡ Auto Compress WebP</span>
+                                    <span
+                                        style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#ffffff; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">⚡
+                                        Auto Compress WebP</span>
                                 </div>
                                 <div class="card-body">
                                     @php
@@ -3089,27 +3239,38 @@
                                             }
                                         }
                                     @endphp
-                                    <div id="clientLogoSlotsContainer" style="display:flex; flex-direction:column; gap:1.25rem;">
+                                    <div id="clientLogoSlotsContainer"
+                                        style="display:flex; flex-direction:column; gap:1.25rem;">
                                         @for($i = 1; $i <= 10; $i++)
                                             @php
-                                                $cName  = $cfg["client_logo_{$i}_name"] ?? null;
-                                                $cLink  = $cfg["client_logo_{$i}_link"] ?? null;
-                                                $cImg   = $cfg["client_logo_{$i}_image"] ?? null;
+                                                $cName = $cfg["client_logo_{$i}_name"] ?? null;
+                                                $cLink = $cfg["client_logo_{$i}_link"] ?? null;
+                                                $cImg = $cfg["client_logo_{$i}_image"] ?? null;
                                                 $hasClientData = !empty($cName) || !empty($cImg) || !empty($cLink);
                                                 $isClientVisible = ($i <= $visibleClientCount) || $hasClientData;
                                             @endphp
-                                            <div class="client-logo-slot-box" id="client-logo-slot-{{ $i }}" style="display: {{ $isClientVisible ? 'block' : 'none' }}; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; background:#f8fafc;">
-                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.6rem;">
-                                                    <strong style="font-size:0.88rem; color:#0f172a;">Slot Logo Client #{{ $i }}</strong>
+                                            <div class="client-logo-slot-box" id="client-logo-slot-{{ $i }}"
+                                                style="display: {{ $isClientVisible ? 'block' : 'none' }}; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; background:#f8fafc;">
+                                                <div
+                                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.6rem;">
+                                                    <strong style="font-size:0.88rem; color:#0f172a;">Slot Logo Client
+                                                        #{{ $i }}</strong>
                                                     <div style="display:flex; align-items:center; gap:0.75rem;">
                                                         @if(!empty($cImg))
-                                                            <label style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                                <input type="checkbox" name="delete_client_logo_{{ $i }}_image" value="1"> Hapus Logo Ini
+                                                            <label
+                                                                style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                                <input type="checkbox" name="delete_client_logo_{{ $i }}_image"
+                                                                    value="1"> Hapus Logo Ini
                                                             </label>
                                                         @endif
                                                         @if($i > 1)
-                                                            <button type="button" onclick="removeClientLogoSlot({{ $i }})" style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; border-radius:6px; padding:0.25rem 0.6rem; font-size:0.72rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                                            <button type="button" onclick="removeClientLogoSlot({{ $i }})"
+                                                                style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; border-radius:6px; padding:0.25rem 0.6rem; font-size:0.72rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                                <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                                    stroke-width="2.2" viewBox="0 0 24 24">
+                                                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                                                </svg>
                                                                 Hapus Slot
                                                             </button>
                                                         @endif
@@ -3118,22 +3279,33 @@
 
                                                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                                                     <div class="form-group">
-                                                        <label class="form-label" style="font-size:0.78rem;">Nama Perusahaan / Client</label>
-                                                        <input type="text" name="client_logo_{{ $i }}_name" value="{{ old('client_logo_' . $i . '_name', $cName) }}" class="form-input" placeholder="Misal: Google / PT Indonesia Jaya">
+                                                        <label class="form-label" style="font-size:0.78rem;">Nama Perusahaan /
+                                                            Client</label>
+                                                        <input type="text" name="client_logo_{{ $i }}_name"
+                                                            value="{{ old('client_logo_' . $i . '_name', $cName) }}"
+                                                            class="form-input" placeholder="Misal: Google / PT Indonesia Jaya">
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="form-label" style="font-size:0.78rem;">Link URL (Opsional / Saat Logo Diklik)</label>
-                                                        <input type="text" name="client_logo_{{ $i }}_link" value="{{ old('client_logo_' . $i . '_link', $cLink) }}" class="form-input" placeholder="https://...">
+                                                        <label class="form-label" style="font-size:0.78rem;">Link URL (Opsional
+                                                            / Saat Logo Diklik)</label>
+                                                        <input type="text" name="client_logo_{{ $i }}_link"
+                                                            value="{{ old('client_logo_' . $i . '_link', $cLink) }}"
+                                                            class="form-input" placeholder="https://...">
                                                     </div>
 
                                                     <div class="form-group" style="grid-column:1/-1;">
-                                                        <label class="form-label" style="font-size:0.78rem;">Upload Logo (Otomatis Compress ke WebP)</label>
-                                                        <input type="file" name="client_logo_{{ $i }}_image" class="form-input" accept="image/*">
+                                                        <label class="form-label" style="font-size:0.78rem;">Upload Logo
+                                                            (Otomatis Compress ke WebP)</label>
+                                                        <input type="file" name="client_logo_{{ $i }}_image" class="form-input"
+                                                            accept="image/*">
                                                         @if(!empty($cImg))
-                                                            <div style="margin-top:0.4rem; display:flex; align-items:center; gap:0.5rem;">
-                                                                <img src="{{ asset('storage/' . $cImg) }}" style="height:32px; max-width:120px; object-fit:contain; border-radius:4px; background:#fff; padding:2px; border:1px solid #e2e8f0;">
-                                                                <span style="font-size:0.7rem; color:#1eb349; font-weight:600;">WebP Compressed</span>
+                                                            <div
+                                                                style="margin-top:0.4rem; display:flex; align-items:center; gap:0.5rem;">
+                                                                <img src="{{ asset('storage/' . $cImg) }}"
+                                                                    style="height:32px; max-width:120px; object-fit:contain; border-radius:4px; background:#fff; padding:2px; border:1px solid #e2e8f0;">
+                                                                <span style="font-size:0.7rem; color:#1eb349; font-weight:600;">WebP
+                                                                    Compressed</span>
                                                             </div>
                                                         @endif
                                                     </div>
@@ -3143,8 +3315,13 @@
                                     </div>
 
                                     <div style="margin-top:1.25rem; text-align:center;">
-                                        <button type="button" id="btnAddClientLogoSlot" onclick="addNextClientLogoSlot()" style="display:inline-flex; align-items:center; gap:0.5rem; background:#ffffff; color:#1eb349; border:1.5px solid #1eb349; padding:0.6rem 1.25rem; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 2px 8px rgba(30,179,73,0.12);">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        <button type="button" id="btnAddClientLogoSlot" onclick="addNextClientLogoSlot()"
+                                            style="display:inline-flex; align-items:center; gap:0.5rem; background:#ffffff; color:#1eb349; border:1.5px solid #1eb349; padding:0.6rem 1.25rem; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 2px 8px rgba(30,179,73,0.12);">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
                                             Tambah Slot Logo Client Baru (Maksimal 10)
                                         </button>
                                     </div>
@@ -3158,16 +3335,20 @@
 
                             {{-- Status Section --}}
                             <div class="prof-card">
-                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
                                     <span>Status Section Tim Kami (Tema 5)</span>
-                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                    <label
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
                                         <input type="checkbox" name="teams_enabled" value="1" {{ ($cfg['teams_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
                                         Aktifkan Section Tim Kami
                                     </label>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                        Tampilkan kartu anggota tim profesional di halaman utama Tema 5. Kartu menampilkan foto, nama, dan posisi. Saat di-hover, akan muncul bio singkat dengan latar gradasi warna yang bisa dikustomisasi.
+                                        Tampilkan kartu anggota tim profesional di halaman utama Tema 5. Kartu menampilkan
+                                        foto, nama, dan posisi. Saat di-hover, akan muncul bio singkat dengan latar gradasi
+                                        warna yang bisa dikustomisasi.
                                     </p>
                                 </div>
                             </div>
@@ -3176,11 +3357,12 @@
                             <div class="prof-card">
                                 <div class="prof-card-head">
                                     <span style="display:flex;align-items:center;gap:0.5rem;">
-                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                            <circle cx="9" cy="7" r="4"/>
-                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                            <circle cx="9" cy="7" r="4" />
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                         </svg>
                                         Teks Header Section Tim
                                     </span>
@@ -3188,11 +3370,14 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label class="form-label">Headline Section</label>
-                                        <input type="text" name="teams_headline" value="{{ old('teams_headline', $cfg['teams_headline'] ?? 'Temui Tim Profesional Kami') }}" class="form-input" placeholder="Contoh: Temui Tim Profesional Kami">
+                                        <input type="text" name="teams_headline"
+                                            value="{{ old('teams_headline', $cfg['teams_headline'] ?? 'Temui Tim Profesional Kami') }}"
+                                            class="form-input" placeholder="Contoh: Temui Tim Profesional Kami">
                                     </div>
                                     <div class="form-group" style="margin-top:1rem;">
                                         <label class="form-label">Deskripsi Singkat</label>
-                                        <textarea name="teams_description" class="form-input" rows="2" placeholder="Deskripsi ringkas tentang tim...">{{ old('teams_description', $cfg['teams_description'] ?? 'Talenta terbaik kami yang berdedikasi tinggi untuk memberikan hasil luar biasa.') }}</textarea>
+                                        <textarea name="teams_description" class="form-input" rows="2"
+                                            placeholder="Deskripsi ringkas tentang tim...">{{ old('teams_description', $cfg['teams_description'] ?? 'Talenta terbaik kami yang berdedikasi tinggi untuk memberikan hasil luar biasa.') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -3201,33 +3386,39 @@
                             <div class="prof-card">
                                 <div class="prof-card-head">
                                     <span style="display:flex;align-items:center;gap:0.5rem;">
-                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <circle cx="12" cy="8" r="4"/>
-                                            <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <circle cx="12" cy="8" r="4" />
+                                            <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
                                         </svg>
                                         Data Anggota Tim (Maks. 10 Orang)
                                     </span>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.5rem; line-height:1.5;">
-                                        📸 Foto: Otomatis dikonversi ke WebP (4:3 landscape). &nbsp;🎨 Warna Gradasi: Pilih 2 warna untuk overlay saat hover. &nbsp;📝 Bio: Maks. 30 kata ditampilkan di kartu.
+                                        📸 Foto: Otomatis dikonversi ke WebP (4:3 landscape). &nbsp;🎨 Warna Gradasi: Pilih
+                                        2 warna untuk overlay saat hover. &nbsp;📝 Bio: Maks. 30 kata ditampilkan di kartu.
                                     </p>
                                     <div style="display:flex; flex-direction:column; gap:1.5rem;">
                                         @for($i = 1; $i <= 10; $i++)
                                             @php
-                                                $tmPhoto   = $cfg["team_member_{$i}_photo"] ?? null;
-                                                $tmName    = $cfg["team_member_{$i}_name"] ?? null;
-                                                $tmPos     = $cfg["team_member_{$i}_position"] ?? null;
-                                                $tmBio     = $cfg["team_member_{$i}_bio"] ?? null;
-                                                $tmGS      = $cfg["team_member_{$i}_grad_start"] ?? '#2563eb';
-                                                $tmGE      = $cfg["team_member_{$i}_grad_end"] ?? '#1d4ed8';
+                                                $tmPhoto = $cfg["team_member_{$i}_photo"] ?? null;
+                                                $tmName = $cfg["team_member_{$i}_name"] ?? null;
+                                                $tmPos = $cfg["team_member_{$i}_position"] ?? null;
+                                                $tmBio = $cfg["team_member_{$i}_bio"] ?? null;
+                                                $tmGS = $cfg["team_member_{$i}_grad_start"] ?? '#2563eb';
+                                                $tmGE = $cfg["team_member_{$i}_grad_end"] ?? '#1d4ed8';
                                             @endphp
-                                            <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.25rem; position:relative;">
+                                            <div
+                                                style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.25rem; position:relative;">
                                                 <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
-                                                    <span style="background:linear-gradient(135deg,{{ $tmGS }},{{ $tmGE }}); color:#fff; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0;">{{ $i }}</span>
-                                                    <span style="font-size:0.85rem; font-weight:700; color:#1e293b;">Anggota Tim #{{ $i }}</span>
+                                                    <span
+                                                        style="background:linear-gradient(135deg,{{ $tmGS }},{{ $tmGE }}); color:#fff; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0;">{{ $i }}</span>
+                                                    <span style="font-size:0.85rem; font-weight:700; color:#1e293b;">Anggota Tim
+                                                        #{{ $i }}</span>
                                                     @if(!empty($tmName))
-                                                        <span style="font-size:0.72rem; color:#1eb349; font-weight:600; background:#f0fdf4; border:1px solid #bbf7d0; padding:0.1rem 0.5rem; border-radius:999px;">{{ $tmName }}</span>
+                                                        <span
+                                                            style="font-size:0.72rem; color:#1eb349; font-weight:600; background:#f0fdf4; border:1px solid #bbf7d0; padding:0.1rem 0.5rem; border-radius:999px;">{{ $tmName }}</span>
                                                     @endif
                                                 </div>
 
@@ -3236,57 +3427,92 @@
                                                     <div>
                                                         <label class="form-label" style="font-size:0.78rem;">Foto (4:3)</label>
                                                         @if(!empty($tmPhoto))
-                                                            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem; border-radius:8px; border:1px solid #e2e8f0;">
-                                                                <img src="{{ asset('storage/' . $tmPhoto) }}" style="width:72px; height:54px; object-fit:cover; border-radius:6px;">
+                                                            <div
+                                                                style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem; border-radius:8px; border:1px solid #e2e8f0;">
+                                                                <img src="{{ asset('storage/' . $tmPhoto) }}"
+                                                                    style="width:72px; height:54px; object-fit:cover; border-radius:6px;">
                                                                 <div>
-                                                                    <span style="font-size:0.72rem; color:#475569; display:block; font-weight:600;">Foto Terpasang (.webp)</span>
-                                                                    <label style="font-size:0.7rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
-                                                                        <input type="checkbox" name="delete_team_member_{{ $i }}_photo" value="1"> Hapus
+                                                                    <span
+                                                                        style="font-size:0.72rem; color:#475569; display:block; font-weight:600;">Foto
+                                                                        Terpasang (.webp)</span>
+                                                                    <label
+                                                                        style="font-size:0.7rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
+                                                                        <input type="checkbox"
+                                                                            name="delete_team_member_{{ $i }}_photo" value="1">
+                                                                        Hapus
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                         @endif
-                                                        <input type="file" name="team_member_{{ $i }}_photo" accept="image/*" class="form-input" style="height:auto; padding:0.35rem; font-size:0.75rem;">
-                                                        <span style="font-size:0.68rem; color:#94a3b8; margin-top:2px; display:block;">JPG/PNG → otomatis WebP</span>
+                                                        <input type="file" name="team_member_{{ $i }}_photo" accept="image/*"
+                                                            class="form-input"
+                                                            style="height:auto; padding:0.35rem; font-size:0.75rem;">
+                                                        <span
+                                                            style="font-size:0.68rem; color:#94a3b8; margin-top:2px; display:block;">JPG/PNG
+                                                            → otomatis WebP</span>
                                                     </div>
 
                                                     {{-- Right: Gradient Colors --}}
                                                     <div>
-                                                        <label class="form-label" style="font-size:0.78rem;">Warna Gradasi Hover</label>
-                                                        <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;">
+                                                        <label class="form-label" style="font-size:0.78rem;">Warna Gradasi
+                                                            Hover</label>
+                                                        <div
+                                                            style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;">
                                                             <div style="flex:1;">
-                                                                <label style="font-size:0.68rem; color:#64748b; display:block; margin-bottom:3px;">Warna 1</label>
-                                                                <input type="color" name="team_member_{{ $i }}_grad_start" value="{{ $tmGS }}" style="width:100%; height:36px; border-radius:6px; border:1.5px solid #e2e8f0; cursor:pointer; padding:2px;">
+                                                                <label
+                                                                    style="font-size:0.68rem; color:#64748b; display:block; margin-bottom:3px;">Warna
+                                                                    1</label>
+                                                                <input type="color" name="team_member_{{ $i }}_grad_start"
+                                                                    value="{{ $tmGS }}"
+                                                                    style="width:100%; height:36px; border-radius:6px; border:1.5px solid #e2e8f0; cursor:pointer; padding:2px;">
                                                             </div>
                                                             <div style="flex:1;">
-                                                                <label style="font-size:0.68rem; color:#64748b; display:block; margin-bottom:3px;">Warna 2</label>
-                                                                <input type="color" name="team_member_{{ $i }}_grad_end" value="{{ $tmGE }}" style="width:100%; height:36px; border-radius:6px; border:1.5px solid #e2e8f0; cursor:pointer; padding:2px;">
+                                                                <label
+                                                                    style="font-size:0.68rem; color:#64748b; display:block; margin-bottom:3px;">Warna
+                                                                    2</label>
+                                                                <input type="color" name="team_member_{{ $i }}_grad_end"
+                                                                    value="{{ $tmGE }}"
+                                                                    style="width:100%; height:36px; border-radius:6px; border:1.5px solid #e2e8f0; cursor:pointer; padding:2px;">
                                                             </div>
                                                         </div>
                                                         {{-- Gradient Preview --}}
-                                                        <div style="height:22px; border-radius:6px; background:linear-gradient(135deg,{{ $tmGS }},{{ $tmGE }}); border:1px solid rgba(0,0,0,0.05);"></div>
+                                                        <div
+                                                            style="height:22px; border-radius:6px; background:linear-gradient(135deg,{{ $tmGS }},{{ $tmGE }}); border:1px solid rgba(0,0,0,0.05);">
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 {{-- Name & Position --}}
-                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:0.85rem;">
+                                                <div
+                                                    style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:0.85rem;">
                                                     <div>
                                                         <label class="form-label" style="font-size:0.78rem;">Nama</label>
-                                                        <input type="text" name="team_member_{{ $i }}_name" value="{{ old('team_member_' . $i . '_name', $tmName) }}" class="form-input" placeholder="Contoh: Manuel Ravier" style="font-size:0.82rem;">
+                                                        <input type="text" name="team_member_{{ $i }}_name"
+                                                            value="{{ old('team_member_' . $i . '_name', $tmName) }}"
+                                                            class="form-input" placeholder="Contoh: Manuel Ravier"
+                                                            style="font-size:0.82rem;">
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" style="font-size:0.78rem;">Posisi / Divisi</label>
-                                                        <input type="text" name="team_member_{{ $i }}_position" value="{{ old('team_member_' . $i . '_position', $tmPos) }}" class="form-input" placeholder="Contoh: Performance Coach" style="font-size:0.82rem;">
+                                                        <label class="form-label" style="font-size:0.78rem;">Posisi /
+                                                            Divisi</label>
+                                                        <input type="text" name="team_member_{{ $i }}_position"
+                                                            value="{{ old('team_member_' . $i . '_position', $tmPos) }}"
+                                                            class="form-input" placeholder="Contoh: Performance Coach"
+                                                            style="font-size:0.82rem;">
                                                     </div>
                                                 </div>
 
                                                 {{-- Bio --}}
                                                 <div style="margin-top:0.85rem;">
-                                                    <label class="form-label" style="font-size:0.78rem; display:flex; justify-content:space-between; align-items:center;">
+                                                    <label class="form-label"
+                                                        style="font-size:0.78rem; display:flex; justify-content:space-between; align-items:center;">
                                                         <span>Bio Singkat</span>
-                                                        <span style="font-size:0.68rem; color:#94a3b8; font-weight:400;">Maks. 30 kata ditampilkan di kartu hover</span>
+                                                        <span style="font-size:0.68rem; color:#94a3b8; font-weight:400;">Maks.
+                                                            30 kata ditampilkan di kartu hover</span>
                                                     </label>
-                                                    <textarea name="team_member_{{ $i }}_bio" class="form-input" rows="2" placeholder="Ceritakan secara singkat peran dan keahlian anggota ini..." style="font-size:0.82rem;">{{ old('team_member_' . $i . '_bio', $tmBio) }}</textarea>
+                                                    <textarea name="team_member_{{ $i }}_bio" class="form-input" rows="2"
+                                                        placeholder="Ceritakan secara singkat peran dan keahlian anggota ini..."
+                                                        style="font-size:0.82rem;">{{ old('team_member_' . $i . '_bio', $tmBio) }}</textarea>
                                                 </div>
                                             </div>
                                         @endfor
@@ -3301,17 +3527,20 @@
                             <div class="prof-card">
                                 <div class="prof-card-head">
                                     <span style="display:flex;align-items:center;gap:0.5rem;">
-                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <rect x="3" y="14" width="18" height="7" rx="2"/>
-                                            <path d="M3 10h18M3 6h18"/>
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="14" width="18" height="7" rx="2" />
+                                            <path d="M3 10h18M3 6h18" />
                                         </svg>
                                         Warna Gradasi Background Footer
                                     </span>
-                                    <span style="font-size:0.72rem;font-weight:600;color:#64748b;">Tema 5 — Footer Gradient</span>
+                                    <span style="font-size:0.72rem;font-weight:600;color:#64748b;">Tema 5 — Footer
+                                        Gradient</span>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.82rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">
-                                        Atur warna gradasi footer halaman publik Tema 5. Dua warna ini akan dijadikan gradasi dari kiri ke kanan (atau bisa ditimpa dengan gambar background di bawah).
+                                        Atur warna gradasi footer halaman publik Tema 5. Dua warna ini akan dijadikan
+                                        gradasi dari kiri ke kanan (atau bisa ditimpa dengan gambar background di bawah).
                                     </p>
                                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
                                         <div class="form-group" style="margin-bottom:0;">
@@ -3322,8 +3551,8 @@
                                                     style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
                                                     oninput="syncFooterColor('footer_color1_picker','footer_color1_text',this.value);updateFooterPreview()">
                                                 <input type="text" id="footer_color1_text"
-                                                    value="{{ $cfg['footer_bg_color1'] ?? '#09121a' }}"
-                                                    class="form-input" style="flex:1;"
+                                                    value="{{ $cfg['footer_bg_color1'] ?? '#09121a' }}" class="form-input"
+                                                    style="flex:1;"
                                                     oninput="syncFooterColorFromText('footer_color1_picker','footer_color1_text',this.value);updateFooterPreview()">
                                             </div>
                                         </div>
@@ -3335,8 +3564,8 @@
                                                     style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
                                                     oninput="syncFooterColor('footer_color2_picker','footer_color2_text',this.value);updateFooterPreview()">
                                                 <input type="text" id="footer_color2_text"
-                                                    value="{{ $cfg['footer_bg_color2'] ?? '#064e3b' }}"
-                                                    class="form-input" style="flex:1;"
+                                                    value="{{ $cfg['footer_bg_color2'] ?? '#064e3b' }}" class="form-input"
+                                                    style="flex:1;"
                                                     oninput="syncFooterColorFromText('footer_color2_picker','footer_color2_text',this.value);updateFooterPreview()">
                                             </div>
                                         </div>
@@ -3344,9 +3573,11 @@
 
                                     {{-- Live Gradient Preview --}}
                                     <div style="margin-top:1.25rem;">
-                                        <label class="form-label" style="margin-bottom:0.4rem;display:block;">Preview Gradasi:</label>
+                                        <label class="form-label" style="margin-bottom:0.4rem;display:block;">Preview
+                                            Gradasi:</label>
                                         <div id="footerGradientPreview"
-                                            style="height:64px;border-radius:12px;border:1px solid #e2e8f0;background:linear-gradient(135deg,{{ $cfg['footer_bg_color1'] ?? '#09121a' }},{{ $cfg['footer_bg_color2'] ?? '#064e3b' }});transition:background 0.3s;"></div>
+                                            style="height:64px;border-radius:12px;border:1px solid #e2e8f0;background:linear-gradient(135deg,{{ $cfg['footer_bg_color1'] ?? '#09121a' }},{{ $cfg['footer_bg_color2'] ?? '#064e3b' }});transition:background 0.3s;">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -3355,30 +3586,36 @@
                             <div class="prof-card">
                                 <div class="prof-card-head">
                                     <span style="display:flex;align-items:center;gap:0.5rem;">
-                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                                            <polyline points="21 15 16 10 5 21"/>
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
                                         </svg>
                                         Gambar Background Footer (Overlay)
                                     </span>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.82rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">
-                                        Upload gambar untuk digunakan sebagai lapisan overlay di atas warna gradasi footer. Atur opacity agar gambar menyatu (blending) dengan gradasi warna yang sudah diset.
+                                        Upload gambar untuk digunakan sebagai lapisan overlay di atas warna gradasi footer.
+                                        Atur opacity agar gambar menyatu (blending) dengan gradasi warna yang sudah diset.
                                     </p>
 
                                     {{-- Current Image --}}
                                     @php $curFooterImg = $cfg['footer_bg_image'] ?? null; @endphp
                                     @if(!empty($curFooterImg))
-                                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;background:#f8fafc;padding:0.5rem 0.75rem;border-radius:8px;border:1px solid #e2e8f0;">
-                                            <img src="{{ asset('storage/' . $curFooterImg) }}"
-                                                id="footer_bg_image_thumb"
+                                        <div
+                                            style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;background:#f8fafc;padding:0.5rem 0.75rem;border-radius:8px;border:1px solid #e2e8f0;">
+                                            <img src="{{ asset('storage/' . $curFooterImg) }}" id="footer_bg_image_thumb"
                                                 style="width:80px;height:50px;object-fit:cover;border-radius:6px;">
                                             <div style="flex:1;">
-                                                <span style="font-size:0.78rem;color:#475569;display:block;font-weight:600;">Gambar Terpasang (.webp)</span>
-                                                <label style="font-size:0.75rem;color:#ef4444;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-top:2px;">
-                                                    <input type="checkbox" name="delete_footer_bg_image" value="1"> Hapus Gambar Footer
+                                                <span
+                                                    style="font-size:0.78rem;color:#475569;display:block;font-weight:600;">Gambar
+                                                    Terpasang (.webp)</span>
+                                                <label
+                                                    style="font-size:0.75rem;color:#ef4444;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-top:2px;">
+                                                    <input type="checkbox" name="delete_footer_bg_image" value="1"> Hapus Gambar
+                                                    Footer
                                                 </label>
                                             </div>
                                         </div>
@@ -3387,49 +3624,64 @@
                                     <input type="file" name="footer_bg_image" id="footer_bg_image_input" accept="image/*"
                                         class="form-input" style="height:auto;padding:0.5rem;"
                                         onchange="previewFooterBgImage(this)">
-                                    <span style="font-size:0.72rem;color:#64748b;margin-top:4px;display:flex;align-items:center;gap:4px;">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2">
-                                            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
+                                    <span
+                                        style="font-size:0.72rem;color:#64748b;margin-top:4px;display:flex;align-items:center;gap:4px;">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349"
+                                            stroke-width="2">
+                                            <path
+                                                d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z" />
                                         </svg>
                                         Semua format (JPG, PNG, WebP) otomatis dikonversi ke WebP resolusi tinggi.
                                     </span>
 
                                     {{-- Opacity Slider --}}
                                     <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">
-                                        <label class="form-label" style="margin-bottom:0.5rem;display:flex;justify-content:space-between;">
+                                        <label class="form-label"
+                                            style="margin-bottom:0.5rem;display:flex;justify-content:space-between;">
                                             <span>Opacity Gambar Background Footer</span>
-                                            <strong id="footer_opacity_label" style="color:#1eb349;">{{ $cfg['footer_bg_opacity'] ?? 30 }}%</strong>
+                                            <strong id="footer_opacity_label"
+                                                style="color:#1eb349;">{{ $cfg['footer_bg_opacity'] ?? 30 }}%</strong>
                                         </label>
-                                        <input type="range" name="footer_bg_opacity" id="footer_opacity_slider"
-                                            min="0" max="100" step="1"
-                                            value="{{ $cfg['footer_bg_opacity'] ?? 30 }}"
+                                        <input type="range" name="footer_bg_opacity" id="footer_opacity_slider" min="0"
+                                            max="100" step="1" value="{{ $cfg['footer_bg_opacity'] ?? 30 }}"
                                             style="width:100%;accent-color:#1eb349;height:6px;"
                                             oninput="document.getElementById('footer_opacity_label').textContent=this.value+'%';updateFooterPreview()">
-                                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#94a3b8;margin-top:0.25rem;">
+                                        <div
+                                            style="display:flex;justify-content:space-between;font-size:0.7rem;color:#94a3b8;margin-top:0.25rem;">
                                             <span>0% (Transparan)</span>
                                             <span>50% (Campuran)</span>
                                             <span>100% (Penuh)</span>
                                         </div>
                                         <p style="font-size:0.78rem;color:#64748b;margin-top:0.75rem;line-height:1.5;">
-                                            Opacity rendah → gambar menyatu halus dengan gradasi warna. Opacity tinggi → gambar lebih dominan menutupi gradasi.
+                                            Opacity rendah → gambar menyatu halus dengan gradasi warna. Opacity tinggi →
+                                            gambar lebih dominan menutupi gradasi.
                                         </p>
                                     </div>
 
                                     {{-- Footer Live Preview --}}
                                     <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">
-                                        <label class="form-label" style="margin-bottom:0.5rem;display:block;">Preview Footer (Simulasi):</label>
+                                        <label class="form-label" style="margin-bottom:0.5rem;display:block;">Preview Footer
+                                            (Simulasi):</label>
                                         <div id="footerLivePreview"
                                             style="position:relative;border-radius:14px;overflow:hidden;height:90px;border:1px solid #e2e8f0;background:linear-gradient(135deg,{{ $cfg['footer_bg_color1'] ?? '#09121a' }},{{ $cfg['footer_bg_color2'] ?? '#064e3b' }});">
                                             @if(!empty($curFooterImg))
-                                            <div id="footerImgOverlay"
-                                                style="position:absolute;inset:0;background:url('{{ asset('storage/' . $curFooterImg) }}') center/cover no-repeat;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;"></div>
+                                                <div id="footerImgOverlay"
+                                                    style="position:absolute;inset:0;background:url('{{ asset('storage/' . $curFooterImg) }}') center/cover no-repeat;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;">
+                                                </div>
                                             @else
-                                            <div id="footerImgOverlay" style="position:absolute;inset:0;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;"></div>
+                                                <div id="footerImgOverlay"
+                                                    style="position:absolute;inset:0;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;">
+                                                </div>
                                             @endif
-                                            <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:100%;gap:1rem;flex-wrap:wrap;">
-                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">© 2026 Brand Anda</span>
-                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.8);font-weight:600;">Hubungi Kami</span>
-                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">📍 Jakarta, Indonesia</span>
+                                            <div
+                                                style="position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:100%;gap:1rem;flex-wrap:wrap;">
+                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">© 2026 Brand
+                                                    Anda</span>
+                                                <span
+                                                    style="font-size:0.78rem;color:rgba(255,255,255,0.8);font-weight:600;">Hubungi
+                                                    Kami</span>
+                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">📍 Jakarta,
+                                                    Indonesia</span>
                                             </div>
                                         </div>
                                     </div>
@@ -3438,51 +3690,73 @@
                         </div> {{-- End #hpsub-footer --}}
 
                         @if(($profile->bio_theme ?? '') === 'theme5')
-                        {{-- FAVICON & SEO HOME PANE (DIPINDAHKAN KE PALING BAWAH FORM) --}}
-                        <div class="prof-card" style="margin-top: 1.5rem; margin-bottom: 1.5rem; border: 1.5px solid #1eb349; background: #fafdfb;">
-                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
-                                <span>Favicon Custom &amp; SEO Meta Tags (Halaman Utama / Beranda)</span>
-                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
-                            </div>
-                            <div class="card-body" style="padding:1.25rem;">
-                                <div style="margin-bottom: 1.25rem; background:#ffffff; padding:1rem; border-radius:10px; border:1px solid #e2e8f0;">
-                                    <label style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.35rem; font-size:0.88rem;">Favicon Custom Website (Tema 5)</label>
-                                    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
-                                        <div style="width:42px; height:42px; border-radius:8px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                            {{-- FAVICON & SEO HOME PANE (DIPINDAHKAN KE PALING BAWAH FORM) --}}
+                            <div class="prof-card"
+                                style="margin-top: 1.5rem; margin-bottom: 1.5rem; border: 1.5px solid #1eb349; background: #fafdfb;">
+                                <div class="prof-card-head"
+                                    style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Favicon Custom &amp; SEO Meta Tags (Halaman Utama / Beranda)</span>
+                                    <span
+                                        style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus
+                                        Tema 5</span>
+                                </div>
+                                <div class="card-body" style="padding:1.25rem;">
+                                    <div
+                                        style="margin-bottom: 1.25rem; background:#ffffff; padding:1rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                        <label
+                                            style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.35rem; font-size:0.88rem;">Favicon
+                                            Custom Website (Tema 5)</label>
+                                        <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                                            <div
+                                                style="width:42px; height:42px; border-radius:8px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                                                @if(!empty($cfg['theme5_favicon']))
+                                                    <img src="{{ asset('storage/' . $cfg['theme5_favicon']) }}" alt="Favicon"
+                                                        style="max-width:100%; max-height:100%; object-fit:contain;">
+                                                @else
+                                                    <img src="{{ asset('favicon.png') }}" alt="Default Favicon"
+                                                        style="max-width:24px; max-height:24px; opacity:0.6;">
+                                                @endif
+                                            </div>
+                                            <div style="flex:1; min-width:200px;">
+                                                <input type="file" name="theme5_favicon"
+                                                    accept="image/x-icon,image/png,image/jpeg,image/webp,image/svg+xml"
+                                                    class="form-input" style="height:auto; padding:0.4rem;">
+                                            </div>
                                             @if(!empty($cfg['theme5_favicon']))
-                                                <img src="{{ asset('storage/' . $cfg['theme5_favicon']) }}" alt="Favicon" style="max-width:100%; max-height:100%; object-fit:contain;">
-                                            @else
-                                                <img src="{{ asset('favicon.png') }}" alt="Default Favicon" style="max-width:24px; max-height:24px; opacity:0.6;">
+                                                <label
+                                                    style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:#ef4444; cursor:pointer;">
+                                                    <input type="checkbox" name="delete_theme5_favicon" value="1"> Hapus Favicon
+                                                </label>
                                             @endif
                                         </div>
-                                        <div style="flex:1; min-width:200px;">
-                                            <input type="file" name="theme5_favicon" accept="image/x-icon,image/png,image/jpeg,image/webp,image/svg+xml" class="form-input" style="height:auto; padding:0.4rem;">
+                                    </div>
+
+                                    <div
+                                        style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">Meta Title Beranda</label>
+                                            <input type="text" name="theme5_seo_home_title"
+                                                value="{{ old('theme5_seo_home_title', $cfg['theme5_seo_home_title'] ?? '') }}"
+                                                placeholder="Contoh: Nama Toko - Solusi Produk Digital Terpercaya"
+                                                class="form-input">
                                         </div>
-                                        @if(!empty($cfg['theme5_favicon']))
-                                            <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:#ef4444; cursor:pointer;">
-                                                <input type="checkbox" name="delete_theme5_favicon" value="1"> Hapus Favicon
-                                            </label>
-                                        @endif
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">Meta Keywords Beranda</label>
+                                            <input type="text" name="theme5_seo_home_keywords"
+                                                value="{{ old('theme5_seo_home_keywords', $cfg['theme5_seo_home_keywords'] ?? '') }}"
+                                                placeholder="Contoh: toko digital, jasa desain, ebook, template"
+                                                class="form-input">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
                                     <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Meta Title Beranda</label>
-                                        <input type="text" name="theme5_seo_home_title" value="{{ old('theme5_seo_home_title', $cfg['theme5_seo_home_title'] ?? '') }}" placeholder="Contoh: Nama Toko - Solusi Produk Digital Terpercaya" class="form-input">
+                                        <label class="form-label">Meta Description Beranda</label>
+                                        <textarea name="theme5_seo_home_desc" rows="3"
+                                            placeholder="Deskripsi singkat toko untuk hasil pencarian Google..."
+                                            class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
                                     </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Meta Keywords Beranda</label>
-                                        <input type="text" name="theme5_seo_home_keywords" value="{{ old('theme5_seo_home_keywords', $cfg['theme5_seo_home_keywords'] ?? '') }}" placeholder="Contoh: toko digital, jasa desain, ebook, template" class="form-input">
-                                    </div>
-                                </div>
-
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label class="form-label">Meta Description Beranda</label>
-                                    <textarea name="theme5_seo_home_desc" rows="3" placeholder="Deskripsi singkat toko untuk hasil pencarian Google..." class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
                                 </div>
                             </div>
-                        </div>
                         @endif
 
                         {{-- SINGLE SUBMIT BUTTON FOR HOMEPAGE (TEMA 5) --}}
@@ -3501,33 +3775,50 @@
                     <form action="{{ route('creator.bio.save-profile') }}" method="POST">
                         @csrf
                         <div class="prof-card" style="border: 1.5px solid #1eb349; background: #fafdfb;">
-                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                            <div class="prof-card-head"
+                                style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
                                 <span>Pengaturan SEO Meta Tags (Halaman Katalog Produk / Layanan)</span>
-                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
+                                <span
+                                    style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus
+                                    Tema 5</span>
                             </div>
                             <div class="card-body" style="padding:1.25rem;">
-                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman katalog produk (URL: <code>/{{ $profile->store_slug }}/produk</code>).</p>
-                                
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">Tentukan judul dan
+                                    deskripsi pencarian Google khusus untuk halaman katalog produk (URL:
+                                    <code>/{{ $profile->store_slug }}/produk</code>).</p>
+
+                                <div
+                                    style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
                                     <div class="form-group" style="margin-bottom:0;">
                                         <label class="form-label">Meta Title Halaman Produk</label>
-                                        <input type="text" name="theme5_seo_products_title" value="{{ old('theme5_seo_products_title', $cfg['theme5_seo_products_title'] ?? '') }}" placeholder="Contoh: Semua Produk & Layanan Digital - Nama Toko" class="form-input">
+                                        <input type="text" name="theme5_seo_products_title"
+                                            value="{{ old('theme5_seo_products_title', $cfg['theme5_seo_products_title'] ?? '') }}"
+                                            placeholder="Contoh: Semua Produk & Layanan Digital - Nama Toko"
+                                            class="form-input">
                                     </div>
                                     <div class="form-group" style="margin-bottom:0;">
                                         <label class="form-label">Meta Keywords Halaman Produk</label>
-                                        <input type="text" name="theme5_seo_products_keywords" value="{{ old('theme5_seo_products_keywords', $cfg['theme5_seo_products_keywords'] ?? '') }}" placeholder="Contoh: produk digital, beli ebook, software, katalog" class="form-input">
+                                        <input type="text" name="theme5_seo_products_keywords"
+                                            value="{{ old('theme5_seo_products_keywords', $cfg['theme5_seo_products_keywords'] ?? '') }}"
+                                            placeholder="Contoh: produk digital, beli ebook, software, katalog"
+                                            class="form-input">
                                     </div>
                                 </div>
 
                                 <div class="form-group" style="margin-bottom:0;">
                                     <label class="form-label">Meta Description Halaman Produk</label>
-                                    <textarea name="theme5_seo_products_desc" rows="3" placeholder="Deskripsi lengkap katalog produk digital dan layanan..." class="form-input">{{ old('theme5_seo_products_desc', $cfg['theme5_seo_products_desc'] ?? '') }}</textarea>
+                                    <textarea name="theme5_seo_products_desc" rows="3"
+                                        placeholder="Deskripsi lengkap katalog produk digital dan layanan..."
+                                        class="form-input">{{ old('theme5_seo_products_desc', $cfg['theme5_seo_products_desc'] ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="display:flex; justify-content:flex-end; margin-top: 1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
-                            <button type="submit" class="btn-submit-sm" style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">Simpan Pengaturan Produk</button>
+                        <div
+                            style="display:flex; justify-content:flex-end; margin-top: 1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
+                            <button type="submit" class="btn-submit-sm"
+                                style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">Simpan Pengaturan
+                                Produk</button>
                         </div>
                     </form>
                 </div>
@@ -3536,20 +3827,38 @@
                 <div class="prof-subtab-pane" id="subtab-contact-main" style="display:none;">
                     <form action="{{ route('creator.bio.save-profile') }}" method="POST">
                         @csrf
-                        <div class="prof-card" style="border: 1px solid #cbd5e1; background: #ffffff; margin-bottom: 1.5rem;">
-                            <div class="prof-card-head" style="font-weight:700; color:#0f172a;">📍 Lokasi Kantor &amp; Embed Google Maps</div>
+                        <div class="prof-card"
+                            style="border: 1px solid #cbd5e1; background: #ffffff; margin-bottom: 1.5rem;">
+                            <div class="prof-card-head" style="font-weight:700; color:#0f172a;">📍 Lokasi Kantor &amp; Embed
+                                Google Maps</div>
                             <div class="card-body" style="padding:1.25rem;">
-                                <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:1.1rem; display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
-                                    <div style="background:#e0f2fe; color:#0284c7; width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <div
+                                    style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:1.1rem; display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                                    <div
+                                        style="background:#e0f2fe; color:#0284c7; width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
                                     </div>
                                     <div style="flex:1; min-width:250px;">
-                                        <h4 style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-bottom:0.3rem;">Alamat &amp; Embed Maps Otomatis Terhubung</h4>
+                                        <h4 style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-bottom:0.3rem;">
+                                            Alamat &amp; Embed Maps Otomatis Terhubung</h4>
                                         <p style="font-size:0.8rem; color:#64748b; line-height:1.5; margin-bottom:0.85rem;">
-                                            Alamat lokasi kantor dan peta interaktif Google Maps untuk Halaman Kontak diambil langsung dari data <strong>Lokasi</strong> dan <strong>Embed Maps</strong> pada menu <strong>Informasi Profil</strong> / <strong>Embed Map</strong>.
+                                            Alamat lokasi kantor dan peta interaktif Google Maps untuk Halaman Kontak
+                                            diambil langsung dari data <strong>Lokasi</strong> dan <strong>Embed
+                                                Maps</strong> pada menu <strong>Informasi Profil</strong> / <strong>Embed
+                                                Map</strong>.
                                         </p>
-                                        <button type="button" class="btn-submit-sm" onclick="switchProfileSubtab('subtab-profile-info', document.getElementById('btn-subtab-info'))" style="background:#0f172a; color:#ffffff; font-size:0.8rem; padding:0.55rem 1.1rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
-                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        <button type="button" class="btn-submit-sm"
+                                            onclick="switchProfileSubtab('subtab-profile-info', document.getElementById('btn-subtab-info'))"
+                                            style="background:#0f172a; color:#ffffff; font-size:0.8rem; padding:0.55rem 1.1rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                            </svg>
                                             Kelola Lokasi &amp; Embed Maps di Informasi Profil
                                         </button>
                                     </div>
@@ -3558,33 +3867,50 @@
                         </div>
 
                         <div class="prof-card" style="border: 1.5px solid #1eb349; background: #fafdfb;">
-                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                            <div class="prof-card-head"
+                                style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
                                 <span>Pengaturan SEO Meta Tags (Halaman Kontak)</span>
-                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
+                                <span
+                                    style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus
+                                    Tema 5</span>
                             </div>
                             <div class="card-body" style="padding:1.25rem;">
-                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman kontak (URL: <code>/{{ $profile->store_slug }}/kontak</code>).</p>
-                                
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">Tentukan judul dan
+                                    deskripsi pencarian Google khusus untuk halaman kontak (URL:
+                                    <code>/{{ $profile->store_slug }}/kontak</code>).</p>
+
+                                <div
+                                    style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
                                     <div class="form-group" style="margin-bottom:0;">
                                         <label class="form-label">Meta Title Halaman Kontak</label>
-                                        <input type="text" name="theme5_seo_contact_title" value="{{ old('theme5_seo_contact_title', $cfg['theme5_seo_contact_title'] ?? '') }}" placeholder="Contoh: Hubungi Kami & Layanan Pelanggan - Nama Toko" class="form-input">
+                                        <input type="text" name="theme5_seo_contact_title"
+                                            value="{{ old('theme5_seo_contact_title', $cfg['theme5_seo_contact_title'] ?? '') }}"
+                                            placeholder="Contoh: Hubungi Kami & Layanan Pelanggan - Nama Toko"
+                                            class="form-input">
                                     </div>
                                     <div class="form-group" style="margin-bottom:0;">
                                         <label class="form-label">Meta Keywords Halaman Kontak</label>
-                                        <input type="text" name="theme5_seo_contact_keywords" value="{{ old('theme5_seo_contact_keywords', $cfg['theme5_seo_contact_keywords'] ?? '') }}" placeholder="Contoh: kontak, alamat kantor, maps, hubungi kami" class="form-input">
+                                        <input type="text" name="theme5_seo_contact_keywords"
+                                            value="{{ old('theme5_seo_contact_keywords', $cfg['theme5_seo_contact_keywords'] ?? '') }}"
+                                            placeholder="Contoh: kontak, alamat kantor, maps, hubungi kami"
+                                            class="form-input">
                                     </div>
                                 </div>
 
                                 <div class="form-group" style="margin-bottom:0;">
                                     <label class="form-label">Meta Description Halaman Kontak</label>
-                                    <textarea name="theme5_seo_contact_desc" rows="3" placeholder="Dapatkan bantuan, konsultasi, alamat kantor, dan kontak resmi..." class="form-input">{{ old('theme5_seo_contact_desc', $cfg['theme5_seo_contact_desc'] ?? '') }}</textarea>
+                                    <textarea name="theme5_seo_contact_desc" rows="3"
+                                        placeholder="Dapatkan bantuan, konsultasi, alamat kantor, dan kontak resmi..."
+                                        class="form-input">{{ old('theme5_seo_contact_desc', $cfg['theme5_seo_contact_desc'] ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="display:flex; justify-content:flex-end; margin-top: 1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
-                            <button type="submit" class="btn-submit-sm" style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">Simpan Pengaturan Kontak</button>
+                        <div
+                            style="display:flex; justify-content:flex-end; margin-top: 1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
+                            <button type="submit" class="btn-submit-sm"
+                                style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">Simpan Pengaturan
+                                Kontak</button>
                         </div>
                     </form>
                 </div>
@@ -4101,8 +4427,8 @@
                                 </div>
                                 @php
                                     $affBlockSlug = $affBlock->data_json['slug'] ?? ($affProd->slug ?? $affBlock->id);
-                                    $affPromoUrl = !empty($profile->custom_domain) 
-                                        ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $affBlockSlug 
+                                    $affPromoUrl = !empty($profile->custom_domain)
+                                        ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $affBlockSlug
                                         : route('bio.product.show', [$profile->store_slug, $affBlockSlug]);
                                 @endphp
                                 <div style="display:flex; align-items:center; gap:0.5rem; margin-left:auto; flex-wrap:wrap;">
@@ -4110,19 +4436,20 @@
                                         onclick="navigator.clipboard.writeText('{{ $affPromoUrl }}'); const old=this.innerHTML; this.innerHTML='<svg width=\'13\' height=\'13\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2.5\' viewBox=\'0 0 24 24\'><polyline points=\'20 6 9 17 4 12\'/></svg> Tersalin!'; setTimeout(()=>this.innerHTML=old, 2000);"
                                         title="Salin link promosi untuk toko bio Anda"
                                         style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                                         </svg>
                                         Salin Link Promosi
                                     </button>
-                                    <a href="{{ $affPromoUrl }}" target="_blank"
-                                        title="Buka halaman produk di bio Anda"
+                                    <a href="{{ $affPromoUrl }}" target="_blank" title="Buka halaman produk di bio Anda"
                                         style="background:#F8FAFC; color:#475569; border:1px solid #E2E8F0; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; font-weight: 500; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                                            <polyline points="15 3 21 3 21 9"/>
-                                            <line x1="10" y1="14" x2="21" y2="3"/>
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                            <polyline points="15 3 21 3 21 9" />
+                                            <line x1="10" y1="14" x2="21" y2="3" />
                                         </svg>
                                         Lihat
                                     </a>
@@ -5375,13 +5702,15 @@
             <div class="wb-intro-header">
                 <div class="wb-intro-title-wrap">
                     <span class="wb-intro-badge">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
                         Panduan Resmi
                     </span>
                     <h3 class="wb-intro-title">Pengenalan Web Builder</h3>
-                    <p class="wb-intro-subtitle">Pelajari cara mudah membuat dan mempersonalisasi halaman Web Builder Anda.</p>
+                    <p class="wb-intro-subtitle">Pelajari cara mudah membuat dan mempersonalisasi halaman Web Builder Anda.
+                    </p>
                 </div>
                 <button type="button" class="wb-intro-close-btn" onclick="closeWebBuilderIntroModal()" title="Tutup">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
@@ -5392,11 +5721,9 @@
             </div>
             <div class="wb-intro-body">
                 <div class="wb-intro-video-container">
-                    <iframe id="wbIntroIframe"
-                            src=""
-                            title="Video Pengenalan Web Builder Buyle"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen></iframe>
+                    <iframe id="wbIntroIframe" src="" title="Video Pengenalan Web Builder Buyle"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
                 </div>
             </div>
             <div class="wb-intro-footer">
@@ -5687,7 +6014,7 @@
         function previewFooterBgImage(input) {
             if (input.files && input.files[0]) {
                 let reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     let overlay = document.getElementById('footerImgOverlay');
                     if (overlay) {
                         overlay.style.backgroundImage = `url('${e.target.result}')`;
@@ -5787,20 +6114,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                                                                            <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                                                                                <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                                                                    <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                                                                </div>
-                                                                                <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                                                                                <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                                                                                <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                                                        Scan AI
-                                                                                    </button>
-                                                                                </div>
-                                                                            </div>`;
+                                                                                <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                                                                    <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                                                                        <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                                                                    </div>
+                                                                                    <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                                                                    <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                                                                    <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                                                                        <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                                                                        <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                                                            Scan AI
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -6074,11 +6401,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                                                                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                                                                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                                                                    <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                                                                </div>
-                                                                            `).join('');
+                                                                                    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                                                                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                                                                        <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                                                    </div>
+                                                                                `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');
@@ -7310,7 +7637,8 @@
                         <line x1="12" y1="8" x2="12" y2="12" />
                         <line x1="12" y1="16" x2="12.01" y2="16" />
                     </svg>
-                    <span><strong>Catatan:</strong> Harga sudah termasuk Admin Fee, Platform Fee, dan PPN (Pajak) 11%.</span>
+                    <span><strong>Catatan:</strong> Harga sudah termasuk Admin Fee, Platform Fee, dan PPN (Pajak)
+                        11%.</span>
                 </div>
                 <div id="dcmErrorBox" class="dcm-error-box">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"
@@ -7694,177 +8022,177 @@
                         style="flex:1.5; height:42px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,.3);">Simpan
                         & Tambahkan</button>
                 </div>
-    <script>
-        function updateHomepageSectionInputs() {
-            const hiddenContainer = document.getElementById('secReorderHiddenContainer');
-            const items = document.querySelectorAll('#secReorderListCompact .sec-reorder-item-compact');
-            if (!hiddenContainer) return;
-            hiddenContainer.innerHTML = '';
-            items.forEach(item => {
-                const key = item.getAttribute('data-sec-key');
-                if (key) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'homepage_sections_order[]';
-                    input.value = key;
-                    hiddenContainer.appendChild(input);
-                }
-            });
-        }
-
-        function moveSecItem(btn, direction) {
-            const item = btn.closest('.sec-reorder-item-compact, .sec-reorder-item');
-            const container = item ? item.parentElement : document.getElementById('secReorderListCompact');
-            if (!item || !container) return;
-
-            if (direction === 'up') {
-                const prev = item.previousElementSibling;
-                if (prev) container.insertBefore(item, prev);
-            } else if (direction === 'down') {
-                const next = item.nextElementSibling;
-                if (next) container.insertBefore(next, item);
-            } else if (direction === 'top') {
-                container.insertBefore(item, container.firstElementChild);
-            } else if (direction === 'bottom') {
-                container.appendChild(item);
-            }
-            updateHomepageSectionInputs();
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const list = document.getElementById('secReorderListCompact');
-            if (list) {
-                let dragItem = null;
-
-                list.addEventListener('dragstart', function(e) {
-                    dragItem = e.target.closest('.sec-reorder-item-compact');
-                    if (dragItem) {
-                        dragItem.classList.add('dragging');
-                        e.dataTransfer.effectAllowed = 'move';
+                <script>
+                    function updateHomepageSectionInputs() {
+                        const hiddenContainer = document.getElementById('secReorderHiddenContainer');
+                        const items = document.querySelectorAll('#secReorderListCompact .sec-reorder-item-compact');
+                        if (!hiddenContainer) return;
+                        hiddenContainer.innerHTML = '';
+                        items.forEach(item => {
+                            const key = item.getAttribute('data-sec-key');
+                            if (key) {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = 'homepage_sections_order[]';
+                                input.value = key;
+                                hiddenContainer.appendChild(input);
+                            }
+                        });
                     }
-                });
 
-                list.addEventListener('dragend', function(e) {
-                    if (dragItem) {
-                        dragItem.classList.remove('dragging');
-                        dragItem = null;
+                    function moveSecItem(btn, direction) {
+                        const item = btn.closest('.sec-reorder-item-compact, .sec-reorder-item');
+                        const container = item ? item.parentElement : document.getElementById('secReorderListCompact');
+                        if (!item || !container) return;
+
+                        if (direction === 'up') {
+                            const prev = item.previousElementSibling;
+                            if (prev) container.insertBefore(item, prev);
+                        } else if (direction === 'down') {
+                            const next = item.nextElementSibling;
+                            if (next) container.insertBefore(next, item);
+                        } else if (direction === 'top') {
+                            container.insertBefore(item, container.firstElementChild);
+                        } else if (direction === 'bottom') {
+                            container.appendChild(item);
+                        }
                         updateHomepageSectionInputs();
                     }
-                });
 
-                list.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    if (!dragItem) return;
-                    const afterElement = getDragAfterElement(list, e.clientY);
-                    if (afterElement == null) {
-                        list.appendChild(dragItem);
-                    } else {
-                        list.insertBefore(dragItem, afterElement);
-                    }
-                });
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const list = document.getElementById('secReorderListCompact');
+                        if (list) {
+                            let dragItem = null;
 
-                function getDragAfterElement(container, y) {
-                    const draggableElements = [...container.querySelectorAll('.sec-reorder-item-compact:not(.dragging)')];
-                    return draggableElements.reduce((closest, child) => {
-                        const box = child.getBoundingClientRect();
-                        const offset = y - box.top - box.height / 2;
-                        if (offset < 0 && offset > closest.offset) {
-                            return { offset: offset, element: child };
-                        } else {
-                            return closest;
+                            list.addEventListener('dragstart', function (e) {
+                                dragItem = e.target.closest('.sec-reorder-item-compact');
+                                if (dragItem) {
+                                    dragItem.classList.add('dragging');
+                                    e.dataTransfer.effectAllowed = 'move';
+                                }
+                            });
+
+                            list.addEventListener('dragend', function (e) {
+                                if (dragItem) {
+                                    dragItem.classList.remove('dragging');
+                                    dragItem = null;
+                                    updateHomepageSectionInputs();
+                                }
+                            });
+
+                            list.addEventListener('dragover', function (e) {
+                                e.preventDefault();
+                                if (!dragItem) return;
+                                const afterElement = getDragAfterElement(list, e.clientY);
+                                if (afterElement == null) {
+                                    list.appendChild(dragItem);
+                                } else {
+                                    list.insertBefore(dragItem, afterElement);
+                                }
+                            });
+
+                            function getDragAfterElement(container, y) {
+                                const draggableElements = [...container.querySelectorAll('.sec-reorder-item-compact:not(.dragging)')];
+                                return draggableElements.reduce((closest, child) => {
+                                    const box = child.getBoundingClientRect();
+                                    const offset = y - box.top - box.height / 2;
+                                    if (offset < 0 && offset > closest.offset) {
+                                        return { offset: offset, element: child };
+                                    } else {
+                                        return closest;
+                                    }
+                                }, { offset: Number.NEGATIVE_INFINITY }).element;
+                            }
                         }
-                    }, { offset: Number.NEGATIVE_INFINITY }).element;
-                }
-            }
 
-            updateHomepageSectionInputs();
-            if (typeof toggleSidebarSecReorderVisibility === 'function') {
-                toggleSidebarSecReorderVisibility();
-            }
-        });
+                        updateHomepageSectionInputs();
+                        if (typeof toggleSidebarSecReorderVisibility === 'function') {
+                            toggleSidebarSecReorderVisibility();
+                        }
+                    });
 
-        /* ── Web Builder Intro Modal Logic (Auto Pop-up with Autoplay Video) ── */
-        const WB_INTRO_STORAGE_KEY = 'buyle_wb_intro_dismissed_v1';
-        const WB_INTRO_RAW_URL = "{{ \App\Models\Setting::get('web_builder_intro_video_url') ?: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ' }}";
+                    /* ── Web Builder Intro Modal Logic (Auto Pop-up with Autoplay Video) ── */
+                    const WB_INTRO_STORAGE_KEY = 'buyle_wb_intro_dismissed_v1';
+                    const WB_INTRO_RAW_URL = "{{ \App\Models\Setting::get('web_builder_intro_video_url') ?: 'https://www.youtube-nocookie.com/embed/h-GRYD3Ild4' }}";
 
-        function parseWbVideoUrl(url) {
-            if (!url) return '';
-            if (url.includes('/embed/')) return url;
-            const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-            if (ytMatch && ytMatch[1]) {
-                return 'https://www.youtube-nocookie.com/embed/' + ytMatch[1];
-            }
-            return url;
-        }
-
-        function openWebBuilderIntroModal(autoplay = true) {
-            const modal = document.getElementById('webBuilderIntroModal');
-            const iframe = document.getElementById('wbIntroIframe');
-            const chk = document.getElementById('wbIntroDontShowAgain');
-            if (!modal || !iframe) return;
-
-            const baseEmbed = parseWbVideoUrl(WB_INTRO_RAW_URL);
-            const delimiter = baseEmbed.includes('?') ? '&' : '?';
-            const autoplayParam = autoplay ? 'autoplay=1&mute=0&rel=0&enablejsapi=1' : 'rel=0&enablejsapi=1';
-
-            iframe.src = baseEmbed ? (baseEmbed + delimiter + autoplayParam) : '';
-            if (chk) {
-                chk.checked = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
-            }
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeWebBuilderIntroModal() {
-            const modal = document.getElementById('webBuilderIntroModal');
-            const iframe = document.getElementById('wbIntroIframe');
-            const chk = document.getElementById('wbIntroDontShowAgain');
-            if (chk && chk.checked) {
-                localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
-            }
-            if (iframe) {
-                iframe.src = '';
-            }
-            if (modal) {
-                modal.style.display = 'none';
-            }
-            document.body.style.overflow = '';
-        }
-
-        function handleWbIntroBackdropClick(e) {
-            if (e.target && e.target.id === 'webBuilderIntroModal') {
-                closeWebBuilderIntroModal();
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('webBuilderIntroModal');
-                if (modal && modal.style.display === 'flex') {
-                    closeWebBuilderIntroModal();
-                }
-            }
-        });
-
-        // Auto pop-up on first visit if not dismissed
-        document.addEventListener('DOMContentLoaded', function() {
-            const isDismissed = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
-            if (!isDismissed) {
-                setTimeout(function() {
-                    openWebBuilderIntroModal(true);
-                }, 500);
-            }
-
-            const chk = document.getElementById('wbIntroDontShowAgain');
-            if (chk) {
-                chk.addEventListener('change', function() {
-                    if (this.checked) {
-                        localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
-                    } else {
-                        localStorage.removeItem(WB_INTRO_STORAGE_KEY);
+                    function parseWbVideoUrl(url) {
+                        if (!url) return '';
+                        if (url.includes('/embed/')) return url;
+                        const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                        if (ytMatch && ytMatch[1]) {
+                            return 'https://www.youtube-nocookie.com/embed/' + ytMatch[1];
+                        }
+                        return url;
                     }
-                });
-            }
-        });
-    </script>
+
+                    function openWebBuilderIntroModal(autoplay = true) {
+                        const modal = document.getElementById('webBuilderIntroModal');
+                        const iframe = document.getElementById('wbIntroIframe');
+                        const chk = document.getElementById('wbIntroDontShowAgain');
+                        if (!modal || !iframe) return;
+
+                        const baseEmbed = parseWbVideoUrl(WB_INTRO_RAW_URL);
+                        const delimiter = baseEmbed.includes('?') ? '&' : '?';
+                        const autoplayParam = autoplay ? 'autoplay=1&mute=0&rel=0&enablejsapi=1' : 'rel=0&enablejsapi=1';
+
+                        iframe.src = baseEmbed ? (baseEmbed + delimiter + autoplayParam) : '';
+                        if (chk) {
+                            chk.checked = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
+                        }
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    }
+
+                    function closeWebBuilderIntroModal() {
+                        const modal = document.getElementById('webBuilderIntroModal');
+                        const iframe = document.getElementById('wbIntroIframe');
+                        const chk = document.getElementById('wbIntroDontShowAgain');
+                        if (chk && chk.checked) {
+                            localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
+                        }
+                        if (iframe) {
+                            iframe.src = '';
+                        }
+                        if (modal) {
+                            modal.style.display = 'none';
+                        }
+                        document.body.style.overflow = '';
+                    }
+
+                    function handleWbIntroBackdropClick(e) {
+                        if (e.target && e.target.id === 'webBuilderIntroModal') {
+                            closeWebBuilderIntroModal();
+                        }
+                    }
+
+                    document.addEventListener('keydown', function (e) {
+                        if (e.key === 'Escape') {
+                            const modal = document.getElementById('webBuilderIntroModal');
+                            if (modal && modal.style.display === 'flex') {
+                                closeWebBuilderIntroModal();
+                            }
+                        }
+                    });
+
+                    // Auto pop-up on first visit if not dismissed
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const isDismissed = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
+                        if (!isDismissed) {
+                            setTimeout(function () {
+                                openWebBuilderIntroModal(true);
+                            }, 500);
+                        }
+
+                        const chk = document.getElementById('wbIntroDontShowAgain');
+                        if (chk) {
+                            chk.addEventListener('change', function () {
+                                if (this.checked) {
+                                    localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
+                                } else {
+                                    localStorage.removeItem(WB_INTRO_STORAGE_KEY);
+                                }
+                            });
+                        }
+                    });
+                </script>
 @endsection
