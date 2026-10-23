@@ -832,7 +832,11 @@
                                  style="width:120px; height:auto; display:block; margin:0 auto 0.75rem; filter:drop-shadow(0 4px 16px rgba(30,179,73,0.15)); animation:floatDinoNav 3s ease-in-out infinite;">
                             <style>@keyframes floatDinoNav { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }</style>
                             <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:0 0 0.25rem;">Keranjang Masih Kosong</h4>
-                            <p style="font-size:0.78rem; color:#64748B; margin:0;">Yuk, cari produk favoritmu sekarang!</p>
+                            <p style="font-size:0.78rem; color:#64748B; margin:0 0 1rem;">Yuk, cari produk favoritmu sekarang!</p>
+                            <a href="{{ route('products') }}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; width:100%; padding:0.65rem 1.5rem; text-align:center; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.8rem; font-weight:700; font-family:'Montserrat',sans-serif; text-decoration:none; border-radius:999px; transition:all 0.3s; box-shadow:0 4px 14px rgba(30,179,73,0.35);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(30,179,73,0.45)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)';">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                Lanjut Belanja
+                            </a>
                         </div>
                     @else
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
