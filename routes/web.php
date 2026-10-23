@@ -800,13 +800,23 @@ Route::post('/{username}/contact/lead', [\App\Http\Controllers\BioContactPageCon
     ->name('bio.contact.lead')
     ->where('username', '[a-zA-Z0-9_\-]+');
 
-// ── Wedding Public & Reception Gate Routes ────────────────────────────────
-Route::prefix('w/{slug}')->group(function () {
-    Route::get('/',                     [\App\Http\Controllers\WeddingPublicController::class, 'show'])->name('wedding.show');
-    Route::post('/wish',                [\App\Http\Controllers\WeddingPublicController::class, 'submitWish'])->name('wedding.wish');
-    Route::post('/gift',                [\App\Http\Controllers\WeddingPublicController::class, 'submitGift'])->name('wedding.gift');
+// ── Wedding Landing & Public Routes ───────────────────────────────────────
+Route::get('/wedding', [\App\Http\Controllers\WeddingPublicController::class, 'landing'])->name('wedding.landing');
+
+Route::prefix('wedding/{slug}')->group(function () {
+    Route::get('/',                             [\App\Http\Controllers\WeddingPublicController::class, 'show'])->name('wedding.show');
+    Route::post('/wish',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitWish'])->name('wedding.wish');
+    Route::post('/gift',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitGift'])->name('wedding.gift');
     Route::match(['get', 'post'], '/buku-tamu', [\App\Http\Controllers\WeddingPublicController::class, 'reception'])->name('wedding.reception');
     Route::post('/buku-tamu/checkin',           [\App\Http\Controllers\WeddingPublicController::class, 'submitReceptionCheckin'])->name('wedding.reception.checkin');
+});
+
+// Backward compatibility redirect: /w/{slug} -> /wedding/{slug}
+Route::get('/w/{slug}', function ($slug) {
+    return redirect()->to(url('/wedding/' . $slug . (request()->getQueryString() ? '?' . request()->getQueryString() : '')));
+});
+Route::match(['get', 'post'], '/w/{slug}/buku-tamu', function ($slug) {
+    return redirect()->to(url('/wedding/' . $slug . '/buku-tamu' . (request()->getQueryString() ? '?' . request()->getQueryString() : '')));
 });
 
 Route::get('/{username}', [\App\Http\Controllers\BioPageController::class, 'show'])

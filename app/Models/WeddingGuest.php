@@ -27,7 +27,12 @@ class WeddingGuest extends Model
 
         static::creating(function ($guest) {
             if (empty($guest->qr_code)) {
-                $guest->qr_code = 'W-' . strtoupper(Str::random(8));
+                // Standar ISO anti-konflik: Prefix WED + Tanggal Ymd + 6 Alfanumerik Unik (Persis modul ticketing)
+                $guest->qr_code = 'WED-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+            }
+            if (empty($guest->qr_token)) {
+                // Standar ISO/IEC 9834-8 UUID v4 anti-pemalsuan
+                $guest->qr_token = Str::uuid()->toString();
             }
         });
     }
@@ -49,6 +54,6 @@ class WeddingGuest extends Model
 
     public function getInvitationUrlAttribute(): string
     {
-        return url('/w/' . $this->wedding->slug . '?to=' . urlencode($this->name) . '&c=' . $this->qr_code);
+        return url('/wedding/' . $this->wedding->slug . '?to=' . urlencode($this->name) . '&code=' . $this->qr_code);
     }
 }

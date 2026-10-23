@@ -11,19 +11,51 @@ use Illuminate\Http\Request;
 class WeddingPublicController extends Controller
 {
     /**
+     * Halaman Utama Landing Page Buyle Wedding (https://buyle.id/wedding).
+     */
+    public function landing()
+    {
+        return view('wedding.landing');
+    }
+
+    /**
      * Tampilkan Undangan Digital Publik (Mobile-first).
+     * Dilengkapi Fitur Anti-Nakal (Jika parameter ?to diubah sembarangan, redirect ke domain utama).
      */
     public function show(string $slug, Request $request)
     {
         $wedding = Wedding::where('slug', $slug)->firstOrFail();
 
-        // Nama tamu personal dari query parameter (?to=Nama+Tamu)
-        $guestName = $request->query('to', 'Tamu Undangan');
+        $guest = null;
+        $guestName = 'Tamu Undangan';
 
-        // Cari tamu jika terdaftar
-        $guest = WeddingGuest::where('wedding_id', $wedding->id)
-            ->where('name', $guestName)
-            ->first();
+        // Fitur Anti-Nakal: Periksa parameter 'to'
+        if ($request->has('to')) {
+            $rawTo = trim($request->query('to'));
+
+            if (!empty($rawTo)) {
+                // Cari di database apakah nama tamu ini benar-benar terdaftar di undangan ini
+                $matchedGuest = WeddingGuest::where('wedding_id', $wedding->id)
+                    ->where(function ($q) use ($rawTo, $request) {
+                        $q->where('name', $rawTo)
+                          ->orWhere('name', urldecode($rawTo));
+
+                        if ($request->filled('code')) {
+                            $q->orWhere('qr_code', trim($request->query('code')))
+                              ->orWhere('qr_token', trim($request->query('code')));
+                        }
+                    })->first();
+
+                // ANTI-NAKAL GUARD: Jika nama tidak ditemukan (tamu mengedit URL sembarangan)
+                // Langsung redirect ke domain wedding mempelai utama tanpa query nakal!
+                if (!$matchedGuest) {
+                    return redirect()->route('wedding.show', ['slug' => $wedding->slug]);
+                }
+
+                $guest = $matchedGuest;
+                $guestName = $matchedGuest->name;
+            }
+        }
 
         // List Ucapan Doa Terbaru
         $wishes = $wedding->wishes()
@@ -138,6 +170,7 @@ class WeddingPublicController extends Controller
                     $q->where('id', $guestId);
                 } elseif ($code) {
                     $q->where('qr_code', $code)
+                      ->orWhere('qr_token', $code)
                       ->orWhere('name', 'like', "%{$code}%");
                 }
             })->first();

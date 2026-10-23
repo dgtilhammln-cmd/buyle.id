@@ -115,6 +115,8 @@ class WeddingController extends Controller
             'event_location_name'    => ['nullable', 'string', 'max:255'],
             'event_address'          => ['nullable', 'string'],
             'event_map_url'          => ['nullable', 'string', 'max:500'],
+            'event_latitude'         => ['nullable', 'numeric'],
+            'event_longitude'        => ['nullable', 'numeric'],
             'ceremony_date'          => ['nullable', 'date'],
             'ceremony_location_name' => ['nullable', 'string', 'max:255'],
             'ceremony_address'       => ['nullable', 'string'],

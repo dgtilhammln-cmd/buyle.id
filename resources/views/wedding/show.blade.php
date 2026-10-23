@@ -11,6 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
 
+    <!-- Leaflet.js Interactive Map (OpenStreetMap) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
     <style>
         :root {
             --primary: #1eb349;
@@ -492,12 +496,30 @@
                 <div class="event-time">{{ $wedding->event_date ? $wedding->event_date->isoFormat('dddd, D MMMM Y &bull; HH:mm') . ' WIB' : '-' }}</div>
                 <div class="event-venue">{{ $wedding->event_location_name }}</div>
                 <div class="event-address">{{ $wedding->event_address }}</div>
-                @if($wedding->event_map_url)
-                    <a href="{{ $wedding->event_map_url }}" target="_blank" class="btn-map">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        <span>Petunjuk Google Maps</span>
+
+                {{-- Komponen Peta Interaktif (Leaflet OSM) --}}
+                <div style="margin: 1.25rem 0 0.5rem; text-align:left;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.45rem;">
+                        <span style="font-size:0.75rem; font-weight:700; color:#166534; display:flex; align-items:center; gap:0.35rem;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                            Peta Lokasi Interaktif
+                        </span>
+                        <span style="font-size:0.68rem; color:#64748b; font-weight:600;">(Bisa digeser &amp; di-zoom)</span>
+                    </div>
+                    <div id="weddingInteractiveMap" style="width:100%; height:230px; border-radius:14px; border:1.5px solid #cbd5e1; z-index:1; background:#f1f5f9; box-shadow:0 4px 12px rgba(0,0,0,0.05);"></div>
+                </div>
+
+                <div style="display:flex; gap:0.5rem; justify-content:center; margin-top:0.75rem; flex-wrap:wrap;">
+                    @if($wedding->event_map_url)
+                        <a href="{{ $wedding->event_map_url }}" target="_blank" class="btn-map" style="flex:1; justify-content:center;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span>Buka Google Maps</span>
+                        </a>
+                    @endif
+                    <a href="https://waze.com/ul?q={{ urlencode($wedding->event_location_name ?: $wedding->event_address) }}" target="_blank" class="btn-map" style="background:#f8fafc; border-color:#cbd5e1; color:#0284c7;">
+                        <span>Navigasi Waze</span>
                     </a>
-                @endif
+                </div>
             </div>
         </section>
 
@@ -663,6 +685,39 @@
             setInterval(updateCountdown, 1000);
             updateCountdown();
         }
+
+        // Inisialisasi Peta Interaktif Leaflet
+        document.addEventListener('DOMContentLoaded', function() {
+            const mapContainer = document.getElementById('weddingInteractiveMap');
+            if (mapContainer && typeof L !== 'undefined') {
+                const lat = {{ $wedding->event_latitude ?: -6.2088 }};
+                const lng = {{ $wedding->event_longitude ?: 106.8456 }};
+                const venueName = "{{ addslashes($wedding->event_location_name ?: 'Venue Resepsi') }}";
+                const venueAddr = "{{ addslashes($wedding->event_address ?: '') }}";
+
+                try {
+                    const map = L.map('weddingInteractiveMap', {
+                        center: [lat, lng],
+                        zoom: 15,
+                        scrollWheelZoom: false
+                    });
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    const marker = L.marker([lat, lng]).addTo(map);
+                    marker.bindPopup(`<strong>${venueName}</strong><br><small style="color:#64748b;">${venueAddr}</small>`).openPopup();
+
+                    // Re-render map tiles saat cover undangan dibuka
+                    window.addEventListener('click', function() {
+                        setTimeout(() => map.invalidateSize(), 300);
+                    }, { once: true });
+                } catch(e) {
+                    console.log('Leaflet Map init error:', e);
+                }
+            }
+        });
     </script>
 </body>
 </html>
