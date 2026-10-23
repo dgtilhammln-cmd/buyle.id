@@ -1118,22 +1118,29 @@
             transform: translateX(100%);
         }
 
-        /* Flow Panels Container */
-        .buyle-flow-panels {
-            position: relative;
+        /* ── Flow Panels Wrapper – CSS Grid Stacking ──
+           Kedua panel menempati cell yang sama (grid-area: 1/1)
+           sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
+           Visibility dikendalikan via opacity + pointer-events agar
+           CSS transition dapat berjalan (display:none tidak bisa di-animate). */
+        .buyle-flow-panels-wrap {
+            display: grid;
+            grid-template-columns: 1fr;
             width: 100%;
         }
 
         .buyle-flow-panel {
-            display: none;
+            grid-area: 1 / 1;          /* stack semua panel di cell yang sama */
             opacity: 0;
-            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateY(12px);
+            pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(16px);
         }
 
         .buyle-flow-panel.active {
-            display: block;
             opacity: 1;
+            pointer-events: auto;
             transform: translateY(0);
         }
 
@@ -1911,6 +1918,9 @@
                 </div>
             </div>
 
+            {{-- ─────── PANELS WRAPPER (CSS Grid Stacking) ─────── --}}
+            <div class="buyle-flow-panels-wrap">
+
             {{-- ──────────────── PANEL 1: SEBAGAI CREATOR ──────────────── --}}
             <div class="buyle-flow-panel panel-creator active animating-in" id="flowPanelCreator">
 
@@ -2173,7 +2183,7 @@
 
 
             {{-- ──────────────── PANEL 2: SEBAGAI PEMBELI ──────────────── --}}
-            <div class="buyle-flow-panel panel-buyer animating-in" id="flowPanelBuyer">
+            <div class="buyle-flow-panel panel-buyer" id="flowPanelBuyer">
 
                 {{-- Desktop View --}}
                 <div class="buyle-flow-canvas">
@@ -2431,6 +2441,8 @@
                 </div>
 
             </div>
+
+            </div>{{-- end .buyle-flow-panels-wrap --}}
 
         </div>
     </section>
@@ -3166,24 +3178,25 @@
             function switchFlow(flow) {
                 if (!switchBox || !panelCreator || !panelBuyer) return;
 
-                if (flow === 'creator') {
-                    tabCreator.classList.add('active');
-                    tabBuyer.classList.remove('active');
-                    switchBox.classList.remove('show-buyer');
+                var outPanel = (flow === 'creator') ? panelBuyer : panelCreator;
+                var inPanel  = (flow === 'creator') ? panelCreator : panelBuyer;
+                var outTab   = (flow === 'creator') ? tabBuyer : tabCreator;
+                var inTab    = (flow === 'creator') ? tabCreator : tabBuyer;
 
-                    panelBuyer.classList.remove('active', 'animating-in');
-                    panelCreator.classList.add('active');
-                    void panelCreator.offsetWidth;
-                    panelCreator.classList.add('animating-in');
-                } else {
-                    tabBuyer.classList.add('active');
-                    tabCreator.classList.remove('active', 'animating-in');
-                    switchBox.classList.add('show-buyer');
+                // ── 1. Update toggle tabs
+                inTab.classList.add('active');
+                outTab.classList.remove('active');
+                switchBox.classList.toggle('show-buyer', flow === 'buyer');
 
-                    panelBuyer.classList.add('active');
-                    void panelBuyer.offsetWidth;
-                    panelBuyer.classList.add('animating-in');
-                }
+                // ── 2. Fade-out panel lama (opacity → 0 via CSS transition)
+                //    Hapus 'active' → opacity:0, pointer-events:none
+                outPanel.classList.remove('active', 'animating-in');
+
+                // ── 3. Fade-in panel baru + restart animasi anak-elemen
+                inPanel.classList.remove('animating-in'); // pastikan tidak ada sisa
+                inPanel.classList.add('active');           // opacity → 1 via CSS transition
+                void inPanel.offsetWidth;                  // force reflow agar animasi restart
+                inPanel.classList.add('animating-in');     // jalankan stagger animation anak-elemen
             }
 
             if (tabCreator && tabBuyer) {
