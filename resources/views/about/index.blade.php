@@ -1400,10 +1400,16 @@
         }
 
         /* ── 4-Second Interactive In-Animation System (Smooth Motion) ── */
-        .buyle-flow-panel:not(.animating-in) .buyle-flow-hub-card,
-        .buyle-flow-panel:not(.animating-in) .buyle-flow-step,
-        .buyle-flow-panel:not(.animating-in) .buyle-mobile-step-item {
+        .buyle-flow-panel:not(.active) .buyle-flow-hub-card,
+        .buyle-flow-panel:not(.active) .buyle-flow-step,
+        .buyle-flow-panel:not(.active) .buyle-mobile-step-item {
             opacity: 0;
+        }
+
+        .buyle-flow-panel.active:not(.animating-in) .buyle-flow-hub-card,
+        .buyle-flow-panel.active:not(.animating-in) .buyle-flow-step,
+        .buyle-flow-panel.active:not(.animating-in) .buyle-mobile-step-item {
+            opacity: 1;
         }
 
         .buyle-flow-panel.animating-in .buyle-flow-hub-card {
@@ -1875,12 +1881,7 @@
 
             {{-- Section Header --}}
             <div class="buyle-flow-header">
-                <div class="buyle-flow-badge">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    Panduan Langkah • Cara Kerja
-                </div>
+
                 <h2 class="buyle-flow-title">
                     Satu Ekosistem, <span class="gradient-text">Dua Cara Menikmati Kemudahannya</span>
                 </h2>
@@ -2172,7 +2173,7 @@
 
 
             {{-- ──────────────── PANEL 2: SEBAGAI PEMBELI ──────────────── --}}
-            <div class="buyle-flow-panel panel-buyer" id="flowPanelBuyer">
+            <div class="buyle-flow-panel panel-buyer animating-in" id="flowPanelBuyer">
 
                 {{-- Desktop View --}}
                 <div class="buyle-flow-canvas">
@@ -3170,19 +3171,18 @@
                     tabBuyer.classList.remove('active');
                     switchBox.classList.remove('show-buyer');
 
-                    panelBuyer.classList.remove('active');
-                    setTimeout(() => {
-                        panelCreator.classList.add('active');
-                    }, 50);
+                    panelBuyer.classList.remove('active', 'animating-in');
+                    panelCreator.classList.add('active');
+                    void panelCreator.offsetWidth;
+                    panelCreator.classList.add('animating-in');
                 } else {
                     tabBuyer.classList.add('active');
-                    tabCreator.classList.remove('active');
+                    tabCreator.classList.remove('active', 'animating-in');
                     switchBox.classList.add('show-buyer');
 
-                    panelCreator.classList.remove('active');
-                    setTimeout(() => {
-                        panelBuyer.classList.add('active');
-                    }, 50);
+                    panelBuyer.classList.add('active');
+                    void panelBuyer.offsetWidth;
+                    panelBuyer.classList.add('animating-in');
                 }
             }
 
