@@ -132,6 +132,86 @@
         transform: translateY(0) !important;
     }
 
+    /* ── Shortcut Menu Dropdown (Matching #userDropdown Style) ── */
+    #shortcut-menu-wrap {
+        position: relative;
+        display: inline-block;
+    }
+    #shortcut-menu-wrap:hover #shortcutDropdown,
+    #shortcut-menu-wrap.open #shortcutDropdown,
+    #shortcutDropdown.open {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+        pointer-events: auto !important;
+    }
+    #shortcut-menu-wrap:hover .nav-shortcut-btn,
+    #shortcut-menu-wrap.open .nav-shortcut-btn {
+        color: #1eb349;
+    }
+    #shortcutDropdown {
+        position: absolute;
+        top: calc(100% + 14px);
+        left: -12px;
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        min-width: 215px;
+        padding: 0.5rem;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+        pointer-events: none;
+        font-family: 'Montserrat', sans-serif;
+    }
+    #shortcutDropdown::before {
+        content: '';
+        position: absolute;
+        top: -14px;
+        left: 0;
+        right: 0;
+        height: 14px;
+    }
+    .shortcut-caret {
+        position: absolute;
+        top: -6px;
+        left: 20px;
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border-left: 1px solid #E2E8F0;
+        border-top: 1px solid #E2E8F0;
+        transform: rotate(45deg);
+    }
+    .shortcut-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.65rem 0.875rem;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #374151;
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        transition: background 0.15s, color 0.15s;
+    }
+    .shortcut-menu-item svg {
+        color: #64748B;
+        transition: color 0.15s;
+        flex-shrink: 0;
+    }
+    .shortcut-menu-item:hover {
+        background: #F0FDF4;
+        color: #16a34a;
+    }
+    .shortcut-menu-item:hover svg {
+        color: #16a34a;
+    }
+
     /* ── User Account Dropdown (Hover & Click) ── */
     #user-menu-wrap {
         position: relative;
@@ -572,7 +652,7 @@
         /* Hide all icons except Mobile Cart & Share & Daftar */
         .pill-icon-btn { display: flex !important; width: 32px; height: 32px; background: #fff; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; }
         .pill-icon-btn svg { width: 16px; height: 16px; color: #64748B; }
-        .cart-dropdown-wrap, .auth-text-btn, .auth-divider, .nav-article-btn { display: none !important; } /* Hide cart dropdown, article icon, and login text on mobile header since cart has direct mobile icon button */
+        .cart-dropdown-wrap, .auth-text-btn, .auth-divider, .nav-article-btn, #shortcut-menu-wrap { display: none !important; } /* Hide cart dropdown, shortcut menu, and login text on mobile header since cart has direct mobile icon button */
         .nav-mobile-cart-btn { display: flex !important; }
         
         body { padding-top: 130px !important; background-color: #F8FAFC !important; }
@@ -641,16 +721,59 @@
         {{-- ── CTA Actions & Auth ── --}}
         <div class="nav-pill-box nav-pill-actions">
             
-            {{-- Blog / Artikel Icon --}}
-            <a href="{{ url('/artikel') }}" class="pill-icon-btn nav-article-btn" title="Blog & Artikel">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-            </a>
+            {{-- Shortcut Dropdown (Tentang Buyle, Ticketing, FAQ, Tips & Blog) --}}
+            <div id="shortcut-menu-wrap">
+                <button type="button" class="pill-icon-btn nav-shortcut-btn" title="Menu Pintas" aria-label="Menu Pintas"
+                    onclick="document.getElementById('shortcut-menu-wrap').classList.toggle('open'); document.getElementById('shortcutDropdown').classList.toggle('open');"
+                    style="background:none;border:none;cursor:pointer;padding:0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                    </svg>
+                </button>
+
+                <div id="shortcutDropdown">
+                    <div class="shortcut-caret"></div>
+                    
+                    <div style="padding: 0.4rem 0.875rem 0.2rem; font-size: 0.65rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Menu Pintas</div>
+
+                    <a href="{{ route('about') }}" class="shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>Tentang Buyle</span>
+                    </a>
+
+                    <a href="{{ url('/ticketing') }}" class="shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
+                            <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2"></line>
+                        </svg>
+                        <span>Ticketing</span>
+                    </a>
+
+                    <a href="{{ route('faqs') }}" class="shortcut-item shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>FAQ</span>
+                    </a>
+
+                    <a href="{{ route('articles') }}" class="shortcut-item shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        <span>Tips &amp; Blog</span>
+                    </a>
+                </div>
+            </div>
 
             {{-- Mobile Cart Icon (Shown on mobile header instead of article icon) --}}
             <a href="{{ route('cart.index') }}" class="pill-icon-btn nav-mobile-cart-btn" title="Keranjang" style="position:relative;">
@@ -1016,5 +1139,14 @@ document.addEventListener('DOMContentLoaded', function() {
             navbar.classList.toggle('navbar-scrolled', window.scrollY > 50);
         });
     }
+
+    // Shortcut dropdown outside click listener
+    document.addEventListener('click', function(e) {
+        const sWrap = document.getElementById('shortcut-menu-wrap');
+        if (sWrap && !sWrap.contains(e.target)) {
+            sWrap.classList.remove('open');
+            document.getElementById('shortcutDropdown')?.classList.remove('open');
+        }
+    });
 });
 </script>

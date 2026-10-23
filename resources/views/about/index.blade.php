@@ -4151,37 +4151,6 @@
         </div>
     </section>
 
-{{-- ════ 3. VISI & MISI ════ --}}
-    <section style="padding: 5rem 1.5rem; background: var(--cv-surface); border-top: 1px solid var(--cv-border);">
-        <div class="container">
-            <div style="text-align:center; max-width:800px; margin:0 auto 3rem;">
-                <div class="cv-adv-section-label" style="justify-content:center;">PROFIL</div>
-                <h2 class="cv-adv-section-title" style="text-align:center;">Visi &amp; Misi Kami</h2>
-            </div>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem;">
-                <div class="cv-card cv-card-gray" style="min-height:auto;" data-aos="fade-up">
-                    <div class="cv-card-content">
-                        <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Visi Platform</div>
-                        <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Menjadi
-                            Pelopor</h3>
-                        <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">
-                            {{ $settings['visi'] ?? 'Menjadi digital creator marketplace terdepan di Indonesia yang menghubungkan kreator berbakat dengan pembeli yang mencari karya dan layanan digital berkualitas.' }}
-                        </p>
-                    </div>
-                </div>
-                <div class="cv-card cv-card-gray" style="min-height:auto;" data-aos="fade-up" data-aos-delay="100">
-                    <div class="cv-card-content">
-                        <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Misi Platform</div>
-                        <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Ekosistem
-                            Digital</h3>
-                        <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">
-                            {{ $settings['misi'] ?? 'Membangun ekosistem marketplace yang adil, aman, dan menguntungkan bagi kreator dan pembeli; mendorong pertumbuhan ekonomi digital Indonesia.' }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     {{-- ════ INJECT STYLES AND SECTIONS FROM HOME ════ --}}
     <style>
