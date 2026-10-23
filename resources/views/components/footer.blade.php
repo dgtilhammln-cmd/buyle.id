@@ -6,8 +6,6 @@ www.buyle.id
     $s = \App\Models\Setting::getAllAsArray();
     $wa = \App\Models\WaSetting::where('is_active', true)->first();
     $footerCategories = \App\Models\ProductCategory::active()->ordered()->take(6)->get();
-    $paymentLogo = \App\Models\Setting::get('payment_logos');
-    $expeditionLogo = \App\Models\Setting::get('expedition_logos');
 @endphp
 
 <style>
@@ -179,132 +177,81 @@ www.buyle.id
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
-    /* Payment & Shipping Logos Section */
-    .cv-footer-trust-strip {
+    /* Bottom Strip inside Green Section (Replaced trust strip) */
+    .cv-footer-bottom-strip {
         max-width: 1240px;
-        margin: 2.5rem auto 0;
+        margin: 2.75rem auto 0;
         padding: 1.5rem clamp(1.25rem, 5vw, 2.5rem) 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;
-        z-index: 2;
-    }
-
-    .cv-footer-trust-box {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .cv-footer-trust-label {
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .cv-footer-trust-img {
-        max-height: 24px;
-        width: auto;
-        object-fit: contain;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    }
-
-    .cv-footer-badge-item {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        background: #ffffff;
-        color: #0F172A;
-        font-size: 0.72rem;
-        font-weight: 800;
-        padding: 0.35rem 0.65rem;
-        border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    }
-
-    /* Bottom Bar */
-    .cv-footer-bottom-wrap {
-        background: #ffffff;
-        border-top: 1px solid rgba(0, 0, 0, 0.06);
-        position: relative;
-        z-index: 2;
-    }
-
-    .cv-footer-bottom {
-        max-width: 1240px;
-        margin: 0 auto;
-        padding: 1.25rem clamp(1.25rem, 5vw, 2.5rem);
+        border-top: 1px solid rgba(255, 255, 255, 0.22);
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 1.25rem;
+        position: relative;
+        z-index: 2;
     }
 
     .cv-footer-copy {
-        font-size: 0.85rem;
-        color: #64748B;
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.92);
         font-weight: 500;
     }
 
     .cv-footer-copy strong {
-        color: #0F172A;
+        color: #ffffff;
         font-weight: 700;
     }
 
     .cv-footer-dev {
-        font-size: 0.83rem;
-        color: #64748B;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.92);
         font-weight: 500;
         display: flex;
         align-items: center;
         gap: 1.25rem;
+        flex-wrap: wrap;
     }
 
     .cv-footer-dev a {
-        color: #1eb349;
-        text-decoration: none;
+        color: #ffffff;
+        text-decoration: underline;
+        text-underline-offset: 3px;
         font-weight: 700;
-        transition: color 0.2s;
+        transition: opacity 0.2s;
     }
 
     .cv-footer-dev a:hover {
-        color: #a5cf37;
-        text-decoration: underline;
+        opacity: 0.82;
     }
 
     .cv-footer-bottom-socials {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.65rem;
     }
 
     .cv-footer-bottom-socials a {
-        color: #64748B;
-        transition: all 0.25s ease;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
-        background: #F1F5F9;
+        text-decoration: none;
     }
 
     .cv-footer-bottom-socials a:hover {
-        background: #1eb349;
-        color: #ffffff;
-        transform: translateY(-2px);
+        background: #ffffff;
+        color: #1eb349;
+        transform: translateY(-2px) scale(1.08);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
     }
 
     /* Responsive */
@@ -313,38 +260,41 @@ www.buyle.id
             grid-template-columns: 1fr 1fr;
             gap: 2.5rem;
         }
-
-        .cv-footer-trust-strip {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1.25rem;
-        }
     }
 
     @media (max-width: 640px) {
+        .cv-footer-body {
+            padding-bottom: 95px !important;
+            /* Space for mobile sticky bottom navbar */
+        }
+
         .cv-footer-v2-main {
             grid-template-columns: 1fr;
             gap: 2rem;
             padding-top: 0.5rem;
-            padding-bottom: 1rem;
+            padding-bottom: 0.5rem;
         }
 
         .cv-footer-tagline {
             max-width: 100%;
         }
 
-        .cv-footer-bottom {
+        .cv-footer-bottom-strip {
             flex-direction: column;
             align-items: flex-start;
-            gap: 0.85rem;
-            padding-bottom: 90px !important;
-            /* Space for mobile sticky bottom navbar */
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+        }
+
+        .cv-footer-dev {
+            width: 100%;
+            justify-content: space-between;
         }
     }
 </style>
 
 <footer class="cv-footer-v2" role="contentinfo">
-
 
     {{-- Main Green Gradient Body --}}
     <div class="cv-footer-body">
@@ -439,66 +389,29 @@ www.buyle.id
 
         </div>
 
-        {{-- Payment & Shipping Logos Section --}}
-        <div class="cv-footer-trust-strip">
-            {{-- Pembayaran --}}
-            <div class="cv-footer-trust-box">
-                <span class="cv-footer-trust-label">Metode Pembayaran:</span>
-                @if($paymentLogo)
-                    <img src="{{ asset('storage/' . $paymentLogo) }}" alt="Pembayaran QRIS GoPay"
-                        class="cv-footer-trust-img">
-                @else
-                    <div class="cv-footer-badge-item" style="color:#D97706;"><span
-                            style="color:#EF4444;font-size:.9rem;">❖</span> QRIS</div>
-                    <div class="cv-footer-badge-item" style="color:#00A5CF;">GoPay</div>
-                    <div class="cv-footer-badge-item" style="color:#4F46E5;">OVO / Dana</div>
-                @endif
-            </div>
-
-            {{-- Pengiriman Fisik --}}
-            <div class="cv-footer-trust-box">
-                <span class="cv-footer-trust-label">Pengiriman Produk Fisik:</span>
-                @if($expeditionLogo)
-                    <img src="{{ asset('storage/' . $expeditionLogo) }}" alt="Pengiriman J&T JNE"
-                        class="cv-footer-trust-img">
-                @else
-                    <div class="cv-footer-badge-item" style="color:#DC2626;font-weight:900;">J&T Express</div>
-                    <div class="cv-footer-badge-item" style="color:#1D4ED8;font-weight:900;">JNE</div>
-                    <div class="cv-footer-badge-item" style="color:#059669;">SiCepat</div>
-                @endif
-            </div>
-        </div>
-
-    </div>
-
-    {{-- Bottom Bar --}}
-    <div class="cv-footer-bottom-wrap">
-        <div class="cv-footer-bottom">
+        {{-- Bottom Strip (copyright + dev + socials inside green section replacing trust strip) --}}
+        <div class="cv-footer-bottom-strip">
             <div class="cv-footer-copy">
-                <strong>{{ $s['copyright'] ?? '© ' . date('Y') . ' buyle.id' }}</strong>. All Rights Reserved.
+                <strong>{{ $s['copyright'] ?? '&copy;' . date('Y') . ' buyle.id' }}</strong>. All Rights Reserved.
             </div>
 
             <div class="cv-footer-dev">
-                <span>Developed by <a href="https://hvmdigital.id/" target="_blank" rel="noopener">HVM
-                        Digital</a></span>
+                <span>Developed by <a href="https://hvmdigital.id/" target="_blank" rel="noopener">HVM Digital</a></span>
                 <div class="cv-footer-bottom-socials">
-                    <a href="https://instagram.com/hvmdigital.id" target="_blank" rel="noopener"
-                        title="Instagram @hvmdigital.id">
+                    <a href="https://instagram.com/hvmdigital.id" target="_blank" rel="noopener" title="Instagram @hvmdigital.id">
                         <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                         </svg>
                     </a>
-                    <a href="https://tiktok.com/@hvmdigital.id" target="_blank" rel="noopener"
-                        title="TikTok @hvmdigital.id">
+                    <a href="https://tiktok.com/@hvmdigital.id" target="_blank" rel="noopener" title="TikTok @hvmdigital.id">
                         <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-2.9 2.802 2.895 2.895 0 0 1-2.893-2.89 2.894 2.894 0 0 1 2.893-2.891c.328 0 .641.055.932.155V9.408a6.3 6.3 0 0 0-.932-.07A6.333 6.333 0 0 0 3.14 15.67a6.33 6.33 0 0 0 6.334 6.33 6.333 6.333 0 0 0 6.333-6.33V9.088a8.216 8.216 0 0 0 5.234 1.86v-3.48a4.8 4.8 0 0 1-1.452-.782z" />
+                            <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-2.9 2.802 2.895 2.895 0 0 1-2.893-2.89 2.894 2.894 0 0 1 2.893-2.891c.328 0 .641.055.932.155V9.408a6.3 6.3 0 0 0-.932-.07A6.333 6.333 0 0 0 3.14 15.67a6.33 6.33 0 0 0 6.334 6.33 6.333 6.333 0 0 0 6.333-6.33V9.088a8.216 8.216 0 0 0 5.234 1.86v-3.48a4.8 4.8 0 0 1-1.452-.782z" />
                         </svg>
                     </a>
                 </div>
             </div>
         </div>
+
     </div>
 
 </footer>
