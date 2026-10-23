@@ -531,7 +531,7 @@
                 <div class="empty-icon-wrap" style="background:none; box-shadow:none; width:auto; margin-bottom:0;">
                     <img src="{{ asset('images/keranjangkosong.png') }}"
                          alt="Keranjang Kosong"
-                         style="width:200px; height:auto; display:block; margin:0 auto 0.5rem; filter:drop-shadow(0 8px 24px rgba(30,179,73,0.15)); animation:floatDino 3s ease-in-out infinite;">
+                         style="width:180px; height:auto; display:block; margin:0 auto 1.5rem; filter:drop-shadow(0 8px 24px rgba(30,179,73,0.15)); animation:floatDino 3s ease-in-out infinite;">
                 </div>
                 <h2>Keranjang Masih Kosong</h2>
                 <p>Yuk cari produk perlengkapan rumah impianmu dan tambahkan ke keranjang!</p>
