@@ -805,8 +805,8 @@ Route::prefix('w/{slug}')->group(function () {
     Route::get('/',                     [\App\Http\Controllers\WeddingPublicController::class, 'show'])->name('wedding.show');
     Route::post('/wish',                [\App\Http\Controllers\WeddingPublicController::class, 'submitWish'])->name('wedding.wish');
     Route::post('/gift',                [\App\Http\Controllers\WeddingPublicController::class, 'submitGift'])->name('wedding.gift');
-    Route::get('/buku-tamu',            [\App\Http\Controllers\WeddingPublicController::class, 'reception'])->name('wedding.reception');
-    Route::post('/buku-tamu/checkin',   [\App\Http\Controllers\WeddingPublicController::class, 'submitReceptionCheckin'])->name('wedding.reception.checkin');
+    Route::match(['get', 'post'], '/buku-tamu', [\App\Http\Controllers\WeddingPublicController::class, 'reception'])->name('wedding.reception');
+    Route::post('/buku-tamu/checkin',           [\App\Http\Controllers\WeddingPublicController::class, 'submitReceptionCheckin'])->name('wedding.reception.checkin');
 });
 
 Route::get('/{username}', [\App\Http\Controllers\BioPageController::class, 'show'])

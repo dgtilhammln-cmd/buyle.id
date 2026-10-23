@@ -295,22 +295,22 @@
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
-            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
-            color: #ffffff;
-            border: none;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
             border-radius: 12px;
             padding: 0.6rem 1.15rem;
             font-size: 0.8rem;
-            font-weight: 700;
+            font-weight: 700 !important;
             text-decoration: none;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.28);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32) !important;
             transition: all 0.15s ease;
         }
 
         .wb-btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(30, 179, 73, 0.35);
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4) !important;
         }
 
         .wb-btn-danger-outline {
@@ -853,6 +853,53 @@
                         </div>
                     </div>
 
+                    {{-- Card Musik Latar Undangan (Backsound MP3) --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <div class="head-title-wrap">
+                                <div class="head-icon">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                                </div>
+                                <span>Musik Latar Undangan (Backsound MP3)</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-label">Upload File Musik (.mp3, .wav, maks 20MB)</label>
+                                        <input type="file" name="music_file" accept="audio/*" class="form-input" style="padding-top:0.4rem;">
+                                        <span class="form-hint">Unggah rekaman audio romantis pilihan Anda dari HP / laptop.</span>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Atau Masukkan Tautan Musik (URL MP3)</label>
+                                        <input type="url" name="music_url" id="musicUrlField" value="{{ old('music_url', $wedding->music_url) }}" placeholder="https://domain.com/musik-wedding.mp3" class="form-input">
+                                        <span class="form-hint">Dapat diisi URL file MP3 online yang dapat diputar langsung.</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-label">Pilih Lagu Rekomendasi (Bebas Royalti)</label>
+                                        <select class="form-input" onchange="document.getElementById('musicUrlField').value = this.value; document.getElementById('audioPreviewElem').src = this.value; document.getElementById('previewWrap').style.display = 'block';">
+                                            <option value="">-- Pilih Musik Rekomendasi --</option>
+                                            <option value="https://assets.mixkit.co/music/preview/mixkit-wedding-waltz-piano-694.mp3">Romantic Wedding Waltz (Piano)</option>
+                                            <option value="https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3">Serene Acoustic Melody</option>
+                                            <option value="https://assets.mixkit.co/music/preview/mixkit-love-story-piano-695.mp3">Love Story Ballad (Piano)</option>
+                                        </select>
+                                    </div>
+                                    <div id="previewWrap" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-top:0.5rem; {{ $wedding->music_url ? '' : 'display:none;' }}">
+                                        <div style="font-size:0.75rem; font-weight:700; color:#166534; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.35rem;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                            Pratinjau Musik:
+                                        </div>
+                                        <audio id="audioPreviewElem" controls style="width:100%; height:36px;" src="{{ $wedding->music_url }}"></audio>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="display:flex; justify-content:flex-end;">
                         <button type="submit" class="wb-btn-primary" style="padding:0.75rem 2rem; font-size:0.9rem;">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
@@ -1034,26 +1081,75 @@
                         </div>
                     </div>
 
-                    {{-- Bulk Import CSV / Text --}}
+                    {{-- Import via CSV / Excel --}}
                     <div class="prof-card" style="margin-bottom:0;">
                         <div class="prof-card-head">
                             <div class="head-title-wrap">
                                 <div class="head-icon">
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
                                 </div>
-                                <span>Bulk Import Tamu (Salin &amp; Tempel)</span>
+                                <span>Import via CSV / Excel (.csv, .xlsx)</span>
                             </div>
+                            <a href="data:text/csv;charset=utf-8,Nama,No_WhatsApp,Pax,Grup%0ABpk.+Rahmat+%26+Rekan,081234567890,2,VIP%0ASiti+Nurhaliza%2C+M.Pd,085678901234,1,Keluarga%0ADimas+%26+Partner,081987654321,2,Teman+Kantor" download="contoh_format_tamu_undangan.csv" style="font-size:0.75rem; font-weight:700; color:#166534; background:#dcfce7; padding:0.35rem 0.75rem; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Unduh Template CSV
+                            </a>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('creator.wedding.guest.import') }}" method="POST">
+                            <form action="{{ route('creator.wedding.guest.import') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <label class="form-label">Format: Nama, NoHP, Pax, Grup (1 baris per tamu)</label>
-                                    <textarea name="bulk_data" class="form-input" style="height:120px; font-family:monospace; font-size:0.75rem;" placeholder="Budi Santoso, 0812345678, 2, Rekan Kerja&#10;Dr. Siti Aminah, 0856789012, 1, VIP&#10;Ahmad Fauzi &amp; Partner, , 2, Teman SMA" required></textarea>
-                                    <span class="form-hint">Pisahkan tiap kolom dengan koma (,). Nomor HP dan grup bersifat opsional.</span>
+                                    <label class="form-label">Pilih File Spreadsheet (CSV / Excel)</label>
+                                    <input type="file" name="file" accept=".csv, .xlsx, .xls, .txt" class="form-input" style="padding-top:0.4rem;">
+                                    <span class="form-hint">Sistem otomatis mendeteksi kolom: <strong>Nama</strong>, <strong>No WhatsApp</strong>, <strong>Pax</strong>, dan <strong>Grup</strong>.</span>
                                 </div>
-                                <button type="submit" class="wb-btn-primary" style="width:100%; justify-content:center; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
-                                    Impor Tamu Sekaligus
+
+                                {{-- Contoh Format Tabel Visual --}}
+                                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-bottom:1rem;">
+                                    <div style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.35rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                        Contoh Struktur Kolom File Spreadsheet:
+                                    </div>
+                                    <div style="overflow-x:auto;">
+                                        <table style="width:100%; border-collapse:collapse; font-size:0.72rem; text-align:left;">
+                                            <thead>
+                                                <tr style="background:#e2e8f0; color:#334155;">
+                                                    <th style="padding:4px 6px; border:1px solid #cbd5e1;">Nama (Wajib)</th>
+                                                    <th style="padding:4px 6px; border:1px solid #cbd5e1;">No WhatsApp</th>
+                                                    <th style="padding:4px 6px; border:1px solid #cbd5e1; text-align:center;">Pax</th>
+                                                    <th style="padding:4px 6px; border:1px solid #cbd5e1;">Grup / Kategori</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">Bpk. Rahmat &amp; Rekan</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">081234567890</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">2</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">VIP</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">Siti Nurhaliza, M.Pd</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">085678901234</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">1</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">Keluarga</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">Dimas &amp; Partner</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">081987654321</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">2</td>
+                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">Teman Kantor</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div style="font-size:0.68rem; color:#64748b; margin-top:0.4rem; line-height:1.3;">
+                                        * Pax otomatis 1 jika tidak diisi. Format nomor HP mendukung awalan 08 atau 62.
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="wb-btn-primary" style="width:100%; justify-content:center;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Impor Tamu via CSV / Excel
                                 </button>
                             </form>
                         </div>

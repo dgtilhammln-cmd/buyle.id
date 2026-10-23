@@ -121,6 +121,7 @@ class WeddingController extends Controller
             'reception_pin'          => ['required', 'string', 'min:4', 'max:10'],
             'theme'                  => ['nullable', 'string', 'max:50'],
             'music_url'              => ['nullable', 'string', 'max:500'],
+            'music_file'             => ['nullable', 'file', 'mimes:mp3,wav,m4a,ogg,audio/mpeg', 'max:20480'],
         ]);
 
         // Upload Cover Photo
@@ -141,10 +142,16 @@ class WeddingController extends Controller
             $validated['bride_photo'] = $path;
         }
 
+        // Upload Music File
+        if ($request->hasFile('music_file')) {
+            $musicPath = $request->file('music_file')->store('weddings/music', 'public');
+            $validated['music_url'] = asset('storage/' . $musicPath);
+        }
+
         $wedding->update($validated);
 
         return redirect()->route('creator.wedding.index', ['tab' => 'tab-info'])
-            ->with('success', 'Informasi acara dan pasangan mempelai berhasil disimpan!');
+            ->with('success', 'Informasi acara, pasangan mempelai, dan musik berhasil disimpan!');
     }
 
     /**
@@ -171,28 +178,54 @@ class WeddingController extends Controller
     }
 
     /**
-     * Import Tamu Sekaligus (Bulk Import via Textarea).
+     * Import Tamu Sekaligus via File CSV / Excel / Textarea.
      */
     public function importGuests(Request $request)
     {
         $wedding = $this->getOrCreateWedding();
 
         $request->validate([
-            'bulk_data' => ['required', 'string'],
+            'file'      => ['nullable', 'file', 'mimes:csv,txt,xls,xlsx', 'max:10240'],
+            'bulk_data' => ['nullable', 'string'],
         ]);
 
-        $lines = preg_split('/\r\n|\r|\n/', trim($request->bulk_data));
+        $rawContent = '';
+
+        if ($request->hasFile('file')) {
+            $rawContent = file_get_contents($request->file('file')->getRealPath());
+        } elseif ($request->filled('bulk_data')) {
+            $rawContent = $request->bulk_data;
+        } else {
+            return redirect()->route('creator.wedding.index', ['tab' => 'tab-guests'])
+                ->with('error', 'Silakan pilih file CSV/Excel atau masukkan data tamu.');
+        }
+
+        // Normalisasi baris
+        $lines = preg_split('/\r\n|\r|\n/', trim($rawContent));
         $count = 0;
 
-        foreach ($lines as $line) {
+        foreach ($lines as $index => $line) {
             $line = trim($line);
             if (empty($line)) continue;
 
-            $parts = array_map('trim', explode(',', $line));
+            // Deteksi pemisah: koma, titik koma, atau tab
+            $delimiter = ',';
+            if (strpos($line, ';') !== false && substr_count($line, ';') >= substr_count($line, ',')) {
+                $delimiter = ';';
+            } elseif (strpos($line, "\t") !== false) {
+                $delimiter = "\t";
+            }
+
+            $parts = array_map('trim', explode($delimiter, $line));
             $name  = $parts[0] ?? null;
             $phone = $parts[1] ?? null;
-            $pax   = isset($parts[2]) ? (int) $parts[2] : 1;
+            $pax   = isset($parts[2]) && is_numeric($parts[2]) ? (int) $parts[2] : 1;
             $group = $parts[3] ?? 'Tamu Undangan';
+
+            // Lewati header jika baris pertama adalah nama kolom
+            if ($index === 0 && (strtolower($name) === 'nama' || strtolower($name) === 'nama tamu' || strtolower($name) === 'name')) {
+                continue;
+            }
 
             if (!empty($name)) {
                 WeddingGuest::create([
