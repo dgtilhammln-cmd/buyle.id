@@ -469,10 +469,143 @@
         .skel-sf-body { padding: 0.75rem 1rem 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center; }
         .skel-sf-pills { display: flex; gap: 0.4rem; overflow-x: hidden; width: 100%; margin-bottom: 0.5rem; }
         .skel-sf-pill-item { height: 34px; border-radius: 999px; background: #fff; border: 1px solid #e2e8f0; flex-shrink: 0; }
-        
         @media(min-width: 768px) {
             .skel-store-layout { display: grid; grid-template-columns: 280px 1fr; gap: 1.25rem; align-items: start; }
             .skel-sf-pills { display: none; }
+        }
+
+        /* ── About Page Skeleton ── */
+        .skel-about-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-top: 0.5rem;
+        }
+        .skel-about-orbit {
+            position: relative;
+            width: 100%;
+            max-width: 980px;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem auto 2.5rem;
+        }
+        .skel-about-bubble {
+            width: 100%;
+            max-width: 490px;
+            height: 250px;
+            border-radius: 32px;
+            z-index: 2;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        }
+        .skel-about-nodes {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        .skel-about-node-item {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .skel-about-node-circle {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+        }
+        .skel-about-node-pill {
+            width: 95px;
+            height: 22px;
+            border-radius: 999px;
+        }
+        .skel-about-node-item:nth-child(1) { top: 6%; left: 10%; }
+        .skel-about-node-item:nth-child(2) { bottom: 6%; left: 13%; }
+        .skel-about-node-item:nth-child(3) { top: 4%; right: 12%; }
+        .skel-about-node-item:nth-child(4) { top: 46%; right: 4%; }
+        .skel-about-node-item:nth-child(5) { top: 42%; left: 4%; }
+        
+        .skel-about-bottom-pill {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(90%, 340px);
+            height: 38px;
+            border-radius: 999px;
+            z-index: 3;
+        }
+
+        .skel-about-visi-misi {
+            width: 100%;
+            max-width: 1000px;
+            margin: 1rem auto 0;
+        }
+        .skel-about-visi-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            width: 100%;
+        }
+        @media(min-width: 768px) {
+            .skel-about-visi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .skel-about-visi-card {
+            width: 100%;
+            height: 180px;
+            border-radius: 20px;
+        }
+
+        @media(max-width: 768px) {
+            .skel-about-orbit {
+                min-height: auto;
+                flex-direction: column;
+                gap: 1.25rem;
+                margin: 0.5rem auto 1.5rem;
+            }
+            .skel-about-bubble {
+                height: 200px;
+                border-radius: 24px;
+            }
+            .skel-about-nodes {
+                position: static;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .skel-about-node-item {
+                position: static;
+                flex-direction: row;
+                gap: 0.85rem;
+                background: #fff;
+                padding: 0.75rem 1rem;
+                border-radius: 16px;
+                border: 1.5px solid #E2E8F0;
+                box-sizing: border-box;
+            }
+            .skel-about-node-circle {
+                width: 44px;
+                height: 44px;
+                flex-shrink: 0;
+            }
+            .skel-about-node-pill {
+                width: 120px;
+                height: 18px;
+            }
+            .skel-about-bottom-pill {
+                position: static;
+                transform: none;
+                margin-top: 0.5rem;
+                width: 100%;
+            }
         }
     </style>
     
@@ -619,6 +752,47 @@
                         <div class="skel-shimmer skel-pd-sidebar-card"></div>
                         <div class="skel-shimmer skel-pd-sidebar-banner"></div>
                         <div class="skel-shimmer skel-pd-sidebar-banner"></div>
+                    </div>
+                </div>
+            @elseif(request()->routeIs('about') || request()->is('tentang-kami') || request()->is('*/tentang-kami'))
+                {{-- About Page Skeleton --}}
+                <div class="skel-about-wrapper">
+                    {{-- Breadcrumb --}}
+                    <div class="skel-shimmer" style="width: 140px; height: 14px; border-radius: 999px; margin: 0.5rem auto 1.5rem;"></div>
+
+                    {{-- Title Header with Pill ("Apa itu [Pill] BUYLE.ID") --}}
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem;">
+                        <div class="skel-shimmer" style="width: 110px; height: 36px; border-radius: 10px;"></div>
+                        <div class="skel-shimmer" style="width: 58px; height: 38px; border-radius: 999px;"></div>
+                        <div class="skel-shimmer" style="width: 140px; height: 36px; border-radius: 10px;"></div>
+                    </div>
+
+                    {{-- Orbit Canvas Area Skeleton --}}
+                    <div class="skel-about-orbit">
+                        {{-- Central Speech Bubble --}}
+                        <div class="skel-shimmer skel-about-bubble"></div>
+
+                        {{-- Nodes (5 Satellites) --}}
+                        <div class="skel-about-nodes">
+                            @for($n = 0; $n < 5; $n++)
+                                <div class="skel-about-node-item">
+                                    <div class="skel-shimmer skel-about-node-circle"></div>
+                                    <div class="skel-shimmer skel-about-node-pill"></div>
+                                </div>
+                            @endfor
+                        </div>
+
+                        {{-- Bottom Pill --}}
+                        <div class="skel-shimmer skel-about-bottom-pill"></div>
+                    </div>
+
+                    {{-- Visi & Misi Cards Skeleton --}}
+                    <div class="skel-about-visi-misi">
+                        <div class="skel-shimmer" style="width: 180px; height: 24px; border-radius: 6px; margin: 2rem auto 1.25rem;"></div>
+                        <div class="skel-about-visi-grid">
+                            <div class="skel-shimmer skel-about-visi-card"></div>
+                            <div class="skel-shimmer skel-about-visi-card"></div>
+                        </div>
                     </div>
                 </div>
             @else
