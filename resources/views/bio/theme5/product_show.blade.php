@@ -1612,14 +1612,27 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    @php
+                                        $t5MaxLimit = null;
+                                        if (($product->product_type ?? $product->type) === 'ticket') {
+                                            $t5MaxLimit = (int) ($product->max_tickets_per_order ?: 4);
+                                        } elseif (!empty($product->max_order)) {
+                                            $t5MaxLimit = (int) $product->max_order;
+                                        }
+                                    @endphp
                                     <div class="bvm-qty-row">
                                         <div>
                                             <div class="bvm-qty-label">Kuantitas</div>
-                                            <div class="bvm-qty-sub">Jumlah pesanan</div>
+                                            <div class="bvm-qty-sub">
+                                                Jumlah pesanan
+                                                @if($t5MaxLimit)
+                                                    <span style="color:#16a34a; font-weight:600;">(Maks. {{ $t5MaxLimit }} per order)</span>
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="bvm-qty-ctrl">
                                             <button type="button" class="bvm-qty-btn" onclick="stepT5BvmQty(-1)">−</button>
-                                            <input type="number" id="t5-bvm-qty-input" class="bvm-qty-input" value="1" min="1" readonly>
+                                            <input type="number" id="t5-bvm-qty-input" class="bvm-qty-input" value="1" min="1" data-max-limit="{{ $t5MaxLimit ?? '' }}" readonly>
                                             <button type="button" class="bvm-qty-btn" onclick="stepT5BvmQty(1)">+</button>
                                         </div>
                                     </div>
@@ -1629,11 +1642,10 @@
                                 </div>
                                 <div class="bvm-footer">
                                     <button type="button" id="t5-bvm-submit-btn" class="bvm-btn-primary" onclick="confirmT5BvmSubmit()">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                                            <path d="M5 12h14"></path>
-                                            <path d="m12 5 7 7-7 7"></path>
-                                        </svg>
                                         <span id="t5-bvm-submit-label">Beli Sekarang</span>
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
@@ -1676,8 +1688,8 @@
                             .bvm-qty-input { width: 44px; height: 32px; border: none; text-align: center; font-size: 0.88rem; font-weight: 700; color: #0f172a; background: #fff; pointer-events: none; }
                             .bvm-error { color: #ef4444; font-size: 0.78rem; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 0.45rem 0.75rem; margin-top: 0.75rem; }
                             .bvm-footer { padding: 0.85rem 1.25rem 1.15rem; border-top: 1px solid #f1f5f9; background: #ffffff; }
-                            .bvm-btn-primary { width: 100%; padding: 0.85rem 1.25rem; border-radius: 14px; border: none; background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(30, 179, 73, 0.32); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-                            .bvm-btn-primary:hover { box-shadow: 0 6px 22px rgba(30, 179, 73, 0.45); transform: translateY(-1px); }
+                            .bvm-btn-primary { width: 100%; padding: 0.8rem 1.5rem; border-radius: 999px; border: none; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; letter-spacing: 0.02em; }
+                            .bvm-btn-primary:hover { box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45); transform: translateY(-1px); }
                         </style>
                     @endif
 
@@ -2313,12 +2325,25 @@
                 submitLabel.textContent = (window._t5CurrentAction === 'cart') ? 'Tambah ke Keranjang' : 'Beli Sekarang';
             }
 
+            // Sync quantity honoring maxLimit
+            var modalQty = document.getElementById('t5-bvm-qty-input');
+            var formQty = document.getElementById('t5_form_qty');
+            if (modalQty && formQty) {
+                var qVal = parseInt(formQty.value) || 1;
+                var maxLimit = parseInt(modalQty.dataset.maxLimit || '') || null;
+                if (maxLimit && qVal > maxLimit) qVal = maxLimit;
+                modalQty.value = qVal;
+                formQty.value = qVal;
+            }
+
+            // Auto-select active or first available variant
             var currentVid = document.getElementById('t5_selected_variant_id').value;
-            if (currentVid) {
-                var activePill = modal.querySelector('.t5-bvm-pill[data-variant-id="' + currentVid + '"]');
-                if (activePill) {
-                    selectT5BvmVariant(activePill, false);
-                }
+            var activePill = currentVid ? modal.querySelector('.t5-bvm-pill[data-variant-id="' + currentVid + '"]') : null;
+            if (!activePill) {
+                activePill = modal.querySelector('.t5-bvm-pill:not(:disabled)');
+            }
+            if (activePill) {
+                selectT5BvmVariant(activePill, false);
             }
 
             modal.style.display = 'flex';
@@ -2419,6 +2444,11 @@
             var next = current + delta;
             if (next < 1) next = 1;
 
+            var maxLimit = parseInt(input.dataset.maxLimit || '') || null;
+            if (maxLimit && next > maxLimit) {
+                next = maxLimit;
+            }
+
             var selectedPill = document.querySelector('.t5-bvm-pill.selected');
             if (selectedPill && selectedPill.dataset.stock) {
                 var maxStock = parseInt(selectedPill.dataset.stock);
@@ -2433,7 +2463,15 @@
         };
 
         window.confirmT5BvmSubmit = function() {
-            var vid = document.getElementById('t5_selected_variant_id').value;
+            var vidEl = document.getElementById('t5_selected_variant_id');
+            var vid = vidEl ? vidEl.value : '';
+            if (!vid) {
+                var firstPill = document.querySelector('.t5-bvm-pill:not(:disabled)');
+                if (firstPill) {
+                    selectT5BvmVariant(firstPill, true);
+                    vid = firstPill.dataset.variantId;
+                }
+            }
             if (!vid) {
                 var err = document.getElementById('t5-bvm-error');
                 if (err) {

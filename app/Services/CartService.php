@@ -37,10 +37,6 @@ class CartService
             throw new \Exception('Produk tidak tersedia atau sedang diarsipkan.');
         }
 
-        if (auth()->check() && $product->seller_id && (int)$product->seller_id === (int)auth()->id()) {
-            throw new \Exception('Anda tidak dapat membeli produk milik Anda sendiri.');
-        }
-
         // Resolusi identitas Affiliator: Parameter -> Session -> Cookie
         if (!$affiliateId) {
             $affiliateId = session('buyle_aff_' . $productId) ?? request()->cookie('buyle_aff_' . $productId);
@@ -54,6 +50,18 @@ class CartService
             } elseif ($product->seller_id && (int)$product->seller_id === $affiliateId) {
                 $affiliateId = null;
             }
+        }
+
+        // Hitung batas maksimal pembelian (Anti-Calo untuk tiket / max_order untuk produk umum)
+        $maxAllowed = null;
+        if (($product->product_type ?? $product->type) === 'ticket') {
+            $maxAllowed = (int) ($product->max_tickets_per_order ?: 4);
+        } elseif (!empty($product->max_order)) {
+            $maxAllowed = (int) $product->max_order;
+        }
+
+        if ($maxAllowed !== null && $qty > $maxAllowed) {
+            throw new \Exception("Maksimal pembelian untuk produk ini adalah {$maxAllowed} per transaksi.");
         }
 
         // Pastikan wajib pilih variasi jika produk memiliki variasi
@@ -103,8 +111,8 @@ class CartService
 
         if ($cart) {
             $newQty = $cart->qty + $qty;
-            if ($product->max_order && $newQty > $product->max_order) {
-                throw new \Exception('Melebihi batas maksimal pembelian: ' . $product->max_order);
+            if ($maxAllowed !== null && $newQty > $maxAllowed) {
+                throw new \Exception("Melebihi batas maksimal pembelian ({$maxAllowed} per transaksi).");
             }
             $updateData = ['qty' => $newQty];
             if ($affiliateId && !$cart->affiliate_id) {
@@ -146,8 +154,15 @@ class CartService
             throw new \Exception('Minimal pembelian adalah: ' . $product->min_order);
         }
 
-        if ($product->max_order && $qty > $product->max_order) {
-            throw new \Exception('Batas maksimal pembelian adalah: ' . $product->max_order);
+        $maxAllowed = null;
+        if (($product->product_type ?? $product->type) === 'ticket') {
+            $maxAllowed = (int) ($product->max_tickets_per_order ?: 4);
+        } elseif (!empty($product->max_order)) {
+            $maxAllowed = (int) $product->max_order;
+        }
+
+        if ($maxAllowed !== null && $qty > $maxAllowed) {
+            throw new \Exception("Batas maksimal pembelian adalah: {$maxAllowed}");
         }
 
         if ($product && $product->type !== 'service' && $product->stock !== null && $product->stock < $qty) {

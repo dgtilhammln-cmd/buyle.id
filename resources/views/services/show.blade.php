@@ -1761,9 +1761,33 @@
                                 </div>
                             @endif
 
+                            @php
+                                $maxOrderLimit = null;
+                                if (($service->product_type ?? $service->type) === 'ticket') {
+                                    $maxOrderLimit = (int) ($service->max_tickets_per_order ?: 4);
+                                } elseif (!empty($service->max_order)) {
+                                    $maxOrderLimit = (int) $service->max_order;
+                                }
+                            @endphp
+
+                            {{-- FLASH MESSAGE ALERTS --}}
+                            @if(session('error'))
+                                <div style="background:#fef2f2; border:1px solid #f87171; color:#991b1b; padding:0.75rem 1rem; border-radius:12px; margin-bottom:1rem; font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                    <span>{{ session('error') }}</span>
+                                </div>
+                            @endif
+                            @if(session('success'))
+                                <div style="background:#f0fdf4; border:1px solid #4ade80; color:#166534; padding:0.75rem 1rem; border-radius:12px; margin-bottom:1rem; font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <span>{{ session('success') }}</span>
+                                </div>
+                            @endif
+
                             {{-- CART FORM --}}
                             <form id="pd-cart-form" action="{{ route('cart.add') }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="action" id="pd_action_input" value="buy">
                                 <input type="hidden" name="product_id" value="{{ $service->id }}">
                                 <input type="hidden" name="variant_value_id" id="pd_selected_variant_id" value="">
 
@@ -1799,8 +1823,9 @@
                                                             @endif
                                                             {{ $val->value }}
                                                             @if($val->price > 0 && $val->price != $basePrice)
+                                                                @php $vDiff = $val->price - $basePrice; @endphp
                                                                 <span
-                                                                    style="font-size:0.7rem; opacity:0.75; margin-left:2px;">+Rp{{ number_format($val->price - $basePrice, 0, ',', '.') }}</span>
+                                                                    style="font-size:0.7rem; opacity:0.75; margin-left:2px;">{{ $vDiff > 0 ? '+Rp' . number_format($vDiff, 0, ',', '.') : '-Rp' . number_format(abs($vDiff), 0, ',', '.') }}</span>
                                                             @endif
                                                             @if($val->stock !== null && $val->stock <= 0)
                                                                 <span style="font-size:0.7rem; margin-left:2px;">(Habis)</span>
@@ -1855,12 +1880,15 @@
                                     <div class="pd-attr-content">
                                         <div class="pd-qty-ctrl">
                                             <button type="button" class="pd-qty-btn"
-                                                onclick="document.getElementById('qty_input').stepDown()">−</button>
+                                                onclick="stepPdQty(-1)">−</button>
                                             <input type="number" id="qty_input" class="pd-qty-input" name="qty"
                                                 value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}"
-                                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock > 0) max="{{ $service->stock }}" @endif @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                                                data-max-limit="{{ $maxOrderLimit ?? '' }}"
+                                                @if($maxOrderLimit) max="{{ $maxOrderLimit }}"
+                                                @elseif($service->type !== 'service' && !is_null($service->stock) && $service->stock > 0) max="{{ $service->stock }}" @endif
+                                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                                             <button type="button" class="pd-qty-btn"
-                                                onclick="document.getElementById('qty_input').stepUp()">+</button>
+                                                onclick="stepPdQty(1)">+</button>
                                         </div>
                                         <div class="pd-stock" id="pd-stock-info">
                                             @if($service->type === 'service')
@@ -1871,6 +1899,9 @@
                                                 Sisa {{ $service->stock }} buah
                                             @else
                                                 <span style="color:#EE4D2D;">Habis</span>
+                                            @endif
+                                            @if($maxOrderLimit)
+                                                <span style="font-size:0.75rem; color:#64748b; margin-left:6px;">(Maks. {{ $maxOrderLimit }} per transaksi)</span>
                                             @endif
                                         </div>
                                     </div>
@@ -2033,7 +2064,8 @@
                                                             @endif
                                                             <span class="bvm-pill-text">{{ $val->value }}</span>
                                                             @if($val->price > 0 && $val->price != $basePrice)
-                                                                <span class="bvm-pill-diff">+Rp{{ number_format($val->price - $basePrice, 0, ',', '.') }}</span>
+                                                                @php $bvmValDiff = $val->price - $basePrice; @endphp
+                                                                <span class="bvm-pill-diff">{{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}</span>
                                                             @endif
                                                             @if($isValOutOfStock)
                                                                 <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
@@ -2048,11 +2080,16 @@
                                         <div class="bvm-qty-row">
                                             <div>
                                                 <div class="bvm-qty-label">Kuantitas</div>
-                                                <div class="bvm-qty-sub" id="bvm-qty-sub">Jumlah yang akan dipesan</div>
+                                                <div class="bvm-qty-sub" id="bvm-qty-sub">
+                                                    Jumlah yang akan dipesan
+                                                    @if($maxOrderLimit)
+                                                        <span style="color:#16a34a; font-weight:600;">(Maks. {{ $maxOrderLimit }} per order)</span>
+                                                    @endif
+                                                </div>
                                             </div>
                                             <div class="bvm-qty-ctrl">
                                                 <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(-1)">−</button>
-                                                <input type="number" id="bvm-qty-input" class="bvm-qty-input" value="1" min="1" readonly>
+                                                <input type="number" id="bvm-qty-input" class="bvm-qty-input" value="1" min="1" data-max-limit="{{ $maxOrderLimit ?? '' }}" readonly>
                                                 <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(1)">+</button>
                                             </div>
                                         </div>
@@ -2062,14 +2099,13 @@
                                         </div>
                                     </div>
 
-                                    {{-- Footer Tombol Beli / Konfirmasi --}}
+                                    {{-- Footer Tombol Beli / Konfirmasi (Style sama persis Button Daftar Navbar) --}}
                                     <div class="bvm-footer">
                                         <button type="button" id="bvm-submit-btn" class="bvm-btn-primary" onclick="confirmBvmSubmit()">
-                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                                                <path d="M5 12h14"></path>
-                                                <path d="m12 5 7 7-7 7"></path>
-                                            </svg>
                                             <span id="bvm-submit-label">Beli Sekarang</span>
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                                            </svg>
                                         </button>
                                     </div>
                                 </div>
@@ -2359,34 +2395,27 @@
                                     border-radius: 8px;
                                     padding: 0.45rem 0.75rem;
                                     margin-top: 0.75rem;
-                                    animation: shake 0.3s;
-                                }
-
-                                .bvm-footer {
-                                    padding: 0.85rem 1.25rem 1.15rem;
-                                    border-top: 1px solid #f1f5f9;
-                                    background: #ffffff;
-                                }
-                                .bvm-btn-primary {
+                                      .bvm-btn-primary {
                                     width: 100%;
-                                    padding: 0.85rem 1.25rem;
-                                    border-radius: 14px;
+                                    padding: 0.8rem 1.5rem;
+                                    border-radius: 999px;
                                     border: none;
-                                    background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+                                    background: linear-gradient(135deg, #1eb349, #a5cf37);
                                     color: #ffffff;
                                     font-family: 'Montserrat', sans-serif;
                                     font-size: 0.92rem;
-                                    font-weight: 800;
+                                    font-weight: 700;
                                     cursor: pointer;
-                                    box-shadow: 0 4px 16px rgba(30, 179, 73, 0.32);
+                                    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
                                     transition: all 0.2s ease;
                                     display: flex;
                                     align-items: center;
                                     justify-content: center;
                                     gap: 0.5rem;
+                                    letter-spacing: 0.02em;
                                 }
                                 .bvm-btn-primary:hover {
-                                    box-shadow: 0 6px 22px rgba(30, 179, 73, 0.45);
+                                    box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
                                     transform: translateY(-1px);
                                 }
                                 .bvm-btn-primary:active {
@@ -2400,6 +2429,24 @@
                                     var hasVariants = {{ ($service->variantOptions && $service->variantOptions->count() > 0) ? 'true' : 'false' }};
                                     window._pdCurrentAction = 'buy';
 
+                                    window.stepPdQty = function(delta) {
+                                        var input = document.getElementById('qty_input');
+                                        if (!input) return;
+                                        var current = parseInt(input.value) || 1;
+                                        var min = parseInt(input.min) || 1;
+                                        var maxLimit = parseInt(input.dataset.maxLimit || '') || null;
+                                        var maxAttr = parseInt(input.max) || null;
+                                        var maxVal = maxLimit;
+                                        if (maxAttr && (!maxVal || maxAttr < maxVal)) maxVal = maxAttr;
+
+                                        var next = current + delta;
+                                        if (next < min) next = min;
+                                        if (maxVal && next > maxVal) next = maxVal;
+                                        input.value = next;
+                                        var bvmQty = document.getElementById('bvm-qty-input');
+                                        if (bvmQty) bvmQty.value = next;
+                                    };
+
                                     window.openPdVariantModal = function(action) {
                                         var modal = document.getElementById('pd-variant-modal');
                                         if (!modal) return;
@@ -2410,20 +2457,25 @@
                                             submitLabel.textContent = (window._pdCurrentAction === 'cart') ? 'Tambah Keranjang' : 'Beli Sekarang';
                                         }
 
-                                        // Sync quantity from main page
+                                        // Sync quantity from main page, honoring max limit
                                         var mainQty = document.getElementById('qty_input');
                                         var modalQty = document.getElementById('bvm-qty-input');
                                         if (mainQty && modalQty) {
-                                            modalQty.value = mainQty.value || 1;
+                                            var qVal = parseInt(mainQty.value) || 1;
+                                            var maxLimit = parseInt(modalQty.dataset.maxLimit || mainQty.dataset.maxLimit || '') || null;
+                                            if (maxLimit && qVal > maxLimit) qVal = maxLimit;
+                                            modalQty.value = qVal;
+                                            mainQty.value = qVal;
                                         }
 
-                                        // Sync current variant if already selected
+                                        // Auto-select active or first available variant
                                         var currentVid = document.getElementById('pd_selected_variant_id').value;
-                                        if (currentVid) {
-                                            var activePill = modal.querySelector('.bvm-pill[data-variant-id="' + currentVid + '"]');
-                                            if (activePill) {
-                                                selectBvmVariant(activePill, false);
-                                            }
+                                        var activePill = currentVid ? modal.querySelector('.bvm-pill[data-variant-id="' + currentVid + '"]') : null;
+                                        if (!activePill) {
+                                            activePill = modal.querySelector('.bvm-pill:not(:disabled)');
+                                        }
+                                        if (activePill) {
+                                            selectBvmVariant(activePill, false);
                                         }
 
                                         modal.style.display = 'flex';
@@ -2550,6 +2602,11 @@
                                         var next = current + delta;
                                         if (next < 1) next = 1;
 
+                                        var maxLimit = parseInt(input.dataset.maxLimit || (mainQty ? mainQty.dataset.maxLimit : '')) || null;
+                                        if (maxLimit && next > maxLimit) {
+                                            next = maxLimit;
+                                        }
+
                                         var selectedPill = document.querySelector('.bvm-pill.selected');
                                         if (selectedPill && selectedPill.dataset.stock) {
                                             var maxStock = parseInt(selectedPill.dataset.stock);
@@ -2563,7 +2620,15 @@
                                     };
 
                                     window.confirmBvmSubmit = function() {
-                                        var vid = document.getElementById('pd_selected_variant_id').value;
+                                        var vidEl = document.getElementById('pd_selected_variant_id');
+                                        var vid = vidEl ? vidEl.value : '';
+                                        if (!vid) {
+                                            var firstPill = document.querySelector('.bvm-pill:not(:disabled)');
+                                            if (firstPill) {
+                                                selectBvmVariant(firstPill, true);
+                                                vid = firstPill.dataset.variantId;
+                                            }
+                                        }
                                         if (!vid) {
                                             var err = document.getElementById('bvm-error');
                                             if (err) {
@@ -2581,7 +2646,17 @@
                                         }
 
                                         var action = window._pdCurrentAction || 'buy';
-                                        document.getElementById('pd_action_input').value = action;
+                                        var actionInput = document.getElementById('pd_action_input');
+                                        if (actionInput) {
+                                            actionInput.value = action;
+                                        } else {
+                                            var actEl = document.createElement('input');
+                                            actEl.type = 'hidden';
+                                            actEl.name = 'action';
+                                            actEl.id = 'pd_action_input';
+                                            actEl.value = action;
+                                            document.getElementById('pd-cart-form').appendChild(actEl);
+                                        }
 
                                         closePdVariantModal();
                                         document.getElementById('pd-cart-form').submit();
@@ -2608,7 +2683,10 @@
                                             openPdVariantModal(action);
                                             return false;
                                         }
-                                        document.getElementById('pd_action_input').value = action;
+                                        var actionInput = document.getElementById('pd_action_input');
+                                        if (actionInput) {
+                                            actionInput.value = action;
+                                        }
                                         document.getElementById('pd-cart-form').submit();
                                     };
 
@@ -3249,13 +3327,13 @@
         {{-- MOBILE STICKY BAR --}}
         @if($service->price > 0)
             <div class="pd-sticky-bar">
-                <button type="submit" form="pd-cart-form" name="action" value="cart" class="pd-btn pd-btn-outline"
+                <button type="button" onclick="submitPdCart('cart')" class="pd-btn pd-btn-outline"
                     @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                     Keranjang
                 </button>
-                <button type="submit" form="pd-cart-form" name="action" value="buy" class="pd-btn pd-btn-primary"
+                <button type="button" onclick="submitPdCart('buy')" class="pd-btn pd-btn-primary"
                     @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
-                    Beli Langsung
+                    Beli Sekarang
                 </button>
             </div>
         @endif
