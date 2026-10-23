@@ -176,6 +176,154 @@
         height: 12px;
     }
 
+    /* ── Creator Submenu Flyout (Left on Desktop, Nested on Mobile) ── */
+    .creator-submenu-wrap {
+        position: relative;
+    }
+    .creator-menu-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        padding: 0.65rem 0.875rem;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #374151;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: background 0.15s, color 0.15s;
+    }
+    .creator-submenu-wrap:hover .creator-menu-trigger,
+    .creator-submenu-wrap.open .creator-menu-trigger {
+        background: #F0FDF4;
+        color: #16a34a;
+    }
+    .creator-submenu-arrow {
+        color: #94A3B8;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+    .creator-submenu-wrap:hover .creator-submenu-arrow,
+    .creator-submenu-wrap.open .creator-submenu-arrow {
+        color: #16a34a;
+        transform: translateX(-3px);
+    }
+
+    /* Flyout to the LEFT on Desktop */
+    .creator-flyout-menu {
+        position: absolute;
+        top: -6px;
+        right: calc(100% + 10px);
+        background: #ffffff;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        min-width: 220px;
+        padding: 0.5rem;
+        z-index: 1001;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(8px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+        pointer-events: none;
+    }
+
+    /* Invisible hover bridge between trigger item and flyout submenu */
+    .creator-flyout-menu::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: -14px;
+        width: 14px;
+    }
+
+    /* Caret pointing right (towards parent menu item) */
+    .creator-flyout-caret {
+        position: absolute;
+        top: 16px;
+        right: -6px;
+        width: 12px;
+        height: 12px;
+        background: #ffffff;
+        border-right: 1px solid #E2E8F0;
+        border-top: 1px solid #E2E8F0;
+        transform: rotate(45deg);
+    }
+
+    .creator-submenu-wrap:hover .creator-flyout-menu,
+    .creator-submenu-wrap.open .creator-flyout-menu {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+        pointer-events: auto !important;
+    }
+
+    .creator-sub-item {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.6rem 0.875rem;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #374151;
+        font-size: 0.835rem;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        transition: background 0.15s, color 0.15s, transform 0.15s;
+    }
+
+    .creator-sub-item:hover {
+        background: #F0FDF4;
+        color: #16a34a;
+        transform: translateX(-3px);
+    }
+
+    .creator-sub-item svg {
+        flex-shrink: 0;
+        color: #64748B;
+        transition: color 0.15s;
+    }
+
+    .creator-sub-item:hover svg {
+        color: #16a34a;
+    }
+
+    /* ── Mobile Friendly Adaptation ── */
+    @media (max-width: 640px) {
+        .creator-submenu-arrow {
+            transform: rotate(-90deg);
+        }
+        .creator-submenu-wrap.open .creator-submenu-arrow {
+            transform: rotate(90deg);
+        }
+        .creator-flyout-menu {
+            position: static !important;
+            box-shadow: none !important;
+            border: none !important;
+            border-left: 2px solid #86efac !important;
+            border-radius: 0 12px 12px 0 !important;
+            margin: 0.25rem 0 0.4rem 1.25rem !important;
+            background: #F8FAFC !important;
+            padding: 0.35rem !important;
+            transform: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            min-width: 0 !important;
+        }
+        .creator-flyout-caret,
+        .creator-flyout-menu::before {
+            display: none !important;
+        }
+        .creator-sub-item {
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.8rem !important;
+        }
+        .creator-sub-item:hover {
+            transform: none !important;
+        }
+    }
+
     /* ── Desktop Search Styling ── */
     .desktop-search-form {
         flex: 1;
@@ -700,10 +848,56 @@
                                 Jadilah Creators (Gratis)
                             </a>
                         @else
-                            <a href="{{ route('creator.dashboard') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.875rem;border-radius:10px;text-decoration:none;color:#374151;font-size:0.85rem;font-weight:600;transition:background 0.15s;" onmouseover="this.style.background='#F0FDF4'" onmouseout="this.style.background='transparent'">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                                Dashboard Creator
-                            </a>
+                            <div class="creator-submenu-wrap">
+                                <a href="{{ route('creator.dashboard') }}" class="creator-menu-trigger">
+                                    <div style="display:flex;align-items:center;gap:0.6rem;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                                        <span>Dashboard Creator</span>
+                                    </div>
+                                    <svg class="creator-submenu-arrow" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                                </a>
+
+                                {{-- Sub Menu Flyout (Muncul di Kiri pada Desktop, Indented pada Mobile) --}}
+                                <div class="creator-flyout-menu">
+                                    <div class="creator-flyout-caret"></div>
+                                    <div style="padding: 0.4rem 0.875rem 0.2rem; font-size: 0.65rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Modul Kreator</div>
+
+                                    <a href="{{ route('creator.bio.index') }}" class="creator-sub-item">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="3"/>
+                                            <line x1="3" y1="9" x2="21" y2="9"/>
+                                            <line x1="9" y1="21" x2="9" y2="9"/>
+                                        </svg>
+                                        <span>Web Builder</span>
+                                    </a>
+
+                                    <a href="{{ route('creator.pos.index') }}" class="creator-sub-item">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                            <line x1="8" y1="21" x2="16" y2="21"/>
+                                            <line x1="12" y1="17" x2="12" y2="21"/>
+                                            <line x1="6" y1="8" x2="18" y2="8"/>
+                                        </svg>
+                                        <span>POS (Kasir Digital)</span>
+                                    </a>
+
+                                    <a href="{{ route('creator.automation-reply.index') }}" class="creator-sub-item">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                                        </svg>
+                                        <span>Meta Automation</span>
+                                    </a>
+
+                                    <a href="{{ route('creator.products.index') }}" class="creator-sub-item">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                            <line x1="3" y1="6" x2="21" y2="6"/>
+                                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                                        </svg>
+                                        <span>Kelola Produk / Jasa</span>
+                                    </a>
+                                </div>
+                            </div>
                         @endif
 
                         <hr style="border:none;border-top:1px solid #F1F5F9;margin:0.4rem 0;">

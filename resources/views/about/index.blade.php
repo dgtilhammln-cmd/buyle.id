@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 
@@ -444,82 +444,649 @@
             background: var(--cv-accent);
             flex-shrink: 0;
         }
+        /* ══════════════════════════════════════════════════════
+           PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
+        ══════════════════════════════════════════════════════ */
+        .buyle-orbit-section {
+            position: relative;
+            padding: 8.5rem 1.5rem 5rem;
+            background: radial-gradient(circle at 50% 25%, rgba(30, 179, 73, 0.08) 0%, #FAFCF8 45%, #F8FAFC 100%);
+            overflow: hidden;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .buyle-orbit-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        /* Top Title with 3D Pill Badge (Reference: "The [Infinity] Team") */
+        .buyle-orbit-header {
+            margin-bottom: 2rem;
+        }
+
+        .buyle-orbit-title {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            color: #0F172A;
+            letter-spacing: -0.035em;
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .buyle-orbit-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 38px;
+            border-radius: 99px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.38), inset 0 2px 4px rgba(255, 255, 255, 0.45);
+            transform: translateY(-2px);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 8px 24px rgba(30, 179, 73, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.4); }
+            50% { box-shadow: 0 12px 32px rgba(30, 179, 73, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.65); }
+        }
+
+        /* Orbit Canvas Area */
+        .buyle-orbit-canvas {
+            position: relative;
+            width: 100%;
+            max-width: 980px;
+            min-height: 580px;
+            margin: 2rem auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Concentric Orbit Rings */
+        .orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orbit-ring-1 {
+            width: 440px;
+            height: 440px;
+            border: 1.5px solid rgba(30, 179, 73, 0.16);
+        }
+
+        .orbit-ring-2 {
+            width: 660px;
+            height: 660px;
+            border: 1.5px solid rgba(30, 179, 73, 0.11);
+        }
+
+        .orbit-ring-3 {
+            width: 880px;
+            height: 880px;
+            border: 1px solid rgba(30, 179, 73, 0.08);
+        }
+
+        .orbit-ring-4 {
+            width: 1080px;
+            height: 1080px;
+            border: 1px dashed rgba(30, 179, 73, 0.05);
+        }
+
+        /* 3D Center Speech Bubble */
+        .orbit-bubble-wrap {
+            position: relative;
+            z-index: 6;
+            max-width: 490px;
+            padding: 0 1rem;
+        }
+
+        .orbit-speech-bubble {
+            background: linear-gradient(145deg, #22c55e 0%, #16a34a 45%, #15803d 100%);
+            border-radius: 32px;
+            padding: 2.25rem 2.25rem 2.5rem;
+            color: #ffffff;
+            position: relative;
+            box-shadow: 0 30px 70px -10px rgba(22, 163, 74, 0.42), 
+                        0 10px 25px -5px rgba(0, 0, 0, 0.12), 
+                        inset 0 1px 2px rgba(255, 255, 255, 0.4);
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .orbit-speech-bubble:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 36px 75px -10px rgba(22, 163, 74, 0.52), 
+                        inset 0 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .orbit-bubble-text {
+            font-family: var(--font);
+            margin: 0;
+            line-height: 1.68;
+            letter-spacing: -0.01em;
+        }
+
+        .orbit-bubble-text.primary {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 1.25rem;
+        }
+
+        .orbit-bubble-text.primary strong {
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.18);
+        }
+
+        .orbit-bubble-text.secondary {
+            font-size: 0.88rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .orbit-bubble-text.secondary strong {
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Bubble Pointer Tail (Bottom-Left) */
+        .orbit-bubble-tail {
+            position: absolute;
+            bottom: -14px;
+            left: 36px;
+            width: 28px;
+            height: 28px;
+            background: #15803d;
+            border-bottom-right-radius: 20px;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+        }
+
+        /* Orbiting Module Nodes */
+        .orbit-nodes-group {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 7;
+        }
+
+        .orbit-node {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            pointer-events: auto;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .orbit-node-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .orbit-node-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #16a34a;
+            transition: all 0.3s ease;
+        }
+
+        .orbit-node-pill {
+            background: #ffffff;
+            color: #0F172A;
+            font-family: var(--font);
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 0.35rem 0.85rem;
+            border-radius: 99px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E2E8F0;
+            white-space: nowrap;
+            letter-spacing: -0.01em;
+            transition: all 0.3s ease;
+        }
+
+        .orbit-node:hover .orbit-node-circle {
+            transform: scale(1.12);
+            box-shadow: 0 16px 36px rgba(30, 179, 73, 0.25);
+            border-color: #1eb349;
+        }
+
+        .orbit-node:hover .orbit-node-inner {
+            background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+            color: #ffffff;
+        }
+
+        .orbit-node:hover .orbit-node-pill {
+            background: #0F172A;
+            color: #ffffff;
+            border-color: #0F172A;
+            transform: translateY(2px);
+        }
+
+        /* Node Positions (Desktop) */
+        .node-web-builder {
+            top: 6%;
+            left: 12%;
+            animation: floatSlow1 4.6s ease-in-out infinite;
+        }
+
+        .node-ticket {
+            bottom: 6%;
+            left: 15%;
+            animation: floatSlow2 5.2s ease-in-out infinite 0.6s;
+        }
+
+        .node-pos {
+            top: 4%;
+            right: 14%;
+            animation: floatSlow1 4.8s ease-in-out infinite 1.2s;
+        }
+
+        .node-marketplace {
+            top: 46%;
+            right: 4%;
+            animation: floatSlow2 5.4s ease-in-out infinite 0.3s;
+        }
+
+        .node-payment {
+            top: 42%;
+            left: 4%;
+            animation: floatSlow3 4.9s ease-in-out infinite 0.9s;
+        }
+
+        /* Floating Micro-Badges */
+        .orbit-badge {
+            position: absolute;
+            z-index: 6;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09), 0 2px 6px rgba(0, 0, 0, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .orbit-badge:hover {
+            transform: scale(1.15) rotate(6deg);
+        }
+
+        .badge-rocket {
+            top: 18%;
+            left: 28%;
+            animation: floatSlow2 4.2s ease-in-out infinite 0.4s;
+        }
+
+        .badge-shield {
+            top: 16%;
+            right: 28%;
+            animation: floatSlow3 4.5s ease-in-out infinite 1.1s;
+        }
+
+        .badge-brush {
+            bottom: 18%;
+            right: 26%;
+            animation: floatSlow1 4.4s ease-in-out infinite 0.8s;
+        }
+
+        /* Bottom Pill (Reference: Headquartered in ...) */
+        .orbit-bottom-pill {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 7;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+            color: #ffffff;
+            font-family: var(--font);
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 0.65rem 1.6rem;
+            border-radius: 99px;
+            box-shadow: 0 10px 28px rgba(30, 179, 73, 0.38), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .orbit-bottom-pill:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 14px 34px rgba(30, 179, 73, 0.48);
+        }
+
+        .orbit-bottom-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #a5cf37;
+            box-shadow: 0 0 8px #a5cf37;
+        }
+
+        /* Float Animations */
+        @keyframes floatSlow1 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-9px) rotate(1.5deg); }
+        }
+
+        @keyframes floatSlow2 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(8px) rotate(-1.5deg); }
+        }
+
+        @keyframes floatSlow3 {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-7px) translateX(4px); }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .buyle-orbit-canvas {
+                min-height: 520px;
+                max-width: 820px;
+            }
+            .node-web-builder { top: 4%; left: 8%; }
+            .node-ticket { bottom: 4%; left: 10%; }
+            .node-pos { top: 2%; right: 10%; }
+            .node-marketplace { top: 44%; right: 2%; }
+            .node-payment { top: 40%; left: 2%; }
+            .badge-rocket { left: 24%; }
+            .badge-shield { right: 24%; }
+            .badge-brush { right: 22%; }
+        }
+
+        @media (max-width: 768px) {
+            .buyle-orbit-section {
+                padding: 6.5rem 1rem 4rem;
+            }
+
+            .buyle-orbit-canvas {
+                min-height: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                padding-bottom: 2rem;
+            }
+
+            .orbit-ring {
+                display: none;
+            }
+
+            .orbit-bubble-wrap {
+                max-width: 100%;
+                order: 1;
+                padding: 0;
+            }
+
+            .orbit-speech-bubble {
+                padding: 1.75rem 1.5rem 2rem;
+                border-radius: 24px;
+            }
+
+            .orbit-bubble-tail {
+                bottom: -10px;
+                left: 28px;
+                width: 20px;
+                height: 20px;
+            }
+
+            /* On mobile, turn nodes group into responsive cards grid below the bubble */
+            .orbit-nodes-group {
+                position: static !important;
+                display: grid !important;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+                gap: 0.85rem !important;
+                width: 100% !important;
+                order: 2;
+                margin-top: 0.5rem;
+            }
+
+            .orbit-node {
+                position: static !important;
+                animation: none !important;
+                flex-direction: row !important;
+                gap: 0.85rem !important;
+                background: #ffffff !important;
+                padding: 0.75rem 1rem !important;
+                border-radius: 16px !important;
+                border: 1.5px solid #E2E8F0 !important;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+                width: 100% !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
+            }
+
+            .orbit-node-circle {
+                width: 48px !important;
+                height: 48px !important;
+                padding: 3px !important;
+                box-shadow: none !important;
+                flex-shrink: 0 !important;
+            }
+
+            .orbit-node-pill {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                font-size: 0.9rem !important;
+                text-align: left !important;
+            }
+
+            .orbit-badge {
+                display: none !important;
+            }
+
+            .orbit-bottom-pill {
+                position: static !important;
+                transform: none !important;
+                order: 3;
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                white-space: normal;
+                text-align: center;
+                font-size: 0.82rem;
+                padding: 0.75rem 1.25rem;
+            }
+        }
     </style>
 
-    {{-- ════ 1. HERO — sama persis dengan /products ════ --}}
-    <section class="sv-hero-premium">
-        <div class="sv-hero-inner" data-aos="fade-up">
-
-            {{-- Breadcrumb — 100% identik dengan /products --}}
+    {{-- ════ 1. PROFIL PLATFORM (Orbit Ekosistem Buyle.id) ════ --}}
+    <section class="buyle-orbit-section" id="profil-platform">
+        <div class="buyle-orbit-container">
+            
+            {{-- Breadcrumb --}}
             <nav class="sv-breadcrumb" aria-label="Breadcrumb">
                 <a href="{{ route_locale('home') }}">Beranda</a>
                 <span class="sv-breadcrumb-sep">/</span>
                 <span class="sv-breadcrumb-current">Tentang Kami</span>
             </nav>
 
-            <div class="sv-label">Profil Platform</div>
-            <h1 class="sv-title">
-                Marketplace Digital Creator<br>
-                Terpercaya di Indonesia
-            </h1>
-            <p class="sv-intro">
-                buyle.id adalah platform marketplace yang menghubungkan para kreator berbakat
-                dengan pembeli yang mencari produk digital, aset kreatif, dan layanan jasa profesional berkualitas.
-            </p>
-        </div>
-    </section>
-
-    {{-- ════ 2. ABOUT CARDS ════ --}}
-    <section style="padding: 5rem 1.5rem; background: #ffffff;">
-        <div class="container">
-            <div class="cv-cards-grid">
-                <div class="cv-card cv-card-gray" data-aos="fade-up">
-                    <div class="cv-card-bg-pattern">
-                        <span class="cv-chip" style="top:10%;left:5%;">Produk Digital</span>
-                        <span class="cv-chip" style="top:15%;left:45%;">Instan Download</span>
-                        <span class="cv-chip" style="top:12%;left:75%;">Terverifikasi</span>
-                        <span class="cv-chip" style="top:35%;left:15%;">Aman</span>
-                        <span class="cv-chip" style="top:38%;left:50%;">Terpercaya</span>
-                        <span class="cv-chip" style="top:60%;left:5%;">Kreator Lokal</span>
-                        <span class="cv-chip" style="top:65%;left:40%;">Berkualitas</span>
-                        <span class="cv-chip" style="top:62%;left:75%;">Garansi</span>
-                    </div>
-                    <div class="cv-card-content push-bottom">
-                        <div class="cv-card-label">Kategori Produk</div>
-                        <div class="cv-card-value">50+</div>
-                    </div>
-                </div>
-
-                <div class="cv-card cv-card-accent" data-aos="fade-up" data-aos-delay="100">
-                    <div class="cv-card-content">
-                        <div class="cv-card-label">Komitmen Platform</div>
-                        <div class="cv-card-value">100%</div>
-                        <div class="cv-card-desc">Transaksi aman, produk terverifikasi, dan akses instan setelah pembayaran
-                            → "Jaminan kepuasan pembeli setiap saat."</div>
-                    </div>
-                </div>
-
-                <div class="cv-card cv-card-image" data-aos="fade-up" data-aos-delay="200">
-                    @php $aboutImgFallback = !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('images/logo.png'); @endphp
-                    <img src="{{ !empty($settings['about_image']) ? asset('storage/' . $settings['about_image']) : $aboutImgFallback }}"
-                        alt="Tim buyle.id" class="cv-card-img" loading="lazy">
-                    <div class="cv-card-overlay"></div>
-                    <div class="cv-card-content" style="justify-content: flex-end;">
-                        <div class="cv-card-value">1K+</div>
-                        <div class="cv-card-desc">Kreator aktif dari seluruh Indonesia yang menjual karya dan layanan
-                            terbaik mereka di platform buyle.id.</div>
-                    </div>
-                </div>
-
-                <div class="cv-card cv-card-gray" data-aos="fade-up" data-aos-delay="300">
-                    <div class="cv-card-content">
-                        <div class="cv-card-label">Transaksi Terlayani</div>
-                        <div class="cv-card-value">10k+</div>
-                        <div class="cv-card-desc" style="margin-top:auto;">Transaksi produk digital yang berhasil
-                            diselesaikan dengan aman dan instan.</div>
-                    </div>
-                </div>
+            {{-- Title Header (Reference: "The [Infinity] Team" -> "Profil [Icon] Platform") --}}
+            <div class="buyle-orbit-header" data-aos="fade-down" data-aos-duration="800">
+                <h1 class="buyle-orbit-title">
+                    Profil
+                    <span class="buyle-orbit-pill" title="Ekosistem Terintegrasi">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18.178 8c-1.38 0-2.61.64-3.41 1.64-.81-1-2.03-1.64-3.41-1.64-2.48 0-4.5 2.02-4.5 4.5s2.02 4.5 4.5 4.5c1.38 0 2.6-.64 3.41-1.64.8 1 2.03 1.64 3.41 1.64 2.48 0 4.5-2.02 4.5-4.5S20.658 8 18.178 8zm-6.82 6.75c-1.24 0-2.25-1.01-2.25-2.25s1.01-2.25 2.25-2.25c.83 0 1.56.45 1.95 1.13-.39.68-1.12 1.12-1.95 1.12v2.25zm6.82 0c-.83 0-1.56-.44-1.95-1.12.39-.68 1.12-1.13 1.95-1.13 1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    Platform
+                </h1>
             </div>
+
+            {{-- Orbit Visual Canvas --}}
+            <div class="buyle-orbit-canvas" data-aos="zoom-in" data-aos-duration="1000">
+                
+                {{-- Concentric Orbital Rings --}}
+                <div class="orbit-ring orbit-ring-1"></div>
+                <div class="orbit-ring orbit-ring-2"></div>
+                <div class="orbit-ring orbit-ring-3"></div>
+                <div class="orbit-ring orbit-ring-4"></div>
+
+                {{-- Central 3D Speech Bubble (Signature Buyle Green Theme) --}}
+                <div class="orbit-bubble-wrap" data-aos="fade-up" data-aos-delay="200">
+                    <div class="orbit-speech-bubble">
+                        <p class="orbit-bubble-text primary">
+                            Kami menyatukan <strong>Web Builder</strong>, <strong>Kasir POS</strong>, <strong>Ticket Management</strong>, <strong>Marketplace Digital</strong>, dan <strong>Pembayaran Terintegrasi</strong> ke dalam satu platform tunggal — dirancang untuk memaksimalkan efisiensi, pendapatan, dan kemudahan bisnis Anda.
+                        </p>
+                        <p class="orbit-bubble-text secondary">
+                            Dibangun oleh praktisi digital untuk Indonesia, <strong>Buyle.id</strong> hadir menjawab kebutuhan ekosistem modern: kendali penuh tanpa koding, otomasi cerdas, dan solusi terintegrasi yang saling terhubung.
+                        </p>
+                        {{-- Bubble Pointer Tail --}}
+                        <div class="orbit-bubble-tail"></div>
+                    </div>
+                </div>
+
+                {{-- Orbiting Module Nodes Group --}}
+                <div class="orbit-nodes-group">
+                    
+                    {{-- Module Node 1: Web Builder (Top-Left) --}}
+                    <div class="orbit-node node-web-builder" data-aos="fade-down-right" data-aos-delay="300">
+                        <div class="orbit-node-circle">
+                            <div class="orbit-node-inner">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="3"/>
+                                    <line x1="3" y1="9" x2="21" y2="9"/>
+                                    <line x1="9" y1="21" x2="9" y2="9"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="orbit-node-pill">Web Builder</div>
+                    </div>
+
+                    {{-- Module Node 2: Ticket System Management (Bottom-Left) --}}
+                    <div class="orbit-node node-ticket" data-aos="fade-up-right" data-aos-delay="400">
+                        <div class="orbit-node-circle">
+                            <div class="orbit-node-inner">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                                    <line x1="13" y1="5" x2="13" y2="7"/>
+                                    <line x1="13" y1="11" x2="13" y2="13"/>
+                                    <line x1="13" y1="17" x2="13" y2="19"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="orbit-node-pill">Ticket Management</div>
+                    </div>
+
+                    {{-- Module Node 3: Kasir POS (Top-Right) --}}
+                    <div class="orbit-node node-pos" data-aos="fade-down-left" data-aos-delay="350">
+                        <div class="orbit-node-circle">
+                            <div class="orbit-node-inner">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                    <line x1="8" y1="21" x2="16" y2="21"/>
+                                    <line x1="12" y1="17" x2="12" y2="21"/>
+                                    <line x1="6" y1="8" x2="18" y2="8"/>
+                                    <line x1="6" y1="12" x2="12" y2="12"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="orbit-node-pill">Kasir POS</div>
+                    </div>
+
+                    {{-- Module Node 4: Marketplace Produk & Jasa Digital (Right) --}}
+                    <div class="orbit-node node-marketplace" data-aos="fade-left" data-aos-delay="450">
+                        <div class="orbit-node-circle">
+                            <div class="orbit-node-inner">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="orbit-node-pill">Marketplace Produk & Jasa</div>
+                    </div>
+
+                    {{-- Module Node 5: Pembayaran Terintegrasi (Left) --}}
+                    <div class="orbit-node node-payment" data-aos="fade-right" data-aos-delay="250">
+                        <div class="orbit-node-circle">
+                            <div class="orbit-node-inner">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <rect x="1" y="4" width="22" height="16" rx="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                    <path d="M6 15h4"/>
+                                    <path d="M15 15h3"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="orbit-node-pill">Pembayaran Terpadu</div>
+                    </div>
+
+                </div>
+
+                {{-- Floating Micro-Badges (Matches Rocket, Shield, Paintbrush in reference) --}}
+                <div class="orbit-badge badge-rocket" title="Kecepatan & Performa Tinggi">
+                    <svg width="18" height="18" fill="none" stroke="#8b5cf6" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                    </svg>
+                </div>
+
+                <div class="orbit-badge badge-shield" title="Keamanan Transaksi & Escrow">
+                    <svg width="18" height="18" fill="#f97316" viewBox="0 0 24 24">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                </div>
+
+                <div class="orbit-badge badge-brush" title="Kustomisasi Desain Tanpa Batas">
+                    <svg width="18" height="18" fill="none" stroke="#0284c7" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="m18.37 2.63 3 3L13.41 13.6a2 2 0 0 1-.88.51l-3.96.99.99-3.96a2 2 0 0 1 .51-.88z"/>
+                        <path d="M14.5 7.5 16.5 9.5"/>
+                    </svg>
+                </div>
+
+                {{-- Bottom Pill (Reference: "Headquartered in Walnut Creek, CA") --}}
+                <div class="orbit-bottom-pill" data-aos="fade-up" data-aos-delay="500">
+                    <span class="orbit-bottom-dot"></span>
+                    🇮🇩 Karya Anak Bangsa • Ekosistem Digital All-in-One Terintegrasi
+                </div>
+
+            </div>
+
         </div>
     </section>
 
