@@ -21,9 +21,9 @@
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
             <polyline points="15 18 9 12 15 6" />
         </svg>
-            Kembali ke Aplikasi
-        </a>
-    @endsection
+        Kembali ke Aplikasi
+    </a>
+@endsection
 
 @section('styles')
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -1019,6 +1019,337 @@
             align-items: flex-start;
             justify-content: center;
         }
+
+        /* ── Web Builder Intro Video Modal (Mobile Friendly & Brand Theme) ── */
+        .wb-intro-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(15, 23, 42, 0.78);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .wb-intro-modal {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Montserrat', sans-serif;
+            animation: wbModalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes wbModalZoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .wb-intro-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 1.15rem 1.35rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            background: #ffffff;
+            gap: 1rem;
+        }
+
+        .wb-intro-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .wb-intro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 999px;
+            width: fit-content;
+        }
+
+        .wb-intro-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .wb-intro-subtitle {
+            font-size: 0.78rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .wb-intro-close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+            padding: 0;
+        }
+
+        .wb-intro-close-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .wb-intro-body {
+            padding: 1.15rem 1.35rem;
+            background: #f8fafc;
+        }
+
+        .wb-intro-video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 ratio */
+            border-radius: 14px;
+            overflow: hidden;
+            background: #000000;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .wb-intro-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .wb-intro-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.95rem 1.35rem;
+            background: #ffffff;
+            border-top: 1px solid #f1f5f9;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .wb-intro-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .wb-intro-checkbox-label input {
+            width: 16px;
+            height: 16px;
+            accent-color: #1eb349;
+            cursor: pointer;
+        }
+
+        .wb-intro-btn-start {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: #1eb349;
+            color: #ffffff;
+            border: none;
+            padding: 0.6rem 1.35rem;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
+        }
+
+        .wb-intro-btn-start:hover {
+            background: #169c3e;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 640px) {
+            .wb-intro-overlay {
+                padding: 0.65rem;
+            }
+            .wb-intro-header {
+                padding: 0.9rem 1rem;
+            }
+            .wb-intro-body {
+                padding: 0.75rem 1rem;
+            }
+            .wb-intro-footer {
+                padding: 0.85rem 1rem;
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+            .wb-intro-btn-start {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ── Web Builder Page Banner / Action Bar (Inside Page, Not Navbar) ── */
+        .wb-page-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 0.95rem 1.35rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            font-family: 'Montserrat', sans-serif;
+        }
+        .wb-page-banner-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .wb-page-banner-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .wb-page-banner-title h2 {
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+        .wb-page-banner-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #166534;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .wb-page-banner-desc {
+            font-size: 0.78rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .wb-page-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+        .wb-btn-tutorial {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 0.62rem 1.15rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.28);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .wb-btn-tutorial:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.38);
+            background: linear-gradient(135deg, #22c55e 0%, #166534 100%);
+            color: #ffffff;
+        }
+        .wb-btn-tutorial svg {
+            flex-shrink: 0;
+        }
+        .wb-btn-preview-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: #ffffff;
+            color: #334155;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.58rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .wb-btn-preview-link:hover {
+            border-color: #1eb349;
+            color: #166534;
+            background: #f0fdf4;
+        }
+
+        @media (max-width: 768px) {
+            .wb-page-banner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.85rem;
+                padding: 0.9rem 1rem;
+            }
+            .wb-page-banner-actions {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .wb-btn-tutorial, .wb-btn-preview-link {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+                box-sizing: border-box;
+            }
+        }
     </style>
 @endsection
 
@@ -1029,6 +1360,35 @@
         $roleLabels = ['content_creator' => 'Content Creator', 'affiliator' => 'Affiliator', 'business' => 'Business / Brand'];
         $bioUrl = $profile->store_slug ? url('/' . $profile->store_slug) : null;
     @endphp
+
+    {{-- Web Builder In-Page Header Banner (Bukan di Navbar Creator) --}}
+    <div class="wb-page-banner">
+        <div class="wb-page-banner-info">
+            <div class="wb-page-banner-title">
+                <h2>Web Builder</h2>
+                <span class="wb-page-banner-badge">Editor Visual</span>
+            </div>
+            <p class="wb-page-banner-desc">Kustomisasi halaman web profil Anda secara instan dan tampilkan portofolio serta tautan produk.</p>
+        </div>
+        <div class="wb-page-banner-actions">
+            <button type="button" class="wb-btn-tutorial" onclick="openWebBuilderIntroModal(true)">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span>Lihat Panduan Video</span>
+            </button>
+            @if($bioUrl)
+                <a href="{{ $bioUrl }}" target="_blank" class="wb-btn-preview-link" title="Buka Halaman Web Builder Anda">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    <span>Pratinjau Web</span>
+                </a>
+            @endif
+        </div>
+    </div>
 
     <div class="bio-layout">
 
@@ -5009,6 +5369,51 @@
         </div>
     </div>
 
+    {{-- MODAL INTRODUCING WEB BUILDER (AUTO PLAY VIDEO) --}}
+    <div id="webBuilderIntroModal" class="wb-intro-overlay" onclick="handleWbIntroBackdropClick(event)">
+        <div class="wb-intro-modal" onclick="event.stopPropagation()">
+            <div class="wb-intro-header">
+                <div class="wb-intro-title-wrap">
+                    <span class="wb-intro-badge">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Panduan Resmi
+                    </span>
+                    <h3 class="wb-intro-title">Pengenalan Web Builder</h3>
+                    <p class="wb-intro-subtitle">Pelajari cara mudah membuat dan mempersonalisasi halaman Web Builder Anda.</p>
+                </div>
+                <button type="button" class="wb-intro-close-btn" onclick="closeWebBuilderIntroModal()" title="Tutup">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="wb-intro-body">
+                <div class="wb-intro-video-container">
+                    <iframe id="wbIntroIframe"
+                            src=""
+                            title="Video Pengenalan Web Builder Buyle"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="wb-intro-footer">
+                <label class="wb-intro-checkbox-label">
+                    <input type="checkbox" id="wbIntroDontShowAgain">
+                    <span>Jangan tampilkan otomatis lagi</span>
+                </label>
+                <button type="button" class="wb-intro-btn-start" onclick="closeWebBuilderIntroModal()">
+                    Mulai Desain Web Builder
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M5 12h14m-7-7l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
@@ -7375,6 +7780,90 @@
             updateHomepageSectionInputs();
             if (typeof toggleSidebarSecReorderVisibility === 'function') {
                 toggleSidebarSecReorderVisibility();
+            }
+        });
+
+        /* ── Web Builder Intro Modal Logic (Auto Pop-up with Autoplay Video) ── */
+        const WB_INTRO_STORAGE_KEY = 'buyle_wb_intro_dismissed_v1';
+        const WB_INTRO_RAW_URL = "{{ \App\Models\Setting::get('web_builder_intro_video_url') ?: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ' }}";
+
+        function parseWbVideoUrl(url) {
+            if (!url) return '';
+            if (url.includes('/embed/')) return url;
+            const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            if (ytMatch && ytMatch[1]) {
+                return 'https://www.youtube-nocookie.com/embed/' + ytMatch[1];
+            }
+            return url;
+        }
+
+        function openWebBuilderIntroModal(autoplay = true) {
+            const modal = document.getElementById('webBuilderIntroModal');
+            const iframe = document.getElementById('wbIntroIframe');
+            const chk = document.getElementById('wbIntroDontShowAgain');
+            if (!modal || !iframe) return;
+
+            const baseEmbed = parseWbVideoUrl(WB_INTRO_RAW_URL);
+            const delimiter = baseEmbed.includes('?') ? '&' : '?';
+            const autoplayParam = autoplay ? 'autoplay=1&mute=0&rel=0&enablejsapi=1' : 'rel=0&enablejsapi=1';
+
+            iframe.src = baseEmbed ? (baseEmbed + delimiter + autoplayParam) : '';
+            if (chk) {
+                chk.checked = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
+            }
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWebBuilderIntroModal() {
+            const modal = document.getElementById('webBuilderIntroModal');
+            const iframe = document.getElementById('wbIntroIframe');
+            const chk = document.getElementById('wbIntroDontShowAgain');
+            if (chk && chk.checked) {
+                localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
+            }
+            if (iframe) {
+                iframe.src = '';
+            }
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            document.body.style.overflow = '';
+        }
+
+        function handleWbIntroBackdropClick(e) {
+            if (e.target && e.target.id === 'webBuilderIntroModal') {
+                closeWebBuilderIntroModal();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('webBuilderIntroModal');
+                if (modal && modal.style.display === 'flex') {
+                    closeWebBuilderIntroModal();
+                }
+            }
+        });
+
+        // Auto pop-up on first visit if not dismissed
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDismissed = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
+            if (!isDismissed) {
+                setTimeout(function() {
+                    openWebBuilderIntroModal(true);
+                }, 500);
+            }
+
+            const chk = document.getElementById('wbIntroDontShowAgain');
+            if (chk) {
+                chk.addEventListener('change', function() {
+                    if (this.checked) {
+                        localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
+                    } else {
+                        localStorage.removeItem(WB_INTRO_STORAGE_KEY);
+                    }
+                });
             }
         });
     </script>

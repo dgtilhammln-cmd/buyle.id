@@ -247,12 +247,6 @@ body { background-color: #F8FAFC !important; }
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                         </svg>
                     </div>
-                    <div>
-                        <span class="fin-status-badge badge-success">
-                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10"/></svg>
-                            Pembayaran Berhasil
-                        </span>
-                    </div>
                     <div class="fin-title" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                         Pesanan Berhasil!
                         <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
@@ -284,36 +278,35 @@ body { background-color: #F8FAFC !important; }
                             E-tiket Anda sudah siap dan dapat diakses di bawah ini.
                         </p>
 
-                        <div style="background: linear-gradient(135deg, #7c3aed, #4f46e5); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(79,70,229,0.3);">
-                            <h4 style="margin-bottom: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem; display:flex; align-items:center; gap:8px;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
+                        <div style="background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #ffffff; text-align: left; box-shadow: 0 10px 25px rgba(30,179,73,0.25);">
+                            <h4 style="margin: 0 0 1rem 0; font-weight: 700; font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 0.65rem; display:flex; align-items:center; gap:8px; color: #ffffff;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
                                 E-Tiket &amp; Info Event
                             </h4>
                             @foreach($order->items as $item)
                                 @if($item->product && $item->product->product_type === 'ticket')
-                                    <div style="margin-bottom: 1rem; background:rgba(255,255,255,0.12); padding:0.85rem; border-radius:12px; border:1px solid rgba(255,255,255,0.25);">
-                                        <strong style="display:flex; align-items:center; gap:6px; font-size: 0.95rem; margin-bottom: 0.35rem;">
+                                    <div style="margin-bottom: 1rem; background: rgba(0,0,0,0.14); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.22);">
+                                        <div style="display:flex; align-items:center; gap:8px; font-size: 0.98rem; font-weight: 700; color: #ffffff; margin-bottom: 0.45rem;">
                                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
-                                            {{ $item->product_name }}
+                                            <span>{{ $item->product_name }}</span>
                                             @php
                                                 $vLabel = $item->variant_name ?? ($item->variantValue ? $item->variantValue->value : null);
                                             @endphp
                                             @if($vLabel)
-                                                <span style="display:inline-flex; align-items:center; gap:3px; font-size:0.75rem; background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; font-weight:600;">
-                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                                <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; background:rgba(255,255,255,0.25); color:#ffffff; padding:2px 8px; border-radius:999px; font-weight:600;">
                                                     {{ $vLabel }}
                                                 </span>
                                             @endif
-                                        </strong>
+                                        </div>
                                         
                                         @if($item->product->event_type === 'online')
-                                            <div style="font-size:0.82rem; margin-bottom:0.5rem; opacity:0.95; display:flex; align-items:center; gap:5px;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                <span><b>Platform:</b> {{ $item->product->event_platform ?: 'Online Streaming / Video Conference' }}</span>
+                                            <div style="font-size:0.85rem; color:#f0fdf4; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                <span><strong>Platform:</strong> {{ $item->product->event_platform ?: 'Online Streaming / Video Conference' }}</span>
                                             </div>
                                             <div style="display:flex; flex-wrap:wrap; gap:8px;">
                                                 @if($item->product->event_location)
-                                                    <a href="{{ $item->product->event_location }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
+                                                    <a href="{{ $item->product->event_location }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #15803d; padding: 0.55rem 1.1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                                                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                                                         Masuk ke Link Event / Grup →
                                                     </a>
@@ -323,14 +316,14 @@ body { background-color: #F8FAFC !important; }
                                                         ? route('account.orders.show', $order->id)
                                                         : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
                                                 @endphp
-                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.2); color: #fff; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border:1px solid rgba(255,255,255,0.3);">
+                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.25); color: #ffffff; padding: 0.55rem 1.1rem; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border:1px solid rgba(255,255,255,0.35);">
                                                     Lihat E-Tiket Saya
                                                 </a>
                                             </div>
                                         @else
-                                            <div style="font-size:0.82rem; margin-bottom:0.5rem; opacity:0.95; display:flex; align-items:center; gap:5px;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                                <span><b>Venue:</b> {{ $item->product->event_location ?: 'Lokasi Ditentukan Panitia' }}</span>
+                                            <div style="font-size:0.85rem; color:#f0fdf4; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                <span><strong>Venue:</strong> {{ $item->product->event_location ?: 'Lokasi Ditentukan Panitia' }}</span>
                                             </div>
                                             <div>
                                                 @php
@@ -338,7 +331,7 @@ body { background-color: #F8FAFC !important; }
                                                         ? route('account.orders.show', $order->id)
                                                         : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
                                                 @endphp
-                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
+                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #15803d; padding: 0.6rem 1.2rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(0,0,0,0.12);">
                                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                                     Buka & Unduh E-Tiket (QR Code) →
                                                 </a>

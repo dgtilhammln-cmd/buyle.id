@@ -1904,7 +1904,7 @@
                             $rRatingVal = $rProd->getEffectiveRating();
 
                             // Subdomain / URL Pill text
-                            $rSellerDomain = $rProd->seller->creatorProfile->custom_domain ?? ($rProd->seller->creatorProfile->username ? $rProd->seller->creatorProfile->username . '.buyle.id' : 'buyle.id');
+                            $rSellerDomain = $rProd->seller?->creatorProfile?->custom_domain ?? ($rProd->seller?->creatorProfile?->username ? $rProd->seller->creatorProfile->username . '.buyle.id' : 'buyle.id');
                         @endphp
                         <a href="{{ route_locale('products.show', $rProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -2626,8 +2626,10 @@
                 <div class="popular-creators-grid">
                     @foreach($popularCreators as $creatorUser)
                         @php
+                            if (!$creatorUser) continue;
                             $cp = $creatorUser->creatorProfile;
-                            $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
+                            if (!$cp) continue;
+                            $cName = $cp->store_name ?: ($creatorUser->name ?: 'Creator');
                             $cBanner = null;
                             if (!empty($cp?->store_banner_1)) {
                                 $cBanner = asset('storage/' . $cp->store_banner_1);
@@ -2654,6 +2656,7 @@
                                 $cAvatar = asset('storage/' . $cp->bio_config['avatar']);
                             }
 
+                            $cStoreSlug = $cp?->store_slug ?: ($creatorUser->store_slug ?? null);
                             $isStoreActive = $cp ? $cp->isStoreActive() : false;
 
                             if ($cStoreSlug) {
