@@ -135,4 +135,9 @@ class User extends Authenticatable
     {
         return $this->kyc?->status === 'verified';
     }
+
+    public function weddings(): HasMany
+    {
+        return $this->hasMany(Wedding::class)->latest();
+    }
 }

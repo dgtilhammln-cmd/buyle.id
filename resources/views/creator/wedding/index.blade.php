@@ -578,8 +578,10 @@
 @section('content')
     @php
         $activeTab = request('tab', 'tab-info');
-        $publicWeddingUrl = route('wedding.show', $wedding->slug);
-        $receptionUrl = route('wedding.reception', $wedding->slug);
+        $publicWeddingUrl = $wedding ? route('wedding.show', $wedding->slug) : '#';
+        $receptionUrl = $wedding ? route('wedding.reception', $wedding->slug) : '#';
+        $midtransClientKeyJs = $midtransClientKey ?? '';
+        $midtransEnv = ($midtransIsProduction ?? false) ? 'production' : 'sandbox';
     @endphp
 
     {{-- Alert Messages --}}
@@ -623,6 +625,46 @@
                 <span>Panic Button PDF</span>
             </a>
         </div>
+    </div>
+
+    {{-- ═══════════════════════════════════════════════════
+         COUPLE SWITCHER + TAMBAH PASANGAN BARU
+    ═══════════════════════════════════════════════════ --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.25rem;">
+        {{-- Dropdown Pasangan --}}
+        <div style="display:flex; align-items:center; gap:0.65rem;">
+            <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span style="font-size:0.8rem; font-weight:700; color:#334155; font-family:'Montserrat',sans-serif;">Pasangan Aktif:</span>
+            @if($allWeddings->count() > 1)
+                <div style="position:relative;">
+                    <select onchange="window.location.href='{{ route('creator.wedding.index') }}?w=' + this.value + '&tab={{ $activeTab }}'"
+                            style="appearance:none; background:#fff; border:1.5px solid #e2e8f0; border-radius:10px; padding:0.4rem 2.2rem 0.4rem 0.8rem; font-size:0.83rem; font-weight:700; color:#0f172a; cursor:pointer; font-family:'Montserrat',sans-serif;">
+                        @foreach($allWeddings as $w)
+                            <option value="{{ $w->id }}" {{ ($wedding && $wedding->id === $w->id) ? 'selected' : '' }}>
+                                💍 {{ $w->groom_nickname ?? $w->groom_name }} &amp; {{ $w->bride_nickname ?? $w->bride_name }}
+                                @if($w->payment_status !== 'paid') [⏳ Pending] @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    <svg style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;" width="12" height="12" fill="none" stroke="#64748b" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+            @elseif($wedding)
+                <span style="background:#ecfdf5; color:#166534; font-size:0.83rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:8px; font-family:'Montserrat',sans-serif;">
+                    💍 {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp; {{ $wedding->bride_nickname ?? $wedding->bride_name }}
+                </span>
+            @else
+                <span style="color:#94a3b8; font-size:0.8rem;">Belum ada pasangan</span>
+            @endif
+        </div>
+
+        {{-- Tombol Tambah Pasangan Baru --}}
+        <button onclick="document.getElementById('modal-add-couple').style.display='flex'"
+                style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.45rem 1rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 2px 8px rgba(30,179,73,0.25);transition:opacity .15s;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Pasangan Baru
+        </button>
     </div>
 
     {{-- Layout Web Builder --}}
@@ -686,6 +728,32 @@
                     </button>
                 </div>
             </div>
+
+            {{-- Quota Progress Bar --}}
+            @if($wedding)
+            <div class="bio-sidebar-card" style="padding:1rem;">
+                <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center;">
+                    <span>Kuota Undangan</span>
+                    <span style="color:#{{ $wedding->remainingGuestSlots() === 0 ? 'ef4444' : '1eb349' }};">
+                        {{ $totalGuests }} / {{ $wedding->guest_limit }}
+                    </span>
+                </div>
+                @php
+                    $pct = $wedding->guest_limit > 0 ? min(100, round($totalGuests / $wedding->guest_limit * 100)) : 0;
+                    $barColor = $pct >= 90 ? '#ef4444' : ($pct >= 70 ? '#f59e0b' : '#1eb349');
+                @endphp
+                <div style="background:#f1f5f9;border-radius:99px;height:8px;overflow:hidden;">
+                    <div style="width:{{ $pct }}%;height:100%;background:{{ $barColor }};border-radius:99px;transition:width .4s;"></div>
+                </div>
+                <div style="font-size:0.7rem;color:#94a3b8;margin-top:0.35rem;">Tersisa {{ $wedding->remainingGuestSlots() }} slot</div>
+                @if($wedding->remainingGuestSlots() < 20)
+                <button onclick="document.getElementById('modal-add-couple').style.display='flex'"
+                    style="margin-top:0.5rem;width:100%;padding:0.4rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;">
+                    ⬆ Upgrade Kuota
+                </button>
+                @endif
+            </div>
+            @endif
 
             {{-- Reception Gate Quick Info Box --}}
             <div class="bio-sidebar-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1;">
@@ -1979,6 +2047,221 @@
             }, err => {
                 alert('Gagal mengambil lokasi GPS: ' + err.message);
             });
+        }
+    </script>
+
+    {{-- ════════════════════════════════════════════════════════════════
+         MODAL: TAMBAH PASANGAN BARU + KALKULATOR OTOMATIS + MIDTRANS
+    ════════════════════════════════════════════════════════════════ --}}
+    <div id="modal-add-couple"
+         style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);z-index:9000;align-items:center;justify-content:center;padding:1rem;">
+        <div style="background:#fff;border-radius:24px;width:100%;max-width:520px;padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative;max-height:92vh;overflow-y:auto;">
+
+            {{-- Close Button --}}
+            <button onclick="document.getElementById('modal-add-couple').style.display='none'"
+                    style="position:absolute;top:1rem;right:1rem;background:#f1f5f9;border:none;border-radius:99px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            {{-- Header --}}
+            <div style="text-align:center;margin-bottom:1.5rem;">
+                <div style="width:52px;height:52px;background:linear-gradient(135deg,#1eb349,#a5cf37);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
+                    <svg width="24" height="24" fill="none" stroke="white" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </div>
+                <h3 style="font-size:1.15rem;font-weight:800;color:#0f172a;margin:0 0 0.25rem;font-family:'Montserrat',sans-serif;">Tambah Pasangan Baru</h3>
+                <p style="font-size:0.82rem;color:#64748b;">Isi data mempelai, pilih kuota undangan, dan selesaikan pembayaran.</p>
+            </div>
+
+            {{-- Form --}}
+            <div id="form-add-couple">
+                {{-- Nama Mempelai --}}
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+                    <div>
+                        <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.3rem;">Nama Mempelai Pria*</label>
+                        <input type="text" id="inp-groom-name" placeholder="Budi Santoso"
+                               style="width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:0.5rem 0.75rem;font-size:0.85rem;outline:none;box-sizing:border-box;"/>
+                    </div>
+                    <div>
+                        <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.3rem;">Nama Mempelai Wanita*</label>
+                        <input type="text" id="inp-bride-name" placeholder="Sari Dewi"
+                               style="width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:0.5rem 0.75rem;font-size:0.85rem;outline:none;box-sizing:border-box;"/>
+                    </div>
+                </div>
+
+                {{-- URL Slug --}}
+                <div style="margin-bottom:0.75rem;">
+                    <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.3rem;">URL Undangan (Slug)*</label>
+                    <div style="display:flex;align-items:center;border:1.5px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+                        <span style="background:#f8fafc;padding:0.5rem 0.65rem;font-size:0.75rem;color:#64748b;white-space:nowrap;border-right:1.5px solid #e2e8f0;">buyle.id/wedding/</span>
+                        <input type="text" id="inp-slug" placeholder="budi-sari-2025"
+                               style="flex:1;border:none;padding:0.5rem 0.75rem;font-size:0.85rem;outline:none;"/>
+                    </div>
+                    <p style="font-size:0.72rem;color:#94a3b8;margin-top:0.25rem;">Hanya huruf kecil, angka, dan tanda hubung (-).</p>
+                </div>
+
+                {{-- Kuota Slider --}}
+                <div style="margin-bottom:0.75rem;">
+                    <label style="font-size:0.75rem;font-weight:700;color:#334155;display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                        <span>Kuota Undangan (min. 150)</span>
+                        <strong id="slider-val" style="color:#1eb349;">150 Tamu</strong>
+                    </label>
+                    <input type="range" id="inp-guest-limit" min="150" max="2000" step="50" value="150"
+                           oninput="updateWeddingPricing(this.value)"
+                           style="width:100%;accent-color:#1eb349;cursor:pointer;"/>
+                    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#94a3b8;margin-top:0.2rem;">
+                        <span>150</span><span>500</span><span>1.000</span><span>2.000</span>
+                    </div>
+                </div>
+
+                {{-- Ringkasan Biaya --}}
+                <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:1rem;margin-bottom:1.25rem;">
+                    <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.65rem;">📋 Ringkasan Biaya</div>
+                    <div id="pricing-breakdown">
+                        <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
+                            <span>Paket Undangan Digital (150 Tamu)</span>
+                            <span>Rp 250.000</span>
+                        </div>
+                        <div id="extra-row" style="display:none;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
+                            <span id="extra-label">Extra Kuota</span>
+                            <span id="extra-val">Rp 0</span>
+                        </div>
+                        <hr style="border:none;border-top:1px dashed #e2e8f0;margin:0.6rem 0;"/>
+                        <div style="display:flex;justify-content:space-between;font-size:0.95rem;font-weight:800;color:#0f172a;">
+                            <span>Total</span>
+                            <span id="total-price" style="color:#1eb349;">Rp 250.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Error --}}
+                <div id="couple-error" style="display:none;background:#fef2f2;border:1.5px solid #fecaca;color:#dc2626;padding:0.65rem 0.85rem;border-radius:10px;font-size:0.82rem;margin-bottom:0.75rem;"></div>
+
+                {{-- Pay Button --}}
+                <button id="btn-pay-couple" onclick="submitOrderCouple()"
+                        style="width:100%;padding:0.85rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:12px;font-size:0.92rem;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 4px 15px rgba(30,179,73,0.3);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    Bayar via Midtrans
+                </button>
+                <p style="text-align:center;font-size:0.72rem;color:#94a3b8;margin-top:0.6rem;">Mendukung QRIS, GoPay, ShopeePay, VA Bank, dll.</p>
+            </div>
+        </div>
+    </div>
+
+    {{-- Midtrans Snap Script --}}
+    <script src="https://app.{{ $midtransEnv }}.midtrans.com/snap/snap.js"
+            data-client-key="{{ $midtransClientKeyJs }}"></script>
+
+    <script>
+        const WEDDING_ORDER_URL      = "{{ route('creator.wedding.order-couple') }}";
+        const WEDDING_SUCCESS_BASE   = "{{ url('/creator/wedding/payment-success') }}";
+        const WEDDING_CALCULATE_URL  = "{{ route('creator.wedding.calculate-price') }}";
+        const CSRF_TOKEN             = document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || '';
+
+        // Auto-generate slug from couple names
+        ['inp-groom-name', 'inp-bride-name'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', () => {
+                const g = document.getElementById('inp-groom-name').value.trim().split(' ')[0].toLowerCase();
+                const b = document.getElementById('inp-bride-name').value.trim().split(' ')[0].toLowerCase();
+                const yr = new Date().getFullYear();
+                document.getElementById('inp-slug').value =
+                    [g, b, yr].filter(Boolean).join('-').replace(/[^a-z0-9\-]/g, '');
+            });
+        });
+
+        function formatRupiah(n) {
+            return 'Rp ' + parseInt(n).toLocaleString('id-ID');
+        }
+
+        function updateWeddingPricing(val) {
+            val = Math.max(150, parseInt(val));
+            document.getElementById('slider-val').textContent = val + ' Tamu';
+            const base = 250000;
+            const extra = Math.max(0, val - 150) * 1000;
+            const total = base + extra;
+            document.getElementById('total-price').textContent = formatRupiah(total);
+            const extraRow = document.getElementById('extra-row');
+            if (extra > 0) {
+                extraRow.style.display = 'flex';
+                document.getElementById('extra-label').textContent = 'Extra ' + (val - 150) + ' Tamu (@Rp 1.000)';
+                document.getElementById('extra-val').textContent = formatRupiah(extra);
+            } else {
+                extraRow.style.display = 'none';
+            }
+        }
+
+        async function submitOrderCouple() {
+            const groom = document.getElementById('inp-groom-name').value.trim();
+            const bride = document.getElementById('inp-bride-name').value.trim();
+            const slug  = document.getElementById('inp-slug').value.trim();
+            const limit = parseInt(document.getElementById('inp-guest-limit').value);
+            const errEl = document.getElementById('couple-error');
+            const btn   = document.getElementById('btn-pay-couple');
+
+            errEl.style.display = 'none';
+
+            if (!groom || !bride || !slug) {
+                errEl.textContent = 'Nama mempelai dan URL wajib diisi.';
+                errEl.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Memproses...';
+
+            try {
+                const res = await fetch(WEDDING_ORDER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        groom_name:  groom,
+                        bride_name:  bride,
+                        slug:        slug,
+                        guest_limit: limit,
+                    }),
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    throw new Error(data.message || 'Gagal membuat order.');
+                }
+
+                // Tampilkan Midtrans Snap popup
+                snap.pay(data.snap_token, {
+                    onSuccess: async (result) => {
+                        // Aktivasi fallback dari frontend
+                        await fetch(WEDDING_SUCCESS_BASE + '/' + data.wedding_id, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' },
+                        });
+                        window.location.href = '/creator/wedding?w=' + data.wedding_id;
+                    },
+                    onPending: () => {
+                        alert('Pembayaran sedang diproses. Undangan akan aktif otomatis setelah pembayaran dikonfirmasi Midtrans.');
+                        document.getElementById('modal-add-couple').style.display = 'none';
+                    },
+                    onError: (err) => {
+                        errEl.textContent = 'Pembayaran gagal. Silakan coba lagi.';
+                        errEl.style.display = 'block';
+                        btn.disabled = false;
+                        btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar via Midtrans';
+                    },
+                    onClose: () => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar via Midtrans';
+                    }
+                });
+
+            } catch (e) {
+                errEl.textContent = e.message || 'Terjadi kesalahan server.';
+                errEl.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar via Midtrans';
+            }
         }
     </script>
 @endsection

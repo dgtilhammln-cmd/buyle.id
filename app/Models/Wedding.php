@@ -21,6 +21,9 @@ class Wedding extends Model
         'data_json'                => 'array',
         'event_latitude'           => 'float',
         'event_longitude'          => 'float',
+        'guest_limit'              => 'integer',
+        'paid_amount'              => 'float',
+        'paid_at'                  => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -58,13 +61,30 @@ class Wedding extends Model
         return $this->guests()->count();
     }
 
+    public function isPaid(): bool
+    {
+        return $this->payment_status === 'paid' || $this->payment_status === 'free';
+    }
+
+    public function remainingGuestSlots(): int
+    {
+        $limit = max(0, (int) ($this->guest_limit ?: 150));
+        return max(0, $limit - $this->totalGuestsCount());
+    }
+
+    public function canAddGuests(int $count = 1): bool
+    {
+        $limit = max(0, (int) ($this->guest_limit ?: 150));
+        return ($this->totalGuestsCount() + $count) <= $limit;
+    }
+
     public function getPublicUrlAttribute(): string
     {
-        return url('/w/' . $this->slug);
+        return url('/wedding/' . $this->slug);
     }
 
     public function getReceptionUrlAttribute(): string
     {
-        return url('/w/' . $this->slug . '/buku-tamu');
+        return url('/wedding/' . $this->slug . '/buku-tamu');
     }
 }

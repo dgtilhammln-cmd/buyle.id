@@ -732,6 +732,9 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
         Route::post('/envelope',     [\App\Http\Controllers\Creator\WeddingController::class, 'updateEnvelope'])->name('update-envelope');
         Route::get('/panic-pdf',     [\App\Http\Controllers\Creator\WeddingController::class, 'exportPdf'])->name('panic-pdf');
         Route::delete('/wish/{wish}',   [\App\Http\Controllers\Creator\WeddingController::class, 'destroyWish'])->name('wish.destroy');
+        Route::post('/calculate-price', [\App\Http\Controllers\Creator\WeddingController::class, 'calculatePrice'])->name('calculate-price');
+        Route::post('/order-couple',    [\App\Http\Controllers\Creator\WeddingController::class, 'orderCouple'])->name('order-couple');
+        Route::post('/payment-success/{wedding}', [\App\Http\Controllers\Creator\WeddingController::class, 'paymentSuccess'])->name('payment-success');
     });
 });
 

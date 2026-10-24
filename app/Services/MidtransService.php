@@ -231,6 +231,62 @@ class MidtransService
     }
 
     /**
+     * Membuat Snap Token khusus Pembelian Paket Undangan Pernikahan (Multi-Pasangan).
+     */
+    public function createWeddingSnapToken(\App\Models\Wedding $wedding, \App\Models\User $user, int $amount, int $guestsLimit): ?string
+    {
+        $midtransOrderId = 'WED-' . $wedding->id . '-' . time();
+        $wedding->update(['midtrans_order_id' => $midtransOrderId]);
+
+        $baseGuests = 150;
+        $basePrice  = 250000;
+        $extraGuests = max(0, $guestsLimit - $baseGuests);
+        $extraPrice  = $extraGuests * 1000;
+
+        $items = [
+            [
+                'id'       => 'WED_BASE_' . $wedding->id,
+                'price'    => $basePrice,
+                'quantity' => 1,
+                'name'     => 'Paket Undangan Base (150 Tamu)',
+            ]
+        ];
+
+        if ($extraGuests > 0) {
+            $items[] = [
+                'id'       => 'WED_EXTRA_' . $wedding->id,
+                'price'    => 1000,
+                'quantity' => $extraGuests,
+                'name'     => 'Extra Kuota (' . $extraGuests . ' Tamu @Rp 1.000)',
+            ];
+        }
+
+        $grossAmount = array_reduce($items, fn($sum, $item) => $sum + ($item['price'] * $item['quantity']), 0);
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $midtransOrderId,
+                'gross_amount' => $grossAmount,
+            ],
+            'customer_details' => [
+                'first_name' => $user->name,
+                'email'      => $user->email,
+                'phone'      => $user->phone ?? '',
+            ],
+            'item_details' => $items,
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            $wedding->update(['snap_token' => $snapToken]);
+            return $snapToken;
+        } catch (Exception $e) {
+            \Log::error('Midtrans Wedding Snap Error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Membatalkan transaksi di Midtrans.
      */
     public function cancelTransaction(string $orderNumber): bool

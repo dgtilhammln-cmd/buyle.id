@@ -44,6 +44,11 @@ class PaymentWebhookController extends Controller
             return $this->handlePosDepositWebhook($payload, $rawOrderId);
         }
 
+        // Support WED-xxx for Wedding Digital Invitation Packages
+        if (\Illuminate\Support\Str::startsWith($rawOrderId, 'WED-')) {
+            return $this->handleWeddingWebhook($payload, $rawOrderId);
+        }
+
         // Support BUYLE-{id}, ORD-xxx, or numeric ID
         $order = null;
         if (\Illuminate\Support\Str::startsWith($rawOrderId, 'BUYLE-')) {
@@ -355,6 +360,67 @@ class PaymentWebhookController extends Controller
             });
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
             $deposit->update(['status' => 'failed']);
+        }
+
+        return response('OK', 200);
+    }
+
+    /**
+     * Handle webhook callback khusus pembayaran paket undangan pernikahan (WED-xxx)
+     */
+    protected function handleWeddingWebhook(array $payload, string $rawOrderId)
+    {
+        // Format: WED-{wedding_id}-{timestamp}
+        $parts = explode('-', $rawOrderId);
+        $weddingId = isset($parts[1]) ? (int) $parts[1] : null;
+
+        $wedding = null;
+        if ($weddingId) {
+            $wedding = \App\Models\Wedding::find($weddingId);
+        }
+        if (!$wedding) {
+            $wedding = \App\Models\Wedding::where('midtrans_order_id', $rawOrderId)->first();
+        }
+
+        if (!$wedding) {
+            Log::warning("[Webhook Wedding] Wedding record not found", ['order_id' => $rawOrderId]);
+            return response('OK', 200);
+        }
+
+        // Validasi Signature Key
+        $serverKey  = \App\Models\Setting::get('midtrans_server_key') ?: config('midtrans.server_key');
+        $signature  = hash('sha512',
+            ($payload['order_id'] ?? '') .
+            ($payload['status_code'] ?? '') .
+            ($payload['gross_amount'] ?? '') .
+            $serverKey
+        );
+
+        if ($signature !== ($payload['signature_key'] ?? '')) {
+            Log::warning('[Webhook Wedding] Invalid Midtrans signature', ['order' => $rawOrderId]);
+            return response('OK', 200);
+        }
+
+        $transactionStatus = $payload['transaction_status'] ?? '';
+        $fraudStatus       = $payload['fraud_status'] ?? '';
+
+        $isPaid = (
+            ($transactionStatus === 'capture' && $fraudStatus === 'accept') ||
+            $transactionStatus === 'settlement'
+        );
+
+        if ($isPaid) {
+            $wedding->update([
+                'payment_status' => 'paid',
+                'is_active'      => true,
+                'paid_at'        => now(),
+            ]);
+            Log::info("[Webhook Wedding] Wedding successfully activated & paid", [
+                'wedding_id' => $wedding->id,
+                'slug'       => $wedding->slug,
+            ]);
+        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+            $wedding->update(['payment_status' => 'cancelled']);
         }
 
         return response('OK', 200);
