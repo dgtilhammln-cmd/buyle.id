@@ -69,19 +69,27 @@
             justify-content: center;
         }
 
-        video#cameraVideo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        /* Ambient blurred live background - fills the vertical 9:16 frame so there are no raw black gaps */
+        video#cameraVideoBg {
             position: absolute;
-            top: 0;
-            left: 0;
-            transform-origin: center center;
-            transition: transform 0.25s ease, filter 0.25s ease;
+            inset: -40px;
+            width: calc(100% + 80px);
+            height: calc(100% + 80px);
+            object-fit: cover;
+            filter: blur(36px) brightness(0.38) saturate(1.2);
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
 
-        video#cameraVideo.mode-contain {
-            object-fit: contain;
+        /* Main camera video - Default is 'contain' (100% bawaan kamera asli, ZERO CROP, NO UNNATURAL ZOOM) */
+        video#cameraVideo {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Bawaan kamera alami tanpa zoom potong */
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
 
         /* Live Frame Overlay SVG */
@@ -106,72 +114,36 @@
             display: none;
         }
 
-        /* ── Floating Zoom Controls ──────────────────────────────────────────────── */
-        .zoom-controls-floating {
+        /* ── Fit Mode Pill (Bawaan Kamera vs Layar Penuh) ─────────────────────────── */
+        .view-mode-pill {
             position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 25;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 6px;
-            border-radius: 99px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-
-        .zoom-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: transparent;
-            border: 1px solid transparent;
-            color: #ffffff;
-            font-size: 0.72rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .zoom-btn.active {
-            background: #fbbf24;
-            color: #000000;
-            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
-        }
-
-        .fit-mode-toggle {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 25;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 6px 10px;
-            border-radius: 99px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #ffffff;
-            font-size: 0.68rem;
-            font-weight: 700;
+            top: calc(env(safe-area-inset-top, 16px) + 54px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 28;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 5px 12px;
+            border-radius: 99px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
         }
 
-        .fit-mode-toggle.active {
-            background: rgba(16, 185, 129, 0.25);
-            border-color: #10b981;
-            color: #34d399;
+        .view-mode-pill:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .view-mode-pill svg {
+            color: #fbbf24;
         }
 
         /* ── Header Controls ──────────────────────────────────────────────────────── */
@@ -182,7 +154,7 @@
             align-items: center;
             justify-content: space-between;
             padding: calc(env(safe-area-inset-top, 16px) + 12px) 16px 12px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
         }
 
         .brand-badge {
@@ -244,7 +216,7 @@
             position: relative;
             z-index: 30;
             padding: 10px 16px calc(env(safe-area-inset-bottom, 16px) + 12px);
-            background: linear-gradient(0deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(0deg, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0) 100%);
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -663,6 +635,10 @@
 
         {{-- ── 1. Viewfinder Camera Stream ────────────────────────────────────────── --}}
         <div class="viewfinder-wrapper" id="viewfinderWrapper">
+            {{-- Background ambient blur (mengisi ruang 9:16 agar tidak ada ruang kosong hitam kaku) --}}
+            <video id="cameraVideoBg" autoplay playsinline muted></video>
+
+            {{-- Main live video: Bawaan Kamera Asli (object-fit: contain, ZERO CROP) --}}
             <video id="cameraVideo" autoplay playsinline muted></video>
 
             {{-- Default SVG Frame Overlay --}}
@@ -673,19 +649,14 @@
             {{-- Custom PNG Frame Overlay --}}
             <img id="liveCustomFrameImg" class="frame-overlay-img" alt="Custom Frame Overlay">
 
-            {{-- Floating Zoom Level Control (Pills: 0.7x Lebar/Normal, 1x Penuh, 1.3x Dekat) --}}
-            <div class="zoom-controls-floating">
-                <button type="button" class="zoom-btn active" id="zoomBtnWide" onclick="setZoomScale(0.75, this)" title="Mode Lebar (Wide / Tanpa Crop)">0.7x</button>
-                <button type="button" class="zoom-btn" id="zoomBtnNormal" onclick="setZoomScale(1.0, this)" title="Mode Normal (1x)">1x</button>
-                <button type="button" class="zoom-btn" id="zoomBtnClose" onclick="setZoomScale(1.3, this)" title="Mode Dekat (1.3x)">1.3x</button>
-            </div>
-
-            {{-- Fit Mode Toggle (Lebar / Penuh) --}}
-            <button type="button" class="fit-mode-toggle" id="btnFitToggle" onclick="toggleFitMode()" title="Ubah tampilan penuh atau lebar">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            {{-- Toggle Mode: Bawaan Kamera (Alami) vs Layar Penuh (Zoom) --}}
+            <button type="button" class="view-mode-pill" id="btnViewModeToggle" onclick="toggleViewMode()" title="Klik untuk beralih antara Kamera Alami atau Layar Penuh">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="12 8 8 12 12 16 12 8"></polygon>
+                    <polygon points="12 8 16 12 12 16 12 8"></polygon>
                 </svg>
-                <span id="fitToggleLabel">Normal (Lebar)</span>
+                <span id="viewModeLabel">Kamera Asli (Alami)</span>
             </button>
 
             {{-- Flash Effect --}}
@@ -955,7 +926,7 @@
 
         // Filter Definitions
         const FILTER_DEFINITIONS = {
-            'normal':  { name: 'Normal', css: 'none' },
+            'normal':  { name: 'Normal (Asli)', css: 'none' },
             'warm':    { name: 'Warm Gold', css: 'sepia(0.22) saturate(1.28) brightness(1.05) contrast(1.03)' },
             'soft':    { name: 'Soft Glow', css: 'brightness(1.08) contrast(0.96) saturate(1.15)' },
             'rose':    { name: 'Rose Blush', css: 'hue-rotate(-10deg) saturate(1.25) brightness(1.04)' },
@@ -975,11 +946,11 @@
         let isCapturing = false;
         let uploadedImageObj = null;
 
-        // Zoom & Fit State
-        let currentZoomScale = 0.75; // Default 0.75x to prevent natural wide camera from being over-cropped
-        let isContainFit = false;
+        // View Mode: 'contain' = Bawaan Kamera Asli (Zero Crop / Alami), 'cover' = Layar Penuh (Zoom Crop)
+        let activeViewMode = 'contain';
 
         const videoEl = document.getElementById('cameraVideo');
+        const videoBgEl = document.getElementById('cameraVideoBg');
         const liveFrameSvg = document.getElementById('liveFrameSvg');
         const liveCustomFrameImg = document.getElementById('liveCustomFrameImg');
         const flashOverlay = document.getElementById('flashOverlay');
@@ -991,7 +962,7 @@
         const cameraNotice = document.getElementById('cameraNotice');
         const toastNotif = document.getElementById('toastNotif');
 
-        function showToast(msg, duration = 2800) {
+        function showToast(msg, duration = 2500) {
             toastNotif.textContent = msg;
             toastNotif.style.display = 'block';
             setTimeout(() => {
@@ -999,7 +970,7 @@
             }, duration);
         }
 
-        // ── Inisialisasi Kamera dengan Constraints Portrait 9:16 ─────────────────────────
+        // ── Inisialisasi Kamera Native Bebas Paksaan Crop ───────────────────────────────
         async function startCamera() {
             cameraNotice.style.display = 'none';
 
@@ -1007,34 +978,33 @@
                 stream.getTracks().forEach(track => track.stop());
             }
 
-            // Ideal 9:16 aspect ratio request agar browser tidak mengambil stream 4:3 yang ter-crop berlebihan
+            // Gunakan constraint native alami dari perangkat tanpa memaksakan ukuran terbalik
             const constraints = {
                 audio: false,
                 video: {
-                    facingMode: { ideal: currentFacingMode },
-                    aspectRatio: { ideal: 9 / 16 },
-                    width: { ideal: 1080 },
-                    height: { ideal: 1920 }
+                    facingMode: currentFacingMode,
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 }
                 }
             };
 
             try {
                 stream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoEl.srcObject = stream;
+                if (videoBgEl) videoBgEl.srcObject = stream;
                 uploadedImageObj = null;
 
                 applyTransform();
                 applyFilterToVideo();
-                tryApplyNativeZoom(currentZoomScale);
             } catch (err) {
-                console.warn('Gagal dengan constraint ideal 9:16, coba fallback:', err);
+                console.warn('Fallback ke constraint sederhana:', err);
                 try {
-                    // Fallback constraints
                     stream = await navigator.mediaDevices.getUserMedia({
                         audio: false,
                         video: { facingMode: currentFacingMode }
                     });
                     videoEl.srcObject = stream;
+                    if (videoBgEl) videoBgEl.srcObject = stream;
                     uploadedImageObj = null;
                     applyTransform();
                     applyFilterToVideo();
@@ -1045,55 +1015,35 @@
             }
         }
 
-        // Apply scale, flip, and fit mode to video element
+        // Apply scale, flip, and fit mode to video elements
         function applyTransform() {
             const flipX = currentFacingMode === 'user' ? -1 : 1;
-            videoEl.style.transform = `scaleX(${flipX}) scale(${currentZoomScale})`;
-        }
-
-        // Coba terapkan hardware zoom kamera (pada hp Android/iOS yang support)
-        function tryApplyNativeZoom(scale) {
-            if (!stream) return;
-            const track = stream.getVideoTracks()[0];
-            if (!track || !track.getCapabilities) return;
-            try {
-                const caps = track.getCapabilities();
-                if (caps.zoom) {
-                    const min = caps.zoom.min || 1;
-                    const max = caps.zoom.max || 1;
-                    // Map 0.7x - 1.3x ke rentang zoom hardware jika didukung
-                    const target = Math.min(Math.max(scale, min), max);
-                    track.applyConstraints({ advanced: [{ zoom: target }] }).catch(() => {});
-                }
-            } catch (e) {}
-        }
-
-        // Set Zoom Scale (0.75x Wide, 1.0x Normal, 1.3x Dekat)
-        function setZoomScale(scale, btnEl) {
-            currentZoomScale = scale;
-            document.querySelectorAll('.zoom-btn').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-            applyTransform();
-            tryApplyNativeZoom(scale);
-            showToast(`Zoom: ${scale}x ${scale < 1 ? '(Sudut Lebar)' : (scale === 1 ? '(Normal)' : '(Dekat)')}`, 1500);
-        }
-
-        // Toggle Fit Mode (Contain vs Cover)
-        function toggleFitMode() {
-            isContainFit = !isContainFit;
-            const btn = document.getElementById('btnFitToggle');
-            const label = document.getElementById('fitToggleLabel');
-            if (isContainFit) {
-                videoEl.classList.add('mode-contain');
-                btn.classList.add('active');
-                label.textContent = 'Penuh (Fit)';
-                showToast('Mode Tampilan: Fit Tanpa Crop', 1800);
-            } else {
-                videoEl.classList.remove('mode-contain');
-                btn.classList.remove('active');
-                label.textContent = 'Normal (Lebar)';
-                showToast('Mode Tampilan: Penuh Layar', 1800);
+            videoEl.style.transform = `scaleX(${flipX})`;
+            if (videoBgEl) {
+                videoBgEl.style.transform = `scale(1.15) scaleX(${flipX})`;
             }
+
+            if (activeViewMode === 'contain') {
+                videoEl.style.objectFit = 'contain';
+                if (videoBgEl) videoBgEl.style.display = 'block';
+            } else {
+                videoEl.style.objectFit = 'cover';
+                if (videoBgEl) videoBgEl.style.display = 'none';
+            }
+        }
+
+        // Toggle View Mode: Bawaan Kamera (Alami / No Crop) vs Layar Penuh (Zoom Crop)
+        function toggleViewMode() {
+            activeViewMode = activeViewMode === 'contain' ? 'cover' : 'contain';
+            const label = document.getElementById('viewModeLabel');
+            if (activeViewMode === 'contain') {
+                label.textContent = 'Kamera Asli (Alami)';
+                showToast('Mode: Kamera Bawaan Asli (Tanpa Zoom / Crop)', 2000);
+            } else {
+                label.textContent = 'Layar Penuh (Zoom)';
+                showToast('Mode: Layar Penuh (Di-crop menyesuaikan layar)', 2000);
+            }
+            applyTransform();
         }
 
         // Flip Camera (Front / Back)
@@ -1112,18 +1062,18 @@
                 btn.classList.add('active');
                 ind.style.display = 'block';
                 ind.textContent = '3s';
-                showToast('Timer diaktifkan: 3 Detik', 1500);
+                showToast('Timer: 3 Detik', 1400);
             } else if (timerSeconds === 3) {
                 timerSeconds = 5;
                 btn.classList.add('active');
                 ind.style.display = 'block';
                 ind.textContent = '5s';
-                showToast('Timer diaktifkan: 5 Detik', 1500);
+                showToast('Timer: 5 Detik', 1400);
             } else {
                 timerSeconds = 0;
                 btn.classList.remove('active');
                 ind.style.display = 'none';
-                showToast('Timer dimatikan', 1500);
+                showToast('Timer dimatikan', 1400);
             }
         }
 
@@ -1158,7 +1108,13 @@
 
         function applyFilterToVideo() {
             const filterDef = FILTER_DEFINITIONS[currentFilterKey];
-            videoEl.style.filter = filterDef ? filterDef.css : 'none';
+            const cssFilter = filterDef ? filterDef.css : 'none';
+            videoEl.style.filter = cssFilter;
+            if (videoBgEl) {
+                videoBgEl.style.filter = cssFilter !== 'none'
+                    ? `${cssFilter} blur(36px) brightness(0.38)`
+                    : 'blur(36px) brightness(0.38)';
+            }
         }
 
         // Select Default SVG Frame
@@ -1351,54 +1307,72 @@
                 sh = sourceMedia.videoHeight || 1920;
             }
 
-            // Hitung crop video dengan mempertimbangkan currentZoomScale
-            // Semakin kecil currentZoomScale (e.g. 0.75), semakin lebar area yang diambil
-            const canvasAspect = cw / ch;
-            const sourceAspect = sw / sh;
-            let renderW, renderH, offsetX, offsetY;
-
-            if (sourceAspect > canvasAspect) {
-                renderH = sh;
-                renderW = sh * canvasAspect;
-                offsetX = (sw - renderW) / 2;
-                offsetY = 0;
-            } else {
-                renderW = sw;
-                renderH = sw / canvasAspect;
-                offsetX = 0;
-                offsetY = (sh - renderH) / 2;
-            }
-
-            // Terapkan Zoom Crop adjustment jika scale !== 1.0
-            if (currentZoomScale !== 1.0 && !isStaticImage) {
-                const adjustedW = renderW / currentZoomScale;
-                const adjustedH = renderH / currentZoomScale;
-                // Pastikan tidak melebihi batas resolusi video asli
-                const finalW = Math.min(sw, adjustedW);
-                const finalH = Math.min(sh, adjustedH);
-                offsetX = Math.max(0, (sw - finalW) / 2);
-                offsetY = Math.max(0, (sh - finalH) / 2);
-                renderW = finalW;
-                renderH = finalH;
-            }
-
-            ctx.save();
-            // Terapkan filter warna ke canvas
             const filterDef = FILTER_DEFINITIONS[currentFilterKey];
-            ctx.filter = filterDef && filterDef.css !== 'none' ? filterDef.css : 'none';
+            const filterCss = filterDef && filterDef.css !== 'none' ? filterDef.css : 'none';
 
-            // Jika kamera depan, mirror horizontal
-            if (!isStaticImage && currentFacingMode === 'user') {
-                ctx.translate(cw, 0);
-                ctx.scale(-1, 1);
+            if (activeViewMode === 'contain') {
+                // ── 1. AMBIENT BLUR BACKGROUND (Mempercantik rasio 9:16 InstaStory tanpa crop foto) ──
+                ctx.save();
+                ctx.filter = filterCss !== 'none'
+                    ? `${filterCss} blur(40px) brightness(0.4) saturate(1.2)`
+                    : 'blur(40px) brightness(0.4) saturate(1.2)';
+
+                if (!isStaticImage && currentFacingMode === 'user') {
+                    ctx.translate(cw, 0);
+                    ctx.scale(-1, 1);
+                }
+                ctx.drawImage(sourceMedia, 0, 0, sw, sh, -100, -100, cw + 200, ch + 200);
+                ctx.restore();
+
+                // ── 2. FOTO ASLI ALAMI DI TENGAH (100% Kamera Asli, Nol Crop, Nol Zoom) ──
+                ctx.save();
+                ctx.filter = filterCss;
+                if (!isStaticImage && currentFacingMode === 'user') {
+                    ctx.translate(cw, 0);
+                    ctx.scale(-1, 1);
+                }
+
+                // Fit contain math
+                const scaleFit = Math.min(cw / sw, ch / sh);
+                const drawW = sw * scaleFit;
+                const drawH = sh * scaleFit;
+                const drawX = (cw - drawW) / 2;
+                const drawY = (ch - drawH) / 2;
+
+                ctx.drawImage(sourceMedia, 0, 0, sw, sh, drawX, drawY, drawW, drawH);
+                ctx.restore();
+            } else {
+                // ── MODE LAYAR PENUH (Cover Center Crop) ──
+                const canvasAspect = cw / ch;
+                const sourceAspect = sw / sh;
+                let renderW, renderH, offsetX, offsetY;
+
+                if (sourceAspect > canvasAspect) {
+                    renderH = sh;
+                    renderW = sh * canvasAspect;
+                    offsetX = (sw - renderW) / 2;
+                    offsetY = 0;
+                } else {
+                    renderW = sw;
+                    renderH = sw / canvasAspect;
+                    offsetX = 0;
+                    offsetY = (sh - renderH) / 2;
+                }
+
+                ctx.save();
+                ctx.filter = filterCss;
+                if (!isStaticImage && currentFacingMode === 'user') {
+                    ctx.translate(cw, 0);
+                    ctx.scale(-1, 1);
+                }
+                ctx.drawImage(sourceMedia, offsetX, offsetY, renderW, renderH, 0, 0, cw, ch);
+                ctx.restore();
             }
-            ctx.drawImage(sourceMedia, offsetX, offsetY, renderW, renderH, 0, 0, cw, ch);
-            ctx.restore();
 
             // Selesai menggambar video, reset filter untuk overlay frame
             ctx.filter = 'none';
 
-            // 2. Overlay Frame (Custom PNG atau Default SVG)
+            // ── 3. OVERLAY FRAME (Custom PNG atau Default SVG) ──
             if (isCustomFrame && activeCustomUrl) {
                 const customImg = new Image();
                 customImg.crossOrigin = 'anonymous';
@@ -1526,7 +1500,7 @@
         }
 
         function showHelpModal() {
-            alert('Petunjuk Penggunaan Photobooth:\n1. Pilih Bingkai (Frame) atau Filter Warna di bawah.\n2. Jika kamera terasa terlalu dekat/zoom, gunakan tombol 0.7x (Lebar) di samping kanan.\n3. Tekan tombol bulat di tengah untuk jepret foto.\n4. Setelah foto selesai, Anda bisa langsung share ke Instagram Story, WhatsApp, atau download foto HD!');
+            alert('Petunjuk Penggunaan Photobooth:\n1. Tampilan kamera menggunakan format asli (alami) tanpa zoom terpotong.\n2. Jika ingin tampilan layar penuh, klik tombol "Kamera Asli (Alami)" di atas untuk beralih.\n3. Pilih Bingkai (Frame) atau Filter Warna di bawah.\n4. Tekan tombol bulat di tengah untuk jepret foto.\n5. Hasil foto langsung siap di-share ke Instagram Story, WhatsApp, atau download foto HD!');
         }
 
         // Start default
