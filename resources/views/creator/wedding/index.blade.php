@@ -606,6 +606,7 @@
         $activeTab = request('tab', 'tab-info');
         $publicWeddingUrl = $wedding ? route('wedding.show', $wedding->slug) : '#';
         $receptionUrl = $wedding ? route('wedding.reception', $wedding->slug) : '#';
+        $photoboothUrl = $wedding ? route('wedding.photobooth', $wedding->slug) : '#';
         $midtransClientKeyJs = $midtransClientKey ?? '';
         $midtransEnv = ($midtransIsProduction ?? false) ? 'production' : 'sandbox';
     @endphp
@@ -763,8 +764,18 @@
                             viewBox="0 0 24 24">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
-                        <span class="tab-text-full">Doa & InstaStory</span>
+                        <span class="tab-text-full">Doa &amp; Ucapan Tamu</span>
                         <small class="tab-text-mob">Doa</small>
+                    </button>
+
+                    <button class="tab-btn {{ $activeTab === 'tab-photobooth' ? 'active' : '' }}" data-tab="tab-photobooth">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span class="tab-text-full">Photobooth Barcode &amp; Frame</span>
+                        <small class="tab-text-mob">Photobooth</small>
                     </button>
                 </div>
             </div>
@@ -788,8 +799,9 @@
                 <div style="font-size:0.7rem;color:#94a3b8;margin-top:0.35rem;">Tersisa {{ $wedding->remainingGuestSlots() }} slot</div>
                 @if($wedding->remainingGuestSlots() < 20)
                 <button onclick="document.getElementById('modal-add-couple').style.display='flex'"
-                    style="margin-top:0.5rem;width:100%;padding:0.4rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;">
-                    ⬆ Upgrade Kuota
+                    style="margin-top:0.5rem;width:100%;padding:0.4rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                    Upgrade Kuota
                 </button>
                 @endif
             </div>
@@ -1850,7 +1862,220 @@
             </div>
 
             {{-- ═══════════════════════════════════════════════════════════
-            TAB 6: PETA INTERAKTIF SEBARAN TAMU & RSVP BERDASARKAN KOTA
+            TAB 6: PHOTOBOOTH BARCODE & FRAME GENERATOR
+            ═══════════════════════════════════════════════════════════════ --}}
+            <div class="tab-pane {{ $activeTab === 'tab-photobooth' ? 'active' : '' }}" id="tab-photobooth">
+                @if($wedding)
+
+                {{-- Photobooth Hero Card --}}
+                <div class="prof-card" style="margin-bottom:1.25rem; overflow:hidden; position:relative;">
+                    <div style="position:absolute; top:0; right:0; width:300px; height:100%; background:linear-gradient(135deg, rgba(30,179,73,0.08) 0%, rgba(165,207,55,0.04) 100%); pointer-events:none;"></div>
+                    <div class="card-body" style="padding:1.5rem;">
+                        <div style="display:flex; align-items:flex-start; gap:1.25rem; flex-wrap:wrap;">
+                            {{-- Camera Icon --}}
+                            <div style="flex-shrink:0; width:56px; height:56px; background:linear-gradient(135deg,#1eb349,#a5cf37); border-radius:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(30,179,73,0.3);">
+                                <svg width="26" height="26" fill="none" stroke="#ffffff" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div style="flex:1; min-width:220px;">
+                                <div style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; font-family:'Montserrat',sans-serif;">Photobooth Live Camera</div>
+                                <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin-bottom:1rem;">Tamu scan QR barcode di venue, kamera langsung terbuka, pilih frame pernikahan eksklusif, jepret foto, dan share ke Instagram Story secara instan — tanpa install aplikasi.</p>
+
+                                <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                                    {{-- Open Photobooth --}}
+                                    <a href="{{ $photoboothUrl }}" target="_blank"
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1.1rem; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; border-radius:10px; font-size:0.8rem; font-weight:700; text-decoration:none; box-shadow:0 4px 12px rgba(30,179,73,0.3); font-family:'Montserrat',sans-serif;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                            <polyline points="15 3 21 3 21 9"></polyline>
+                                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                                        </svg>
+                                        Preview Photobooth
+                                    </a>
+                                    {{-- Copy Link --}}
+                                    <button type="button" onclick="copyGuestLink('{{ $photoboothUrl }}')"
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1.1rem; background:#f8fafc; border:1.5px solid #e2e8f0; color:#334155; border-radius:10px; font-size:0.8rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        Salin Link
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- QR Code Stand Banner & Info --}}
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem;" class="photobooth-grid">
+
+                    {{-- QR Code Stand --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <div class="head-title-wrap">
+                                <div class="head-icon" style="background:#eff6ff; color:#3b82f6;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                                    </svg>
+                                </div>
+                                <span>QR Code Barcode Stand</span>
+                            </div>
+                        </div>
+                        <div class="card-body" style="text-align:center; padding:1.5rem 1.25rem;">
+                            <div style="font-size:0.78rem; color:#64748b; margin-bottom:1rem; line-height:1.5;">
+                                Print QR Code ini sebagai stand di venue. Tamu scan untuk langsung buka photobooth tanpa ketik link.
+                            </div>
+                            {{-- QR Code (pakai Google Chart API, no JS library needed) --}}
+                            @php
+                                $pbUrl = route('wedding.photobooth', $wedding->slug);
+                                $qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&format=png&ecc=M&data=' . urlencode($pbUrl);
+                            @endphp
+                            <div style="display:inline-block; padding:12px; background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+                                <img src="{{ $qrApiUrl }}" alt="QR Photobooth" width="200" height="200" style="display:block; border-radius:8px;" loading="lazy">
+                            </div>
+                            <div style="margin-top:1rem;">
+                                <code style="font-size:0.65rem; color:#64748b; word-break:break-all; line-height:1.4; display:block;">{{ $pbUrl }}</code>
+                            </div>
+                            {{-- Download QR --}}
+                            <a href="{{ $qrApiUrl }}" download="QR_Photobooth_{{ $wedding->slug }}.png" target="_blank"
+                                style="display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.45rem 1rem; background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe; border-radius:8px; font-size:0.78rem; font-weight:700; text-decoration:none;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Unduh QR Code (PNG)
+                            </a>
+                        </div>
+                    </div>
+
+                    {{-- Frame Preview Cards --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <div class="head-title-wrap">
+                                <div class="head-icon" style="background:#fdf4ff; color:#a855f7;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                        <path d="M3 20l4-4 2 2 4-4 5 6"></path>
+                                    </svg>
+                                </div>
+                                <span>Template Frame Tersedia (9:16)</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+
+                                {{-- Frame 1: Classic Gold --}}
+                                <div style="border:1.5px solid #fde68a; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:linear-gradient(160deg,#0f172a 0%, #1e293b 50%, #0b1215 100%);">
+                                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; gap:4px;">
+                                        <div style="width:100%; height:100%; border:2px solid rgba(251,191,36,0.6); border-radius:6px; position:absolute; inset:4px; width:calc(100% - 8px); height:calc(100% - 8px);"></div>
+                                        <div style="font-size:0.45rem; font-weight:800; color:#fbbf24; letter-spacing:1px; text-align:center; position:relative; z-index:1;">WEDDING</div>
+                                        <div style="font-size:0.6rem; font-weight:800; color:#ffffff; text-align:center; font-family:serif; position:relative; z-index:1;">Ilham & Buyle</div>
+                                    </div>
+                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:4px; text-align:center;">
+                                        <span style="font-size:0.55rem; color:#fbbf24; font-weight:700;">Classic Gold</span>
+                                    </div>
+                                </div>
+
+                                {{-- Frame 2: Floral Romance --}}
+                                <div style="border:1.5px solid #fecdd3; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:linear-gradient(160deg,#1e0a12 0%, #2d1228 100%);">
+                                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; gap:4px;">
+                                        <div style="font-size:0.45rem; font-weight:700; color:#fda4af; font-style:italic; text-align:center; position:relative; z-index:1;">Happy Ever After</div>
+                                        <div style="font-size:0.6rem; font-weight:800; color:#ffffff; text-align:center; font-family:serif; position:relative; z-index:1;">Ilham & Buyle</div>
+                                    </div>
+                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:4px; text-align:center;">
+                                        <span style="font-size:0.55rem; color:#fda4af; font-weight:700;">Floral Romance</span>
+                                    </div>
+                                </div>
+
+                                {{-- Frame 3: Modern Arch --}}
+                                <div style="border:1.5px solid #e2e8f0; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:#0f172a;">
+                                    <div style="position:absolute; inset:6px; border:2px solid rgba(255,255,255,0.8); border-radius:50% 50% 4px 4px / 30% 30% 4px 4px;"></div>
+                                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; gap:4px;">
+                                        <div style="font-size:0.6rem; font-weight:800; color:#ffffff; text-align:center; font-family:serif; position:relative; z-index:1;">Ilham & Buyle</div>
+                                    </div>
+                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:4px; text-align:center;">
+                                        <span style="font-size:0.55rem; color:#ffffff; font-weight:700;">Minimalist Arch</span>
+                                    </div>
+                                </div>
+
+                                {{-- Frame 4: Polaroid --}}
+                                <div style="border:2px solid #ffffff; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:#1a1a2e;">
+                                    <div style="position:absolute; bottom:0; left:0; right:0; height:30%; background:#ffffff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
+                                        <div style="font-size:0.6rem; font-weight:800; color:#0f172a; text-align:center;">Ilham & Buyle</div>
+                                        <div style="font-size:0.4rem; color:#64748b; letter-spacing:1px;">PHOTOBOOTH</div>
+                                    </div>
+                                    <div style="position:absolute; top:0; left:0; right:0; bottom:30%; display:flex; align-items:center; justify-content:center;">
+                                        <div style="width:60%; height:60%; border:1px solid rgba(255,255,255,0.3); border-radius:4px;"></div>
+                                    </div>
+                                    <div style="position:absolute; top:4px; left:0; right:0; text-align:center;">
+                                        <span style="font-size:0.5rem; color:#94a3b8; font-weight:700;">Polaroid Strip</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- How it Works Steps --}}
+                <div class="prof-card" style="margin-top:1.25rem;">
+                    <div class="prof-card-head">
+                        <div class="head-title-wrap">
+                            <div class="head-icon">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span>Cara Kerja Photobooth di Venue</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+                            @php
+                                $pbSteps = [
+                                    ['num'=>'1', 'color'=>'#eff6ff', 'stroke'=>'#3b82f6', 'icon'=>'<rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect>', 'title'=>'Scan QR di Venue', 'desc'=>'Panitia pasang stand QR code di pintu masuk atau meja resepsi'],
+                                    ['num'=>'2', 'color'=>'#fdf4ff', 'stroke'=>'#a855f7', 'icon'=>'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>', 'title'=>'Kamera Terbuka', 'desc'=>'Browser langsung mengaktifkan kamera depan smartphone tamu'],
+                                    ['num'=>'3', 'color'=>'#fff7ed', 'stroke'=>'#f97316', 'icon'=>'<rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="12" cy="10" r="3"></circle><path d="M3 20l4-4 2 2 4-4 5 6"></path>', 'title'=>'Pilih Frame & Jepret', 'desc'=>'Tamu pilih dari 4 template frame estetik 9:16 lalu foto'],
+                                    ['num'=>'4', 'color'=>'#f0fdf4', 'stroke'=>'#22c55e', 'icon'=>'<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>', 'title'=>'Share ke InstaStory', 'desc'=>'Foto langsung dapat didownload atau share ke Instagram Story'],
+                                ];
+                            @endphp
+                            @foreach($pbSteps as $step)
+                                <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.5rem; padding:1rem; background:{{ $step['color'] }}; border-radius:12px; border:1px solid {{ $step['stroke'] }}20;">
+                                    <div style="width:32px; height:32px; border-radius:50%; background:{{ $step['stroke'] }}22; display:flex; align-items:center; justify-content:center;">
+                                        <svg width="16" height="16" fill="none" stroke="{{ $step['stroke'] }}" stroke-width="2" viewBox="0 0 24 24">{!! $step['icon'] !!}</svg>
+                                    </div>
+                                    <div style="font-size:0.8rem; font-weight:800; color:#0f172a;">{{ $step['num'] }}. {{ $step['title'] }}</div>
+                                    <div style="font-size:0.74rem; color:#475569; line-height:1.4;">{{ $step['desc'] }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                @else
+                <div style="text-align:center; padding:4rem 2rem; color:#94a3b8;">
+                    <svg width="48" height="48" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 1rem;">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    <div style="font-size:0.9rem; font-weight:700; color:#64748b;">Buat pasangan pernikahan terlebih dahulu</div>
+                    <div style="font-size:0.78rem; margin-top:0.25rem;">Photobooth tersedia setelah Anda membuat dan mengaktifkan pasangan.</div>
+                </div>
+                @endif
+            </div>
+
+            {{-- ═══════════════════════════════════════════════════════════
+            TAB 7: PETA INTERAKTIF SEBARAN TAMU & RSVP BERDASARKAN KOTA
             ═══════════════════════════════════════════════════════════════ --}}
             <div class="tab-pane {{ $activeTab === 'tab-map' ? 'active' : '' }}" id="tab-map">
                 <div class="prof-card" style="margin-bottom:1.25rem;">

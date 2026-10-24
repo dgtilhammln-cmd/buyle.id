@@ -19,6 +19,18 @@ class WeddingPublicController extends Controller
     }
 
     /**
+     * Web-based Live Camera Photobooth dengan Frame Wedding 9:16 untuk InstaStory.
+     * Tamu scan barcode di venue -> open to camera -> pilih aneka frame photobooth -> jepret foto & share ke InstaStory.
+     */
+    public function photobooth(string $slug, Request $request)
+    {
+        $wedding = Wedding::where('slug', $slug)->firstOrFail();
+        $guestName = $request->query('to', 'Tamu Spesial');
+
+        return view('wedding.photobooth', compact('wedding', 'guestName'));
+    }
+
+    /**
      * Tampilkan Undangan Digital Publik (Mobile-first).
      * Dilengkapi Fitur Anti-Nakal (Jika parameter ?to diubah sembarangan, redirect ke domain utama).
      */
