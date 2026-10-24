@@ -15,7 +15,33 @@
 @endsection
 
 @section('styles')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <style>
+        .map-filter-btn {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.35rem 0.75rem;
+            border-radius: 99px;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .map-filter-btn.active, .map-filter-btn:hover {
+            background: #10b981;
+            color: #ffffff;
+            border-color: #10b981;
+        }
+        .custom-guest-pin {
+            background: transparent;
+            border: none;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         .bio-layout {
             display: flex;
             gap: 1.75rem;
@@ -643,16 +669,17 @@
                             style="appearance:none; background:#fff; border:1.5px solid #e2e8f0; border-radius:10px; padding:0.4rem 2.2rem 0.4rem 0.8rem; font-size:0.83rem; font-weight:700; color:#0f172a; cursor:pointer; font-family:'Montserrat',sans-serif;">
                         @foreach($allWeddings as $w)
                             <option value="{{ $w->id }}" {{ ($wedding && $wedding->id === $w->id) ? 'selected' : '' }}>
-                                💍 {{ $w->groom_nickname ?? $w->groom_name }} &amp; {{ $w->bride_nickname ?? $w->bride_name }}
-                                @if($w->payment_status !== 'paid') [⏳ Pending] @endif
+                                {{ $w->groom_nickname ?? $w->groom_name }} &amp; {{ $w->bride_nickname ?? $w->bride_name }}
+                                @if($w->payment_status !== 'paid') [Pending] @endif
                             </option>
                         @endforeach
                     </select>
                     <svg style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;" width="12" height="12" fill="none" stroke="#64748b" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
             @elseif($wedding)
-                <span style="background:#ecfdf5; color:#166534; font-size:0.83rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:8px; font-family:'Montserrat',sans-serif;">
-                    💍 {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp; {{ $wedding->bride_nickname ?? $wedding->bride_name }}
+                <span style="background:#ecfdf5; color:#166534; font-size:0.83rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:8px; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.4rem;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp; {{ $wedding->bride_nickname ?? $wedding->bride_name }}
                 </span>
             @else
                 <span style="color:#94a3b8; font-size:0.8rem;">Belum ada pasangan</span>
@@ -706,6 +733,19 @@
                         </svg>
                         <span class="tab-text-full">Daftar Tamu & WA</span>
                         <small class="tab-text-mob">Tamu</small>
+                    </button>
+
+                    <button class="tab-btn {{ $activeTab === 'tab-map' ? 'active' : '' }}" data-tab="tab-map">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                            <line x1="16" y1="6" x2="16" y2="22"></line>
+                        </svg>
+                        <span class="tab-text-full">Peta Sebaran Tamu</span>
+                        <small class="tab-text-mob">Peta</small>
+                        @if(isset($mapGuests) && $mapGuests->count() > 0)
+                            <span style="background:#10b981; color:#fff; font-size:0.65rem; font-weight:800; padding:1px 6px; border-radius:99px; margin-left:auto;">{{ $mapGuests->count() }}</span>
+                        @endif
                     </button>
 
                     <button class="tab-btn {{ $activeTab === 'tab-envelope' ? 'active' : '' }}" data-tab="tab-envelope">
@@ -1809,6 +1849,147 @@
 
             </div>
 
+            {{-- ═══════════════════════════════════════════════════════════
+            TAB 6: PETA INTERAKTIF SEBARAN TAMU & RSVP BERDASARKAN KOTA
+            ═══════════════════════════════════════════════════════════════ --}}
+            <div class="tab-pane {{ $activeTab === 'tab-map' ? 'active' : '' }}" id="tab-map">
+                <div class="prof-card" style="margin-bottom:1.25rem;">
+                    <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div class="head-title-wrap">
+                            <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <span style="font-size:0.95rem; font-weight:800; color:#0f172a;">Peta Interaktif Sebaran Tamu &amp; RSVP</span>
+                                <div style="font-size:0.75rem; color:#64748b; font-weight:500;">Pantau persebaran domisili &amp; kehadiran tamu undangan dari berbagai kota di Indonesia</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="resetMapToIndonesia()" class="wb-btn-secondary" style="font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.35rem;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                            Reset Peta Indonesia
+                        </button>
+                    </div>
+
+                    <div class="card-body">
+                        {{-- Ringkasan Metrik Sebaran --}}
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:0.75rem; margin-bottom:1.25rem;">
+                            <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
+                                <div style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase;">Total RSVP</div>
+                                <div style="font-size:1.35rem; font-weight:800; color:#0f172a;">{{ $mapGuests->count() }}</div>
+                            </div>
+                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:0.75rem 1rem;">
+                                <div style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Konfirmasi Hadir
+                                </div>
+                                <div style="font-size:1.35rem; font-weight:800; color:#166534;">{{ $mapGuests->where('status', 'hadir')->count() }}</div>
+                            </div>
+                            <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:12px; padding:0.75rem 1rem;">
+                                <div style="font-size:0.7rem; color:#991b1b; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="#991b1b" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    Tidak Hadir
+                                </div>
+                                <div style="font-size:1.35rem; font-weight:800; color:#991b1b;">{{ $mapGuests->where('status', 'tidak_hadir')->count() }}</div>
+                            </div>
+                            <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:0.75rem 1rem;">
+                                <div style="font-size:0.7rem; color:#92400e; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="#92400e" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    Ragu-Ragu
+                                </div>
+                                <div style="font-size:1.35rem; font-weight:800; color:#92400e;">{{ $mapGuests->where('status', 'ragu')->count() }}</div>
+                            </div>
+                            <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
+                                <div style="font-size:0.7rem; color:#475569; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    Kota Terdaftar
+                                </div>
+                                <div style="font-size:1.35rem; font-weight:800; color:#0f172a;">{{ $cityStats->count() }}</div>
+                            </div>
+                        </div>
+
+                        {{-- Filter Status di Atas Peta --}}
+                        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+                            <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                                <span style="font-size:0.75rem; font-weight:700; color:#475569; margin-right:0.25rem;">Filter Pin:</span>
+                                <button type="button" onclick="filterMapMarkers('all')" class="map-filter-btn active" data-filter="all">Semua ({{ $mapGuests->count() }})</button>
+                                <button type="button" onclick="filterMapMarkers('hadir')" class="map-filter-btn" data-filter="hadir">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Hadir ({{ $mapGuests->where('status', 'hadir')->count() }})
+                                </button>
+                                <button type="button" onclick="filterMapMarkers('tidak_hadir')" class="map-filter-btn" data-filter="tidak_hadir">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    Tidak Hadir ({{ $mapGuests->where('status', 'tidak_hadir')->count() }})
+                                </button>
+                                <button type="button" onclick="filterMapMarkers('ragu')" class="map-filter-btn" data-filter="ragu">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    Ragu ({{ $mapGuests->where('status', 'ragu')->count() }})
+                                </button>
+                            </div>
+                            <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
+                                <svg width="13" height="13" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Klik pin untuk melihat nama tamu &amp; pesan doa
+                            </span>
+                        </div>
+
+                        {{-- Leaflet Map Container --}}
+                        <div style="position:relative; width:100%; height:500px; border-radius:16px; border:1.5px solid #cbd5e1; overflow:hidden; background:#e2e8f0; box-shadow:0 6px 20px rgba(0,0,0,0.06);">
+                            <div id="guestDistributionMap" style="width:100%; height:100%;"></div>
+                        </div>
+
+                        {{-- Daftar Kota & Sebaran Tamu --}}
+                        <div style="margin-top:1.5rem;">
+                            <div style="font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="2.3" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                Sebaran Tamu per Kota ({{ $cityStats->count() }} Kota)
+                            </div>
+
+                            @if($cityStats->count() > 0)
+                                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:0.75rem;">
+                                    @foreach($cityStats as $cStat)
+                                        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.9rem; display:flex; align-items:center; justify-content:space-between; transition:all .2s;"
+                                             onmouseover="this.style.borderColor='#10b981';this.style.boxShadow='0 4px 12px rgba(16,185,129,0.1)';"
+                                             onmouseout="this.style.borderColor='#e2e8f0';this.style.boxShadow='none';">
+                                            <div>
+                                                <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                    {{ $cStat['city'] }}
+                                                </div>
+                                                <div style="font-size:0.72rem; color:#64748b; margin-top:3px; display:flex; align-items:center; gap:0.4rem;">
+                                                    <span style="color:#166534; font-weight:700;">{{ $cStat['hadir'] }} Hadir</span> &bull;
+                                                    <span style="color:#991b1b; font-weight:700;">{{ $cStat['tidak_hadir'] }} Absen</span>
+                                                    @if($cStat['ragu'] > 0)
+                                                        &bull; <span style="color:#92400e; font-weight:700;">{{ $cStat['ragu'] }} Ragu</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <button type="button" onclick="focusCity({{ $cStat['lat'] }}, {{ $cStat['lng'] }}, '{{ addslashes($cStat['city']) }}')"
+                                                    style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.72rem; font-weight:700; padding:0.35rem 0.65rem; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                                Zoom
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div style="text-align:center; padding:2rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:14px; color:#64748b;">
+                                    <div style="margin-bottom:0.4rem; color:#94a3b8;">
+                                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                                    </div>
+                                    <div style="font-weight:700; font-size:0.85rem; color:#334155;">Belum Ada Tamu yang Mengisi RSVP Kota</div>
+                                    <p style="font-size:0.75rem; margin:0.3rem 0 0.75rem; color:#94a3b8;">
+                                        Ketika tamu membuka undangan dan memilih kota asal (misal: Sidoarjo), pin dan rincian tamu akan otomatis muncul di peta interaktif ini.
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1838,6 +2019,7 @@
 @endsection
 
 @section('scripts')
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
         // Tab switching logic (identik dengan Web Builder)
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1852,6 +2034,15 @@
                 const targetPane = document.getElementById(targetTab);
                 if (targetPane) {
                     targetPane.classList.add('active');
+                }
+
+                // Invalidate map saat tab peta dibuka
+                if (targetTab === 'tab-map') {
+                    if (!guestMap) {
+                        setTimeout(() => initGuestDistributionMap(), 150);
+                    } else {
+                        setTimeout(() => guestMap.invalidateSize(), 200);
+                    }
                 }
 
                 // Update URL parameter tanpa reload
@@ -1895,15 +2086,15 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        resBox.innerHTML = `<div style="background:#dcfce7; border:1px solid #86efac; color:#166534; padding:0.6rem 1rem; border-radius:10px; font-size:0.8rem; font-weight:700;">✅ ${data.message} (${data.guest.name} - ${data.guest.pax} Pax)</div>`;
+                        resBox.innerHTML = `<div style="background:#dcfce7; border:1px solid #86efac; color:#166534; padding:0.6rem 1rem; border-radius:10px; font-size:0.8rem; font-weight:700; display:flex; align-items:center; gap:0.4rem;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> ${data.message} (${data.guest.name} - ${data.guest.pax} Pax)</div>`;
                         input.value = '';
                         setTimeout(() => location.reload(), 1500);
                     } else {
-                        resBox.innerHTML = `<div style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; padding:0.6rem 1rem; border-radius:10px; font-size:0.8rem; font-weight:700;">❌ ${data.message}</div>`;
+                        resBox.innerHTML = `<div style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; padding:0.6rem 1rem; border-radius:10px; font-size:0.8rem; font-weight:700; display:flex; align-items:center; gap:0.4rem;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ${data.message}</div>`;
                     }
                 })
                 .catch(err => {
-                    resBox.innerHTML = `<div style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; padding:0.6rem 1rem; border-radius:10px; font-size:0.8rem; font-weight:700;">❌ Terjadi kesalahan jaringan.</div>`;
+                    resBox.innerHTML = `<div style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; padding:0.6rem 1rem; border-radius:10px; font-size:0.8rem; font-weight:700; display:flex; align-items:center; gap:0.4rem;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Terjadi kesalahan jaringan.</div>`;
                 });
         }
 
@@ -2115,7 +2306,10 @@
 
                 {{-- Ringkasan Biaya --}}
                 <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:1rem;margin-bottom:1.25rem;">
-                    <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.65rem;">📋 Ringkasan Biaya</div>
+                    <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.65rem;display:flex;align-items:center;gap:0.35rem;">
+                        <svg width="14" height="14" fill="none" stroke="#475569" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Ringkasan Biaya
+                    </div>
                     <div id="pricing-breakdown">
                         <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
                             <span>Paket Undangan Digital (150 Tamu)</span>
@@ -2206,7 +2400,7 @@
             }
 
             btn.disabled = true;
-            btn.innerHTML = '⏳ Memproses...';
+            btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24" style="animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Memproses...';
 
             try {
                 const res = await fetch(WEDDING_ORDER_URL, {
@@ -2263,5 +2457,146 @@
                 btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar via Midtrans';
             }
         }
+
+        // ═══════════════════════════════════════════════════════════════
+        // PETA INTERAKTIF SEBARAN TAMU & RSVP BERDASARKAN KOTA ASAL
+        // ═══════════════════════════════════════════════════════════════
+        let guestMap = null;
+        let allGuestMarkers = [];
+        const rawGuestMapData = @json($mapGuests ?? []);
+
+        function initGuestDistributionMap() {
+            const container = document.getElementById('guestDistributionMap');
+            if (!container || guestMap || typeof L === 'undefined') return;
+
+            // Default center: Sidoarjo / Jawa Timur (Pusat Peta Indonesia)
+            guestMap = L.map('guestDistributionMap', {
+                center: [-7.4478, 112.7183],
+                zoom: 7,
+                scrollWheelZoom: true,
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(guestMap);
+
+            renderMarkers('all');
+        }
+
+        function createPinIcon(status) {
+            let color = '#10b981'; // hadir
+            let svgIcon = '<svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.8" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+            if (status === 'tidak_hadir') {
+                color = '#ef4444';
+                svgIcon = '<svg width="11" height="11" fill="none" stroke="#fff" stroke-width="2.8" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            } else if (status === 'ragu') {
+                color = '#f59e0b';
+                svgIcon = '<svg width="11" height="11" fill="none" stroke="#fff" stroke-width="2.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+            }
+
+            return L.divIcon({
+                className: 'custom-guest-pin',
+                html: `
+                    <div style="width:28px; height:28px; background:${color}; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,0.25); border:2px solid #fff;">
+                        <span style="transform:rotate(45deg); display:flex; align-items:center; justify-content:center;">${svgIcon}</span>
+                    </div>
+                `,
+                iconSize: [28, 28],
+                iconAnchor: [14, 28],
+                popupAnchor: [0, -28]
+            });
+        }
+
+        function renderMarkers(statusFilter) {
+            if (!guestMap) return;
+
+            // Bersihkan marker lama
+            allGuestMarkers.forEach(m => guestMap.removeLayer(m));
+            allGuestMarkers = [];
+
+            const bounds = [];
+
+            rawGuestMapData.forEach(item => {
+                if (statusFilter !== 'all' && item.status !== statusFilter) return;
+
+                const icon = createPinIcon(item.status);
+                const marker = L.marker([item.lat, item.lng], { icon: icon });
+
+                const badgeBg = item.status === 'hadir' ? '#dcfce7' : (item.status === 'tidak_hadir' ? '#fee2e2' : '#fef3c7');
+                const badgeColor = item.status === 'hadir' ? '#166534' : (item.status === 'tidak_hadir' ? '#991b1b' : '#92400e');
+                const statusSvg = item.status === 'hadir'
+                    ? '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;"><polyline points="20 6 9 17 4 12"/></svg> Akan Hadir'
+                    : (item.status === 'tidak_hadir'
+                        ? '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Tidak Hadir'
+                        : '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Masih Ragu');
+
+                const popupHtml = `
+                    <div style="font-family:'Montserrat',sans-serif; min-width:180px; padding:2px;">
+                        <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Tamu Undangan</div>
+                        <div style="font-weight:800; font-size:0.95rem; color:#0f172a; margin:0.15rem 0;">${escapeHtml(item.name)}</div>
+                        <div style="font-size:0.75rem; color:#059669; font-weight:700; margin-bottom:0.4rem; display:flex; align-items:center; gap:3px;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            ${escapeHtml(item.city)}
+                        </div>
+                        <div style="display:inline-block; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:99px; background:${badgeBg}; color:${badgeColor}; margin-bottom:0.5rem;">
+                            ${statusSvg}
+                        </div>
+                        ${item.message ? `<div style="font-size:0.75rem; color:#475569; font-style:italic; background:#f8fafc; padding:0.4rem 0.6rem; border-radius:8px; border-left:3px solid #10b981;">"${escapeHtml(item.message)}"</div>` : ''}
+                        ${item.time ? `<div style="font-size:0.65rem; color:#94a3b8; margin-top:0.35rem; text-align:right;">${item.time}</div>` : ''}
+                    </div>
+                `;
+
+                marker.bindPopup(popupHtml);
+                marker.addTo(guestMap);
+                allGuestMarkers.push(marker);
+                bounds.push([item.lat, item.lng]);
+            });
+
+            if (bounds.length > 0) {
+                guestMap.fitBounds(bounds, { padding: [50, 50], maxZoom: 13 });
+            }
+        }
+
+        function filterMapMarkers(filter) {
+            document.querySelectorAll('.map-filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-filter') === filter);
+            });
+            renderMarkers(filter);
+        }
+
+        function resetMapToIndonesia() {
+            if (guestMap) {
+                if (rawGuestMapData.length > 0) {
+                    const bounds = rawGuestMapData.map(i => [i.lat, i.lng]);
+                    guestMap.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+                } else {
+                    guestMap.setView([-7.4478, 112.7183], 7);
+                }
+            }
+        }
+
+        function focusCity(lat, lng, cityName) {
+            if (!guestMap) return;
+            guestMap.flyTo([lat, lng], 13, { duration: 1.2 });
+            const match = allGuestMarkers.find(m => {
+                const pos = m.getLatLng();
+                return Math.abs(pos.lat - lat) < 0.05 && Math.abs(pos.lng - lng) < 0.05;
+            });
+            if (match) {
+                setTimeout(() => match.openPopup(), 1300);
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // Auto-init jika tab aktif saat dibuka adalah tab-map
+        document.addEventListener('DOMContentLoaded', function () {
+            @if($activeTab === 'tab-map')
+                setTimeout(() => initGuestDistributionMap(), 300);
+            @endif
+        });
     </script>
 @endsection

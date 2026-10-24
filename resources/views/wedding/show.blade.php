@@ -11,10 +11,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
 
-    <!-- Leaflet.js Interactive Map (OpenStreetMap) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
     <style>
         :root {
             --primary: #1eb349;
@@ -497,17 +493,7 @@
                 <div class="event-venue">{{ $wedding->event_location_name }}</div>
                 <div class="event-address">{{ $wedding->event_address }}</div>
 
-                {{-- Komponen Peta Interaktif (Leaflet OSM) --}}
-                <div style="margin: 1.25rem 0 0.5rem; text-align:left;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.45rem;">
-                        <span style="font-size:0.75rem; font-weight:700; color:#166534; display:flex; align-items:center; gap:0.35rem;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                            Peta Lokasi Interaktif
-                        </span>
-                        <span style="font-size:0.68rem; color:#64748b; font-weight:600;">(Bisa digeser &amp; di-zoom)</span>
-                    </div>
-                    <div id="weddingInteractiveMap" style="width:100%; height:230px; border-radius:14px; border:1.5px solid #cbd5e1; z-index:1; background:#f1f5f9; box-shadow:0 4px 12px rgba(0,0,0,0.05);"></div>
-                </div>
+
 
                 <div style="display:flex; gap:0.5rem; justify-content:center; margin-top:0.75rem; flex-wrap:wrap;">
                     @if($wedding->event_map_url)
@@ -564,23 +550,81 @@
                 </div>
             @endif
 
+            @php
+                $isPreFilled = ($guest !== null || ($guestName !== 'Tamu Undangan' && !empty($guestName)));
+            @endphp
+
             <form action="{{ route('wedding.wish', $wedding->slug) }}" method="POST">
                 @csrf
+
+                @if($isPreFilled)
+                    {{-- Tamu Sudah Diundang: Nama Otomatis Terkunci Tanpa Perlu Input Lagi --}}
+                    <div style="background:linear-gradient(135deg, #f0fdf4 0%, #e6f9ed 100%); border:1.5px solid #a7f3d0; border-radius:14px; padding:0.85rem 1rem; margin-bottom:0.85rem; display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:0.65rem;">
+                            <div style="width:36px; height:36px; border-radius:50%; background:#1eb349; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.95rem;">
+                                {{ strtoupper(mb_substr($guestName, 0, 1)) }}
+                            </div>
+                            <div>
+                                <div style="font-size:0.68rem; color:#047857; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Tamu Terhormat</div>
+                                <div style="font-size:0.95rem; font-weight:800; color:#0f172a;">{{ $guestName }}</div>
+                            </div>
+                        </div>
+                        <span style="background:#10b981; color:#fff; font-size:0.65rem; font-weight:700; padding:3px 9px; border-radius:99px; display:inline-flex; align-items:center; gap:3px; letter-spacing:0.03em;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Terdaftar
+                        </span>
+                    </div>
+                    <input type="hidden" name="sender_name" value="{{ $guestName }}">
+                    @if($guest)
+                        <input type="hidden" name="guest_id" value="{{ $guest->id }}">
+                    @endif
+                @else
+                    {{-- Pengunjung Umum (Jika Tidak Lewat Link Undangan Personal) --}}
+                    <div class="input-group">
+                        <input type="text" name="sender_name" placeholder="Nama Anda*" class="input-control" required>
+                    </div>
+                @endif
+
+                {{-- Input Kota Asal / Domisili untuk Peta Interaktif Dashboard --}}
                 <div class="input-group">
-                    <input type="text" name="sender_name" value="{{ $guestName !== 'Tamu Undangan' ? $guestName : '' }}" placeholder="Nama Anda" class="input-control" required>
+                    <div style="position:relative;">
+                        <input type="text" name="sender_city" id="senderCity" list="cityDatalist" placeholder="Kota Asal / Domisili (misal: Sidoarjo)*" class="input-control" required autocomplete="off" style="padding-left:2.2rem;">
+                        <svg style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:#1eb349;" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <datalist id="cityDatalist">
+                        @if(isset($citySuggestions))
+                            @foreach($citySuggestions as $citySug)
+                                <option value="{{ $citySug }}"></option>
+                            @endforeach
+                        @else
+                            <option value="Sidoarjo (Jawa Timur)"></option>
+                            <option value="Surabaya (Jawa Timur)"></option>
+                            <option value="Jakarta (DKI Jakarta)"></option>
+                            <option value="Bandung (Jawa Barat)"></option>
+                            <option value="Malang (Jawa Timur)"></option>
+                        @endif
+                    </datalist>
                 </div>
+
+                {{-- Status Kehadiran --}}
                 <div class="input-group">
-                    <select name="attendance_status" class="input-control" style="background:#fff;" required>
+                    <select name="attendance_status" class="input-control" style="background:#fff; font-weight:600;" required>
                         <option value="hadir">Saya akan Hadir</option>
                         <option value="tidak_hadir">Maaf, Tidak Bisa Hadir</option>
                         <option value="ragu">Masih Ragu</option>
                     </select>
                 </div>
+
+                {{-- Pesan Doa --}}
                 <div class="input-group">
-                    <textarea name="message" placeholder="Tuliskan doa restu untuk kedua mempelai..." class="input-control" required></textarea>
+                    <textarea name="message" placeholder="Tuliskan doa restu untuk kedua mempelai..." class="input-control" required style="min-height:90px;"></textarea>
                 </div>
+
                 <button type="submit" class="btn-open-invite" style="width:100%; justify-content:center; animation:none;">
-                    Kirim Ucapan &amp; Doa
+                    Kirim Ucapan &amp; Konfirmasi
                 </button>
             </form>
 
@@ -592,10 +636,18 @@
                 <div class="wish-stream">
                     @forelse($wishes as $w)
                         <div class="wish-bubble">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                                <strong style="font-size:0.85rem; color:#0f172a;">{{ $w->sender_name }}</strong>
-                                <span style="font-size:0.65rem; padding:2px 8px; border-radius:999px; background:{{ $w->attendance_status === 'hadir' ? '#dcfce7' : '#fef3c7' }}; color:{{ $w->attendance_status === 'hadir' ? '#166534' : '#92400e' }}; font-weight:700;">
-                                    {{ ucfirst($w->attendance_status) }}
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.35rem;">
+                                <div>
+                                    <strong style="font-size:0.85rem; color:#0f172a; display:block;">{{ $w->sender_name }}</strong>
+                                    @if($w->sender_city)
+                                        <span style="font-size:0.68rem; color:#059669; font-weight:600; display:inline-flex; align-items:center; gap:0.25rem; margin-top:1px;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                            {{ $w->sender_city }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <span style="font-size:0.65rem; padding:2px 8px; border-radius:999px; background:{{ $w->attendance_status === 'hadir' ? '#dcfce7' : ($w->attendance_status === 'tidak_hadir' ? '#fee2e2' : '#fef3c7') }}; color:{{ $w->attendance_status === 'hadir' ? '#166534' : ($w->attendance_status === 'tidak_hadir' ? '#991b1b' : '#92400e') }}; font-weight:700;">
+                                    {{ ucfirst(str_replace('_', ' ', $w->attendance_status)) }}
                                 </span>
                             </div>
                             <p style="font-size:0.8rem; color:#475569; line-height:1.4;">"{{ $w->message }}"</p>
@@ -686,38 +738,7 @@
             updateCountdown();
         }
 
-        // Inisialisasi Peta Interaktif Leaflet
-        document.addEventListener('DOMContentLoaded', function() {
-            const mapContainer = document.getElementById('weddingInteractiveMap');
-            if (mapContainer && typeof L !== 'undefined') {
-                const lat = {{ $wedding->event_latitude ?: -6.2088 }};
-                const lng = {{ $wedding->event_longitude ?: 106.8456 }};
-                const venueName = "{{ addslashes($wedding->event_location_name ?: 'Venue Resepsi') }}";
-                const venueAddr = "{{ addslashes($wedding->event_address ?: '') }}";
 
-                try {
-                    const map = L.map('weddingInteractiveMap', {
-                        center: [lat, lng],
-                        zoom: 15,
-                        scrollWheelZoom: false
-                    });
-
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
-                    }).addTo(map);
-
-                    const marker = L.marker([lat, lng]).addTo(map);
-                    marker.bindPopup(`<strong>${venueName}</strong><br><small style="color:#64748b;">${venueAddr}</small>`).openPopup();
-
-                    // Re-render map tiles saat cover undangan dibuka
-                    window.addEventListener('click', function() {
-                        setTimeout(() => map.invalidateSize(), 300);
-                    }, { once: true });
-                } catch(e) {
-                    console.log('Leaflet Map init error:', e);
-                }
-            }
-        });
     </script>
 </body>
 </html>

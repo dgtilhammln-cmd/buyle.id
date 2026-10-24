@@ -64,11 +64,13 @@ class WeddingPublicController extends Controller
             ->take(30)
             ->get();
 
-        return view('wedding.show', compact('wedding', 'guestName', 'guest', 'wishes'));
+        $citySuggestions = \App\Services\CityCoordinateService::getCitySuggestions();
+
+        return view('wedding.show', compact('wedding', 'guestName', 'guest', 'wishes', 'citySuggestions'));
     }
 
     /**
-     * Kirim Doa & Konfirmasi Kehadiran Tamu.
+     * Kirim Doa & Konfirmasi Kehadiran Tamu (RSVP) beserta Kota Domisili.
      */
     public function submitWish(string $slug, Request $request)
     {
@@ -76,20 +78,53 @@ class WeddingPublicController extends Controller
 
         $validated = $request->validate([
             'sender_name'       => ['required', 'string', 'max:150'],
+            'sender_city'       => ['nullable', 'string', 'max:100'],
             'message'           => ['required', 'string', 'max:1000'],
             'attendance_status' => ['required', 'in:hadir,tidak_hadir,ragu'],
+            'guest_id'          => ['nullable', 'exists:wedding_guests,id'],
         ]);
 
-        $wedding->wishes()->create([
+        $city = trim($validated['sender_city'] ?? '');
+        $lat = null;
+        $lng = null;
+
+        if (!empty($city)) {
+            $coords = \App\Services\CityCoordinateService::lookup($city);
+            if ($coords) {
+                $lat = $coords['lat'];
+                $lng = $coords['lng'];
+                // Bersihkan nama kota agar rapi jika ada format "Sidoarjo (Jawa Timur)"
+                $cleanName = explode('(', $city)[0];
+                $city = trim($cleanName);
+            }
+        }
+
+        // Cari atau validasi guest_id
+        $guestId = $validated['guest_id'] ?? null;
+        if (!$guestId) {
+            $matched = WeddingGuest::where('wedding_id', $wedding->id)
+                ->where('name', $validated['sender_name'])
+                ->first();
+            if ($matched) {
+                $guestId = $matched->id;
+            }
+        }
+
+        $wish = $wedding->wishes()->create([
+            'wedding_id'        => $wedding->id,
+            'guest_id'          => $guestId,
             'sender_name'       => $validated['sender_name'],
+            'sender_city'       => !empty($city) ? $city : 'Indonesia',
             'message'           => $validated['message'],
             'attendance_status' => $validated['attendance_status'],
+            'latitude'          => $lat,
+            'longitude'         => $lng,
             'is_approved'       => true,
             'ip_address'        => $request->ip(),
             'user_agent'        => $request->userAgent(),
         ]);
 
-        return back()->with('wish_success', 'Terima kasih atas doa dan ucapan hangat Anda!');
+        return back()->with('wish_success', 'Terima kasih ' . e($validated['sender_name']) . ', doa dan konfirmasi kehadiran Anda berhasil dikirim!');
     }
 
     /**

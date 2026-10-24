@@ -215,6 +215,48 @@ class WeddingController extends Controller
         $wishes = $wedding->wishes()->paginate(20, ['*'], 'wishes_page');
         $gifts  = $wedding->gifts()->paginate(20, ['*'], 'gifts_page');
 
+        // Peta Interaktif Sebaran Tamu & RSVP berdasarkan Kota Asal
+        $mapGuests = $wedding ? $wedding->wishes()
+            ->select(['id', 'sender_name', 'sender_city', 'attendance_status', 'message', 'latitude', 'longitude', 'created_at'])
+            ->get()
+            ->map(function ($w) {
+                if ((!$w->latitude || !$w->longitude) && !empty($w->sender_city)) {
+                    $coords = \App\Services\CityCoordinateService::lookup($w->sender_city);
+                    if ($coords) {
+                        $w->latitude = $coords['lat'];
+                        $w->longitude = $coords['lng'];
+                        \App\Models\WeddingWish::where('id', $w->id)->update([
+                            'latitude'  => $coords['lat'],
+                            'longitude' => $coords['lng'],
+                        ]);
+                    }
+                }
+                return [
+                    'id'      => $w->id,
+                    'name'    => $w->sender_name,
+                    'city'    => $w->sender_city ?: 'Indonesia',
+                    'status'  => $w->attendance_status,
+                    'message' => $w->message,
+                    'lat'     => (float) $w->latitude,
+                    'lng'     => (float) $w->longitude,
+                    'time'    => $w->created_at ? $w->created_at->diffForHumans() : '',
+                ];
+            })
+            ->filter(fn($item) => !empty($item['lat']) && !empty($item['lng']))
+            ->values() : collect();
+
+        $cityStats = $mapGuests->groupBy('city')->map(function ($group, $cityName) {
+            return [
+                'city'        => $cityName,
+                'total'       => $group->count(),
+                'hadir'       => $group->where('status', 'hadir')->count(),
+                'tidak_hadir' => $group->where('status', 'tidak_hadir')->count(),
+                'ragu'        => $group->where('status', 'ragu')->count(),
+                'lat'         => $group->first()['lat'],
+                'lng'         => $group->first()['lng'],
+            ];
+        })->sortByDesc('total')->values();
+
         $midtransClientKey = \App\Models\Setting::get('midtrans_client_key') ?: config('midtrans.client_key');
         $midtransIsProduction = \App\Models\Setting::get('midtrans_is_production') ?? config('midtrans.is_production', false);
 
@@ -228,6 +270,8 @@ class WeddingController extends Controller
             'guests',
             'wishes',
             'gifts',
+            'mapGuests',
+            'cityStats',
             'midtransClientKey',
             'midtransIsProduction'
         ));
