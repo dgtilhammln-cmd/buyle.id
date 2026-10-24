@@ -549,4 +549,68 @@ class WeddingController extends Controller
         return redirect()->route('creator.wedding.index', ['tab' => 'tab-wishes', 'w' => $wedding->id])
             ->with('success', 'Ucapan doa berhasil dihapus.');
     }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // POST: Upload Custom Photobooth Frame PNG (9:16 InstaStory)
+    // Disimpan di storage/app/public/wedding/{slug}/frames/
+    // URL-nya dimasukkan ke data_json['photobooth_frames'] (max 6 frames).
+    // ──────────────────────────────────────────────────────────────────────────
+    public function uploadPhotoboothFrame(Request $request)
+    {
+        $wedding = $this->resolveActiveWedding($request);
+        if (!$wedding || $wedding->user_id !== auth()->id()) abort(403);
+
+        $request->validate([
+            'frame' => ['required', 'image', 'mimes:png,webp,jpg,jpeg', 'max:4096'],
+        ], [
+            'frame.required' => 'Pilih file gambar terlebih dahulu.',
+            'frame.image'    => 'File harus berupa gambar (PNG/WebP/JPG).',
+            'frame.mimes'    => 'Format gambar harus PNG, WebP, atau JPG.',
+            'frame.max'      => 'Ukuran file maksimal 4 MB.',
+        ]);
+
+        // Ambil frame yang sudah ada (max 6)
+        $data   = $wedding->data_json ?? [];
+        $frames = $data['photobooth_frames'] ?? [];
+        if (count($frames) >= 6) {
+            return back()->with('error', 'Maksimal 6 custom frame per pasangan. Hapus salah satu terlebih dahulu.');
+        }
+
+        // Simpan file ke storage/public/wedding/{slug}/frames/
+        $dir  = 'wedding/' . $wedding->slug . '/frames';
+        $path = $request->file('frame')->store($dir, 'public');
+
+        $frames[] = $path;
+        $data['photobooth_frames'] = $frames;
+        $wedding->update(['data_json' => $data]);
+
+        return redirect()->route('creator.wedding.index', ['tab' => 'tab-photobooth', 'w' => $wedding->id])
+            ->with('success', 'Frame custom berhasil diupload dan siap digunakan tamu di photobooth.');
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // DELETE: Hapus satu Custom Photobooth Frame by index
+    // ──────────────────────────────────────────────────────────────────────────
+    public function deletePhotoboothFrame(Request $request, int $index)
+    {
+        $wedding = $this->resolveActiveWedding($request);
+        if (!$wedding || $wedding->user_id !== auth()->id()) abort(403);
+
+        $data   = $wedding->data_json ?? [];
+        $frames = $data['photobooth_frames'] ?? [];
+
+        if (!isset($frames[$index])) {
+            return back()->with('error', 'Frame tidak ditemukan.');
+        }
+
+        // Hapus file fisik dari storage
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($frames[$index]);
+
+        array_splice($frames, $index, 1);
+        $data['photobooth_frames'] = $frames;
+        $wedding->update(['data_json' => $data]);
+
+        return redirect()->route('creator.wedding.index', ['tab' => 'tab-photobooth', 'w' => $wedding->id])
+            ->with('success', 'Frame custom berhasil dihapus.');
+    }
 }

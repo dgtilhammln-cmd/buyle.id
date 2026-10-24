@@ -735,6 +735,9 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
         Route::post('/calculate-price', [\App\Http\Controllers\Creator\WeddingController::class, 'calculatePrice'])->name('calculate-price');
         Route::post('/order-couple',    [\App\Http\Controllers\Creator\WeddingController::class, 'orderCouple'])->name('order-couple');
         Route::post('/payment-success/{wedding}', [\App\Http\Controllers\Creator\WeddingController::class, 'paymentSuccess'])->name('payment-success');
+        // Photobooth custom frame management
+        Route::post('/photobooth-frame',          [\App\Http\Controllers\Creator\WeddingController::class, 'uploadPhotoboothFrame'])->name('photobooth-frame.upload');
+        Route::delete('/photobooth-frame/{index}',[\App\Http\Controllers\Creator\WeddingController::class, 'deletePhotoboothFrame'])->name('photobooth-frame.delete');
     });
 });
 

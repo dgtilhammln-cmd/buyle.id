@@ -2025,6 +2025,143 @@
                     </div>
                 </div>
 
+                {{-- ── Custom Frame Upload Section ──────────────────────────── --}}
+                <div class="prof-card" style="margin-top:1.25rem;">
+                    <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div class="head-title-wrap">
+                            <div class="head-icon" style="background:#fdf4ff; color:#a855f7;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <span style="font-weight:800; color:#0f172a;">Upload Frame Custom (9:16 PNG/WebP)</span>
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Buat desain frame InstaStory di Canva / Photoshop → export PNG → upload di sini. Tamu bisa pilih frame bawaan atau frame custom Anda. Maks 6 frame.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {{-- Error / Success Flash --}}
+                        @if(session('error'))
+                            <div style="background:#fee2e2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:10px; font-size:0.82rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        @php
+                            $customFrames = $wedding->data_json['photobooth_frames'] ?? [];
+                        @endphp
+
+                        {{-- Galeri Custom Frame yang Sudah Diupload --}}
+                        @if(count($customFrames) > 0)
+                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
+                                @foreach($customFrames as $idx => $framePath)
+                                    <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:9/16; background:#0f172a; border:2px solid #a855f7; box-shadow:0 4px 16px rgba(168,85,247,0.2);">
+                                        <img src="{{ Storage::url($framePath) }}" alt="Custom Frame {{ $idx + 1 }}"
+                                            style="width:100%; height:100%; object-fit:cover; display:block;">
+                                        {{-- Badge Custom --}}
+                                        <div style="position:absolute; top:6px; left:6px; background:#a855f7; color:#fff; font-size:0.55rem; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase;">CUSTOM</div>
+                                        {{-- Delete Button --}}
+                                        <form action="{{ route('creator.wedding.photobooth-frame.delete', $idx) }}?w={{ $wedding->id }}" method="POST"
+                                              onsubmit="return confirm('Hapus frame custom ini?');"
+                                              style="position:absolute; top:6px; right:6px;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        {{-- Upload Form --}}
+                        @if(count($customFrames) < 6)
+                            <form action="{{ route('creator.wedding.photobooth-frame.upload') }}?w={{ $wedding->id }}"
+                                  method="POST" enctype="multipart/form-data"
+                                  id="frameUploadForm">
+                                @csrf
+                                <div id="frameDropZone"
+                                    style="border:2px dashed #c084fc; border-radius:14px; padding:2rem; text-align:center; background:#fdf4ff; cursor:pointer; transition:all 0.2s ease; position:relative;"
+                                    onclick="document.getElementById('frameFileInput').click()"
+                                    ondragover="event.preventDefault(); this.style.borderColor='#9333ea'; this.style.background='#f3e8ff';"
+                                    ondragleave="this.style.borderColor='#c084fc'; this.style.background='#fdf4ff';"
+                                    ondrop="handleFrameDrop(event)">
+                                    <input type="file" id="frameFileInput" name="frame" accept="image/png,image/webp,image/jpeg"
+                                        style="display:none;" onchange="previewFrameUpload(event)">
+
+                                    <div id="frameDropContent">
+                                        <div style="width:44px; height:44px; border-radius:50%; background:#e9d5ff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
+                                            <svg width="22" height="22" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                        </div>
+                                        <div style="font-size:0.85rem; font-weight:800; color:#581c87; margin-bottom:0.25rem;">Drag & Drop Frame PNG di sini</div>
+                                        <div style="font-size:0.75rem; color:#7c3aed; margin-bottom:0.75rem;">atau klik untuk pilih file</div>
+                                        <div style="font-size:0.7rem; color:#94a3b8; line-height:1.4;">
+                                            Format: PNG / WebP / JPG &bull; Rasio: 9:16 (InstaStory) &bull; Maks: 4 MB<br>
+                                            Tersisa <strong>{{ 6 - count($customFrames) }}</strong> slot dari 6 frame custom
+                                        </div>
+                                    </div>
+
+                                    <div id="framePreviewWrap" style="display:none;">
+                                        <img id="framePreviewImg" src="" alt="Preview"
+                                            style="max-height:200px; border-radius:10px; margin:0 auto 0.75rem; display:block; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+                                        <div id="framePreviewName" style="font-size:0.78rem; font-weight:700; color:#581c87; margin-bottom:0.75rem;"></div>
+                                    </div>
+                                </div>
+
+                                {{-- Upload Submit Button (hidden until file selected) --}}
+                                <div id="frameUploadActions" style="display:none; margin-top:0.85rem; gap:0.65rem; flex-wrap:wrap;">
+                                    <button type="submit"
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.55rem 1.25rem; background:linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; border:none; border-radius:10px; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 4px 12px rgba(124,58,237,0.3);">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        Upload Frame Sekarang
+                                    </button>
+                                    <button type="button" onclick="resetFrameUpload()"
+                                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 0.9rem; background:#f1f5f9; border:1.5px solid #e2e8f0; color:#475569; border-radius:10px; font-size:0.8rem; font-weight:600; cursor:pointer;">
+                                        Batal
+                                    </button>
+                                </div>
+                            </form>
+                        @else
+                            <div style="text-align:center; padding:1.5rem; background:#f8fafc; border-radius:12px; color:#64748b; font-size:0.82rem; font-weight:600; border:1.5px dashed #e2e8f0;">
+                                <svg width="24" height="24" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="margin:0 auto 0.5rem; display:block;"><circle cx="12" cy="12" r="10"></circle><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Slot custom frame sudah penuh (6/6). Hapus salah satu untuk menambah frame baru.
+                            </div>
+                        @endif
+
+                        {{-- Panduan Desain Frame --}}
+                        <div style="margin-top:1rem; padding:0.85rem 1rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;">
+                            <div style="font-size:0.78rem; font-weight:700; color:#92400e; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                Panduan Membuat Frame Custom di Canva:
+                            </div>
+                            <ol style="font-size:0.74rem; color:#78350f; line-height:1.7; margin:0; padding-left:1.25rem;">
+                                <li>Buka Canva → pilih template <strong>Instagram Story (1080 x 1920 px)</strong></li>
+                                <li>Desain frame dengan area tengah <strong>transparan</strong> (lubang untuk foto kamera)</li>
+                                <li>Tambahkan ornamen, teks nama pasangan, tanggal, dll. di pinggiran frame</li>
+                                <li>Download sebagai <strong>PNG dengan background transparan</strong></li>
+                                <li>Upload di sini — frame langsung muncul sebagai pilihan tamu di photobooth</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- How it Works Steps --}}
                 <div class="prof-card" style="margin-top:1.25rem;">
                     <div class="prof-card-head">
@@ -2045,7 +2182,7 @@
                                 $pbSteps = [
                                     ['num'=>'1', 'color'=>'#eff6ff', 'stroke'=>'#3b82f6', 'icon'=>'<rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect>', 'title'=>'Scan QR di Venue', 'desc'=>'Panitia pasang stand QR code di pintu masuk atau meja resepsi'],
                                     ['num'=>'2', 'color'=>'#fdf4ff', 'stroke'=>'#a855f7', 'icon'=>'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>', 'title'=>'Kamera Terbuka', 'desc'=>'Browser langsung mengaktifkan kamera depan smartphone tamu'],
-                                    ['num'=>'3', 'color'=>'#fff7ed', 'stroke'=>'#f97316', 'icon'=>'<rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="12" cy="10" r="3"></circle><path d="M3 20l4-4 2 2 4-4 5 6"></path>', 'title'=>'Pilih Frame & Jepret', 'desc'=>'Tamu pilih dari 4 template frame estetik 9:16 lalu foto'],
+                                    ['num'=>'3', 'color'=>'#fff7ed', 'stroke'=>'#f97316', 'icon'=>'<rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="12" cy="10" r="3"></circle><path d="M3 20l4-4 2 2 4-4 5 6"></path>', 'title'=>'Pilih Frame & Jepret', 'desc'=>'Tamu pilih template bawaan atau frame custom yang Anda buat'],
                                     ['num'=>'4', 'color'=>'#f0fdf4', 'stroke'=>'#22c55e', 'icon'=>'<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>', 'title'=>'Share ke InstaStory', 'desc'=>'Foto langsung dapat didownload atau share ke Instagram Story'],
                                 ];
                             @endphp
@@ -2815,6 +2952,54 @@
         function escapeHtml(str) {
             if (!str) return '';
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // Photobooth Frame Upload Handlers
+        function previewFrameUpload(event) {
+            const file = event.target.files ? event.target.files[0] : null;
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('framePreviewImg');
+                const name = document.getElementById('framePreviewName');
+                const drop = document.getElementById('frameDropContent');
+                const wrap = document.getElementById('framePreviewWrap');
+                const actions = document.getElementById('frameUploadActions');
+                if (img) img.src = e.target.result;
+                if (name) name.textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+                if (drop) drop.style.display = 'none';
+                if (wrap) wrap.style.display = 'block';
+                if (actions) actions.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleFrameDrop(event) {
+            event.preventDefault();
+            const file = event.dataTransfer && event.dataTransfer.files ? event.dataTransfer.files[0] : null;
+            if (file) {
+                const input = document.getElementById('frameFileInput');
+                if (input) {
+                    input.files = event.dataTransfer.files;
+                    previewFrameUpload({ target: { files: [file] } });
+                }
+            }
+            const zone = document.getElementById('frameDropZone');
+            if (zone) {
+                zone.style.borderColor = '#c084fc';
+                zone.style.background = '#fdf4ff';
+            }
+        }
+
+        function resetFrameUpload() {
+            const input = document.getElementById('frameFileInput');
+            const drop = document.getElementById('frameDropContent');
+            const wrap = document.getElementById('framePreviewWrap');
+            const actions = document.getElementById('frameUploadActions');
+            if (input) input.value = '';
+            if (drop) drop.style.display = 'block';
+            if (wrap) wrap.style.display = 'none';
+            if (actions) actions.style.display = 'none';
         }
 
         // Auto-init jika tab aktif saat dibuka adalah tab-map
