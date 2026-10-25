@@ -262,7 +262,9 @@ class AdminOrderController extends Controller
                     return 'Fisik';
                 })->unique()->implode(', ');
                 $txTypeLabel = $types ?: 'Produk';
-                $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->shipping_address['payment_method'] ? strtoupper($o->shipping_address['payment_method']) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS'));
+                $shipAddr = is_array($o->shipping_address) ? $o->shipping_address : [];
+                $posMethod = $shipAddr['payment_method'] ?? null;
+                $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($posMethod ? strtoupper($posMethod) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : ($isPos ? 'KASIR POS' : 'MIDTRANS')));
                 $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
 
                 $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
@@ -277,13 +279,13 @@ class AdminOrderController extends Controller
                 $creatorName = $o->items->first()?->product?->seller?->name ?? ($isPos ? ($o->user->name ?? 'Kasir POS') : 'Creator');
 
                 if ($isPos) {
-                    $partyName = $o->shipping_address['name'] ?? $o->shipping_address['receiver_name'] ?? 'Pelanggan Kasir';
-                    $partyEmail = $o->shipping_address['email'] ?? ($o->shipping_address['phone'] ?? '-');
+                    $partyName = $shipAddr['name'] ?? $shipAddr['receiver_name'] ?? 'Pelanggan Kasir';
+                    $partyEmail = $shipAddr['email'] ?? ($shipAddr['phone'] ?? '-');
                     $partyRole = 'Pelanggan POS';
                     $categoryLabel = 'POS (Kasir - ' . $txTypeLabel . ')';
                     $sourceType = 'pos_order';
                 } else {
-                    $partyName = $o->user->name ?? 'Pembeli';
+                    $partyName = $o->user->name ?? ($shipAddr['receiver_name'] ?? 'Pembeli');
                     $partyEmail = $o->user->email ?? '-';
                     $partyRole = 'Pembeli';
                     $categoryLabel = 'Pembeli (' . $txTypeLabel . ')';
@@ -639,7 +641,9 @@ class AdminOrderController extends Controller
                 return 'Fisik';
             })->unique()->implode(', ');
             $txTypeLabel = $types ?: 'Produk';
-            $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->shipping_address['payment_method'] ? strtoupper($o->shipping_address['payment_method']) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS'));
+            $shipAddr = is_array($o->shipping_address) ? $o->shipping_address : [];
+            $posMethod = $shipAddr['payment_method'] ?? null;
+            $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($posMethod ? strtoupper($posMethod) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : ($isPos ? 'KASIR POS' : 'MIDTRANS')));
             $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
             $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
             $stBadge = match($statusVal) {
@@ -650,8 +654,8 @@ class AdminOrderController extends Controller
                 default                   => [ucfirst($statusVal)]
             };
 
-            $partyName = $isPos ? ($o->shipping_address['name'] ?? $o->shipping_address['receiver_name'] ?? 'Pelanggan Kasir') : ($o->user->name ?? 'Pembeli');
-            $partyEmail = $isPos ? ($o->shipping_address['email'] ?? ($o->shipping_address['phone'] ?? '-')) : ($o->user->email ?? '-');
+            $partyName = $isPos ? ($shipAddr['name'] ?? $shipAddr['receiver_name'] ?? 'Pelanggan Kasir') : ($o->user->name ?? ($shipAddr['receiver_name'] ?? 'Pembeli'));
+            $partyEmail = $isPos ? ($shipAddr['email'] ?? ($shipAddr['phone'] ?? '-')) : ($o->user->email ?? '-');
             $categoryLabel = $isPos ? ('POS (Kasir - ' . $txTypeLabel . ')') : ('Pembeli (' . $txTypeLabel . ')');
 
             $rows->push((object)[
