@@ -34,7 +34,7 @@ class AdminOrderController extends Controller
         $endDate   = $request->get('end_date');
         $q         = trim($request->get('q', ''));
         $txType    = $request->get('tx_type', 'all');
-        if (!in_array($txType, ['all', 'buyer', 'creator', 'domain', 'deposit'])) {
+        if (!in_array($txType, ['all', 'buyer', 'creator', 'domain', 'deposit', 'pos'])) {
             $txType = 'all';
         }
 
@@ -146,13 +146,32 @@ class AdminOrderController extends Controller
             }
 
             // ── Perhitungan Statistik Finansial Keseluruhan ──
-            $buyerPaidBase = (clone $buyerQuery)->whereNotIn('status', ['cancelled', 'refunded']);
-            $buyerGross    = (float) $buyerPaidBase->sum('total');
-            $buyerSubtotal = (float) $buyerPaidBase->sum('subtotal');
-            $buyerAdminFee = (float) $buyerPaidBase->sum('admin_fee');
-            $buyerPlatFee  = (float) $buyerPaidBase->sum('platform_fee');
-            $buyerProfit   = $buyerAdminFee + $buyerPlatFee;
-            $buyerCount    = (clone $buyerQuery)->count();
+            $posPaidBase = (clone $buyerQuery)->where(function($q) {
+                $q->where('source', 'pos')
+                  ->orWhere('shipping_address->is_pos', true);
+            })->whereNotIn('status', ['cancelled', 'refunded']);
+
+            $onlinePaidBase = (clone $buyerQuery)->where(function($q) {
+                $q->where(function($sub) {
+                    $sub->whereNull('source')->orWhere('source', '!=', 'pos');
+                })->where(function($sub) {
+                    $sub->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
+                });
+            })->whereNotIn('status', ['cancelled', 'refunded']);
+
+            $onlineGross    = (float) $onlinePaidBase->sum('total');
+            $onlineSubtotal = (float) $onlinePaidBase->sum('subtotal');
+            $onlineAdminFee = (float) $onlinePaidBase->sum('admin_fee');
+            $onlinePlatFee  = (float) $onlinePaidBase->sum('platform_fee');
+            $onlineProfit   = $onlineAdminFee + $onlinePlatFee;
+            $onlineCount    = (clone $onlinePaidBase)->count();
+
+            $posOrderGross    = (float) $posPaidBase->sum('total');
+            $posOrderSubtotal = (float) $posPaidBase->sum('subtotal');
+            $posOrderAdminFee = (float) $posPaidBase->sum('admin_fee');
+            $posOrderPlatFee  = (float) $posPaidBase->sum('platform_fee');
+            $posOrderProfit   = $posOrderAdminFee + $posOrderPlatFee;
+            $posOrderCount    = (clone $posPaidBase)->count();
 
             $domainPaidBase = (clone $domainQuery)->whereIn('status', ['paid', 'completed']);
             $domainGross    = (float) $domainPaidBase->sum('amount');
@@ -181,24 +200,34 @@ class AdminOrderController extends Controller
             $depositTotalGross    = $depositTransferGross + $depositDirectGross;
             $depositCount         = (clone $payoutDepositQuery)->count() + (clone $directPosDepositQuery)->count();
 
+            // Gabungan POS (Penjualan Kasir POS + Saldo Deposit POS)
+            $posTotalGross  = $posOrderGross + $depositTotalGross;
+            $posTotalProfit = $posOrderProfit;
+            $posTotalCount  = $posOrderCount + $depositCount;
+
             $revenueStats = [
-                'gross'         => $buyerGross + $domainGross + $depositTotalGross,
-                'subtotal'      => $buyerSubtotal + $domainBaseCost,
-                'admin_fee'     => $buyerAdminFee + $domainAdminFee,
-                'platform_fee'  => $buyerPlatFee + $domainPlatFee,
-                'tax'           => $domainTax,
-                'profit'        => $buyerProfit + $domainProfit,
-                'buyer_gross'   => $buyerGross,
-                'buyer_profit'  => $buyerProfit,
-                'buyer_count'   => $buyerCount,
-                'domain_gross'  => $domainGross,
-                'domain_base'   => $domainBaseCost,
-                'domain_profit' => $domainProfit,
-                'domain_tax'    => $domainTax,
-                'domain_count'  => $domainCount,
-                'domain_paid'   => $domainPaidCount,
-                'deposit_gross' => $depositTotalGross,
-                'deposit_count' => $depositCount,
+                'gross'            => $onlineGross + $posOrderGross + $domainGross + $depositTotalGross,
+                'subtotal'         => $onlineSubtotal + $posOrderSubtotal + $domainBaseCost,
+                'admin_fee'        => $onlineAdminFee + $posOrderAdminFee + $domainAdminFee,
+                'platform_fee'     => $onlinePlatFee + $posOrderPlatFee + $domainPlatFee,
+                'tax'              => $domainTax,
+                'profit'           => $onlineProfit + $posOrderProfit + $domainProfit,
+                'buyer_gross'      => $onlineGross,
+                'buyer_profit'     => $onlineProfit,
+                'buyer_count'      => $onlineCount,
+                'pos_gross'        => $posTotalGross,
+                'pos_profit'       => $posTotalProfit,
+                'pos_count'        => $posTotalCount,
+                'pos_order_gross'  => $posOrderGross,
+                'pos_order_count'  => $posOrderCount,
+                'domain_gross'     => $domainGross,
+                'domain_base'      => $domainBaseCost,
+                'domain_profit'    => $domainProfit,
+                'domain_tax'       => $domainTax,
+                'domain_count'     => $domainCount,
+                'domain_paid'      => $domainPaidCount,
+                'deposit_gross'    => $depositTotalGross,
+                'deposit_count'    => $depositCount,
             ];
 
             // Update stats tab total omset card
@@ -206,67 +235,87 @@ class AdminOrderController extends Controller
 
             // Counts untuk pill filter transaksi
             $txTypeCounts = [
-                'all'     => $buyerCount + $domainCount + $depositCount,
-                'buyer'   => $buyerCount,
-                'creator' => $domainCount + $depositCount,
+                'all'     => $onlineCount + $posTotalCount + $domainCount,
+                'buyer'   => $onlineCount,
+                'pos'     => $posTotalCount,
+                'deposit' => $posTotalCount, // alias backwards compatibility
                 'domain'  => $domainCount,
-                'deposit' => $depositCount,
+                'creator' => $posTotalCount + $domainCount,
             ];
 
             // ── Kumpulkan dan seragamkan baris transaksi ──
             $rows = collect();
 
-            // 1. Pesanan Pembeli
-            if (in_array($txType, ['all', 'buyer'])) {
-                foreach ($buyerQuery->get() as $o) {
-                    $types = $o->items->map(function($i) {
-                        $pt = $i->product?->product_type ?? $i->product?->type ?? '';
-                        if ($pt === 'ticket') return 'Tiket';
-                        if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
-                        return 'Fisik';
-                    })->unique()->implode(', ');
-                    $txTypeLabel = $types ?: 'Produk';
-                    $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS');
-                    $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
+            // 1. Pesanan Pembeli Online & Kasir POS
+            foreach ($buyerQuery->get() as $o) {
+                $isPos = ($o->source === 'pos') || (!empty($o->shipping_address['is_pos']));
 
-                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                    $stBadge = match($statusVal) {
-                        'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Perlu Dikirim'],
-                        'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
-                        'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
-                        'cancelled'               => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
-                        default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
-                    };
+                // Filter check berdasarkan tab/pill yang dipilih
+                if ($txType === 'buyer' && $isPos) continue;
+                if (in_array($txType, ['pos', 'deposit']) && !$isPos) continue;
+                if ($txType === 'domain') continue;
 
-                    $creatorName = $o->items->first()?->product?->seller?->name ?? 'Creator';
+                $types = $o->items->map(function($i) {
+                    $pt = $i->product?->product_type ?? $i->product?->type ?? '';
+                    if ($pt === 'ticket') return 'Tiket';
+                    if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
+                    return 'Fisik';
+                })->unique()->implode(', ');
+                $txTypeLabel = $types ?: 'Produk';
+                $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->shipping_address['payment_method'] ? strtoupper($o->shipping_address['payment_method']) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS'));
+                $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
 
-                    $rows->push((object)[
-                        'id'           => 'ORD-' . $o->id,
-                        'source_type'  => 'buyer_order',
-                        'created_at'   => $o->created_at,
-                        'ref_number'   => '#' . $o->order_number,
-                        'url'          => route('admin.orders.show', $o),
-                        'party_name'   => $o->user->name ?? 'Pembeli',
-                        'party_email'  => $o->user->email ?? '-',
-                        'party_role'   => 'Pembeli',
-                        'category'     => 'Pembeli (' . $txTypeLabel . ')',
-                        'creator_name' => $creatorName,
-                        'channel'      => $channel,
-                        'base_amount'  => (float)$o->subtotal,
-                        'buy_cost'     => 0,
-                        'admin_fee'    => (float)($o->admin_fee ?? 0),
-                        'platform_fee' => (float)($o->platform_fee ?? 0),
-                        'tax_amount'   => 0,
-                        'gross'        => (float)$o->total,
-                        'profit'       => $profit,
-                        'status'       => $statusVal,
-                        'status_label' => $stBadge[2],
-                        'status_color' => $stBadge[0],
-                        'status_bg'    => $stBadge[1],
-                        'can_update'   => false,
-                        'raw'          => $o,
-                    ]);
+                $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+                $stBadge = match($statusVal) {
+                    'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Berhasil'],
+                    'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
+                    'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
+                    'cancelled'               => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
+                    default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
+                };
+
+                $creatorName = $o->items->first()?->product?->seller?->name ?? ($isPos ? ($o->user->name ?? 'Kasir POS') : 'Creator');
+
+                if ($isPos) {
+                    $partyName = $o->shipping_address['name'] ?? $o->shipping_address['receiver_name'] ?? 'Pelanggan Kasir';
+                    $partyEmail = $o->shipping_address['email'] ?? ($o->shipping_address['phone'] ?? '-');
+                    $partyRole = 'Pelanggan POS';
+                    $categoryLabel = 'POS (Kasir - ' . $txTypeLabel . ')';
+                    $sourceType = 'pos_order';
+                } else {
+                    $partyName = $o->user->name ?? 'Pembeli';
+                    $partyEmail = $o->user->email ?? '-';
+                    $partyRole = 'Pembeli';
+                    $categoryLabel = 'Pembeli (' . $txTypeLabel . ')';
+                    $sourceType = 'buyer_order';
                 }
+
+                $rows->push((object)[
+                    'id'           => 'ORD-' . $o->id,
+                    'source_type'  => $sourceType,
+                    'created_at'   => $o->created_at,
+                    'ref_number'   => '#' . $o->order_number,
+                    'url'          => route('admin.orders.show', $o),
+                    'party_name'   => $partyName,
+                    'party_email'  => $partyEmail,
+                    'party_role'   => $partyRole,
+                    'category'     => $categoryLabel,
+                    'creator_name' => $creatorName,
+                    'channel'      => $channel,
+                    'base_amount'  => (float)$o->subtotal,
+                    'buy_cost'     => 0,
+                    'admin_fee'    => (float)($o->admin_fee ?? 0),
+                    'platform_fee' => (float)($o->platform_fee ?? 0),
+                    'tax_amount'   => 0,
+                    'gross'        => (float)$o->total,
+                    'profit'       => $profit,
+                    'status'       => $statusVal,
+                    'status_label' => $stBadge[2],
+                    'status_color' => $stBadge[0],
+                    'status_bg'    => $stBadge[1],
+                    'can_update'   => false,
+                    'raw'          => $o,
+                ]);
             }
 
             // 2. Transaksi Domain Creator
@@ -319,7 +368,7 @@ class AdminOrderController extends Controller
             }
 
             // 3. Pindah Saldo Kasir POS (Creator)
-            if (in_array($txType, ['all', 'deposit', 'creator'])) {
+            if (in_array($txType, ['all', 'deposit', 'pos', 'creator'])) {
                 foreach ($payoutDepositQuery->get() as $p) {
                     $creatorName = $p->seller->name ?? 'Creator';
                     $rows->push((object)[
@@ -543,7 +592,7 @@ class AdminOrderController extends Controller
         $end     = $request->get('end_date', now()->format('Y-m-d'));
         $format  = $request->get('format', 'xlsx');
         $txType  = $request->get('tx_type', 'all');
-        if (!in_array($txType, ['all', 'buyer', 'creator', 'domain', 'deposit'])) {
+        if (!in_array($txType, ['all', 'buyer', 'creator', 'domain', 'deposit', 'pos'])) {
             $txType = 'all';
         }
 
@@ -576,42 +625,50 @@ class AdminOrderController extends Controller
         // ── Kumpulkan rows ──
         $rows = collect();
 
-        if (in_array($txType, ['all', 'buyer'])) {
-            foreach ($buyerQuery->get() as $o) {
-                $types = $o->items->map(function($i) {
-                    $pt = $i->product?->product_type ?? $i->product?->type ?? '';
-                    if ($pt === 'ticket') return 'Tiket';
-                    if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
-                    return 'Fisik';
-                })->unique()->implode(', ');
-                $txTypeLabel = $types ?: 'Produk';
-                $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS');
-                $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
-                $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                $stBadge = match($statusVal) {
-                    'confirmed', 'processing' => ['Perlu Dikirim'],
-                    'shipped'                 => ['Dikirim'],
-                    'completed', 'delivered'  => ['Selesai'],
-                    'cancelled'               => ['Dibatalkan'],
-                    default                   => [ucfirst($statusVal)]
-                };
+        foreach ($buyerQuery->get() as $o) {
+            $isPos = ($o->source === 'pos') || (!empty($o->shipping_address['is_pos']));
 
-                $rows->push((object)[
-                    'created_at'   => $o->created_at,
-                    'ref_number'   => '#' . $o->order_number,
-                    'party_name'   => $o->user->name ?? 'Pembeli',
-                    'party_email'  => $o->user->email ?? '-',
-                    'category'     => 'Pembeli (' . $txTypeLabel . ')',
-                    'channel'      => $channel,
-                    'base_amount'  => (float)$o->subtotal,
-                    'admin_fee'    => (float)($o->admin_fee ?? 0),
-                    'platform_fee' => (float)($o->platform_fee ?? 0),
-                    'tax_amount'   => 0,
-                    'gross'        => (float)$o->total,
-                    'profit'       => $profit,
-                    'status_label' => $stBadge[0],
-                ]);
-            }
+            if ($txType === 'buyer' && $isPos) continue;
+            if (in_array($txType, ['pos', 'deposit']) && !$isPos) continue;
+            if ($txType === 'domain') continue;
+
+            $types = $o->items->map(function($i) {
+                $pt = $i->product?->product_type ?? $i->product?->type ?? '';
+                if ($pt === 'ticket') return 'Tiket';
+                if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
+                return 'Fisik';
+            })->unique()->implode(', ');
+            $txTypeLabel = $types ?: 'Produk';
+            $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->shipping_address['payment_method'] ? strtoupper($o->shipping_address['payment_method']) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS'));
+            $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
+            $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+            $stBadge = match($statusVal) {
+                'confirmed', 'processing' => ['Berhasil'],
+                'shipped'                 => ['Dikirim'],
+                'completed', 'delivered'  => ['Selesai'],
+                'cancelled'               => ['Dibatalkan'],
+                default                   => [ucfirst($statusVal)]
+            };
+
+            $partyName = $isPos ? ($o->shipping_address['name'] ?? $o->shipping_address['receiver_name'] ?? 'Pelanggan Kasir') : ($o->user->name ?? 'Pembeli');
+            $partyEmail = $isPos ? ($o->shipping_address['email'] ?? ($o->shipping_address['phone'] ?? '-')) : ($o->user->email ?? '-');
+            $categoryLabel = $isPos ? ('POS (Kasir - ' . $txTypeLabel . ')') : ('Pembeli (' . $txTypeLabel . ')');
+
+            $rows->push((object)[
+                'created_at'   => $o->created_at,
+                'ref_number'   => '#' . $o->order_number,
+                'party_name'   => $partyName,
+                'party_email'  => $partyEmail,
+                'category'     => $categoryLabel,
+                'channel'      => $channel,
+                'base_amount'  => (float)$o->subtotal,
+                'admin_fee'    => (float)($o->admin_fee ?? 0),
+                'platform_fee' => (float)($o->platform_fee ?? 0),
+                'tax_amount'   => 0,
+                'gross'        => (float)$o->total,
+                'profit'       => $profit,
+                'status_label' => $stBadge[0],
+            ]);
         }
 
         if (in_array($txType, ['all', 'domain', 'creator'])) {
@@ -647,7 +704,7 @@ class AdminOrderController extends Controller
             }
         }
 
-        if (in_array($txType, ['all', 'deposit', 'creator'])) {
+        if (in_array($txType, ['all', 'deposit', 'pos', 'creator'])) {
             foreach ($payoutDepositQuery->get() as $p) {
                 $rows->push((object)[
                     'created_at'   => $p->created_at,
@@ -699,9 +756,10 @@ class AdminOrderController extends Controller
         ];
 
         $filterLabel = match($txType) {
-            'buyer'   => 'Pesanan Pembeli',
+            'buyer'   => 'Pesanan Pembeli Online',
+            'pos'     => 'POS (Kasir & Deposit)',
+            'deposit' => 'POS (Kasir & Deposit)',
             'domain'  => 'Domain Creator',
-            'deposit' => 'Deposit POS Creator',
             'creator' => 'Semua Creator',
             default   => 'Semua Transaksi',
         };

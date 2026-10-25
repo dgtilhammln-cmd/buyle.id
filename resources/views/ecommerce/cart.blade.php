@@ -636,10 +636,17 @@
                     $hasNonTicketItemC = false;
                     foreach ($summary['items'] as $ci) {
                         $pt = $ci->product->product_type ?? $ci->product->type ?? '';
+                        $sellerProfile = $ci->product->seller?->creatorProfile;
                         if ($pt === 'ticket') {
                             $hasTicketItemC = true;
-                            $platformFeeCart += round($ci->subtotal * $ticketPlatformFeeRate / 100);
-                            $adminFeeCart += $ticketAdminFeeFlat * $ci->qty;
+                            if ($sellerProfile && $sellerProfile->has_custom_fee) {
+                                $tFee = $sellerProfile->calculateTicketFees($ci->subtotal, $ci->qty);
+                                $platformFeeCart += $tFee['platform_fee'];
+                                $adminFeeCart    += $tFee['admin_fee'];
+                            } else {
+                                $platformFeeCart += round($ci->subtotal * $ticketPlatformFeeRate / 100);
+                                $adminFeeCart += $ticketAdminFeeFlat * $ci->qty;
+                            }
                         } else {
                             $hasNonTicketItemC = true;
                             $platformFeeCart += round($ci->subtotal * $pfRate / 100);

@@ -840,11 +840,11 @@
             </div>
             <div class="omset-bcard">
                 <div class="omset-bcard-head">
-                    <span class="omset-bcard-title">Deposit POS Creator</span>
-                    <span style="font-size:0.725rem; font-weight:600; color:#64748B; background:#F8FAFC; border:1px solid #E2E8F0; padding:2px 7px; border-radius:6px;">Saldo Kasir</span>
+                    <span class="omset-bcard-title">POS (Kasir &amp; Deposit)</span>
+                    <span class="omset-bcard-profit">+ Rp {{ number_format($revenueStats['pos_profit'] ?? 0, 0, ',', '.') }} profit fee</span>
                 </div>
-                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['deposit_gross'] ?? 0, 0, ',', '.') }}</div>
-                <div class="omset-bcard-sub">Total mutasi saldo deposit POS point of sale</div>
+                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['pos_gross'] ?? 0, 0, ',', '.') }}</div>
+                <div class="omset-bcard-sub">{{ $revenueStats['pos_order_count'] ?? 0 }} transaksi kasir &bull; {{ $revenueStats['deposit_count'] ?? 0 }} deposit kasir</div>
             </div>
         </div>
 
@@ -856,9 +856,13 @@
                    class="tx-type-pill {{ $txType === 'all' ? 'active' : '' }}">
                     Semua Transaksi ({{ $txTypeCounts['all'] ?? 0 }})
                 </a>
+                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'pos', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+                   class="tx-type-pill {{ in_array($txType, ['pos', 'deposit']) ? 'active' : '' }}">
+                    POS ({{ $txTypeCounts['pos'] ?? 0 }})
+                </a>
                 <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'buyer', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
                    class="tx-type-pill {{ $txType === 'buyer' ? 'active' : '' }}">
-                    Pembeli ({{ $txTypeCounts['buyer'] ?? 0 }})
+                    Pembeli Online ({{ $txTypeCounts['buyer'] ?? 0 }})
                 </a>
                 <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'creator', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
                    class="tx-type-pill {{ $txType === 'creator' ? 'active' : '' }}">
@@ -867,10 +871,6 @@
                 <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
                    class="tx-type-pill {{ $txType === 'domain' ? 'active' : '' }}">
                     Domain Creator ({{ $txTypeCounts['domain'] ?? 0 }})
-                </a>
-                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'deposit', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-                   class="tx-type-pill {{ $txType === 'deposit' ? 'active' : '' }}">
-                    Deposit POS Creator ({{ $txTypeCounts['deposit'] ?? 0 }})
                 </a>
             </div>
             <div style="font-size:0.75rem; color:#64748B;">
@@ -904,7 +904,7 @@
                                 <div style="font-weight:600;color:#0F172A;">{{ $o->created_at ? $o->created_at->format('d M Y, H:i') : '-' }} WIB</div>
                             </td>
                             <td>
-                                @if(!empty($o->url) && $o->source_type === 'buyer_order')
+                                @if(!empty($o->url) && ($o->source_type === 'buyer_order' || $o->source_type === 'pos_order'))
                                     <a href="{{ $o->url }}" style="font-weight:700;color:#10B981;text-decoration:none;">{{ $o->ref_number }}</a>
                                 @elseif(!empty($o->url) && $o->source_type === 'domain_order')
                                     <strong style="color:#0F172A; display:block;">{{ $o->ref_number }}</strong>
@@ -919,7 +919,7 @@
                             </td>
                             <td>
                                 <span class="badge-pill" style="background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;">{{ $o->category }}</span>
-                                @if(!empty($o->creator_name) && $o->party_role === 'Pembeli')
+                                @if(!empty($o->creator_name) && in_array($o->party_role, ['Pembeli', 'Pelanggan POS']))
                                     <div style="font-size:0.7rem;color:#64748B;margin-top:2px;">Creator: {{ $o->creator_name }}</div>
                                 @endif
                             </td>
@@ -1194,11 +1194,12 @@ function openReportModal() {
         titleEl.textContent = 'Unduh Laporan Keuangan & Omset';
 
         const typeLabels = {
-            'all':     'Semua Transaksi (Pembeli + Domain Creator + Deposit POS)',
-            'buyer':   'Pesanan Pembeli (Produk Fisik & Digital)',
+            'all':     'Semua Transaksi (Pembeli Online + POS + Domain Creator)',
+            'pos':     'POS (Transaksi Kasir & Deposit Saldo)',
+            'buyer':   'Pesanan Pembeli Online (Produk Fisik & Digital)',
             'domain':  'Domain Creator',
-            'deposit': 'Deposit POS Creator',
-            'creator': 'Semua Creator (Domain + Deposit POS)',
+            'deposit': 'POS (Transaksi Kasir & Deposit Saldo)',
+            'creator': 'Semua Creator (Domain + POS)',
         };
         const label = typeLabels[currentType] || 'Semua Transaksi';
         infoEl.innerHTML =

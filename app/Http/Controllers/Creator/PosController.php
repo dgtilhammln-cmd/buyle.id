@@ -215,9 +215,10 @@ class PosController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        // 4. Setting fee
-        $platformFeeRate = (float) Setting::get('platform_fee_rate', 5);
-        $adminFeeRate    = (float) Setting::get('admin_fee_rate', 5);
+        // 4. Setting fee (Mendukung tarif custom creator jika disetting di admin)
+        $posFeeRates = $profile ? $profile->calculatePosFees(100000) : null;
+        $platformFeeRate = $posFeeRates ? $posFeeRates['platform_fee_rate'] : (float) Setting::get('platform_fee_rate', 5);
+        $adminFeeRate    = $posFeeRates ? $posFeeRates['admin_fee_rate'] : (float) Setting::get('admin_fee_rate', 5);
 
         // 5. Saldo Deposit Kasir POS
         $posBalance = (float) ($profile->pos_balance ?? 0);
@@ -338,12 +339,16 @@ class PosController extends Controller
             // Biaya Layanan Tambahan (opsional oleh toko)
             $serviceFee = max(0, (float) ($request->service_fee ?? 0));
 
-            // System Fee Calculation (Platform Fee & Admin Fee)
-            $platformFeeRate = (float) Setting::get('platform_fee_rate', 5);
-            $adminFeeRate    = (float) Setting::get('admin_fee_rate', 5);
+            // Lock Creator Profile
+            $profile = CreatorProfile::where('user_id', $seller->id)->lockForUpdate()->first();
 
-            $platformFee = ($subtotal * $platformFeeRate) / 100;
-            $adminFee    = ($subtotal * $adminFeeRate) / 100;
+            // System Fee Calculation (Platform Fee & Admin Fee — mendukung special fee creator)
+            $feeCalc = $profile ? $profile->calculatePosFees($subtotal) : [
+                'platform_fee' => ($subtotal * (float) Setting::get('platform_fee_rate', 5)) / 100,
+                'admin_fee'    => ($subtotal * (float) Setting::get('admin_fee_rate', 5)) / 100,
+            ];
+            $platformFee = $feeCalc['platform_fee'];
+            $adminFee    = $feeCalc['admin_fee'];
             $totalFee    = $platformFee + $adminFee;
 
             $total = max(0, $subtotal - $discountAmount + $serviceFee + $platformFee + $adminFee);
@@ -353,7 +358,6 @@ class PosController extends Controller
             $customerName = trim($request->customer_name ?? '') ?: 'Pelanggan Umum';
 
             // Validasi Saldo Deposit Kasir POS jika metode pembayaran CASH
-            $profile = CreatorProfile::where('user_id', $seller->id)->lockForUpdate()->first();
             if ($paymentMethod === 'cash' && $totalFee > 0) {
                 $currentBalance = (float) ($profile->pos_balance ?? 0);
                 if ($currentBalance < $totalFee) {

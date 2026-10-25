@@ -771,6 +771,163 @@
         @endif
     </div>
 
+    {{-- ══ Special Fee & VIP Partner Deal Card (POS & Ticketing Custom Fee) ══ --}}
+    <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.5rem; margin-bottom:1.75rem; box-shadow:0 4px 20px rgba(0,0,0,0.02);">
+        <form action="{{ route('admin.creator-resources.custom-fee', $user->id) }}" method="POST">
+            @csrf
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding-bottom:1rem; border-bottom:1.5px solid #F1F5F9; margin-bottom:1.25rem;">
+                <div>
+                    <div style="font-size:1.05rem; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="22" height="22" fill="none" stroke="#F59E0B" stroke-width="2.2" viewBox="0 0 24 24">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        Pengaturan Tarif Khusus / Special Fee Deal (VIP & Kolega)
+                    </div>
+                    <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
+                        Atur persentase (%) atau nominal (Rp) khusus Platform Fee & Admin Fee untuk creator ini (berlaku di POS & Ticketing).
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    @if($creatorProfile && $creatorProfile->has_custom_fee)
+                        <span style="background:#FEF3C7; color:#92400E; border:1px solid #FDE68A; font-size:0.75rem; font-weight:800; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                            <span style="width:7px; height:7px; background:#D97706; border-radius:50%; display:inline-block;"></span>
+                            STATUS: SPECIAL DEAL AKTIF
+                        </span>
+                    @else
+                        <span style="background:#F1F5F9; color:#475569; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                            STATUS: TARIF DEFAULT PLATFORM
+                        </span>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Toggle Activation & Deal Notes --}}
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1rem 1.25rem; margin-bottom:1.25rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;">
+                <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-size:0.85rem; font-weight:700; color:#0F172A; user-select:none;">
+                    <input type="checkbox" name="has_custom_fee" value="1" {{ ($creatorProfile && $creatorProfile->has_custom_fee) ? 'checked' : '' }}
+                        onchange="toggleFeeInputs(this.checked)"
+                        style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;">
+                    Aktifkan Tarif Spesial untuk Creator ini (Override Tarif Global)
+                </label>
+
+                <div style="flex:1; min-width:250px;">
+                    <input type="text" name="custom_fee_notes" value="{{ $creatorProfile->custom_fee_notes ?? '' }}"
+                        placeholder="Catatan internal deal (contoh: Teman dekat owner / VIP EO Partner 0% fee)"
+                        style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.75rem; font-size:0.78rem; color:#1E293B; background:#ffffff;">
+                </div>
+            </div>
+
+            {{-- Fee Setting Grid --}}
+            <div id="custom-fee-settings-panel" style="{{ ($creatorProfile && $creatorProfile->has_custom_fee) ? '' : 'opacity:0.6; pointer-events:none;' }} transition:opacity 0.2s ease;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.25rem; margin-bottom:1.25rem;">
+                    
+                    {{-- 1. POS Kasir Section --}}
+                    <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:14px; padding:1.25rem;">
+                        <div style="font-size:0.88rem; font-weight:800; color:#0F172A; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.45rem;">
+                            🏪 Kasir POS (Point of Sale)
+                            <span style="font-size:0.72rem; font-weight:600; color:#64748B; background:#F1F5F9; padding:0.15rem 0.45rem; border-radius:6px;">Default: 5% + 5%</span>
+                        </div>
+
+                        {{-- POS Platform Fee --}}
+                        <div style="margin-bottom:0.85rem;">
+                            <label style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">Platform Fee POS</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <select name="custom_pos_platform_fee_type" style="width:110px; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem; font-size:0.78rem; font-weight:600; background:#F8FAFC;">
+                                    <option value="default" {{ ($creatorProfile->custom_pos_platform_fee_type ?? '') === 'default' ? 'selected' : '' }}>Default (5%)</option>
+                                    <option value="percent" {{ ($creatorProfile->custom_pos_platform_fee_type ?? '') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
+                                    <option value="fixed" {{ ($creatorProfile->custom_pos_platform_fee_type ?? '') === 'fixed' ? 'selected' : '' }}>Nominal (Rp)</option>
+                                </select>
+                                <input type="number" step="0.01" name="custom_pos_platform_fee_value" value="{{ $creatorProfile->custom_pos_platform_fee_value ?? '' }}"
+                                    placeholder="Nilai (contoh: 0 atau 2.5)"
+                                    style="flex:1; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.8rem;">
+                            </div>
+                        </div>
+
+                        {{-- POS Admin Fee --}}
+                        <div>
+                            <label style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">Admin Fee POS</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <select name="custom_pos_admin_fee_type" style="width:110px; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem; font-size:0.78rem; font-weight:600; background:#F8FAFC;">
+                                    <option value="default" {{ ($creatorProfile->custom_pos_admin_fee_type ?? '') === 'default' ? 'selected' : '' }}>Default (5%)</option>
+                                    <option value="percent" {{ ($creatorProfile->custom_pos_admin_fee_type ?? '') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
+                                    <option value="fixed" {{ ($creatorProfile->custom_pos_admin_fee_type ?? '') === 'fixed' ? 'selected' : '' }}>Nominal (Rp)</option>
+                                </select>
+                                <input type="number" step="0.01" name="custom_pos_admin_fee_value" value="{{ $creatorProfile->custom_pos_admin_fee_value ?? '' }}"
+                                    placeholder="Nilai (contoh: 0 atau 1000)"
+                                    style="flex:1; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.8rem;">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 2. Ticketing Section --}}
+                    <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:14px; padding:1.25rem;">
+                        <div style="font-size:0.88rem; font-weight:800; color:#0F172A; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.45rem;">
+                            🎟️ Event & Tiket (Ticketing)
+                            <span style="font-size:0.72rem; font-weight:600; color:#64748B; background:#F1F5F9; padding:0.15rem 0.45rem; border-radius:6px;">Default: 5% + Rp 5.000/tiket</span>
+                        </div>
+
+                        {{-- Ticket Platform Fee --}}
+                        <div style="margin-bottom:0.85rem;">
+                            <label style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">Platform Fee Tiket</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <select name="custom_ticket_platform_fee_type" style="width:130px; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem; font-size:0.78rem; font-weight:600; background:#F8FAFC;">
+                                    <option value="default" {{ ($creatorProfile->custom_ticket_platform_fee_type ?? '') === 'default' ? 'selected' : '' }}>Default (5%)</option>
+                                    <option value="percent" {{ ($creatorProfile->custom_ticket_platform_fee_type ?? '') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
+                                    <option value="fixed" {{ ($creatorProfile->custom_ticket_platform_fee_type ?? '') === 'fixed' ? 'selected' : '' }}>Nominal Flat (Rp)</option>
+                                </select>
+                                <input type="number" step="0.01" name="custom_ticket_platform_fee_value" value="{{ $creatorProfile->custom_ticket_platform_fee_value ?? '' }}"
+                                    placeholder="Nilai (contoh: 0 atau 3)"
+                                    style="flex:1; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.8rem;">
+                            </div>
+                        </div>
+
+                        {{-- Ticket Admin Fee --}}
+                        <div>
+                            <label style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">Admin Fee Tiket</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <select name="custom_ticket_admin_fee_type" style="width:130px; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem; font-size:0.78rem; font-weight:600; background:#F8FAFC;">
+                                    <option value="default" {{ ($creatorProfile->custom_ticket_admin_fee_type ?? '') === 'default' ? 'selected' : '' }}>Default (Rp 5.000/tiket)</option>
+                                    <option value="fixed_per_qty" {{ ($creatorProfile->custom_ticket_admin_fee_type ?? '') === 'fixed_per_qty' ? 'selected' : '' }}>Rp Flat / Tiket</option>
+                                    <option value="percent" {{ ($creatorProfile->custom_ticket_admin_fee_type ?? '') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
+                                </select>
+                                <input type="number" step="0.01" name="custom_ticket_admin_fee_value" value="{{ $creatorProfile->custom_ticket_admin_fee_value ?? '' }}"
+                                    placeholder="Nilai (contoh: 0 atau 2000)"
+                                    style="flex:1; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.8rem;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                <div style="font-size:0.75rem; color:#64748B;">
+                    💡 <em>Tips: Untuk teman dekat/kolega <strong>bebas biaya (0%)</strong>, pilih Persen (%) dan isi <strong>0</strong> pada Platform Fee & Admin Fee.</em>
+                </div>
+
+                <button type="submit" style="background:#0F172A; color:#ffffff; border:none; border-radius:10px; padding:0.6rem 1.4rem; font-size:0.82rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; transition:background 0.2s;"
+                    onmouseover="this.style.background='#1E293B'" onmouseout="this.style.background='#0F172A'">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Simpan Pengaturan Tarif Khusus
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function toggleFeeInputs(checked) {
+            const panel = document.getElementById('custom-fee-settings-panel');
+            if (!panel) return;
+            if (checked) {
+                panel.style.opacity = '1';
+                panel.style.pointerEvents = 'auto';
+            } else {
+                panel.style.opacity = '0.6';
+                panel.style.pointerEvents = 'none';
+            }
+        }
+    </script>
+
     {{-- ══ Location Intelligence Card ══ --}}
     <div style="background:#ffffff; border-radius:20px; border:1.5px solid #E2E8F0; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.75rem; overflow:hidden;">
         {{-- Header --}}

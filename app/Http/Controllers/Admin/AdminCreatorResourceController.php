@@ -797,6 +797,42 @@ class AdminCreatorResourceController extends Controller
     }
 
     /**
+     * Update Pengaturan Special Fee / VIP Deal untuk Creator (POS & Ticketing)
+     */
+    public function updateCustomFee(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $creatorProfile = CreatorProfile::getOrCreateForUser($user);
+
+        $hasCustomFee = $request->boolean('has_custom_fee');
+
+        $creatorProfile->has_custom_fee = $hasCustomFee;
+        $creatorProfile->custom_fee_notes = $request->input('custom_fee_notes');
+
+        if ($hasCustomFee) {
+            // POS Fees
+            $creatorProfile->custom_pos_platform_fee_type = $request->input('custom_pos_platform_fee_type', 'default');
+            $creatorProfile->custom_pos_platform_fee_value = $request->filled('custom_pos_platform_fee_value') ? (float) $request->input('custom_pos_platform_fee_value') : null;
+            $creatorProfile->custom_pos_admin_fee_type = $request->input('custom_pos_admin_fee_type', 'default');
+            $creatorProfile->custom_pos_admin_fee_value = $request->filled('custom_pos_admin_fee_value') ? (float) $request->input('custom_pos_admin_fee_value') : null;
+
+            // Ticketing Fees
+            $creatorProfile->custom_ticket_platform_fee_type = $request->input('custom_ticket_platform_fee_type', 'default');
+            $creatorProfile->custom_ticket_platform_fee_value = $request->filled('custom_ticket_platform_fee_value') ? (float) $request->input('custom_ticket_platform_fee_value') : null;
+            $creatorProfile->custom_ticket_admin_fee_type = $request->input('custom_ticket_admin_fee_type', 'default');
+            $creatorProfile->custom_ticket_admin_fee_value = $request->filled('custom_ticket_admin_fee_value') ? (float) $request->input('custom_ticket_admin_fee_value') : null;
+        }
+
+        $creatorProfile->save();
+
+        $msg = $hasCustomFee
+            ? "Tarif khusus (Special Deal / VIP) untuk {$user->name} berhasil disimpan dan langsung aktif di POS & Ticketing."
+            : "Tarif khusus untuk {$user->name} dinonaktifkan. Creator kembali menggunakan tarif default platform.";
+
+        return redirect()->back()->with('success', $msg);
+    }
+
+    /**
      * Update / Set / Clear Custom Domain & Verification Code untuk Creator (Link in Bio)
      */
     public function updateCustomDomain(Request $request, $id)

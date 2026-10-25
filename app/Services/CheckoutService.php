@@ -94,9 +94,16 @@ class CheckoutService
             }
             $productType = $cartItem->product->product_type ?? $cartItem->product->type ?? '';
             if ($productType === 'ticket') {
-                // Skema tiket: admin fee Rp 5.000/tiket (flat), platform fee 5% dari subtotal
-                $platformFee += round($cartItem->subtotal * $ticketPlatformFeeRate, 2);
-                $adminFee    += $ticketAdminFeePerQty * $cartItem->qty;
+                $sellerProfile = $cartItem->product->seller?->creatorProfile;
+                if ($sellerProfile && $sellerProfile->has_custom_fee) {
+                    $tFee = $sellerProfile->calculateTicketFees($cartItem->subtotal, $cartItem->qty);
+                    $platformFee += $tFee['platform_fee'];
+                    $adminFee    += $tFee['admin_fee'];
+                } else {
+                    // Skema tiket default: admin fee Rp 5.000/tiket (flat), platform fee 5% dari subtotal
+                    $platformFee += round($cartItem->subtotal * $ticketPlatformFeeRate, 2);
+                    $adminFee    += $ticketAdminFeePerQty * $cartItem->qty;
+                }
             } else {
                 // Skema umum: persentase dari subtotal per produk
                 $platformFee += round($cartItem->subtotal * $platformFeeRate, 2);

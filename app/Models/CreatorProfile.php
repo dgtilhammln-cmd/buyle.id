@@ -47,6 +47,17 @@ class CreatorProfile extends Model
         'last_menu_scan_at',
         'monthly_scan_count',
         'scan_count_reset_at',
+        // Custom Fee (VIP / Deal Khusus)
+        'has_custom_fee',
+        'custom_pos_platform_fee_type',
+        'custom_pos_platform_fee_value',
+        'custom_pos_admin_fee_type',
+        'custom_pos_admin_fee_value',
+        'custom_ticket_platform_fee_type',
+        'custom_ticket_platform_fee_value',
+        'custom_ticket_admin_fee_type',
+        'custom_ticket_admin_fee_value',
+        'custom_fee_notes',
     ];
 
     protected $casts = [
@@ -57,6 +68,11 @@ class CreatorProfile extends Model
         'pos_balance'  => 'float',
         'last_menu_scan_at' => 'datetime',
         'scan_count_reset_at' => 'datetime',
+        'has_custom_fee' => 'boolean',
+        'custom_pos_platform_fee_value' => 'float',
+        'custom_pos_admin_fee_value' => 'float',
+        'custom_ticket_platform_fee_value' => 'float',
+        'custom_ticket_admin_fee_value' => 'float',
     ];
 
     public function posDeposits(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -264,5 +280,105 @@ class CreatorProfile extends Model
                 'count'  => 0,
             ];
         }
+    }
+
+    /**
+     * Hitung Platform Fee & Admin Fee untuk POS Kasir
+     * Jika creator memiliki special deal (has_custom_fee = true), gunakan setting khusus.
+     * Jika tidak, 100% fallback ke Setting default global sistem.
+     */
+    public function calculatePosFees(float $subtotal): array
+    {
+        if ($this->has_custom_fee) {
+            // 1. Platform Fee POS
+            if ($this->custom_pos_platform_fee_type === 'fixed') {
+                $platformFee = (float) ($this->custom_pos_platform_fee_value ?? 0);
+                $platformFeeRate = $subtotal > 0 ? round(($platformFee / $subtotal) * 100, 2) : 0;
+            } elseif ($this->custom_pos_platform_fee_type === 'percent') {
+                $platformFeeRate = (float) ($this->custom_pos_platform_fee_value ?? 0);
+                $platformFee = round(($subtotal * $platformFeeRate) / 100, 2);
+            } else {
+                $platformFeeRate = (float) Setting::get('platform_fee_rate', 5);
+                $platformFee = round(($subtotal * $platformFeeRate) / 100, 2);
+            }
+
+            // 2. Admin Fee POS
+            if ($this->custom_pos_admin_fee_type === 'fixed') {
+                $adminFee = (float) ($this->custom_pos_admin_fee_value ?? 0);
+                $adminFeeRate = $subtotal > 0 ? round(($adminFee / $subtotal) * 100, 2) : 0;
+            } elseif ($this->custom_pos_admin_fee_type === 'percent') {
+                $adminFeeRate = (float) ($this->custom_pos_admin_fee_value ?? 0);
+                $adminFee = round(($subtotal * $adminFeeRate) / 100, 2);
+            } else {
+                $adminFeeRate = (float) Setting::get('admin_fee_rate', 5);
+                $adminFee = round(($subtotal * $adminFeeRate) / 100, 2);
+            }
+
+            return [
+                'platform_fee'      => $platformFee,
+                'admin_fee'         => $adminFee,
+                'platform_fee_rate' => $platformFeeRate,
+                'admin_fee_rate'    => $adminFeeRate,
+                'is_custom'         => true,
+            ];
+        }
+
+        // Default sistem (fallback aman)
+        $platformFeeRate = (float) Setting::get('platform_fee_rate', 5);
+        $adminFeeRate    = (float) Setting::get('admin_fee_rate', 5);
+        $platformFee     = round(($subtotal * $platformFeeRate) / 100, 2);
+        $adminFee        = round(($subtotal * $adminFeeRate) / 100, 2);
+
+        return [
+            'platform_fee'      => $platformFee,
+            'admin_fee'         => $adminFee,
+            'platform_fee_rate' => $platformFeeRate,
+            'admin_fee_rate'    => $adminFeeRate,
+            'is_custom'         => false,
+        ];
+    }
+
+    /**
+     * Hitung Platform Fee & Admin Fee untuk Produk Tiket Event
+     * Default sistem: Platform fee 5% dari subtotal, Admin fee Rp 5.000 flat per tiket.
+     */
+    public function calculateTicketFees(float $subtotal, int $qty): array
+    {
+        if ($this->has_custom_fee) {
+            // 1. Platform Fee Tiket
+            if ($this->custom_ticket_platform_fee_type === 'fixed') {
+                $platformFee = (float) ($this->custom_ticket_platform_fee_value ?? 0);
+            } elseif ($this->custom_ticket_platform_fee_type === 'percent') {
+                $rate = (float) ($this->custom_ticket_platform_fee_value ?? 0) / 100;
+                $platformFee = round($subtotal * $rate, 2);
+            } else {
+                $platformFee = round($subtotal * 0.05, 2); // default 5%
+            }
+
+            // 2. Admin Fee Tiket
+            if ($this->custom_ticket_admin_fee_type === 'fixed_per_qty') {
+                $adminFee = (float) ($this->custom_ticket_admin_fee_value ?? 0) * $qty;
+            } elseif ($this->custom_ticket_admin_fee_type === 'fixed') {
+                $adminFee = (float) ($this->custom_ticket_admin_fee_value ?? 0);
+            } elseif ($this->custom_ticket_admin_fee_type === 'percent') {
+                $rate = (float) ($this->custom_ticket_admin_fee_value ?? 0) / 100;
+                $adminFee = round($subtotal * $rate, 2);
+            } else {
+                $adminFee = 5000 * $qty; // default Rp 5.000 flat / tiket
+            }
+
+            return [
+                'platform_fee' => $platformFee,
+                'admin_fee'    => $adminFee,
+                'is_custom'    => true,
+            ];
+        }
+
+        // Default sistem tiket
+        return [
+            'platform_fee' => round($subtotal * 0.05, 2),
+            'admin_fee'    => 5000 * $qty,
+            'is_custom'    => false,
+        ];
     }
 }
