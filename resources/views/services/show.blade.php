@@ -1948,7 +1948,7 @@
                                             <span id="warBtnLabel">Penjualan Dibuka
                                                 {{ $service->ticket_war_start->isoFormat('D MMMM Y, HH:mm') }} WIB</span>
                                         </button>
-                                        <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
+                                    <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
                                             <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
                                                 onclick="submitPdCart('cart')">
                                                 Tambah Keranjang
@@ -1958,7 +1958,6 @@
                                                 Beli Sekarang
                                             </button>
                                         </div>
-                                        <input type="hidden" name="action" id="pd_action_input" value="cart">
                                     </div>
                                 @else
                                     <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
@@ -1972,7 +1971,6 @@
                                             disabled @endif onclick="submitPdCart('buy')">
                                             Beli Sekarang
                                         </button>
-                                        <input type="hidden" name="action" id="pd_action_input" value="cart">
                                     </div>
                                 @endif
                             </form>
