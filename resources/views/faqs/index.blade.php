@@ -107,28 +107,18 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
     transform:translateY(-6px);
     box-shadow:0 20px 40px rgba(30,179,73,0.09);
 }
-.ar-card-img {
-    width:100%; aspect-ratio:16/10;
-    overflow:hidden; position:relative;
-    background:var(--c-surface);
-}
-.ar-card-img img {
-    width:100%; height:100%; object-fit:cover;
-    transition:transform 0.55s var(--ease);
-    display:block;
-}
-.ar-card:hover .ar-card-img img { transform:scale(1.07); }
 .ar-card-badge {
-    position:absolute; top:1rem; left:1rem;
-    background:rgba(15,23,42,0.82);
-    backdrop-filter:blur(6px);
+    display:inline-block;
+    background:rgba(15,23,42,0.85);
     color:#fff; font-size:0.65rem; font-weight:700;
-    letter-spacing:0.1em; text-transform:uppercase;
-    padding:0.3rem 0.75rem; border-radius:50px;
+    letter-spacing:0.08em; text-transform:uppercase;
+    padding:0.35rem 0.8rem; border-radius:50px;
     font-family:var(--font);
+    align-self:flex-start;
+    margin-bottom:0.875rem;
 }
 .ar-card-body {
-    padding:1.5rem;
+    padding:1.75rem 1.5rem 1.5rem;
     display:flex; flex-direction:column; flex-grow:1;
 }
 .ar-card-meta {
@@ -331,30 +321,17 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
                data-aos="fade-up"
                data-aos-delay="{{ ($i % 2) * 80 }}">
 
-                <div class="ar-card-img">
-                    @if($faq->image)
-                        <img src="{{ $faq->image_url }}"
-                             alt="{{ $faq->alt_text ?? $faq->title }}"
-                             loading="{{ $i < 4 ? 'eager' : 'lazy' }}">
-                    @else
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#E2E8F0,#CBD5E1);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;color:#94A3B8;">
-                            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            <span style="font-size:0.7rem;font-weight:600;font-family:var(--font);">FAQ</span>
-                        </div>
-                    @endif
+                <div class="ar-card-body">
                     @if($faq->category)
                     <div class="ar-card-badge">{{ $faq->category }}</div>
                     @endif
-                </div>
-
-                <div class="ar-card-body">
                     <div class="ar-card-meta">
                         <span>{{ $faq->formatted_date }}</span>
                         <span class="ar-card-meta-sep">·</span>
                         <span>{{ $faq->read_time }} mnt baca</span>
                     </div>
                     <h2 class="ar-card-title">{{ $faq->title }}</h2>
-                    <p class="ar-card-excerpt">{{ $faq->excerpt }}</p>
+                    <p class="ar-card-excerpt">{{ $faq->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($faq->content ?? ''), 130) }}</p>
                     <div class="ar-card-footer">
                         <span class="ar-card-date">{{ \Carbon\Carbon::parse($faq->published_at)->format('d M Y') }}</span>
                         <span class="ar-card-read">

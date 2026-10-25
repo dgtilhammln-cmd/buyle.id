@@ -365,31 +365,42 @@ a { text-decoration: none; color: inherit; }
 }
 .ar-related-card {
     background:var(--c-card); border:1.5px solid var(--c-border);
-    border-radius:20px; overflow:hidden; display:block;
+    border-radius:18px; padding:1.5rem; display:flex; flex-direction:column;
     text-decoration:none !important; transition:all 0.35s var(--ease);
 }
 .ar-related-card:hover {
     border-color:var(--c-accent);
-    transform:translateY(-5px);
-    box-shadow:0 16px 40px rgba(30,179,73,0.09);
+    transform:translateY(-4px);
+    box-shadow:0 14px 32px rgba(30,179,73,0.09);
 }
-.ar-related-card-img { aspect-ratio:16/10; overflow:hidden; background:var(--c-surface); }
-.ar-related-card-img img {
-    width:100%; height:100%; object-fit:cover;
-    transition:transform 0.55s var(--ease);
-}
-.ar-related-card:hover .ar-related-card-img img { transform:scale(1.07); }
-.ar-related-card-body { padding:1.25rem; }
+.ar-related-card-body { padding:0; display:flex; flex-direction:column; flex:1; }
 .ar-related-cat {
-    font-size:0.62rem; font-weight:700; letter-spacing:0.1em;
+    font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
     text-transform:uppercase; color:var(--c-accent);
-    margin-bottom:0.5rem; font-family:var(--font);
+    margin-bottom:0.6rem; font-family:var(--font);
 }
 .ar-related-card-title {
-    font-size:0.9375rem; font-weight:700; color:var(--c-text);
+    font-size:1.05rem; font-weight:700; color:var(--c-text);
     line-height:1.45; font-family:var(--font);
     display:-webkit-box; -webkit-line-clamp:2;
     -webkit-box-orient:vertical; overflow:hidden;
+    margin-bottom:0.6rem;
+}
+.ar-related-card-desc {
+    font-size:0.875rem; color:var(--c-muted);
+    line-height:1.6; font-family:var(--font);
+    display:-webkit-box; -webkit-line-clamp:3;
+    -webkit-box-orient:vertical; overflow:hidden;
+    margin-bottom:1.25rem;
+}
+.ar-related-card-footer {
+    display:flex; align-items:center; gap:0.4rem;
+    font-size:0.825rem; font-weight:600; color:var(--c-accent);
+    font-family:var(--font); margin-top:auto;
+    transition:gap 0.2s ease;
+}
+.ar-related-card:hover .ar-related-card-footer {
+    gap:0.65rem;
 }
 
 /* ════ RESPONSIVE ════ */
@@ -693,20 +704,21 @@ a { text-decoration: none; color: inherit; }
         <div class="ar-related-grid">
             @foreach($related as $r)
             <a href="{{ route_locale('faqs.show', $r->slug) }}" class="ar-related-card" data-aos="fade-up">
-                <div class="ar-related-card-img">
-                    @if($r->image)
-                        <img src="{{ asset('storage/' . $r->image) }}" alt="{{ $r->title }}" loading="lazy">
-                    @else
-                        <div style="width:100%;height:100%;min-height:160px;background:linear-gradient(135deg,#E2E8F0,#CBD5E1);display:flex;align-items:center;justify-content:center;">
-                            <svg width="28" height="28" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                        </div>
-                    @endif
-                </div>
                 <div class="ar-related-card-body">
                     @if($r->category)
                     <div class="ar-related-cat">{{ $r->category }}</div>
                     @endif
                     <h3 class="ar-related-card-title">{{ $r->title }}</h3>
+                    @php
+                        $desc = $r->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($r->content ?? ''), 120);
+                    @endphp
+                    @if(!empty($desc))
+                    <p class="ar-related-card-desc">{{ $desc }}</p>
+                    @endif
+                    <div class="ar-related-card-footer">
+                        <span>Baca FAQ</span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                 </div>
             </a>
             @endforeach
