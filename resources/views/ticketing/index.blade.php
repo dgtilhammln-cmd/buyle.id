@@ -676,12 +676,17 @@
             border-radius: 14px;
             padding: 1rem 1.15rem;
             margin-top: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
         }
 
         .calc-total-label {
             font-size: 0.98rem;
             font-weight: 800;
             color: #0F172A;
+            white-space: nowrap;
         }
 
         .calc-total-note {
@@ -699,6 +704,9 @@
             -webkit-text-fill-color: transparent;
             font-family: var(--font);
             letter-spacing: -0.02em;
+            white-space: nowrap !important;
+            flex-shrink: 0;
+            text-align: right;
         }
 
         .calc-creator-takeaway {
@@ -736,6 +744,9 @@
             font-size: 1.05rem;
             font-weight: 800;
             color: #15803d;
+            white-space: nowrap !important;
+            flex-shrink: 0;
+            text-align: right;
         }
 
         /* ══════════════════════════════════════════════
@@ -1064,9 +1075,107 @@
                 gap: 1rem;
             }
 
+            /* Calculator Card Mobile Optimization (No 2-line wraps) */
+            .ticket-calc-result-card {
+                padding: 1.25rem 1rem !important;
+            }
+
+            .calc-receipt-row.total-row {
+                padding: 0.85rem 0.95rem;
+                gap: 0.5rem;
+            }
+
+            .calc-total-label {
+                font-size: 0.85rem;
+            }
+
+            .calc-total-val {
+                font-size: 1.35rem !important;
+                white-space: nowrap !important;
+            }
+
+            .calc-creator-takeaway {
+                padding: 0.75rem 0.85rem;
+                margin-top: 1rem;
+            }
+
+            .creator-takeaway-inner {
+                gap: 0.5rem;
+            }
+
+            .takeaway-left {
+                font-size: 0.75rem;
+                gap: 0.35rem;
+            }
+
+            .takeaway-val {
+                font-size: 0.92rem !important;
+                white-space: nowrap !important;
+            }
+
+            /* Venue Inspector Card on Mobile (Clean 3-column stats & no orphan wraps) */
+            .venue-inspector-card {
+                padding: 1.25rem 1rem !important;
+                border-radius: 16px;
+                gap: 1rem !important;
+            }
+
+            .inspector-left {
+                gap: 0.85rem;
+                align-items: flex-start;
+            }
+
+            .inspector-icon-badge {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+            }
+
+            .inspector-icon-badge svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .inspector-name {
+                font-size: 0.98rem;
+                line-height: 1.35;
+            }
+
+            .inspector-desc {
+                font-size: 0.78rem;
+                line-height: 1.45;
+                margin-top: 0.2rem;
+            }
+
             .inspector-stats-row {
-                flex-wrap: wrap;
-                gap: 1rem;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                width: 100% !important;
+                gap: 0.45rem !important;
+                padding-top: 0.85rem;
+                border-top: 1px solid #E2E8F0;
+                flex-wrap: nowrap !important;
+            }
+
+            .stat-block {
+                text-align: center !important;
+                background: #F8FAFC;
+                padding: 0.55rem 0.25rem;
+                border-radius: 10px;
+                border: 1px solid #F1F5F9;
+            }
+
+            .stat-val {
+                font-size: 0.9rem !important;
+                font-weight: 800;
+                white-space: nowrap !important;
+            }
+
+            .stat-label {
+                font-size: 0.62rem !important;
+                font-weight: 600;
+                letter-spacing: 0 !important;
+                margin-top: 2px;
             }
         }
     </style>

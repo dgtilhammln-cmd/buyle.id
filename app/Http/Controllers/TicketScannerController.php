@@ -118,7 +118,7 @@ class TicketScannerController extends Controller
         }
 
         $seo = [
-            'title'   => 'Scan Tiket & Data Kehadiran · Creator Studio',
+            'title'   => 'Ticket System Management · Creator Studio',
             'robots'  => 'noindex, nofollow',
         ];
 

@@ -607,6 +607,79 @@
                 width: 100%;
             }
         }
+
+        /* ── Ticketing Page Skeleton ── */
+        .skel-ticketing-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 0.5rem;
+        }
+        .skel-tk-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 2.5rem;
+        }
+        .skel-tk-features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        .skel-tk-card {
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 1.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.25rem;
+            box-sizing: border-box;
+        }
+        .skel-tk-highlights {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 18px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2.5rem;
+            box-sizing: border-box;
+        }
+        .skel-tk-calc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.75rem;
+            width: 100%;
+            margin-bottom: 2.5rem;
+        }
+        .skel-tk-calc-box {
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        @media(max-width: 900px) {
+            .skel-tk-features-grid { grid-template-columns: 1fr; }
+            .skel-tk-highlights { grid-template-columns: repeat(2, 1fr); }
+            .skel-tk-calc-grid { grid-template-columns: 1fr; }
+        }
+        @media(max-width: 640px) {
+            .skel-tk-highlights { grid-template-columns: 1fr; }
+            .skel-tk-card { padding: 1.25rem 1rem; }
+            .skel-tk-calc-box { padding: 1.25rem 1rem; }
+        }
     </style>
     
     <div id="cv-app-preloader">
@@ -792,6 +865,77 @@
                         <div class="skel-about-visi-grid">
                             <div class="skel-shimmer skel-about-visi-card"></div>
                             <div class="skel-shimmer skel-about-visi-card"></div>
+                        </div>
+                    </div>
+                </div>
+            @elseif(request()->routeIs('ticketing*') || request()->is('ticketing*'))
+                {{-- Ticketing Landing Page Skeleton (100% Sesuai Halaman Ticketing) --}}
+                <div class="skel-ticketing-wrapper">
+                    {{-- Breadcrumb --}}
+                    <div class="skel-shimmer" style="width: 150px; height: 14px; border-radius: 999px; margin: 0.5rem auto 1.75rem;"></div>
+
+                    {{-- Header Intro --}}
+                    <div class="skel-tk-header">
+                        <div class="skel-shimmer" style="width: min(85%, 520px); height: 38px; border-radius: 8px; margin-bottom: 0.65rem;"></div>
+                        <div class="skel-shimmer" style="width: min(65%, 360px); height: 38px; border-radius: 8px; margin-bottom: 1.25rem;"></div>
+                        <div class="skel-shimmer" style="width: min(90%, 680px); height: 16px; border-radius: 4px; margin-bottom: 0.5rem;"></div>
+                        <div class="skel-shimmer" style="width: min(75%, 480px); height: 16px; border-radius: 4px; margin-bottom: 1.75rem;"></div>
+                        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                            <div class="skel-shimmer" style="width: 160px; height: 48px; border-radius: 999px;"></div>
+                            <div class="skel-shimmer" style="width: 140px; height: 48px; border-radius: 999px;"></div>
+                        </div>
+                    </div>
+
+                    {{-- 6 Feature Cards Grid --}}
+                    <div class="skel-tk-features-grid">
+                        @for($f = 0; $f < 6; $f++)
+                            <div class="skel-tk-card {{ $f > 3 ? 'hide-on-mobile' : '' }}">
+                                <div class="skel-shimmer" style="width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;"></div>
+                                <div style="flex: 1;">
+                                    <div class="skel-shimmer" style="width: 70%; height: 18px; border-radius: 4px; margin-bottom: 0.5rem;"></div>
+                                    <div class="skel-shimmer" style="width: 95%; height: 12px; border-radius: 3px; margin-bottom: 0.35rem;"></div>
+                                    <div class="skel-shimmer" style="width: 60%; height: 12px; border-radius: 3px;"></div>
+                                </div>
+                                <div class="skel-shimmer" style="width: 32px; height: 44px; border-radius: 6px; flex-shrink: 0;"></div>
+                            </div>
+                        @endfor
+                    </div>
+
+                    {{-- Highlights Bar --}}
+                    <div class="skel-tk-highlights">
+                        @for($h = 0; $h < 4; $h++)
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div class="skel-shimmer" style="width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;"></div>
+                                <div style="flex: 1;">
+                                    <div class="skel-shimmer" style="width: 80px; height: 14px; border-radius: 3px; margin-bottom: 0.3rem;"></div>
+                                    <div class="skel-shimmer" style="width: 110px; height: 10px; border-radius: 3px;"></div>
+                                </div>
+                            </div>
+                        @endfor
+                    </div>
+
+                    {{-- Ticket Cost Calculator Skeleton --}}
+                    <div class="skel-tk-calc-grid">
+                        <div class="skel-tk-calc-box">
+                            <div class="skel-shimmer" style="width: 140px; height: 16px; border-radius: 4px; margin-bottom: 0.75rem;"></div>
+                            <div class="skel-shimmer" style="width: 100%; height: 50px; border-radius: 12px; margin-bottom: 1rem;"></div>
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                                <div class="skel-shimmer" style="width: 70px; height: 30px; border-radius: 999px;"></div>
+                                <div class="skel-shimmer" style="width: 70px; height: 30px; border-radius: 999px;"></div>
+                                <div class="skel-shimmer" style="width: 70px; height: 30px; border-radius: 999px;"></div>
+                            </div>
+                            <div class="skel-shimmer" style="width: 100px; height: 16px; border-radius: 4px; margin-bottom: 0.75rem;"></div>
+                            <div class="skel-shimmer" style="width: 160px; height: 44px; border-radius: 12px;"></div>
+                        </div>
+                        <div class="skel-tk-calc-box">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+                                <div class="skel-shimmer" style="width: 150px; height: 18px; border-radius: 4px;"></div>
+                                <div class="skel-shimmer" style="width: 90px; height: 22px; border-radius: 999px;"></div>
+                            </div>
+                            <div class="skel-shimmer" style="width: 100%; height: 16px; border-radius: 4px; margin-bottom: 1rem;"></div>
+                            <div class="skel-shimmer" style="width: 100%; height: 16px; border-radius: 4px; margin-bottom: 1rem;"></div>
+                            <div class="skel-shimmer" style="width: 100%; height: 16px; border-radius: 4px; margin-bottom: 1.5rem;"></div>
+                            <div class="skel-shimmer" style="width: 100%; height: 60px; border-radius: 14px;"></div>
                         </div>
                     </div>
                 </div>
