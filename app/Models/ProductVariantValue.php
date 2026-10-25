@@ -41,6 +41,15 @@ class ProductVariantValue extends Model
     }
 
     /**
+     * Alias for variantOption() — kept for backward-compatibility with legacy
+     * callers that use ->option?->name (e.g. views, CheckoutService).
+     */
+    public function option(): BelongsTo
+    {
+        return $this->variantOption();
+    }
+
+    /**
      * Semua item cart yang memilih varian ini.
      */
     public function carts(): HasMany

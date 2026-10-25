@@ -53,7 +53,8 @@ class CartController extends Controller
                 return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
             }
 
-            return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambahkan ke keranjang.');
+            // action === 'buy' — skip keranjang, langsung ke checkout
+            return redirect()->route('checkout.index')->with('success', 'Produk siap untuk checkout.');
         } catch (\Exception $e) {
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
