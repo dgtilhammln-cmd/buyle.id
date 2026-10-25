@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<a href="{{ route('auth.google') }}" class="btn-google" style="margin-bottom:1rem;">
+<a href="{{ route('auth.google') }}" class="btn-google" style="margin-bottom:0.75rem;">
     <svg width="20" height="20" viewBox="0 0 48 48">
         <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
         <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
@@ -24,6 +24,15 @@
     </svg>
     Daftar dengan Google
 </a>
+
+<div style="text-align:center; margin-top:0.6rem;">
+    <a href="{{ route('register.email') }}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.45rem; padding:0.5rem 1.15rem; font-size:0.78rem; font-weight:600; color:#475569; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:99px; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='#ffffff'; this.style.borderColor='#1eb349'; this.style.color='#1eb349';" onmouseout="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.color='#475569';">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        Daftar dengan Email
+    </a>
+</div>
 
 <p style="text-align:center; font-size:0.75rem; color:#94A3B8; margin-top:1.5rem; line-height:1.6;">
     Dengan mendaftar, Anda menyetujui <a href="#" style="color:#1eb349;">Syarat & Ketentuan</a><br>dan <a href="#" style="color:#1eb349;">Kebijakan Privasi</a> kami.

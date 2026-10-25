@@ -102,6 +102,26 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    // ── Show Register via Email Form ──
+    public function showRegisterEmail()
+    {
+        if (Auth::check()) {
+            $role = Auth::user()->role;
+            if ($role === 'super_admin' || $role === 'admin') return redirect()->route('admin.dashboard');
+            if ($role === 'seller') return redirect()->route('creator.dashboard');
+            return redirect()->route('account.overview');
+        }
+
+        $prev = url()->previous();
+        if ($prev && !session()->has('url.intended')) {
+            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar'])) {
+                session()->put('url.intended', $prev);
+            }
+        }
+
+        return view('auth.register_email');
+    }
+
     // ── Process Register (Step 1: Save Draft & Send OTP) ──
     public function register(Request $request)
     {
@@ -109,14 +129,24 @@ class AuthController extends Controller
             'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:users,email',
             'phone'    => 'nullable|string|max:20',
-            'password' => 'required|min:6|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[a-z]/',        // min 1 huruf kecil
+                'regex:/[A-Z]/',        // min 1 huruf besar
+                'regex:/[0-9]/',        // min 1 angka
+                'regex:/[^A-Za-z0-9]/', // min 1 simbol khusus
+            ],
         ], [
-            'name.required'      => 'Nama wajib diisi.',
+            'name.required'      => 'Nama lengkap wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
-            'email.unique'       => 'Email sudah terdaftar.',
+            'email.unique'       => 'Email sudah terdaftar. Silakan gunakan email lain atau masuk.',
             'password.required'  => 'Kata sandi wajib diisi.',
-            'password.min'       => 'Kata sandi minimal 6 karakter.',
+            'password.min'       => 'Kata sandi minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'password.regex'     => 'Kata sandi wajib memenuhi standar keamanan: kombinasi huruf besar & kecil, angka, dan simbol.',
         ]);
 
         $otpCode = (string) rand(100000, 999999);

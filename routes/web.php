@@ -164,6 +164,8 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login',   [AuthController::class, 'login'])->name('login.submit')->middleware('throttle:login-limit');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::get('/register/email', [AuthController::class, 'showRegisterEmail'])->name('register.email');
+    Route::post('/register/email', [AuthController::class, 'register'])->name('register.email.submit')->middleware('throttle:login-limit');
     Route::post('/register',[AuthController::class, 'register'])->name('register.submit')->middleware('throttle:login-limit');
 
     // Email OTP Verification Routes
