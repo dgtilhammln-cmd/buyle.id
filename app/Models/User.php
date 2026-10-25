@@ -140,4 +140,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Wedding::class)->latest();
     }
+
+    /**
+     * Profil creator milik user.
+     */
+    public function creatorProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CreatorProfile::class);
+    }
 }

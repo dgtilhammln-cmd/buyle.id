@@ -37,7 +37,7 @@ class HomeController extends Controller
             $uspItems,
             $categoryItems,
             $promoSections,
-        ] = Cache::remember('home_page_data_v5', 300, function () {
+        ] = Cache::remember('home_page_data_v6', 300, function () {
             // Semua produk marketplace sekaligus — cukup 1 query besar, dibagi di PHP
             $allMp = Product::marketplace()
                 ->with(['seller:id,name,username,avatar', 'seller.creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1', 'category:id,name,slug'])
@@ -95,19 +95,37 @@ class HomeController extends Controller
                     ->get();
             }
 
-            // Creator populer — 1 query dengan filter DB, tanpa PHP loop order-items per creator
+            // Creator populer — filter DB: punya produk marketplace aktif ATAU produk di link in bio
             $popularCreators = \App\Models\User::whereHas('creatorProfile', function($q) {
-                    $q->where('store_name', 'NOT LIKE', '%copywriter%')
+                    $q->whereNotNull('store_slug')
+                      ->where('store_slug', '!=', '')
+                      ->where('store_name', 'NOT LIKE', '%copywriter%')
                       ->where('store_slug', 'NOT LIKE', '%copywriter%');
                 })
                 ->where('is_active', true)
                 ->whereNotIn('role', ['admin', 'super_admin', 'admin_super', 'buyer'])
                 ->where('name', 'NOT LIKE', '%copywriter%')
-                ->whereHas('products', function($q) {
-                    $q->where('is_active', true);
+                ->where(function($q) {
+                    $q->whereHas('products', function($pq) {
+                        $pq->where('is_active', true);
+                    })
+                    ->orWhereHas('creatorProfile.bioBlocks', function($bq) {
+                        $bq->where('is_active', true)
+                           ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate', 'shopee', 'affiliate']);
+                    });
                 })
-                ->with(['creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1,store_banner_2,bio_config'])
-                ->withCount('products')
+                ->with([
+                    'creatorProfile' => function($q) {
+                        $q->select('id', 'user_id', 'store_name', 'store_slug', 'is_verified', 'store_banner_1', 'store_banner_2', 'bio_config', 'bio_role')
+                          ->withCount(['bioBlocks as bio_products_count' => function($bq) {
+                              $bq->where('is_active', true)
+                                 ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate', 'shopee', 'affiliate']);
+                          }]);
+                    }
+                ])
+                ->withCount(['products' => function($pq) {
+                    $pq->where('is_active', true);
+                }])
                 ->orderByRaw("
                     CASE
                         WHEN username LIKE '%hvmdigital%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_slug LIKE '%hvmdigital%') THEN 1
@@ -118,7 +136,14 @@ class HomeController extends Controller
                 ->orderByDesc('products_count')
                 ->limit(10)
                 ->get()
-                ->filter(fn($u) => $u->creatorProfile && $u->creatorProfile->isStoreActive() && $u->products_count > 0)
+                ->filter(function($u) {
+                    if (!$u->creatorProfile || !$u->creatorProfile->isStoreActive()) {
+                        return false;
+                    }
+                    $marketCount = (int) ($u->products_count ?? 0);
+                    $bioCount = (int) ($u->creatorProfile->bio_products_count ?? 0);
+                    return ($marketCount + $bioCount) > 0;
+                })
                 ->values();
 
             $articles       = Article::published()->with('translations')->latest()->limit(4)->get();

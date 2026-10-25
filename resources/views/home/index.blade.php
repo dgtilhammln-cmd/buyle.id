@@ -2449,14 +2449,13 @@
                 border: 1px solid #E2E8F0;
                 overflow: hidden;
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-                transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+                transition: transform 0.25s ease, box-shadow 0.25s ease;
                 position: relative;
             }
 
             .popular-creator-card:hover {
                 transform: translateY(-4px);
-                box-shadow: 0 10px 28px rgba(30, 179, 73, 0.12);
-                border-color: #1eb349;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
             }
 
             .popular-creator-banner {
@@ -2642,7 +2641,9 @@
                                 $cBanner = Str::startsWith($cover, ['http://', 'https://']) ? $cover : asset('storage/' . $cover);
                             }
                             $cSalesCount = $cp?->total_sales ?? ($creatorUser->products_sum_sold_count ?? 0);
-                            $cProductCount = $creatorUser->products_count ?? 0;
+                            $cMarketCount = (int) ($creatorUser->products_count ?? 0);
+                            $cBioCount = (int) ($cp?->bio_products_count ?? 0);
+                            $cTotalProducts = $cMarketCount + $cBioCount;
 
                             // Realtime Creator Rating & Verification Status from DB
                             $cIsVerified = $cp ? $cp->isVerified() : false;
@@ -2659,10 +2660,10 @@
                             }
 
                             $cStoreSlug = $cp?->store_slug ?: ($creatorUser->store_slug ?? null);
-                            $isStoreActive = $cp ? $cp->isStoreActive() : false;
 
+                            // Arahkan langsung ke Link in Bio creator
                             if ($cStoreSlug) {
-                                $targetUrl = $isStoreActive ? route_locale('store.show', $cStoreSlug) : url('/' . $cStoreSlug);
+                                $targetUrl = url('/' . $cStoreSlug);
                             } else {
                                 $targetUrl = route_locale('products');
                             }
@@ -2707,7 +2708,7 @@
                                         </span>
                                         <span>•</span>
                                     @endif
-                                    <span>{{ $cSalesCount > 0 ? $cSalesCount . ' Terjual' : ($cProductCount . ' Produk') }}</span>
+                                    <span>{{ $cSalesCount > 0 ? $cSalesCount . ' Terjual' : ($cTotalProducts . ' Produk') }}</span>
                                 </div>
 
                                 <span class="popular-creator-cta-btn">
