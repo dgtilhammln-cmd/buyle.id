@@ -32,7 +32,7 @@
             color: #0F172A;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
             min-height: 100dvh;
@@ -41,6 +41,7 @@
             padding: 1.5rem 1rem;
             box-sizing: border-box;
             position: relative;
+            overflow-y: auto;
         }
 
         .auth-bg-decor {
@@ -61,17 +62,37 @@
             margin: auto;
             position: relative;
             z-index: 10;
+            padding: 1.5rem 0;
         }
 
         .login-glass-panel {
             background: #ffffff;
             border-radius: 24px;
-            padding: 2.25rem 2rem;
+            padding: 1.75rem 2rem 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             box-shadow: 0 20px 45px rgba(30, 179, 73, 0.08), 0 4px 15px rgba(0,0,0,0.03);
             border: 1px solid #E2E8F0;
+            max-height: calc(100dvh - 3rem);
+        }
+
+        .auth-content-wrap {
+            width: 100%;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            padding-right: 2px; /* prevent scrollbar shift */
+        }
+        .auth-content-wrap::-webkit-scrollbar {
+            width: 4px;
+        }
+        .auth-content-wrap::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .auth-content-wrap::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 99px;
         }
 
         .logo-center-wrap {
@@ -91,9 +112,7 @@
             padding: 0 !important;
         }
 
-        .auth-content-wrap {
-            width: 100%;
-        }
+        /* .auth-content-wrap defined above with scroll */
 
         .back-link {
             font-size: 0.8125rem;
@@ -285,8 +304,11 @@
 
         @media (max-width: 480px) {
             .login-glass-panel {
-                padding: 1.75rem 1.25rem;
+                padding: 1.5rem 1.1rem 1.75rem;
                 border-radius: 20px;
+            }
+            .login-wrapper {
+                padding: 0.75rem 0;
             }
         }
     </style>

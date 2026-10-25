@@ -173,6 +173,10 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify.submit');
     Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('otp.resend')->middleware('throttle:login-limit');
 
+    // AJAX OTP routes for inline email registration
+    Route::post('/register/send-otp',   [AuthController::class, 'sendOtpAjax'])->name('register.send_otp')->middleware('throttle:login-limit');
+    Route::post('/register/verify-otp', [AuthController::class, 'verifyOtpAjax'])->name('register.verify_otp_ajax')->middleware('throttle:login-limit');
+
     // Password Reset Routes
     Route::get('/lupa-password',          [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/lupa-password',         [AuthController::class, 'sendResetLink'])->name('password.email');

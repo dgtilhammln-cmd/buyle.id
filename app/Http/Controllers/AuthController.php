@@ -128,7 +128,7 @@ class AuthController extends Controller
         $request->validate([
             'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:users,email',
-            'phone'    => 'nullable|string|max:20',
+            'phone'    => 'required|string|max:20',
             'password' => [
                 'required',
                 'string',
@@ -143,6 +143,7 @@ class AuthController extends Controller
             'name.required'      => 'Nama lengkap wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
             'email.unique'       => 'Email sudah terdaftar. Silakan gunakan email lain atau masuk.',
+            'phone.required'     => 'No. WhatsApp wajib diisi.',
             'password.required'  => 'Kata sandi wajib diisi.',
             'password.min'       => 'Kata sandi minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
@@ -268,6 +269,87 @@ class AuthController extends Controller
 
         return redirect()->to($redirectRoute)
             ->with('success', 'Verifikasi berhasil! Akun Anda telah aktif. Selamat datang di buyle.id, ' . $user->name . '!');
+    }
+
+    // ── AJAX: Send OTP for inline email registration ──
+    public function sendOtpAjax(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'name'  => 'required|string|max:100',
+        ]);
+
+        // Check if email is already taken
+        if (\App\Models\User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email ini sudah terdaftar. Silakan gunakan email lain atau masuk.',
+            ], 422);
+        }
+
+        $otpCode   = (string) rand(100000, 999999);
+        $expiresAt = time() + 120; // 2 menit
+
+        // Store in session
+        session()->put('ajax_otp', [
+            'code'       => $otpCode,
+            'email'      => $request->email,
+            'expires_at' => $expiresAt,
+        ]);
+
+        // Create HMAC token so client can reference this OTP attempt
+        $token = hash_hmac('sha256', $request->email . '|' . $otpCode . '|' . $expiresAt, config('app.key'));
+
+        try {
+            \Illuminate\Support\Facades\Notification::route('mail', $request->email)
+                ->notify(new OtpVerificationNotification($otpCode, $request->name));
+        } catch (\Throwable $e) {
+            \Log::error('sendOtpAjax email failed: ' . $e->getMessage());
+            // Still return success so UX is not blocked by mail issues
+        }
+
+        return response()->json([
+            'success' => true,
+            'token'   => $token,
+            'message' => 'OTP telah dikirim.',
+        ]);
+    }
+
+    // ── AJAX: Verify OTP token (does NOT create user) ──
+    public function verifyOtpAjax(Request $request)
+    {
+        $request->validate([
+            'otp'   => 'required|string|size:6',
+            'token' => 'required|string',
+        ]);
+
+        $stored = session('ajax_otp');
+        if (!$stored) {
+            return response()->json(['success' => false, 'message' => 'Sesi OTP tidak ditemukan. Kirim ulang OTP.'], 422);
+        }
+
+        if (time() > $stored['expires_at']) {
+            return response()->json(['success' => false, 'message' => 'Kode OTP kadaluarsa.'], 422);
+        }
+
+        // Re-derive the token to verify it matches
+        $expected = hash_hmac('sha256', $stored['email'] . '|' . $stored['code'] . '|' . $stored['expires_at'], config('app.key'));
+        if (!hash_equals($expected, $request->token)) {
+            return response()->json(['success' => false, 'message' => 'Token tidak valid.'], 422);
+        }
+
+        if (trim($request->otp) !== $stored['code']) {
+            return response()->json(['success' => false, 'message' => 'Kode OTP salah.']);
+        }
+
+        // Mark OTP as verified in session
+        session()->put('ajax_otp_verified', [
+            'email'     => $stored['email'],
+            'token'     => $request->token,
+            'verified'  => true,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     // ── Resend OTP ──

@@ -35,6 +35,6 @@
 </div>
 
 <p style="text-align:center; font-size:0.75rem; color:#94A3B8; margin-top:1.5rem; line-height:1.6;">
-    Dengan mendaftar, Anda menyetujui <a href="#" style="color:#1eb349;">Syarat & Ketentuan</a><br>dan <a href="#" style="color:#1eb349;">Kebijakan Privasi</a> kami.
+    Dengan mendaftar, Anda menyetujui <a href="{{ route('faqs.show', 'syarat-ketentuan') }}" target="_blank" style="color:#1eb349; text-decoration:underline;">Syarat & Ketentuan</a><br>dan <a href="{{ route('faqs.show', 'kebijakan-privasi') }}" target="_blank" style="color:#1eb349; text-decoration:underline;">Kebijakan Privasi</a> kami.
 </p>
 @endsection

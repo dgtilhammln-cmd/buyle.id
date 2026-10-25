@@ -382,8 +382,8 @@ www.buyle.id
                 <ul class="cv-footer-links">
                     <li><a href="{{ route_locale('contact') }}">Hubungi Kami</a></li>
                     <li><a href="{{ route_locale('faqs') }}">Pusat Bantuan & FAQ</a></li>
-                    <li><a href="{{ route_locale('contact') }}#syarat">Syarat & Ketentuan</a></li>
-                    <li><a href="{{ route_locale('contact') }}#privasi">Kebijakan Privasi</a></li>
+                    <li><a href="{{ route_locale('faqs.show', 'syarat-ketentuan') }}">Syarat & Ketentuan</a></li>
+                    <li><a href="{{ route_locale('faqs.show', 'kebijakan-privasi') }}">Kebijakan Privasi</a></li>
                 </ul>
             </div>
 

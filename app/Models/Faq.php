@@ -9,14 +9,13 @@ use Illuminate\Support\Str;
 class Faq extends Model
 {
     protected $fillable = [
-        'slug', 'image', 'alt_text', 'category', 'tags', 'is_published', 
-        'published_at', 'views', 'og_image', 'author_id', 'show_toc',
+        'title', 'content', 'excerpt', 'slug', 'image', 'alt_text', 'category', 'tags', 'is_published', 
+        'published_at', 'views', 'og_image', 'author', 'author_id', 'meta_title', 'meta_desc',
     ];
 
     protected $casts = [
         'tags'         => 'array',
         'is_published' => 'boolean',
-        'show_toc'     => 'boolean',
         'published_at' => 'datetime',
         'views'        => 'integer',
     ];
@@ -39,8 +38,12 @@ class Faq extends Model
     public function translate($locale = null)
     {
         $locale = $locale ?: app()->getLocale();
-        return $this->translations->firstWhere('locale', $locale) 
-            ?: $this->translations->firstWhere('locale', 'id');
+        try {
+            return $this->translations->firstWhere('locale', $locale) 
+                ?: $this->translations->firstWhere('locale', 'id');
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     public function currentTranslation()
@@ -52,10 +55,10 @@ class Faq extends Model
         return $this->_translationCache[$locale];
     }
 
-    // Accessors for translated fields
-    public function getTitleAttribute() { return $this->currentTranslation()?->title; }
-    public function getExcerptAttribute() { return $this->currentTranslation()?->excerpt; }
-    public function getContentAttribute() { return $this->currentTranslation()?->content; }
+    // Accessors for translated fields (with direct faqs table fallback)
+    public function getTitleAttribute() { return $this->currentTranslation()?->title ?: ($this->attributes['title'] ?? null); }
+    public function getExcerptAttribute() { return $this->currentTranslation()?->excerpt ?: ($this->attributes['excerpt'] ?? null); }
+    public function getContentAttribute() { return $this->currentTranslation()?->content ?: ($this->attributes['content'] ?? null); }
     public function getFaqsAttribute() { return $this->currentTranslation()?->faqs; }
     public function getCtaButtonAttribute() { return $this->currentTranslation()?->cta_button; }
     public function getMetaKeywordsAttribute() { return $this->currentTranslation()?->meta_keywords; }

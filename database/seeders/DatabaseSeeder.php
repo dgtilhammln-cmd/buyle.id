@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
             ProductCategorySeeder::class,
             CourierSeeder::class,
             KeunggulanSeeder::class,
+            LegalFaqSeeder::class,
         ]);
     }
 }
