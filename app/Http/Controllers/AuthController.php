@@ -58,7 +58,7 @@ class AuthController extends Controller
             }
 
             $role = Auth::user()->role;
-            $redirectRoute = route('account.overview'); // default (buyer)
+            $redirectRoute = url('/'); // default (buyer ke beranda/halaman awal)
             
             if ($role === 'super_admin' || $role === 'admin') {
                 // Set legacy session for admin panel backward compatibility
@@ -389,8 +389,22 @@ class AuthController extends Controller
     }
 
     // ── Google OAuth Redirect ──
-    public function googleRedirect()
+    public function googleRedirect(Request $request)
     {
+        if ($request->filled('redirect')) {
+            $redirect = $request->query('redirect');
+            if (Str::startsWith($redirect, [url('/'), '/'])) {
+                session()->put('url.intended', $redirect);
+                session()->put('auth_redirect', $redirect);
+            }
+        } elseif (!session()->has('url.intended')) {
+            $prev = url()->previous();
+            if ($prev && !Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar', '/auth/google'])) {
+                session()->put('url.intended', $prev);
+                session()->put('auth_redirect', $prev);
+            }
+        }
+
         return Socialite::driver('google')->redirect();
     }
 
@@ -404,7 +418,12 @@ class AuthController extends Controller
         }
 
         $oldSessionId = request()->session()->getId();
-        $isNewUser = false;
+        $target = session('auth_redirect') ?? session('url.intended');
+        session()->forget(['auth_redirect', 'url.intended']);
+
+        if ($target && Str::contains($target, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar', '/auth/google'])) {
+            $target = null;
+        }
 
         // Find or create user
         $user = User::where('google_id', $googleUser->getId())
@@ -424,7 +443,6 @@ class AuthController extends Controller
                 $user->update($updates);
             }
         } else {
-            $isNewUser = true;
             // Generate unique username
             $base     = Str::slug($googleUser->getName(), '.');
             $username = $base;
@@ -459,19 +477,24 @@ class AuthController extends Controller
             \Log::warning('Merge guest cart on Google callback failed: ' . $e->getMessage());
         }
 
-        if ($isNewUser && $user->role === 'buyer') {
-            return redirect()->route('account.profile')
-                ->with('success', 'Selamat datang, ' . $user->name . '! Harap lengkapi profil Anda.');
+        try {
+            \App\Models\Order::where('customer_email', $user->email)
+                ->whereNull('user_id')
+                ->update(['user_id' => $user->id]);
+        } catch (\Throwable $e) {
+            \Log::warning('Link guest orders on Google callback failed: ' . $e->getMessage());
         }
 
-        $redirectRoute = route('account.overview');
+        $fallback = url('/');
         if ($user->role === 'super_admin' || $user->role === 'admin') {
-            $redirectRoute = route('admin.dashboard');
+            $fallback = route('admin.dashboard');
         } elseif ($user->role === 'seller') {
-            $redirectRoute = route('creator.dashboard');
+            $fallback = route('creator.dashboard');
         }
 
-        return redirect()->intended($redirectRoute)
+        $destination = $target ?: $fallback;
+
+        return redirect()->to($destination)
             ->with('success', 'Selamat datang, ' . $user->name . '!');
     }
 

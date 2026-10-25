@@ -780,7 +780,7 @@
                     Dapat promo & diskon khusus pembeli setia
                 </li>
             </ul>
-            <a href="{{ route('auth.google') }}"
+            <a href="{{ route('auth.google', ['redirect' => route('cart.index')]) }}"
                 style="display:flex; align-items:center; justify-content:center; gap:0.6rem; width:100%; background:#ffffff; color:#0F172A; border:1.5px solid #CBD5E1; border-radius:12px; padding:0.75rem; font-weight:700; font-size:0.9rem; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,0.06); transition:all 0.2s;"
                 onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#CBD5E1'">
                 <svg width="18" height="18" viewBox="0 0 24 24">
