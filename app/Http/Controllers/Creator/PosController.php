@@ -1072,7 +1072,7 @@ class PosController extends Controller
     }
 
     /**
-     * Tambah atau edit data staf kasir.
+     * Tambah atau edit data staf kasir (menggunakan Email untuk login).
      */
     public function saveCashier(Request $request)
     {
@@ -1085,23 +1085,31 @@ class PosController extends Controller
 
         $request->validate([
             'name'               => 'required|string|max:100',
-            'username'           => 'required|string|min:3|max:50|alpha_dash|unique:users,username,' . ($cashierId ?: 'NULL') . ',id',
+            'email'              => 'required|email|max:100|unique:users,email,' . ($cashierId ?: 'NULL') . ',id',
             'password'           => $cashierId ? 'nullable|string|min:6' : 'required|string|min:6',
             'shift_hours'        => 'nullable|string|max:100',
             'cashier_role_title' => 'nullable|string|max:100',
             'is_active'          => 'nullable',
         ], [
             'name.required'      => 'Nama staf kasir wajib diisi.',
-            'username.required'  => 'Username wajib diisi.',
-            'username.unique'    => 'Username ini sudah digunakan, silakan pilih username lain.',
+            'email.required'     => 'Email login staf kasir wajib diisi.',
+            'email.email'        => 'Format email tidak valid.',
+            'email.unique'       => 'Email ini sudah terdaftar, silakan gunakan email lain.',
             'password.required'  => 'Password wajib diisi untuk staf kasir baru.',
             'password.min'       => 'Password minimal 6 karakter.',
         ]);
 
+        $email = strtolower(trim($request->email));
+        $usernameBase = explode('@', $email)[0];
+        $username = \Illuminate\Support\Str::slug($usernameBase);
+
         if ($cashierId) {
             $cashier = \App\Models\User::where('parent_seller_id', $seller->id)->findOrFail($cashierId);
             $cashier->name = $request->name;
-            $cashier->username = strtolower(trim($request->username));
+            $cashier->email = $email;
+            if (empty($cashier->username)) {
+                $cashier->username = $username;
+            }
             $cashier->shift_hours = $request->shift_hours;
             $cashier->cashier_role_title = $request->cashier_role_title ?: 'Kasir';
             if ($request->has('is_active')) {
@@ -1113,16 +1121,16 @@ class PosController extends Controller
             $cashier->save();
             $msg = 'Data staf kasir ' . $cashier->name . ' berhasil diperbarui!';
         } else {
-            $username = strtolower(trim($request->username));
-            $email = $username . '.' . $seller->id . '@pos.buyle.id';
-            if (\App\Models\User::where('email', $email)->exists()) {
-                $email = $username . '.' . time() . '@pos.buyle.id';
+            $u = $username;
+            $counter = 1;
+            while (\App\Models\User::where('username', $u)->exists()) {
+                $u = $username . $counter++;
             }
 
             $cashier = \App\Models\User::create([
                 'name'               => $request->name,
-                'username'           => $username,
                 'email'              => $email,
+                'username'           => $u,
                 'password'           => \Illuminate\Support\Facades\Hash::make($request->password),
                 'role'               => 'pos_cashier',
                 'parent_seller_id'   => $seller->id,
@@ -1133,10 +1141,15 @@ class PosController extends Controller
             $msg = 'Staf kasir baru ' . $cashier->name . ' berhasil didaftarkan!';
         }
 
+        $allCashiers = \App\Models\User::where('parent_seller_id', $seller->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'username', 'email', 'shift_hours', 'cashier_role_title', 'is_active', 'created_at']);
+
         return response()->json([
-            'success' => true,
-            'message' => $msg,
-            'cashier' => $cashier
+            'success'  => true,
+            'message'  => $msg,
+            'cashier'  => $cashier,
+            'cashiers' => $allCashiers
         ]);
     }
 
@@ -1154,9 +1167,14 @@ class PosController extends Controller
         $name = $cashier->name;
         $cashier->delete();
 
+        $allCashiers = \App\Models\User::where('parent_seller_id', $seller->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'username', 'email', 'shift_hours', 'cashier_role_title', 'is_active', 'created_at']);
+
         return response()->json([
-            'success' => true,
-            'message' => 'Akun staf kasir ' . $name . ' berhasil dihapus.'
+            'success'  => true,
+            'message'  => 'Akun staf kasir ' . $name . ' berhasil dihapus.',
+            'cashiers' => $allCashiers
         ]);
     }
 
@@ -1174,10 +1192,15 @@ class PosController extends Controller
         $cashier->is_active = !$cashier->is_active;
         $cashier->save();
 
+        $allCashiers = \App\Models\User::where('parent_seller_id', $seller->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'username', 'email', 'shift_hours', 'cashier_role_title', 'is_active', 'created_at']);
+
         return response()->json([
             'success'   => true,
             'is_active' => $cashier->is_active,
-            'message'   => 'Status akun kasir ' . $cashier->name . ' diubah menjadi ' . ($cashier->is_active ? 'AKTIF' : 'NONAKTIF') . '.'
+            'message'   => 'Status akun kasir ' . $cashier->name . ' diubah menjadi ' . ($cashier->is_active ? 'AKTIF' : 'NONAKTIF') . '.',
+            'cashiers'  => $allCashiers
         ]);
     }
 }
