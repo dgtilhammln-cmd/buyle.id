@@ -952,6 +952,54 @@
                     navigator.sendBeacon('{{ url('/track-bio') }}', new Blob([JSON.stringify(payload)], {type:'application/json'}));
                 }, { passive: true });
             });
+
+            // QR Code Table Order Detection (Tema 1-4)
+            (function() {
+                var urlParams = new URLSearchParams(window.location.search);
+                var meja = urlParams.get('meja');
+                if (meja) {
+                    var decoded = decodeURIComponent(meja).trim();
+                    sessionStorage.setItem('buyle_table_number', decoded);
+                    localStorage.setItem('buyle_table_number', decoded);
+                } else {
+                    meja = sessionStorage.getItem('buyle_table_number') || localStorage.getItem('buyle_table_number');
+                }
+
+                if (meja) {
+                    var decodedMeja = decodeURIComponent(meja).trim();
+
+                    // Teruskan param ?meja ke semua link produk internal
+                    document.querySelectorAll('a[href]').forEach(function(a) {
+                        try {
+                            var href = a.getAttribute('href');
+                            if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+                            var url = new URL(a.href, window.location.origin);
+                            if (url.origin === window.location.origin && !url.searchParams.has('meja')) {
+                                url.searchParams.set('meja', decodedMeja);
+                                a.href = url.toString();
+                            }
+                        } catch(e) {}
+                    });
+
+                    // Tampilkan floating badge nomor meja
+                    var banner = document.createElement('div');
+                    banner.id = 'tableOrderBanner';
+                    banner.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:99999; width:calc(100% - 32px); max-width:420px; background:rgba(15, 23, 42, 0.95); backdrop-filter:blur(10px); color:#fff; border-radius:14px; padding:10px 14px; box-shadow:0 12px 30px rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(255,255,255,0.18); font-family:Montserrat,sans-serif;';
+                    banner.innerHTML = '<div style="display:flex; align-items:center; gap:10px; min-width:0;">' +
+                        '<div style="width:34px; height:34px; border-radius:8px; background:#1eb349; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">' +
+                        '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>' +
+                        '</div>' +
+                        '<div style="min-width:0;">' +
+                        '<div style="font-size:0.68rem; color:#94a3b8; font-weight:600; text-transform:uppercase;">Dine-In di Meja</div>' +
+                        '<div style="font-size:0.88rem; font-weight:800; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + decodedMeja + '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div style="font-size:0.7rem; color:#86efac; font-weight:700; background:rgba(30,179,73,0.22); padding:5px 9px; border-radius:6px; flex-shrink:0;">' +
+                        'Auto Diantar' +
+                        '</div>';
+                    document.body.appendChild(banner);
+                }
+            })();
         });
     </script>
     @include('partials.share_modal')

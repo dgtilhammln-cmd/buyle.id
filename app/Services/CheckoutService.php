@@ -220,6 +220,12 @@ class CheckoutService
             $shippingAddressArray['ticket_niks'] = $ticketNiksInput;
         }
 
+        // Simpan input Nomor Meja jika dipesan dari Link in Bio / QR Meja
+        $tableNumberInput = $data['table_number'] ?? ($data['fnb_table_number'] ?? request()->input('table_number', request()->input('fnb_table_number')));
+        if (!empty($tableNumberInput)) {
+            $shippingAddressArray['table_number'] = $tableNumberInput;
+        }
+
         DB::beginTransaction();
 
         try {

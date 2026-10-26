@@ -1457,6 +1457,29 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeBioVariantModal();
         });
+
+        // Simpan & Teruskan Nomor Meja QR Code
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number') || localStorage.getItem('buyle_table_number');
+            if (meja) {
+                const decodedMeja = decodeURIComponent(meja).trim();
+                sessionStorage.setItem('buyle_table_number', decodedMeja);
+                localStorage.setItem('buyle_table_number', decodedMeja);
+
+                const form = document.getElementById('bio-cart-form');
+                if (form) {
+                    let hidden = form.querySelector('input[name="table_number"]');
+                    if (!hidden) {
+                        hidden = document.createElement('input');
+                        hidden.type = 'hidden';
+                        hidden.name = 'table_number';
+                        form.appendChild(hidden);
+                    }
+                    hidden.value = decodedMeja;
+                }
+            }
+        })();
     </script>
 
     {{-- SMART RETARGETING TRACKER --}}

@@ -31,6 +31,7 @@ class CheckoutRequest extends FormRequest
             'courier_service'      => 'nullable|string|max:50',
             'fnb_service_type'     => 'nullable|string|max:50',
             'fnb_table_number'     => 'nullable|string|max:100',
+            'table_number'         => 'nullable|string|max:100',
             'fnb_pickup_time'      => 'nullable|string|max:100',
             'ticket_holders'       => 'nullable|array',
             'ticket_holders.*'     => 'nullable|array',

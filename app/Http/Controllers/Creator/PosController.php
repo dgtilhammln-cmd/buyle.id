@@ -275,6 +275,9 @@ class PosController extends Controller
         // 13. Daftar Diskon / Promo Produk
         $posDiscounts = $profile ? $profile->getPosDiscounts() : [];
 
+        // 14. Daftar Meja Toko
+        $posTables = $profile ? $profile->getPosTables() : [];
+
         return view('creator.pos.index', compact(
             'products',
             'todayOrders',
@@ -296,7 +299,8 @@ class PosController extends Controller
             'todayFeeDeducted',
             'todayMutations',
             'posFees',
-            'posDiscounts'
+            'posDiscounts',
+            'posTables'
         ));
     }
 
@@ -1050,6 +1054,7 @@ class PosController extends Controller
             'pos_store_phone'   => 'nullable|string|max:50',
             'pos_fees'          => 'nullable',
             'pos_discounts'     => 'nullable',
+            'pos_tables'        => 'nullable',
         ]);
 
         $updateData = [
@@ -1082,6 +1087,17 @@ class PosController extends Controller
             $updateData['bio_config'] = $bioConfig;
         }
 
+        if ($request->has('pos_tables')) {
+            $tables = $request->input('pos_tables');
+            if (is_string($tables)) {
+                $tables = json_decode($tables, true) ?: [];
+            }
+            $updateData['pos_tables'] = $tables;
+            $bioConfig = $updateData['bio_config'] ?? ($profile->bio_config ?? []);
+            $bioConfig['pos_tables'] = $tables;
+            $updateData['bio_config'] = $bioConfig;
+        }
+
         $profile->update($updateData);
 
         return response()->json([
@@ -1093,6 +1109,7 @@ class PosController extends Controller
                 'pos_store_phone'   => $profile->pos_store_phone,
                 'pos_fees'          => $profile->getPosFees(),
                 'pos_discounts'     => $profile->getPosDiscounts(),
+                'pos_tables'        => $profile->getPosTables(),
             ]
         ]);
     }

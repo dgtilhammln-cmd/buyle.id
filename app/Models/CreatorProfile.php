@@ -14,6 +14,7 @@ class CreatorProfile extends Model
         'pos_store_phone',
         'pos_fees',
         'pos_discounts',
+        'pos_tables',
         'store_slug',
         'custom_domain',
         'custom_domain_status',
@@ -70,6 +71,7 @@ class CreatorProfile extends Model
         'bio_config'     => 'array',
         'pos_fees'       => 'array',
         'pos_discounts'  => 'array',
+        'pos_tables'     => 'array',
         'is_exclusive'   => 'boolean',
         'is_verified'    => 'boolean',
         'pos_balance'    => 'float',
@@ -123,6 +125,21 @@ class CreatorProfile extends Model
         $config = $this->bio_config ?? [];
         if (!empty($config['pos_discounts']) && is_array($config['pos_discounts'])) {
             return $config['pos_discounts'];
+        }
+        return [];
+    }
+
+    /**
+     * Dapatkan daftar meja POS yang dikonfigurasi.
+     */
+    public function getPosTables(): array
+    {
+        if (!empty($this->pos_tables) && is_array($this->pos_tables)) {
+            return $this->pos_tables;
+        }
+        $config = $this->bio_config ?? [];
+        if (!empty($config['pos_tables']) && is_array($config['pos_tables'])) {
+            return $config['pos_tables'];
         }
         return [];
     }

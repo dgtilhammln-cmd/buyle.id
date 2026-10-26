@@ -1708,30 +1708,23 @@
                                 <strong style="color:#0f172a;" id="displaySubtotal">Rp 0</strong>
                             </div>
 
-                            <!-- Diskon Field (Manual + Preset dari Pengaturan) -->
+                            <!-- Diskon Field (Preset dari Pengaturan POS) -->
                             <div class="summary-row" id="cartDiscountSection">
                                 <div class="d-flex align-items-center gap-1" style="flex:1; flex-wrap:wrap; gap:6px !important;">
                                     <span>Diskon</span>
-                                    <!-- Preset Promo Dropdown (jika ada diskon terkonfigurasi) -->
+                                    <!-- Preset Promo Dropdown (dari Pengaturan POS) -->
                                     <div id="cartDiscountPresetWrap" style="display:none; margin-left:4px;">
                                         <select id="posDiscountPresetSelect" class="form-input"
-                                            style="height:26px; font-size:0.7rem; padding:0 6px; border-radius:6px; min-width:90px; max-width:130px;"
+                                            style="height:28px; font-size:0.75rem; padding:0 8px; border-radius:6px; min-width:115px; max-width:170px;"
                                             onchange="onDiscountPresetChanged()">
-                                            <option value="">Pilih Promo</option>
+                                            <option value="">Tanpa Diskon</option>
                                         </select>
                                     </div>
-                                    <!-- Toggle Manual Rp / % -->
-                                    <div class="disc-toggle" id="manualDiscToggle">
-                                        <button type="button" class="disc-btn active" id="btnDiscNominal"
-                                            onclick="setDiscountType('nominal')">Rp</button>
-                                        <button type="button" class="disc-btn" id="btnDiscPercent"
-                                            onclick="setDiscountType('percent')">%</button>
-                                    </div>
                                 </div>
-                                <div style="width: 105px;">
-                                    <input type="number" id="posDiscountInput" class="form-input text-end"
-                                        style="height:34px; padding:0 10px; font-size:0.8rem;" placeholder="0" min="0"
-                                        oninput="calculateTotals()">
+                                <div style="display:flex; align-items:center;">
+                                    <strong id="displayDiscountAmount" style="color:#16a34a; font-size:0.85rem;">- Rp 0</strong>
+                                    <!-- Hidden input for calculateTotals() & POS store request compatibility -->
+                                    <input type="hidden" id="posDiscountInput" value="0">
                                 </div>
                             </div>
 
@@ -2041,11 +2034,21 @@
                                 style="height:34px; font-size:0.78rem;" placeholder="Pelanggan Umum">
                         </div>
                         <div>
-                            <label
-                                style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No.
-                                Ref / Catatan / Meja</label>
-                            <input type="text" id="posTableNumber" class="form-input"
-                                style="height:34px; font-size:0.78rem;" placeholder="Catatan / Ref (Opsional)">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                                <label style="font-size:0.7rem; font-weight:700; color:#475569; margin:0;">
+                                    Meja / Ref
+                                </label>
+                                <a href="javascript:void(0)" onclick="openPosSettingsModal('tables')" style="font-size:0.67rem; color:#1eb349; text-decoration:none; font-weight:700;">
+                                    + Kelola Meja
+                                </a>
+                            </div>
+                            <div style="display:flex; gap:4px;">
+                                <select id="posTableQuickSelect" class="form-input" style="height:34px; font-size:0.75rem; flex:1; padding:0 6px;" onchange="onTableQuickSelectChanged(this.value)">
+                                    <option value="">Pilih Meja...</option>
+                                </select>
+                                <input type="text" id="posTableNumber" class="form-input"
+                                    style="height:34px; font-size:0.75rem; flex:1; padding:0 8px;" placeholder="No. Meja / Ref">
+                            </div>
                         </div>
                         <div>
                             <label
@@ -2444,6 +2447,13 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                     Staf Kasir (<span id="settingStaffBadgeCount">{{ count($cashiers) }}</span>)
+                </button>
+                <button type="button" class="history-tab-btn" id="tabBtnSettingTables" onclick="switchSettingTab('tables')">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M3 9h18M9 21V9" />
+                    </svg>
+                    Kelola Meja (<span id="settingTablesBadgeCount">{{ count($posTables ?? []) }}</span>)
                 </button>
             </div>
 
@@ -2910,6 +2920,75 @@
 
                     </div>
 
+                    <!-- TAB 5: KELOLA MEJA & BARCODE QR DINE-IN -->
+                    <div id="paneSettingTables" style="display:none;">
+                        <!-- Header & Info Card -->
+                        <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.1rem; margin-bottom:1.2rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+                                <div>
+                                    <div style="font-size:0.9rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <path d="M3 9h18M9 21V9" />
+                                        </svg>
+                                        Kelola Meja &amp; Barcode QR Dine-In
+                                    </div>
+                                    <div style="font-size:0.75rem; color:#64748b; margin-top:3px; line-height:1.45;">
+                                        Setiap meja memiliki Barcode QR khusus yang terhubung ke Link in Bio (Tema 1-4). Pelanggan tinggal scan untuk memesan, dan nomor meja langsung terisi otomatis saat checkout!
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-primary-bio" onclick="toggleAddTableForm()"
+                                    style="padding:0.4rem 0.95rem; font-size:0.75rem; border-radius:8px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    + Tambah Meja
+                                </button>
+                            </div>
+
+                            <!-- Add Table Form (Collapsible) -->
+                            <div id="formAddTableBox" style="display:none; margin-top:1rem; padding-top:1rem; border-top:1.5px dashed #cbd5e1;">
+                                <div style="display:grid; grid-template-columns: 2fr 1fr 2fr auto; gap:8px; align-items:flex-end;">
+                                    <div>
+                                        <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Nama Meja / Nomor <span style="color:#ef4444;">*</span></label>
+                                        <input type="text" id="newTableName" class="form-input" style="height:34px; font-size:0.78rem;" placeholder="Contoh: Meja 01, VIP 1">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Kursi</label>
+                                        <input type="number" id="newTableSeats" class="form-input" style="height:34px; font-size:0.78rem;" placeholder="4" min="1" value="4">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Area / Catatan</label>
+                                        <input type="text" id="newTableArea" class="form-input" style="height:34px; font-size:0.78rem;" placeholder="Contoh: Indoor Lt 1 / Outdoor">
+                                    </div>
+                                    <div style="display:flex; gap:6px;">
+                                        <button type="button" class="btn-primary-bio" onclick="confirmAddTable()" style="height:34px; padding:0 12px; font-size:0.75rem; border-radius:6px; font-weight:700;">
+                                            Simpan
+                                        </button>
+                                        <button type="button" onclick="toggleAddTableForm(false)" style="height:34px; padding:0 10px; font-size:0.75rem; border-radius:6px; border:1px solid #cbd5e1; background:#fff; color:#64748b; cursor:pointer;">
+                                            Batal
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table List Container -->
+                        <div id="tableRowsListContainer" style="display:flex; flex-direction:column; gap:10px;">
+                            <!-- Rendered by renderTablesSettingsList() -->
+                        </div>
+
+                        <!-- Bottom Save Notice & Button -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.2rem; padding-top:1rem; border-top:1.5px solid #f1f5f9;">
+                            <div style="font-size:0.72rem; color:#64748b;">
+                                Perubahan meja otomatis tersinkronisasi dengan kasir POS dan Link in Bio.
+                            </div>
+                            <button type="button" class="btn-primary-bio" id="btnSaveTablesSettings" onclick="saveTablesSettings()"
+                                style="padding:0.48rem 1.25rem; font-size:0.78rem; border-radius:8px; font-weight:800; display:inline-flex; align-items:center; gap:6px;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                Simpan Perubahan Meja
+                            </button>
+                        </div>
+                    </div>
+
                 </div> <!-- end posSettingsRealContent -->
 
             </div>
@@ -3324,6 +3403,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // State POS
         let cart = [];
@@ -3333,9 +3413,12 @@
         let currentPosBalance = {{ (float) $posBalance }};
         let currentCompletedOrder = null;
 
-        // Fees & Discounts Data (from POS Settings)
+        // Fees, Discounts & Tables Data (from POS Settings)
         let posFeesData = {!! json_encode($profile ? $profile->getPosFees() : []) !!};
         let posDiscountsData = {!! json_encode($profile ? $profile->getPosDiscounts() : []) !!};
+        let posTablesData = {!! json_encode($profile ? $profile->getPosTables() : []) !!};
+        const posBioBaseUrl = {!! json_encode(!empty($profile->custom_domain) ? ('https://' . rtrim($profile->custom_domain, '/')) : url('/' . ($profile->store_slug ?: ($seller->username ?? '')))) !!};
+        const posStoreDisplayName = {!! json_encode($profile->store_name ?? $storeName ?? 'Toko') !!};
 
         // All products list for discount product-picker
         window.posAllProducts = [
@@ -3643,8 +3726,10 @@
         // Toggle Discount Type (nominal / percent)
         function setDiscountType(type) {
             discountType = type;
-            document.getElementById('btnDiscNominal').classList.toggle('active', type === 'nominal');
-            document.getElementById('btnDiscPercent').classList.toggle('active', type === 'percent');
+            const bNom = document.getElementById('btnDiscNominal');
+            const bPct = document.getElementById('btnDiscPercent');
+            if (bNom) bNom.classList.toggle('active', type === 'nominal');
+            if (bPct) bPct.classList.toggle('active', type === 'percent');
             calculateTotals();
         }
 
@@ -3696,6 +3781,10 @@
             const grandTotal = Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
 
             document.getElementById('displaySubtotal').innerText = 'Rp ' + formatRupiah(subtotal);
+            const dispDisc = document.getElementById('displayDiscountAmount');
+            if (dispDisc) {
+                dispDisc.innerText = discountAmount > 0 ? ('- Rp ' + formatRupiah(discountAmount)) : '- Rp 0';
+            }
             document.getElementById('displaySystemFees').innerText = 'Rp ' + formatRupiah(systemFees);
             document.getElementById('displayGrandTotal').innerText = 'Rp ' + formatRupiah(grandTotal);
 
@@ -4607,20 +4696,22 @@
             }
         }
 
-        // Tab Switching Pengaturan (4 Tab)
+        // Tab Switching Pengaturan (5 Tab: Struk, Fees, Discounts, Staff, Tables)
         function switchSettingTab(tabId) {
-            const tabs = ['struk', 'fees', 'discounts', 'staff'];
+            const tabs = ['struk', 'fees', 'discounts', 'staff', 'tables'];
             const btnMap = {
                 struk: 'tabBtnSettingStruk',
                 fees: 'tabBtnSettingFees',
                 discounts: 'tabBtnSettingDiscounts',
                 staff: 'tabBtnSettingStaff',
+                tables: 'tabBtnSettingTables',
             };
             const paneMap = {
                 struk: 'paneSettingStruk',
                 fees: 'paneSettingFees',
                 discounts: 'paneSettingDiscounts',
                 staff: 'paneSettingStaff',
+                tables: 'paneSettingTables',
             };
             tabs.forEach(t => {
                 const btn = document.getElementById(btnMap[t]);
@@ -4634,6 +4725,9 @@
             if (tabId === 'discounts') {
                 renderDiscountSettingsList();
                 renderDiscountProductPicker();
+            }
+            if (tabId === 'tables') {
+                renderTablesSettingsList();
             }
         }
 
@@ -5079,11 +5173,11 @@
             const activeDiscounts = (posDiscountsData || []).filter(d => d.is_active);
             if (activeDiscounts.length === 0) {
                 wrap.style.display = 'none';
-                sel.innerHTML = '<option value="">Pilih Promo</option>';
+                sel.innerHTML = '<option value="">Tanpa Diskon</option>';
                 return;
             }
             wrap.style.display = '';
-            sel.innerHTML = '<option value="">-- Manual --</option>' +
+            sel.innerHTML = '<option value="">Tanpa Diskon</option>' +
                 activeDiscounts.map((d, i) => {
                     const label = `${d.name} (${d.type === 'percent' ? d.value + '%' : 'Rp ' + formatRupiah(d.value)})`;
                     return `<option value="${i}">${label}</option>`;
@@ -5094,15 +5188,15 @@
             const sel = document.getElementById('posDiscountPresetSelect');
             const idx = sel ? parseInt(sel.value) : NaN;
             const activeDiscounts = (posDiscountsData || []).filter(d => d.is_active);
+            const discInput = document.getElementById('posDiscountInput');
             if (!isNaN(idx) && activeDiscounts[idx]) {
                 const disc = activeDiscounts[idx];
-                // Set discount input accordingly
                 setDiscountType(disc.type === 'percent' ? 'percent' : 'nominal');
-                document.getElementById('posDiscountInput').value = disc.value;
-                // Store selected discount ref for scoped calc
+                if (discInput) discInput.value = disc.value;
                 window._selectedDiscountPreset = disc;
             } else {
                 window._selectedDiscountPreset = null;
+                if (discInput) discInput.value = 0;
             }
             calculateTotals();
         }
@@ -5563,6 +5657,334 @@
         }
 
         // ═══════════════════════════════════════════════
+        // TABLE MANAGEMENT (Kelola Meja & Barcode QR)
+        // ═══════════════════════════════════════════════
+
+        function toggleAddTableForm(show) {
+            const box = document.getElementById('formAddTableBox');
+            if (!box) return;
+            if (show === undefined) {
+                box.style.display = box.style.display === 'none' ? 'block' : 'none';
+            } else {
+                box.style.display = show ? 'block' : 'none';
+            }
+            if (box.style.display === 'block') {
+                document.getElementById('newTableName')?.focus();
+            }
+        }
+
+        function confirmAddTable() {
+            const nameInput = document.getElementById('newTableName');
+            const seatsInput = document.getElementById('newTableSeats');
+            const areaInput = document.getElementById('newTableArea');
+
+            const name = (nameInput?.value || '').trim();
+            if (!name) {
+                showPosAlert('Silakan isi Nama atau Nomor Meja.', 'Nama Meja Kosong', 'warning');
+                nameInput?.focus();
+                return;
+            }
+
+            const seats = parseInt(seatsInput?.value) || 4;
+            const area = (areaInput?.value || '').trim();
+
+            if (!Array.isArray(posTablesData)) posTablesData = [];
+
+            // Cek duplikasi nama meja
+            const exists = posTablesData.some(t => (t.name || '').toLowerCase() === name.toLowerCase());
+            if (exists) {
+                showPosAlert('Nama meja "' + name + '" sudah ada. Gunakan nama yang berbeda.', 'Meja Sudah Ada', 'warning');
+                return;
+            }
+
+            posTablesData.push({
+                id: 'table_' + Date.now(),
+                name: name,
+                seats: seats,
+                area: area,
+                created_at: new Date().toISOString()
+            });
+
+            // Reset form
+            if (nameInput) nameInput.value = '';
+            if (seatsInput) seatsInput.value = '4';
+            if (areaInput) areaInput.value = '';
+            toggleAddTableForm(false);
+
+            renderTablesSettingsList();
+            renderTablesQuickSelect();
+            updateTablesBadgeCount();
+            saveTablesSettings(false);
+            showPosToast('Meja "' + name + '" berhasil ditambahkan!', 'success');
+        }
+
+        function deleteTable(idx) {
+            if (!posTablesData || !posTablesData[idx]) return;
+            const table = posTablesData[idx];
+            if (confirm('Hapus ' + (table.name || 'meja ini') + '? Barcode QR meja ini tidak akan bisa digunakan lagi.')) {
+                posTablesData.splice(idx, 1);
+                renderTablesSettingsList();
+                renderTablesQuickSelect();
+                updateTablesBadgeCount();
+                saveTablesSettings(false);
+                showPosToast('Meja berhasil dihapus.', 'info');
+            }
+        }
+
+        function updateTablesBadgeCount() {
+            const count = (posTablesData || []).length;
+            const badge = document.getElementById('settingTablesBadgeCount');
+            if (badge) badge.innerText = count;
+        }
+
+        function renderTablesSettingsList() {
+            const container = document.getElementById('tableRowsListContainer');
+            if (!container) return;
+
+            if (!posTablesData || posTablesData.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:2.5rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
+                        <div style="width:44px; height:44px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto; color:#94a3b8;">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <path d="M3 9h18M9 21V9" />
+                            </svg>
+                        </div>
+                        <div style="font-size:0.88rem; font-weight:700; color:#334155;">Belum Ada Meja Ditambahkan</div>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:3px; max-width:380px; margin-left:auto; margin-right:auto;">
+                            Klik tombol <strong>+ Tambah Meja</strong> di atas untuk membuat meja dan men-download barcode QR tiap meja.
+                        </div>
+                    </div>
+                `;
+                updateTablesBadgeCount();
+                return;
+            }
+
+            container.innerHTML = posTablesData.map((table, idx) => {
+                const tableUrl = posBioBaseUrl + (posBioBaseUrl.includes('?') ? '&' : '?') + 'meja=' + encodeURIComponent(table.name);
+                return `
+                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
+                        <div style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
+                            <div id="tableQrThumb_${idx}" style="width:48px; height:48px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
+                            <div style="min-width:0;">
+                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                    <span style="font-size:0.92rem; font-weight:800; color:#0f172a;">${escapeHtml(table.name)}</span>
+                                    ${table.seats ? `<span style="font-size:0.68rem; font-weight:700; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:4px;">${table.seats} Kursi</span>` : ''}
+                                    ${table.area ? `<span style="font-size:0.68rem; font-weight:700; background:#f0fdf4; color:#166534; padding:2px 7px; border-radius:4px; border:1px solid #bbf7d0;">${escapeHtml(table.area)}</span>` : ''}
+                                </div>
+                                <div style="font-size:0.7rem; color:#94a3b8; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:400px;">
+                                    ${escapeHtml(tableUrl)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                            <button type="button" class="btn-primary-bio" onclick="downloadTableQr(${idx})"
+                                style="padding:6px 12px; font-size:0.74rem; border-radius:7px; font-weight:700; display:inline-flex; align-items:center; gap:5px;"
+                                title="Download Barcode QR Meja ini">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Download Barcode
+                            </button>
+                            <a href="${tableUrl}" target="_blank"
+                                style="padding:6px 10px; font-size:0.74rem; border-radius:7px; border:1px solid #cbd5e1; background:#fff; color:#475569; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600;"
+                                title="Buka Link di Tab Baru">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                Tes Link
+                            </a>
+                            <button type="button" onclick="deleteTable(${idx})"
+                                style="padding:6px 8px; font-size:0.74rem; border-radius:7px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer;"
+                                title="Hapus Meja">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Generate thumbnails for each table
+            posTablesData.forEach((table, idx) => {
+                const el = document.getElementById('tableQrThumb_' + idx);
+                if (el && typeof QRCode !== 'undefined') {
+                    el.innerHTML = '';
+                    const tableUrl = posBioBaseUrl + (posBioBaseUrl.includes('?') ? '&' : '?') + 'meja=' + encodeURIComponent(table.name);
+                    new QRCode(el, {
+                        text: tableUrl,
+                        width: 44,
+                        height: 44,
+                        colorDark: "#0f172a",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            });
+
+            updateTablesBadgeCount();
+        }
+
+        // Quick Select Dropdown in POS Cart
+        function renderTablesQuickSelect() {
+            const select = document.getElementById('posTableQuickSelect');
+            if (!select) return;
+            const currentVal = document.getElementById('posTableNumber')?.value || '';
+            let html = '<option value="">Pilih Meja...</option>';
+            (posTablesData || []).forEach(table => {
+                const isSelected = table.name === currentVal ? 'selected' : '';
+                const label = table.name + (table.seats ? ` (${table.seats} Kursi)` : '') + (table.area ? ` - ${table.area}` : '');
+                html += `<option value="${escapeHtml(table.name)}" ${isSelected}>${escapeHtml(label)}</option>`;
+            });
+            select.innerHTML = html;
+        }
+
+        function onTableQuickSelectChanged(val) {
+            const input = document.getElementById('posTableNumber');
+            if (input) {
+                input.value = val;
+            }
+        }
+
+        // Download Styled Barcode QR PNG
+        function downloadTableQr(idx) {
+            if (!posTablesData || !posTablesData[idx]) return;
+            const table = posTablesData[idx];
+            const tableUrl = posBioBaseUrl + (posBioBaseUrl.includes('?') ? '&' : '?') + 'meja=' + encodeURIComponent(table.name);
+
+            // Generate a clean QR code offscreen
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            document.body.appendChild(tempDiv);
+
+            new QRCode(tempDiv, {
+                text: tableUrl,
+                width: 320,
+                height: 320,
+                colorDark: '#0f172a',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            setTimeout(() => {
+                const qrImg = tempDiv.querySelector('img') || tempDiv.querySelector('canvas');
+                if (!qrImg) {
+                    showPosAlert('Gagal memproses QR code. Coba lagi dalam beberapa detik.', 'Gagal Generate QR', 'error');
+                    document.body.removeChild(tempDiv);
+                    return;
+                }
+
+                // Render into high-res print-ready canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 600;
+                canvas.height = 760;
+
+                // 1. Background clean white
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 2. Decorative Top Header
+                ctx.fillStyle = '#1eb349';
+                ctx.fillRect(0, 0, canvas.width, 14);
+
+                // 3. Store Name Header
+                ctx.fillStyle = '#0f172a';
+                ctx.font = 'bold 28px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(posStoreDisplayName.toUpperCase(), 300, 75);
+
+                // Subtitle
+                ctx.fillStyle = '#64748b';
+                ctx.font = '600 16px Montserrat, sans-serif';
+                ctx.fillText('SCAN DI SINI UNTUK PESAN & MENU', 300, 110);
+
+                // 4. White Card for QR code with subtle border
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(100, 140, 400, 400);
+
+                // Draw QR Code
+                ctx.drawImage(qrImg, 140, 180, 320, 320);
+
+                // 5. Table Name Badge
+                ctx.fillStyle = '#0f172a';
+                ctx.font = 'bold 36px Montserrat, sans-serif';
+                ctx.fillText(table.name.toUpperCase(), 300, 600);
+
+                if (table.area || table.seats) {
+                    ctx.fillStyle = '#16a34a';
+                    ctx.font = '600 18px Montserrat, sans-serif';
+                    const subInfo = [table.area, table.seats ? (table.seats + ' Kursi') : ''].filter(Boolean).join(' • ');
+                    ctx.fillText(subInfo, 300, 635);
+                }
+
+                // 6. Footer Note
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '13px Montserrat, sans-serif';
+                ctx.fillText('Pesanan Anda akan diantar langsung ke meja ini', 300, 690);
+                ctx.fillStyle = '#cbd5e1';
+                ctx.fillText('Powered by buyle.id', 300, 725);
+
+                // 7. Trigger PNG Download
+                const link = document.createElement('a');
+                link.download = 'QR-' + table.name.replace(/[^a-zA-Z0-9_-]/g, '_') + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                document.body.removeChild(tempDiv);
+                showPosToast('Barcode QR ' + table.name + ' berhasil di-download!', 'success');
+            }, 250);
+        }
+
+        // Save Tables to Server via POS updateSettings
+        function saveTablesSettings(showNotification = true) {
+            const btn = document.getElementById('btnSaveTablesSettings');
+            if (btn && showNotification) {
+                btn.disabled = true;
+                btn.innerHTML = '<span style="display:inline-block; animation:spin 1s linear infinite;">↻</span> Menyimpan...';
+            }
+
+            fetch('{{ route("creator.pos.update-settings") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    pos_tables: posTablesData
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn && showNotification) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Simpan Perubahan Meja';
+                }
+                if (data.success) {
+                    if (data.data && data.data.pos_tables) {
+                        posTablesData = data.data.pos_tables;
+                    }
+                    renderTablesQuickSelect();
+                    updateTablesBadgeCount();
+                    if (showNotification) {
+                        showPosToast('Pengaturan meja berhasil disimpan!', 'success');
+                    }
+                } else {
+                    if (showNotification) {
+                        showPosAlert(data.message || 'Gagal menyimpan meja.', 'Gagal Simpan', 'error');
+                    }
+                }
+            })
+            .catch(err => {
+                if (btn && showNotification) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Simpan Perubahan Meja';
+                }
+                if (showNotification) {
+                    showPosAlert('Terjadi kesalahan: ' + err.message, 'Gagal Simpan', 'error');
+                }
+            });
+        }
+
+        // ═══════════════════════════════════════════════
         // DEPOSIT POS FUNCTIONS (STORE TRANSFER & QRIS)
         // ═══════════════════════════════════════════════
 
@@ -5963,6 +6385,14 @@
                 const real = document.getElementById('pos-real-content');
                 if (skel) skel.style.display = 'none';
                 if (real) real.style.opacity = '1';
+
+                // Initial render for fees, discounts, and tables
+                try {
+                    if (typeof renderCartFees === 'function') renderCartFees();
+                    if (typeof renderDiscountPresetDropdown === 'function') renderDiscountPresetDropdown();
+                    if (typeof renderTablesQuickSelect === 'function') renderTablesQuickSelect();
+                    if (typeof updateTablesBadgeCount === 'function') updateTablesBadgeCount();
+                } catch(e) {}
             }
             if (document.readyState === 'complete') {
                 setTimeout(revealPos, 120);
