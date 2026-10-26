@@ -261,9 +261,25 @@ class MenuScanController extends Controller
 
             $addImg = function (string $u) use (&$images) {
                 $u = trim($u);
-                if ($u && filter_var($u, FILTER_VALIDATE_URL) && !in_array($u, $images) && count($images) < 6) {
-                    $images[] = $u;
+                $u = html_entity_decode($u, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                if (!$u || !filter_var($u, FILTER_VALIDATE_URL) || count($images) >= 6) {
+                    return;
                 }
+                if (preg_match('/(?:icon|logo|badge|avatar|spinner|placeholder)/i', $u)) {
+                    return;
+                }
+                // Deduplicate by URL path or unique image hash
+                $path = parse_url($u, PHP_URL_PATH) ?? '';
+                $imgId = '';
+                if (preg_match('/([a-f0-9]{32}|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|id-11134207-[a-z0-9-]+)/i', $path, $idm)) {
+                    $imgId = $idm[1];
+                }
+                foreach ($images as $existing) {
+                    $exPath = parse_url($existing, PHP_URL_PATH) ?? '';
+                    if ($path === $exPath) return;
+                    if ($imgId && str_contains($exPath, $imgId)) return;
+                }
+                $images[] = $u;
             };
 
             if (!empty($html)) {
@@ -339,6 +355,73 @@ class MenuScanController extends Controller
                 for ($i = 1; $i <= 6 && count($images) < 6; $i++) {
                     $alt = $getMeta("og:image:alt:$i") ?: $getMeta("og:image:$i") ?: $getMeta("product:image:$i");
                     if ($alt) $addImg($alt);
+                }
+
+                // ── Dedicated Tokopedia Gallery Extractor ──
+                if ($isTokopedia || count($images) < 6) {
+                    if (preg_match_all('/"(?:urlOriginal|url300|originalURL|pictureUrl)"\s*:\s*"([^"]+)"/i', $html, $tokImgs)) {
+                        foreach ($tokImgs[1] as $rawUrl) {
+                            $cleaned = str_replace('\/', '/', $rawUrl);
+                            $addImg($cleaned);
+                            if (count($images) >= 6) break;
+                        }
+                    }
+                    if (count($images) < 6 && preg_match_all('/"(https?:\\\\?\/\\\\?\/[^"]*(?:tokopedia-static\.net|images\.tokopedia\.net)[^"]*(?:resize-jpeg|cache|product-1)[^"]*)"/i', $html, $tokImgs2)) {
+                        foreach ($tokImgs2[1] as $rawUrl) {
+                            $cleaned = str_replace('\/', '/', $rawUrl);
+                            $addImg($cleaned);
+                            if (count($images) >= 6) break;
+                        }
+                    }
+                }
+
+                // ── Dedicated Shopee Gallery Extractor ──
+                if ($isShopee || count($images) < 6) {
+                    if (preg_match_all('/https?:\\\\?\/\\\\?\/[a-zA-Z0-9_\-\.]*susercontent\.com\\\\?\/file\\\\?\/([a-zA-Z0-9_\-]+)/i', $html, $shpMatches)) {
+                        foreach ($shpMatches[0] as $rawUrl) {
+                            $cleaned = str_replace('\/', '/', $rawUrl);
+                            $addImg($cleaned);
+                            if (count($images) >= 6) break;
+                        }
+                    }
+                    if (count($images) < 6 && preg_match('/"(?:images|image_list)"\s*:\s*\[([^\]]+)\]/i', $html, $shpArray)) {
+                        if (preg_match_all('/"([a-zA-Z0-9_\-]{20,})"/i', $shpArray[1], $hashes)) {
+                            foreach ($hashes[1] as $hash) {
+                                $addImg("https://down-id.img.susercontent.com/file/{$hash}");
+                                if (count($images) >= 6) break;
+                            }
+                        }
+                    }
+                }
+
+                // ── Dedicated TikTok Shop Gallery Extractor ──
+                if ($isTiktok || count($images) < 6) {
+                    if (preg_match_all('/"(?:image_url_list|gallery_list|product_images)"\s*:\s*\[([^\]]+)\]/i', $html, $ttArray)) {
+                        foreach ($ttArray[1] as $rawArr) {
+                            if (preg_match_all('/"(https?:\\\\?\/\\\\?\/[^"]+)"/i', $rawArr, $ttImgs)) {
+                                foreach ($ttImgs[1] as $rawUrl) {
+                                    $cleaned = str_replace('\/', '/', $rawUrl);
+                                    $addImg($cleaned);
+                                    if (count($images) >= 6) break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // ── General Embedded JSON Gallery Arrays ──
+                if (count($images) < 6) {
+                    if (preg_match_all('/"(?:images|gallery|photos|pictures)"\s*:\s*\[([^\]]+)\]/i', $html, $genArrays)) {
+                        foreach ($genArrays[1] as $rawArr) {
+                            if (preg_match_all('/"(https?:\\\\?\/\\\\?\/[^"]+(?:\.jpg|\.jpeg|\.png|\.webp|~tplv-)[^"]*)"/i', $rawArr, $genImgs)) {
+                                foreach ($genImgs[1] as $rawUrl) {
+                                    $cleaned = str_replace('\/', '/', $rawUrl);
+                                    $addImg($cleaned);
+                                    if (count($images) >= 6) break;
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // JSON-LD structured data for products
