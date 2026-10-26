@@ -12,6 +12,8 @@ class CreatorProfile extends Model
         'pos_logo',
         'pos_store_address',
         'pos_store_phone',
+        'pos_fees',
+        'pos_discounts',
         'store_slug',
         'custom_domain',
         'custom_domain_status',
@@ -64,11 +66,13 @@ class CreatorProfile extends Model
     ];
 
     protected $casts = [
-        'social_links' => 'array',
-        'bio_config'   => 'array',
-        'is_exclusive' => 'boolean',
-        'is_verified'  => 'boolean',
-        'pos_balance'  => 'float',
+        'social_links'   => 'array',
+        'bio_config'     => 'array',
+        'pos_fees'       => 'array',
+        'pos_discounts'  => 'array',
+        'is_exclusive'   => 'boolean',
+        'is_verified'    => 'boolean',
+        'pos_balance'    => 'float',
         'last_menu_scan_at' => 'datetime',
         'scan_count_reset_at' => 'datetime',
         'has_custom_fee' => 'boolean',
@@ -77,6 +81,51 @@ class CreatorProfile extends Model
         'custom_ticket_platform_fee_value' => 'float',
         'custom_ticket_admin_fee_value' => 'float',
     ];
+
+    /**
+     * Dapatkan daftar pajak & biaya layanan POS yang dikonfigurasi.
+     */
+    public function getPosFees(): array
+    {
+        if (!empty($this->pos_fees) && is_array($this->pos_fees)) {
+            return $this->pos_fees;
+        }
+        $config = $this->bio_config ?? [];
+        if (!empty($config['pos_fees']) && is_array($config['pos_fees'])) {
+            return $config['pos_fees'];
+        }
+        return [
+            [
+                'id'        => 'fee_ppn',
+                'name'      => 'PPN',
+                'type'      => 'percent',
+                'rate'      => 11,
+                'is_active' => false,
+            ],
+            [
+                'id'        => 'fee_service',
+                'name'      => 'Service Fee',
+                'type'      => 'percent',
+                'rate'      => 5,
+                'is_active' => false,
+            ],
+        ];
+    }
+
+    /**
+     * Dapatkan daftar diskon / promo POS yang dikonfigurasi.
+     */
+    public function getPosDiscounts(): array
+    {
+        if (!empty($this->pos_discounts) && is_array($this->pos_discounts)) {
+            return $this->pos_discounts;
+        }
+        $config = $this->bio_config ?? [];
+        if (!empty($config['pos_discounts']) && is_array($config['pos_discounts'])) {
+            return $config['pos_discounts'];
+        }
+        return [];
+    }
 
     public function posDeposits(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

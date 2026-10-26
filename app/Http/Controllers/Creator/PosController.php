@@ -269,6 +269,12 @@ class PosController extends Controller
             ->orderBy('name')
             ->get();
 
+        // 12. Daftar Pajak & Biaya Tambahan (PPN, Service Fee, dll)
+        $posFees = $profile ? $profile->getPosFees() : [];
+
+        // 13. Daftar Diskon / Promo Produk
+        $posDiscounts = $profile ? $profile->getPosDiscounts() : [];
+
         return view('creator.pos.index', compact(
             'products',
             'todayOrders',
@@ -288,7 +294,9 @@ class PosController extends Controller
             'todayCashInDrawer',
             'todayDigitalSales',
             'todayFeeDeducted',
-            'todayMutations'
+            'todayMutations',
+            'posFees',
+            'posDiscounts'
         ));
     }
 
@@ -370,15 +378,25 @@ class PosController extends Controller
 
             // Hitung Diskon
             $discountAmount = 0;
-            if ($request->discount_type === 'percent') {
+            if ($request->filled('discount_amount')) {
+                $discountAmount = min($subtotal, max(0, (float) $request->discount_amount));
+            } elseif ($request->discount_type === 'percent') {
                 $pct = min(100, max(0, (float) ($request->discount_val ?? 0)));
                 $discountAmount = ($subtotal * $pct) / 100;
             } elseif ($request->discount_type === 'nominal') {
                 $discountAmount = min($subtotal, max(0, (float) ($request->discount_val ?? 0)));
             }
 
-            // Biaya Layanan Tambahan (opsional oleh toko)
+            // Biaya Layanan Tambahan & Pajak (PPN, Service Fee, dll)
             $serviceFee = max(0, (float) ($request->service_fee ?? 0));
+            $feesBreakdown = $request->fees_breakdown ?? [];
+            if (is_string($feesBreakdown)) {
+                $feesBreakdown = json_decode($feesBreakdown, true) ?: [];
+            }
+            $discountDetails = $request->discount_details ?? [];
+            if (is_string($discountDetails)) {
+                $discountDetails = json_decode($discountDetails, true) ?: [];
+            }
 
             // Lock Creator Profile
             $profile = CreatorProfile::where('user_id', $seller->id)->lockForUpdate()->first();
@@ -430,18 +448,20 @@ class PosController extends Controller
                 'notes'           => $request->table_number ? ('No. Ref/Meja: ' . $request->table_number) : null,
                 'source'          => 'pos',
                 'shipping_address' => [
-                    'name'           => $customerName,
-                    'receiver_name'  => $customerName,
-                    'email'          => $request->customer_email,
-                    'phone'          => $request->customer_phone,
-                    'is_pos'         => true,
-                    'payment_method' => $paymentMethod,
-                    'cash_paid'      => (float) ($request->cash_paid ?? 0),
-                    'cash_change'    => (float) ($request->cash_change ?? 0),
-                    'service_fee'    => $serviceFee,
-                    'cashier_id'     => $cashierId,
-                    'cashier_name'   => $cashierName,
-                    'cashier_shift'  => $cashierShift,
+                    'name'             => $customerName,
+                    'receiver_name'    => $customerName,
+                    'email'            => $request->customer_email,
+                    'phone'            => $request->customer_phone,
+                    'is_pos'           => true,
+                    'payment_method'   => $paymentMethod,
+                    'cash_paid'        => (float) ($request->cash_paid ?? 0),
+                    'cash_change'      => (float) ($request->cash_change ?? 0),
+                    'service_fee'      => $serviceFee,
+                    'fees_breakdown'   => $feesBreakdown,
+                    'discount_details' => $discountDetails,
+                    'cashier_id'       => $cashierId,
+                    'cashier_name'     => $cashierName,
+                    'cashier_shift'    => $cashierShift,
                 ],
             ]);
 
@@ -1028,6 +1048,8 @@ class PosController extends Controller
             'store_name'        => 'nullable|string|max:100',
             'pos_store_address' => 'nullable|string|max:500',
             'pos_store_phone'   => 'nullable|string|max:50',
+            'pos_fees'          => 'nullable',
+            'pos_discounts'     => 'nullable',
         ]);
 
         $updateData = [
@@ -1038,15 +1060,39 @@ class PosController extends Controller
             $updateData['store_name'] = trim($request->store_name);
         }
 
+        if ($request->has('pos_fees')) {
+            $fees = $request->input('pos_fees');
+            if (is_string($fees)) {
+                $fees = json_decode($fees, true) ?: [];
+            }
+            $updateData['pos_fees'] = $fees;
+            $bioConfig = $profile->bio_config ?? [];
+            $bioConfig['pos_fees'] = $fees;
+            $updateData['bio_config'] = $bioConfig;
+        }
+
+        if ($request->has('pos_discounts')) {
+            $discounts = $request->input('pos_discounts');
+            if (is_string($discounts)) {
+                $discounts = json_decode($discounts, true) ?: [];
+            }
+            $updateData['pos_discounts'] = $discounts;
+            $bioConfig = $updateData['bio_config'] ?? ($profile->bio_config ?? []);
+            $bioConfig['pos_discounts'] = $discounts;
+            $updateData['bio_config'] = $bioConfig;
+        }
+
         $profile->update($updateData);
 
         return response()->json([
             'success' => true,
-            'message' => 'Pengaturan struk kasir berhasil disimpan!',
+            'message' => 'Pengaturan POS berhasil disimpan!',
             'data'    => [
                 'store_name'        => $profile->store_name,
                 'pos_store_address' => $profile->pos_store_address,
                 'pos_store_phone'   => $profile->pos_store_phone,
+                'pos_fees'          => $profile->getPosFees(),
+                'pos_discounts'     => $profile->getPosDiscounts(),
             ]
         ]);
     }

@@ -671,6 +671,7 @@
                     </div>
                 </div>
                 <div style="padding:0.25rem 0;">
+                    @if(!auth()->user()->isPosCashier())
                     <a href="{{ route('creator.profile.edit') }}"
                         style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
@@ -707,6 +708,7 @@
                         Saldo &amp; Pencairan
                     </a>
                     <div style="border-top:1px solid #F1F5F9;margin:0.2rem 0;"></div>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                         @csrf
                         <button type="submit"
@@ -754,7 +756,7 @@
         {{-- Nav Links --}}
         <nav class="cr-nav">
             @if($isPosCashier)
-                {{-- Kasir Staff Dedicated Mode: Hanya Kasir POS yang aktif, menu lain terkunci --}}
+                {{-- Kasir Staff Dedicated Mode: Hanya menu Kasir POS yang tampil --}}
                 <a href="{{ route('creator.pos.index') }}"
                     class="cr-nav-link {{ request()->routeIs('creator.pos*') ? 'active' : '' }}"
                     style="font-weight:700;">
@@ -767,54 +769,6 @@
                     </svg>
                     Kasir POS
                     <span style="margin-left:auto; background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:999px; letter-spacing:0.04em;">AKTIF</span>
-                </a>
-
-                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                    Overview
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </a>
-
-                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                    </svg>
-                    Aplikasi
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </a>
-
-                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="2" y="7" width="20" height="14" rx="2" />
-                        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                    </svg>
-                    Produk Toko
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </a>
-
-                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle cx="12" cy="8" r="4" />
-                        <path d="M20 21a8 8 0 1 0-16 0" />
-                    </svg>
-                    Profil Toko
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </a>
-
-                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="2" y="6" width="20" height="12" rx="2" />
-                        <circle cx="16" cy="12" r="2" />
-                        <path d="M6 12h.01" stroke-width="3" stroke-linecap="round" />
-                    </svg>
-                    Saldo &amp; Pencairan
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 </a>
             @else
                 {{-- Mode Normal Seller / Creator --}}
@@ -1005,6 +959,7 @@
                                 </div>
                             </div>
                             <div style="padding:0.35rem 0;">
+                                @if(!$isPosCashier)
                                 <a href="{{ route('creator.profile.edit') }}"
                                     style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
                                     onmouseover="this.style.background='#F8FAFC'"
@@ -1049,6 +1004,7 @@
                                     Saldo & Pencairan
                                 </a>
                                 <div style="border-top:1px solid #F1F5F9;margin:0.25rem 0;"></div>
+                                @endif
                                 <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                     @csrf
                                     <button type="submit"
@@ -1477,7 +1433,7 @@
 
         function showCashierLockedNotice(e) {
             if (e) e.preventDefault();
-            alert('Akses Terbatas: Akun staf kasir hanya diizinkan untuk mengakses modul Kasir (POS). Menu lain pada sidebar terkunci untuk keamanan toko.');
+            return false;
         }
     </script>
     @yield('scripts')

@@ -1070,6 +1070,125 @@
                 grid-template-columns: 1fr !important;
             }
         }
+
+        /* ── Fee & Discount Setting Components ──────────────── */
+        .fee-card-row {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .fee-card-row:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .discount-card-row {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .discount-card-row:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .product-picker-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .product-picker-item:hover {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+        }
+
+        .product-picker-item.selected {
+            border-color: #1eb349;
+            background: #f0fdf4;
+            box-shadow: 0 0 0 1px #1eb349;
+        }
+
+        .product-picker-thumb {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            overflow: hidden;
+        }
+
+        .badge-scope-all {
+            background: #e0e7ff;
+            color: #3730a3;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .badge-scope-specific {
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        /* Cart Promo and Fee Rows */
+        .cart-fee-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #334155;
+            padding: 2px 0;
+        }
+
+        .cart-promo-active-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
     </style>
 @endsection
 
@@ -1589,11 +1708,20 @@
                                 <strong style="color:#0f172a;" id="displaySubtotal">Rp 0</strong>
                             </div>
 
-                            <!-- Diskon Field -->
-                            <div class="summary-row">
-                                <div class="d-flex align-items-center gap-1">
+                            <!-- Diskon Field (Manual + Preset dari Pengaturan) -->
+                            <div class="summary-row" id="cartDiscountSection">
+                                <div class="d-flex align-items-center gap-1" style="flex:1; flex-wrap:wrap; gap:6px !important;">
                                     <span>Diskon</span>
-                                    <div class="disc-toggle">
+                                    <!-- Preset Promo Dropdown (jika ada diskon terkonfigurasi) -->
+                                    <div id="cartDiscountPresetWrap" style="display:none; margin-left:4px;">
+                                        <select id="posDiscountPresetSelect" class="form-input"
+                                            style="height:26px; font-size:0.7rem; padding:0 6px; border-radius:6px; min-width:90px; max-width:130px;"
+                                            onchange="onDiscountPresetChanged()">
+                                            <option value="">Pilih Promo</option>
+                                        </select>
+                                    </div>
+                                    <!-- Toggle Manual Rp / % -->
+                                    <div class="disc-toggle" id="manualDiscToggle">
                                         <button type="button" class="disc-btn active" id="btnDiscNominal"
                                             onclick="setDiscountType('nominal')">Rp</button>
                                         <button type="button" class="disc-btn" id="btnDiscPercent"
@@ -1607,19 +1735,14 @@
                                 </div>
                             </div>
 
-                            <!-- Service Fee Field -->
-                            <div class="summary-row">
-                                <span>Service Fee</span>
-                                <div style="width: 105px;">
-                                    <input type="number" id="posServiceFeeInput" class="form-input text-end"
-                                        style="height:34px; padding:0 10px; font-size:0.8rem;" placeholder="0" min="0"
-                                        oninput="calculateTotals()">
-                                </div>
+                            <!-- Dynamic Fees Container (dari Pengaturan POS) -->
+                            <div id="cartFeesContainer" style="display:none;">
+                                <!-- Rendered dynamically by renderCartFees() -->
                             </div>
 
                             <!-- Platform & Admin Fees Breakdown -->
                             <div class="summary-row" style="font-size:0.75rem; color:#94a3b8; align-items:flex-start;">
-                                <span style="line-height:1.35; flex:1; min-width:0;">Platform Fee ({{ $platformFeeRate }}%) & Admin Fee ({{ $adminFeeRate }}%)</span>
+                                <span style="line-height:1.35; flex:1; min-width:0;">Platform Fee ({{ $platformFeeRate }}%) &amp; Admin Fee ({{ $adminFeeRate }}%)</span>
                                 <span id="displaySystemFees" style="white-space:nowrap; flex-shrink:0; text-align:right; font-weight:600; margin-left:8px;">Rp 0</span>
                             </div>
 
@@ -1629,6 +1752,8 @@
                                 <span style="color:#1eb349;" id="displayGrandTotal">Rp 0</span>
                             </div>
                         </div>
+
+
 
                         <!-- Checkout Button -->
                         <button type="button" class="btn-submit-green" id="btnCheckout" onclick="openPaymentModal()"
@@ -2174,12 +2299,12 @@
                                         <span id="recSubtotal" style="font-weight: 600;">Rp 0</span>
                                     </div>
                                     <div id="recDiscountRow" style="display: none; justify-content: space-between; color: #dc2626; margin-bottom: 3px;">
-                                        <span>Diskon</span>
+                                        <span id="recDiscountLabel">Diskon</span>
                                         <span id="recDiscount">-Rp 0</span>
                                     </div>
-                                    <div id="recServiceFeeRow" style="display: none; justify-content: space-between; margin-bottom: 3px;">
-                                        <span>Biaya Layanan</span>
-                                        <span id="recServiceFee">Rp 0</span>
+                                    <!-- Dynamic Custom Fees from POS Settings -->
+                                    <div id="recCustomFeesWrap" style="display:none;">
+                                        <!-- Rendered dynamically -->
                                     </div>
                                     <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 14.5px; margin: 6px 0 6px 0; border-top: 1px dashed #ccc; padding-top: 5px;">
                                         <span>Total</span>
@@ -2267,7 +2392,7 @@
 
     <!-- CUSTOM OVERLAY MODAL: Pengaturan Modul POS (Logo, Alamat, No Telp, Staf Kasir) -->
     <div class="pos-modal-overlay" id="posSettingsModal" data-static-backdrop="true">
-        <div class="pos-modal-card" style="max-width: 680px; width: 95vw; max-height: 92vh;">
+        <div class="pos-modal-card" style="max-width: 780px; width: 95vw; max-height: 92vh;">
             <!-- Modal Header -->
             <div class="pos-modal-head" style="border-bottom: 1.5px solid #f1f5f9; padding: 1.1rem 1.4rem;">
                 <div style="display:flex; align-items:center; gap:10px;">
@@ -2279,21 +2404,37 @@
                     </div>
                     <div>
                         <h5 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a; line-height:1.2;">Pengaturan Kasir POS</h5>
-                        <div style="font-size:0.73rem; color:#64748b; margin-top:2px;">Format struk transaksi, identitas toko &amp; akun staf kasir</div>
+                        <div style="font-size:0.73rem; color:#64748b; margin-top:2px;">Format struk, pajak/biaya tambahan, diskon produk &amp; akun kasir</div>
                     </div>
                 </div>
                 <!-- Tombol X Close (Hanya bisa keluar lewat tombol ini atau Simpan) -->
                 <button type="button" class="pos-modal-close" onclick="closeModal('posSettingsModal')" title="Tutup Pengaturan">&times;</button>
             </div>
 
-            <!-- Tab Buttons Bar -->
-            <div style="display:flex; align-items:center; border-bottom:1.5px solid #e2e8f0; background:#f8fafc; padding:0 1.25rem; gap:6px;">
+            <!-- Tab Buttons Bar (4 Tab Lengkap: Struk & Toko, Pajak & Biaya, Diskon & Promo, Staf Kasir) -->
+            <div style="display:flex; align-items:center; border-bottom:1.5px solid #e2e8f0; background:#f8fafc; padding:0 1.25rem; gap:6px; overflow-x:auto; scrollbar-width:none;">
                 <button type="button" class="history-tab-btn active" id="tabBtnSettingStruk" onclick="switchSettingTab('struk')">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                     </svg>
-                    Struk &amp; Profil Toko
+                    Struk &amp; Toko
+                </button>
+                <button type="button" class="history-tab-btn" id="tabBtnSettingFees" onclick="switchSettingTab('fees')">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    Pajak &amp; Biaya (<span id="settingFeesBadgeCount">0</span>)
+                </button>
+                <button type="button" class="history-tab-btn" id="tabBtnSettingDiscounts" onclick="switchSettingTab('discounts')">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="19" y1="5" x2="5" y2="19" />
+                        <circle cx="6.5" cy="6.5" r="2.5" />
+                        <circle cx="17.5" cy="17.5" r="2.5" />
+                    </svg>
+                    Diskon &amp; Promo (<span id="settingDiscountsBadgeCount">0</span>)
                 </button>
                 <button type="button" class="history-tab-btn" id="tabBtnSettingStaff" onclick="switchSettingTab('staff')">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -2302,7 +2443,7 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
-                    Staf Kasir &amp; Shift (<span id="settingStaffBadgeCount">{{ count($cashiers) }}</span>)
+                    Staf Kasir (<span id="settingStaffBadgeCount">{{ count($cashiers) }}</span>)
                 </button>
             </div>
 
@@ -2438,7 +2579,190 @@
                     </div>
 
                     <!-- ═══════════════════════════════════════════════════ -->
-                    <!-- TAB 2: STAF KASIR & SHIFT                          -->
+                    <!-- TAB 2: PAJAK & BIAYA TAMBAHAN                       -->
+                    <!-- ═══════════════════════════════════════════════════ -->
+                    <div id="paneSettingFees" style="display: none;">
+                        <!-- Guidance Alert Box -->
+                        <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:12px 14px; margin-bottom:1.1rem; display:flex; gap:10px; align-items:flex-start;">
+                            <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <div style="font-size:0.75rem; color:#166534; line-height:1.45;">
+                                <strong>Pajak &amp; Biaya Tambahan Fleksibel:</strong> Anda dapat menambahkan beberapa jenis biaya atau pajak (misal <strong>PPN 11%</strong>, <strong>Service Charge Resto 5%</strong>, <strong>PB1</strong>, atau <strong>Biaya Kemasan/Takeaway Rp 2.000</strong>). Biaya yang berstatus aktif akan otomatis dihitung dan dirinci di struk thermal kasir.
+                            </div>
+                        </div>
+
+                        <!-- Top Action Bar -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:8px;">
+                            <div>
+                                <div style="font-size:0.88rem; font-weight:800; color:#0f172a;">Daftar Biaya &amp; Pajak POS</div>
+                                <div style="font-size:0.72rem; color:#64748b;">Atur persentase (%) atau nominal rupiah (Rp) untuk tiap komponen</div>
+                            </div>
+                            <button type="button" class="btn-submit-green" onclick="addFeeRow()" style="width:auto; padding:0.45rem 1rem; font-size:0.76rem; border-radius:999px;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                + Tambah Biaya / Pajak
+                            </button>
+                        </div>
+
+                        <!-- Container Daftar Biaya -->
+                        <div id="feeRowsListContainer" style="display:flex; flex-direction:column; gap:10px;">
+                            <!-- Rendered dynamically by renderFeeSettingsList() -->
+                        </div>
+
+                        <!-- Live Simulation Box -->
+                        <div style="margin-top:1.25rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:12px 14px;">
+                            <div style="font-size:0.74rem; font-weight:700; color:#475569; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                Simulasi Perhitungan Transaksi (Contoh Subtotal Rp 100.000):
+                            </div>
+                            <div id="feeLiveSimulationText" style="font-size:0.78rem; color:#0f172a; font-weight:600; line-height:1.5;">
+                                Memuat simulasi...
+                            </div>
+                        </div>
+
+                        <!-- Footer Tab 2: Simpan Pengaturan Biaya -->
+                        <div style="margin-top:1.25rem; display:flex; justify-content:flex-end; gap:8px;">
+                            <button type="button" class="btn-submit-green" id="btnSaveFeesSettings" onclick="savePosFeesSettings()" style="width:auto; padding:0.6rem 1.6rem; font-size:0.82rem; border-radius:999px;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                Simpan Pengaturan Biaya &amp; Pajak
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- TAB 3: DISKON & PROMO PRODUK                        -->
+                    <!-- ═══════════════════════════════════════════════════ -->
+                    <div id="paneSettingDiscounts" style="display: none;">
+                        <!-- Guidance Alert Box -->
+                        <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:12px; padding:12px 14px; margin-bottom:1.1rem; display:flex; gap:10px; align-items:flex-start;">
+                            <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <div style="font-size:0.75rem; color:#1e40af; line-height:1.45;">
+                                <strong>Promo Fleksibel Berbasis Produk:</strong> Anda dapat membuat promo potongan harga (%) atau nominal (Rp). Diskon dapat diterapkan untuk <strong>Semua Produk</strong> atau <strong>Produk Tertentu (bisa pilih lebih dari 1 produk)</strong>. Saat transaksi di kasir POS, sistem akan otomatis menghitung potongan hanya untuk produk yang valid!
+                            </div>
+                        </div>
+
+                        <!-- Top Action Bar -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:8px;">
+                            <div>
+                                <div style="font-size:0.88rem; font-weight:800; color:#0f172a;">Katalog Diskon &amp; Promo POS</div>
+                                <div style="font-size:0.72rem; color:#64748b;">Kelola promo aktif, potongan harga, dan target produk</div>
+                            </div>
+                            <button type="button" class="btn-submit-green" onclick="openAddDiscountDrawer()" style="width:auto; padding:0.45rem 1rem; font-size:0.76rem; border-radius:999px;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                + Buat Diskon Baru
+                            </button>
+                        </div>
+
+                        <!-- Collapsible Drawer / Form Buat & Edit Diskon -->
+                        <div id="discountDrawerForm" style="display:none; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:1.1rem; margin-bottom:1.25rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                                <div style="font-size:0.85rem; font-weight:800; color:#0f172a;" id="discountDrawerTitle">
+                                    Tambah Diskon / Promo Baru
+                                </div>
+                                <button type="button" onclick="closeDiscountDrawer()" style="background:none; border:none; font-size:1.1rem; color:#64748b; cursor:pointer; line-height:1;">&times;</button>
+                            </div>
+
+                            <form id="formDiscountData" onsubmit="handleSaveDiscount(event)">
+                                <input type="hidden" id="discountEditId" value="">
+
+                                <div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:10px;">
+                                    <div>
+                                        <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Nama Promo / Diskon *</label>
+                                        <input type="text" id="discountInputName" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: Diskon Kopi 15% / Promo Gajian Rp 10.000" required>
+                                    </div>
+                                </div>
+
+                                <div class="cashier-form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                                    <div>
+                                        <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Tipe Diskon *</label>
+                                        <select id="discountInputType" class="form-input" style="height:36px; font-size:0.8rem;" onchange="onDiscountTypeChanged()">
+                                            <option value="percent">Persentase (%)</option>
+                                            <option value="nominal">Nominal Rupiah (Rp)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Besaran Potongan *</label>
+                                        <div style="position:relative;">
+                                            <input type="number" id="discountInputValue" class="form-input" style="height:36px; font-size:0.8rem; padding-right:32px;" placeholder="Contoh: 15" min="0" step="any" required>
+                                            <span id="discountValueSuffix" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:0.75rem; font-weight:700; color:#64748b;">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Scope Pilihan Produk -->
+                                <div style="margin-bottom:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px 12px;">
+                                    <label style="display:block; font-size:0.73rem; font-weight:800; color:#1e293b; margin-bottom:6px;">Berlaku Untuk Produk:</label>
+                                    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                                        <label style="display:flex; align-items:center; gap:6px; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                                            <input type="radio" name="discountScopeRadio" value="all" checked onchange="toggleDiscountScopeUI('all')" style="accent-color:#1eb349; cursor:pointer;">
+                                            <span>Semua Produk (Global)</span>
+                                        </label>
+                                        <label style="display:flex; align-items:center; gap:6px; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                                            <input type="radio" name="discountScopeRadio" value="specific" onchange="toggleDiscountScopeUI('specific')" style="accent-color:#1eb349; cursor:pointer;">
+                                            <span>Pilih Produk Tertentu (Multi-select)</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Multi-product Picker Checklist (Visible only when scope === 'specific') -->
+                                <div id="discountProductPickerWrap" style="display:none; margin-bottom:12px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:10px; padding:10px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;">
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:0.75rem; font-weight:700; color:#0f172a;">Pilih Produk:</span>
+                                            <span id="discountSelectedCountBadge" style="font-size:0.68rem; background:#dcfce7; color:#15803d; font-weight:700; padding:1px 7px; border-radius:999px;">0 produk dipilih</span>
+                                        </div>
+                                        <div style="display:flex; gap:6px;">
+                                            <button type="button" onclick="selectAllDiscountProducts()" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:0.68rem; font-weight:700; padding:3px 8px; border-radius:6px; cursor:pointer;">
+                                                Pilih Semua
+                                            </button>
+                                            <button type="button" onclick="deselectAllDiscountProducts()" style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; font-size:0.68rem; font-weight:700; padding:3px 8px; border-radius:6px; cursor:pointer;">
+                                                Hapus Pilihan
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Search input within picker -->
+                                    <div style="margin-bottom:8px;">
+                                        <input type="text" id="discountProductPickerSearch" class="form-input" style="height:32px; font-size:0.74rem;" placeholder="Cari nama produk..." oninput="filterDiscountProductPicker()">
+                                    </div>
+
+                                    <!-- Scrollable Checklist -->
+                                    <div id="discountProductPickerList" style="max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; padding-right:4px;">
+                                        <!-- Rendered dynamically from window.posAllProducts -->
+                                    </div>
+                                </div>
+
+                                <!-- Status Toggle -->
+                                <div style="margin-bottom:12px;">
+                                    <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; font-weight:600; color:#1e293b; cursor:pointer;">
+                                        <input type="checkbox" id="discountInputActive" checked style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer;">
+                                        <span>Promo Aktif &amp; Siap Digunakan di Kasir</span>
+                                    </label>
+                                </div>
+
+                                <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid #e2e8f0; padding-top:10px;">
+                                    <button type="button" class="btn-outline-bio" onclick="closeDiscountDrawer()" style="padding:0.45rem 1rem; font-size:0.76rem; border-radius:8px;">Batal</button>
+                                    <button type="submit" class="btn-submit-green" id="btnSaveDiscountSubmit" style="width:auto; padding:0.45rem 1.25rem; font-size:0.76rem; border-radius:8px;">
+                                        Simpan Promo Diskon
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Discounts List Cards -->
+                        <div id="discountListContainer" style="display:flex; flex-direction:column; gap:8px;">
+                            <!-- Rendered dynamically by renderDiscountSettingsList() -->
+                        </div>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- TAB 4: STAF KASIR & SHIFT                          -->
                     <!-- ═══════════════════════════════════════════════════ -->
                     <div id="paneSettingStaff" style="display: none;">
                         
@@ -3009,6 +3333,20 @@
         let currentPosBalance = {{ (float) $posBalance }};
         let currentCompletedOrder = null;
 
+        // Fees & Discounts Data (from POS Settings)
+        let posFeesData = {!! json_encode($profile ? $profile->getPosFees() : []) !!};
+        let posDiscountsData = {!! json_encode($profile ? $profile->getPosDiscounts() : []) !!};
+
+        // All products list for discount product-picker
+        window.posAllProducts = [
+            @foreach($products as $prod)
+            {
+                id: {{ $prod->id }},
+                name: {!! json_encode($prod->name) !!},
+            },
+            @endforeach
+        ];
+
         // Custom Modal Helpers (Vanilla JS - Independent from Bootstrap)
         function openModal(modalId) {
             if (modalId === 'posLogoModal') {
@@ -3174,6 +3512,12 @@
                 searchInput.addEventListener('keyup', filterProducts);
             }
             filterProducts();
+
+            // Initialize POS dynamic components
+            if (typeof renderCartFees === 'function') renderCartFees();
+            if (typeof renderDiscountPresetDropdown === 'function') renderDiscountPresetDropdown();
+            if (typeof updateFeesBadgeCount === 'function') updateFeesBadgeCount();
+            if (typeof updateDiscountsBadgeCount === 'function') updateDiscountsBadgeCount();
         });
 
         // Add product to cart
@@ -3308,27 +3652,54 @@
         function calculateTotals() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
+            // ── Discount Calculation (scoped) ──
             let discountVal = parseFloat(document.getElementById('posDiscountInput').value) || 0;
             let discountAmount = 0;
+            const preset = window._selectedDiscountPreset;
 
-            if (discountType === 'percent') {
-                discountVal = Math.min(100, Math.max(0, discountVal));
-                discountAmount = (subtotal * discountVal) / 100;
+            if (preset && preset.scope === 'specific' && Array.isArray(preset.product_ids) && preset.product_ids.length > 0) {
+                // Only apply discount to matching products
+                const eligibleIds = new Set(preset.product_ids.map(Number));
+                const eligibleSubtotal = cart
+                    .filter(item => eligibleIds.has(Number(item.id)))
+                    .reduce((s, item) => s + (item.price * item.qty), 0);
+                if (preset.type === 'percent') {
+                    discountAmount = (eligibleSubtotal * Math.min(100, Math.max(0, preset.value))) / 100;
+                } else {
+                    discountAmount = Math.min(eligibleSubtotal, Math.max(0, preset.value));
+                }
+                discountVal = discountAmount; // Keep input synced
             } else {
-                discountAmount = Math.min(subtotal, Math.max(0, discountVal));
+                if (discountType === 'percent') {
+                    discountVal = Math.min(100, Math.max(0, discountVal));
+                    discountAmount = (subtotal * discountVal) / 100;
+                } else {
+                    discountAmount = Math.min(subtotal, Math.max(0, discountVal));
+                }
             }
 
-            const serviceFee = Math.max(0, parseFloat(document.getElementById('posServiceFeeInput').value) || 0);
+            // ── Custom Fees ──
+            let customFeesTotal = 0;
+            (posFeesData || []).forEach(fee => {
+                if (!fee.is_active) return;
+                const amt = fee.type === 'percent'
+                    ? (subtotal * (parseFloat(fee.value) || 0)) / 100
+                    : (parseFloat(fee.value) || 0);
+                customFeesTotal += amt;
+            });
 
+            // ── System Fees ──
             const platformFee = (subtotal * platformFeeRate) / 100;
             const adminFee = (subtotal * adminFeeRate) / 100;
             const systemFees = platformFee + adminFee;
 
-            const grandTotal = Math.max(0, subtotal - discountAmount + serviceFee + systemFees);
+            const grandTotal = Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
 
             document.getElementById('displaySubtotal').innerText = 'Rp ' + formatRupiah(subtotal);
             document.getElementById('displaySystemFees').innerText = 'Rp ' + formatRupiah(systemFees);
             document.getElementById('displayGrandTotal').innerText = 'Rp ' + formatRupiah(grandTotal);
+
+            renderCartFees();
 
             const totalItemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
             document.getElementById('mobileCartCount').innerText = `${totalItemsCount} Items`;
@@ -3428,10 +3799,22 @@
         function getGrandTotalVal() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             let discountVal = parseFloat(document.getElementById('posDiscountInput').value) || 0;
-            let discountAmount = discountType === 'percent' ? (subtotal * Math.min(100, discountVal)) / 100 : Math.min(subtotal, discountVal);
-            const serviceFee = Math.max(0, parseFloat(document.getElementById('posServiceFeeInput').value) || 0);
+            let discountAmount = 0;
+            const preset = window._selectedDiscountPreset;
+            if (preset && preset.scope === 'specific' && Array.isArray(preset.product_ids) && preset.product_ids.length > 0) {
+                const eligibleIds = new Set(preset.product_ids.map(Number));
+                const eligibleSubtotal = cart.filter(item => eligibleIds.has(Number(item.id))).reduce((s, i) => s + i.price * i.qty, 0);
+                discountAmount = preset.type === 'percent' ? (eligibleSubtotal * Math.min(100, Math.max(0, preset.value))) / 100 : Math.min(eligibleSubtotal, Math.max(0, preset.value));
+            } else {
+                discountAmount = discountType === 'percent' ? (subtotal * Math.min(100, discountVal)) / 100 : Math.min(subtotal, discountVal);
+            }
+            let customFeesTotal = 0;
+            (posFeesData || []).forEach(fee => {
+                if (!fee.is_active) return;
+                customFeesTotal += fee.type === 'percent' ? (subtotal * (parseFloat(fee.value) || 0)) / 100 : (parseFloat(fee.value) || 0);
+            });
             const systemFees = (subtotal * (platformFeeRate + adminFeeRate)) / 100;
-            return Math.max(0, subtotal - discountAmount + serviceFee + systemFees);
+            return Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
         }
 
         // Select Payment Method (cash | cashless)
@@ -3513,6 +3896,36 @@
             btnSubmit.disabled = true;
             btnSubmit.innerText = 'Memproses...';
 
+            // Hitung breakdown custom fees & total biaya tambahan POS
+            const cartSubtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            let customFeesTotal = 0;
+            const feesBreakdown = [];
+            (posFeesData || []).forEach(fee => {
+                if (!fee.is_active) return;
+                const amt = fee.type === 'percent'
+                    ? (cartSubtotal * (parseFloat(fee.value) || 0)) / 100
+                    : (parseFloat(fee.value) || 0);
+                customFeesTotal += amt;
+                feesBreakdown.push({
+                    name: fee.name,
+                    type: fee.type,
+                    value: fee.value,
+                    amount: amt
+                });
+            });
+
+            // Hitung kalkulasi diskon akurat (mendukung diskon selektif per produk)
+            let discountVal = parseFloat(document.getElementById('posDiscountInput').value) || 0;
+            let discountAmount = 0;
+            const preset = window._selectedDiscountPreset;
+            if (preset && preset.scope === 'specific' && Array.isArray(preset.product_ids) && preset.product_ids.length > 0) {
+                const eligibleIds = new Set(preset.product_ids.map(Number));
+                const eligibleSubtotal = cart.filter(item => eligibleIds.has(Number(item.id))).reduce((s, i) => s + i.price * i.qty, 0);
+                discountAmount = preset.type === 'percent' ? (eligibleSubtotal * Math.min(100, Math.max(0, preset.value))) / 100 : Math.min(eligibleSubtotal, Math.max(0, preset.value));
+            } else {
+                discountAmount = discountType === 'percent' ? (cartSubtotal * Math.min(100, discountVal)) / 100 : Math.min(cartSubtotal, discountVal);
+            }
+
             const payload = {
                 _token: '{{ csrf_token() }}',
                 customer_name: custName,
@@ -3521,8 +3934,17 @@
                 customer_email: custEmail,
                 items: cart.map(i => ({ id: i.id, qty: i.qty })),
                 discount_type: discountType,
-                discount_val: parseFloat(document.getElementById('posDiscountInput').value) || 0,
-                service_fee: parseFloat(document.getElementById('posServiceFeeInput').value) || 0,
+                discount_val: discountVal,
+                discount_amount: discountAmount,
+                discount_details: preset ? {
+                    name: preset.name,
+                    type: preset.type,
+                    value: preset.value,
+                    scope: preset.scope,
+                    product_ids: preset.product_ids || []
+                } : null,
+                service_fee: customFeesTotal,
+                fees_breakdown: feesBreakdown,
                 payment_method: payMethodBackend,
                 cash_paid: cashPaid,
                 cash_change: Math.max(0, cashPaid - grandTotal)
@@ -3804,9 +4226,14 @@
             const discountVal = parseInt(order.discount) || 0;
             const elDiscount = document.getElementById('recDiscount');
             const elDiscountRow = document.getElementById('recDiscountRow');
+            const elDiscountLabel = document.getElementById('recDiscountLabel');
             if (elDiscount && elDiscountRow) {
                 if (discountVal > 0) {
                     elDiscount.innerText = '-Rp ' + formatRupiah(discountVal);
+                    if (elDiscountLabel) {
+                        const discName = addr.discount_details?.name;
+                        elDiscountLabel.innerText = discName ? `Diskon (${escapeHtml(discName)})` : 'Diskon';
+                    }
                     elDiscountRow.style.display = 'flex';
                 } else {
                     elDiscountRow.style.display = 'none';
@@ -3814,14 +4241,36 @@
             }
 
             const serviceFeeVal = parseInt(addr.service_fee) || 0;
-            const elServiceFee = document.getElementById('recServiceFee');
-            const elServiceFeeRow = document.getElementById('recServiceFeeRow');
-            if (elServiceFee && elServiceFeeRow) {
-                if (serviceFeeVal > 0) {
-                    elServiceFee.innerText = 'Rp ' + formatRupiah(serviceFeeVal);
-                    elServiceFeeRow.style.display = 'flex';
+            const elCustomFeesWrap = document.getElementById('recCustomFeesWrap');
+            if (elCustomFeesWrap) {
+                const breakdown = Array.isArray(addr.fees_breakdown) ? addr.fees_breakdown : [];
+                if (breakdown.length > 0) {
+                    let feeHtml = '';
+                    breakdown.forEach(f => {
+                        const amt = parseFloat(f.amount) || 0;
+                        if (amt > 0) {
+                            const rateSuffix = f.type === 'percent' ? ` (${f.value}%)` : '';
+                            feeHtml += `
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px; color:#475569;">
+                                    <span>${escapeHtml(f.name)}${rateSuffix}</span>
+                                    <span style="font-weight:600;">Rp ${formatRupiah(amt)}</span>
+                                </div>
+                            `;
+                        }
+                    });
+                    elCustomFeesWrap.innerHTML = feeHtml;
+                    elCustomFeesWrap.style.display = feeHtml ? 'block' : 'none';
+                } else if (serviceFeeVal > 0) {
+                    elCustomFeesWrap.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px; color:#475569;">
+                            <span>Biaya Layanan</span>
+                            <span style="font-weight:600;">Rp ${formatRupiah(serviceFeeVal)}</span>
+                        </div>
+                    `;
+                    elCustomFeesWrap.style.display = 'block';
                 } else {
-                    elServiceFeeRow.style.display = 'none';
+                    elCustomFeesWrap.innerHTML = '';
+                    elCustomFeesWrap.style.display = 'none';
                 }
             }
 
@@ -3968,7 +4417,11 @@
             document.getElementById('posCustomerPhone').value = '';
             document.getElementById('posCustomerEmail').value = '';
             document.getElementById('posDiscountInput').value = '';
-            document.getElementById('posServiceFeeInput').value = '';
+            const presetSelect = document.getElementById('posDiscountPresetSelect');
+            if (presetSelect) presetSelect.value = '';
+            window._selectedDiscountPreset = null;
+            const cartEmail = document.getElementById('posCartCustomerEmail');
+            if (cartEmail) cartEmail.value = '';
             renderCart();
         }
 
@@ -4154,24 +4607,504 @@
             }
         }
 
-        // Tab Switching Pengaturan
+        // Tab Switching Pengaturan (4 Tab)
         function switchSettingTab(tabId) {
-            const btnStruk = document.getElementById('tabBtnSettingStruk');
-            const btnStaff = document.getElementById('tabBtnSettingStaff');
-            const paneStruk = document.getElementById('paneSettingStruk');
-            const paneStaff = document.getElementById('paneSettingStaff');
+            const tabs = ['struk', 'fees', 'discounts', 'staff'];
+            const btnMap = {
+                struk: 'tabBtnSettingStruk',
+                fees: 'tabBtnSettingFees',
+                discounts: 'tabBtnSettingDiscounts',
+                staff: 'tabBtnSettingStaff',
+            };
+            const paneMap = {
+                struk: 'paneSettingStruk',
+                fees: 'paneSettingFees',
+                discounts: 'paneSettingDiscounts',
+                staff: 'paneSettingStaff',
+            };
+            tabs.forEach(t => {
+                const btn = document.getElementById(btnMap[t]);
+                const pane = document.getElementById(paneMap[t]);
+                if (btn) btn.classList.toggle('active', t === tabId);
+                if (pane) pane.style.display = t === tabId ? 'block' : 'none';
+            });
 
-            if (tabId === 'struk') {
-                if (btnStruk) btnStruk.classList.add('active');
-                if (btnStaff) btnStaff.classList.remove('active');
-                if (paneStruk) paneStruk.style.display = 'block';
-                if (paneStaff) paneStaff.style.display = 'none';
-            } else {
-                if (btnStaff) btnStaff.classList.add('active');
-                if (btnStruk) btnStruk.classList.remove('active');
-                if (paneStaff) paneStaff.style.display = 'block';
-                if (paneStruk) paneStruk.style.display = 'none';
+            // Render the appropriate pane when switching
+            if (tabId === 'fees') renderFeeSettingsList();
+            if (tabId === 'discounts') {
+                renderDiscountSettingsList();
+                renderDiscountProductPicker();
             }
+        }
+
+        // ═══════════════════════════════════════════════
+        // FEES MANAGEMENT (Tab Pajak & Biaya)
+        // ═══════════════════════════════════════════════
+
+        function renderFeeSettingsList() {
+            const container = document.getElementById('feeRowsListContainer');
+            if (!container) return;
+
+            if (!posFeesData || posFeesData.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
+                        Belum ada biaya / pajak ditambahkan.<br>Klik <strong>+ Tambah Biaya / Pajak</strong> untuk menambah.
+                    </div>`;
+                renderFeeSimulation();
+                updateFeesBadgeCount();
+                return;
+            }
+
+            container.innerHTML = posFeesData.map((fee, idx) => `
+                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
+                            <input type="checkbox" ${fee.is_active ? 'checked' : ''}
+                                onchange="toggleFeeActive(${idx}, this.checked)"
+                                style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
+                        </label>
+                        <div style="min-width:0;">
+                            <div style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                ${escapeHtml(fee.name)}
+                            </div>
+                            <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">
+                                ${fee.type === 'percent' ? fee.value + '%' : 'Rp ' + formatRupiah(fee.value)} (${fee.type === 'percent' ? 'Persentase' : 'Nominal Tetap'})
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                        <input type="number" value="${fee.value}" min="0" step="any"
+                            style="width:70px; height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 6px; font-size:0.78rem; font-weight:600; text-align:right;"
+                            onchange="updateFeeValue(${idx}, this.value)">
+                        <select onchange="updateFeeType(${idx}, this.value)"
+                            style="height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 4px; font-size:0.72rem; font-weight:600; color:#334155;">
+                            <option value="percent" ${fee.type === 'percent' ? 'selected' : ''}>%</option>
+                            <option value="nominal" ${fee.type === 'nominal' ? 'selected' : ''}>Rp</option>
+                        </select>
+                        <button onclick="removeFeeRow(${idx})"
+                            style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                    </div>
+                </div>
+            `).join('');
+
+            renderFeeSimulation();
+            updateFeesBadgeCount();
+        }
+
+        function addFeeRow() {
+            posFeesData.push({ name: 'Biaya Baru', type: 'percent', value: 0, is_active: true });
+            renderFeeSettingsList();
+            const container = document.getElementById('feeRowsListContainer');
+            if (container) {
+                const cards = container.querySelectorAll('[style*="border-radius:12px"]');
+                if (cards.length > 0) {
+                    const lastCard = cards[cards.length - 1];
+                    lastCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                    // Focus name input via inline edit on click
+                    const nameEl = lastCard.querySelector('div[style*="font-weight:800"]');
+                    if (nameEl) {
+                        nameEl.contentEditable = 'true';
+                        nameEl.focus();
+                        nameEl.onblur = function() {
+                            const newName = this.innerText.trim() || 'Biaya Baru';
+                            posFeesData[posFeesData.length - 1].name = newName;
+                            this.contentEditable = 'false';
+                            renderFeeSettingsList();
+                        };
+                        // Select all text
+                        const range = document.createRange();
+                        range.selectNodeContents(nameEl);
+                        window.getSelection().removeAllRanges();
+                        window.getSelection().addRange(range);
+                    }
+                }
+            }
+        }
+
+        function toggleFeeActive(idx, active) {
+            if (posFeesData[idx]) {
+                posFeesData[idx].is_active = active;
+                renderFeeSimulation();
+                updateFeesBadgeCount();
+                renderCartFees();
+                calculateTotals();
+            }
+        }
+
+        function updateFeeValue(idx, val) {
+            if (posFeesData[idx]) {
+                posFeesData[idx].value = parseFloat(val) || 0;
+                renderFeeSimulation();
+                renderCartFees();
+                calculateTotals();
+            }
+        }
+
+        function updateFeeType(idx, type) {
+            if (posFeesData[idx]) {
+                posFeesData[idx].type = type;
+                renderFeeSimulation();
+                renderCartFees();
+                calculateTotals();
+            }
+        }
+
+        function removeFeeRow(idx) {
+            posFeesData.splice(idx, 1);
+            renderFeeSettingsList();
+            renderCartFees();
+            calculateTotals();
+        }
+
+        function renderFeeSimulation() {
+            const simEl = document.getElementById('feeLiveSimulationText');
+            if (!simEl) return;
+            const exampleSubtotal = 100000;
+            let lines = [];
+            let totalCustomFee = 0;
+            (posFeesData || []).forEach(fee => {
+                if (!fee.is_active) return;
+                let amount = fee.type === 'percent'
+                    ? (exampleSubtotal * (parseFloat(fee.value) || 0)) / 100
+                    : (parseFloat(fee.value) || 0);
+                totalCustomFee += amount;
+                lines.push(`${escapeHtml(fee.name)}: +Rp ${formatRupiah(amount)}`);
+            });
+            const systemFee = (exampleSubtotal * (platformFeeRate + adminFeeRate)) / 100;
+            const grandTotal = exampleSubtotal + totalCustomFee + systemFee;
+            if (lines.length === 0) {
+                simEl.innerHTML = `<span style="color:#94a3b8;">Tidak ada biaya tambahan aktif.</span>`;
+            } else {
+                simEl.innerHTML = `
+                    <div>Subtotal: Rp ${formatRupiah(exampleSubtotal)}</div>
+                    ${lines.map(l => `<div style="color:#0369a1;">+ ${l}</div>`).join('')}
+                    <div style="color:#64748b; font-size:0.72rem;">+ Platform/Admin Fee: Rp ${formatRupiah(systemFee)}</div>
+                    <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #cbd5e1; font-weight:900; color:#1eb349;">
+                        Grand Total: Rp ${formatRupiah(grandTotal)}
+                    </div>`;
+            }
+        }
+
+        function updateFeesBadgeCount() {
+            const active = (posFeesData || []).filter(f => f.is_active).length;
+            const badge = document.getElementById('settingFeesBadgeCount');
+            if (badge) badge.innerText = active;
+        }
+
+        function savePosFeesSettings() {
+            const btn = document.getElementById('btnSaveFeesSettings');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24" style="animation:spin 0.8s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Menyimpan...`;
+            }
+            fetch('{{ route("creator.pos.update-settings") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                body: JSON.stringify({ pos_fees: posFeesData })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Pengaturan Biaya & Pajak`;
+                }
+                if (data.success) {
+                    showPosToast('Pengaturan biaya & pajak berhasil disimpan!', 'success');
+                    renderCartFees();
+                    calculateTotals();
+                } else {
+                    showPosAlert(data.message || 'Gagal menyimpan.', 'Error', 'error');
+                }
+            })
+            .catch(() => {
+                if (btn) { btn.disabled = false; btn.innerText = 'Simpan Pengaturan Biaya & Pajak'; }
+                showPosAlert('Terjadi kesalahan jaringan.', 'Error', 'error');
+            });
+        }
+
+        // Render dynamic fee rows inside cart summary box
+        function renderCartFees() {
+            const container = document.getElementById('cartFeesContainer');
+            if (!container) return;
+            const activeFees = (posFeesData || []).filter(f => f.is_active);
+            if (activeFees.length === 0) {
+                container.style.display = 'none';
+                container.innerHTML = '';
+                return;
+            }
+            container.style.display = 'block';
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            container.innerHTML = activeFees.map(fee => {
+                const amount = fee.type === 'percent'
+                    ? (subtotal * (parseFloat(fee.value) || 0)) / 100
+                    : (parseFloat(fee.value) || 0);
+                return `<div class="summary-row" style="font-size:0.78rem; color:#475569;">
+                    <span>${escapeHtml(fee.name)}${fee.type === 'percent' ? ' (' + fee.value + '%)' : ''}</span>
+                    <span style="font-weight:600;">+Rp ${formatRupiah(amount)}</span>
+                </div>`;
+            }).join('');
+        }
+
+        // ═══════════════════════════════════════════════
+        // DISCOUNTS MANAGEMENT (Tab Diskon & Promo)
+        // ═══════════════════════════════════════════════
+
+        function renderDiscountSettingsList() {
+            const container = document.getElementById('discountListContainer');
+            if (!container) return;
+
+            if (!posDiscountsData || posDiscountsData.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
+                        Belum ada promo / diskon dibuat.<br>Klik <strong>+ Buat Diskon Baru</strong> untuk membuat promo pertama.
+                    </div>`;
+                updateDiscountsBadgeCount();
+                return;
+            }
+
+            container.innerHTML = posDiscountsData.map((disc, idx) => {
+                const scopeLabel = disc.scope === 'all'
+                    ? 'Semua Produk'
+                    : `${(disc.product_ids || []).length} Produk Dipilih`;
+                const valueLabel = disc.type === 'percent'
+                    ? disc.value + '%'
+                    : 'Rp ' + formatRupiah(disc.value);
+                return `
+                <div id="discountCard-${idx}" style="background:#ffffff; border:1.5px solid ${disc.is_active ? '#bbf7d0' : '#e2e8f0'}; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
+                            <input type="checkbox" ${disc.is_active ? 'checked' : ''}
+                                onchange="toggleDiscountActive(${idx}, this.checked)"
+                                style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
+                        </label>
+                        <div style="min-width:0;">
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <span style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(disc.name)}</span>
+                                <span style="font-size:0.68rem; background:${disc.is_active ? '#dcfce7' : '#f1f5f9'}; color:${disc.is_active ? '#15803d' : '#64748b'}; font-weight:700; padding:1px 7px; border-radius:999px; flex-shrink:0;">${disc.is_active ? 'Aktif' : 'Nonaktif'}</span>
+                            </div>
+                            <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
+                                Potongan <strong>${valueLabel}</strong> &nbsp;·&nbsp; ${scopeLabel}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                        <button onclick="openEditDiscountDrawer(${idx})"
+                            style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; border-radius:6px; padding:4px 9px; font-size:0.7rem; font-weight:700; cursor:pointer;">Edit</button>
+                        <button onclick="removeDiscount(${idx})"
+                            style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                    </div>
+                </div>`;
+            }).join('');
+            updateDiscountsBadgeCount();
+            // Also update the cart preset dropdown
+            renderDiscountPresetDropdown();
+        }
+
+        function updateDiscountsBadgeCount() {
+            const active = (posDiscountsData || []).filter(d => d.is_active).length;
+            const badge = document.getElementById('settingDiscountsBadgeCount');
+            if (badge) badge.innerText = active;
+        }
+
+        function toggleDiscountActive(idx, active) {
+            if (posDiscountsData[idx]) {
+                posDiscountsData[idx].is_active = active;
+                renderDiscountSettingsList();
+                renderDiscountPresetDropdown();
+                calculateTotals();
+            }
+        }
+
+        function removeDiscount(idx) {
+            posDiscountsData.splice(idx, 1);
+            renderDiscountSettingsList();
+            renderDiscountPresetDropdown();
+            calculateTotals();
+        }
+
+        // ── Discount Drawer ──
+        let discountEditIndex = -1;
+
+        function openAddDiscountDrawer() {
+            discountEditIndex = -1;
+            const title = document.getElementById('discountDrawerTitle');
+            if (title) title.innerText = 'Tambah Diskon / Promo Baru';
+            document.getElementById('discountEditId').value = '';
+            document.getElementById('discountInputName').value = '';
+            document.getElementById('discountInputType').value = 'percent';
+            document.getElementById('discountInputValue').value = '';
+            document.getElementById('discountValueSuffix').innerText = '%';
+            document.getElementById('discountInputActive').checked = true;
+            document.querySelector('input[name="discountScopeRadio"][value="all"]').checked = true;
+            toggleDiscountScopeUI('all');
+            deselectAllDiscountProducts();
+            const drawer = document.getElementById('discountDrawerForm');
+            if (drawer) { drawer.style.display = 'block'; drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+        }
+
+        function openEditDiscountDrawer(idx) {
+            const disc = posDiscountsData[idx];
+            if (!disc) return;
+            discountEditIndex = idx;
+            const title = document.getElementById('discountDrawerTitle');
+            if (title) title.innerText = 'Edit Diskon: ' + disc.name;
+            document.getElementById('discountEditId').value = idx;
+            document.getElementById('discountInputName').value = disc.name;
+            document.getElementById('discountInputType').value = disc.type || 'percent';
+            document.getElementById('discountInputValue').value = disc.value;
+            document.getElementById('discountValueSuffix').innerText = disc.type === 'percent' ? '%' : 'Rp';
+            document.getElementById('discountInputActive').checked = !!disc.is_active;
+            const scope = disc.scope || 'all';
+            document.querySelector(`input[name="discountScopeRadio"][value="${scope}"]`).checked = true;
+            toggleDiscountScopeUI(scope);
+            // Re-check selected products
+            const selectedIds = new Set((disc.product_ids || []).map(Number));
+            document.querySelectorAll('#discountProductPickerList input[type="checkbox"]').forEach(cb => {
+                cb.checked = selectedIds.has(Number(cb.value));
+            });
+            updateDiscountSelectedCount();
+            const drawer = document.getElementById('discountDrawerForm');
+            if (drawer) { drawer.style.display = 'block'; drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+        }
+
+        function closeDiscountDrawer() {
+            const drawer = document.getElementById('discountDrawerForm');
+            if (drawer) drawer.style.display = 'none';
+            discountEditIndex = -1;
+        }
+
+        function onDiscountTypeChanged() {
+            const type = document.getElementById('discountInputType').value;
+            const suffix = document.getElementById('discountValueSuffix');
+            if (suffix) suffix.innerText = type === 'percent' ? '%' : 'Rp';
+        }
+
+        function toggleDiscountScopeUI(scope) {
+            const wrap = document.getElementById('discountProductPickerWrap');
+            if (wrap) wrap.style.display = scope === 'specific' ? 'block' : 'none';
+        }
+
+        function handleSaveDiscount(e) {
+            e.preventDefault();
+            const name = document.getElementById('discountInputName').value.trim();
+            const type = document.getElementById('discountInputType').value;
+            const value = parseFloat(document.getElementById('discountInputValue').value) || 0;
+            const isActive = document.getElementById('discountInputActive').checked;
+            const scope = document.querySelector('input[name="discountScopeRadio"]:checked')?.value || 'all';
+            const productIds = scope === 'specific'
+                ? Array.from(document.querySelectorAll('#discountProductPickerList input[type="checkbox"]:checked')).map(cb => Number(cb.value))
+                : [];
+
+            if (!name) { showPosAlert('Nama promo tidak boleh kosong.', 'Nama Wajib', 'warning'); return; }
+            if (type === 'percent' && value > 100) { showPosAlert('Diskon persen tidak boleh melebihi 100%.', 'Nilai Tidak Valid', 'warning'); return; }
+            if (scope === 'specific' && productIds.length === 0) { showPosAlert('Pilih minimal 1 produk untuk diskon spesifik.', 'Produk Wajib Dipilih', 'warning'); return; }
+
+            const discObj = { name, type, value, scope, product_ids: productIds, is_active: isActive };
+
+            if (discountEditIndex >= 0) {
+                posDiscountsData[discountEditIndex] = discObj;
+            } else {
+                posDiscountsData.push(discObj);
+            }
+            // Save to server
+            fetch('{{ route("creator.pos.update-settings") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                body: JSON.stringify({ pos_discounts: posDiscountsData })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    showPosToast('Promo diskon berhasil disimpan!', 'success');
+                    closeDiscountDrawer();
+                    renderDiscountSettingsList();
+                    renderDiscountPresetDropdown();
+                    calculateTotals();
+                } else {
+                    showPosAlert(data.message || 'Gagal menyimpan.', 'Error', 'error');
+                }
+            })
+            .catch(() => showPosAlert('Terjadi kesalahan jaringan.', 'Error', 'error'));
+        }
+
+        // ── Product Picker for Discount ──
+        function renderDiscountProductPicker() {
+            const list = document.getElementById('discountProductPickerList');
+            if (!list) return;
+            const products = window.posAllProducts || [];
+            if (products.length === 0) {
+                list.innerHTML = `<div style="font-size:0.78rem; color:#94a3b8; text-align:center; padding:1rem;">Tidak ada produk tersedia.</div>`;
+                return;
+            }
+            list.innerHTML = products.map(p => `
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:600; color:#1e293b; cursor:pointer; padding:5px 4px; border-radius:6px; transition:background 0.15s;">
+                    <input type="checkbox" value="${p.id}"
+                        style="width:15px; height:15px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;"
+                        onchange="updateDiscountSelectedCount()">
+                    <span>${escapeHtml(p.name)}</span>
+                </label>
+            `).join('');
+        }
+
+        function filterDiscountProductPicker() {
+            const q = (document.getElementById('discountProductPickerSearch')?.value || '').toLowerCase().trim();
+            document.querySelectorAll('#discountProductPickerList label').forEach(label => {
+                const name = label.querySelector('span')?.innerText?.toLowerCase() || '';
+                label.style.display = !q || name.includes(q) ? '' : 'none';
+            });
+        }
+
+        function selectAllDiscountProducts() {
+            document.querySelectorAll('#discountProductPickerList input[type="checkbox"]').forEach(cb => { cb.checked = true; });
+            updateDiscountSelectedCount();
+        }
+
+        function deselectAllDiscountProducts() {
+            document.querySelectorAll('#discountProductPickerList input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+            updateDiscountSelectedCount();
+        }
+
+        function updateDiscountSelectedCount() {
+            const count = document.querySelectorAll('#discountProductPickerList input[type="checkbox"]:checked').length;
+            const badge = document.getElementById('discountSelectedCountBadge');
+            if (badge) badge.innerText = count + ' produk dipilih';
+        }
+
+        // ── Cart Preset Dropdown ──
+        function renderDiscountPresetDropdown() {
+            const sel = document.getElementById('posDiscountPresetSelect');
+            const wrap = document.getElementById('cartDiscountPresetWrap');
+            if (!sel || !wrap) return;
+            const activeDiscounts = (posDiscountsData || []).filter(d => d.is_active);
+            if (activeDiscounts.length === 0) {
+                wrap.style.display = 'none';
+                sel.innerHTML = '<option value="">Pilih Promo</option>';
+                return;
+            }
+            wrap.style.display = '';
+            sel.innerHTML = '<option value="">-- Manual --</option>' +
+                activeDiscounts.map((d, i) => {
+                    const label = `${d.name} (${d.type === 'percent' ? d.value + '%' : 'Rp ' + formatRupiah(d.value)})`;
+                    return `<option value="${i}">${label}</option>`;
+                }).join('');
+        }
+
+        function onDiscountPresetChanged() {
+            const sel = document.getElementById('posDiscountPresetSelect');
+            const idx = sel ? parseInt(sel.value) : NaN;
+            const activeDiscounts = (posDiscountsData || []).filter(d => d.is_active);
+            if (!isNaN(idx) && activeDiscounts[idx]) {
+                const disc = activeDiscounts[idx];
+                // Set discount input accordingly
+                setDiscountType(disc.type === 'percent' ? 'percent' : 'nominal');
+                document.getElementById('posDiscountInput').value = disc.value;
+                // Store selected discount ref for scoped calc
+                window._selectedDiscountPreset = disc;
+            } else {
+                window._selectedDiscountPreset = null;
+            }
+            calculateTotals();
         }
 
         // Live Preview Struk di Tab 1
