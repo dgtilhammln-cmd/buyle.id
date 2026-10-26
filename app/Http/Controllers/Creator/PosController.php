@@ -193,7 +193,10 @@ class PosController extends Controller
      */
     public function index(Request $request)
     {
-        $seller = auth()->user();
+        $authUser = auth()->user();
+        $isStaff = $authUser->isPosCashier() && $authUser->parent_seller_id;
+        $seller = $isStaff ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser) : $authUser;
+        $currentCashier = $isStaff ? $authUser : null;
 
         // 1. Ambil profil toko creator
         $profile = CreatorProfile::where('user_id', $seller->id)->first();
@@ -254,10 +257,29 @@ class PosController extends Controller
         $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
         $availableStoreBalance = (float) ($balanceData['available_balance'] ?? 0);
 
+        // 9. Logo Struk POS Toko
+        $posLogoUrl = $profile?->pos_logo ? asset('storage/' . $profile->pos_logo) : null;
+
+        // 10. Pengaturan Alamat & Telepon Toko untuk Struk
+        $posStoreAddress = $profile?->pos_store_address ?? $profile?->address ?? '';
+        $posStorePhone   = $profile?->pos_store_phone ?? $seller?->phone ?? '';
+
+        // 11. Daftar Staf Kasir Terdaftar
+        $cashiers = \App\Models\User::where('parent_seller_id', $seller->id)
+            ->orderBy('name')
+            ->get();
+
         return view('creator.pos.index', compact(
             'products',
             'todayOrders',
             'profile',
+            'posLogoUrl',
+            'posStoreAddress',
+            'posStorePhone',
+            'cashiers',
+            'currentCashier',
+            'isStaff',
+            'seller',
             'platformFeeRate',
             'adminFeeRate',
             'posBalance',
@@ -275,7 +297,10 @@ class PosController extends Controller
      */
     public function products(Request $request)
     {
-        $seller = auth()->user();
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
         $products = $this->getPosProducts($seller->id);
 
         return response()->json([
@@ -300,7 +325,23 @@ class PosController extends Controller
             'payment_method' => 'required|in:cash,transfer,qris',
         ]);
 
-        $seller = auth()->user();
+        $authUser = auth()->user();
+        $isStaff = $authUser->isPosCashier() && $authUser->parent_seller_id;
+        $seller = $isStaff ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser) : $authUser;
+
+        // Tentukan kasir yang bertugas pada transaksi ini
+        $cashierId = $authUser->id;
+        $cashierName = $authUser->name;
+        $cashierShift = $authUser->shift_hours ?? 'Shift Kasir';
+
+        if (!$isStaff && $request->filled('active_cashier_id')) {
+            $selectedCashier = \App\Models\User::where('parent_seller_id', $seller->id)->find($request->active_cashier_id);
+            if ($selectedCashier) {
+                $cashierId = $selectedCashier->id;
+                $cashierName = $selectedCashier->name;
+                $cashierShift = $selectedCashier->shift_hours ?? 'Shift Kasir';
+            }
+        }
 
         DB::beginTransaction();
         try {
@@ -377,6 +418,8 @@ class PosController extends Controller
             $order = Order::create([
                 'order_number'    => Order::generateOrderNumber(),
                 'user_id'         => $seller->id,
+                'cashier_id'      => $cashierId,
+                'cashier_name'    => $cashierName,
                 'status'          => $isPaid ? OrderStatus::Confirmed : OrderStatus::Pending,
                 'subtotal'        => $subtotal,
                 'shipping_cost'   => 0,
@@ -396,6 +439,9 @@ class PosController extends Controller
                     'cash_paid'      => (float) ($request->cash_paid ?? 0),
                     'cash_change'    => (float) ($request->cash_change ?? 0),
                     'service_fee'    => $serviceFee,
+                    'cashier_id'     => $cashierId,
+                    'cashier_name'   => $cashierName,
+                    'cashier_shift'  => $cashierShift,
                 ],
             ]);
 
@@ -600,18 +646,24 @@ class PosController extends Controller
      */
     private function dispatchReceiptEmail(Order $order, string $email): void
     {
-        $profile = CreatorProfile::where('user_id', auth()->id())->first();
-        $storeName = $profile->store_name ?? auth()->user()->name ?? 'buyle.id Store';
+        try {
+            $order->loadMissing(['items', 'payment']);
+            $profile = CreatorProfile::where('user_id', $order->user_id)->first();
+            $storeName = $profile->store_name ?? $order->user->name ?? 'buyle.id Store';
 
-        Mail::send('emails.pos_receipt', [
-            'order'     => $order,
-            'profile'   => $profile,
-            'storeName' => $storeName,
-            'subject'   => 'Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')',
-        ], function ($message) use ($email, $order, $storeName) {
-            $message->to($email)
-                ->subject('Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')');
-        });
+            Mail::send('emails.pos_receipt', [
+                'order'     => $order,
+                'profile'   => $profile,
+                'storeName' => $storeName,
+                'subject'   => 'Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')',
+            ], function ($message) use ($email, $order, $storeName) {
+                $message->to($email)
+                    ->subject('Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')');
+            });
+            Log::info("POS E-Receipt sent to {$email} for order {$order->order_number}");
+        } catch (\Throwable $e) {
+            Log::error("Failed to send POS E-Receipt to {$email}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -828,6 +880,304 @@ class PosController extends Controller
                     'fee'          => (float) (($o->platform_fee ?? 0) + ($o->admin_fee ?? 0)),
                 ];
             }),
+        ]);
+    }
+
+    /**
+     * Polling AJAX Real-time: Cek status pembayaran order POS (misal QRIS / Non-tunai).
+     * Jika Midtrans sudah settlement tapi webhook delay, otomatis sync status lunas & kirim E-Receipt.
+     */
+    public function orderStatus(int $id)
+    {
+        $seller = auth()->user();
+        $order = Order::where('id', $id)
+            ->where('source', 'pos')
+            ->where('user_id', $seller->id)
+            ->with(['items', 'payment'])
+            ->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Transaksi POS tidak ditemukan.',
+            ], 404);
+        }
+
+        $statusStr = is_object($order->status) ? $order->status->value : (string) $order->status;
+        $isPaid = in_array($statusStr, ['confirmed', 'processing', 'completed', 'delivered']);
+
+        // Jika masih pending dan ada payment Midtrans/QRIS, cek langsung ke Midtrans API
+        if (!$isPaid && $statusStr === 'pending' && !empty($order->order_number)) {
+            try {
+                $midtransService = app(MidtransService::class);
+                $mtStatus = $midtransService->getTransactionStatus($order->order_number);
+                if ($mtStatus && isset($mtStatus->transaction_status)) {
+                    $tStatus = $mtStatus->transaction_status;
+                    if (in_array($tStatus, ['settlement', 'capture'])) {
+                        $order->update(['status' => OrderStatus::Confirmed]);
+                        if ($order->payment) {
+                            $order->payment->update([
+                                'status'  => PaymentStatus::Success,
+                                'paid_at' => now(),
+                            ]);
+                        }
+                        $isPaid = true;
+                        $statusStr = 'confirmed';
+
+                        // Kirim E-Receipt jika email pelanggan diisi
+                        $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+                        if (!empty($addr['email'])) {
+                            $this->dispatchReceiptEmail($order, $addr['email']);
+                        }
+                    } elseif (in_array($tStatus, ['cancel', 'deny', 'expire'])) {
+                        $order->update(['status' => OrderStatus::Cancelled]);
+                        if ($order->payment) {
+                            $order->payment->update(['status' => PaymentStatus::Failed]);
+                        }
+                        $statusStr = 'cancelled';
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Midtrans real-time check error: ' . $e->getMessage());
+            }
+        }
+
+        $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+
+        return response()->json([
+            'success'        => true,
+            'status'         => $statusStr,
+            'is_paid'        => $isPaid,
+            'payment_status' => $order->payment?->status ? (is_object($order->payment->status) ? $order->payment->status->value : (string) $order->payment->status) : null,
+            'customer_email' => $addr['email'] ?? null,
+            'order'          => $order->fresh(['items', 'payment']),
+        ]);
+    }
+
+    /**
+     * Upload Logo Toko Struk POS.
+     * Jika diupload, nama toko teks pada struk akan digantikan logo ini.
+     */
+    public function uploadLogo(Request $request)
+    {
+        $request->validate([
+            'logo' => 'required|image|mimes:png,jpg,jpeg,svg,webp|max:3072',
+        ]);
+
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+
+        if ($request->hasFile('logo')) {
+            if ($profile->pos_logo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_logo);
+            }
+
+            $path = $request->file('logo')->store('pos_logos', 'public');
+            $profile->update(['pos_logo' => $path]);
+
+            return response()->json([
+                'success'  => true,
+                'message'  => 'Logo struk kasir berhasil disimpan!',
+                'logo_url' => asset('storage/' . $path),
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'File logo tidak valid.',
+        ], 422);
+    }
+
+    /**
+     * Hapus Logo Toko Struk POS (kembali ke nama teks toko).
+     */
+    public function removeLogo()
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+
+        if ($profile->pos_logo) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_logo);
+            $profile->update(['pos_logo' => null]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logo struk dihapus. Struk kini kembali menggunakan nama toko.',
+        ]);
+    }
+
+    /**
+     * Simpan Pengaturan Profil Toko untuk Struk POS (Alamat, No Telp, Nama Toko).
+     */
+    public function updateSettings(Request $request)
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+
+        $request->validate([
+            'store_name'        => 'nullable|string|max:100',
+            'pos_store_address' => 'nullable|string|max:500',
+            'pos_store_phone'   => 'nullable|string|max:50',
+        ]);
+
+        $updateData = [
+            'pos_store_address' => $request->pos_store_address,
+            'pos_store_phone'   => $request->pos_store_phone,
+        ];
+        if ($request->filled('store_name')) {
+            $updateData['store_name'] = trim($request->store_name);
+        }
+
+        $profile->update($updateData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengaturan struk kasir berhasil disimpan!',
+            'data'    => [
+                'store_name'        => $profile->store_name,
+                'pos_store_address' => $profile->pos_store_address,
+                'pos_store_phone'   => $profile->pos_store_phone,
+            ]
+        ]);
+    }
+
+    /**
+     * Ambil data staf kasir untuk toko ini.
+     */
+    public function getCashiers()
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $cashiers = \App\Models\User::where('parent_seller_id', $seller->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'username', 'email', 'shift_hours', 'cashier_role_title', 'is_active', 'created_at']);
+
+        return response()->json([
+            'success'  => true,
+            'cashiers' => $cashiers
+        ]);
+    }
+
+    /**
+     * Tambah atau edit data staf kasir.
+     */
+    public function saveCashier(Request $request)
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $cashierId = $request->input('id');
+
+        $request->validate([
+            'name'               => 'required|string|max:100',
+            'username'           => 'required|string|min:3|max:50|alpha_dash|unique:users,username,' . ($cashierId ?: 'NULL') . ',id',
+            'password'           => $cashierId ? 'nullable|string|min:6' : 'required|string|min:6',
+            'shift_hours'        => 'nullable|string|max:100',
+            'cashier_role_title' => 'nullable|string|max:100',
+            'is_active'          => 'nullable',
+        ], [
+            'name.required'      => 'Nama staf kasir wajib diisi.',
+            'username.required'  => 'Username wajib diisi.',
+            'username.unique'    => 'Username ini sudah digunakan, silakan pilih username lain.',
+            'password.required'  => 'Password wajib diisi untuk staf kasir baru.',
+            'password.min'       => 'Password minimal 6 karakter.',
+        ]);
+
+        if ($cashierId) {
+            $cashier = \App\Models\User::where('parent_seller_id', $seller->id)->findOrFail($cashierId);
+            $cashier->name = $request->name;
+            $cashier->username = strtolower(trim($request->username));
+            $cashier->shift_hours = $request->shift_hours;
+            $cashier->cashier_role_title = $request->cashier_role_title ?: 'Kasir';
+            if ($request->has('is_active')) {
+                $cashier->is_active = $request->boolean('is_active', true);
+            }
+            if ($request->filled('password')) {
+                $cashier->password = \Illuminate\Support\Facades\Hash::make($request->password);
+            }
+            $cashier->save();
+            $msg = 'Data staf kasir ' . $cashier->name . ' berhasil diperbarui!';
+        } else {
+            $username = strtolower(trim($request->username));
+            $email = $username . '.' . $seller->id . '@pos.buyle.id';
+            if (\App\Models\User::where('email', $email)->exists()) {
+                $email = $username . '.' . time() . '@pos.buyle.id';
+            }
+
+            $cashier = \App\Models\User::create([
+                'name'               => $request->name,
+                'username'           => $username,
+                'email'              => $email,
+                'password'           => \Illuminate\Support\Facades\Hash::make($request->password),
+                'role'               => 'pos_cashier',
+                'parent_seller_id'   => $seller->id,
+                'shift_hours'        => $request->shift_hours,
+                'cashier_role_title' => $request->cashier_role_title ?: 'Kasir',
+                'is_active'          => $request->boolean('is_active', true),
+            ]);
+            $msg = 'Staf kasir baru ' . $cashier->name . ' berhasil didaftarkan!';
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $msg,
+            'cashier' => $cashier
+        ]);
+    }
+
+    /**
+     * Hapus staf kasir.
+     */
+    public function deleteCashier($id)
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $cashier = \App\Models\User::where('parent_seller_id', $seller->id)->findOrFail($id);
+        $name = $cashier->name;
+        $cashier->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Akun staf kasir ' . $name . ' berhasil dihapus.'
+        ]);
+    }
+
+    /**
+     * Toggle status aktif/nonaktif staf kasir.
+     */
+    public function toggleCashier($id)
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $cashier = \App\Models\User::where('parent_seller_id', $seller->id)->findOrFail($id);
+        $cashier->is_active = !$cashier->is_active;
+        $cashier->save();
+
+        return response()->json([
+            'success'   => true,
+            'is_active' => $cashier->is_active,
+            'message'   => 'Status akun kasir ' . $cashier->name . ' diubah menjadi ' . ($cashier->is_active ? 'AKTIF' : 'NONAKTIF') . '.'
         ]);
     }
 }

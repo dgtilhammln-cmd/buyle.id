@@ -62,7 +62,7 @@
                         @ Rp {{ number_format($item->price, 0, ',', '.') }}
                     </div>
                 </td>
-                <td align="center" style="padding: 10px 0;">{{ $item->quantity }}</td>
+                <td align="center" style="padding: 10px 0;">{{ $item->qty ?? $item->quantity ?? 1 }}</td>
                 <td align="right" style="padding: 10px 0; font-weight: 600; color: #0f172a;">
                     Rp {{ number_format($item->subtotal, 0, ',', '.') }}
                 </td>

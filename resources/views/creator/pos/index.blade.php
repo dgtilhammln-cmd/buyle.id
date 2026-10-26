@@ -423,9 +423,11 @@
         }
 
         .cart-item-unit-price {
-            font-size: 0.75rem;
-            color: #64748b;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #166534;
             margin-top: 2px;
+            white-space: nowrap;
         }
 
         .cart-qty-ctrl {
@@ -490,9 +492,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 0.75rem;
             margin-bottom: 0.5rem;
             font-size: 0.83rem;
             color: #475569;
+        }
+
+        .summary-row > span:last-child,
+        .summary-row > strong:last-child {
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-align: right;
         }
 
         .summary-total {
@@ -502,6 +512,65 @@
             border-top: 2px dashed #cbd5e1;
             padding-top: 0.75rem;
             margin-top: 0.75rem;
+        }
+
+        /* ── Thermal Receipt Printer Animation ───────────────────────────── */
+        .receipt-printer-box {
+            position: relative;
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1.5px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .receipt-printer-slot {
+            height: 10px;
+            background: #0f172a;
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        @keyframes receiptEjectAnim {
+            0% {
+                transform: translateY(-35px);
+                opacity: 0.5;
+            }
+            45% {
+                transform: translateY(8px);
+                opacity: 0.95;
+            }
+            75% {
+                transform: translateY(-2px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .receipt-ejecting {
+            animation: receiptEjectAnim 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+        }
+
+        @keyframes pulsePendingAnim {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.75; transform: scale(0.98); }
+        }
+
+        .status-badge-pending {
+            background: #fef3c7 !important;
+            color: #92400e !important;
+            border: 1.5px dashed #f59e0b !important;
+            animation: pulsePendingAnim 1.8s infinite ease-in-out;
+        }
+
+        .status-badge-paid {
+            background: #ecfdf5 !important;
+            color: #065f46 !important;
+            border: 1.5px solid #10b981 !important;
         }
 
         /* ── Discount Type Toggle ────────────────────────────────────────── */
@@ -898,6 +967,25 @@
             </button>
         </div>
 
+        <!-- Indikator Kasir Bertugas -->
+        <div style="display:inline-flex; align-items:center; gap:6px; background:#f0fdf4; border:1.5px solid #bbf7d0; padding:4px 11px; border-radius:999px; font-size:0.75rem; color:#166534; font-weight:700;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#16a34a; display:inline-block; box-shadow:0 0 0 2px rgba(22,163,74,0.25);"></span>
+            <span style="color:#64748b; font-size:0.7rem; font-weight:600;">Kasir:</span>
+            <strong id="topbarCashierNameDisplay">{{ $currentCashier ? $currentCashier->name : auth()->user()->name }}</strong>
+            @if($currentCashier && $currentCashier->shift_hours)
+                <span style="font-size:0.65rem; background:#dcfce7; color:#15803d; font-weight:800; padding:1px 6px; border-radius:999px;">{{ $currentCashier->shift_hours }}</span>
+            @endif
+        </div>
+
+        <!-- Tombol Icon Pengaturan POS (Logo, Alamat, No Telp, Staff Kasir) -->
+        <button type="button" class="btn-outline-bio" onclick="openPosSettingsModal()" style="padding:0.45rem 1rem; display:inline-flex; align-items:center; gap:6px;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+            </svg>
+            Pengaturan POS
+        </button>
+
         <!-- Tombol Rekap Closing & Riwayat Shift -->
         <button type="button" class="btn-outline-bio" onclick="openModal('posHistoryModal')" style="padding:0.45rem 1rem;">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -907,16 +995,29 @@
             Rekap Shift &amp; Riwayat
         </button>
 
-        <!-- Tombol Kembali ke Aplikasi -->
-        <a href="{{ route('creator.app.index') }}"
-            style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#475569; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; text-decoration:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,0.03);"
-            onmouseover="this.style.borderColor='#1eb349';this.style.color='#166534';"
-            onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#475569';">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                <polyline points="15 18 9 12 15 6" />
-            </svg>
-            Kembali ke Aplikasi
-        </a>
+        @if(!$isStaff)
+            <!-- Tombol Kembali ke Aplikasi (Hanya untuk Owner) -->
+            <a href="{{ route('creator.app.index') }}"
+                style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#475569; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; text-decoration:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,0.03);"
+                onmouseover="this.style.borderColor='#1eb349';this.style.color='#166534';"
+                onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#475569';">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Kembali ke Aplikasi
+            </a>
+        @else
+            <!-- Tombol Logout Kasir Staf -->
+            <button type="button" onclick="document.getElementById('logout-form').submit();"
+                style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#ef4444; background:#fef2f2; border:1.5px solid #fecaca; border-radius:999px; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all 0.15s ease;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Logout Kasir
+            </button>
+        @endif
     </div>
 @endsection
 
@@ -1403,9 +1504,9 @@
                             </div>
 
                             <!-- Platform & Admin Fees Breakdown -->
-                            <div class="summary-row" style="font-size:0.75rem; color:#94a3b8;">
-                                <span>Platform Fee ({{ $platformFeeRate }}%) & Admin Fee ({{ $adminFeeRate }}%)</span>
-                                <span id="displaySystemFees">Rp 0</span>
+                            <div class="summary-row" style="font-size:0.75rem; color:#94a3b8; align-items:flex-start;">
+                                <span style="line-height:1.35; flex:1; min-width:0;">Platform Fee ({{ $platformFeeRate }}%) & Admin Fee ({{ $adminFeeRate }}%)</span>
+                                <span id="displaySystemFees" style="white-space:nowrap; flex-shrink:0; text-align:right; font-weight:600; margin-left:8px;">Rp 0</span>
                             </div>
 
                             <!-- Grand Total -->
@@ -1869,113 +1970,141 @@
         </div>
     </div>
 
-    <!-- CUSTOM OVERLAY MODAL 2: Receipt Preview & Thermal Print -->
+    <!-- CUSTOM OVERLAY MODAL 2: Receipt Preview & Modern Thermal Print -->
     <div class="pos-modal-overlay" id="posReceiptModal">
         <div class="pos-modal-card" style="max-width: 440px;">
             <div class="pos-modal-head no-print">
-                <h5>Struk Transaksi</h5>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                    </div>
+                    <h5 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Struk Transaksi POS</h5>
+                </div>
                 <button type="button" class="pos-modal-close"
                     onclick="closeModal('posReceiptModal'); resetPOS();">&times;</button>
             </div>
 
-            <div class="pos-modal-body" id="posReceiptModalContent">
-                <!-- Thermal Struk Print Template -->
-                <div style="font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #000000; line-height: 1.3;"
-                    id="printablePosReceiptArea">
-                    <div class="text-center mb-3">
-                        @if($siteLogoUrl)
-                            <img src="{{ $siteLogoUrl }}" alt="buyle.id" style="height: 28px; width: auto; margin-bottom: 4px;"
-                                class="no-print">
-                        @endif
-                        <div style="font-weight: 900; font-size: 15px; text-transform: uppercase;">{{ $storeName }}</div>
-                        <div style="font-size: 11px;">buyle.id POS</div>
-                        <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
-                    </div>
+            <div class="pos-modal-body" id="posReceiptModalContent" style="padding: 1.25rem;">
+                <!-- Thermal Struk Printer Container with Slot & Ejection Animation -->
+                <div class="receipt-printer-box">
+                    <div class="receipt-printer-slot"></div>
+                    <div style="padding: 1rem; background: #ffffff;">
+                        <div style="font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11.5px; color: #000000; line-height: 1.35; position: relative; overflow: hidden; background: #ffffff; padding: 4px;"
+                            id="printablePosReceiptArea">
 
-                    <table style="width: 100%; font-size: 11px; margin-bottom: 8px;">
-                        <tr>
-                            <td>No Order:</td>
-                            <td class="text-end" style="font-weight:700;" id="recOrderNum">-</td>
-                        </tr>
-                        <tr>
-                            <td>Tanggal:</td>
-                            <td class="text-end" id="recDate">-</td>
-                        </tr>
-                        <tr>
-                            <td>Pelanggan:</td>
-                            <td class="text-end" style="font-weight:700;" id="recCustomerName">-</td>
-                        </tr>
-                        <tr id="recNotesRow" style="display:none;">
-                            <td>Catatan:</td>
-                            <td class="text-end" id="recNotes">-</td>
-                        </tr>
-                        <tr>
-                            <td>Metode:</td>
-                            <td class="text-end" style="font-weight:700;" id="recPayMethod">-</td>
-                        </tr>
-                    </table>
+                            <!-- Watermark Logo buyle.id di Tengah Struk (Transparansi Minim tapi Tetap Kelihatan) -->
+                            <div class="pos-receipt-watermark" style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); opacity: 0.055; pointer-events: none; z-index: 0; width: 190px; text-align: center;">
+                                @if(!empty($siteLogoUrl))
+                                    <img src="{{ $siteLogoUrl }}" alt="buyle watermark" style="max-width: 140px; max-height: 55px; object-fit: contain; filter: grayscale(100%); margin:0 auto; display:block;">
+                                @endif
+                                <div style="font-size: 24px; font-weight: 900; color: #000; letter-spacing: 2px;">buyle.id</div>
+                                <div style="font-size: 8.5px; font-weight: 800; color: #000; letter-spacing: 1px;">DIGITAL CREATOR CENTER</div>
+                            </div>
 
-                    <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
+                            <!-- Konten Struk Transaksi Modern (Z-Index 1) -->
+                            <div style="position: relative; z-index: 1;">
+                                <!-- 1. Header (Logo/Icon Toko, Nama Toko, Alamat, No Telp, No Struk) -->
+                                <div style="text-align: center; margin-bottom: 6px;">
+                                    <div id="recHeaderLogoWrap" style="margin-bottom: 4px;">
+                                        @if(!empty($posLogoUrl))
+                                            <img src="{{ $posLogoUrl }}" alt="Logo Toko" id="recHeaderLogoImg" style="max-height: 48px; max-width: 140px; object-fit: contain; margin: 0 auto 3px auto; display: block;">
+                                        @else
+                                            <svg id="recHeaderLogoFallbackSvg" width="38" height="38" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; margin:0 auto 2px auto; color:#000000;">
+                                                <path d="M4 4h16a1 1 0 0 1 1 1v2a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1-3 3 3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm0 8v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9h-2v7H6v-7H4zm5 1h6v6H9v-6z"/>
+                                            </svg>
+                                        @endif
+                                    </div>
+                                    <div id="recHeaderStoreName" style="font-weight: 800; font-size: 15px; color: #000; letter-spacing: -0.2px;">{{ $storeName }}</div>
+                                    <div id="recHeaderStoreAddress" style="font-size: 11px; color: #111; line-height: 1.35; max-width: 250px; margin: 2px auto 0 auto;">{{ $posStoreAddress ?: ($profile->address ?? '') }}</div>
+                                    <div id="recHeaderStorePhone" style="font-size: 11px; color: #111; margin-top: 1px;">{{ $posStorePhone ? ('No. Telp ' . $posStorePhone) : '' }}</div>
+                                    <div id="recOrderCode" style="font-size: 11.5px; font-weight: 600; color: #000; margin-top: 2px; letter-spacing: 0.3px;">-</div>
+                                </div>
 
-                    <table style="width: 100%; font-size: 11px; margin-bottom: 8px;" id="recItemsTable">
-                        <thead>
-                            <tr style="border-bottom: 1px solid #000;">
-                                <th class="text-start">Item</th>
-                                <th class="text-center">Qty</th>
-                                <th class="text-end">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                                <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
 
-                    <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
+                                <!-- 2. Meta Transaksi (Date, Time, Queue Tag di Kiri; Alias, Kasir, Cabang di Kanan) -->
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; font-size: 11.5px; color: #000; line-height: 1.35;">
+                                    <div>
+                                        <div id="recDateOnly">-</div>
+                                        <div id="recTimeOnly">-</div>
+                                        <div style="margin-top: 5px;">
+                                            <span id="recQueueTag" style="border: 1.5px solid #16a34a; color: #16a34a; font-weight: 800; font-size: 11px; padding: 2px 7px; border-radius: 4px; display: inline-block;">No. 0-1</span>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div id="recStoreShortSlug" style="font-weight: 600;">{{ $profile->store_slug ?? 'toko' }}</div>
+                                        <div id="recCashierName" style="font-weight: 700;">{{ $currentCashier ? $currentCashier->name : auth()->user()->name }}</div>
+                                        <div id="recStoreCity" style="font-size: 10.5px; color: #222;">{{ $profile->city_name ?? ($profile->address ? Str::limit($profile->address, 20) : 'Indonesia') }}</div>
+                                    </div>
+                                </div>
 
-                    <table style="width: 100%; font-size: 11px;">
-                        <tr>
-                            <td>Subtotal:</td>
-                            <td class="text-end" id="recSubtotal">Rp 0</td>
-                        </tr>
-                        <tr id="recDiscountRow" style="display:none;">
-                            <td>Diskon:</td>
-                            <td class="text-end" id="recDiscount">-Rp 0</td>
-                        </tr>
-                        <tr id="recServiceFeeRow" style="display:none;">
-                            <td>Service Fee:</td>
-                            <td class="text-end" id="recServiceFee">Rp 0</td>
-                        </tr>
-                        <tr id="recPlatformFeeRow">
-                            <td>Platform Fee:</td>
-                            <td class="text-end" id="recPlatformFee">Rp 0</td>
-                        </tr>
-                        <tr id="recAdminFeeRow">
-                            <td>Admin Fee:</td>
-                            <td class="text-end" id="recAdminFee">Rp 0</td>
-                        </tr>
-                        <tr style="font-weight: 900; font-size: 13px;">
-                            <td style="padding-top:4px;">TOTAL:</td>
-                            <td class="text-end" style="padding-top:4px;" id="recTotal">Rp 0</td>
-                        </tr>
-                        <tr id="recCashPaidRow" style="display:none;">
-                            <td>Tunai Diterima:</td>
-                            <td class="text-end" id="recCashPaid">Rp 0</td>
-                        </tr>
-                        <tr id="recCashChangeRow" style="display:none;">
-                            <td>Kembalian:</td>
-                            <td class="text-end" id="recCashChange">Rp 0</td>
-                        </tr>
-                    </table>
+                                <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
 
-                    <div style="border-bottom: 1px dashed #000; margin: 12px 0 8px 0;"></div>
-                    <div class="text-center" style="font-size: 10px; color: #444444;">
-                        Terima kasih atas kunjungan Anda!<br>
-                        Powered by buyle.id
+                                <!-- 3. Daftar Item Bernomor -->
+                                <div id="recNumberedItemsWrap" style="font-size: 11.5px; color: #000;">
+                                    <!-- Dynamic items list -->
+                                </div>
+
+                                <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
+
+                                <!-- 4. Rincian & Total Pembayaran -->
+                                <div style="font-size: 11.5px; color: #000; line-height: 1.45;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: 700;">
+                                        <span>Total QTY : <span id="recTotalQty">0</span></span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                        <span>Sub Total</span>
+                                        <span id="recSubtotal" style="font-weight: 600;">Rp 0</span>
+                                    </div>
+                                    <div id="recDiscountRow" style="display: none; justify-content: space-between; color: #dc2626; margin-bottom: 3px;">
+                                        <span>Diskon</span>
+                                        <span id="recDiscount">-Rp 0</span>
+                                    </div>
+                                    <div id="recServiceFeeRow" style="display: none; justify-content: space-between; margin-bottom: 3px;">
+                                        <span>Biaya Layanan</span>
+                                        <span id="recServiceFee">Rp 0</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 14.5px; margin: 6px 0 6px 0; border-top: 1px dashed #ccc; padding-top: 5px;">
+                                        <span>Total</span>
+                                        <span id="recTotal">Rp 0</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                        <span id="recPayMethodLabel">Bayar (Cash)</span>
+                                        <span id="recCashPaidVal" style="font-weight: 600;">Rp 0</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                        <span>Kembali</span>
+                                        <span id="recCashChangeVal" style="font-weight: 600;">Rp 0</span>
+                                    </div>
+                                </div>
+
+                                <div style="border-bottom: 1px dashed #000; margin: 10px 0 8px 0;"></div>
+
+                                <!-- 5. Ucapan & Link Kritik Saran -->
+                                <div style="text-align: center; font-size: 11px; color: #111; line-height: 1.4;">
+                                    <div style="font-weight: 600; margin-bottom: 3px;">Terimakasih Telah Berbelanja</div>
+                                    <div style="font-size: 10px; color: #555;">Link Kritik dan Saran:</div>
+                                    <div id="recLinkKritik" style="font-size: 9.5px; color: #222; word-break: break-all; margin-top: 1px; font-weight: 500;">
+                                        {{ url('/c/' . ($profile->store_slug ?? 'shop')) }}
+                                    </div>
+                                </div>
+
+                                <!-- 6. Powered by buyle.id di paling bawah -->
+                                <div style="text-align: center; border-top: 1px dashed #ccc; margin-top: 10px; padding-top: 6px; font-size: 9.5px; font-weight: 700; color: #555; letter-spacing: 0.4px;">
+                                    powered buyle.id | digital creator center
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- E-Receipt auto-sent notice -->
+                <!-- E-Receipt auto-sent notice & manual resend input -->
                 <div class="no-print mt-3 pt-3" style="border-top:1.5px dashed #cbd5e1;">
                     <div id="receiptEmailAutoNotice"
-                        style="display:none; align-items:center; gap:8px; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:9px 12px;">
+                        style="display:none; align-items:center; gap:8px; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:9px 12px; margin-bottom:8px;">
                         <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"
                             style="flex-shrink:0;">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -1986,8 +2115,18 @@
                         </div>
                     </div>
                     <div id="receiptEmailNoneNotice"
-                        style="display:none; font-size:0.72rem; color:#94a3b8; text-align:center;">
-                        Tidak ada email pelanggan — E-Receipt tidak dikirim.
+                        style="display:none; font-size:0.72rem; color:#94a3b8; text-align:center; margin-bottom:8px;">
+                        Tidak ada email pelanggan saat transaksi.
+                    </div>
+                    <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 12px;">
+                        <div style="font-size:0.72rem; font-weight:700; color:#475569; margin-bottom:6px; display:flex; align-items:center; gap:4px;">
+                            <svg width="13" height="13" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            Kirim / Kirim Ulang E-Receipt ke Email
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <input type="email" id="recSendEmailInput" class="form-input" style="height:34px; font-size:0.78rem; flex:1;" placeholder="Email pelanggan...">
+                            <button type="button" class="btn-submit-green" id="btnSendRecEmail" onclick="sendEReceiptEmail()" style="width:auto; height:34px; padding:0 14px; font-size:0.75rem; flex-shrink:0;">Kirim</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2007,6 +2146,310 @@
                     style="flex:1; margin:0; padding:0.55rem 0.9rem; font-size:0.78rem; border-radius:999px !important; white-space:nowrap;"
                     onclick="closeModal('posReceiptModal'); resetPOS();">
                     Selesai &amp; Baru
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM OVERLAY MODAL: Pengaturan Modul POS (Logo, Alamat, No Telp, Staf Kasir) -->
+    <div class="pos-modal-overlay" id="posSettingsModal" data-static-backdrop="true">
+        <div class="pos-modal-card" style="max-width: 680px; width: 95vw; max-height: 92vh;">
+            <!-- Modal Header -->
+            <div class="pos-modal-head" style="border-bottom: 1.5px solid #f1f5f9; padding: 1.1rem 1.4rem;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534; flex-shrink:0;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a; line-height:1.2;">Pengaturan Kasir POS</h5>
+                        <div style="font-size:0.73rem; color:#64748b; margin-top:2px;">Format struk transaksi, identitas toko &amp; akun staf kasir</div>
+                    </div>
+                </div>
+                <!-- Tombol X Close (Hanya bisa keluar lewat tombol ini atau Simpan) -->
+                <button type="button" class="pos-modal-close" onclick="closeModal('posSettingsModal')" title="Tutup Pengaturan">&times;</button>
+            </div>
+
+            <!-- Tab Buttons Bar -->
+            <div style="display:flex; align-items:center; border-bottom:1.5px solid #e2e8f0; background:#f8fafc; padding:0 1.25rem; gap:6px;">
+                <button type="button" class="history-tab-btn active" id="tabBtnSettingStruk" onclick="switchSettingTab('struk')">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    Struk &amp; Profil Toko
+                </button>
+                <button type="button" class="history-tab-btn" id="tabBtnSettingStaff" onclick="switchSettingTab('staff')">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    Staf Kasir &amp; Shift (<span id="settingStaffBadgeCount">{{ count($cashiers) }}</span>)
+                </button>
+            </div>
+
+            <!-- Modal Body with Scroll -->
+            <div class="pos-modal-body" style="padding: 1.25rem; background: #ffffff;">
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- TAB 1: STRUK & PROFIL TOKO                         -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div id="paneSettingStruk" style="display: block;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 1.25rem;">
+                        
+                        <!-- Upload Logo Struk -->
+                        <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.1rem;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                                <div>
+                                    <div style="font-size:0.85rem; font-weight:800; color:#0f172a;">Logo Struk Transaksi</div>
+                                    <div style="font-size:0.72rem; color:#64748b;">Logo toko akan dicetak di bagian paling atas struk thermal</div>
+                                </div>
+                                <div id="posLogoDeleteWrap" style="{{ empty($posLogoUrl) ? 'display:none;' : '' }}">
+                                    <button type="button" onclick="handlePosLogoDelete()" style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; font-size:0.72rem; font-weight:700; padding:4px 9px; border-radius:6px; cursor:pointer;">
+                                        Hapus Logo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+                                <div id="posLogoPreviewContainer" style="width: 130px; height: 65px; border: 2px dashed #cbd5e1; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: #ffffff; overflow: hidden; padding: 4px; flex-shrink:0;">
+                                    @if(!empty($posLogoUrl))
+                                        <img id="posLogoPreviewImg" src="{{ $posLogoUrl }}" alt="Logo POS" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    @else
+                                        <span id="posLogoPreviewEmpty" style="font-size: 0.7rem; color: #94a3b8; font-weight: 600; text-align:center;">Belum ada logo</span>
+                                    @endif
+                                </div>
+
+                                <div style="flex:1; min-width: 180px;">
+                                    <form id="formUploadPosLogo" onsubmit="handlePosLogoUpload(event)">
+                                        <input type="file" id="posLogoFileInput" accept="image/*" style="display:none;" onchange="previewPosLogoSelected(this)">
+                                        <div style="display:flex; gap:8px; align-items:center;">
+                                            <button type="button" class="btn-outline-bio" onclick="document.getElementById('posLogoFileInput').click()" style="padding:0.45rem 0.9rem; font-size:0.75rem; border-radius:8px;">
+                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                                Pilih Logo Baru
+                                            </button>
+                                            <button type="submit" class="btn-submit-green" id="btnSavePosLogo" style="width:auto; padding:0.45rem 1rem; font-size:0.75rem; border-radius:8px; display:none;">
+                                                Upload &amp; Pasang
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <div style="font-size:0.69rem; color:#94a3b8; margin-top:6px; line-height:1.35;">
+                                        Format JPG, PNG, WEBP atau SVG (Maks. 3MB). Saran: format horizontal / transparan.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Toko di Struk -->
+                        <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.1rem;">
+                            <div style="font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem;">Identitas Toko di Cetakan Struk</div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-bottom:1rem;">Informasi nama, alamat dan kontak yang tercetak di kertas thermal struk</div>
+
+                            <div style="display:flex; flex-direction:column; gap:12px;">
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama Toko Struk</label>
+                                    <input type="text" id="setPosStoreName" class="form-input" style="height:38px; font-size:0.82rem;" value="{{ $storeName }}" placeholder="Contoh: Toko Kopi Senja" oninput="liveUpdateReceiptPreview()">
+                                </div>
+
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:4px;">Alamat Toko</label>
+                                    <textarea id="setPosStoreAddress" class="form-input" rows="2" style="font-size:0.82rem; padding:8px 10px; resize:none;" placeholder="Contoh: Jl. Sudirman No. 12, Jakarta Pusat" oninput="liveUpdateReceiptPreview()">{{ $posStoreAddress ?: ($profile->address ?? '') }}</textarea>
+                                </div>
+
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:4px;">No. Telepon / WhatsApp Toko</label>
+                                    <input type="text" id="setPosStorePhone" class="form-input" style="height:38px; font-size:0.82rem;" value="{{ $posStorePhone ?: ($profile->phone ?? '') }}" placeholder="Contoh: 081234567890" oninput="liveUpdateReceiptPreview()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Live Preview Box -->
+                        <div style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:12px 16px; background:#ffffff; text-align:center;">
+                            <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#64748b; margin-bottom:8px;">
+                                — Live Preview Header Struk —
+                            </div>
+                            <div id="prevReceiptHeader" style="font-family:'Montserrat',sans-serif; color:#000; line-height:1.35; max-width:280px; margin:0 auto;">
+                                <div id="prevHeaderLogo" style="margin-bottom:4px;">
+                                    @if(!empty($posLogoUrl))
+                                        <img src="{{ $posLogoUrl }}" alt="Logo" style="max-height:36px; max-width:120px; object-fit:contain; margin:0 auto; display:block;">
+                                    @endif
+                                </div>
+                                <div id="prevHeaderName" style="font-weight:800; font-size:13.5px;">{{ $storeName }}</div>
+                                <div id="prevHeaderAddress" style="font-size:10px; color:#333; margin-top:2px;">{{ $posStoreAddress ?: ($profile->address ?? 'Alamat toko belum diatur') }}</div>
+                                <div id="prevHeaderPhone" style="font-size:10px; color:#333; margin-top:1px;">{{ $posStorePhone ? ('No. Telp ' . $posStorePhone) : 'No. Telp: -' }}</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Footer Tab 1: Simpan Pengaturan -->
+                    <div style="margin-top:1.25rem; display:flex; justify-content:flex-end; gap:8px;">
+                        <button type="button" class="btn-submit-green" id="btnSaveStoreSettings" onclick="savePosStoreSettings()" style="width:auto; padding:0.6rem 1.6rem; font-size:0.82rem; border-radius:999px;">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Simpan Pengaturan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- TAB 2: STAF KASIR & SHIFT                          -->
+                <!-- ═══════════════════════════════════════════════════ -->
+                <div id="paneSettingStaff" style="display: none;">
+                    
+                    <!-- Guidance Alert Box -->
+                    <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:12px; padding:12px 14px; margin-bottom:1.1rem; display:flex; gap:10px; align-items:flex-start;">
+                        <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="16" x2="12" y2="12" />
+                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                        </svg>
+                        <div style="font-size:0.75rem; color:#1e40af; line-height:1.45;">
+                            <strong>Akses Terbatas Staf Kasir:</strong> Akun kasir hanya dapat membuka halaman <strong>Kasir POS</strong>. Seluruh menu lain (Overview, Produk, Saldo, Laporan) otomatis terkunci demi keamanan data Anda. Setiap transaksi dan closing shift akan tercatat atas nama staf yang sedang bertugas.
+                        </div>
+                    </div>
+
+                    <!-- Top Action Bar -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                        <div>
+                            <div style="font-size:0.88rem; font-weight:800; color:#0f172a;">Daftar Akun Kasir</div>
+                            <div style="font-size:0.72rem; color:#64748b;">Kelola akun login, jam kerja / shift, dan status aktif staf</div>
+                        </div>
+                        <button type="button" class="btn-submit-green" onclick="openAddCashierDrawer()" style="width:auto; padding:0.45rem 1rem; font-size:0.76rem; border-radius:999px;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            + Tambah Staf Kasir
+                        </button>
+                    </div>
+
+                    <!-- Collapsible Drawer / Form Tambah & Edit Staf -->
+                    <div id="cashierDrawerForm" style="display:none; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:1.1rem; margin-bottom:1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                            <div style="font-size:0.85rem; font-weight:800; color:#0f172a;" id="cashierDrawerTitle">
+                                Tambah Staf Kasir Baru
+                            </div>
+                            <button type="button" onclick="closeCashierDrawer()" style="background:none; border:none; font-size:1.1rem; color:#64748b; cursor:pointer; line-height:1;">&times;</button>
+                        </div>
+
+                        <form id="formCashierData" onsubmit="handleSaveCashier(event)">
+                            <input type="hidden" id="cashierEditId" value="">
+                            
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Nama Lengkap Staf *</label>
+                                    <input type="text" id="cashierInputName" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: Siti Rahmawati" required>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Jabatan / Role Title</label>
+                                    <input type="text" id="cashierInputRole" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: Kasir Pagi / Kasir Utama" value="Kasir">
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Username Login *</label>
+                                    <input type="text" id="cashierInputUsername" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: kasir_siti" required autocomplete="off">
+                                    <div style="font-size:0.67rem; color:#94a3b8; margin-top:2px;">Huruf kecil, angka &amp; underscore tanpa spasi</div>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Password Login <span id="cashierPasswordNotice" style="font-weight:normal; color:#94a3b8;">*</span></label>
+                                    <input type="password" id="cashierInputPassword" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Minimal 6 karakter" autocomplete="new-password">
+                                    <div style="font-size:0.67rem; color:#94a3b8; margin-top:2px;" id="cashierPassHelper">Wajib diisi untuk akun baru</div>
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Jam Kerja / Shift</label>
+                                    <input type="text" id="cashierInputShift" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: 08:00 - 16:00 (Pagi) / Shift 1">
+                                </div>
+                                <div style="display:flex; flex-direction:column; justify-content:center;">
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:4px;">Status Akun</label>
+                                    <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; font-weight:600; color:#1e293b; cursor:pointer;">
+                                        <input type="checkbox" id="cashierInputActive" checked style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer;">
+                                        <span>Aktif &amp; Boleh Login</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid #e2e8f0; padding-top:10px;">
+                                <button type="button" class="btn-outline-bio" onclick="closeCashierDrawer()" style="padding:0.45rem 1rem; font-size:0.76rem; border-radius:8px;">Batal</button>
+                                <button type="submit" class="btn-submit-green" id="btnSaveCashierSubmit" style="width:auto; padding:0.45rem 1.25rem; font-size:0.76rem; border-radius:8px;">
+                                    Simpan Akun Staf
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Cashiers List Cards / Grid -->
+                    <div id="cashierListWrap" style="display:flex; flex-direction:column; gap:8px;">
+                        @forelse($cashiers as $c)
+                            <div class="cashier-card-item" id="cashierRow-{{ $c->id }}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
+                                <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                                    <div style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:800; color:#334155; flex-shrink:0;">
+                                        {{ strtoupper(substr($c->name, 0, 2)) }}
+                                    </div>
+                                    <div style="min-width:0;">
+                                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                            <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">{{ $c->name }}</span>
+                                            <span style="font-size:0.7rem; color:#64748b; background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600;">@<span>{{ $c->username ?? Str::slug($c->name) }}</span></span>
+                                            @if($c->is_active)
+                                                <span class="badge-status-active" id="badgeActive-{{ $c->id }}" style="font-size:0.68rem; background:#dcfce7; color:#15803d; font-weight:700; padding:2px 7px; border-radius:999px;">Aktif</span>
+                                            @else
+                                                <span class="badge-status-inactive" id="badgeActive-{{ $c->id }}" style="font-size:0.68rem; background:#f1f5f9; color:#64748b; font-weight:700; padding:2px 7px; border-radius:999px;">Nonaktif</span>
+                                            @endif
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:12px; font-size:0.72rem; color:#64748b; margin-top:3px; flex-wrap:wrap;">
+                                            <span style="display:inline-flex; align-items:center; gap:4px; color:#475569; font-weight:600;">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                                {{ $c->cashier_role_title ?: 'Kasir' }}
+                                            </span>
+                                            @if(!empty($c->shift_hours))
+                                                <span style="display:inline-flex; align-items:center; gap:4px; color:#0369a1; background:#f0f9ff; padding:1px 6px; border-radius:4px; font-weight:600;">
+                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                    {{ $c->shift_hours }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                    <button type="button" class="btn-outline-bio" style="padding:4px 9px; font-size:0.72rem; border-radius:6px;" onclick='editCashierData(@json($c))' title="Edit Kasir">
+                                        Edit
+                                    </button>
+                                    <button type="button" style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; cursor:pointer; font-weight:600;" onclick="toggleCashierActive({{ $c->id }})" title="Aktifkan / Nonaktifkan">
+                                        {{ $c->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                                    </button>
+                                    <button type="button" style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;" onclick="deleteCashier({{ $c->id }}, '{{ addslashes($c->name) }}')" title="Hapus Staf">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        @empty
+                            <div id="cashierEmptyNotice" style="text-align:center; padding:2rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
+                                <div style="width:40px; height:40px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; color:#94a3b8;">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                </div>
+                                <div style="font-size:0.85rem; font-weight:700; color:#334155;">Belum Ada Akun Staf Kasir</div>
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Klik tombol "+ Tambah Staf Kasir" di atas untuk menambahkan staf yang bertugas.</div>
+                            </div>
+                        @endforelse
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Footer: Penutup Modal -->
+            <div class="pos-modal-foot" style="display:flex; justify-content:space-between; align-items:center; padding:0.8rem 1.4rem; background:#f8fafc; border-top:1.5px solid #f1f5f9;">
+                <div style="font-size:0.7rem; color:#94a3b8;">
+                    Kustomisasi tersimpan &amp; terhubung langsung ke modul POS.
+                </div>
+                <button type="button" class="btn-outline-bio" onclick="closeModal('posSettingsModal')" style="padding:0.45rem 1.2rem; font-size:0.78rem; border-radius:999px;">
+                    Tutup
                 </button>
             </div>
         </div>
@@ -2128,7 +2571,7 @@
                             <div
                                 style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
                                 <span style="color:#64748b;">Kasir Bertugas:</span>
-                                <strong style="color:#0f172a;">{{ auth()->user()->name }}</strong>
+                                <strong style="color:#0f172a;">{{ $currentCashier ? $currentCashier->name : auth()->user()->name }} @if(!empty($currentCashier?->shift_hours))<span style="font-size:0.75rem; color:#0369a1; font-weight:600;">({{ $currentCashier->shift_hours }})</span>@endif</strong>
                             </div>
                             <div
                                 style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
@@ -2196,12 +2639,16 @@
                                         $tAddr = is_array($tOrd->shipping_address) ? $tOrd->shipping_address : (json_decode($tOrd->shipping_address ?? '', true) ?? []);
                                         $tPayMethod = $tAddr['payment_method'] ?? ($tOrd->payment?->method ?? 'cash');
                                         $tFee = (float) ($tOrd->platform_fee ?? 0) + (float) ($tOrd->admin_fee ?? 0);
+                                        $tCashierName = $tOrd->cashier_name ?? ($tAddr['cashier_name'] ?? null);
                                     @endphp
                                     <tr>
                                         <td style="padding-left:1.5rem;">
                                             <strong style="color:#0f172a;">#{{ $tOrd->order_number }}</strong>
                                             <div style="font-size:0.73rem; color:#64748b;">
                                                 {{ $tOrd->created_at->format('H:i') }} WIB
+                                                @if(!empty($tCashierName))
+                                                    • <span style="color:#0369a1; font-weight:700;">Kasir: {{ $tCashierName }}</span>
+                                                @endif
                                             </div>
                                         </td>
                                         <td>
@@ -2417,6 +2864,10 @@
 
         // Custom Modal Helpers (Vanilla JS - Independent from Bootstrap)
         function openModal(modalId) {
+            if (modalId === 'posLogoModal') {
+                openPosSettingsModal('struk');
+                return;
+            }
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.add('show');
@@ -2427,6 +2878,9 @@
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.remove('show');
+            }
+            if (modalId === 'posReceiptModal') {
+                stopOrderStatusPolling();
             }
         }
 
@@ -2490,10 +2944,13 @@
             }, 3000);
         }
 
-        // Close Modal when clicking backdrop overlay
+        // Close Modal when clicking backdrop overlay (except posSettingsModal / static backdrop)
         document.querySelectorAll('.pos-modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', function (e) {
                 if (e.target === this) {
+                    if (this.id === 'posSettingsModal' || this.getAttribute('data-static-backdrop') === 'true') {
+                        return; // Hanya bisa di-X kalo mau keluar atau klik Simpan
+                    }
                     this.classList.remove('show');
                 }
             });
@@ -2674,7 +3131,7 @@
                                         </div>
                                         <div class="cart-item-info">
                                             <div class="cart-item-title">${escapeHtml(item.name)}</div>
-                                            <div class="cart-item-unit-price">@ Rp ${formatRupiah(item.price)} &bull; Sub: Rp ${formatRupiah(itemSub)}</div>
+                                            <div class="cart-item-unit-price">Rp ${formatRupiah(itemSub)}</div>
                                         </div>
                                         <div class="cart-qty-ctrl">
                                             <button type="button" class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
@@ -3008,89 +3465,288 @@
                 });
         }
 
+        // ── Order Status Real-Time Polling & Status Badge ─────────────────────
+        let orderStatusPollTimer = null;
+        let currentPollingOrderId = null;
+
+        function updateReceiptStatusBadge(status) {
+            const badge = document.getElementById('recStatusBadge');
+            if (!badge) return;
+
+            const st = String(status || '').toLowerCase();
+            badge.className = '';
+            badge.style.background = '';
+            badge.style.color = '';
+            badge.style.border = '';
+
+            if (st === 'pending') {
+                badge.className = 'status-badge-pending';
+                badge.innerText = 'MENUNGGU PEMBAYARAN';
+            } else if (['paid', 'confirmed', 'settlement', 'capture', 'success'].includes(st)) {
+                badge.className = 'status-badge-paid';
+                badge.innerText = 'LUNAS / BERHASIL';
+            } else if (['cancelled', 'cancel', 'deny', 'expire', 'failed'].includes(st)) {
+                badge.style.background = '#fee2e2';
+                badge.style.color = '#991b1b';
+                badge.style.border = '1.5px solid #ef4444';
+                badge.innerText = 'DIBATALKAN';
+            } else {
+                badge.className = 'status-badge-pending';
+                badge.innerText = (status || 'MENUNGGU PEMBAYARAN').toUpperCase();
+            }
+        }
+
+        function startOrderStatusPolling(orderId) {
+            stopOrderStatusPolling();
+            currentPollingOrderId = orderId;
+
+            // Polling interval 3 detik
+            orderStatusPollTimer = setInterval(() => {
+                if (!currentPollingOrderId) return;
+                fetch(`{{ url('/creator/pos/order-status') }}/${currentPollingOrderId}`, {
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        const isPaid = data.is_paid || ['confirmed', 'paid', 'settlement'].includes(String(data.status).toLowerCase());
+                        if (isPaid) {
+                            updateReceiptStatusBadge('paid');
+                            if (currentCompletedOrder) {
+                                currentCompletedOrder.status = 'paid';
+                            }
+                            if (data.customer_email) {
+                                const autoNotice = document.getElementById('receiptEmailAutoNotice');
+                                const noneNotice = document.getElementById('receiptEmailNoneNotice');
+                                const autoEmailSpan = document.getElementById('receiptAutoEmail');
+                                if (autoNotice) autoNotice.style.display = 'flex';
+                                if (noneNotice) noneNotice.style.display = 'none';
+                                if (autoEmailSpan) autoEmailSpan.innerText = data.customer_email;
+                            }
+                            showPosToast('Pembayaran berhasil diterima &amp; terverifikasi realtime!', 'success');
+                            stopOrderStatusPolling();
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.warn('Status poll warning:', err);
+                });
+            }, 3000);
+        }
+
+        function stopOrderStatusPolling() {
+            if (orderStatusPollTimer) {
+                clearInterval(orderStatusPollTimer);
+                orderStatusPollTimer = null;
+            }
+            currentPollingOrderId = null;
+        }
+
         // Show Receipt Modal
         function showReceiptModal(order) {
             currentCompletedOrder = order;
             const addr = order.shipping_address || {};
 
-            document.getElementById('recOrderNum').innerText = '#' + (order.order_number || ('BYL-' + order.id));
-            document.getElementById('recDate').innerText = formatDate(order.created_at || new Date().toISOString());
-            document.getElementById('recCustomerName').innerText = addr.name || 'Pelanggan';
+            // 1. Order Number & Date / Time
+            const orderCode = order.order_number || ('BYL-' + order.id);
+            const orderDate = new Date(order.created_at || new Date().toISOString());
 
-            if (order.notes) {
-                document.getElementById('recNotes').innerText = order.notes;
-                document.getElementById('recNotesRow').style.display = 'table-row';
-            } else {
-                document.getElementById('recNotesRow').style.display = 'none';
+            const elOrderNum = document.getElementById('recOrderNum');
+            if (elOrderNum) elOrderNum.innerText = '#' + orderCode;
+
+            const elOrderCode = document.getElementById('recOrderCode');
+            if (elOrderCode) elOrderCode.innerText = '#' + orderCode;
+
+            const elDateOnly = document.getElementById('recDateOnly');
+            if (elDateOnly) {
+                const day = String(orderDate.getDate()).padStart(2, '0');
+                const month = String(orderDate.getMonth() + 1).padStart(2, '0');
+                const year = orderDate.getFullYear();
+                elDateOnly.innerText = `${day}-${month}-${year}`;
             }
 
+            const elTimeOnly = document.getElementById('recTimeOnly');
+            if (elTimeOnly) {
+                const hours = String(orderDate.getHours()).padStart(2, '0');
+                const minutes = String(orderDate.getMinutes()).padStart(2, '0');
+                const seconds = String(orderDate.getSeconds()).padStart(2, '0');
+                elTimeOnly.innerText = `${hours}:${minutes}:${seconds}`;
+            }
+
+            // Queue Tag (e.g. [ No. 0-1 ] or daily order count)
+            const elQueueTag = document.getElementById('recQueueTag');
+            if (elQueueTag) {
+                const qNum = (order.id % 100) || 1;
+                elQueueTag.innerText = `No. 0-${qNum}`;
+            }
+
+            // Cashier Name
+            const elCashierName = document.getElementById('recCashierName');
+            if (elCashierName) {
+                elCashierName.innerText = order.cashier_name || (typeof currentCashierStaffName !== 'undefined' && currentCashierStaffName ? currentCashierStaffName : '{{ $currentCashier ? $currentCashier->name : auth()->user()->name }}');
+            }
+
+            // Customer Name & Notes (Legacy fallback)
+            const elCustomerName = document.getElementById('recCustomerName');
+            if (elCustomerName) elCustomerName.innerText = addr.name || 'Pelanggan Umum';
+
+            const elNotes = document.getElementById('recNotes');
+            const elNotesRow = document.getElementById('recNotesRow');
+            if (elNotes && elNotesRow) {
+                if (order.notes) {
+                    elNotes.innerText = order.notes;
+                    elNotesRow.style.display = 'table-row';
+                } else {
+                    elNotesRow.style.display = 'none';
+                }
+            }
+
+            // 2. Modern Numbered Items List (media_1792971364160.png style)
+            const numberedItemsWrap = document.getElementById('recNumberedItemsWrap');
+            let totalItemQty = 0;
+            if (numberedItemsWrap) {
+                let itemsHtml = '';
+                (order.items || []).forEach((item, idx) => {
+                    const itemQty = parseInt(item.qty ?? item.quantity ?? 1) || 1;
+                    totalItemQty += itemQty;
+                    const itemPrice = parseInt(item.price) || 0;
+                    const itemSubtotal = parseInt(item.subtotal) || (itemPrice * itemQty);
+
+                    itemsHtml += `
+                        <div style="margin-bottom: 7px; line-height: 1.35;">
+                            <div style="font-weight: 700; font-size: 11.5px; color: #000;">
+                                ${idx + 1}. ${escapeHtml(item.product_name)}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #222; margin-top: 1px;">
+                                <span style="letter-spacing: 0.2px;">${itemQty} x ${formatRupiah(itemPrice)}</span>
+                                <span style="font-weight: 700; color: #000;">Rp ${formatRupiah(itemSubtotal)}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                numberedItemsWrap.innerHTML = itemsHtml || '<div style="text-align:center; color:#666; font-size:11px;">(Tidak ada item)</div>';
+            }
+
+            // Legacy items table fallback if present
+            const legacyTableBody = document.querySelector('#recItemsTable tbody');
+            if (legacyTableBody) {
+                let legacyRows = '';
+                (order.items || []).forEach(item => {
+                    const itemQty = item.qty ?? item.quantity ?? 1;
+                    legacyRows += `
+                        <tr>
+                            <td class="text-start" style="font-weight:700;">
+                                ${escapeHtml(item.product_name)}
+                                <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
+                            </td>
+                            <td class="text-center" style="vertical-align:top;">${itemQty}</td>
+                            <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
+                        </tr>
+                    `;
+                });
+                legacyTableBody.innerHTML = legacyRows;
+            }
+
+            // 3. Totals & Payment Details
+            const elTotalQty = document.getElementById('recTotalQty');
+            if (elTotalQty) elTotalQty.innerText = totalItemQty;
+
+            const elSubtotal = document.getElementById('recSubtotal');
+            if (elSubtotal) elSubtotal.innerText = 'Rp ' + formatRupiah(order.subtotal || 0);
+
+            const discountVal = parseInt(order.discount) || 0;
+            const elDiscount = document.getElementById('recDiscount');
+            const elDiscountRow = document.getElementById('recDiscountRow');
+            if (elDiscount && elDiscountRow) {
+                if (discountVal > 0) {
+                    elDiscount.innerText = '-Rp ' + formatRupiah(discountVal);
+                    elDiscountRow.style.display = 'flex';
+                } else {
+                    elDiscountRow.style.display = 'none';
+                }
+            }
+
+            const serviceFeeVal = parseInt(addr.service_fee) || 0;
+            const elServiceFee = document.getElementById('recServiceFee');
+            const elServiceFeeRow = document.getElementById('recServiceFeeRow');
+            if (elServiceFee && elServiceFeeRow) {
+                if (serviceFeeVal > 0) {
+                    elServiceFee.innerText = 'Rp ' + formatRupiah(serviceFeeVal);
+                    elServiceFeeRow.style.display = 'flex';
+                } else {
+                    elServiceFeeRow.style.display = 'none';
+                }
+            }
+
+            const totalVal = parseInt(order.total) || 0;
+            const elTotal = document.getElementById('recTotal');
+            if (elTotal) elTotal.innerText = 'Rp ' + formatRupiah(totalVal);
+
+            // Payment method & Cash change
+            const isCash = (addr.payment_method || 'cash') === 'cash';
             const payMethodLabel = {
-                'cash': 'Tunai',
-                'cashless': 'Non-Tunai (QRIS / Transfer)',
-                'transfer': 'Non-Tunai (QRIS / Transfer)',
-                'qris': 'Non-Tunai (QRIS / Transfer)'
-            }[addr.payment_method || 'cash'] || 'Tunai';
+                'cash': 'Bayar (Cash)',
+                'cashless': 'Bayar (Non-Tunai)',
+                'transfer': 'Bayar (Non-Tunai)',
+                'qris': 'Bayar (Non-Tunai)'
+            }[addr.payment_method || 'cash'] || 'Bayar (Cash)';
 
-            document.getElementById('recPayMethod').innerText = payMethodLabel;
+            const elPayMethodLabel = document.getElementById('recPayMethodLabel');
+            if (elPayMethodLabel) elPayMethodLabel.innerText = payMethodLabel;
 
-            let itemsHtml = '';
-            (order.items || []).forEach(item => {
-                const itemQty = item.qty ?? item.quantity ?? 1;
-                itemsHtml += `
-                                    <tr>
-                                        <td class="text-start" style="font-weight:700;">
-                                            ${escapeHtml(item.product_name)}
-                                            <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
-                                        </td>
-                                        <td class="text-center" style="vertical-align:top;">${itemQty}</td>
-                                        <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
-                                    </tr>
-                                `;
-            });
-            document.querySelector('#recItemsTable tbody').innerHTML = itemsHtml;
+            const cashPaidVal = parseInt(addr.cash_paid) || totalVal;
+            const cashChangeVal = parseInt(addr.cash_change) || 0;
 
-            document.getElementById('recSubtotal').innerText = 'Rp ' + formatRupiah(order.subtotal);
+            const elCashPaidVal = document.getElementById('recCashPaidVal');
+            if (elCashPaidVal) elCashPaidVal.innerText = 'Rp ' + formatRupiah(cashPaidVal);
 
-            if (order.discount > 0) {
-                document.getElementById('recDiscount').innerText = '-Rp ' + formatRupiah(order.discount);
-                document.getElementById('recDiscountRow').style.display = 'table-row';
-            } else {
-                document.getElementById('recDiscountRow').style.display = 'none';
+            const elCashChangeVal = document.getElementById('recCashChangeVal');
+            if (elCashChangeVal) elCashChangeVal.innerText = 'Rp ' + formatRupiah(cashChangeVal);
+
+            // Legacy rows fallback
+            const elCashPaid = document.getElementById('recCashPaid');
+            const elCashChange = document.getElementById('recCashChange');
+            const elCashPaidRow = document.getElementById('recCashPaidRow');
+            const elCashChangeRow = document.getElementById('recCashChangeRow');
+            if (elCashPaid && elCashPaidRow) {
+                if (isCash && cashPaidVal > 0) {
+                    elCashPaid.innerText = 'Rp ' + formatRupiah(cashPaidVal);
+                    if (elCashChange) elCashChange.innerText = 'Rp ' + formatRupiah(cashChangeVal);
+                    elCashPaidRow.style.display = 'table-row';
+                    if (elCashChangeRow) elCashChangeRow.style.display = 'table-row';
+                } else {
+                    elCashPaidRow.style.display = 'none';
+                    if (elCashChangeRow) elCashChangeRow.style.display = 'none';
+                }
             }
 
-            if (addr.service_fee > 0) {
-                document.getElementById('recServiceFee').innerText = 'Rp ' + formatRupiah(addr.service_fee);
-                document.getElementById('recServiceFeeRow').style.display = 'table-row';
+            // Status Badge & Realtime Polling
+            const orderStatus = String(order.status || (order.payment && order.payment.status) || 'pending').toLowerCase();
+            updateReceiptStatusBadge(orderStatus);
+            if (orderStatus === 'pending') {
+                startOrderStatusPolling(order.id);
             } else {
-                document.getElementById('recServiceFeeRow').style.display = 'none';
+                stopOrderStatusPolling();
             }
 
-            document.getElementById('recPlatformFee').innerText = 'Rp ' + formatRupiah(order.platform_fee || 0);
-            document.getElementById('recAdminFee').innerText = 'Rp ' + formatRupiah(order.admin_fee || 0);
-            document.getElementById('recTotal').innerText = 'Rp ' + formatRupiah(order.total);
-
-            if (addr.payment_method === 'cash' && addr.cash_paid > 0) {
-                document.getElementById('recCashPaid').innerText = 'Rp ' + formatRupiah(addr.cash_paid);
-                document.getElementById('recCashChange').innerText = 'Rp ' + formatRupiah(addr.cash_change || 0);
-                document.getElementById('recCashPaidRow').style.display = 'table-row';
-                document.getElementById('recCashChangeRow').style.display = 'table-row';
-            } else {
-                document.getElementById('recCashPaidRow').style.display = 'none';
-                document.getElementById('recCashChangeRow').style.display = 'none';
-            }
-
-            // Tampilkan auto-email notice
+            // Auto-email notice & pre-fill email input
             const autoNotice = document.getElementById('receiptEmailAutoNotice');
             const noneNotice = document.getElementById('receiptEmailNoneNotice');
             const autoEmailSpan = document.getElementById('receiptAutoEmail');
+            const recSendEmailInput = document.getElementById('recSendEmailInput');
             const customerEmail = addr.email || '';
+
+            if (recSendEmailInput) {
+                recSendEmailInput.value = customerEmail;
+            }
+
             if (customerEmail) {
-                if (autoNotice) { autoNotice.style.display = 'flex'; }
-                if (noneNotice) { noneNotice.style.display = 'none'; }
+                if (autoNotice) autoNotice.style.display = 'flex';
+                if (noneNotice) noneNotice.style.display = 'none';
                 if (autoEmailSpan) autoEmailSpan.innerText = customerEmail;
             } else {
-                if (autoNotice) { autoNotice.style.display = 'none'; }
-                if (noneNotice) { noneNotice.style.display = 'block'; }
+                if (autoNotice) autoNotice.style.display = 'none';
+                if (noneNotice) noneNotice.style.display = 'block';
             }
 
             openModal('posReceiptModal');
@@ -3099,10 +3755,17 @@
         // Send E-Receipt Email
         function sendEReceiptEmail() {
             if (!currentCompletedOrder) return;
-            const email = document.getElementById('recSendEmailInput').value.trim();
+            const emailInput = document.getElementById('recSendEmailInput');
+            const btnSend = document.getElementById('btnSendRecEmail');
+            const email = (emailInput ? emailInput.value : '').trim();
             if (!email) {
-                showPosAlert('Silakan masukkan alamat email tujuan!', 'Email Diperlukan', 'warning');
+                showPosAlert('Silakan masukkan alamat email pelanggan tujuan!', 'Email Diperlukan', 'warning');
                 return;
+            }
+
+            if (btnSend) {
+                btnSend.disabled = true;
+                btnSend.innerText = 'Mengirim...';
             }
 
             fetch('{{ route("creator.pos.send-receipt") }}', {
@@ -3118,13 +3781,27 @@
             })
                 .then(res => res.json())
                 .then(data => {
+                    if (btnSend) {
+                        btnSend.disabled = false;
+                        btnSend.innerText = 'Kirim';
+                    }
                     if (data.success) {
+                        const autoNotice = document.getElementById('receiptEmailAutoNotice');
+                        const noneNotice = document.getElementById('receiptEmailNoneNotice');
+                        const autoEmailSpan = document.getElementById('receiptAutoEmail');
+                        if (autoNotice) autoNotice.style.display = 'flex';
+                        if (noneNotice) noneNotice.style.display = 'none';
+                        if (autoEmailSpan) autoEmailSpan.innerText = email;
                         showPosToast(data.message || 'E-Receipt berhasil dikirim!', 'success');
                     } else {
                         showPosAlert(data.message || 'Gagal mengirim E-Receipt.', 'Gagal Pengiriman', 'error');
                     }
                 })
                 .catch(err => {
+                    if (btnSend) {
+                        btnSend.disabled = false;
+                        btnSend.innerText = 'Kirim';
+                    }
                     showPosAlert('Gagal mengirim E-Receipt: ' + err.message, 'Gagal Pengiriman', 'error');
                 });
         }
@@ -3138,6 +3815,7 @@
         // Reset POS State
         function resetPOS() {
             cart = [];
+            stopOrderStatusPolling();
             document.getElementById('posCustomerName').value = '';
             document.getElementById('posTableNumber').value = '';
             document.getElementById('posCustomerPhone').value = '';
@@ -3160,40 +3838,620 @@
             return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
         }
 
-        function printPosReceipt() {
-            const receiptElement = document.getElementById('printablePosReceiptArea');
-            if (!receiptElement) return;
-            const content = receiptElement.innerHTML;
-            const printWin = window.open('', '_blank', 'width=400,height=600');
-            if (!printWin) {
-                showPosAlert('Pop-up terblokir oleh browser. Izinkan pop-up untuk mencetak struk.', 'Pop-up Terblokir', 'warning');
-                return;
+        // ── Thermal Printing Mechanical Sound Effect ──────────────────────────
+        function playThermalPrintSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const audioCtx = new AudioCtx();
+
+                // High-pitch thermal head chime
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); // B5
+                osc.frequency.exponentialRampToValueAtTime(1567.98, audioCtx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.22);
+
+                // Thermal motor whirr simulation
+                const bufferSize = Math.floor(audioCtx.sampleRate * 0.45);
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * 0.04;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 850;
+                filter.Q.value = 3;
+                const noiseGain = audioCtx.createGain();
+                noiseGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+                noise.connect(filter);
+                filter.connect(noiseGain);
+                noiseGain.connect(audioCtx.destination);
+                noise.start(audioCtx.currentTime + 0.05);
+            } catch (e) {
+                // Ignore audio restriction gracefully
             }
-            printWin.document.write(`<!DOCTYPE html>
+        }
+
+        // ── Cetak Struk POS dengan Animasi Eject Kertas & Hidden Iframe ────────
+        function printPosReceipt() {
+            const receiptArea = document.getElementById('printablePosReceiptArea');
+            if (!receiptArea) return;
+
+            // Trigger eject paper animation from the slot
+            receiptArea.classList.remove('receipt-ejecting');
+            void receiptArea.offsetWidth; // force DOM reflow
+            receiptArea.classList.add('receipt-ejecting');
+
+            // Play acoustic thermal printer audio
+            playThermalPrintSound();
+
+            const content = receiptArea.innerHTML;
+
+            // Reliable print using hidden iframe (prevents browser popup blocker)
+            let iframe = document.getElementById('posHiddenPrintIframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'posHiddenPrintIframe';
+                iframe.style.position = 'fixed';
+                iframe.style.right = '-9999px';
+                iframe.style.bottom = '-9999px';
+                iframe.style.width = '1px';
+                iframe.style.height = '1px';
+                iframe.style.border = 'none';
+                document.body.appendChild(iframe);
+            }
+
+            const doc = iframe.contentWindow || iframe.contentDocument;
+            const iframeDoc = doc.document || doc;
+            iframeDoc.open();
+            iframeDoc.write(`<!DOCTYPE html>
                 <html>
                 <head>
                     <title>Struk POS</title>
+                    <meta charset="utf-8">
                     <style>
                         @page { size: 80mm auto; margin: 0; }
-                        body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
+                        body { 
+                            font-family: 'Courier New', Courier, monospace; 
+                            font-size: 11px; 
+                            color: #000000; 
+                            margin: 0; 
+                            padding: 4mm 3mm; 
+                            width: 72mm; 
+                            background: #ffffff; 
+                            line-height: 1.3;
+                        }
                         table { width: 100%; border-collapse: collapse; }
+                        td, th { padding: 1.5px 0; }
                         .text-end { text-align: right; }
                         .text-center { text-align: center; }
                         .text-start { text-align: left; }
                         .no-print { display: none !important; }
-                        img { display: none !important; }
+                        img { 
+                            max-width: 150px; 
+                            max-height: 48px; 
+                            object-fit: contain; 
+                            display: block; 
+                            margin: 0 auto 4px auto; 
+                            filter: grayscale(100%) contrast(150%);
+                        }
+                        #recStatusBadge {
+                            display: inline-block;
+                            padding: 2px 6px;
+                            border: 1px solid #000;
+                            font-size: 10px;
+                            font-weight: 800;
+                        }
                     </style>
                 </head>
                 <body>
                     ${content}
                 </body>
                 </html>`);
-            printWin.document.close();
-            printWin.focus();
+            iframeDoc.close();
+
             setTimeout(() => {
-                printWin.print();
-                printWin.close();
-            }, 350);
+                try {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                } catch (e) {
+                    // Fallback to window.open if iframe printing restricted
+                    const printWin = window.open('', '_blank', 'width=400,height=600');
+                    if (printWin) {
+                        printWin.document.write(iframeDoc.documentElement.outerHTML);
+                        printWin.document.close();
+                        printWin.focus();
+                        setTimeout(() => { printWin.print(); printWin.close(); }, 300);
+                    }
+                }
+            }, 300);
+        }
+
+        // ═══════════════════════════════════════════════
+        // PENGATURAN MODUL POS & STAF KASIR
+        // ═══════════════════════════════════════════════
+        let currentPosLogoUrl = {!! !empty($posLogoUrl) ? json_encode($posLogoUrl) : 'null' !!};
+        let storeNameText = {!! json_encode($storeName) !!};
+        let storeAddressText = {!! json_encode($posStoreAddress ?: ($profile->address ?? '')) !!};
+        let storePhoneText = {!! json_encode($posStorePhone ?: ($profile->phone ?? '')) !!};
+
+        // Buka Pop-up Pengaturan POS (Hanya bisa keluar via X atau Simpan)
+        function openPosSettingsModal(initialTab = 'struk') {
+            switchSettingTab(initialTab);
+            openModal('posSettingsModal');
+        }
+
+        // Tab Switching Pengaturan
+        function switchSettingTab(tabId) {
+            const btnStruk = document.getElementById('tabBtnSettingStruk');
+            const btnStaff = document.getElementById('tabBtnSettingStaff');
+            const paneStruk = document.getElementById('paneSettingStruk');
+            const paneStaff = document.getElementById('paneSettingStaff');
+
+            if (tabId === 'struk') {
+                if (btnStruk) btnStruk.classList.add('active');
+                if (btnStaff) btnStaff.classList.remove('active');
+                if (paneStruk) paneStruk.style.display = 'block';
+                if (paneStaff) paneStaff.style.display = 'none';
+            } else {
+                if (btnStaff) btnStaff.classList.add('active');
+                if (btnStruk) btnStruk.classList.remove('active');
+                if (paneStaff) paneStaff.style.display = 'block';
+                if (paneStruk) paneStruk.style.display = 'none';
+            }
+        }
+
+        // Live Preview Struk di Tab 1
+        function liveUpdateReceiptPreview() {
+            const name = (document.getElementById('setPosStoreName')?.value || '').trim() || storeNameText;
+            const addr = (document.getElementById('setPosStoreAddress')?.value || '').trim();
+            const phone = (document.getElementById('setPosStorePhone')?.value || '').trim();
+
+            const prevName = document.getElementById('prevHeaderName');
+            const prevAddr = document.getElementById('prevHeaderAddress');
+            const prevPhone = document.getElementById('prevHeaderPhone');
+
+            if (prevName) prevName.innerText = name;
+            if (prevAddr) prevAddr.innerText = addr || 'Alamat toko belum diatur';
+            if (prevPhone) prevPhone.innerText = phone ? ('No. Telp ' + phone) : 'No. Telp: -';
+        }
+
+        // Simpan Pengaturan Struk Toko (Nama, Alamat, No Telp)
+        function savePosStoreSettings() {
+            const name = (document.getElementById('setPosStoreName')?.value || '').trim();
+            const address = (document.getElementById('setPosStoreAddress')?.value || '').trim();
+            const phone = (document.getElementById('setPosStorePhone')?.value || '').trim();
+
+            if (!name) {
+                showPosAlert('Nama toko struk tidak boleh kosong.', 'Nama Toko Wajib', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnSaveStoreSettings');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24" style="animation:spin 0.8s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Menyimpan...`;
+            }
+
+            fetch('{{ route("creator.pos.update-settings") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    store_name: name,
+                    pos_store_address: address,
+                    pos_store_phone: phone
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Pengaturan`;
+                }
+                if (data.success) {
+                    storeNameText = name;
+                    storeAddressText = address;
+                    storePhoneText = phone;
+
+                    // Update main thermal receipt display
+                    const recName = document.getElementById('recHeaderStoreName');
+                    const recAddr = document.getElementById('recHeaderStoreAddress');
+                    const recPhone = document.getElementById('recHeaderStorePhone');
+                    if (recName) recName.innerText = name;
+                    if (recAddr) recAddr.innerText = address;
+                    if (recPhone) recPhone.innerText = phone ? ('No. Telp ' + phone) : '';
+
+                    showPosToast('Pengaturan struk & profil toko berhasil disimpan!', 'success');
+                    closeModal('posSettingsModal'); // Menutup pop-up saat tombol Simpan ditekan
+                } else {
+                    showPosAlert(data.message || 'Gagal menyimpan pengaturan.', 'Gagal Simpan', 'error');
+                }
+            })
+            .catch(err => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Pengaturan`;
+                }
+                showPosAlert('Terjadi kesalahan jaringan: ' + err.message, 'Gagal Simpan', 'error');
+            });
+        }
+
+        // Preview Logo yang dipilih
+        function previewPosLogoSelected(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 3 * 1024 * 1024) {
+                    showPosAlert('Ukuran file maksimal 3MB.', 'File Terlalu Besar', 'warning');
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.getElementById('posLogoPreviewContainer');
+                    if (container) {
+                        container.innerHTML = `<img id="posLogoPreviewImg" src="${e.target.result}" alt="Preview" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                    }
+                    const prevLogo = document.getElementById('prevHeaderLogo');
+                    if (prevLogo) {
+                        prevLogo.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-height:36px; max-width:120px; object-fit:contain; margin:0 auto; display:block;">`;
+                    }
+                    const btnSave = document.getElementById('btnSavePosLogo');
+                    if (btnSave) btnSave.style.display = 'inline-flex';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle Upload Logo Struk
+        function handlePosLogoUpload(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('posLogoFileInput');
+            if (!fileInput.files || !fileInput.files[0]) {
+                showPosAlert('Silakan pilih file logo terlebih dahulu.', 'Pilih File', 'warning');
+                return;
+            }
+
+            const btnSave = document.getElementById('btnSavePosLogo');
+            if (btnSave) {
+                btnSave.disabled = true;
+                btnSave.innerText = 'Mengupload...';
+            }
+
+            const formData = new FormData();
+            formData.append('logo', fileInput.files[0]);
+            formData.append('_token', '{{ csrf_token() }}');
+
+            fetch('{{ route("creator.pos.upload-logo") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btnSave) {
+                    btnSave.disabled = false;
+                    btnSave.innerText = 'Upload & Pasang';
+                    btnSave.style.display = 'none';
+                }
+                if (data.success && data.logo_url) {
+                    currentPosLogoUrl = data.logo_url;
+                    updateReceiptHeaderLogo(data.logo_url);
+                    const delWrap = document.getElementById('posLogoDeleteWrap');
+                    if (delWrap) delWrap.style.display = 'block';
+                    showPosToast('Logo struk kasir berhasil dipasang!', 'success');
+                } else {
+                    showPosAlert(data.message || 'Gagal mengupload logo struk.', 'Gagal Upload', 'error');
+                }
+            })
+            .catch(err => {
+                if (btnSave) {
+                    btnSave.disabled = false;
+                    btnSave.innerText = 'Upload & Pasang';
+                }
+                showPosAlert('Terjadi kesalahan: ' + err.message, 'Gagal Upload', 'error');
+            });
+        }
+
+        // Handle Hapus Logo Struk
+        function handlePosLogoDelete() {
+            if (!confirm('Yakin ingin menghapus logo struk dan kembali menggunakan icon standar?')) return;
+
+            fetch('{{ route("creator.pos.remove-logo") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    currentPosLogoUrl = null;
+                    updateReceiptHeaderLogo(null);
+                    const container = document.getElementById('posLogoPreviewContainer');
+                    if (container) {
+                        container.innerHTML = `<span id="posLogoPreviewEmpty" style="font-size: 0.7rem; color: #94a3b8; font-weight: 600; text-align:center;">Belum ada logo</span>`;
+                    }
+                    const prevLogo = document.getElementById('prevHeaderLogo');
+                    if (prevLogo) prevLogo.innerHTML = '';
+                    const delWrap = document.getElementById('posLogoDeleteWrap');
+                    if (delWrap) delWrap.style.display = 'none';
+                    const fileInput = document.getElementById('posLogoFileInput');
+                    if (fileInput) fileInput.value = '';
+                    const btnSave = document.getElementById('btnSavePosLogo');
+                    if (btnSave) btnSave.style.display = 'none';
+                    showPosToast(data.message || 'Logo struk berhasil dihapus.', 'success');
+                } else {
+                    showPosAlert(data.message || 'Gagal menghapus logo.', 'Gagal', 'error');
+                }
+            })
+            .catch(err => {
+                showPosAlert('Terjadi kesalahan: ' + err.message, 'Gagal', 'error');
+            });
+        }
+
+        function updateReceiptHeaderLogo(logoUrl) {
+            const wrap = document.getElementById('recHeaderLogoWrap');
+            if (!wrap) return;
+            if (logoUrl) {
+                wrap.innerHTML = `<img src="${logoUrl}" alt="Logo Toko" id="recHeaderLogoImg" style="max-height: 48px; max-width: 140px; object-fit: contain; margin: 0 auto 3px auto; display: block;">`;
+            } else {
+                wrap.innerHTML = `<svg id="recHeaderLogoFallbackSvg" width="38" height="38" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; margin:0 auto 2px auto; color:#000000;"><path d="M4 4h16a1 1 0 0 1 1 1v2a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm0 8v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9h-2v7H6v-7H4zm5 1h6v6H9v-6z"/></svg>`;
+            }
+        }
+
+        // ═══════════════════════════════════════════════
+        // KELOLA STAF KASIR & SHIFT (AJAX CRUD)
+        // ═══════════════════════════════════════════════
+
+        function openAddCashierDrawer() {
+            document.getElementById('cashierDrawerTitle').innerText = 'Tambah Staf Kasir Baru';
+            document.getElementById('cashierEditId').value = '';
+            document.getElementById('cashierInputName').value = '';
+            document.getElementById('cashierInputRole').value = 'Kasir';
+            document.getElementById('cashierInputUsername').value = '';
+            document.getElementById('cashierInputPassword').value = '';
+            document.getElementById('cashierInputShift').value = '';
+            document.getElementById('cashierInputActive').checked = true;
+
+            const notice = document.getElementById('cashierPasswordNotice');
+            if (notice) notice.innerText = '*';
+            const helper = document.getElementById('cashierPassHelper');
+            if (helper) helper.innerText = 'Wajib diisi minimal 6 karakter';
+
+            const drawer = document.getElementById('cashierDrawerForm');
+            if (drawer) {
+                drawer.style.display = 'block';
+                drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function closeCashierDrawer() {
+            const drawer = document.getElementById('cashierDrawerForm');
+            if (drawer) drawer.style.display = 'none';
+        }
+
+        function editCashierData(c) {
+            document.getElementById('cashierDrawerTitle').innerText = 'Edit Staf Kasir: ' + c.name;
+            document.getElementById('cashierEditId').value = c.id;
+            document.getElementById('cashierInputName').value = c.name || '';
+            document.getElementById('cashierInputRole').value = c.cashier_role_title || 'Kasir';
+            document.getElementById('cashierInputUsername').value = c.username || '';
+            document.getElementById('cashierInputPassword').value = '';
+            document.getElementById('cashierInputShift').value = c.shift_hours || '';
+            document.getElementById('cashierInputActive').checked = !!c.is_active;
+
+            const notice = document.getElementById('cashierPasswordNotice');
+            if (notice) notice.innerText = '(opsional)';
+            const helper = document.getElementById('cashierPassHelper');
+            if (helper) helper.innerText = 'Kosongkan jika password tidak diubah';
+
+            const drawer = document.getElementById('cashierDrawerForm');
+            if (drawer) {
+                drawer.style.display = 'block';
+                drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function handleSaveCashier(event) {
+            event.preventDefault();
+            const id = document.getElementById('cashierEditId').value;
+            const name = (document.getElementById('cashierInputName').value || '').trim();
+            const role = (document.getElementById('cashierInputRole').value || '').trim();
+            const username = (document.getElementById('cashierInputUsername').value || '').trim();
+            const password = document.getElementById('cashierInputPassword').value;
+            const shift = (document.getElementById('cashierInputShift').value || '').trim();
+            const isActive = document.getElementById('cashierInputActive').checked ? 1 : 0;
+
+            if (!name || !username) {
+                showPosAlert('Nama lengkap dan username login kasir wajib diisi!', 'Data Belum Lengkap', 'warning');
+                return;
+            }
+
+            if (!id && (!password || password.length < 6)) {
+                showPosAlert('Password wajib diisi minimal 6 karakter untuk akun kasir baru.', 'Password Terlalu Pendek', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnSaveCashierSubmit');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = 'Menyimpan...';
+            }
+
+            fetch('{{ route("creator.pos.cashiers.save") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    id: id || null,
+                    name: name,
+                    username: username,
+                    password: password,
+                    shift_hours: shift,
+                    cashier_role_title: role,
+                    is_active: isActive
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan Akun Staf';
+                }
+                if (data.success) {
+                    closeCashierDrawer();
+                    refreshCashierListUI(data.cashiers || []);
+                    showPosToast(data.message || 'Akun staf kasir berhasil disimpan!', 'success');
+                } else {
+                    showPosAlert(data.message || 'Gagal menyimpan akun kasir.', 'Gagal Simpan', 'error');
+                }
+            })
+            .catch(err => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan Akun Staf';
+                }
+                showPosAlert('Terjadi kesalahan: ' + err.message, 'Gagal Simpan', 'error');
+            });
+        }
+
+        function toggleCashierActive(cashierId) {
+            const url = '{{ route("creator.pos.cashiers.toggle", ":id") }}'.replace(':id', cashierId);
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showPosToast(data.message || 'Status kasir diperbarui.', 'success');
+                    if (data.cashiers) refreshCashierListUI(data.cashiers);
+                } else {
+                    showPosAlert(data.message || 'Gagal mengubah status kasir.', 'Gagal', 'error');
+                }
+            })
+            .catch(err => showPosAlert('Terjadi kesalahan: ' + err.message, 'Gagal', 'error'));
+        }
+
+        function deleteCashier(cashierId, cashierName) {
+            if (!confirm(`Yakin ingin menghapus staf kasir "${cashierName}"? Akun ini tidak akan dapat login lagi ke modul POS.`)) return;
+
+            const url = '{{ route("creator.pos.cashiers.delete", ":id") }}'.replace(':id', cashierId);
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showPosToast(data.message || 'Akun staf kasir berhasil dihapus.', 'success');
+                    if (data.cashiers) refreshCashierListUI(data.cashiers);
+                } else {
+                    showPosAlert(data.message || 'Gagal menghapus akun kasir.', 'Gagal', 'error');
+                }
+            })
+            .catch(err => showPosAlert('Terjadi kesalahan: ' + err.message, 'Gagal', 'error'));
+        }
+
+        // Render Ulang Daftar Kasir Secara Dinamis
+        function refreshCashierListUI(cashiers) {
+            const countBadge = document.getElementById('settingStaffBadgeCount');
+            if (countBadge) countBadge.innerText = cashiers.length;
+
+            const wrap = document.getElementById('cashierListWrap');
+            if (!wrap) return;
+
+            if (cashiers.length === 0) {
+                wrap.innerHTML = `
+                    <div id="cashierEmptyNotice" style="text-align:center; padding:2rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
+                        <div style="width:40px; height:40px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; color:#94a3b8;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        </div>
+                        <div style="font-size:0.85rem; font-weight:700; color:#334155;">Belum Ada Akun Staf Kasir</div>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Klik tombol "+ Tambah Staf Kasir" di atas untuk menambahkan staf yang bertugas.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            cashiers.forEach(c => {
+                const initials = (c.name || 'KS').substring(0, 2).toUpperCase();
+                const isActive = !!c.is_active;
+                const statusBadge = isActive
+                    ? `<span style="font-size:0.68rem; background:#dcfce7; color:#15803d; font-weight:700; padding:2px 7px; border-radius:999px;">Aktif</span>`
+                    : `<span style="font-size:0.68rem; background:#f1f5f9; color:#64748b; font-weight:700; padding:2px 7px; border-radius:999px;">Nonaktif</span>`;
+                const toggleLabel = isActive ? 'Nonaktifkan' : 'Aktifkan';
+                const roleTitle = c.cashier_role_title || 'Kasir';
+                const shiftHtml = c.shift_hours
+                    ? `<span style="display:inline-flex; align-items:center; gap:4px; color:#0369a1; background:#f0f9ff; padding:1px 6px; border-radius:4px; font-weight:600;"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${escapeHtml(c.shift_hours)}</span>`
+                    : '';
+
+                const cJson = JSON.stringify(c).replace(/"/g, '&quot;');
+
+                html += `
+                    <div class="cashier-card-item" id="cashierRow-${c.id}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
+                        <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                            <div style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:800; color:#334155; flex-shrink:0;">
+                                ${initials}
+                            </div>
+                            <div style="min-width:0;">
+                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                    <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(c.name)}</span>
+                                    <span style="font-size:0.7rem; color:#64748b; background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600;">@<span>${escapeHtml(c.username || '')}</span></span>
+                                    ${statusBadge}
+                                </div>
+                                <div style="display:flex; align-items:center; gap:12px; font-size:0.72rem; color:#64748b; margin-top:3px; flex-wrap:wrap;">
+                                    <span style="display:inline-flex; align-items:center; gap:4px; color:#475569; font-weight:600;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                        ${escapeHtml(roleTitle)}
+                                    </span>
+                                    ${shiftHtml}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                            <button type="button" class="btn-outline-bio" style="padding:4px 9px; font-size:0.72rem; border-radius:6px;" onclick="editCashierData(${cJson})" title="Edit Kasir">
+                                Edit
+                            </button>
+                            <button type="button" style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; cursor:pointer; font-weight:600;" onclick="toggleCashierActive(${c.id})" title="Aktifkan / Nonaktifkan">
+                                ${toggleLabel}
+                            </button>
+                            <button type="button" style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;" onclick="deleteCashier(${c.id}, '${escapeHtml(c.name)}')" title="Hapus Staf">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            wrap.innerHTML = html;
         }
 
         function escapeHtml(str) {

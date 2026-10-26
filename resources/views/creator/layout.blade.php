@@ -731,9 +731,11 @@
     {{-- SIDEBAR --}}
     <aside class="cr-sidebar" id="crSidebar">
         @php 
-                                    $logo = \App\Models\Setting::get('logo');
-            $isBuyer = auth()->user()->role === 'buyer';
-            $cp = auth()->user()->creatorProfile;
+            $logo = \App\Models\Setting::get('logo');
+            $authUser = auth()->user();
+            $isPosCashier = $authUser ? $authUser->isPosCashier() : false;
+            $isBuyer = $authUser ? $authUser->role === 'buyer' : false;
+            $cp = $authUser ? ($isPosCashier && $authUser->parent_seller_id ? $authUser->parentSeller?->creatorProfile : $authUser->creatorProfile) : null;
             $storeSlug = $cp->store_slug ?? '';
         @endphp
 
@@ -751,107 +753,173 @@
 
         {{-- Nav Links --}}
         <nav class="cr-nav">
-            <a href="{{ $isBuyer ? '#' : route('creator.dashboard') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                Overview
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
+            @if($isPosCashier)
+                {{-- Kasir Staff Dedicated Mode: Hanya Kasir POS yang aktif, menu lain terkunci --}}
+                <a href="{{ route('creator.pos.index') }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.pos*') ? 'active' : '' }}"
+                    style="font-weight:700;">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                        <line x1="7" y1="15" x2="7.01" y2="15" stroke-width="3" />
+                        <line x1="12" y1="15" x2="12.01" y2="15" stroke-width="3" />
+                        <line x1="17" y1="15" x2="17.01" y2="15" stroke-width="3" />
+                    </svg>
+                    Kasir POS
+                    <span style="margin-left:auto; background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:999px; letter-spacing:0.04em;">AKTIF</span>
+                </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.app.index') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.app*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                </svg>
-                Aplikasi
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
+                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    Overview
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.products.index') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <rect x="2" y="7" width="20" height="14" rx="2" />
-                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                    <line x1="12" y1="12" x2="12" y2="16" />
-                    <line x1="10" y1="14" x2="14" y2="14" />
-                </svg>
-                Produk Saya
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
+                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
+                    Aplikasi
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.groups.index') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.groups*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16M4 18h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
-                </svg>
-                Kelompok Produk
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
+                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" rx="2" />
+                        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                    </svg>
+                    Produk Toko
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </a>
 
-            <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
-                class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <circle cx="12" cy="8" r="4" />
-                    <path d="M20 21a8 8 0 1 0-16 0" />
-                </svg>
-                Profil & Store
-            </a>
+                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M20 21a8 8 0 1 0-16 0" />
+                    </svg>
+                    Profil Toko
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                </svg>
-                Statistik & Data Order
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
+                <a href="#" onclick="showCashierLockedNotice(event)" class="cr-nav-link" style="opacity:0.55; cursor:not-allowed;">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="16" cy="12" r="2" />
+                        <path d="M6 12h.01" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                    Saldo &amp; Pencairan
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.8;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </a>
+            @else
+                {{-- Mode Normal Seller / Creator --}}
+                <a href="{{ $isBuyer ? '#' : route('creator.dashboard') }}"
+                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    Overview
+                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg> @endif
+                </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                    <circle cx="16" cy="12" r="2" />
-                    <path d="M6 12h.01" stroke-width="3" stroke-linecap="round" />
-                </svg>
-                Saldo &amp; Pencairan
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
+                <a href="{{ $isBuyer ? '#' : route('creator.app.index') }}"
+                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.app*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
+                    Aplikasi
+                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg> @endif
+                </a>
+
+                <a href="{{ $isBuyer ? '#' : route('creator.products.index') }}"
+                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" rx="2" />
+                        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                        <line x1="12" y1="12" x2="12" y2="16" />
+                        <line x1="10" y1="14" x2="14" y2="14" />
+                    </svg>
+                    Produk Saya
+                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg> @endif
+                </a>
+
+                <a href="{{ $isBuyer ? '#' : route('creator.groups.index') }}"
+                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.groups*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M4 6h16M4 12h16M4 18h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                    </svg>
+                    Kelompok Produk
+                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg> @endif
+                </a>
+
+                <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M20 21a8 8 0 1 0-16 0" />
+                    </svg>
+                    Profil & Store
+                </a>
+
+                <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
+                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    Statistik & Data Order
+                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg> @endif
+                </a>
+
+                <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
+                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="16" cy="12" r="2" />
+                        <path d="M6 12h.01" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                    Saldo &amp; Pencairan
+                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg> @endif
+                </a>
+            @endif
         </nav>
 
         {{-- Bottom Actions --}}
@@ -1051,75 +1119,100 @@
     <nav class="superapp-bottom-nav" id="superappBottomNav">
         @php
             $bottomNavIsBuyer = auth()->user()->role === 'buyer';
+            $bottomNavIsCashier = auth()->user()->isPosCashier();
         @endphp
 
-        {{-- Overview --}}
-        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.dashboard') }}"
-            onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-            class="superapp-nav-item {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
-            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-            <span>Overview</span>
-        </a>
+        @if($bottomNavIsCashier)
+            <a href="{{ route('creator.pos.index') }}"
+                class="superapp-nav-item active" style="min-width:80px;">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                    <line x1="7" y1="15" x2="7.01" y2="15" stroke-width="3" />
+                    <line x1="12" y1="15" x2="12.01" y2="15" stroke-width="3" />
+                    <line x1="17" y1="15" x2="17.01" y2="15" stroke-width="3" />
+                </svg>
+                <span>Kasir POS</span>
+            </a>
 
-        {{-- Produk --}}
-        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.products.index') }}"
-            onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-            class="superapp-nav-item {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
-            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <rect x="2" y="7" width="20" height="14" rx="2" />
-                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-            </svg>
-            <span>Produk</span>
-        </a>
+            <button type="button" class="superapp-nav-item"
+                onclick="document.getElementById('logout-form').submit();" style="min-width:80px; color:rgba(255,255,255,0.85);">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span>Logout</span>
+            </button>
+        @else
+            {{-- Overview --}}
+            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.dashboard') }}"
+                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                class="superapp-nav-item {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span>Overview</span>
+            </a>
 
-        {{-- Laporan Penjualan --}}
-        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
-            onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-            class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
-            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-            </svg>
-            <span>Laporan</span>
-        </a>
+            {{-- Produk --}}
+            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.products.index') }}"
+                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                class="superapp-nav-item {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                </svg>
+                <span>Produk</span>
+            </a>
 
-        {{-- Aplikasi --}}
-        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.app.index') }}"
-            onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-            class="superapp-nav-item {{ request()->routeIs('creator.app*') ? 'active' : '' }}">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                <rect x="3" y="14" width="7" height="7" rx="1.5" />
-            </svg>
-            <span>Aplikasi</span>
-        </a>
+            {{-- Laporan Penjualan --}}
+            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
+                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>Laporan</span>
+            </a>
 
-        {{-- Saldo --}}
-        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.payout.settings') }}"
-            onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-            class="superapp-nav-item {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="2" y="6" width="20" height="12" rx="2" />
-                <circle cx="16" cy="12" r="2" />
-                <path d="M6 12h.01" />
-            </svg>
-            <span>Saldo</span>
-        </a>
+            {{-- Aplikasi --}}
+            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.app.index') }}"
+                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                class="superapp-nav-item {{ request()->routeIs('creator.app*') ? 'active' : '' }}">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                </svg>
+                <span>Aplikasi</span>
+            </a>
 
-        {{-- Menu (open sidebar drawer) --}}
-        <button type="button" class="superapp-nav-item"
-            onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-            <span>Menu</span>
-        </button>
+            {{-- Saldo --}}
+            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.payout.settings') }}"
+                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                class="superapp-nav-item {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <circle cx="16" cy="12" r="2" />
+                    <path d="M6 12h.01" />
+                </svg>
+                <span>Saldo</span>
+            </a>
+
+            {{-- Menu (open sidebar drawer) --}}
+            <button type="button" class="superapp-nav-item"
+                onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+                <span>Menu</span>
+            </button>
+        @endif
     </nav>
 
     {{-- Interactive Locked Feature Modal for Buyers --}}
@@ -1382,14 +1475,10 @@
             }
         }
 
-        window.addEventListener('click', function (e) {
-            const profDropdown = document.getElementById('creator-profile-dropdown');
-            if (profDropdown && !e.target.closest('#creator-profile-container')) {
-                profDropdown.style.opacity = '0';
-                profDropdown.style.transform = 'translateY(-8px)';
-                setTimeout(() => { profDropdown.style.display = 'none'; }, 200);
-            }
-        });
+        function showCashierLockedNotice(e) {
+            if (e) e.preventDefault();
+            alert('Akses Terbatas: Akun staf kasir hanya diizinkan untuk mengakses modul Kasir (POS). Menu lain pada sidebar terkunci untuk keamanan toko.');
+        }
     </script>
     @yield('scripts')
 </body>

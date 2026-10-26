@@ -18,6 +18,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             $role = Auth::user()->role;
             if ($role === 'super_admin' || $role === 'admin') return redirect()->route('admin.dashboard');
+            if ($role === 'pos_cashier') return redirect()->route('creator.pos.index');
             if ($role === 'seller') return redirect()->route('creator.dashboard');
             return redirect()->route('account.overview');
         }
@@ -36,19 +37,27 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email'    => 'required|string',
             'password' => 'required|min:6',
         ], [
-            'email.required'    => 'Email wajib diisi.',
-            'email.email'       => 'Format email tidak valid.',
+            'email.required'    => 'Email atau Username wajib diisi.',
             'password.required' => 'Kata sandi wajib diisi.',
             'password.min'      => 'Kata sandi minimal 6 karakter.',
         ]);
 
         $oldSessionId = $request->session()->getId();
-        $credentials  = $request->only('email', 'password');
+        $loginInput   = trim($request->input('email'));
+        $fieldType    = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $credentials  = [$fieldType => $loginInput, 'password' => $request->password];
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            if (Auth::user()->is_active === false || Auth::user()->is_active === 0) {
+                Auth::logout();
+                return back()->withInput()->withErrors([
+                    'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi pemilik toko atau admin.',
+                ]);
+            }
+
             $request->session()->regenerate();
             
             try {
@@ -69,6 +78,8 @@ class AuthController extends Controller
                     'admin_email'     => Auth::user()->email,
                 ]);
                 $redirectRoute = route('admin.dashboard');
+            } elseif ($role === 'pos_cashier') {
+                $redirectRoute = route('creator.pos.index');
             } elseif ($role === 'seller') {
                 $redirectRoute = route('creator.dashboard');
             }

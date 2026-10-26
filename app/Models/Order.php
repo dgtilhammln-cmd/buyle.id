@@ -27,6 +27,8 @@ class Order extends Model
         'discount',
         'total',
         'shipping_address',
+        'cashier_id',
+        'cashier_name',
         'notes',
         'source',
         'utm_source',
@@ -61,6 +63,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function cashier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cashier_id');
     }
 
     /**

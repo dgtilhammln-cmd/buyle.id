@@ -28,6 +28,16 @@ class RoleMiddleware
         }
 
         if ($userRole !== $role) {
+            // Jika akun kasir (pos_cashier) mengakses area seller/creator
+            if ($role === 'seller' && $userRole === 'pos_cashier') {
+                $routeName = $request->route() ? $request->route()->getName() : '';
+                // Hanya boleh akses rute POS dan logout
+                if (str_starts_with($routeName, 'creator.pos.') || in_array($routeName, ['logout'])) {
+                    return $next($request);
+                }
+                return redirect()->route('creator.pos.index')->with('error', 'Akses Terbatas: Akun staf kasir hanya diizinkan membuka modul Kasir POS.');
+            }
+
             // Jika buyer mencoba membuka menu creator/seller, arahkan ke onboarding (yang sekarang akan mengubah role secara otomatis dan melempar ke /creator/profile)
             if ($role === 'seller' && $userRole === 'buyer') {
                 return redirect()->route('creator.onboarding');
