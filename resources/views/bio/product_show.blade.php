@@ -1073,13 +1073,13 @@
                 Deskripsi Produk
             </div>
             <div class="ps-desc-body">
-                {!! $rawDesc !!}
                 @php
                     $bioVideoUrl = !empty($product->tiktok_video_url) ? $product->tiktok_video_url : (!empty($product->youtube_video_url) ? $product->youtube_video_url : (!empty($block->data_json['tiktok_video_url']) ? $block->data_json['tiktok_video_url'] : null));
                 @endphp
                 @if(!empty($bioVideoUrl))
                     @include('partials.product_video', ['videoUrl' => $bioVideoUrl])
                 @endif
+                {!! $rawDesc !!}
             </div>
         </div>
         @endif

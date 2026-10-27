@@ -2812,13 +2812,13 @@
                                     <a href="https://buyle.id" title="BUYLE.ID"><strong>BUYLE.ID</strong></a>.
                                 </div>
 
+                                {{-- Video Produk (Minimalist YouTube / TikTok Embed) - Tepat di bawah Callout sebelum isi deskripsi --}}
+                                @include('partials.product_video', ['videoUrl' => $service->tiktok_video_url])
+
                                 @if($service->short_desc)
                                     <p><b>{{ $service->short_desc }}</b></p>
                                 @endif
                                 {!! $service->description ?? 'Belum ada deskripsi mendetail.' !!}
-
-                                {{-- Video Produk (Minimalist YouTube / TikTok Embed) --}}
-                                @include('partials.product_video', ['videoUrl' => $service->tiktok_video_url])
 
                                 {{-- Poster Landscape Banner (og_image) --}}
                                 @if(!empty($service->og_image))

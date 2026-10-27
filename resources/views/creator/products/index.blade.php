@@ -1124,6 +1124,18 @@
 
   {{-- SKELETON LOADING PLACEHOLDER (Smooth & Lightweight) --}}
   <div id="products-skeleton" style="margin-bottom: 2rem;">
+    <script>
+      (function() {
+        try {
+          var p = localStorage.getItem('admin_services_view') || (window.innerWidth <= 768 ? 'grid' : 'list');
+          if (p === 'grid') {
+            document.write('<style>#skel-list-container{display:none!important;}#skel-grid-container{display:grid!important;}</style>');
+          } else {
+            document.write('<style>#skel-list-container{display:block!important;}#skel-grid-container{display:none!important;}</style>');
+          }
+        } catch(e) {}
+      })();
+    </script>
     {{-- Tabs & Filters Skeleton --}}
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
       <div style="display:flex; align-items:center; gap:0.35rem; background:#f1f5f9; padding:0.25rem; border-radius:12px;">
@@ -1559,7 +1571,7 @@
   </div> {{-- Close #products-real-content --}}
 
   {{-- Interactive Delete Confirmation Modal --}}
-  <div id="deleteConfirmOverlay" class="del-confirm-overlay" onclick="if(event.target===this) closeDeleteModal()">
+  <div id="deleteConfirmOverlay" class="del-confirm-overlay" onclick="if(event.target===this) closeDeleteModal()" style="display:none !important;">
     <div class="del-confirm-card" role="dialog" aria-modal="true">
       <div class="del-confirm-icon-wrap">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1584,14 +1596,21 @@
         localStorage.setItem('admin_services_view_user_toggled', 'true');
       }
       localStorage.setItem('admin_services_view', type);
-      document.getElementById('view-list').style.display = type === 'list' ? 'block' : 'none';
-      document.getElementById('view-grid').style.display = type === 'grid' ? 'grid' : 'none';
+      const vList = document.getElementById('view-list');
+      const vGrid = document.getElementById('view-grid');
+      if (vList) vList.style.display = type === 'list' ? 'block' : 'none';
+      if (vGrid) vGrid.style.display = type === 'grid' ? 'grid' : 'none';
 
-      document.getElementById('btn-view-list').style.background = type === 'list' ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : 'transparent';
-      document.getElementById('btn-view-list').style.color = type === 'list' ? '#fff' : '#94A3B8';
-
-      document.getElementById('btn-view-grid').style.background = type === 'grid' ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : 'transparent';
-      document.getElementById('btn-view-grid').style.color = type === 'grid' ? '#fff' : '#94A3B8';
+      const bList = document.getElementById('btn-view-list');
+      const bGrid = document.getElementById('btn-view-grid');
+      if (bList) {
+        bList.style.background = type === 'list' ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : 'transparent';
+        bList.style.color = type === 'list' ? '#fff' : '#94A3B8';
+      }
+      if (bGrid) {
+        bGrid.style.background = type === 'grid' ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : 'transparent';
+        bGrid.style.color = type === 'grid' ? '#fff' : '#94A3B8';
+      }
     }
 
     // Initialize view (default to grid on mobile)
@@ -1608,12 +1627,10 @@
     switchView(savedView);
   </script>
 
-@endsection
-
 @include('partials.scan_menu_modal')
 
 {{-- ===== SMART IMPORT MODAL ===== --}}
-<div class="si-overlay" id="smartImportOverlay" onclick="closeSmartImport(event)">
+<div class="si-overlay" id="smartImportOverlay" onclick="closeSmartImport(event)" style="display:none !important;">
   <div class="si-modal" onclick="event.stopPropagation()">
 
     {{-- Header --}}
@@ -1931,15 +1948,27 @@
 
   </div>
 </div>
+@endsection
 
+@section('scripts')
 <script>
   // Smart Import Modal
   function openSmartImport() {
-    document.getElementById('smartImportOverlay').classList.add('open');
+    const el = document.getElementById('smartImportOverlay');
+    if (!el) return;
+    el.style.setProperty('display', 'flex', 'important');
+    requestAnimationFrame(() => el.classList.add('open'));
   }
   function closeSmartImport(e) {
-    if (!e || e.target === document.getElementById('smartImportOverlay')) {
-      document.getElementById('smartImportOverlay').classList.remove('open');
+    const el = document.getElementById('smartImportOverlay');
+    if (!el) return;
+    if (!e || e.target === el || (e.target && e.target.classList && e.target.classList.contains('si-close'))) {
+      el.classList.remove('open');
+      setTimeout(() => {
+        if (!el.classList.contains('open')) {
+          el.style.setProperty('display', 'none', 'important');
+        }
+      }, 250);
     }
   }
   function switchSiTab(tab, el) {
@@ -2290,10 +2319,11 @@
       if (real) real.style.opacity = '1';
     }
 
-    if (document.readyState === 'complete') {
-      setTimeout(revealProducts, 120);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(revealProducts, 40);
     } else {
-      window.addEventListener('load', () => setTimeout(revealProducts, 120));
+      document.addEventListener('DOMContentLoaded', () => setTimeout(revealProducts, 40));
+      window.addEventListener('load', () => setTimeout(revealProducts, 40));
     }
   })();
 
@@ -2423,7 +2453,11 @@
     }
 
     confirmBtn.disabled = false;
-    document.getElementById('deleteConfirmOverlay').classList.add('open');
+    const delOverlay = document.getElementById('deleteConfirmOverlay');
+    if (delOverlay) {
+      delOverlay.style.setProperty('display', 'flex', 'important');
+      requestAnimationFrame(() => delOverlay.classList.add('open'));
+    }
   }
 
   function executeBulkActionConfirmed() {
@@ -2503,7 +2537,11 @@
       iconWrap.style.borderColor = '#fecaca';
       iconWrap.style.color = '#ef4444';
     }
-    document.getElementById('deleteConfirmOverlay').classList.add('open');
+    const overlay = document.getElementById('deleteConfirmOverlay');
+    if (overlay) {
+      overlay.style.setProperty('display', 'flex', 'important');
+      requestAnimationFrame(() => overlay.classList.add('open'));
+    }
   }
 
   function openDeleteAllModal(count) {
@@ -2521,12 +2559,23 @@
       iconWrap.style.borderColor = '#fecaca';
       iconWrap.style.color = '#ef4444';
     }
-    document.getElementById('deleteConfirmOverlay').classList.add('open');
+    const overlay = document.getElementById('deleteConfirmOverlay');
+    if (overlay) {
+      overlay.style.setProperty('display', 'flex', 'important');
+      requestAnimationFrame(() => overlay.classList.add('open'));
+    }
   }
 
   function closeDeleteModal() {
     const overlay = document.getElementById('deleteConfirmOverlay');
-    if (overlay) overlay.classList.remove('open');
+    if (overlay) {
+      overlay.classList.remove('open');
+      setTimeout(() => {
+        if (!overlay.classList.contains('open')) {
+          overlay.style.setProperty('display', 'none', 'important');
+        }
+      }, 220);
+    }
     _activeDeleteForm = null;
     _bulkActionType = null;
     const confirmBtn = document.getElementById('delConfirmBtn');
@@ -2557,3 +2606,4 @@
     if (e.key === 'Escape') closeDeleteModal();
   });
 </script>
+@endsection

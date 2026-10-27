@@ -1842,8 +1842,6 @@
                     Deskripsi Produk
                 </div>
                 <div class="ps-desc-body">
-                    {!! $rawDesc !!}
-
                     {{-- Video Produk (Minimalist YouTube / TikTok Embed) --}}
                     @php
                         $prodVideoUrl = !empty($product->tiktok_video_url) ? $product->tiktok_video_url : (!empty($product->youtube_video_url) ? $product->youtube_video_url : (!empty($block->data_json['tiktok_video_url']) ? $block->data_json['tiktok_video_url'] : null));
@@ -1851,6 +1849,8 @@
                     @if(!empty($prodVideoUrl))
                         @include('partials.product_video', ['videoUrl' => $prodVideoUrl])
                     @endif
+
+                    {!! $rawDesc !!}
 
                     @php
                         $posterImage = !empty($product->og_image) ? asset('storage/' . $product->og_image) : (!empty($block->data_json['og_image']) ? asset('storage/' . $block->data_json['og_image']) : null);

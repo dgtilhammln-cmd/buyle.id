@@ -62,44 +62,83 @@
 
         {{-- TIKTOK EMBEDS: JEJER HORIZONTAL & AMAN DI DALAM BOX DESKRIPSI --}}
         @if(!empty($ttItems))
-            <div style="width:100%; max-width:100%; box-sizing:border-box; overflow:hidden;">
+            <style>
+                .pd-tiktok-horizontal-row {
+                    display: flex;
+                    gap: 12px;
+                    width: 100%;
+                    max-width: 100%;
+                    box-sizing: border-box;
+                    align-items: stretch;
+                }
+                .pd-tiktok-card-item {
+                    aspect-ratio: 9/16;
+                    max-height: 520px;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    background: #000;
+                    border: 1.5px solid #e2e8f0;
+                    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+                    box-sizing: border-box;
+                }
+                @media (min-width: 641px) {
+                    .pd-tiktok-horizontal-row {
+                        overflow-x: visible;
+                    }
+                    .pd-tt-count-3 .pd-tiktok-card-item {
+                        flex: 1 1 0 !important;
+                        width: calc((100% - 24px) / 3) !important;
+                        max-width: calc((100% - 24px) / 3) !important;
+                        min-width: 0 !important;
+                    }
+                    .pd-tt-count-2 .pd-tiktok-card-item {
+                        flex: 1 1 0 !important;
+                        width: calc((100% - 12px) / 2) !important;
+                        max-width: calc((100% - 12px) / 2) !important;
+                        min-width: 0 !important;
+                    }
+                    .pd-tt-count-1 .pd-tiktok-card-item {
+                        flex: 0 0 min(320px, 100%) !important;
+                        width: min(320px, 100%) !important;
+                        max-width: 320px !important;
+                    }
+                    .pd-tt-scroll-hint {
+                        display: none !important;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .pd-tiktok-horizontal-row {
+                        overflow-x: auto;
+                        scroll-snap-type: x mandatory;
+                        -webkit-overflow-scrolling: touch;
+                        padding-bottom: 8px;
+                    }
+                    .pd-tiktok-card-item {
+                        flex: 0 0 min(240px, 72vw) !important;
+                        width: min(240px, 72vw) !important;
+                        scroll-snap-align: start;
+                        flex-shrink: 0;
+                    }
+                    .pd-tt-scroll-hint {
+                        display: inline-block !important;
+                    }
+                }
+            </style>
+
+            <div style="width:100%; max-width:100%; box-sizing:border-box;">
                 @if(count($ttItems) > 1)
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem; font-size:0.8rem; font-weight:700; color:#334155;">
                         <span style="display:flex; align-items:center; gap:0.35rem;">
                             <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
                             Video Review TikTok ({{ count($ttItems) }})
                         </span>
-                        <span style="font-size:0.72rem; color:#94a3b8; font-weight:500;">Geser untuk melihat semua &rarr;</span>
+                        <span class="pd-tt-scroll-hint" style="font-size:0.72rem; color:#94a3b8; font-weight:500;">Geser untuk melihat semua &rarr;</span>
                     </div>
                 @endif
 
-                <div class="pd-tiktok-horizontal-row" style="
-                    display: flex;
-                    gap: 12px;
-                    overflow-x: auto;
-                    width: 100%;
-                    max-width: 100%;
-                    padding-bottom: 8px;
-                    box-sizing: border-box;
-                    scroll-snap-type: x mandatory;
-                    -webkit-overflow-scrolling: touch;
-                    scrollbar-width: thin;
-                ">
+                <div class="pd-tiktok-horizontal-row pd-tt-count-{{ min(count($ttItems), 3) }}">
                     @foreach($ttItems as $idx => $tt)
-                        <div class="pd-tiktok-card-item" style="
-                            flex: {{ count($ttItems) === 1 ? '0 0 min(320px, 100%)' : '0 0 min(260px, 78vw)' }};
-                            width: {{ count($ttItems) === 1 ? 'min(320px, 100%)' : 'min(260px, 78vw)' }};
-                            aspect-ratio: 9/16;
-                            max-height: 520px;
-                            border-radius: 14px;
-                            overflow: hidden;
-                            background: #000;
-                            border: 1.5px solid #e2e8f0;
-                            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-                            scroll-snap-align: start;
-                            flex-shrink: 0;
-                            box-sizing: border-box;
-                        ">
+                        <div class="pd-tiktok-card-item">
                             @if(!empty($tt['id']))
                                 <iframe src="https://www.tiktok.com/player/v1/{{ $tt['id'] }}?music_info=1&description=1"
                                     style="width:100%; height:100%; border:none; display:block;"
