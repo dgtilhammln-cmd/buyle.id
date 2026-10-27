@@ -3040,14 +3040,24 @@
                                     </div>
                                 </div>
 
-                                <div class="cashier-form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                                <div class="cashier-form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
                                     <div>
-                                        <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Jam Kerja / Shift</label>
-                                        <input type="text" id="cashierInputShift" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: 08:00 - 16:00 (Pagi) / Shift 1">
+                                        <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:4px;">Jam Kerja / Shift Kasir</label>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <input type="time" id="cashierShiftStart" class="form-input" style="height:36px; font-size:0.82rem; padding:0 8px; flex:1;" value="08:00" onchange="syncCashierShiftTime()">
+                                            <span style="font-size:0.73rem; font-weight:700; color:#64748b;">s/d</span>
+                                            <input type="time" id="cashierShiftEnd" class="form-input" style="height:36px; font-size:0.82rem; padding:0 8px; flex:1;" value="16:00" onchange="syncCashierShiftTime()">
+                                        </div>
+                                        <input type="hidden" id="cashierInputShift" value="08:00 - 16:00">
+                                        <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
+                                            <button type="button" onclick="setCashierShiftPreset('08:00', '16:00')" style="font-size:0.65rem; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:999px; padding:2px 7px; color:#475569; cursor:pointer; font-weight:600;">Pagi (08:00 - 16:00)</button>
+                                            <button type="button" onclick="setCashierShiftPreset('12:00', '20:00')" style="font-size:0.65rem; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:999px; padding:2px 7px; color:#475569; cursor:pointer; font-weight:600;">Siang (12:00 - 20:00)</button>
+                                            <button type="button" onclick="setCashierShiftPreset('16:00', '00:00')" style="font-size:0.65rem; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:999px; padding:2px 7px; color:#475569; cursor:pointer; font-weight:600;">Malam (16:00 - 00:00)</button>
+                                        </div>
                                     </div>
                                     <div style="display:flex; flex-direction:column; justify-content:center;">
                                         <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:4px;">Status Akun</label>
-                                        <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; font-weight:600; color:#1e293b; cursor:pointer;">
+                                        <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; font-weight:600; color:#1e293b; cursor:pointer; padding:8px 0;">
                                             <input type="checkbox" id="cashierInputActive" checked style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer;">
                                             <span>Aktif &amp; Boleh Login</span>
                                         </label>
@@ -3381,7 +3391,6 @@
                                     <th style="padding-left:1.5rem;">No. Order / Waktu</th>
                                     <th>Pelanggan</th>
                                     <th>Metode Bayar</th>
-                                    <th>Fee Kasir</th>
                                     <th>Total Bayar</th>
                                     <th>Status</th>
                                     <th style="text-align:right; padding-right:1.5rem;">Aksi</th>
@@ -3418,9 +3427,6 @@
                                                 {{ $tPayMethod }}
                                             </span>
                                         </td>
-                                        <td style="font-size:0.75rem; color:#64748b;">
-                                            Rp {{ number_format($tFee, 0, ',', '.') }}
-                                        </td>
                                         <td style="font-weight:800; color:#0f172a;">
                                             Rp {{ number_format($tOrd->total, 0, ',', '.') }}
                                         </td>
@@ -3438,9 +3444,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7"
-                                            style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">
-                                            Belum ada transaksi POS hari ini.
+                                        <td colspan="6" style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">Belum ada transaksi POS hari ini.
                                         </td>
                                     </tr>
                                 @endforelse
@@ -5611,6 +5615,21 @@
         // KELOLA STAF KASIR & SHIFT (AJAX CRUD)
         // ═══════════════════════════════════════════════
 
+        function syncCashierShiftTime() {
+            const start = document.getElementById('cashierShiftStart')?.value || '08:00';
+            const end = document.getElementById('cashierShiftEnd')?.value || '16:00';
+            const hidden = document.getElementById('cashierInputShift');
+            if (hidden) hidden.value = start + ' - ' + end;
+        }
+
+        function setCashierShiftPreset(start, end) {
+            const sInput = document.getElementById('cashierShiftStart');
+            const eInput = document.getElementById('cashierShiftEnd');
+            if (sInput) sInput.value = start;
+            if (eInput) eInput.value = end;
+            syncCashierShiftTime();
+        }
+
         function openAddCashierDrawer() {
             document.getElementById('cashierDrawerTitle').innerText = 'Tambah Staf Kasir Baru';
             document.getElementById('cashierEditId').value = '';
@@ -5618,7 +5637,9 @@
             document.getElementById('cashierInputRole').value = 'Kasir';
             document.getElementById('cashierInputEmail').value = '';
             document.getElementById('cashierInputPassword').value = '';
-            document.getElementById('cashierInputShift').value = '';
+            document.getElementById('cashierShiftStart').value = '08:00';
+            document.getElementById('cashierShiftEnd').value = '16:00';
+            document.getElementById('cashierInputShift').value = '08:00 - 16:00';
             document.getElementById('cashierInputActive').checked = true;
 
             const notice = document.getElementById('cashierPasswordNotice');
@@ -5645,7 +5666,16 @@
             document.getElementById('cashierInputRole').value = c.cashier_role_title || 'Kasir';
             document.getElementById('cashierInputEmail').value = c.email || c.username || '';
             document.getElementById('cashierInputPassword').value = '';
-            document.getElementById('cashierInputShift').value = c.shift_hours || '';
+            const rawShift = c.shift_hours || '08:00 - 16:00';
+            document.getElementById('cashierInputShift').value = rawShift;
+            if (rawShift.includes('-')) {
+                const parts = rawShift.split('-');
+                document.getElementById('cashierShiftStart').value = parts[0].trim().substring(0, 5) || '08:00';
+                document.getElementById('cashierShiftEnd').value = parts[1].trim().substring(0, 5) || '16:00';
+            } else {
+                document.getElementById('cashierShiftStart').value = '08:00';
+                document.getElementById('cashierShiftEnd').value = '16:00';
+            }
             document.getElementById('cashierInputActive').checked = !!c.is_active;
 
             const notice = document.getElementById('cashierPasswordNotice');

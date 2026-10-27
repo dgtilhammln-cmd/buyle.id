@@ -1385,15 +1385,188 @@
             gap: 0.75rem;
         }
 
-        .pos-method-pill {
-            padding: 0.4rem 0.85rem;
+        
+        /* ── POS Tab Premium Styling ─────────────────────────────────────── */
+        .pos-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.15rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pos-kpi-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 1.1rem 1.25rem;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pos-kpi-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #cbd5e1;
+            transition: width 0.2s ease;
+        }
+
+        .pos-kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            border-color: #cbd5e1;
+        }
+
+        .pos-kpi-card.kpi-emerald::before { background: linear-gradient(180deg, #16a34a, #22c55e); }
+        .pos-kpi-card.kpi-teal::before { background: linear-gradient(180deg, #0d9488, #14b8a6); }
+        .pos-kpi-card.kpi-blue::before { background: linear-gradient(180deg, #2563eb, #3b82f6); }
+        .pos-kpi-card.kpi-purple::before { background: linear-gradient(180deg, #7c3aed, #a855f7); }
+
+        .pos-kpi-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pos-kpi-icon.emerald { background: #f0fdf4; color: #16a34a; }
+        .pos-kpi-icon.teal { background: #f0fdfa; color: #0d9488; }
+        .pos-kpi-icon.blue { background: #eff6ff; color: #2563eb; }
+        .pos-kpi-icon.purple { background: #faf5ff; color: #7c3aed; }
+
+        .pos-kpi-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+
+        .pos-kpi-value {
+            font-size: 1.28rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            font-feature-settings: "tnum";
+        }
+
+        .pos-kpi-sub {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 1024px) {
+            .pos-kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 580px) {
+            .pos-kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── POS Card Table & Toolbar ─────────────────────────────────────── */
+        .pos-report-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 22px;
+            padding: 1.6rem;
+            box-shadow: 0 4px 24px rgba(15, 23, 42, 0.04);
+            margin-bottom: 2rem;
+        }
+
+        .pos-report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.4rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pos-header-info h3 {
+            font-size: 1.18rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pos-header-info p {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .pos-toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }
+
+        .pos-search-wrapper {
+            position: relative;
+            min-width: 220px;
+        }
+
+        .pos-search-wrapper input {
+            width: 100%;
+            height: 38px;
+            padding: 0 12px 0 34px;
             border-radius: 999px;
-            font-size: 0.75rem;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 0.78rem;
+            font-family: 'Montserrat', sans-serif;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .pos-search-wrapper input:focus {
+            background: #ffffff;
+            border-color: #1eb349;
+            box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
+        }
+
+        .pos-search-wrapper svg {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .pos-method-pill {
+            padding: 0.44rem 0.95rem;
+            border-radius: 999px;
+            font-size: 0.76rem;
             font-weight: 700;
             text-decoration: none;
-            transition: all 0.2s;
-            border: 1px solid #e2e8f0;
-            color: #64748b;
+            transition: all 0.18s ease;
+            border: 1.5px solid #e2e8f0;
+            color: #475569;
             background: #ffffff;
             display: inline-flex;
             align-items: center;
@@ -1404,14 +1577,135 @@
         .pos-method-pill:hover {
             border-color: #1eb349;
             color: #1eb349;
+            background: #f0fdf4;
+            transform: translateY(-1px);
         }
 
         .pos-method-pill.active {
-            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
             color: #ffffff;
             border-color: transparent;
-            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
+            box-shadow: 0 3px 12px rgba(30, 179, 73, 0.30);
         }
+
+        .btn-pos-export-excel {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.46rem 1.05rem;
+            background: #15803d;
+            color: #ffffff;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .btn-pos-export-excel:hover {
+            background: #166534;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.35);
+        }
+
+        /* ── POS Table Custom Styling ─────────────────────────────────────── */
+        .pos-data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.8rem;
+        }
+
+        .pos-data-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 14px;
+            border-top: 1px solid #f1f5f9;
+            border-bottom: 1.5px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        .pos-data-table td {
+            padding: 13px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            color: #334155;
+        }
+
+        .pos-data-table tr.pos-order-row {
+            transition: background 0.15s ease;
+        }
+
+        .pos-data-table tr.pos-order-row:hover {
+            background: #f8fafc;
+        }
+
+        .pos-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #dcfce7;
+            color: #15803d;
+            font-weight: 800;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid #bbf7d0;
+        }
+
+        .pos-empty-container {
+            padding: 3.5rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pos-empty-icon-bubble {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            background: #f0fdf4;
+            border: 1.5px solid #bbf7d0;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.12);
+        }
+
+        .btn-pos-launch-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.65rem 1.5rem;
+            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 800;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.28);
+            transition: all 0.2s ease;
+        }
+
+        .btn-pos-launch-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 179, 73, 0.38);
+            color: #ffffff;
+        }
+
     </style>
 @endsection
 
@@ -2153,87 +2447,94 @@
 
     {{-- ── TAB 3: KASIR DIGITAL (POS) & NERACA ────────────────────────── --}}
     <div id="tabContentPos" class="rp-tab-content" style="{{ $activeTab === 'pos' ? '' : 'display:none;' }}">
+
+        {{-- ── 1. LUXURY KPI SUMMARY CARDS ────────────────────────────────── --}}
         <div class="pos-kpi-grid">
             {{-- Card 1: Total Omset POS --}}
-            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
-                <div class="sm-icon" style="background:#F0FDF4; color:#1eb349; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="pos-kpi-card kpi-emerald">
+                <div class="pos-kpi-icon emerald">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="2" y="5" width="20" height="14" rx="2" />
                         <line x1="2" y1="10" x2="22" y2="10" />
+                        <circle cx="7" cy="15" r="1" />
+                        <circle cx="12" cy="15" r="1" />
+                        <circle cx="17" cy="15" r="1" />
                     </svg>
                 </div>
                 <div style="min-width:0; flex:1;">
-                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Total Omset POS</div>
-                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#0f172a; margin-top:1px; line-height:1.2;">
+                    <div class="pos-kpi-title">Total Omset Kasir POS</div>
+                    <div class="pos-kpi-value" style="color:#15803d;">
                         Rp {{ number_format($posTotalSales, 0, ',', '.') }}
                     </div>
-                    <div class="stat-sub" style="font-size:0.7rem; color:#15803d; font-weight:700; margin-top:2px;">
-                        {{ $posTotalTransactions }} Transaksi Kasir
+                    <div class="pos-kpi-sub">
+                        <span style="color:#16a34a; font-weight:700;">{{ $posTotalTransactions }}</span> Transaksi Penjualan
                     </div>
                 </div>
             </div>
 
-            {{-- Card 2: Uang Tunai di Laci --}}
-            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
-                <div class="sm-icon" style="background:#ECFDF5; color:#059669; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            {{-- Card 2: Uang Tunai di Laci Kasir --}}
+            <div class="pos-kpi-card kpi-teal">
+                <div class="pos-kpi-icon teal">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="2" y="6" width="20" height="12" rx="2" />
                         <circle cx="12" cy="12" r="3" />
                         <path d="M6 12h.01M18 12h.01" />
                     </svg>
                 </div>
                 <div style="min-width:0; flex:1;">
-                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Uang Tunai di Laci</div>
-                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#059669; margin-top:1px; line-height:1.2;">
+                    <div class="pos-kpi-title">Uang Tunai di Laci (Cash)</div>
+                    <div class="pos-kpi-value" style="color:#0f766e;">
                         Rp {{ number_format($posCashTotal, 0, ',', '.') }}
                     </div>
-                    <div class="stat-sub" style="font-size:0.7rem; color:#64748b; font-weight:500; margin-top:2px;">
-                        Kas fisik di laci kasir
+                    <div class="pos-kpi-sub">
+                        Kas fisik tersimpan di laci toko
                     </div>
                 </div>
             </div>
 
-            {{-- Card 3: Non-Tunai (QRIS / Transfer) --}}
-            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
-                <div class="sm-icon" style="background:#EFF6FF; color:#2563EB; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            {{-- Card 3: Pembayaran Digital --}}
+            <div class="pos-kpi-card kpi-blue">
+                <div class="pos-kpi-icon blue">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="5" y="2" width="14" height="20" rx="2" />
                         <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3" />
                     </svg>
                 </div>
                 <div style="min-width:0; flex:1;">
-                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Non-Tunai (Digital)</div>
-                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#1D4ED8; margin-top:1px; line-height:1.2;">
+                    <div class="pos-kpi-title">Non-Tunai (Digital)</div>
+                    <div class="pos-kpi-value" style="color:#1d4ed8;">
                         Rp {{ number_format($posDigitalTotal, 0, ',', '.') }}
                     </div>
-                    <div class="stat-sub" style="font-size:0.7rem; color:#64748b; font-weight:500; margin-top:2px;">
-                        QRIS & Transfer Bank
+                    <div class="pos-kpi-sub">
+                        QRIS Dinamis & Transfer Bank
                     </div>
                 </div>
             </div>
 
-            {{-- Card 4: Fee Transaksi Terpotong --}}
-            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
-                <div class="sm-icon" style="background:#FEF2F2; color:#DC2626; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="9" y1="15" x2="15" y2="15" />
+            {{-- Card 4: Rata-Rata Transaksi (AOV) --}}
+            @php
+                $posAov = $posTotalTransactions > 0 ? round($posTotalSales / $posTotalTransactions) : 0;
+            @endphp
+            <div class="pos-kpi-card kpi-purple">
+                <div class="pos-kpi-icon purple">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                        <polyline points="17 6 23 6 23 12" />
                     </svg>
                 </div>
                 <div style="min-width:0; flex:1;">
-                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Beban Biaya Kasir</div>
-                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#DC2626; margin-top:1px; line-height:1.2;">
-                        Rp {{ number_format($posFeesTotal, 0, ',', '.') }}
+                    <div class="pos-kpi-title">Rata-Rata Transaksi (AOV)</div>
+                    <div class="pos-kpi-value" style="color:#6d28d9;">
+                        Rp {{ number_format($posAov, 0, ',', '.') }}
                     </div>
-                    <div class="stat-sub" style="font-size:0.7rem; color:#64748b; font-weight:500; margin-top:2px;">
-                        Fee dipotong deposit
+                    <div class="pos-kpi-sub">
+                        Rata-rata belanja per struk
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- ── 2. DUAL-COLUMN NERACA & AUDIT SALDO DEPOSIT ───────────── --}}
+        {{-- ── 2. DUAL-COLUMN NERACA & SALDO DEPOSIT AUDIT ─────────────────── --}}
         <div class="pos-neraca-grid">
             {{-- Kolom Kiri: Neraca Arus Kas Kasir POS --}}
             <div class="pos-neraca-card">
@@ -2243,7 +2544,7 @@
                             <h3 style="font-size:0.98rem; font-weight:800; color:#0f172a; margin:0 0 2px;">Neraca Arus Kas Kasir</h3>
                             <p style="font-size:0.74rem; color:#64748b; margin:0;">Rekonsiliasi omset fisik & digital periode ini</p>
                         </div>
-                        <span style="font-size:0.7rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:999px; white-space:nowrap;">
+                        <span style="font-size:0.7rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 9px; border-radius:999px; white-space:nowrap;">
                             Buku Kasir
                         </span>
                     </div>
@@ -2251,8 +2552,8 @@
                     <div class="pos-neraca-body">
                         <div class="pos-neraca-row">
                             <span class="pos-neraca-label">
-                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#1eb349; flex-shrink:0;"></span>
-                                Penjualan Kotor (Gross Sales)
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#16a34a; flex-shrink:0;"></span>
+                                Penjualan Kasir (Gross Sales)
                             </span>
                             <span class="pos-neraca-val" style="color:#15803d;">
                                 + Rp {{ number_format($posTotalSales, 0, ',', '.') }}
@@ -2260,29 +2561,29 @@
                         </div>
                         <div class="pos-neraca-row">
                             <span class="pos-neraca-label">
-                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#059669; flex-shrink:0;"></span>
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#0d9488; flex-shrink:0;"></span>
                                 Uang Tunai di Laci Kasir (Cash)
                             </span>
-                            <span class="pos-neraca-val">
+                            <span class="pos-neraca-val" style="color:#0f766e;">
                                 Rp {{ number_format($posCashTotal, 0, ',', '.') }}
                             </span>
                         </div>
                         <div class="pos-neraca-row">
                             <span class="pos-neraca-label">
-                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#2563eb; flex-shrink:0;"></span>
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#2563eb; flex-shrink:0;"></span>
                                 Pembayaran Non-Tunai (QRIS & Transfer)
                             </span>
-                            <span class="pos-neraca-val">
+                            <span class="pos-neraca-val" style="color:#1d4ed8;">
                                 Rp {{ number_format($posDigitalTotal, 0, ',', '.') }}
                             </span>
                         </div>
                         <div class="pos-neraca-row">
                             <span class="pos-neraca-label">
-                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#dc2626; flex-shrink:0;"></span>
-                                Beban Fee Transaksi (Platform Fee)
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#64748b; flex-shrink:0;"></span>
+                                Total Struk Penjualan Terlayani
                             </span>
-                            <span class="pos-neraca-val" style="color:#dc2626;">
-                                - Rp {{ number_format($posFeesTotal, 0, ',', '.') }}
+                            <span class="pos-neraca-val" style="color:#0f172a;">
+                                {{ $posTotalTransactions }} Transaksi
                             </span>
                         </div>
                     </div>
@@ -2290,29 +2591,29 @@
 
                 <div class="pos-neraca-footer">
                     <div>
-                        <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Estimasi Omset Bersih</div>
-                        <div style="font-size:0.68rem; color:#94a3b8; margin-top:1px;">(Gross Sales dikurangi Platform Fee)</div>
+                        <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Total Pemasukan Kasir</div>
+                        <div style="font-size:0.68rem; color:#94a3b8; margin-top:1px;">(Akumulasi semua metode pembayaran)</div>
                     </div>
-                    <div style="font-size:1.2rem; font-weight:800; color:#15803d;">
-                        Rp {{ number_format(max(0, $posTotalSales - $posFeesTotal), 0, ',', '.') }}
+                    <div style="font-size:1.25rem; font-weight:800; color:#15803d;">
+                        Rp {{ number_format($posTotalSales, 0, ',', '.') }}
                     </div>
                 </div>
             </div>
 
-            {{-- Kolom Kanan: Audit Saldo Deposit & Mutasi Ledger --}}
+            {{-- Kolom Kanan: Audit Saldo Deposit & Mutasi --}}
             <div class="pos-neraca-card">
                 <div>
                     <div class="pos-neraca-head">
                         <div>
                             <h3 style="font-size:0.98rem; font-weight:800; color:#0f172a; margin:0 0 2px;">Saldo Deposit Kasir POS</h3>
-                            <p style="font-size:0.74rem; color:#64748b; margin:0;">Saldo cadangan pemotongan fee transaksi tunai</p>
+                            <p style="font-size:0.74rem; color:#64748b; margin:0;">Saldo cadangan operasional transaksi kasir</p>
                         </div>
                         @if($posBalance > 5000)
-                            <span style="font-size:0.7rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:999px; white-space:nowrap;">
+                            <span style="font-size:0.7rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 9px; border-radius:999px; white-space:nowrap;">
                                 Saldo Aman
                             </span>
                         @else
-                            <span style="font-size:0.7rem; font-weight:700; color:#d97706; background:#FEF3C7; border:1px solid #FDE68A; padding:2px 8px; border-radius:999px; white-space:nowrap;">
+                            <span style="font-size:0.7rem; font-weight:700; color:#d97706; background:#FEF3C7; border:1px solid #FDE68A; padding:2px 9px; border-radius:999px; white-space:nowrap;">
                                 Perlu Topup
                             </span>
                         @endif
@@ -2320,35 +2621,26 @@
 
                     <div class="pos-neraca-body">
                         {{-- Highlight Saldo --}}
-                        <div style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border:1.5px solid #bbf7d0; border-radius:12px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem;">
+                        <div style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border:1.5px solid #bbf7d0; border-radius:14px; padding:0.85rem 1.1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem;">
                             <div>
                                 <div style="font-size:0.68rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">Sisa Saldo Deposit Saat Ini</div>
-                                <div style="font-size:1.25rem; font-weight:800; color:#14532d; margin-top:1px;">
+                                <div style="font-size:1.3rem; font-weight:800; color:#14532d; margin-top:2px;">
                                     Rp {{ number_format($posBalance, 0, ',', '.') }}
                                 </div>
                             </div>
-                            <a href="{{ route('creator.pos.index') }}" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.45rem 0.95rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border-radius:999px; font-weight:800; font-size:0.75rem; text-decoration:none; box-shadow:0 2px 8px rgba(30,179,73,0.25); transition:transform 0.15s;">
+                            <a href="{{ route('creator.pos.index') }}" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.48rem 1rem; background:linear-gradient(135deg, #1eb349 0%, #16a34a 100%); color:#fff; border-radius:999px; font-weight:800; font-size:0.76rem; text-decoration:none; box-shadow:0 2px 8px rgba(30,179,73,0.25); transition:transform 0.15s;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                                <span>Buka Kasir & Topup</span>
+                                <span>Buka Kasir &amp; Topup</span>
                             </a>
                         </div>
 
                         <div class="pos-neraca-row">
                             <span class="pos-neraca-label">
-                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#16a34a; flex-shrink:0;"></span>
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#16a34a; flex-shrink:0;"></span>
                                 Total Topup Deposit di Periode ini
                             </span>
                             <span class="pos-neraca-val" style="color:#16a34a;">
                                 + Rp {{ number_format($posTotalTopup, 0, ',', '.') }}
-                            </span>
-                        </div>
-                        <div class="pos-neraca-row">
-                            <span class="pos-neraca-label">
-                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#e11d48; flex-shrink:0;"></span>
-                                Total Pemotongan Fee POS
-                            </span>
-                            <span class="pos-neraca-val" style="color:#e11d48;">
-                                - Rp {{ number_format($posTotalFeeMutations, 0, ',', '.') }}
                             </span>
                         </div>
                     </div>
@@ -2357,14 +2649,14 @@
                 {{-- Riwayat Mutasi Terakhir --}}
                 <div class="pos-neraca-footer" style="flex-direction:column; align-items:stretch; gap:0.4rem;">
                     <div style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; justify-content:space-between;">
-                        <span>Mutasi Terakhir ({{ $posMutations->count() }} Transaksi)</span>
+                        <span>Mutasi Terakhir ({{ $posMutations->count() }} Aktivitas)</span>
                     </div>
                     @if($posMutations->count() > 0)
                         <div style="max-height:85px; overflow-y:auto; display:flex; flex-direction:column; gap:3px;">
                             @foreach($posMutations->take(4) as $mut)
                                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; padding:2px 0; color:#475569;">
                                     <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:65%;">
-                                        <span style="font-weight:600; color:#0f172a;">{{ $mut->description ?? ($mut->type === 'topup' ? 'Topup Saldo POS' : 'Potong Fee POS') }}</span>
+                                        <span style="font-weight:600; color:#0f172a;">{{ $mut->description ?? ($mut->type === 'topup' ? 'Topup Saldo POS' : 'Potong Biaya POS') }}</span>
                                         <span style="color:#94a3b8; font-size:0.65rem; margin-left:3px;">{{ $mut->created_at->format('d/m H:i') }}</span>
                                     </div>
                                     <span style="font-weight:700; color:{{ $mut->amount >= 0 ? '#16a34a' : '#e11d48' }};">
@@ -2378,17 +2670,33 @@
                             Belum ada catatan mutasi deposit di rentang tanggal ini.
                         </div>
                     @endif
+                </div>
             </div>
         </div>
 
-        {{-- ── 3. TABEL DAFTAR TRANSAKSI KASIR POS ───────────────────── --}}
-        <div class="table-card" style="margin-bottom:2rem;">
-            <div class="table-card-header" style="flex-wrap:wrap; gap:1rem;">
-                <div>
-                    <h3 class="table-title">Riwayat Transaksi Kasir POS</h3>
-                    <p class="table-sub">Daftar struk transaksi penjualan kasir digital di toko Anda</p>
+        {{-- ── 3. TABEL DAFTAR TRANSAKSI KASIR POS (PREMIUM CARD) ──────────── --}}
+        <div class="pos-report-card">
+            <div class="pos-report-header">
+                <div class="pos-header-info">
+                    <h3>
+                        <span>Riwayat Transaksi Kasir POS</span>
+                        <span style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-size:0.72rem; font-weight:800; padding:2px 9px; border-radius:999px;">
+                            {{ count($posOrders ?? []) }} Struk
+                        </span>
+                    </h3>
+                    <p>Daftar lengkap struk transaksi penjualan kasir digital di toko Anda</p>
                 </div>
-                <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+
+                <div class="pos-toolbar-actions">
+                    {{-- Pencarian Cepat Struk / Pelanggan --}}
+                    <div class="pos-search-wrapper">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" id="posOrderSearchInput" placeholder="Cari No. Struk / Pelanggan..." onkeyup="filterPosReportTable()">
+                    </div>
+
                     {{-- Filter Metode Pembayaran --}}
                     <div style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
                         <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['tab' => 'pos', 'pos_method' => 'all'])) }}"
@@ -2397,24 +2705,23 @@
                         </a>
                         <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['tab' => 'pos', 'pos_method' => 'cash'])) }}"
                             class="pos-method-pill {{ ($posPaymentMethod ?? '') === 'cash' ? 'active' : '' }}">
-                            Tunai (Cash)
+                            💵 Tunai (Cash)
                         </a>
                         <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['tab' => 'pos', 'pos_method' => 'qris'])) }}"
                             class="pos-method-pill {{ ($posPaymentMethod ?? '') === 'qris' ? 'active' : '' }}">
-                            QRIS
+                            📱 QRIS
                         </a>
                         <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['tab' => 'pos', 'pos_method' => 'transfer'])) }}"
                             class="pos-method-pill {{ ($posPaymentMethod ?? '') === 'transfer' ? 'active' : '' }}">
-                            Transfer Bank
+                            🏦 Transfer
                         </a>
                     </div>
 
-                    {{-- Tombol Export POS --}}
-                    <div class="export-group">
+                    {{-- Tombol Export Excel POS --}}
+                    <div>
                         <a href="{{ route('creator.sales.report.export_pos', array_merge(request()->query(), ['pos_method' => $posPaymentMethod ?? 'all'])) }}"
-                            class="btn-export" style="background:#15803d; border-radius:999px; padding:0.45rem 1rem;">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                            class="btn-pos-export-excel" title="Unduh data penjualan POS ke file Excel">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -2426,26 +2733,24 @@
             </div>
 
             <div style="overflow-x:auto;">
-                <table class="data-table">
+                <table class="pos-data-table">
                     <thead>
                         <tr>
-                            <th>Waktu & No. Struk</th>
+                            <th>Waktu &amp; No. Struk</th>
                             <th>Pelanggan</th>
                             <th>Item Penjualan</th>
                             <th>Metode Bayar</th>
-                            <th>Biaya Fee</th>
                             <th>Total Penjualan</th>
-                            <th>Aksi</th>
+                            <th style="text-align:right;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="posOrdersTableBody">
                         @forelse($posOrders as $order)
                             @php
                                 $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
                                 $customerName = $addr['name'] ?? $order->user?->name ?? 'Pelanggan Umum (Walk-in)';
                                 $customerPhone = $addr['phone'] ?? $order->user?->phone ?? '-';
                                 $methodRaw = strtolower($addr['payment_method'] ?? ($order->payment->method ?? 'cash'));
-                                $orderTotalFee = (float) (($order->platform_fee ?? 0) + ($order->admin_fee ?? 0));
 
                                 $statusVal = is_object($order->status) ? $order->status->value : (string) $order->status;
                                 $statusLabel = is_object($order->status) && method_exists($order->status, 'label') ? $order->status->label() : ucfirst($statusVal);
@@ -2490,14 +2795,13 @@
                                     'update_url' => route('creator.sales.report.update_order', $order->id),
                                 ]);
                             @endphp
-                            <tr>
-                                <td style="white-space:nowrap; color:#64748b; font-size:0.78rem;">
+                            <tr class="pos-order-row">
+                                <td style="white-space:nowrap;">
                                     <div style="display:flex; align-items:center; gap:6px;">
-                                        <span style="font-weight:700; color:#0f172a; font-family:monospace;">
+                                        <span style="font-weight:800; color:#0f172a; font-family:monospace; font-size:0.84rem;">
                                             #{{ $order->order_number ?? ('BYL-' . $order->id) }}
                                         </span>
-                                        <span
-                                            style="background:#e0e7ff; color:#3730a3; font-size:0.65rem; padding:1px 6px; border-radius:4px; font-weight:700;">
+                                        <span style="background:#e0e7ff; color:#3730a3; font-size:0.65rem; padding:1px 6px; border-radius:4px; font-weight:800;">
                                             POS
                                         </span>
                                     </div>
@@ -2506,14 +2810,21 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div style="font-weight:700; color:#0f172a; font-size:0.86rem;">
-                                        {{ $customerName }}
-                                    </div>
-                                    @if(!empty($customerPhone) && $customerPhone !== '-')
-                                        <div style="font-size:0.74rem; color:#1eb349; font-weight:600;">
-                                            {{ $customerPhone }}
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div class="pos-avatar">{{ strtoupper(substr($customerName, 0, 1)) }}</div>
+                                        <div>
+                                            <div style="font-weight:700; color:#0f172a; font-size:0.86rem;">
+                                                {{ $customerName }}
+                                            </div>
+                                            @if(!empty($customerPhone) && $customerPhone !== '-')
+                                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $customerPhone) }}" target="_blank"
+                                                    style="font-size:0.72rem; color:#16a34a; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:3px;">
+                                                    <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+                                                    {{ $customerPhone }}
+                                                </a>
+                                            @endif
                                         </div>
-                                    @endif
+                                    </div>
                                 </td>
                                 <td>
                                     @foreach($order->items as $item)
@@ -2521,57 +2832,48 @@
                                             <span style="font-weight:600; font-size:0.8rem; color:#1e293b;">
                                                 {{ Str::limit($item->product_name, 28) }}
                                             </span>
-                                            <span style="font-size:0.7rem; color:#64748b; font-weight:700;">
-                                                (x{{ $item->quantity }})
+                                            <span style="font-size:0.68rem; color:#15803d; background:#ecfdf5; border:1px solid #bbf7d0; padding:1px 5px; border-radius:4px; font-weight:800;">
+                                                x{{ $item->quantity }}
                                             </span>
                                         </div>
                                     @endforeach
                                 </td>
                                 <td>
                                     @if($methodRaw === 'cash')
-                                        <span
-                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DCFCE7; border:1px solid #BBF7D0; color:#166534; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DCFCE7; border:1px solid #BBF7D0; color:#166534; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             💵 Tunai (Cash)
                                         </span>
                                     @elseif($methodRaw === 'qris')
-                                        <span
-                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DBEAFE; border:1px solid #BFDBFE; color:#1E40AF; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DBEAFE; border:1px solid #BFDBFE; color:#1E40AF; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             📱 QRIS
                                         </span>
                                     @elseif(in_array($methodRaw, ['transfer', 'bank_transfer']))
-                                        <span
-                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F3E8FF; border:1px solid #E9D5FF; color:#6B21A8; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F3E8FF; border:1px solid #E9D5FF; color:#6B21A8; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             🏦 Transfer Bank
                                         </span>
                                     @else
-                                        <span
-                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F1F5F9; border:1px solid #E2E8F0; color:#475569; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F1F5F9; border:1px solid #E2E8F0; color:#475569; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             {{ strtoupper($methodRaw) }}
                                         </span>
                                     @endif
                                 </td>
-                                <td style="font-size:0.78rem; color:#dc2626; font-weight:700;">
-                                    Rp {{ number_format($orderTotalFee, 0, ',', '.') }}
-                                </td>
-                                <td style="font-weight:800; white-space:nowrap; color:#0f172a; font-size:0.9rem;">
+                                <td style="font-weight:800; white-space:nowrap; color:#15803d; font-size:0.92rem;">
                                     Rp {{ number_format($order->total, 0, ',', '.') }}
                                 </td>
-                                <td>
-                                    <div style="display:flex; align-items:center; gap:0.4rem;">
+                                <td style="text-align:right;">
+                                    <div style="display:inline-flex; align-items:center; gap:0.4rem;">
                                         <button type="button" onclick="printReceipt({{ $orderDataJson }})"
-                                            style="background:#1eb349; color:#fff; border:none; padding:0.38rem 0.75rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;"
-                                            title="Cetak Struk Transaksi">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24">
+                                            style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.8rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap; display:inline-flex; align-items:center; gap:4px; transition:transform 0.15s;"
+                                            title="Cetak Ulang Struk">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                                 <polyline points="6 9 6 2 18 2 18 9" />
-                                                <path
-                                                    d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
                                                 <rect x="6" y="14" width="12" height="8" />
                                             </svg>
                                             Struk
                                         </button>
                                         <button type="button" onclick="openOrderModal({{ $orderDataJson }})"
-                                            style="background:#0f172a; color:#fff; border:none; padding:0.38rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
+                                            style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.75rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
                                             Detail
                                         </button>
                                     </div>
@@ -2579,11 +2881,36 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" style="text-align:center; padding:2.5rem; color:#94a3b8; font-size:0.85rem;">
-                                    Belum ada transaksi kasir POS di rentang tanggal dan metode pembayaran ini.
+                                <td colspan="6" style="padding:0; border:none;">
+                                    <div class="pos-empty-container">
+                                        <div class="pos-empty-icon-bubble">
+                                            <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <rect x="2" y="5" width="20" height="14" rx="2" />
+                                                <line x1="2" y1="10" x2="22" y2="10" />
+                                                <circle cx="7" cy="15" r="1.5" />
+                                                <circle cx="12" cy="15" r="1.5" />
+                                                <circle cx="17" cy="15" r="1.5" />
+                                            </svg>
+                                        </div>
+                                        <h4 style="font-size:1.15rem; font-weight:800; color:#0f172a; margin:0 0 0.35rem;">Belum Ada Transaksi Kasir POS</h4>
+                                        <p style="font-size:0.82rem; color:#64748b; max-width:440px; margin:0 0 1.25rem; line-height:1.5;">
+                                            Belum ada struk penjualan kasir di rentang tanggal dan metode pembayaran ini. Mulai layani pelanggan langsung melalui aplikasi POS Anda.
+                                        </p>
+                                        <a href="{{ route('creator.pos.index') }}" class="btn-pos-launch-cta">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <polyline points="9 18 15 12 9 6" />
+                                            </svg>
+                                            Buka Aplikasi Kasir POS
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
+                        <tr id="posOrderClientEmpty" style="display:none;">
+                            <td colspan="6" style="text-align:center; padding:2.5rem; color:#94a3b8; font-size:0.85rem;">
+                                Tidak ada struk transaksi yang cocok dengan kata kunci pencarian.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -2593,6 +2920,23 @@
 @endsection
 
 @section('scripts')
+    <script>
+        function filterPosReportTable() {
+            const query = (document.getElementById('posOrderSearchInput')?.value || '').toLowerCase().trim();
+            const rows = document.querySelectorAll('#posOrdersTableBody tr.pos-order-row');
+            let matchCount = 0;
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                const matched = text.includes(query);
+                r.style.display = matched ? '' : 'none';
+                if (matched) matchCount++;
+            });
+            const emptyEl = document.getElementById('posOrderClientEmpty');
+            if (emptyEl) {
+                emptyEl.style.display = (matchCount === 0 && rows.length > 0) ? '' : 'none';
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <script>
         function switchReportTab(tabName) {
