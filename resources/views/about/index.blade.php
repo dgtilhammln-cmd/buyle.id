@@ -1056,17 +1056,26 @@
             display: flex;
             justify-content: center;
             margin-top: 1rem;
+            width: 100%;
         }
 
         .buyle-flow-switch {
             position: relative;
             display: inline-flex;
+            align-items: center;
             background: #F1F5F9;
             padding: 5px;
             border-radius: 999px;
             border: 1px solid #E2E8F0;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
             user-select: none;
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .buyle-flow-switch::-webkit-scrollbar {
+            display: none;
         }
 
         .buyle-switch-tab {
@@ -1074,19 +1083,20 @@
             z-index: 2;
             display: inline-flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.75rem 1.6rem;
+            gap: 0.5rem;
+            padding: 0.7rem 1.35rem;
             border-radius: 999px;
             border: none;
             background: transparent;
             font-family: var(--font);
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             font-weight: 700;
             color: #64748B;
             cursor: pointer;
             transition: color 0.3s ease;
             outline: none;
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .buyle-switch-tab.active {
@@ -1106,16 +1116,30 @@
             top: 5px;
             left: 5px;
             height: calc(100% - 10px);
-            width: calc(50% - 5px);
+            width: 140px;
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             border-radius: 999px;
             box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
             z-index: 1;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
 
-        .buyle-flow-switch.show-buyer .buyle-switch-glider {
-            transform: translateX(100%);
+        @media (max-width: 768px) {
+            .buyle-flow-switch-wrap {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding: 0 1rem 8px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .buyle-flow-switch {
+                width: max-content;
+            }
+            .buyle-switch-tab {
+                padding: 0.55rem 1rem;
+                font-size: 0.8rem;
+                gap: 0.35rem;
+            }
         }
 
         /* ── Flow Panels Wrapper – CSS Grid Stacking ──
@@ -1916,19 +1940,18 @@
             <div class="buyle-flow-header">
 
                 <h2 class="buyle-flow-title">
-                    Satu Ekosistem, <span class="gradient-text">Dua Cara Menikmati Kemudahannya</span>
+                    Satu Ekosistem, <span class="gradient-text">Empat Peran Meraih Keberhasilan</span>
                 </h2>
                 <p class="buyle-flow-desc">
-                    Pelajari langkah mudah meluncurkan toko digital karya Anda, atau temukan ribuan produk digital siap
-                    pakai dalam 5 langkah sederhana.
+                    Pelajari langkah mudah meluncurkan karya sebagai Creator, belanja praktis sebagai Pembeli, raih komisi pasif sebagai Affiliator, atau bangun brand sendiri via Whitelabel dalam 5 langkah sederhana.
                 </p>
 
-                {{-- Interactive Switch Tabs (Navbar Button Gradient) --}}
+                {{-- Interactive Switch Tabs (4 Roles: Creator, Pembeli, Affiliator, Whitelabel) --}}
                 <div class="buyle-flow-switch-wrap">
                     <div class="buyle-flow-switch" id="flowSwitchBox">
                         <button type="button" class="buyle-switch-tab active" data-flow="creator" id="tabFlowCreator"
                             aria-label="Tampilkan panduan untuk Creator">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <path
                                     d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
@@ -1938,13 +1961,32 @@
                         </button>
                         <button type="button" class="buyle-switch-tab" data-flow="buyer" id="tabFlowBuyer"
                             aria-label="Tampilkan panduan untuk Pembeli">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6l-3-4z"></path>
                                 <line x1="3" y1="6" x2="21" y2="6"></line>
                                 <path d="M16 10a4 4 0 0 1-8 0"></path>
                             </svg>
                             <span>Sebagai Pembeli</span>
+                        </button>
+                        <button type="button" class="buyle-switch-tab" data-flow="affiliator" id="tabFlowAffiliator"
+                            aria-label="Tampilkan panduan untuk Affiliator">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                            </svg>
+                            <span>Sebagai Affiliator</span>
+                        </button>
+                        <button type="button" class="buyle-switch-tab" data-flow="whitelabel" id="tabFlowWhitelabel"
+                            aria-label="Tampilkan panduan untuk Whitelabel">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
+                            <span>Sebagai Whitelabel</span>
                         </button>
                         <span class="buyle-switch-glider"></span>
                     </div>
@@ -2603,6 +2645,646 @@
                                     </div>
                                     <p class="buyle-mobile-card-desc">Link unduh produk, lisensi & invoice otomatis dikirim
                                         langsung ke email & WhatsApp.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                {{-- ──────────────── PANEL 3: SEBAGAI AFFILIATOR ──────────────── --}}
+                <div class="buyle-flow-panel panel-affiliator" id="flowPanelAffiliator">
+
+                    {{-- Desktop View --}}
+                    <div class="buyle-flow-canvas">
+                        {{-- SVG Background Track Layer (Matching Reference Image Arc) --}}
+                        <svg class="buyle-flow-track-layer" viewBox="0 0 1140 680" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="flowTrackGradAffiliator" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#1eb349" />
+                                    <stop offset="100%" stop-color="#a5cf37" />
+                                </linearGradient>
+                            </defs>
+
+                            {{-- Hub Surrounding Decorative Rings --}}
+                            <circle cx="240" cy="340" r="232" stroke="rgba(30, 179, 73, 0.16)" stroke-width="1.5" />
+                            <circle cx="240" cy="340" r="255" stroke="rgba(30, 179, 73, 0.09)" stroke-width="1"
+                                stroke-dasharray="4 6" />
+                            <path d="M 130 180 A 225 225 0 0 1 350 180" stroke="url(#flowTrackGradAffiliator)" stroke-width="5"
+                                stroke-linecap="round" />
+                            <path d="M 130 500 A 225 225 0 0 0 350 500" stroke="url(#flowTrackGradAffiliator)" stroke-width="5"
+                                stroke-linecap="round" />
+
+                            {{-- Thick Green Semicircle Ribbon Track (The "Setengah Lingkaran" Arc) --}}
+                            <path d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631" stroke="#EBF8ED"
+                                stroke-width="84" stroke-linecap="round" />
+                            <path d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631"
+                                stroke="rgba(30, 179, 73, 0.22)" stroke-width="86" stroke-linecap="round" />
+                            <path d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631"
+                                stroke="rgba(30, 179, 73, 0.45)" stroke-width="2" stroke-linecap="round"
+                                stroke-dasharray="6 8" />
+
+                            {{-- Smooth 4s Glowing Animated Beam --}}
+                            <path class="buyle-flow-track-glow" d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631"
+                                stroke="url(#flowTrackGradAffiliator)" stroke-width="5" stroke-linecap="round"
+                                stroke-dasharray="750" stroke-dashoffset="750" />
+                        </svg>
+
+                        {{-- Left Central Hub Circle --}}
+                        <div class="buyle-flow-hub-wrap">
+                            <div class="buyle-flow-hub-card">
+                                <div class="buyle-hub-subtitle-top">PANDUAN AFFILIATOR</div>
+                                <h3 class="buyle-hub-main-title">
+                                    5 Langkah
+                                    <span class="accent">Cuan Affiliate</span>
+                                    di Buyle.id
+                                </h3>
+                                <div class="buyle-hub-accent-bar"></div>
+                                <p class="buyle-hub-desc">
+                                    Raih komisi pasif tanpa modal stok produk. Cukup pasang di link in bio / website Anda dan sebar link seluasnya.
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Right Steps Arc Group --}}
+                        <div class="buyle-flow-nodes">
+                            {{-- Step 01 --}}
+                            <div class="buyle-flow-step step-pos-1">
+                                <div class="buyle-flow-node-num">
+                                    <span>01</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <line x1="19" y1="8" x2="19" y2="14"></line>
+                                                <line x1="22" y1="11" x2="16" y2="11"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Daftar & Buka Menu Web</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Daftar akun gratis, lalu buka menu <strong>Web & Bio Link</strong> pada dashboard Anda.</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 02 --}}
+                            <div class="buyle-flow-step step-pos-2">
+                                <div class="buyle-flow-node-num">
+                                    <span>02</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path
+                                                    d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Rancang Web & Bio Link</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Rancang halaman biolink atau website toko personal Anda dengan tampilan profesional.</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 03 --}}
+                            <div class="buyle-flow-step step-pos-3">
+                                <div class="buyle-flow-node-num">
+                                    <span>03</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Tab Katalog & Affiliate</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Buka menu produk lalu klik tab <strong>Katalog & Affiliate</strong> untuk melihat ribuan produk siap jual.</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 04 --}}
+                            <div class="buyle-flow-step step-pos-4">
+                                <div class="buyle-flow-node-num">
+                                    <span>04</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Tambah Produk (s.d 10%)</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Pilih produk yang cocok, klik tambah ke bio link Anda dengan standar komisi up to 10%.</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 05 --}}
+                            <div class="buyle-flow-step step-pos-5">
+                                <div class="buyle-flow-node-num">
+                                    <span>05</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Sebar Link & Cuan</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Sebar link bio Anda sebanyak-banyaknya di medsos. Komisi otomatis cair tiap ada orderan!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Mobile Timeline View --}}
+                    <div class="buyle-flow-mobile-view">
+                        <div class="buyle-mobile-hub">
+                            <div class="buyle-hub-subtitle-top">PANDUAN AFFILIATOR</div>
+                            <h3 class="buyle-hub-main-title" style="font-size: 1.6rem;">
+                                5 Langkah <span class="accent">Cuan Affiliate</span> di Buyle.id
+                            </h3>
+                            <div class="buyle-hub-accent-bar"></div>
+                            <p class="buyle-hub-desc" style="max-width: 100%;">
+                                Dapatkan komisi pasif tanpa perlu modal stok produk. Cukup buat bio link, pilih produk kreator, dan sebar link Anda.
+                            </p>
+                        </div>
+
+                        <div class="buyle-mobile-timeline">
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>01</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <line x1="19" y1="8" x2="19" y2="14"></line>
+                                                <line x1="22" y1="11" x2="16" y2="11"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Daftar & Buka Menu Web</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Daftar akun gratis, lalu buka menu <strong>Web & Bio Link</strong> pada dashboard Anda.</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>02</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path
+                                                    d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Rancang Web & Bio Link</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Rancang halaman link in bio atau website toko personal Anda dengan mudah.</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>03</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Tab Katalog & Affiliate</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Buka menu produk dan pilih tab <strong>Katalog & Affiliate</strong> untuk melihat produk tersedia.</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>04</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Tambah Produk (s.d 10%)</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Pilih produk favorit Anda dan klik tambah dengan komisi standar up to 10%.</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>05</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Sebar Link & Cuan</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Sebar link bio Anda sebanyak-banyaknya di media sosial dan terima komisi otomatis!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                {{-- ──────────────── PANEL 4: SEBAGAI WHITELABEL ──────────────── --}}
+                <div class="buyle-flow-panel panel-whitelabel" id="flowPanelWhitelabel">
+
+                    {{-- Desktop View --}}
+                    <div class="buyle-flow-canvas">
+                        {{-- SVG Background Track Layer (Matching Reference Image Arc) --}}
+                        <svg class="buyle-flow-track-layer" viewBox="0 0 1140 680" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="flowTrackGradWhitelabel" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#1eb349" />
+                                    <stop offset="100%" stop-color="#a5cf37" />
+                                </linearGradient>
+                            </defs>
+
+                            {{-- Hub Surrounding Decorative Rings --}}
+                            <circle cx="240" cy="340" r="232" stroke="rgba(30, 179, 73, 0.16)" stroke-width="1.5" />
+                            <circle cx="240" cy="340" r="255" stroke="rgba(30, 179, 73, 0.09)" stroke-width="1"
+                                stroke-dasharray="4 6" />
+                            <path d="M 130 180 A 225 225 0 0 1 350 180" stroke="url(#flowTrackGradWhitelabel)" stroke-width="5"
+                                stroke-linecap="round" />
+                            <path d="M 130 500 A 225 225 0 0 0 350 500" stroke="url(#flowTrackGradWhitelabel)" stroke-width="5"
+                                stroke-linecap="round" />
+
+                            {{-- Thick Green Semicircle Ribbon Track (The "Setengah Lingkaran" Arc) --}}
+                            <path d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631" stroke="#EBF8ED"
+                                stroke-width="84" stroke-linecap="round" />
+                            <path d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631"
+                                stroke="rgba(30, 179, 73, 0.22)" stroke-width="86" stroke-linecap="round" />
+                            <path d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631"
+                                stroke="rgba(30, 179, 73, 0.45)" stroke-width="2" stroke-linecap="round"
+                                stroke-dasharray="6 8" />
+
+                            {{-- Smooth 4s Glowing Animated Beam --}}
+                            <path class="buyle-flow-track-glow" d="M 395 49 A 330 330 0 0 1 570 340 A 330 330 0 0 1 395 631"
+                                stroke="url(#flowTrackGradWhitelabel)" stroke-width="5" stroke-linecap="round"
+                                stroke-dasharray="750" stroke-dashoffset="750" />
+                        </svg>
+
+                        {{-- Left Central Hub Circle --}}
+                        <div class="buyle-flow-hub-wrap">
+                            <div class="buyle-flow-hub-card">
+                                <div class="buyle-hub-subtitle-top">PANDUAN WHITELABEL</div>
+                                <h3 class="buyle-hub-main-title">
+                                    5 Langkah
+                                    <span class="accent">Bisnis Whitelabel</span>
+                                    di Buyle.id
+                                </h3>
+                                <div class="buyle-hub-accent-bar"></div>
+                                <p class="buyle-hub-desc">
+                                    Bebas tentukan harga jual kembali. Produk eksklusif hanya tayang di link in bio / website pribadi Anda.
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Right Steps Arc Group --}}
+                        <div class="buyle-flow-nodes">
+                            {{-- Step 01 --}}
+                            <div class="buyle-flow-step step-pos-1">
+                                <div class="buyle-flow-node-num">
+                                    <span>01</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Daftar & Buka Menu Web</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Registrasi akun, lalu buka menu <strong>Web & Bio Link</strong> untuk menyiapkan storefront toko online brand Anda.</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 02 --}}
+                            <div class="buyle-flow-step step-pos-2">
+                                <div class="buyle-flow-node-num">
+                                    <span>02</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Pilih Produk Whitelabel</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Cari dan pilih produk digital berlisensi whitelabel di tab Katalog & Affiliate yang siap dijual kembali.</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 03 --}}
+                            <div class="buyle-flow-step step-pos-3">
+                                <div class="buyle-flow-node-num">
+                                    <span>03</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Bebas Atur Harga Jual</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Bebas menentukan harga jual kembali sesuai strategi margin keuntungan dan target pasar Anda.</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 04 --}}
+                            <div class="buyle-flow-step step-pos-4">
+                                <div class="buyle-flow-node-num">
+                                    <span>04</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Hanya di Web & Bio Link</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Produk tayang eksklusif di link in bio / website pribadi Anda (tidak dipasarkan di marketplace Buyle).</p>
+                                </div>
+                            </div>
+
+                            {{-- Step 05 --}}
+                            <div class="buyle-flow-step step-pos-5">
+                                <div class="buyle-flow-node-num">
+                                    <span>05</span>
+                                </div>
+                                <div class="buyle-flow-pointer">
+                                    <div class="buyle-flow-pointer-line"></div>
+                                    <div class="buyle-flow-pointer-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="buyle-flow-card">
+                                    <div class="buyle-flow-card-head">
+                                        <div class="buyle-flow-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                                <polyline points="17 6 23 6 23 12"></polyline>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-flow-card-title">Promosikan & Raih Margin</h4>
+                                    </div>
+                                    <p class="buyle-flow-card-desc">Sebar link toko Anda, terima pembayaran otomatis, dan nikmati keuntungan margin penjualan secara utuh!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Mobile Timeline View --}}
+                    <div class="buyle-flow-mobile-view">
+                        <div class="buyle-mobile-hub">
+                            <div class="buyle-hub-subtitle-top">PANDUAN WHITELABEL</div>
+                            <h3 class="buyle-hub-main-title" style="font-size: 1.6rem;">
+                                5 Langkah <span class="accent">Bisnis Whitelabel</span> di Buyle.id
+                            </h3>
+                            <div class="buyle-hub-accent-bar"></div>
+                            <p class="buyle-hub-desc" style="max-width: 100%;">
+                                Miliki produk digital dengan brand Anda sendiri. Bebas markup harga jual kembali dan pasarkan langsung di link in bio / web Anda.
+                            </p>
+                        </div>
+
+                        <div class="buyle-mobile-timeline">
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>01</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Daftar & Buka Menu Web</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Registrasi akun, lalu buka menu <strong>Web & Bio Link</strong> untuk menyiapkan storefront toko online brand Anda.</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>02</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Pilih Produk Whitelabel</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Cari dan pilih produk digital berlisensi whitelabel di tab Katalog & Affiliate yang siap dijual kembali.</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>03</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Bebas Atur Harga Jual</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Bebas menentukan harga jual kembali sesuai strategi margin keuntungan dan target pasar Anda.</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>04</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Hanya di Web & Bio Link</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Produk tayang eksklusif di link in bio / website pribadi Anda (tidak dipasarkan di marketplace Buyle).</p>
+                                </div>
+                            </div>
+
+                            <div class="buyle-mobile-step-item">
+                                <div class="buyle-mobile-node-num"><span>05</span></div>
+                                <div class="buyle-mobile-card-body">
+                                    <div class="buyle-mobile-card-top">
+                                        <div class="buyle-mobile-card-icon">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                                <polyline points="17 6 23 6 23 12"></polyline>
+                                            </svg>
+                                        </div>
+                                        <h4 class="buyle-mobile-card-title">Promosikan & Raih Margin</h4>
+                                    </div>
+                                    <p class="buyle-mobile-card-desc">Sebar link toko Anda, terima pembayaran otomatis, dan nikmati keuntungan margin penjualan secara utuh!</p>
                                 </div>
                             </div>
                         </div>
@@ -4844,45 +5526,65 @@
     {{-- Interactive Script for Switch & Scroll Animation on How It Works --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ── Switch Tabs for "Cara Jadi Creator vs Pembeli" ──
+            // ── Switch Tabs for 4 Roles: Creator, Pembeli, Affiliator, Whitelabel ──
             const switchBox = document.getElementById('flowSwitchBox');
-            const tabCreator = document.getElementById('tabFlowCreator');
-            const tabBuyer = document.getElementById('tabFlowBuyer');
-            const panelCreator = document.getElementById('flowPanelCreator');
-            const panelBuyer = document.getElementById('flowPanelBuyer');
+            const tabs = switchBox ? switchBox.querySelectorAll('.buyle-switch-tab') : [];
+            const panels = document.querySelectorAll('.buyle-flow-panel');
+
+            function updateGlider(activeTab) {
+                const glider = switchBox ? switchBox.querySelector('.buyle-switch-glider') : null;
+                if (!glider || !activeTab) return;
+                glider.style.width = activeTab.offsetWidth + 'px';
+                glider.style.transform = `translateX(${activeTab.offsetLeft - 5}px)`;
+            }
 
             function switchFlow(flow) {
-                if (!switchBox || !panelCreator || !panelBuyer) return;
+                if (!switchBox) return;
 
-                var outPanel = (flow === 'creator') ? panelBuyer : panelCreator;
-                var inPanel = (flow === 'creator') ? panelCreator : panelBuyer;
-                var outTab = (flow === 'creator') ? tabBuyer : tabCreator;
-                var inTab = (flow === 'creator') ? tabCreator : tabBuyer;
+                // 1. Update active tab & glider
+                let activeTab = null;
+                tabs.forEach(tab => {
+                    if (tab.dataset.flow === flow) {
+                        tab.classList.add('active');
+                        activeTab = tab;
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
 
-                // ── 1. Update toggle tabs
-                inTab.classList.add('active');
-                outTab.classList.remove('active');
-                switchBox.classList.toggle('show-buyer', flow === 'buyer');
+                if (activeTab) {
+                    updateGlider(activeTab);
+                }
 
-                // ── 2. Fade-out panel lama (opacity → 0 via CSS transition)
-                //    Hapus 'active' → opacity:0, pointer-events:none
-                outPanel.classList.remove('active', 'animating-in');
-
-                // ── 3. Fade-in panel baru + restart animasi anak-elemen
-                inPanel.classList.remove('animating-in'); // pastikan tidak ada sisa
-                inPanel.classList.add('active');           // opacity → 1 via CSS transition
-                void inPanel.offsetWidth;                  // force reflow agar animasi restart
-                inPanel.classList.add('animating-in');     // jalankan stagger animation anak-elemen
+                // 2. Switch active panel with smooth animation
+                const targetId = 'flowPanel' + flow.charAt(0).toUpperCase() + flow.slice(1);
+                panels.forEach(panel => {
+                    if (panel.id === targetId) {
+                        panel.classList.remove('animating-in');
+                        panel.classList.add('active');
+                        void panel.offsetWidth; // force reflow for CSS animations
+                        panel.classList.add('animating-in');
+                    } else {
+                        panel.classList.remove('active', 'animating-in');
+                    }
+                });
             }
 
-            if (tabCreator && tabBuyer) {
-                tabCreator.addEventListener('click', function () {
-                    switchFlow('creator');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    switchFlow(this.dataset.flow);
                 });
-                tabBuyer.addEventListener('click', function () {
-                    switchFlow('buyer');
-                });
+            });
+
+            // Initial glider position setup
+            const initialTab = switchBox ? switchBox.querySelector('.buyle-switch-tab.active') : null;
+            if (initialTab) {
+                setTimeout(() => updateGlider(initialTab), 60);
             }
+            window.addEventListener('resize', function () {
+                const curTab = switchBox ? switchBox.querySelector('.buyle-switch-tab.active') : null;
+                if (curTab) updateGlider(curTab);
+            });
 
             // ── Interactive Scroll Animation Observer ──
             const flowSection = document.getElementById('buyle-how-it-works');
