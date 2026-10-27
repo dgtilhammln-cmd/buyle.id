@@ -1618,6 +1618,7 @@
                         </div>
 
                         {{-- PRICE --}}
+                        @if($service->isTraktir() || $service->isPayWhatYouWant() || $service->price > 0 || $service->sale_price !== null)
                         <div class="pd-price-box">
                             @if($service->isTraktir())
                                 <div>

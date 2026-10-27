@@ -963,53 +963,50 @@
     }
     .grid-chk-wrap {
       position: absolute;
-      top: 6px;
-      left: 6px;
+      top: 8px;
+      left: 8px;
       z-index: 11;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      border-radius: 8px;
-      padding: 3px 5px;
+      background: transparent !important;
+      padding: 0 !important;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      transition: all 0.2s ease;
+      box-shadow: none !important;
+      border: none !important;
     }
     .grid-card-item.card-selected {
       border-color: #1eb349 !important;
       box-shadow: 0 0 0 2px rgba(30, 179, 73, 0.25), 0 6px 18px rgba(0, 0, 0, 0.08) !important;
     }
     .grid-card-item.card-selected .grid-chk-wrap {
-      background: #1eb349;
-      border-color: #1eb349;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
     }
     .grid-card-item.card-selected .grid-chk-wrap input {
-      accent-color: #ffffff;
+      accent-color: #1eb349 !important;
     }
 
-    /* Floating Bulk Action Dock */
+    /* Floating Bulk Action Dock - Buyle Light Theme */
     .bulk-dock-bar {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(120%);
-      background: #0f172a;
-      color: #ffffff;
-      padding: 0.65rem 1.15rem;
+      background: #ffffff;
+      color: #0f172a;
+      padding: 0.55rem 0.95rem;
       border-radius: 999px;
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      gap: 0.65rem;
+      box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e2e8f0;
       z-index: 99998;
       transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
       opacity: 0;
       pointer-events: none;
       max-width: 95vw;
-      flex-wrap: wrap;
     }
     .bulk-dock-bar.visible {
       transform: translateX(-50%) translateY(0);
@@ -1020,11 +1017,11 @@
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: #f8fafc;
-      padding-right: 0.45rem;
-      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      color: #0f172a;
+      padding-right: 0.6rem;
+      border-right: 1px solid #e2e8f0;
       white-space: nowrap;
     }
     .bulk-count-badge {
@@ -1032,7 +1029,7 @@
       color: #ffffff;
       font-size: 0.75rem;
       font-weight: 800;
-      padding: 2px 8px;
+      padding: 1px 7px;
       border-radius: 999px;
       min-width: 20px;
       text-align: center;
@@ -1040,81 +1037,100 @@
     .bulk-actions-group {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       flex-wrap: nowrap;
     }
     .bulk-act-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.95rem;
+      gap: 0.35rem;
+      padding: 0.42rem 0.8rem;
       border-radius: 999px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       font-family: 'Montserrat', sans-serif;
       cursor: pointer;
-      border: none;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #334155;
       transition: all 0.15s ease;
       white-space: nowrap;
       text-decoration: none;
     }
+    .bulk-act-btn:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
     .bulk-btn-archive {
-      background: rgba(245, 158, 11, 0.18);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.35);
+      background: #fff;
+      color: #475569;
+      border-color: #e2e8f0;
     }
     .bulk-btn-archive:hover {
-      background: #f59e0b;
-      color: #ffffff;
+      background: #f8fafc;
+      color: #0f172a;
+      border-color: #cbd5e1;
     }
     .bulk-btn-activate {
-      background: rgba(30, 179, 73, 0.18);
-      color: #4ade80;
-      border: 1px solid rgba(30, 179, 73, 0.35);
+      background: #f0fdf4;
+      color: #15803d;
+      border-color: #bbf7d0;
     }
     .bulk-btn-activate:hover {
-      background: #1eb349;
-      color: #ffffff;
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
     }
     .bulk-btn-delete {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: #fff;
+      color: #dc2626;
+      border-color: #fee2e2;
     }
     .bulk-btn-delete:hover {
-      background: #ef4444;
-      color: #ffffff;
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #fecaca;
     }
     .bulk-btn-close {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #94a3b8;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.15s ease;
       padding: 0;
+      flex-shrink: 0;
     }
     .bulk-btn-close:hover {
-      background: rgba(255, 255, 255, 0.22);
-      color: #ffffff;
+      background: #e2e8f0;
+      color: #0f172a;
     }
     @media (max-width: 640px) {
       .bulk-dock-bar {
         bottom: 16px;
-        padding: 0.5rem 0.85rem;
-        gap: 0.5rem;
-      }
-      .bulk-act-btn {
-        padding: 0.4rem 0.65rem;
-        font-size: 0.72rem;
+        padding: 0.45rem 0.65rem;
+        gap: 0.4rem;
+        width: calc(100% - 24px);
+        max-width: 440px;
+        justify-content: space-between;
       }
       .bulk-count-pill {
-        font-size: 0.75rem;
+        font-size: 0.74rem;
+        padding-right: 0.4rem;
+      }
+      .bulk-act-btn {
+        padding: 0.38rem 0.6rem;
+        font-size: 0.72rem;
+        gap: 0.25rem;
+      }
+      .bulk-act-btn svg {
+        width: 13px;
+        height: 13px;
       }
     }
   </style>

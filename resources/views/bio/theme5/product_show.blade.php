@@ -56,7 +56,14 @@
         $firstImage = !empty($images[0]) ? (\Illuminate\Support\Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/buyle-og.png');
         $bioName = $config['name'] ?? $profile->store_name ?? $username;
         $pageTitle = $prodTitle . ' - ' . $bioName . ' | buyle.id';
-        $rawDesc = !empty($block->data_json['description']) ? $block->data_json['description'] : ($product ? ($product->description ?: $product->short_desc) : '');
+        $rawDesc = '';
+        if ($product && !empty(trim(strip_tags($product->description ?? '')))) {
+            $rawDesc = $product->description;
+        } elseif (!empty($block->data_json['description']) && !empty(trim(strip_tags($block->data_json['description'])))) {
+            $rawDesc = $block->data_json['description'];
+        } elseif ($product && !empty(trim(strip_tags($product->short_desc ?? '')))) {
+            $rawDesc = $product->short_desc;
+        }
         $shortDesc = !empty($rawDesc) ? \Illuminate\Support\Str::limit(strip_tags($rawDesc), 160) : '';
         $pageDesc = !empty($shortDesc) ? $shortDesc : 'Beli ' . $prodTitle . ' berkualitas dengan harga terbaik dari ' . $bioName . ' di buyle.id.';
         $hasDiscount = !empty($origPrice) && $origPrice > $price;
@@ -593,36 +600,97 @@
         }
 
         .ps-price-box {
-            background: var(--bg);
-            border: 1px solid var(--s2);
-            border-radius: var(--r10);
-            padding: 0.85rem 1.1rem;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin: 0.5rem 0 0.85rem 0 !important;
             display: flex;
             align-items: baseline;
-            gap: 0.65rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
         }
 
         .ps-price {
-            font-size: 1.55rem;
-            font-weight: 700;
-            color: var(--em2);
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #0f172a;
             letter-spacing: -0.03em;
+            line-height: 1.15;
         }
 
         .ps-orig {
-            font-size: 0.85rem;
-            color: var(--s4);
+            font-size: 0.92rem;
+            color: #94a3b8;
             text-decoration: line-through;
+            font-weight: 500;
         }
 
         .ps-save {
-            font-size: 0.68rem;
+            font-size: 0.72rem;
             font-weight: 700;
-            color: var(--rd);
-            background: #fef2f2;
-            padding: 0.15rem 0.45rem;
-            border-radius: 4px;
+            color: #15803d;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 0.18rem 0.55rem;
+            border-radius: 999px;
+            letter-spacing: 0.01em;
+        }
+
+        /* ── MARKETPLACE POPUP VARIANT TRIGGER (MINIMALIST & MOBILE FRIENDLY) ── */
+        .t5-variant-trigger-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin: 0.65rem 0 1rem 0;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            user-select: none;
+        }
+        .t5-variant-trigger-card:hover {
+            border-color: #1eb349;
+            background: #f8fafc;
+            box-shadow: 0 4px 12px rgba(30,179,73,0.08);
+        }
+        .t5-var-trig-left {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            min-width: 0;
+            flex: 1;
+        }
+        .t5-var-trig-badge {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 3px 7px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .t5-var-trig-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .t5-var-trig-right {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: #1eb349;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
         /* short desc */
@@ -1299,23 +1367,26 @@
                 {{-- Price --}}
                 <div class="ps-price-box">
                     @if($product && $product->isTraktir())
+                        @php
+                            $rawIcon = $product->traktir_unit_icon ?? '☕';
+                            $displayIcon = (empty($rawIcon) || in_array(strtolower(trim($rawIcon)), ['coffee', 'kopi', 'icon', 'none'])) ? '☕' : $rawIcon;
+                        @endphp
                         <div style="display:flex; flex-direction:column; gap:4px;">
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <span style="font-size:1.4rem;">{{ $product->traktir_unit_icon ?? '☕' }}</span>
-                                <span class="ps-price" style="color:#d97706;">Rp {{ number_format($product->traktir_unit_price ?? 10000, 0, ',', '.') }}</span>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:1.35rem; line-height:1;">{{ $displayIcon }}</span>
+                                <span class="ps-price">Rp {{ number_format($product->traktir_unit_price ?? 10000, 0, ',', '.') }}</span>
                                 <span style="font-size:0.85rem; color:#64748b; font-weight:600;">/ {{ $product->traktir_unit_name ?? 'kopi' }}</span>
                             </div>
-                            <div style="font-size:0.8rem; color:#b45309; font-weight:600;">
+                            <div style="font-size:0.78rem; color:#64748b; font-weight:500;">
                                 Traktir creator dengan kelipatan {{ $product->traktir_unit_name ?? 'kopi' }}
                             </div>
                         </div>
                     @elseif($product && $product->isPayWhatYouWant())
                         <div style="display:flex; flex-direction:column; gap:4px;">
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <span style="font-size:1.3rem;">💛</span>
-                                <span class="ps-price" style="color:#0284c7;">Bayar Seikhlasnya</span>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span class="ps-price">Bayar Seikhlasnya</span>
                             </div>
-                            <div style="font-size:0.8rem; color:#64748b; font-weight:600;">
+                            <div style="font-size:0.78rem; color:#64748b; font-weight:500;">
                                 Minimum: Rp {{ number_format($product->pwyw_min_price ?? 0, 0, ',', '.') }}
                             </div>
                         </div>
@@ -1523,52 +1594,21 @@
                         </div>
                     @endif
 
-                    {{-- VARIANT SELECTOR THEME 5 --}}
+                    {{-- VARIANT SELECTOR TRIGGER (MARKETPLACE POPUP STYLE) --}}
                     @if($product && $product->variantOptions && $product->variantOptions->count() > 0)
-                        <div id="t5-variant-section" style="margin-bottom:1rem;">
-                            <style>
-                                .t5-var-group { margin-bottom:0.65rem; }
-                                .t5-var-label { font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.03em; }
-                                .t5-var-pills { display:flex; flex-wrap:wrap; gap:0.4rem; }
-                                .t5-var-pill {
-                                    display:inline-flex; align-items:center; gap:0.4rem;
-                                    padding:0.35rem 0.8rem; border:1.5px solid #E2E8F0; border-radius:99px;
-                                    background:#fff; color:#0F172A; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.15s;
-                                }
-                                .t5-var-pill:hover:not(:disabled) { border-color:#1eb349; color:#1eb349; }
-                                .t5-var-pill.selected { border-color:#1eb349; background:rgba(30,179,73,0.1); color:#1eb349; font-weight:700; }
-                                .t5-var-pill:disabled { opacity:0.4; cursor:not-allowed; }
-                                .t5-var-pill-img { width:20px; height:20px; border-radius:4px; object-fit:cover; }
-                            </style>
-                            @foreach($product->variantOptions as $opt)
-                                <div class="t5-var-group">
-                                    <div class="t5-var-label">{{ $opt->name }}</div>
-                                    <div class="t5-var-pills">
-                                        @foreach($opt->values as $val)
-                                            @php
-                                                $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
-                                                $valFinalPrice = $val->finalPrice();
-                                            @endphp
-                                            <button type="button" class="t5-var-pill"
-                                                data-variant-id="{{ $val->id }}"
-                                                data-price="{{ $valFinalPrice }}"
-                                                data-price-formatted="Rp {{ number_format($valFinalPrice, 0, ',', '.') }}"
-                                                data-stock="{{ $val->stock }}"
-                                                data-label="{{ $opt->name }}: {{ $val->value }}"
-                                                data-img="{{ $valImg ?: $firstImage }}"
-                                                data-has-custom-img="{{ $valImg ? '1' : '0' }}"
-                                                @if($val->stock !== null && $val->stock <= 0) disabled @endif
-                                                onclick="selectT5Variant(this)">
-                                                @if($valImg)
-                                                    <img src="{{ $valImg }}" alt="{{ $val->value }}" class="t5-var-pill-img">
-                                                @endif
-                                                <span>{{ $val->value }}</span>
-                                            </button>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endforeach
+                        <div class="t5-variant-trigger-card" onclick="openT5VariantModal('buy')">
+                            <div class="t5-var-trig-left">
+                                <span class="t5-var-trig-badge">Pilihan Variasi</span>
+                                <span class="t5-var-trig-text" id="t5-var-main-preview">Pilih opsi & variasi produk</span>
+                            </div>
+                            <div class="t5-var-trig-right">
+                                <span class="t5-var-trig-hint">Pilih</span>
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </div>
                         </div>
+                    @endif
 
                         {{-- T5 INTERACTIVE VARIANT POPUP MODAL --}}
                         <div id="t5-variant-modal" class="buyle-variant-modal" style="display:none;" aria-hidden="true">
@@ -1720,31 +1760,32 @@
                         @php
                             $unitPrice = (float)($product->traktir_unit_price ?? 10000);
                             $unitName  = $product->traktir_unit_name ?? 'kopi';
-                            $unitIcon  = $product->traktir_unit_icon ?? '☕';
+                            $rawUnitIcon = $product->traktir_unit_icon ?? '☕';
+                            $unitIcon  = (empty($rawUnitIcon) || in_array(strtolower(trim($rawUnitIcon)), ['coffee', 'kopi', 'icon', 'none'])) ? '☕' : $rawUnitIcon;
                         @endphp
                         <style>
                             .t5-pricing-card {
                                 background: #ffffff;
-                                border: 1.5px solid #e2e8f0;
-                                border-radius: 16px;
-                                padding: 1.15rem;
-                                margin-bottom: 1.25rem;
-                                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+                                border: 1px solid #e2e8f0;
+                                border-radius: 14px;
+                                padding: 1rem;
+                                margin-bottom: 1rem;
+                                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
                                 font-family: 'Montserrat', sans-serif;
                             }
                             .t5-pill-grid {
                                 display: grid;
                                 grid-template-columns: repeat(5, 1fr);
                                 gap: 0.35rem;
-                                margin-bottom: 0.85rem;
+                                margin-bottom: 0.75rem;
                             }
                             .t5-amount-pill {
-                                padding: 0.5rem 0.25rem;
+                                padding: 0.45rem 0.2rem;
                                 background: #f8fafc;
                                 color: #334155;
-                                border: 1.5px solid #e2e8f0;
-                                border-radius: 10px;
-                                font-size: 0.82rem;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 8px;
+                                font-size: 0.8rem;
                                 font-weight: 700;
                                 cursor: pointer;
                                 transition: all 0.15s;
@@ -1755,19 +1796,19 @@
                                 background: #1eb349;
                                 color: #ffffff;
                                 border-color: #1eb349;
-                                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
+                                box-shadow: 0 2px 6px rgba(30, 179, 73, 0.25);
                             }
                             .t5-btn-checkout {
                                 width: 100%;
                                 justify-content: center;
-                                background: linear-gradient(135deg, #1eb349, #a5cf37);
+                                background: #1eb349;
                                 color: #fff;
                                 border: none;
-                                padding: 0.9rem;
-                                font-size: 0.95rem;
-                                font-weight: 800;
+                                padding: 0.85rem 1.25rem;
+                                font-size: 0.92rem;
+                                font-weight: 700;
                                 border-radius: 999px;
-                                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
+                                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.25);
                                 cursor: pointer;
                                 display: flex;
                                 align-items: center;
@@ -1776,8 +1817,9 @@
                                 transition: all 0.15s;
                             }
                             .t5-btn-checkout:hover {
+                                background: #16a34a;
                                 transform: translateY(-1px);
-                                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+                                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
                             }
                         </style>
 
@@ -1876,26 +1918,26 @@
                         <style>
                             .t5-pricing-card {
                                 background: #ffffff;
-                                border: 1.5px solid #e2e8f0;
-                                border-radius: 16px;
-                                padding: 1.15rem;
-                                margin-bottom: 1.25rem;
-                                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+                                border: 1px solid #e2e8f0;
+                                border-radius: 14px;
+                                padding: 1rem;
+                                margin-bottom: 1rem;
+                                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
                                 font-family: 'Montserrat', sans-serif;
                             }
                             .t5-pill-grid-pwyw {
                                 display: grid;
                                 grid-template-columns: repeat(4, 1fr);
                                 gap: 0.35rem;
-                                margin-bottom: 0.85rem;
+                                margin-bottom: 0.75rem;
                             }
                             .t5-amount-pill {
-                                padding: 0.5rem 0.25rem;
+                                padding: 0.45rem 0.2rem;
                                 background: #f8fafc;
                                 color: #334155;
-                                border: 1.5px solid #e2e8f0;
-                                border-radius: 10px;
-                                font-size: 0.82rem;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 8px;
+                                font-size: 0.8rem;
                                 font-weight: 700;
                                 cursor: pointer;
                                 transition: all 0.15s;
@@ -1906,19 +1948,19 @@
                                 background: #1eb349;
                                 color: #ffffff;
                                 border-color: #1eb349;
-                                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
+                                box-shadow: 0 2px 6px rgba(30, 179, 73, 0.25);
                             }
                             .t5-btn-checkout {
                                 width: 100%;
                                 justify-content: center;
-                                background: linear-gradient(135deg, #1eb349, #a5cf37);
+                                background: #1eb349;
                                 color: #fff;
                                 border: none;
-                                padding: 0.9rem;
-                                font-size: 0.95rem;
-                                font-weight: 800;
+                                padding: 0.85rem 1.25rem;
+                                font-size: 0.92rem;
+                                font-weight: 700;
                                 border-radius: 999px;
-                                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
+                                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.25);
                                 cursor: pointer;
                                 display: flex;
                                 align-items: center;
@@ -1927,8 +1969,9 @@
                                 transition: all 0.15s;
                             }
                             .t5-btn-checkout:hover {
+                                background: #16a34a;
                                 transform: translateY(-1px);
-                                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+                                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
                             }
                         </style>
 
@@ -2185,7 +2228,11 @@
         </div>{{-- end .ps-top --}}
 
         {{-- DESCRIPTION CARD (BELOW) --}}
-        @if(!empty($rawDesc))
+        @php
+            $prodVideoUrl = !empty($product->tiktok_video_url) ? $product->tiktok_video_url : (!empty($product->youtube_video_url) ? $product->youtube_video_url : (!empty($block->data_json['tiktok_video_url']) ? $block->data_json['tiktok_video_url'] : null));
+            $cleanDesc = trim(strip_tags($rawDesc ?? ''));
+        @endphp
+        @if(!empty($cleanDesc) || !empty($prodVideoUrl))
             <div class="ps-desc-card">
                 <div class="ps-desc-header">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -2199,23 +2246,19 @@
                 </div>
                 <div class="ps-desc-body">
                     {{-- Video Produk (Minimalist YouTube / TikTok Embed) --}}
-                    @php
-                        $prodVideoUrl = !empty($product->tiktok_video_url) ? $product->tiktok_video_url : (!empty($product->youtube_video_url) ? $product->youtube_video_url : (!empty($block->data_json['tiktok_video_url']) ? $block->data_json['tiktok_video_url'] : null));
-                    @endphp
                     @if(!empty($prodVideoUrl))
-                        @include('partials.product_video', ['videoUrl' => $prodVideoUrl])
+                        <div style="margin-bottom: 1.25rem;">
+                            @include('partials.product_video', ['videoUrl' => $prodVideoUrl])
+                        </div>
                     @endif
 
-                    {!! $rawDesc !!}
-
-                    @php
-                        $posterImage = !empty($product->og_image) ? asset('storage/' . $product->og_image) : (!empty($block->data_json['og_image']) ? asset('storage/' . $block->data_json['og_image']) : null);
-                    @endphp
-                    @if(!empty($posterImage))
-                        <div
-                            style="margin-top: 1.5rem; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #F1F5F9; border: 1px solid #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-                            <img src="{{ $posterImage }}" alt="{{ $prodTitle }}"
-                                style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    @if(!empty($cleanDesc))
+                        <div class="ps-desc-content" style="color: #334155; font-size: 0.92rem; line-height: 1.75;">
+                            {!! $rawDesc !!}
+                        </div>
+                    @else
+                        <div class="ps-desc-content" style="color: #64748b; font-size: 0.9rem; line-height: 1.7;">
+                            <p>Informasi detail untuk pemesanan <strong>{{ $prodTitle }}</strong>. Silakan pilih opsi atau lakukan checkout sekarang.</p>
                         </div>
                     @endif
                 </div>
@@ -2798,14 +2841,10 @@
             document.getElementById('t5_selected_variant_id').value = vid;
 
             if (syncToPage) {
-                var pagePills = document.querySelectorAll('.t5-var-pill[data-variant-id="' + vid + '"]');
-                pagePills.forEach(function(pill) {
-                    var parent = pill.closest('.t5-var-pills');
-                    if (parent) {
-                        parent.querySelectorAll('.t5-var-pill').forEach(function(p) { p.classList.remove('selected'); });
-                    }
-                    pill.classList.add('selected');
-                });
+                var previewEl = document.getElementById('t5-var-main-preview');
+                if (previewEl && label) {
+                    previewEl.textContent = label;
+                }
 
                 var pagePriceEl = document.querySelector('.ps-price');
                 if (pagePriceEl && price > 0) {
