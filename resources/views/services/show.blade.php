@@ -1990,43 +1990,216 @@
                                         $unitName  = $service->traktir_unit_name ?? 'kopi';
                                         $unitIcon  = $service->traktir_unit_icon ?? '☕';
                                     @endphp
-                                    <div style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border: 1.5px solid #FDE68A; border-radius: 16px; padding: 1.25rem; margin-top: 1.25rem;">
-                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                                <span style="font-size: 1.5rem;">{{ $unitIcon }}</span>
+                                    <style>
+                                        .by-pricing-card {
+                                            background: #ffffff;
+                                            border: 1.5px solid #e2e8f0;
+                                            border-radius: 18px;
+                                            padding: 1.25rem;
+                                            margin-top: 1.25rem;
+                                            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+                                            font-family: 'Montserrat', sans-serif;
+                                        }
+                                        .by-pricing-header {
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: space-between;
+                                            margin-bottom: 1rem;
+                                            gap: 0.75rem;
+                                        }
+                                        .by-pricing-badge-icon {
+                                            width: 44px;
+                                            height: 44px;
+                                            border-radius: 12px;
+                                            background: rgba(30, 179, 73, 0.1);
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            font-size: 1.35rem;
+                                            flex-shrink: 0;
+                                        }
+                                        .by-pricing-title {
+                                            font-size: 0.95rem;
+                                            font-weight: 800;
+                                            color: #0f172a;
+                                            line-height: 1.25;
+                                        }
+                                        .by-pricing-sub {
+                                            font-size: 0.76rem;
+                                            color: #64748b;
+                                            font-weight: 600;
+                                            margin-top: 2px;
+                                        }
+                                        .by-pricing-total-box {
+                                            text-align: right;
+                                            flex-shrink: 0;
+                                        }
+                                        .by-pricing-total-label {
+                                            font-size: 0.7rem;
+                                            color: #64748b;
+                                            font-weight: 700;
+                                            text-transform: uppercase;
+                                            letter-spacing: 0.04em;
+                                        }
+                                        .by-pricing-total-val {
+                                            font-size: 1.15rem;
+                                            font-weight: 800;
+                                            color: #1eb349;
+                                            line-height: 1.2;
+                                            margin-top: 2px;
+                                        }
+                                        .by-pill-grid {
+                                            display: grid;
+                                            grid-template-columns: repeat(5, 1fr);
+                                            gap: 0.45rem;
+                                            margin-bottom: 0.9rem;
+                                        }
+                                        @media (max-width: 480px) {
+                                            .by-pill-grid {
+                                                grid-template-columns: repeat(5, 1fr);
+                                                gap: 0.35rem;
+                                            }
+                                            .by-pricing-card {
+                                                padding: 1rem;
+                                            }
+                                        }
+                                        .by-amount-pill {
+                                            padding: 0.55rem 0.35rem;
+                                            background: #f8fafc;
+                                            color: #334155;
+                                            border: 1.5px solid #e2e8f0;
+                                            border-radius: 12px;
+                                            font-size: 0.82rem;
+                                            font-weight: 700;
+                                            font-family: 'Montserrat', sans-serif;
+                                            cursor: pointer;
+                                            transition: all 0.15s ease;
+                                            text-align: center;
+                                            user-select: none;
+                                        }
+                                        .by-amount-pill:hover {
+                                            border-color: #cbd5e1;
+                                            background: #f1f5f9;
+                                        }
+                                        .by-amount-pill.active {
+                                            background: #1eb349;
+                                            color: #ffffff;
+                                            border-color: #1eb349;
+                                            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.28);
+                                        }
+                                        .by-counter-box {
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: space-between;
+                                            background: #f8fafc;
+                                            border: 1.5px solid #e2e8f0;
+                                            border-radius: 12px;
+                                            padding: 0.45rem 0.85rem;
+                                        }
+                                        .by-counter-label {
+                                            font-size: 0.82rem;
+                                            font-weight: 700;
+                                            color: #334155;
+                                        }
+                                        .by-counter-ctrl {
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 0.4rem;
+                                        }
+                                        .by-counter-btn {
+                                            width: 32px;
+                                            height: 32px;
+                                            border-radius: 8px;
+                                            border: 1.5px solid #cbd5e1;
+                                            background: #ffffff;
+                                            color: #0f172a;
+                                            font-size: 1.1rem;
+                                            font-weight: 800;
+                                            cursor: pointer;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            transition: all 0.15s;
+                                        }
+                                        .by-counter-btn:hover {
+                                            background: #f1f5f9;
+                                            border-color: #94a3b8;
+                                        }
+                                        .by-counter-input {
+                                            width: 48px;
+                                            text-align: center;
+                                            border: none;
+                                            font-size: 1rem;
+                                            font-weight: 800;
+                                            color: #0f172a;
+                                            outline: none;
+                                            background: transparent;
+                                            font-family: 'Montserrat', sans-serif;
+                                        }
+                                        .by-btn-primary-action {
+                                            width: 100%;
+                                            padding: 0.95rem 1.5rem;
+                                            border-radius: 999px;
+                                            border: none;
+                                            background: linear-gradient(135deg, #1eb349, #a5cf37);
+                                            color: #ffffff;
+                                            font-family: 'Montserrat', sans-serif;
+                                            font-size: 0.96rem;
+                                            font-weight: 800;
+                                            cursor: pointer;
+                                            box-shadow: 0 4px 16px rgba(30, 179, 73, 0.32);
+                                            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            gap: 0.6rem;
+                                            letter-spacing: 0.01em;
+                                        }
+                                        .by-btn-primary-action:hover {
+                                            transform: translateY(-2px);
+                                            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42);
+                                        }
+                                    </style>
+
+                                    <div class="by-pricing-card">
+                                        <div class="by-pricing-header">
+                                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                                <div class="by-pricing-badge-icon">
+                                                    {{ $unitIcon }}
+                                                </div>
                                                 <div>
-                                                    <div style="font-size: 0.92rem; font-weight: 800; color: #92400E;">Traktir {{ ucfirst($unitName) }}</div>
-                                                    <div style="font-size: 0.75rem; color: #B45309;">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
+                                                    <div class="by-pricing-title">Traktir {{ ucfirst($unitName) }}</div>
+                                                    <div class="by-pricing-sub">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
                                                 </div>
                                             </div>
-                                            <div style="text-align: right;">
-                                                <div style="font-size: 0.72rem; color: #B45309; font-weight: 600;">Total Traktir</div>
-                                                <div id="service-traktir-total" style="font-size: 1.1rem; font-weight: 800; color: #78350F;">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
+                                            <div class="by-pricing-total-box">
+                                                <div class="by-pricing-total-label">Total</div>
+                                                <div class="by-pricing-total-val" id="service-traktir-total">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
                                             </div>
                                         </div>
 
                                         {{-- Preset Qty --}}
-                                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                                        <div class="by-pill-grid">
                                             @foreach([1, 2, 3, 5, 10] as $presetQty)
-                                                <button type="button" onclick="setServiceTraktirQty({{ $presetQty }})" class="service-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}" data-qty="{{ $presetQty }}" style="flex: 1; min-width: 45px; padding: 0.45rem 0.5rem; background: {{ $presetQty === 1 ? '#F59E0B' : '#fff' }}; color: {{ $presetQty === 1 ? '#fff' : '#78350F' }}; border: 1.5px solid {{ $presetQty === 1 ? '#D97706' : '#FCD34D' }}; border-radius: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                                <button type="button" onclick="setServiceTraktirQty({{ $presetQty }})" class="by-amount-pill service-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}" data-qty="{{ $presetQty }}">
                                                     {{ $presetQty }}x
                                                 </button>
                                             @endforeach
                                         </div>
 
                                         {{-- Custom Qty Counter --}}
-                                        <div style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #FDE68A; border-radius: 12px; padding: 0.5rem 0.85rem;">
-                                            <span style="font-size: 0.85rem; font-weight: 700; color: #78350F;">Jumlah {{ ucfirst($unitName) }}</span>
-                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                                <button type="button" onclick="stepServiceTraktirQty(-1)" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
-                                                <input type="number" id="service-traktir-qty-val" value="1" min="1" max="1000" style="width: 50px; text-align: center; border: none; font-size: 1rem; font-weight: 800; color: #78350F; outline: none; background: transparent;" oninput="updateServiceTraktirTotal(this.value)">
-                                                <button type="button" onclick="stepServiceTraktirQty(1)" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                                        <div class="by-counter-box">
+                                            <span class="by-counter-label">Jumlah {{ ucfirst($unitName) }}</span>
+                                            <div class="by-counter-ctrl">
+                                                <button type="button" class="by-counter-btn" onclick="stepServiceTraktirQty(-1)">−</button>
+                                                <input type="number" id="service-traktir-qty-val" class="by-counter-input" value="1" min="1" max="1000" oninput="updateServiceTraktirTotal(this.value)">
+                                                <button type="button" class="by-counter-btn" onclick="stepServiceTraktirQty(1)">+</button>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="pd-actions" style="margin-top:1.25rem;">
-                                        <button type="button" onclick="submitPdCart('buy')" class="pd-btn" style="flex:1; width:100%; justify-content:center; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color:#fff; border:none; padding:0.9rem; font-size:1rem; font-weight:800; border-radius:12px; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35); cursor:pointer; display:flex; align-items:center; gap:0.5rem;">
+                                        <button type="button" onclick="submitPdCart('buy')" class="by-btn-primary-action">
                                             <span>{{ $unitIcon }}</span>
                                             <span id="service-traktir-btn-text">Traktir Sekarang (Rp {{ number_format($unitPrice, 0, ',', '.') }})</span>
                                         </button>
@@ -2059,13 +2232,9 @@
 
                                                 document.querySelectorAll('.service-traktir-pill').forEach(function(p) {
                                                     if (parseInt(p.dataset.qty) === q) {
-                                                        p.style.background = '#F59E0B';
-                                                        p.style.color = '#fff';
-                                                        p.style.borderColor = '#D97706';
+                                                        p.classList.add('active');
                                                     } else {
-                                                        p.style.background = '#fff';
-                                                        p.style.color = '#78350F';
-                                                        p.style.borderColor = '#FCD34D';
+                                                        p.classList.remove('active');
                                                     }
                                                 });
                                             };
@@ -2079,17 +2248,89 @@
                                         $initialPrice = $suggestedPrice > 0 ? $suggestedPrice : ($minPrice > 0 ? $minPrice : 10000);
                                     @endphp
                                     <input type="hidden" name="custom_price" id="service_pwyw_custom_price" value="{{ (int)$initialPrice }}">
-                                    <div style="background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%); border: 1.5px solid #BAE6FD; border-radius: 16px; padding: 1.25rem; margin-top: 1.25rem;">
-                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                                <span style="font-size: 1.4rem;">💛</span>
+                                    
+                                    <style>
+                                        .by-pricing-card {
+                                            background: #ffffff;
+                                            border: 1.5px solid #e2e8f0;
+                                            border-radius: 18px;
+                                            padding: 1.25rem;
+                                            margin-top: 1.25rem;
+                                            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+                                            font-family: 'Montserrat', sans-serif;
+                                        }
+                                        .by-pricing-badge-icon {
+                                            width: 44px;
+                                            height: 44px;
+                                            border-radius: 12px;
+                                            background: rgba(30, 179, 73, 0.1);
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            color: #1eb349;
+                                            flex-shrink: 0;
+                                        }
+                                        .by-pill-grid-pwyw {
+                                            display: grid;
+                                            grid-template-columns: repeat(4, 1fr);
+                                            gap: 0.5rem;
+                                            margin-bottom: 0.9rem;
+                                        }
+                                        @media (max-width: 480px) {
+                                            .by-pill-grid-pwyw {
+                                                grid-template-columns: repeat(4, 1fr);
+                                                gap: 0.35rem;
+                                            }
+                                        }
+                                        .by-input-wrapper {
+                                            position: relative;
+                                            display: flex;
+                                            align-items: center;
+                                        }
+                                        .by-input-prefix {
+                                            position: absolute;
+                                            left: 1rem;
+                                            font-weight: 800;
+                                            font-size: 0.95rem;
+                                            color: #64748b;
+                                            pointer-events: none;
+                                        }
+                                        .by-pwyw-input-field {
+                                            width: 100%;
+                                            box-sizing: border-box;
+                                            padding: 0.75rem 1rem 0.75rem 2.6rem;
+                                            border: 1.5px solid #e2e8f0;
+                                            border-radius: 14px;
+                                            font-size: 1.05rem;
+                                            font-weight: 800;
+                                            color: #0f172a;
+                                            background: #f8fafc;
+                                            outline: none;
+                                            font-family: 'Montserrat', sans-serif;
+                                            transition: all 0.15s;
+                                        }
+                                        .by-pwyw-input-field:focus {
+                                            border-color: #1eb349;
+                                            background: #ffffff;
+                                            box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
+                                        }
+                                    </style>
+
+                                    <div class="by-pricing-card">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 0.75rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                                <div class="by-pricing-badge-icon">
+                                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                                    </svg>
+                                                </div>
                                                 <div>
-                                                    <div style="font-size: 0.92rem; font-weight: 800; color: #0369A1;">Bayar Seikhlasnya</div>
-                                                    <div style="font-size: 0.75rem; color: #0284C7;">
+                                                    <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Bayar Seikhlasnya</div>
+                                                    <div style="font-size: 0.76rem; color: #64748b; font-weight: 600; margin-top:2px;">
                                                         @if($minPrice > 0)
-                                                            Min. Rp {{ number_format($minPrice, 0, ',', '.') }}
+                                                            Minimum: Rp {{ number_format($minPrice, 0, ',', '.') }}
                                                         @else
-                                                            Bebas masukkan nominal berapa saja
+                                                            Bebas tentukan nominal berapa saja
                                                         @endif
                                                     </div>
                                                 </div>
@@ -2108,25 +2349,27 @@
                                                 sort($presets);
                                             }
                                         @endphp
-                                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                                        <div class="by-pill-grid-pwyw">
                                             @foreach(array_slice($presets, 0, 4) as $presetNominal)
-                                                <button type="button" onclick="setServicePwywNominal({{ $presetNominal }})" class="service-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}" data-nominal="{{ $presetNominal }}" style="flex: 1; min-width: 65px; padding: 0.45rem 0.5rem; background: {{ $presetNominal == $initialPrice ? '#0284C7' : '#fff' }}; color: {{ $presetNominal == $initialPrice ? '#fff' : '#0369A1' }}; border: 1.5px solid #7DD3FC; border-radius: 10px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                                <button type="button" onclick="setServicePwywNominal({{ $presetNominal }})" class="by-amount-pill service-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}" data-nominal="{{ $presetNominal }}">
                                                     {{ number_format($presetNominal / 1000, 0) }}k
                                                 </button>
                                             @endforeach
                                         </div>
 
                                         {{-- Input Bebas --}}
-                                        <div style="position: relative;">
-                                            <span style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 0.95rem; color: #0369A1;">Rp</span>
-                                            <input type="text" id="service-pwyw-input" value="{{ number_format($initialPrice, 0, ',', '.') }}" style="width: 100%; box-sizing: border-box; padding: 0.7rem 0.85rem 0.7rem 2.4rem; border: 1.5px solid #BAE6FD; border-radius: 12px; font-size: 1rem; font-weight: 800; color: #0F172A; background: #fff; outline: none;" oninput="formatServicePwywInput(this)">
+                                        <div class="by-input-wrapper">
+                                            <span class="by-input-prefix">Rp</span>
+                                            <input type="text" id="service-pwyw-input" class="by-pwyw-input-field" value="{{ number_format($initialPrice, 0, ',', '.') }}" oninput="formatServicePwywInput(this)" placeholder="0">
                                         </div>
-                                        <div id="service-pwyw-error" style="display: none; color: #EF4444; font-size: 0.78rem; font-weight: 600; margin-top: 0.4rem;"></div>
+                                        <div id="service-pwyw-error" style="display: none; color: #ef4444; font-size: 0.78rem; font-weight: 600; margin-top: 0.45rem;"></div>
                                     </div>
 
                                     <div class="pd-actions" style="margin-top:1.25rem;">
-                                        <button type="button" onclick="submitServicePwyw()" class="pd-btn" style="flex:1; width:100%; justify-content:center; background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); color:#fff; border:none; padding:0.9rem; font-size:1rem; font-weight:800; border-radius:12px; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35); cursor:pointer; display:flex; align-items:center; gap:0.5rem;">
-                                            <span>💛</span>
+                                        <button type="button" onclick="submitServicePwyw()" class="by-btn-primary-action">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                            </svg>
                                             <span id="service-pwyw-btn-text">Dukung Sekarang (Rp {{ number_format($initialPrice, 0, ',', '.') }})</span>
                                         </button>
                                     </div>
@@ -2145,11 +2388,9 @@
 
                                                 document.querySelectorAll('.service-pwyw-pill').forEach(function(p) {
                                                     if (parseInt(p.dataset.nominal) === num) {
-                                                        p.style.background = '#0284C7';
-                                                        p.style.color = '#fff';
+                                                        p.classList.add('active');
                                                     } else {
-                                                        p.style.background = '#fff';
-                                                        p.style.color = '#0369A1';
+                                                        p.classList.remove('active');
                                                     }
                                                 });
                                             };

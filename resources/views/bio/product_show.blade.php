@@ -977,37 +977,104 @@
                             $unitName  = $product->traktir_unit_name ?? 'kopi';
                             $unitIcon  = $product->traktir_unit_icon ?? '☕';
                         @endphp
-                        <div style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border: 1.5px solid #FDE68A; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="font-size: 1.5rem;">{{ $unitIcon }}</span>
+                        <style>
+                            .bio-pricing-card {
+                                background: #ffffff;
+                                border: 1.5px solid #e2e8f0;
+                                border-radius: 16px;
+                                padding: 1.15rem;
+                                margin-bottom: 1.25rem;
+                                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+                                font-family: 'Montserrat', sans-serif;
+                            }
+                            .bio-pricing-hdr {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                margin-bottom: 0.85rem;
+                            }
+                            .bio-pill-grid {
+                                display: grid;
+                                grid-template-columns: repeat(5, 1fr);
+                                gap: 0.35rem;
+                                margin-bottom: 0.85rem;
+                            }
+                            .bio-amount-pill {
+                                padding: 0.5rem 0.25rem;
+                                background: #f8fafc;
+                                color: #334155;
+                                border: 1.5px solid #e2e8f0;
+                                border-radius: 10px;
+                                font-size: 0.82rem;
+                                font-weight: 700;
+                                cursor: pointer;
+                                transition: all 0.15s;
+                                text-align: center;
+                                font-family: 'Montserrat', sans-serif;
+                            }
+                            .bio-amount-pill.active {
+                                background: #1eb349;
+                                color: #ffffff;
+                                border-color: #1eb349;
+                                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
+                            }
+                            .bio-btn-checkout {
+                                width: 100%;
+                                justify-content: center;
+                                background: linear-gradient(135deg, #1eb349, #a5cf37);
+                                color: #fff;
+                                border: none;
+                                padding: 0.9rem;
+                                font-size: 0.95rem;
+                                font-weight: 800;
+                                border-radius: 999px;
+                                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                font-family: 'Montserrat', sans-serif;
+                                transition: all 0.15s;
+                            }
+                            .bio-btn-checkout:hover {
+                                transform: translateY(-1px);
+                                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+                            }
+                        </style>
+
+                        <div class="bio-pricing-card">
+                            <div class="bio-pricing-hdr">
+                                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(30,179,73,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                        {{ $unitIcon }}
+                                    </div>
                                     <div>
-                                        <div style="font-size: 0.9rem; font-weight: 800; color: #92400E;">Traktir {{ ucfirst($unitName) }}</div>
-                                        <div style="font-size: 0.75rem; color: #B45309;">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
+                                        <div style="font-size: 0.9rem; font-weight: 800; color: #0f172a;">Traktir {{ ucfirst($unitName) }}</div>
+                                        <div style="font-size: 0.74rem; color: #64748b; font-weight: 600;">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
                                     </div>
                                 </div>
                                 <div style="text-align: right;">
-                                    <div style="font-size: 0.72rem; color: #B45309; font-weight: 600;">Total Traktir</div>
-                                    <div id="bio-traktir-total" style="font-size: 1.05rem; font-weight: 800; color: #78350F;">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
+                                    <div style="font-size: 0.68rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Total</div>
+                                    <div id="bio-traktir-total" style="font-size: 1.05rem; font-weight: 800; color: #1eb349;">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
                                 </div>
                             </div>
 
                             {{-- Pilihan Cepat Qty --}}
-                            <div style="display: flex; gap: 0.4rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                            <div class="bio-pill-grid">
                                 @foreach([1, 2, 3, 5, 10] as $presetQty)
-                                    <button type="button" onclick="setBioTraktirQty({{ $presetQty }})" class="bio-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}" data-qty="{{ $presetQty }}" style="flex: 1; min-width: 44px; padding: 0.4rem 0.5rem; background: #fff; border: 1.5px solid #FCD34D; border-radius: 10px; font-size: 0.82rem; font-weight: 700; color: #78350F; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                    <button type="button" onclick="setBioTraktirQty({{ $presetQty }})" class="bio-amount-pill bio-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}" data-qty="{{ $presetQty }}">
                                         {{ $presetQty }}x
                                     </button>
                                 @endforeach
                             </div>
 
                             {{-- Custom Qty Counter --}}
-                            <div style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #FDE68A; border-radius: 12px; padding: 0.4rem 0.75rem;">
-                                <span style="font-size: 0.82rem; font-weight: 700; color: #78350F;">Jumlah {{ ucfirst($unitName) }}</span>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <button type="button" onclick="stepBioTraktirQty(-1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
-                                    <input type="number" id="bio-traktir-qty-val" value="1" min="1" max="1000" style="width: 45px; text-align: center; border: none; font-size: 0.95rem; font-weight: 800; color: #78350F; outline: none; background: transparent;" oninput="updateBioTraktirTotal(this.value)">
-                                    <button type="button" onclick="stepBioTraktirQty(1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 0.45rem 0.85rem;">
+                                <span style="font-size: 0.8rem; font-weight: 700; color: #334155;">Jumlah {{ ucfirst($unitName) }}</span>
+                                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                                    <button type="button" onclick="stepBioTraktirQty(-1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+                                    <input type="number" id="bio-traktir-qty-val" value="1" min="1" max="1000" style="width: 44px; text-align: center; border: none; font-size: 0.95rem; font-weight: 800; color: #0f172a; outline: none; background: transparent; font-family:'Montserrat',sans-serif;" oninput="updateBioTraktirTotal(this.value)">
+                                    <button type="button" onclick="stepBioTraktirQty(1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
                                 </div>
                             </div>
                         </div>
@@ -1020,7 +1087,7 @@
                             @if(!empty($affiliateUserId))
                                 <input type="hidden" name="affiliate_id" value="{{ $affiliateUserId }}">
                             @endif
-                            <button type="submit" class="ps-btn-checkout" style="width:100%; justify-content:center; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);">
+                            <button type="submit" class="bio-btn-checkout">
                                 <span>{{ $unitIcon }}</span>
                                 <span id="bio-traktir-btn-text">Traktir Sekarang (Rp {{ number_format($unitPrice, 0, ',', '.') }})</span>
                             </button>
@@ -1052,13 +1119,9 @@
 
                                     document.querySelectorAll('.bio-traktir-pill').forEach(function(p) {
                                         if (parseInt(p.dataset.qty) === q) {
-                                            p.style.background = '#F59E0B';
-                                            p.style.color = '#fff';
-                                            p.style.borderColor = '#D97706';
+                                            p.classList.add('active');
                                         } else {
-                                            p.style.background = '#fff';
-                                            p.style.color = '#78350F';
-                                            p.style.borderColor = '#FCD34D';
+                                            p.classList.remove('active');
                                         }
                                     });
                                 };
@@ -1072,19 +1135,80 @@
                             $suggestedPrice = (float)($product->pwyw_suggested_price ?? 0);
                             $initialPrice = $suggestedPrice > 0 ? $suggestedPrice : ($minPrice > 0 ? $minPrice : 10000);
                         @endphp
-                        <div style="background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%); border: 1.5px solid #BAE6FD; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="font-size: 1.4rem;">💛</span>
-                                    <div>
-                                        <div style="font-size: 0.9rem; font-weight: 800; color: #0369A1;">Bayar Seikhlasnya</div>
-                                        <div style="font-size: 0.75rem; color: #0284C7;">
-                                            @if($minPrice > 0)
-                                                Min. Rp {{ number_format($minPrice, 0, ',', '.') }}
-                                            @else
-                                                Bebas masukkan nominal berapa saja
-                                            @endif
-                                        </div>
+                        <style>
+                            .bio-pricing-card {
+                                background: #ffffff;
+                                border: 1.5px solid #e2e8f0;
+                                border-radius: 16px;
+                                padding: 1.15rem;
+                                margin-bottom: 1.25rem;
+                                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+                                font-family: 'Montserrat', sans-serif;
+                            }
+                            .bio-pill-grid-pwyw {
+                                display: grid;
+                                grid-template-columns: repeat(4, 1fr);
+                                gap: 0.35rem;
+                                margin-bottom: 0.85rem;
+                            }
+                            .bio-amount-pill {
+                                padding: 0.5rem 0.25rem;
+                                background: #f8fafc;
+                                color: #334155;
+                                border: 1.5px solid #e2e8f0;
+                                border-radius: 10px;
+                                font-size: 0.82rem;
+                                font-weight: 700;
+                                cursor: pointer;
+                                transition: all 0.15s;
+                                text-align: center;
+                                font-family: 'Montserrat', sans-serif;
+                            }
+                            .bio-amount-pill.active {
+                                background: #1eb349;
+                                color: #ffffff;
+                                border-color: #1eb349;
+                                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
+                            }
+                            .bio-btn-checkout {
+                                width: 100%;
+                                justify-content: center;
+                                background: linear-gradient(135deg, #1eb349, #a5cf37);
+                                color: #fff;
+                                border: none;
+                                padding: 0.9rem;
+                                font-size: 0.95rem;
+                                font-weight: 800;
+                                border-radius: 999px;
+                                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                font-family: 'Montserrat', sans-serif;
+                                transition: all 0.15s;
+                            }
+                            .bio-btn-checkout:hover {
+                                transform: translateY(-1px);
+                                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+                            }
+                        </style>
+
+                        <div class="bio-pricing-card">
+                            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem;">
+                                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(30,179,73,0.1); color: #1eb349; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.9rem; font-weight: 800; color: #0f172a;">Bayar Seikhlasnya</div>
+                                    <div style="font-size: 0.74rem; color: #64748b; font-weight: 600;">
+                                        @if($minPrice > 0)
+                                            Min. Rp {{ number_format($minPrice, 0, ',', '.') }}
+                                        @else
+                                            Bebas masukkan nominal berapa saja
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -1101,9 +1225,9 @@
                                     sort($presets);
                                 }
                             @endphp
-                            <div style="display: flex; gap: 0.4rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                            <div class="bio-pill-grid-pwyw">
                                 @foreach(array_slice($presets, 0, 4) as $presetNominal)
-                                    <button type="button" onclick="setBioPwywNominal({{ $presetNominal }})" class="bio-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}" data-nominal="{{ $presetNominal }}" style="flex: 1; min-width: 60px; padding: 0.4rem 0.5rem; background: {{ $presetNominal == $initialPrice ? '#0284C7' : '#fff' }}; color: {{ $presetNominal == $initialPrice ? '#fff' : '#0369A1' }}; border: 1.5px solid #7DD3FC; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                    <button type="button" onclick="setBioPwywNominal({{ $presetNominal }})" class="bio-amount-pill bio-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}" data-nominal="{{ $presetNominal }}">
                                         {{ number_format($presetNominal / 1000, 0) }}k
                                     </button>
                                 @endforeach
@@ -1111,10 +1235,10 @@
 
                             {{-- Input Nominal Bebas --}}
                             <div style="position: relative;">
-                                <span style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 0.9rem; color: #0369A1;">Rp</span>
-                                <input type="text" id="bio-pwyw-input" value="{{ number_format($initialPrice, 0, ',', '.') }}" style="width: 100%; box-sizing: border-box; padding: 0.65rem 0.85rem 0.65rem 2.2rem; border: 1.5px solid #BAE6FD; border-radius: 12px; font-size: 0.95rem; font-weight: 800; color: #0F172A; background: #fff; outline: none;" oninput="formatBioPwywInput(this)">
+                                <span style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 0.9rem; color: #64748b; pointer-events:none;">Rp</span>
+                                <input type="text" id="bio-pwyw-input" value="{{ number_format($initialPrice, 0, ',', '.') }}" style="width: 100%; box-sizing: border-box; padding: 0.65rem 0.85rem 0.65rem 2.4rem; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; font-weight: 800; color: #0f172a; background: #f8fafc; outline: none; font-family:'Montserrat',sans-serif;" oninput="formatBioPwywInput(this)">
                             </div>
-                            <div id="bio-pwyw-error" style="display: none; color: #EF4444; font-size: 0.75rem; font-weight: 600; margin-top: 0.4rem;"></div>
+                            <div id="bio-pwyw-error" style="display: none; color: #ef4444; font-size: 0.75rem; font-weight: 600; margin-top: 0.4rem;"></div>
                         </div>
 
                         <form action="{{ route('cart.add') }}" method="POST" id="bio-cart-form" style="display:contents;" onsubmit="return validateBioPwywForm()">
@@ -1126,8 +1250,10 @@
                             @if(!empty($affiliateUserId))
                                 <input type="hidden" name="affiliate_id" value="{{ $affiliateUserId }}">
                             @endif
-                            <button type="submit" class="ps-btn-checkout" style="width:100%; justify-content:center; background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);">
-                                <span>💛</span>
+                            <button type="submit" class="bio-btn-checkout">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
                                 <span id="bio-pwyw-btn-text">Dukung Sekarang (Rp {{ number_format($initialPrice, 0, ',', '.') }})</span>
                             </button>
                         </form>
@@ -1146,11 +1272,9 @@
 
                                     document.querySelectorAll('.bio-pwyw-pill').forEach(function(p) {
                                         if (parseInt(p.dataset.nominal) === num) {
-                                            p.style.background = '#0284C7';
-                                            p.style.color = '#fff';
+                                            p.classList.add('active');
                                         } else {
-                                            p.style.background = '#fff';
-                                            p.style.color = '#0369A1';
+                                            p.classList.remove('active');
                                         }
                                     });
                                 };
