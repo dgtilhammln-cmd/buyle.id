@@ -1275,9 +1275,6 @@
             style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Nama Layanan</th>
           <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Slug</th>
-          <th
             style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Stok</th>
           <th
@@ -1349,10 +1346,6 @@
                 </div>
               @endif
             </td>
-            <td style="padding:1.25rem 1.5rem;">
-              <code
-                style="font-size:.75rem;background:#F1F5F9;color:#3B82F6;padding:.25rem .625rem;border-radius:6px;font-family:'Courier New',monospace;">/{{ $s->slug }}</code>
-            </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
               <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
                 @csrf
@@ -1420,7 +1413,7 @@
         @endforeach
         @if($products->count() === 0)
           <tr>
-            <td colspan="9" style="padding:4rem;text-align:center;">
+            <td colspan="8" style="padding:4rem;text-align:center;">
               <div
                 style="width:56px;height:56px;background:#F1F5F9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
                 <svg width="24" height="24" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24">
@@ -1466,11 +1459,9 @@
         </div>
         <div style="padding:0.65rem;flex:1;display:flex;flex-direction:column;">
           <div
-            style="font-size:0.72rem;font-weight:500;color:#1E293B;margin-bottom:.25rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+            style="font-size:0.75rem;font-weight:600;color:#1E293B;margin-bottom:.45rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
             {{ $s->name }}
           </div>
-          <code
-            style="font-size:.6rem;background:#F8FAFC;color:#1eb349;padding:.15rem .4rem;border-radius:4px;align-self:flex-start;margin-bottom:.5rem;border:1px solid #E2E8F0;display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">/{{ $s->slug }}</code>
 
           <div
             style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:0.5rem;border-top:1px solid #F1F5F9;">
