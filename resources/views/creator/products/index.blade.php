@@ -944,6 +944,179 @@
     .del-btn-confirm:active {
       transform: translateY(0);
     }
+
+    /* ── Bulk Select & Floating Action Dock ── */
+    .prod-chk-custom {
+      width: 18px;
+      height: 18px;
+      accent-color: #1eb349;
+      cursor: pointer;
+      border-radius: 5px;
+      vertical-align: middle;
+      transition: transform 0.15s ease;
+    }
+    .prod-chk-custom:hover {
+      transform: scale(1.1);
+    }
+    .tr-selected {
+      background: #f0fdf4 !important;
+    }
+    .grid-chk-wrap {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      z-index: 11;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 8px;
+      padding: 3px 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      transition: all 0.2s ease;
+    }
+    .grid-card-item.card-selected {
+      border-color: #1eb349 !important;
+      box-shadow: 0 0 0 2px rgba(30, 179, 73, 0.25), 0 6px 18px rgba(0, 0, 0, 0.08) !important;
+    }
+    .grid-card-item.card-selected .grid-chk-wrap {
+      background: #1eb349;
+      border-color: #1eb349;
+    }
+    .grid-card-item.card-selected .grid-chk-wrap input {
+      accent-color: #ffffff;
+    }
+
+    /* Floating Bulk Action Dock */
+    .bulk-dock-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 0.65rem 1.15rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      z-index: 99998;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      opacity: 0;
+      pointer-events: none;
+      max-width: 95vw;
+      flex-wrap: wrap;
+    }
+    .bulk-dock-bar.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .bulk-count-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #f8fafc;
+      padding-right: 0.45rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      white-space: nowrap;
+    }
+    .bulk-count-badge {
+      background: #1eb349;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      min-width: 20px;
+      text-align: center;
+    }
+    .bulk-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
+    }
+    .bulk-act-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.95rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .bulk-btn-archive {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .bulk-btn-archive:hover {
+      background: #f59e0b;
+      color: #ffffff;
+    }
+    .bulk-btn-activate {
+      background: rgba(30, 179, 73, 0.18);
+      color: #4ade80;
+      border: 1px solid rgba(30, 179, 73, 0.35);
+    }
+    .bulk-btn-activate:hover {
+      background: #1eb349;
+      color: #ffffff;
+    }
+    .bulk-btn-delete {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .bulk-btn-delete:hover {
+      background: #ef4444;
+      color: #ffffff;
+    }
+    .bulk-btn-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      padding: 0;
+    }
+    .bulk-btn-close:hover {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+    @media (max-width: 640px) {
+      .bulk-dock-bar {
+        bottom: 16px;
+        padding: 0.5rem 0.85rem;
+        gap: 0.5rem;
+      }
+      .bulk-act-btn {
+        padding: 0.4rem 0.65rem;
+        font-size: 0.72rem;
+      }
+      .bulk-count-pill {
+        font-size: 0.75rem;
+      }
+    }
   </style>
 @endsection
 
@@ -1089,8 +1262,11 @@
     <table style="width:100%;border-collapse:collapse;min-width:1000px;">
       <thead>
         <tr style="background:#F8FAFC;">
+          <th style="padding:1rem 0.5rem 1rem 1.25rem; width: 44px; text-align:center; border-bottom:1px solid #F1F5F9;">
+            <input type="checkbox" id="selectAllList" class="prod-chk-custom" title="Pilih Semua di Halaman Ini" onchange="toggleSelectAll(this.checked)">
+          </th>
           <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.25rem 1rem 0.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             No</th>
           <th
             style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
@@ -1117,9 +1293,13 @@
       </thead>
       <tbody>
         @foreach($products as $s)
-          <tr style="border-bottom:1px solid #F8FAFC;transition:background .15s;"
-            onmouseover="this.style.background='#FAFBFF'" onmouseout="this.style.background='transparent'">
-            <td style="padding:1.25rem 1.5rem;">
+          <tr id="prod-row-{{ $s->id }}" style="border-bottom:1px solid #F8FAFC;transition:background .15s;"
+            onmouseover="if(!this.classList.contains('tr-selected')) this.style.background='#FAFBFF'" 
+            onmouseout="if(!this.classList.contains('tr-selected')) this.style.background='transparent'">
+            <td style="padding:1.25rem 0.5rem 1.25rem 1.25rem; width: 44px; text-align: center;">
+              <input type="checkbox" class="prod-chk-custom prod-item-chk" value="{{ $s->id }}" data-product-id="{{ $s->id }}" data-is-active="{{ $s->is_active ? '1' : '0' }}" onchange="handleProductCheck(this)">
+            </td>
+            <td style="padding:1.25rem 1.25rem 1.25rem 0.5rem;">
               <span
                 style="font-size:.8rem;font-weight: 500;color:#CBD5E1;">{{ str_pad($s->order, 2, '0', STR_PAD_LEFT) }}</span>
             </td>
@@ -1240,7 +1420,7 @@
         @endforeach
         @if($products->count() === 0)
           <tr>
-            <td colspan="7" style="padding:4rem;text-align:center;">
+            <td colspan="9" style="padding:4rem;text-align:center;">
               <div
                 style="width:56px;height:56px;background:#F1F5F9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
                 <svg width="24" height="24" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24">
@@ -1260,10 +1440,16 @@
   {{-- GRID VIEW: 7 per row --}}
   <div id="view-grid" class="view-container" style="display:none; grid-template-columns: repeat(7, 1fr); gap: 0.75rem;">
     @foreach($products as $s)
-      <div
-        style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s,box-shadow 0.2s;"
+      <div id="prod-card-{{ $s->id }}" class="grid-card-item"
+        style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;"
         onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'"
-        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)'">
+        onmouseout="this.style.transform='translateY(0)';if(!this.classList.contains('card-selected')) this.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)'">
+        
+        {{-- Checkbox top-left --}}
+        <div class="grid-chk-wrap" title="Pilih produk">
+          <input type="checkbox" class="prod-chk-custom prod-item-chk" value="{{ $s->id }}" data-product-id="{{ $s->id }}" data-is-active="{{ $s->is_active ? '1' : '0' }}" onchange="handleProductCheck(this)">
+        </div>
+
         <form action="{{ route('creator.products.toggle-status', $s->id) }}" method="POST" class="form-toggle-status" style="position:absolute;top:6px;right:6px;z-index:10;margin:0;" data-product-id="{{ $s->id }}">
           @csrf
           @method('PATCH')
@@ -1352,7 +1538,31 @@
     <div style="margin-top:1.5rem; display:flex; justify-content:center;">
       {{ $products->links() }}
     </div>
-  @endif
+  {{-- FLOATING BULK ACTIONS DOCK BAR --}}
+  <div id="bulkDockBar" class="bulk-dock-bar">
+    <div class="bulk-count-pill">
+      <span id="bulkCountBadge" class="bulk-count-badge">0</span>
+      <span id="bulkCountText">Produk Dipilih</span>
+    </div>
+    <div class="bulk-actions-group">
+      <button type="button" onclick="confirmBulkAction('archive')" class="bulk-act-btn bulk-btn-archive" title="Arsipkan semua produk yang dipilih">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+        <span>Arsipkan</span>
+      </button>
+      <button type="button" onclick="confirmBulkAction('activate')" class="bulk-act-btn bulk-btn-activate" title="Aktifkan semua produk yang dipilih">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        <span>Aktifkan</span>
+      </button>
+      <button type="button" onclick="confirmBulkAction('delete')" class="bulk-act-btn bulk-btn-delete" title="Hapus permanen produk yang dipilih">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>Hapus</span>
+      </button>
+      <button type="button" onclick="deselectAllProducts()" class="bulk-btn-close" title="Batalkan pilihan">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
   </div> {{-- Close #products-real-content --}}
 
   {{-- Interactive Delete Confirmation Modal --}}
@@ -2094,6 +2304,194 @@
     }
   })();
 
+  // Bulk Checkbox & Action Dock Logic
+  const selectedProductIds = new Set();
+  let _bulkActionType = null;
+
+  function handleProductCheck(chk) {
+    const pid = parseInt(chk.value);
+    if (chk.checked) {
+      selectedProductIds.add(pid);
+    } else {
+      selectedProductIds.delete(pid);
+    }
+    syncProductVisuals(pid, chk.checked);
+    updateBulkDock();
+  }
+
+  function syncProductVisuals(pid, isChecked) {
+    document.querySelectorAll(`.prod-item-chk[value="${pid}"]`).forEach(c => c.checked = isChecked);
+
+    const row = document.getElementById(`prod-row-${pid}`);
+    if (row) {
+      if (isChecked) row.classList.add('tr-selected');
+      else row.classList.remove('tr-selected');
+    }
+
+    const card = document.getElementById(`prod-card-${pid}`);
+    if (card) {
+      if (isChecked) card.classList.add('card-selected');
+      else card.classList.remove('card-selected');
+    }
+  }
+
+  function toggleSelectAll(isChecked) {
+    document.querySelectorAll('.prod-item-chk').forEach(chk => {
+      const pid = parseInt(chk.value);
+      if (isChecked) {
+        selectedProductIds.add(pid);
+      } else {
+        selectedProductIds.delete(pid);
+      }
+      chk.checked = isChecked;
+      syncProductVisuals(pid, isChecked);
+    });
+    updateBulkDock();
+  }
+
+  function deselectAllProducts() {
+    selectedProductIds.clear();
+    document.querySelectorAll('.prod-item-chk').forEach(c => {
+      c.checked = false;
+      syncProductVisuals(parseInt(c.value), false);
+    });
+    const selectAllList = document.getElementById('selectAllList');
+    if (selectAllList) selectAllList.checked = false;
+    updateBulkDock();
+  }
+
+  function updateBulkDock() {
+    const dock = document.getElementById('bulkDockBar');
+    const badge = document.getElementById('bulkCountBadge');
+    const count = selectedProductIds.size;
+    if (badge) badge.textContent = count;
+
+    if (count > 0) {
+      if (dock) dock.classList.add('visible');
+    } else {
+      if (dock) dock.classList.remove('visible');
+    }
+
+    const allCheckboxes = document.querySelectorAll('#view-list .prod-item-chk');
+    const selectAllList = document.getElementById('selectAllList');
+    if (selectAllList && allCheckboxes.length > 0) {
+      selectAllList.checked = Array.from(allCheckboxes).every(c => c.checked);
+    }
+  }
+
+  function confirmBulkAction(action) {
+    const count = selectedProductIds.size;
+    if (count === 0) {
+      alert('Pilih minimal satu produk terlebih dahulu.');
+      return;
+    }
+
+    _bulkActionType = action;
+    _activeDeleteForm = 'bulk';
+
+    const modalTitle = document.getElementById('delModalTitle');
+    const modalDesc = document.getElementById('delModalDesc');
+    const confirmBtn = document.getElementById('delConfirmBtn');
+    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+
+    if (action === 'delete') {
+      modalTitle.textContent = `Hapus ${count} Produk?`;
+      modalDesc.innerHTML = `Apakah Anda yakin ingin menghapus <b>${count} produk</b> yang dipilih? Tindakan ini permanen dan tidak dapat dibatalkan.`;
+      confirmBtn.textContent = `Ya, Hapus (${count})`;
+      confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+      confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+      if (iconWrap) {
+        iconWrap.style.background = '#fef2f2';
+        iconWrap.style.borderColor = '#fecaca';
+        iconWrap.style.color = '#ef4444';
+      }
+    } else if (action === 'archive') {
+      modalTitle.textContent = `Arsipkan ${count} Produk?`;
+      modalDesc.innerHTML = `Apakah Anda yakin ingin mengarsipkan <b>${count} produk</b> yang dipilih? Produk tidak akan muncul di marketplace dan storefront pembeli.`;
+      confirmBtn.textContent = `Ya, Arsipkan (${count})`;
+      confirmBtn.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+      confirmBtn.style.boxShadow = '0 4px 14px rgba(245, 158, 11, 0.35)';
+      if (iconWrap) {
+        iconWrap.style.background = '#fffbeb';
+        iconWrap.style.borderColor = '#fde68a';
+        iconWrap.style.color = '#f59e0b';
+      }
+    } else if (action === 'activate') {
+      modalTitle.textContent = `Aktifkan ${count} Produk?`;
+      modalDesc.innerHTML = `Apakah Anda yakin ingin mengaktifkan kembali <b>${count} produk</b> yang dipilih? Produk akan dapat dibeli kembali.`;
+      confirmBtn.textContent = `Ya, Aktifkan (${count})`;
+      confirmBtn.style.background = 'linear-gradient(135deg, #1eb349, #15803d)';
+      confirmBtn.style.boxShadow = '0 4px 14px rgba(30, 179, 73, 0.35)';
+      if (iconWrap) {
+        iconWrap.style.background = '#f0fdf4';
+        iconWrap.style.borderColor = '#bbf7d0';
+        iconWrap.style.color = '#1eb349';
+      }
+    }
+
+    confirmBtn.disabled = false;
+    document.getElementById('deleteConfirmOverlay').classList.add('open');
+  }
+
+  function executeBulkActionConfirmed() {
+    const confirmBtn = document.getElementById('delConfirmBtn');
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Memproses...';
+
+    const ids = Array.from(selectedProductIds);
+
+    fetch('{{ route("creator.products.bulk-action") }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        action: _bulkActionType,
+        ids: ids
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        window.location.reload();
+      } else {
+        alert(data.message || 'Terjadi kesalahan saat memproses produk.');
+        confirmBtn.disabled = false;
+        closeDeleteModal();
+      }
+    })
+    .catch(() => {
+      // Fallback standard HTML form submit
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '{{ route("creator.products.bulk-action") }}';
+      const csrf = document.createElement('input');
+      csrf.type = 'hidden';
+      csrf.name = '_token';
+      csrf.value = '{{ csrf_token() }}';
+      form.appendChild(csrf);
+
+      const act = document.createElement('input');
+      act.type = 'hidden';
+      act.name = 'action';
+      act.value = _bulkActionType;
+      form.appendChild(act);
+
+      ids.forEach(id => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'ids[]';
+        input.value = id;
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+    });
+  }
+
   // Interactive Product Delete Confirmation Modal
   let _activeDeleteForm = null;
 
@@ -2104,6 +2502,14 @@
     const confirmBtn = document.getElementById('delConfirmBtn');
     confirmBtn.textContent = 'Ya, Hapus';
     confirmBtn.disabled = false;
+    confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+    confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+    if (iconWrap) {
+      iconWrap.style.background = '#fef2f2';
+      iconWrap.style.borderColor = '#fecaca';
+      iconWrap.style.color = '#ef4444';
+    }
     document.getElementById('deleteConfirmOverlay').classList.add('open');
   }
 
@@ -2114,6 +2520,14 @@
     const confirmBtn = document.getElementById('delConfirmBtn');
     confirmBtn.textContent = 'Ya, Hapus Semua!';
     confirmBtn.disabled = false;
+    confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+    confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+    if (iconWrap) {
+      iconWrap.style.background = '#fef2f2';
+      iconWrap.style.borderColor = '#fecaca';
+      iconWrap.style.color = '#ef4444';
+    }
     document.getElementById('deleteConfirmOverlay').classList.add('open');
   }
 
@@ -2121,10 +2535,24 @@
     const overlay = document.getElementById('deleteConfirmOverlay');
     if (overlay) overlay.classList.remove('open');
     _activeDeleteForm = null;
+    _bulkActionType = null;
+    const confirmBtn = document.getElementById('delConfirmBtn');
+    if (confirmBtn) {
+      confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+      confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+    }
+    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+    if (iconWrap) {
+      iconWrap.style.background = '#fef2f2';
+      iconWrap.style.borderColor = '#fecaca';
+      iconWrap.style.color = '#ef4444';
+    }
   }
 
   function executeDeleteConfirmed() {
-    if (_activeDeleteForm) {
+    if (_activeDeleteForm === 'bulk') {
+      executeBulkActionConfirmed();
+    } else if (_activeDeleteForm) {
       const confirmBtn = document.getElementById('delConfirmBtn');
       confirmBtn.textContent = 'Menghapus...';
       confirmBtn.disabled = true;

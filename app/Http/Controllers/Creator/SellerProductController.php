@@ -663,6 +663,89 @@ class SellerProductController extends Controller
     }
 
     /**
+     * Bulk action untuk produk yang dipilih: hapus, arsip, atau aktifkan.
+     */
+    public function bulkAction(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|in:delete,archive,activate',
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer',
+        ]);
+
+        $sellerId = auth()->id();
+        $action   = $request->input('action');
+        $ids      = $request->input('ids');
+
+        $products = Product::where('seller_id', $sellerId)
+            ->whereIn('id', $ids)
+            ->get();
+
+        if ($products->isEmpty()) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Tidak ada produk valid yang dipilih.'], 422);
+            }
+            return back()->with('error', 'Tidak ada produk valid yang dipilih.');
+        }
+
+        $count = $products->count();
+
+        if ($action === 'delete') {
+            foreach ($products as $product) {
+                if ($product->image && !Str::startsWith($product->image, 'http')) {
+                    Storage::disk('public')->delete($product->image);
+                }
+                if ($product->og_image && !Str::startsWith($product->og_image, 'http')) {
+                    Storage::disk('public')->delete($product->og_image);
+                }
+                // Clean up linked bio blocks
+                \App\Models\CreatorBioBlock::where('type', 'buyle_product')
+                    ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(data_json, '$.product_id')) = ?", [(string)$product->id])
+                    ->delete();
+
+                $product->delete();
+                Cache::forget("product_{$product->id}");
+            }
+            $msg = "Berhasil menghapus {$count} produk terpilih.";
+        } elseif ($action === 'archive') {
+            foreach ($products as $product) {
+                $product->update(['is_active' => false]);
+                \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+                    $q->where('data_json->product_id', $product->id)
+                      ->orWhere('data_json->product_id', (string)$product->id);
+                })->update(['is_active' => false]);
+                Cache::forget("product_{$product->id}");
+            }
+            $msg = "Berhasil mengarsipkan {$count} produk terpilih.";
+        } elseif ($action === 'activate') {
+            foreach ($products as $product) {
+                $product->update(['is_active' => true]);
+                \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+                    $q->where('data_json->product_id', $product->id)
+                      ->orWhere('data_json->product_id', (string)$product->id);
+                })->update(['is_active' => true]);
+                Cache::forget("product_{$product->id}");
+            }
+            $msg = "Berhasil mengaktifkan {$count} produk terpilih.";
+        }
+
+        Cache::forget('catalog_main');
+        Cache::forget('home_page_data_v3');
+        Cache::forget("seller_products_{$sellerId}");
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => $msg,
+                'count'   => $count,
+                'action'  => $action,
+            ]);
+        }
+
+        return back()->with('success', $msg);
+    }
+
+    /**
      * Pastikan produk milik seller yang sedang login.
      */
     private function authorizeProduct(Product $product): void
