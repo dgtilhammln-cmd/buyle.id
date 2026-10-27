@@ -1189,6 +1189,131 @@
             padding: 2px 8px;
             border-radius: 999px;
         }
+
+        /* ── POS Settings Hover Dropdown ──────────────────── */
+        .pos-settings-dropdown-wrap {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .pos-settings-dropdown-wrap .pos-settings-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 220px;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 8px 28px rgba(15,23,42,0.10), 0 2px 8px rgba(15,23,42,0.06);
+            padding: 6px;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px) scale(0.97);
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            pointer-events: none;
+        }
+
+        /* Arrow caret pointing up */
+                /* Invisible hover bridge */
+        .pos-settings-dropdown-wrap .pos-settings-dropdown::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            right: 0;
+            height: 12px;
+        }
+
+        .pos-settings-dropdown-wrap .pos-settings-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            right: 18px;
+            width: 12px;
+            height: 12px;
+            background: #ffffff;
+            border-left: 1.5px solid #e2e8f0;
+            border-top: 1.5px solid #e2e8f0;
+            transform: rotate(45deg);
+        }
+
+        .pos-settings-dropdown-wrap:hover .pos-settings-dropdown,
+        .pos-settings-dropdown-wrap .pos-settings-dropdown:hover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .pos-settings-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 9px 12px;
+            border: none;
+            background: transparent;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #334155;
+            border-radius: 9px;
+            cursor: pointer;
+            text-align: left;
+            text-decoration: none;
+            transition: background 0.14s ease, color 0.14s ease;
+        }
+
+        .pos-settings-dropdown-item:hover {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .pos-settings-dropdown-item .psd-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.14s;
+        }
+
+        .pos-settings-dropdown-item:hover .psd-icon {
+            background: #dcfce7;
+        }
+
+        .pos-settings-dropdown-item .psd-label {
+            flex: 1;
+            line-height: 1.25;
+        }
+
+        .pos-settings-dropdown-item .psd-label small {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: #94a3b8;
+            margin-top: 1px;
+        }
+
+        .pos-settings-dropdown-item:hover .psd-label small {
+            color: #6ee7a0;
+        }
+
+        .pos-settings-dropdown-divider {
+            height: 1px;
+            background: #f1f5f9;
+            margin: 4px 0;
+        }
+
+        /* Keep dropdown open when moving mouse from button to dropdown */
+        .pos-settings-dropdown-wrap .pos-topbar-btn {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 @endsection
 
@@ -1214,14 +1339,93 @@
             <button type="button" onclick="openDepositModal()" class="pos-deposit-add-btn" title="Isi Saldo POS">+</button>
         </div>
 
-        <!-- Tombol Pengaturan POS -->
-        <button type="button" class="pos-topbar-btn" onclick="openPosSettingsModal()" title="Pengaturan POS &amp; Kasir">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
-            </svg>
-            <span class="pos-btn-text">Pengaturan</span>
-        </button>
+        <!-- Tombol Pengaturan POS + Hover Dropdown Menu -->
+        <div class="pos-settings-dropdown-wrap">
+            <button type="button" class="pos-topbar-btn" onclick="openPosSettingsModal('struk')" title="Pengaturan POS &amp; Kasir">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+                </svg>
+                <span class="pos-btn-text">Pengaturan</span>
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:2px; opacity:0.7;">
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
+            </button>
+
+            <!-- Dropdown Menu saat Hover -->
+            <div class="pos-settings-dropdown">
+                <button type="button" class="pos-settings-dropdown-item" onclick="openPosSettingsModal('struk')">
+                    <span class="psd-icon">
+                        <svg width="15" height="15" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                    </span>
+                    <span class="psd-label">
+                        Struk &amp; Toko
+                        <small>Profil, logo &amp; setting cetak</small>
+                    </span>
+                </button>
+
+                <button type="button" class="pos-settings-dropdown-item" onclick="openPosSettingsModal('fees')">
+                    <span class="psd-icon">
+                        <svg width="15" height="15" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                    </span>
+                    <span class="psd-label">
+                        Pajak &amp; Biaya
+                        <small>PB1 restoran &amp; service charge</small>
+                    </span>
+                </button>
+
+                <button type="button" class="pos-settings-dropdown-item" onclick="openPosSettingsModal('discounts')">
+                    <span class="psd-icon">
+                        <svg width="15" height="15" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24">
+                            <line x1="19" y1="5" x2="5" y2="19" />
+                            <circle cx="6.5" cy="6.5" r="2.5" />
+                            <circle cx="17.5" cy="17.5" r="2.5" />
+                        </svg>
+                    </span>
+                    <span class="psd-label">
+                        Diskon &amp; Promo
+                        <small>Voucher &amp; diskon otomatis</small>
+                    </span>
+                </button>
+
+                <button type="button" class="pos-settings-dropdown-item" onclick="openPosSettingsModal('staff')">
+                    <span class="psd-icon">
+                        <svg width="15" height="15" fill="none" stroke="#8b5cf6" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </span>
+                    <span class="psd-label">
+                        Staf Kasir
+                        <small>Kelola akun kasir &amp; PIN</small>
+                    </span>
+                </button>
+
+                <div class="pos-settings-dropdown-divider"></div>
+
+                <button type="button" class="pos-settings-dropdown-item" onclick="openPosSettingsModal('tables')">
+                    <span class="psd-icon">
+                        <svg width="15" height="15" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <path d="M3 9h18M9 21V9" />
+                        </svg>
+                    </span>
+                    <span class="psd-label">
+                        Kelola Meja
+                        <small>Tata letak &amp; nomor meja dine-in</small>
+                    </span>
+                </button>
+            </div>
+        </div>
 
         <!-- Tombol Rekap Closing & Riwayat Shift -->
         <button type="button" class="pos-topbar-btn" onclick="openModal('posHistoryModal')" title="Rekap Shift &amp; Riwayat">
