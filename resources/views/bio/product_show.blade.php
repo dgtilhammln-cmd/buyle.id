@@ -103,70 +103,28 @@
             min-height: 100vh;
         }
 
-        /* ── THEME PALETTES (TEMA 1 - 4) ── */
-        /* Theme 1: Dark Mode */
-        body.theme-theme1 {
-            background: #0f172a;
-            color: #f8fafc;
-            --card-bg: #1e293b;
-            --card-border: #334155;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --price-color: #34d399;
-            --accent: #10b981;
-            --topbar-bg: rgba(15, 23, 42, 0.95);
-            --topbar-border: rgba(255, 255, 255, 0.1);
-            --topbar-text: #ffffff;
-            --img-bg: #0f172a;
-        }
-
-        /* Theme 2: Slate Light */
-        body.theme-theme2 {
+        /* ── TEMA BAWAAN BUYLE.ID (SEMUA TEMA 1–4) ── */
+        body,
+        body.theme-theme1,
+        body.theme-theme2,
+        body.theme-theme3,
+        body.theme-theme4,
+        body.theme1,
+        body.theme2,
+        body.theme3,
+        body.theme4 {
             background: #f8fafc;
             color: #0f172a;
             --card-bg: #ffffff;
             --card-border: #e2e8f0;
             --text-main: #0f172a;
             --text-sub: #64748b;
-            --price-color: #2563eb;
-            --accent: #2563eb;
-            --topbar-bg: rgba(255, 255, 255, 0.95);
+            --price-color: #16a34a;
+            --accent: #1eb349;
+            --topbar-bg: rgba(255, 255, 255, 0.97);
             --topbar-border: #e2e8f0;
             --topbar-text: #0f172a;
             --img-bg: #f1f5f9;
-        }
-
-        /* Theme 3: Emerald Gradient */
-        body.theme-theme3 {
-            background: linear-gradient(135deg, #a5cf37, #1eb349);
-            background-attachment: fixed;
-            color: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --card-border: rgba(255, 255, 255, 0.3);
-            --text-main: #0f172a;
-            --text-sub: #475569;
-            --price-color: #16a34a;
-            --accent: #1eb349;
-            --topbar-bg: rgba(30, 179, 73, 0.95);
-            --topbar-border: rgba(255, 255, 255, 0.2);
-            --topbar-text: #ffffff;
-            --img-bg: #f8fafc;
-        }
-
-        /* Theme 4: Clean Modern Light */
-        body.theme-theme4 {
-            background: #f1f5f9;
-            color: #1e293b;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
-            --price-color: #16a34a;
-            --accent: #1eb349;
-            --topbar-bg: rgba(255, 255, 255, 0.95);
-            --topbar-border: #e2e8f0;
-            --topbar-text: #1e293b;
-            --img-bg: #f8fafc;
         }
 
         /* ── TOPBAR NAV ── */
@@ -1821,14 +1779,29 @@
             if (e.key === 'Escape') closeBioVariantModal();
         });
 
-        // Simpan & Teruskan Nomor Meja QR Code
+        // Simpan & Teruskan Nomor Meja QR Code — KHUSUS produk makanan/FnB saja
         (function() {
+            // Hanya aktif jika produk bertipe makanan/FnB
+            var pTypeFnb = {{ json_encode(in_array($pType, ['makanan', 'fnb', 'food'])) }};
+            if (!pTypeFnb) {
+                // Bukan produk makanan — hapus sisa state meja agar tidak bocor ke produk lain
+                try {
+                    sessionStorage.removeItem('buyle_table_number');
+                    localStorage.removeItem('buyle_table_number');
+                } catch(e){}
+                const existingInput = document.querySelector('#bio-cart-form input[name="table_number"]');
+                if (existingInput) existingInput.remove();
+                return;
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
-            const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number') || localStorage.getItem('buyle_table_number');
+            const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number');
             if (meja) {
                 const decodedMeja = decodeURIComponent(meja).trim();
-                sessionStorage.setItem('buyle_table_number', decodedMeja);
-                localStorage.setItem('buyle_table_number', decodedMeja);
+                try {
+                    sessionStorage.setItem('buyle_table_number', decodedMeja);
+                    localStorage.removeItem('buyle_table_number');
+                } catch(e){}
 
                 const form = document.getElementById('bio-cart-form');
                 if (form) {

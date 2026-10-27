@@ -957,12 +957,12 @@
             (function() {
                 var urlParams = new URLSearchParams(window.location.search);
                 var meja = urlParams.get('meja');
+                try { localStorage.removeItem('buyle_table_number'); } catch(e){}
                 if (meja) {
                     var decoded = decodeURIComponent(meja).trim();
-                    sessionStorage.setItem('buyle_table_number', decoded);
-                    localStorage.setItem('buyle_table_number', decoded);
+                    try { sessionStorage.setItem('buyle_table_number', decoded); } catch(e){}
                 } else {
-                    meja = sessionStorage.getItem('buyle_table_number') || localStorage.getItem('buyle_table_number');
+                    try { meja = sessionStorage.getItem('buyle_table_number'); } catch(e){ meja = null; }
                 }
 
                 if (meja) {

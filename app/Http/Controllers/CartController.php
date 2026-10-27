@@ -74,7 +74,24 @@ class CartController extends Controller
             }
 
             // action === 'buy' — skip keranjang, langsung ke checkout
-            return redirect()->route('checkout.index')->with('success', 'Produk siap untuk checkout.');
+            $checkoutParams = [];
+            $mejaVal = $request->input('table_number') ?: $request->input('meja');
+            $pTypeLower = strtolower($product->product_type ?? '');
+            $catLower   = strtolower($product->category?->name ?? '');
+            $isDigitalOrService = in_array($pTypeLower, ['digital', 'service', 'jasa', 'ticket', 'course', 'ebook', 'download', 'virtual', 'file', 'external_link'])
+                || (method_exists($product, 'isTraktir') && $product->isTraktir())
+                || (method_exists($product, 'isPayWhatYouWant') && $product->isPayWhatYouWant())
+                || in_array($catLower, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking', 'tiket & event', 'ticket']);
+
+            $isFoodProduct = !$isDigitalOrService && (
+                in_array($pTypeLower, ['makanan', 'fnb', 'food'])
+                || in_array($catLower, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman'])
+                || preg_match('/\b(nasi|mie|bakso|soto|ayam|bebek|kopi|es|minuman|resto|cafe|kuliner)\b/i', $product->name ?? '')
+            );
+            if ($mejaVal && $isFoodProduct) {
+                $checkoutParams['meja'] = $mejaVal;
+            }
+            return redirect()->route('checkout.index', $checkoutParams)->with('success', 'Produk siap untuk checkout.');
         } catch (\Exception $e) {
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([

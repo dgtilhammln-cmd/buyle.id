@@ -2826,72 +2826,81 @@
             document.addEventListener('DOMContentLoaded', function () {
                 checkAllFreeRequirements();
 
-                // ── Auto-fill Nomor Meja dari Link in Bio QR Code ──
+                // ── Auto-fill Nomor Meja dari Link in Bio QR Code (HANYA KHUSUS PRODUK MAKANAN / F&B) ──
                 (function() {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number') || localStorage.getItem('buyle_table_number');
-                    if (meja) {
-                        const decodedMeja = decodeURIComponent(meja).trim();
+                    // Bersihkan cache localStorage lama agar tidak menempel di semua produk
+                    try { localStorage.removeItem('buyle_table_number'); } catch(e){}
 
-                        // 1. Opsi F&B: Ubah ke Dine-In & Isi Nomor Meja
-                        const fnbSelect = document.getElementById('fnb_service_type_select');
-                        const fnbTableInput = document.getElementById('fnb_table_number_input');
-                        if (fnbSelect) {
-                            fnbSelect.value = 'dine_in';
-                            if (typeof toggleFnbFields === 'function') {
-                                toggleFnbFields('dine_in');
-                            } else {
-                                const dineInField = document.getElementById('fnb_field_dine_in');
-                                const deliveryField = document.getElementById('fnb_field_delivery');
-                                const takeawayField = document.getElementById('fnb_field_takeaway');
-                                if (dineInField) dineInField.style.display = 'block';
-                                if (deliveryField) deliveryField.style.display = 'none';
-                                if (takeawayField) takeawayField.style.display = 'none';
+                    @if($summary['checkout_type'] === 'food' || $summary['checkout_type'] === 'food_service')
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number');
+                        if (meja) {
+                            const decodedMeja = decodeURIComponent(meja).trim();
+                            try { sessionStorage.setItem('buyle_table_number', decodedMeja); } catch(e){}
+
+                            // 1. Opsi F&B: Ubah ke Dine-In & Isi Nomor Meja
+                            const fnbSelect = document.getElementById('fnb_service_type_select');
+                            const fnbTableInput = document.getElementById('fnb_table_number_input');
+                            if (fnbSelect) {
+                                fnbSelect.value = 'dine_in';
+                                if (typeof toggleFnbFields === 'function') {
+                                    toggleFnbFields('dine_in');
+                                } else {
+                                    const dineInField = document.getElementById('fnb_field_dine_in');
+                                    const deliveryField = document.getElementById('fnb_field_delivery');
+                                    const takeawayField = document.getElementById('fnb_field_takeaway');
+                                    if (dineInField) dineInField.style.display = 'block';
+                                    if (deliveryField) deliveryField.style.display = 'none';
+                                    if (takeawayField) takeawayField.style.display = 'none';
+                                }
+                            }
+                            if (fnbTableInput) {
+                                fnbTableInput.value = decodedMeja;
+                            }
+
+                            // 2. Tambahkan hidden input table_number ke form checkout
+                            const form = document.getElementById('checkoutForm');
+                            if (form) {
+                                let hiddenInput = form.querySelector('input[name="table_number"]');
+                                if (!hiddenInput) {
+                                    hiddenInput = document.createElement('input');
+                                    hiddenInput.type = 'hidden';
+                                    hiddenInput.name = 'table_number';
+                                    form.appendChild(hiddenInput);
+                                }
+                                hiddenInput.value = decodedMeja;
+                            }
+
+                            // 3. Banner visual notifikasi meja di bagian atas form checkout
+                            const coLeft = document.querySelector('.co-left') || form;
+                            if (coLeft && !document.getElementById('checkoutTableNotice')) {
+                                const notice = document.createElement('div');
+                                notice.id = 'checkoutTableNotice';
+                                notice.style.cssText = 'background:#ffffff; border:1px solid #86efac; border-radius:12px; padding:0.85rem 1.15rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 1px 4px rgba(30,179,73,0.06);';
+                                notice.innerHTML = `
+                                    <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                                        <div style="width:34px; height:34px; border-radius:8px; background:#1eb349; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                <path d="M3 9h18M9 21V9" />
+                                            </svg>
+                                        </div>
+                                        <div style="min-width:0;">
+                                            <div style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Pesanan Dine-In Terdeteksi</div>
+                                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${decodedMeja}</div>
+                                        </div>
+                                    </div>
+                                    <div style="font-size:0.7rem; color:#15803d; font-weight:700; background:#dcfce7; padding:4px 10px; border-radius:99px; flex-shrink:0; border:1px solid #bbf7d0;">
+                                        Auto Diantar ke Meja
+                                    </div>
+                                `;
+                                coLeft.insertBefore(notice, coLeft.firstChild);
                             }
                         }
-                        if (fnbTableInput) {
-                            fnbTableInput.value = decodedMeja;
-                        }
-
-                        // 2. Tambahkan hidden input table_number ke form checkout
-                        const form = document.getElementById('checkoutForm');
-                        if (form) {
-                            let hiddenInput = form.querySelector('input[name="table_number"]');
-                            if (!hiddenInput) {
-                                hiddenInput = document.createElement('input');
-                                hiddenInput.type = 'hidden';
-                                hiddenInput.name = 'table_number';
-                                form.appendChild(hiddenInput);
-                            }
-                            hiddenInput.value = decodedMeja;
-                        }
-
-                        // 3. Banner visual notifikasi meja di bagian atas form checkout
-                        const coLeft = document.querySelector('.co-left') || form;
-                        if (coLeft && !document.getElementById('checkoutTableNotice')) {
-                            const notice = document.createElement('div');
-                            notice.id = 'checkoutTableNotice';
-                            notice.style.cssText = 'background:linear-gradient(135deg, #f0fdf4, #ecfdf5); border:1.5px solid #86efac; border-radius:14px; padding:0.9rem 1.15rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 2px 10px rgba(30,179,73,0.08);';
-                            notice.innerHTML = `
-                                <div style="display:flex; align-items:center; gap:12px; min-width:0;">
-                                    <div style="width:38px; height:38px; border-radius:10px; background:#16a34a; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" />
-                                            <path d="M3 9h18M9 21V9" />
-                                        </svg>
-                                    </div>
-                                    <div style="min-width:0;">
-                                        <div style="font-size:0.72rem; color:#166534; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Pesanan Dine-In Terdeteksi</div>
-                                        <div style="font-size:0.95rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${decodedMeja}</div>
-                                    </div>
-                                </div>
-                                <div style="font-size:0.72rem; color:#15803d; font-weight:700; background:#dcfce7; padding:4px 10px; border-radius:99px; flex-shrink:0; border:1px solid #bbf7d0;">
-                                    Auto Diantar ke Meja
-                                </div>
-                            `;
-                            coLeft.insertBefore(notice, coLeft.firstChild);
-                        }
-                    }
+                    @else
+                        // Bukan produk makanan: Bersihkan sesi meja agar tidak terbawa
+                        try { sessionStorage.removeItem('buyle_table_number'); } catch(e){}
+                    @endif
                 })();
             });
         </script>

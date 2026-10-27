@@ -267,39 +267,47 @@ class CartService
                     }
                 }
 
-                // 1. Digital, Ticket, Service / Jasa / Whitelabel classification
+                // 1. Digital, Ticket, Service / Jasa / Whitelabel / Traktir / PWYW classification
                 $isDigitalOrService = in_array($pType, ['digital', 'service', 'jasa', 'ticket', 'course', 'ebook', 'download', 'virtual', 'file', 'external_link']) 
+                                       || ($p->isTraktir() || $p->isPayWhatYouWant())
                                        || in_array($blockCat, ['jasa', 'digital', 'whitelabel'])
                                        || in_array($catName, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking', 'tiket & event', 'ticket']);
 
-                // 2. Food / FnB classification (only if not digital/service)
-                $isFood = !$isDigitalOrService && ($isFoodName 
-                           || $blockCat === 'makanan' 
-                           || $pType === 'makanan' 
-                           || $pType === 'fnb'
-                           || in_array($catName, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman']));
+                // 2. Food / FnB classification (HANYA jika bukan digital/service/traktir)
+                $isFood = !$isDigitalOrService && (
+                    $pType === 'makanan' 
+                    || $pType === 'fnb'
+                    || $pType === 'food'
+                    || $blockCat === 'makanan'
+                    || $blockCat === 'fnb'
+                    || $blockCat === 'kuliner'
+                    || in_array($catName, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman'])
+                    || $isFoodName
+                );
 
-                // 3. Goods / Barang Physical classification (only if not digital/service)
-                $isGoods = !$isDigitalOrService && ($blockCat === 'barang' 
-                            || $pType === 'physical' 
-                            || $pType === 'barang' 
-                            || in_array($catName, ['barang', 'produk fisik', 'umkm', 'peralatan dapur', 'kebersihan', 'kamar tidur', 'kamar mandi', 'elektronik', 'taman & outdoor', 'perkakas', 'laundry', 'penyimpanan', 'pengiriman kilat']));
+                // 3. Goods / Barang Physical classification (HANYA jika BUKAN digital/service DAN BUKAN makanan)
+                $isGoods = !$isDigitalOrService && !$isFood && (
+                    $blockCat === 'barang' 
+                    || $pType === 'physical' 
+                    || $pType === 'barang' 
+                    || in_array($catName, ['barang', 'produk fisik', 'umkm', 'peralatan dapur', 'kebersihan', 'kamar tidur', 'kamar mandi', 'elektronik', 'taman & outdoor', 'perkakas', 'laundry', 'penyimpanan', 'pengiriman kilat'])
+                );
 
-                if ($isGoods) {
-                    $hasGoodsShipping = true;
-                    $hasDigitalOnly   = false;
-                } elseif ($isFood) {
+                if ($isFood) {
                     $hasFood        = true;
                     $hasDigitalOnly = false;
+                } elseif ($isGoods) {
+                    $hasGoodsShipping = true;
+                    $hasDigitalOnly   = false;
                 }
             }
         }
 
         $checkoutType = 'digital';
-        if ($hasGoodsShipping) {
-            $checkoutType = 'goods';
-        } elseif ($hasFood) {
+        if ($hasFood) {
             $checkoutType = 'food';
+        } elseif ($hasGoodsShipping) {
+            $checkoutType = 'goods';
         }
 
         return [
