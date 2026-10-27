@@ -202,8 +202,9 @@
     /* ── GRID ROW 1: SALDO (WIDGET 2) & TRAFFIC WAVE (WIDGET 5) ── */
     .cr-grid-main {
         display: grid;
-        grid-template-columns: 1.25fr 1fr;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
         gap: 1.25rem;
+        min-width: 0;
     }
 
     .bio-card {
@@ -624,8 +625,9 @@
     /* ── GRID ROW 3: RECENT SALES & RECENT PRODUCTS ── */
     .cr-grid-bottom {
         display: grid;
-        grid-template-columns: 1.3fr 1fr;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
         gap: 1.25rem;
+        min-width: 0;
     }
 
     .section-card-title {
@@ -677,50 +679,122 @@
         background: #f1f5f9;
     }
 
-    /* ── RESPONSIVE MOBILE BREAKPOINTS ── */
-    @media (max-width: 1024px) {
-        .cr-grid-main {
-            grid-template-columns: 1fr;
-        }
+    /* ── RESPONSIVE BREAKPOINTS (fluid — works at any zoom level) ── */
+
+    /* Container always full width, no overflow */
+    .cr-dash-container {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    /* When viewport is too narrow for 2-col (covers zoom-out too) */
+    @media (max-width: 1100px) {
+        .cr-grid-main,
         .cr-grid-bottom {
             grid-template-columns: 1fr;
         }
     }
 
+    /* Tablet */
     @media (max-width: 768px) {
         .ai-header-banner {
-            padding: 1.25rem;
+            padding: 1.1rem 1rem;
             flex-direction: column;
             align-items: flex-start;
+            gap: 0.85rem;
         }
+
+        /* Hide subtitle text on mobile banner */
+        .ai-banner-sub {
+            display: none;
+        }
+
         .ai-banner-actions {
             width: 100%;
         }
-        .link-group-row {
+
+        .btn-dropdown-trigger {
             width: 100%;
-        }
-        .btn-bio-primary, .btn-bio-secondary {
-            flex: 1;
             justify-content: center;
         }
+
         .balance-val {
-            font-size: 1.5rem;
+            font-size: 1.45rem;
         }
+
         .ai-health-row {
             flex-direction: column;
             text-align: center;
         }
+
         .ai-rec-item {
             flex-direction: column;
             align-items: flex-start;
         }
+
         .btn-ai-action {
             width: 100%;
             justify-content: center;
             margin-top: 0.35rem;
         }
+
         .stats-counter-grid {
             grid-template-columns: repeat(3, 1fr);
+        }
+
+        .bio-card {
+            padding: 1.1rem;
+        }
+
+        .ai-assistant-card {
+            padding: 1.1rem;
+        }
+
+        /* Verified creator card inner padding */
+        .ai-header-banner + div > div:last-child {
+            padding: 1rem;
+        }
+    }
+
+    /* Small mobile */
+    @media (max-width: 480px) {
+        .cr-dash-container {
+            gap: 0.85rem;
+        }
+
+        .ai-banner-title {
+            font-size: 1.15rem;
+        }
+
+        .balance-val {
+            font-size: 1.3rem;
+        }
+
+        .stats-counter-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.45rem;
+        }
+
+        .counter-item {
+            padding: 0.6rem 0.3rem;
+        }
+
+        .counter-item-val {
+            font-size: 1rem;
+        }
+
+        .counter-item-label {
+            font-size: 0.6rem;
+        }
+
+        .table-custom {
+            font-size: 0.72rem;
+        }
+
+        .table-custom td,
+        .table-custom th {
+            padding: 0.55rem 0.45rem;
         }
     }
 </style>

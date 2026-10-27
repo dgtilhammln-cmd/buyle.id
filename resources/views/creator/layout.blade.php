@@ -528,6 +528,10 @@
                 display: none;
             }
 
+            /* ── Hide desktop page title/subtitle on mobile ── */
+            .cr-topbar-header-row {
+                display: none !important;
+            }
             .cr-nav-link {
                 border-radius: 14px;
                 margin-right: 1.25rem;
