@@ -272,6 +272,157 @@
             stroke-width: 2;
         }
 
+        /* ── Submenu Modul Aplikasi (Interaktif Hover) ────────────────── */
+        .cr-nav-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .cr-nav-link.has-sub {
+            display: flex;
+            align-items: center;
+        }
+
+        .cr-nav-chevron {
+            margin-left: auto;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0.75;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .cr-nav-chevron:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .cr-nav-link:hover .cr-nav-chevron,
+        .cr-nav-group:hover .cr-nav-chevron,
+        .cr-nav-group.has-active .cr-nav-chevron,
+        .cr-nav-group.is-open .cr-nav-chevron {
+            transform: rotate(180deg);
+            opacity: 1;
+        }
+
+        .cr-submenu {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transform: translateY(-4px);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-left: 1.35rem;
+            padding-left: 0.65rem;
+            border-left: 1.5px solid rgba(255, 255, 255, 0.2);
+            transition: max-height 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.25s ease, margin 0.25s ease;
+        }
+
+        /* Hover Expansion on Desktop or when Active or Open */
+        .cr-nav-group:hover .cr-submenu,
+        .cr-nav-group.has-active .cr-submenu,
+        .cr-nav-group.is-open .cr-submenu {
+            max-height: 400px;
+            opacity: 1;
+            overflow: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+            margin-top: 0.35rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .cr-sublink {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.45rem 0.65rem;
+            border-radius: 10px;
+            margin-right: 1.25rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.76rem;
+            font-weight: 600;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .cr-sublink:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .cr-sublink.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.24);
+            font-weight: 700;
+            box-shadow: inset 3px 0 0 #ffffff;
+        }
+
+        .cr-sub-icon-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--mod-bg, rgba(255, 255, 255, 0.15));
+            color: #ffffff;
+            flex-shrink: 0;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cr-sublink:hover .cr-sub-icon-box {
+            transform: scale(1.12);
+            background: #ffffff;
+            color: var(--mod-color, #1eb349);
+            box-shadow: 0 0 10px var(--mod-color, rgba(255, 255, 255, 0.5));
+        }
+
+        .cr-sublink.active .cr-sub-icon-box {
+            background: #ffffff;
+            color: var(--mod-color, #1eb349);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        .cr-sub-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cr-sub-badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 0.12rem 0.45rem;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.15);
+            color: rgba(255, 255, 255, 0.85);
+            margin-left: auto;
+            letter-spacing: 0.02em;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .cr-sublink:hover .cr-sub-badge {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        .cr-sublink.active .cr-sub-badge {
+            background: #ffffff;
+            color: var(--mod-color, #1eb349);
+            font-weight: 800;
+        }
+
         .cr-sidebar-bottom {
             margin-top: auto;
             display: flex;
@@ -791,22 +942,118 @@
                     </svg> @endif
                 </a>
 
-                <a href="{{ $isBuyer ? '#' : route('creator.app.index') }}"
-                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                    class="cr-nav-link {{ request()->routeIs('creator.app*') ? 'active' : '' }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                    </svg>
-                    Aplikasi
-                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg> @endif
-                </a>
+                @php
+                    $isSubAppActive = request()->routeIs('creator.pos*', 'creator.bio*', 'creator.ticket*', 'creator.automation-reply*', 'creator.wedding*');
+                    $isAppActive = request()->routeIs('creator.app*');
+                    $isAnyAppActive = $isAppActive || $isSubAppActive;
+                @endphp
+                <div class="cr-nav-group {{ $isAnyAppActive ? 'has-active' : '' }}" id="crNavAppGroup">
+                    <a href="{{ $isBuyer ? '#' : route('creator.app.index') }}"
+                        onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                        class="cr-nav-link has-sub {{ $isAppActive ? 'active' : '' }}"
+                        id="crNavAppLink">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        </svg>
+                        <span>Aplikasi</span>
+                        @if($isBuyer)
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        @else
+                            <span class="cr-nav-chevron" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('crNavAppGroup').classList.toggle('is-open');" title="Toggle Modul">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </span>
+                        @endif
+                    </a>
+
+                    {{-- Sub Menu Modul Aplikasi --}}
+                    @if(!$isBuyer)
+                        <div class="cr-submenu" id="crAppSubmenu">
+                            {{-- 1. Buyle POS --}}
+                            <a href="{{ route('creator.pos.index') }}"
+                                class="cr-sublink {{ request()->routeIs('creator.pos*') ? 'active' : '' }}"
+                                style="--mod-color:#0284c7; --mod-bg:rgba(2,132,199,0.22);">
+                                <span class="cr-sub-icon-box">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="4" y="3" width="16" height="18" rx="2" />
+                                        <line x1="8" y1="7" x2="16" y2="7" />
+                                        <line x1="8" y1="11" x2="10" y2="11" />
+                                        <line x1="14" y1="11" x2="16" y2="11" />
+                                        <line x1="8" y1="15" x2="10" y2="15" />
+                                        <line x1="14" y1="15" x2="16" y2="15" />
+                                    </svg>
+                                </span>
+                                <span class="cr-sub-text">Buyle POS</span>
+                                <span class="cr-sub-badge">Kasir</span>
+                            </a>
+
+                            {{-- 2. Web Builder --}}
+                            <a href="{{ route('creator.bio.index') }}"
+                                class="cr-sublink {{ request()->routeIs('creator.bio*') ? 'active' : '' }}"
+                                style="--mod-color:#1eb349; --mod-bg:rgba(30,179,73,0.22);">
+                                <span class="cr-sub-icon-box">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="2" y1="12" x2="22" y2="12" />
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                    </svg>
+                                </span>
+                                <span class="cr-sub-text">Web Builder</span>
+                                <span class="cr-sub-badge">Bio Link</span>
+                            </a>
+
+                            {{-- 3. Buyle e-Ticket --}}
+                            <a href="{{ route('creator.ticket.scanner') }}"
+                                class="cr-sublink {{ request()->routeIs('creator.ticket*') ? 'active' : '' }}"
+                                style="--mod-color:#7c3aed; --mod-bg:rgba(124,58,237,0.22);">
+                                <span class="cr-sub-icon-box">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                                        <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2" />
+                                    </svg>
+                                </span>
+                                <span class="cr-sub-text">Buyle e-Ticket</span>
+                                <span class="cr-sub-badge">Scanner</span>
+                            </a>
+
+                            {{-- 4. Automation Reply --}}
+                            <a href="{{ route('creator.automation-reply.index') }}"
+                                class="cr-sublink {{ request()->routeIs('creator.automation-reply*') ? 'active' : '' }}"
+                                style="--mod-color:#e1306c; --mod-bg:rgba(225,48,108,0.22);">
+                                <span class="cr-sub-icon-box">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                                    </svg>
+                                </span>
+                                <span class="cr-sub-text">Auto Reply IG</span>
+                                <span class="cr-sub-badge">Bot DM</span>
+                            </a>
+
+                            {{-- 5. Buyle Wedding --}}
+                            <a href="{{ route('creator.wedding.index') }}"
+                                class="cr-sublink {{ request()->routeIs('creator.wedding*') ? 'active' : '' }}"
+                                style="--mod-color:#e11d48; --mod-bg:rgba(225,29,72,0.22);">
+                                <span class="cr-sub-icon-box">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                    </svg>
+                                </span>
+                                <span class="cr-sub-text">Buyle Wedding</span>
+                                <span class="cr-sub-badge">Undangan</span>
+                            </a>
+                        </div>
+                    @endif
+                </div>
 
                 <a href="{{ $isBuyer ? '#' : route('creator.products.index') }}"
                     onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"

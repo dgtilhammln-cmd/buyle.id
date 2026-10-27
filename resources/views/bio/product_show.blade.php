@@ -1781,8 +1781,8 @@
 
         // Simpan & Teruskan Nomor Meja QR Code — KHUSUS produk makanan/FnB saja
         (function() {
-            // Hanya aktif jika produk bertipe makanan/FnB
-            var pTypeFnb = {{ json_encode(in_array($pType, ['makanan', 'fnb', 'food'])) }};
+            // Hanya aktif jika produk bertipe makanan/FnB (via type, category, atau block category)
+            var pTypeFnb = {{ json_encode(in_array($pType, ['makanan', 'fnb', 'food']) || strtolower($category ?? '') === 'makanan' || in_array(strtolower($rawCat ?? ''), ['makanan', 'fnb', 'food', 'kuliner'])) }};
             if (!pTypeFnb) {
                 // Bukan produk makanan — hapus sisa state meja agar tidak bocor ke produk lain
                 try {

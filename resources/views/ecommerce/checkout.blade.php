@@ -1082,7 +1082,7 @@
 
                                         <div class="ticket-holder-row"
                                             style="margin-bottom:{{ $ticketIdx < $qty - 1 ? '1rem' : '0' }};
-                                                                                                                                                                                                                                                                                                                                {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
+                                                                                                                                                                                                                                                                                                                                                    {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
 
                                             {{-- Slot label dengan nomor tiket --}}
                                             <div
@@ -1334,12 +1334,14 @@
                                     <div style="flex:1;">
                                         <div class="summary-title">{{ $item->product->name ?? 'Produk Telah Dihapus' }}</div>
                                         @if($item->product && $item->product->isTraktir())
-                                            <div style="font-size:0.75rem; color:#d97706; font-weight:700; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:4px; background:#fef3c7; padding:2px 8px; border-radius:6px;">
+                                            <div
+                                                style="font-size:0.75rem; color:#d97706; font-weight:700; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:4px; background:#fef3c7; padding:2px 8px; border-radius:6px;">
                                                 <span>{{ $item->product->traktir_unit_icon ?? '☕' }}</span>
                                                 <span>Traktir {{ $item->product->traktir_unit_name ?? 'Kopi' }}</span>
                                             </div>
                                         @elseif($item->product && $item->product->isPayWhatYouWant())
-                                            <div style="font-size:0.75rem; color:#0284c7; font-weight:700; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:4px; background:#e0f2fe; padding:2px 8px; border-radius:6px;">
+                                            <div
+                                                style="font-size:0.75rem; color:#0284c7; font-weight:700; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:4px; background:#e0f2fe; padding:2px 8px; border-radius:6px;">
                                                 <span>💛</span>
                                                 <span>Dukungan Seikhlasnya</span>
                                             </div>
@@ -1397,10 +1399,10 @@
                             // Label tampil
                             $pfLabel = $hasTicketItem && !$hasNonTicketItem
                                 ? 'Platform Fee (5%)'
-                                : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int)$pfRate : $pfRate) . '%)';
+                                : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int) $pfRate : $pfRate) . '%)';
                             $afLabel = $hasTicketItem && !$hasNonTicketItem
                                 ? 'Admin Fee (Rp 5.000/tiket)'
-                                : 'Admin Fee (' . ($afRate % 1 == 0 ? (int)$afRate : $afRate) . '%)';
+                                : 'Admin Fee (' . ($afRate % 1 == 0 ? (int) $afRate : $afRate) . '%)';
                         @endphp
 
                         <div class="summary-row" id="platform-fee-row">
@@ -1490,53 +1492,6 @@
                             </button>
                         </div>
 
-                        {{-- ====== VOUCHER MODAL ====== --}}
-                        <div id="voucher-modal-overlay" onclick="closeVoucherModal()"
-                            style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:99998;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s ease;">
-                        </div>
-                        <div id="voucher-modal"
-                            style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);width:92%;max-width:420px;z-index:99999;background:#fff;border-radius:20px;max-height:75vh;overflow:hidden;flex-direction:column;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
-                            {{-- Header --}}
-                            <div
-                                style="padding:1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;background:#F8FAFC;">
-                                <div
-                                    style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;color:#0F172A;">
-                                    <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                    </svg>
-                                    Pilih Voucher
-                                </div>
-                                <button type="button" onclick="closeVoucherModal()"
-                                    style="background:#E2E8F0;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#475569;transition:background 0.2s;"
-                                    onmouseover="this.style.background='#CBD5E1'"
-                                    onmouseout="this.style.background='#E2E8F0'">✕</button>
-                            </div>
-                            {{-- Manual Input --}}
-                            <div style="padding:1rem 1.25rem;border-bottom:1px solid #F1F5F9;">
-                                <div style="display:flex;gap:0.5rem;">
-                                    <input type="text" id="voucher-manual-input" placeholder="Masukkan kode voucher..."
-                                        style="flex:1;border:1.5px solid #E2E8F0;border-radius:10px;padding:0.65rem 1rem;font-size:0.9rem;font-family:var(--font);outline:none;text-transform:uppercase;"
-                                        oninput="this.value=this.value.toUpperCase()">
-                                    <button type="button" onclick="applyManualVoucher()"
-                                        style="background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
-                                </div>
-                                <div id="voucher-manual-msg" style="font-size:0.78rem;margin-top:0.4rem;display:none;">
-                                </div>
-                            </div>
-                            {{-- List --}}
-                            <div style="overflow-y:auto;flex:1;padding:0.75rem 1.25rem 2rem;" id="voucher-list-container">
-                                <div
-                                    style="font-size:0.75rem;color:#94A3B8;font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">
-                                    Voucher Tersedia</div>
-                                <div id="voucher-list">
-                                    <div style="text-align:center;padding:2rem;color:#94A3B8;font-size:0.875rem;">Memuat
-                                        voucher...</div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
                             <div class="summary-total" style="margin-top:0; padding-top:1rem;">
                                 <span>Total Belanja</span>
@@ -1590,14 +1545,61 @@
         </form>
     </div>
 
+    {{-- ====== VOUCHER MODAL ====== --}}
+    <div id="voucher-modal-overlay" onclick="closeVoucherModal()"
+        style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:99998;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s ease;">
+    </div>
+    <div id="voucher-modal"
+        style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);width:92%;max-width:420px;z-index:99999;background:#fff;border-radius:20px;max-height:75vh;overflow:hidden;flex-direction:column;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
+        {{-- Header --}}
+        <div
+            style="padding:1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;background:#F8FAFC;">
+            <div
+                style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;color:#0F172A;">
+                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                Pilih Voucher
+            </div>
+            <button type="button" onclick="closeVoucherModal()"
+                style="background:#E2E8F0;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#475569;transition:background 0.2s;"
+                onmouseover="this.style.background='#CBD5E1'"
+                onmouseout="this.style.background='#E2E8F0'">✕</button>
+        </div>
+        {{-- Manual Input --}}
+        <div style="padding:1rem 1.25rem;border-bottom:1px solid #F1F5F9;">
+            <div style="display:flex;gap:0.5rem;">
+                <input type="text" id="voucher-manual-input" placeholder="Masukkan kode voucher..."
+                    style="flex:1;border:1.5px solid #E2E8F0;border-radius:10px;padding:0.65rem 1rem;font-size:0.9rem;font-family:var(--font);outline:none;text-transform:uppercase;"
+                    oninput="this.value=this.value.toUpperCase()">
+                <button type="button" onclick="applyManualVoucher()"
+                    style="background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
+            </div>
+            <div id="voucher-manual-msg" style="font-size:0.78rem;margin-top:0.4rem;display:none;">
+            </div>
+        </div>
+        {{-- List --}}
+        <div style="overflow-y:auto;flex:1;padding:0.75rem 1.25rem 2rem;" id="voucher-list-container">
+            <div
+                style="font-size:0.75rem;color:#94A3B8;font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">
+                Voucher Tersedia</div>
+            <div id="voucher-list">
+                <div style="text-align:center;padding:2rem;color:#94A3B8;font-size:0.875rem;">Memuat
+                    voucher...</div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const subtotal = {{ $summary['subtotal'] }};
         const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 100 }};
         // Fee sudah dihitung di PHP per item (ticket vs non-ticket) — pakai nilai yang sudah benar
         const platformFee = {{ (int) $pfAmt }};
-        const adminFee    = {{ (int) $afAmt }};
-        const totalFees   = platformFee + adminFee;
+        const adminFee = {{ (int) $afAmt }};
+        const totalFees = platformFee + adminFee;
 
         let selectedCost = 0;
         let allProvinces = [];
@@ -1849,11 +1851,11 @@
             const serviceContainer = document.getElementById('courier_service_container');
             if (serviceContainer) {
                 serviceContainer.innerHTML = `
-                        <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #64748B; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Pilih kota dan kurir terlebih dahulu untuk melihat opsi pengiriman.
-                        </div>
-                    `;
+                            <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #64748B; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Pilih kota dan kurir terlebih dahulu untuk melihat opsi pengiriman.
+                            </div>
+                        `;
             }
             const hiddenInput = document.getElementById('courier_service_hidden');
             if (hiddenInput) hiddenInput.value = '';
@@ -1872,11 +1874,11 @@
 
             if (loadingEl) loadingEl.style.display = 'flex';
             serviceContainer.innerHTML = `
-                    <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #1eb349; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight:600;">
-                        <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
-                        Menghitung ongkir...
-                    </div>
-                `;
+                        <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #1eb349; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight:600;">
+                            <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                            Menghitung ongkir...
+                        </div>
+                    `;
             hiddenInput.value = '';
 
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
@@ -1907,15 +1909,15 @@
                     if (data.manual) {
                         console.warn('[ONGKIR] Fallback manual. Debug:', data.debug_error);
                         serviceContainer.innerHTML = `
-                            <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
-                                <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                                <div style="flex:1;">
-                                    <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
-                                    <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
-                                </div>
-                                <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
-                            </label>
-                        `;
+                                <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                                    <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                    <div style="flex:1;">
+                                        <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                                        <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                                    </div>
+                                    <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
+                                </label>
+                            `;
                         hiddenInput.value = 'manual';
                         hiddenInput.removeAttribute('required');
                         selectedCost = 0;
@@ -1928,11 +1930,11 @@
                     if (data.error) {
                         console.warn('[ONGKIR] API error:', data.error);
                         serviceContainer.innerHTML = `
-                            <div style="padding: 1rem; border: 1px dashed #FCA5A5; border-radius: 10px; background: #FEF2F2; color: #B91C1C; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"></path></svg>
-                                ${data.error}
-                            </div>
-                        `;
+                                <div style="padding: 1rem; border: 1px dashed #FCA5A5; border-radius: 10px; background: #FEF2F2; color: #B91C1C; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"></path></svg>
+                                    ${data.error}
+                                </div>
+                            `;
                         hiddenInput.value = '';
                         hiddenInput.removeAttribute('required');
                         return;
@@ -1942,15 +1944,15 @@
                     if (!Array.isArray(data) || data.length === 0) {
                         console.warn('[ONGKIR] Data kosong atau bukan array:', data);
                         serviceContainer.innerHTML = `
-                            <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
-                                <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                                <div style="flex:1;">
-                                    <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
-                                    <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
-                                </div>
-                                <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
-                            </label>
-                        `;
+                                <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                                    <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                    <div style="flex:1;">
+                                        <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                                        <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                                    </div>
+                                    <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
+                                </label>
+                            `;
                         hiddenInput.value = 'manual';
                         hiddenInput.removeAttribute('required');
                         selectedCost = 0;
@@ -1979,22 +1981,22 @@
                         const cardStyle = (idx === 0) ? 'border-color:#1eb349; background:#F0F9FF;' : 'border-color:#E2E8F0; background:#fff;';
 
                         html += `
-                            <label class="service-card ${idx === 0 ? 'selected' : ''}" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid; ${cardStyle} border-radius:10px; transition:all 0.2s;">
-                                <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" ${isChecked} style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                                <div style="flex:1;">
-                                    <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
-                                    <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                                        ${desc}
+                                <label class="service-card ${idx === 0 ? 'selected' : ''}" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid; ${cardStyle} border-radius:10px; transition:all 0.2s;">
+                                    <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" ${isChecked} style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                    <div style="flex:1;">
+                                        <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
+                                        <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                            ${desc}
+                                        </div>
+                                        <div style="font-size:0.8rem; color:#15803d; font-weight:600; margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+                                            ${etd}
+                                        </div>
                                     </div>
-                                    <div style="font-size:0.8rem; color:#15803d; font-weight:600; margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem;">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
-                                        ${etd}
-                                    </div>
-                                </div>
-                                <div style="font-weight:800; color:#1eb349; font-size:1.1rem;">Rp ${fmt}</div>
-                            </label>
-                        `;
+                                    <div style="font-weight:800; color:#1eb349; font-size:1.1rem;">Rp ${fmt}</div>
+                                </label>
+                            `;
                     });
                     serviceContainer.innerHTML = html;
                     attachRadioListeners();
@@ -2013,15 +2015,15 @@
                     if (loadingEl) loadingEl.style.display = 'none';
                     console.error('[ONGKIR] Fetch/jaringan error:', err);
                     serviceContainer.innerHTML = `
-                        <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
-                            <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                            <div style="flex:1;">
-                                <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
-                                <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
-                            </div>
-                            <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
-                        </label>
-                    `;
+                            <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                                <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                <div style="flex:1;">
+                                    <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                                    <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                                </div>
+                                <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
+                            </label>
+                        `;
                     hiddenInput.value = 'manual';
                     hiddenInput.removeAttribute('required');
                     selectedCost = 0;
@@ -2335,39 +2337,39 @@
             const totalCost = document.getElementById('total-row-val')?.innerText || '';
 
             const htmlSummary = `
-                    <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#334155; margin-top:1rem;">
-                        <div style="margin-bottom:0.75rem;">
-                            <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pembeli & Kontak Akses</strong>
-                            <div><strong>${receiverName}</strong></div>
-                            <div style="color:#166534; font-weight:600;">Email: ${receiverEmail}</div>
-                            ${receiverPhone ? `<div>WhatsApp: ${receiverPhone}</div>` : ''}
+                        <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#334155; margin-top:1rem;">
+                            <div style="margin-bottom:0.75rem;">
+                                <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pembeli & Kontak Akses</strong>
+                                <div><strong>${receiverName}</strong></div>
+                                <div style="color:#166534; font-weight:600;">Email: ${receiverEmail}</div>
+                                ${receiverPhone ? `<div>WhatsApp: ${receiverPhone}</div>` : ''}
+                            </div>
+                            ${hasPhysicalProduct ? `
+                            <div style="margin-bottom:0.75rem;">
+                                <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Alamat Pengiriman</strong>
+                                <div>${addressText}</div>
+                            </div>
+                            <div style="margin-bottom:0.75rem;">
+                                <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Kurir</strong>
+                                <div>${courierText}</div>
+                            </div>
+                            ` : `
+                            <div style="margin-bottom:0.75rem;">
+                                <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pengiriman</strong>
+                                <div style="color:#166534; font-weight:600;">Instan / Otomatis dikirim ke Email & WhatsApp</div>
+                            </div>
+                            `}
+                            ${notesText && notesText !== '-' ? `
+                            <div style="margin-bottom:0.75rem;">
+                                <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Catatan</strong>
+                                <div style="font-style:italic;">"${notesText}"</div>
+                            </div>
+                            ` : ''}
+                            <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#1eb349; font-weight:800; font-size:1.15rem; text-align:right;">
+                                ${totalCost}
+                            </div>
                         </div>
-                        ${hasPhysicalProduct ? `
-                        <div style="margin-bottom:0.75rem;">
-                            <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Alamat Pengiriman</strong>
-                            <div>${addressText}</div>
-                        </div>
-                        <div style="margin-bottom:0.75rem;">
-                            <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Kurir</strong>
-                            <div>${courierText}</div>
-                        </div>
-                        ` : `
-                        <div style="margin-bottom:0.75rem;">
-                            <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pengiriman</strong>
-                            <div style="color:#166534; font-weight:600;">Instan / Otomatis dikirim ke Email & WhatsApp</div>
-                        </div>
-                        `}
-                        ${notesText && notesText !== '-' ? `
-                        <div style="margin-bottom:0.75rem;">
-                            <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Catatan</strong>
-                            <div style="font-style:italic;">"${notesText}"</div>
-                        </div>
-                        ` : ''}
-                        <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#1eb349; font-weight:800; font-size:1.15rem; text-align:right;">
-                            ${totalCost}
-                        </div>
-                    </div>
-                `;
+                    `;
 
             Swal.fire({
                 title: 'Konfirmasi Pesanan',
@@ -2473,26 +2475,34 @@
 
         function openVoucherModal() {
             const overlay = document.getElementById('voucher-modal-overlay');
-            const modal = document.getElementById('voucher-modal');
+            const modal   = document.getElementById('voucher-modal');
+            const navbar  = document.getElementById('mainNavbar');
             overlay.style.display = 'block';
-            modal.style.display = 'flex';
-            // Trigger reflow
-            void modal.offsetWidth;
-            overlay.style.opacity = '1';
-            modal.style.opacity = '1';
-            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.display   = 'flex';
+            // Push navbar below overlay (stacking context fix: backdrop-filter creates new ctx)
+            if (navbar) navbar.style.zIndex = '1';
+            document.body.style.overflow = 'hidden';
+            // Trigger reflow for transition
+            void overlay.offsetWidth;
+            overlay.style.opacity       = '1';
+            modal.style.opacity         = '1';
+            modal.style.transform       = 'translate(-50%, -50%) scale(1)';
             loadVouchers();
         }
 
         function closeVoucherModal() {
             const overlay = document.getElementById('voucher-modal-overlay');
-            const modal = document.getElementById('voucher-modal');
+            const modal   = document.getElementById('voucher-modal');
+            const navbar  = document.getElementById('mainNavbar');
             overlay.style.opacity = '0';
-            modal.style.opacity = '0';
-            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.opacity   = '0';
+            modal.style.transform = 'translate(-50%, -56%) scale(0.96)';
             setTimeout(() => {
                 overlay.style.display = 'none';
-                modal.style.display = 'none';
+                modal.style.display   = 'none';
+                // Restore navbar z-index & scroll
+                if (navbar) navbar.style.zIndex = '';
+                document.body.style.overflow = '';
             }, 300);
         }
 
@@ -2527,34 +2537,34 @@
                 const hint = v.already_used ? '⚠️ Sudah digunakan' : (!v.eligible ? '⚠️ Belum memenuhi syarat' : '');
 
                 html += `
-                    <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"
-                         style="position:relative;border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:12px;padding:0.875rem 1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;"
-                         ${v.eligible ? 'onmouseover="this.style.borderColor=\'#1eb349\';this.style.boxShadow=\'0 4px 12px rgba(30,179,73,0.1)\'"' : ''}
-                         ${v.eligible ? 'onmouseout="this.style.borderColor=\'#E2E8F0\';this.style.boxShadow=\'none\'"' : ''}>
+                        <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"
+                             style="position:relative;border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:12px;padding:0.875rem 1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;"
+                             ${v.eligible ? 'onmouseover="this.style.borderColor=\'#1eb349\';this.style.boxShadow=\'0 4px 12px rgba(30,179,73,0.1)\'"' : ''}
+                             ${v.eligible ? 'onmouseout="this.style.borderColor=\'#E2E8F0\';this.style.boxShadow=\'none\'"' : ''}>
 
-                        <!-- Ticket cutouts left & right -->
-                        <div style="position:absolute;left:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-right:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
-                        <div style="position:absolute;right:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-left:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
+                            <!-- Ticket cutouts left & right -->
+                            <div style="position:absolute;left:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-right:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
+                            <div style="position:absolute;right:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-left:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
 
-                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.25rem;">
-                            <div>
-                                <span style="display:inline-block;background:#F0F9FF;color:#1eb349;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.15rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
-                                <div style="font-size:0.9rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
+                            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.25rem;">
+                                <div>
+                                    <span style="display:inline-block;background:#F0F9FF;color:#1eb349;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.15rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
+                                    <div style="font-size:0.9rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
+                                </div>
+                                <div style="text-align:right;flex-shrink:0;">
+                                    <div style="font-size:1rem;font-weight:900;color:#1eb349;">${v.value}</div>
+                                    ${v.estimated_discount_fmt ? `<div style="font-size:0.65rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
+                                </div>
                             </div>
-                            <div style="text-align:right;flex-shrink:0;">
-                                <div style="font-size:1rem;font-weight:900;color:#1eb349;">${v.value}</div>
-                                ${v.estimated_discount_fmt ? `<div style="font-size:0.65rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
+                            <div style="font-size:0.75rem;color:#64748B;margin-bottom:0.35rem;line-height:1.2;">${v.description || ''}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.3rem;font-size:0.65rem;">
+                                <span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.min_purchase}</span>
+                                ${v.max_discount ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.max_discount}</span>` : ''}
+                                ${v.expired_label ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">⏰ ${v.expired_label}</span>` : ''}
+                                ${v.remaining !== null ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">Sisa ${v.remaining}x</span>` : ''}
+                                ${hint ? `<span style="background:#FEF2F2;color:#DC2626;padding:0.1rem 0.4rem;border-radius:99px;">${hint}</span>` : ''}
                             </div>
-                        </div>
-                        <div style="font-size:0.75rem;color:#64748B;margin-bottom:0.35rem;line-height:1.2;">${v.description || ''}</div>
-                        <div style="display:flex;flex-wrap:wrap;gap:0.3rem;font-size:0.65rem;">
-                            <span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.min_purchase}</span>
-                            ${v.max_discount ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.max_discount}</span>` : ''}
-                            ${v.expired_label ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">⏰ ${v.expired_label}</span>` : ''}
-                            ${v.remaining !== null ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">Sisa ${v.remaining}x</span>` : ''}
-                            ${hint ? `<span style="background:#FEF2F2;color:#DC2626;padding:0.1rem 0.4rem;border-radius:99px;">${hint}</span>` : ''}
-                        </div>
-                    </div>`;
+                        </div>`;
             });
             container.innerHTML = html;
         }
@@ -2820,88 +2830,88 @@
                 btn.style.boxShadow = '0 6px 20px rgba(30,179,73,.35)';
                 const txt = document.getElementById('btn-claim-text');
                 if (txt) txt.textContent = 'Klaim Gratis';
-                }
             }
+        }
 
-            document.addEventListener('DOMContentLoaded', function () {
-                checkAllFreeRequirements();
+        document.addEventListener('DOMContentLoaded', function () {
+            checkAllFreeRequirements();
 
-                // ── Auto-fill Nomor Meja dari Link in Bio QR Code (HANYA KHUSUS PRODUK MAKANAN / F&B) ──
-                (function() {
-                    // Bersihkan cache localStorage lama agar tidak menempel di semua produk
-                    try { localStorage.removeItem('buyle_table_number'); } catch(e){}
+            // ── Auto-fill Nomor Meja dari Link in Bio QR Code (HANYA KHUSUS PRODUK MAKANAN / F&B) ──
+            (function () {
+                // Bersihkan cache localStorage lama agar tidak menempel di semua produk
+                try { localStorage.removeItem('buyle_table_number'); } catch (e) { }
 
-                    @if($summary['checkout_type'] === 'food' || $summary['checkout_type'] === 'food_service')
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number');
-                        if (meja) {
-                            const decodedMeja = decodeURIComponent(meja).trim();
-                            try { sessionStorage.setItem('buyle_table_number', decodedMeja); } catch(e){}
+                @if($summary['checkout_type'] === 'food' || $summary['checkout_type'] === 'food_service')
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number');
+                    if (meja) {
+                        const decodedMeja = decodeURIComponent(meja).trim();
+                        try { sessionStorage.setItem('buyle_table_number', decodedMeja); } catch (e) { }
 
-                            // 1. Opsi F&B: Ubah ke Dine-In & Isi Nomor Meja
-                            const fnbSelect = document.getElementById('fnb_service_type_select');
-                            const fnbTableInput = document.getElementById('fnb_table_number_input');
-                            if (fnbSelect) {
-                                fnbSelect.value = 'dine_in';
-                                if (typeof toggleFnbFields === 'function') {
-                                    toggleFnbFields('dine_in');
-                                } else {
-                                    const dineInField = document.getElementById('fnb_field_dine_in');
-                                    const deliveryField = document.getElementById('fnb_field_delivery');
-                                    const takeawayField = document.getElementById('fnb_field_takeaway');
-                                    if (dineInField) dineInField.style.display = 'block';
-                                    if (deliveryField) deliveryField.style.display = 'none';
-                                    if (takeawayField) takeawayField.style.display = 'none';
-                                }
-                            }
-                            if (fnbTableInput) {
-                                fnbTableInput.value = decodedMeja;
-                            }
-
-                            // 2. Tambahkan hidden input table_number ke form checkout
-                            const form = document.getElementById('checkoutForm');
-                            if (form) {
-                                let hiddenInput = form.querySelector('input[name="table_number"]');
-                                if (!hiddenInput) {
-                                    hiddenInput = document.createElement('input');
-                                    hiddenInput.type = 'hidden';
-                                    hiddenInput.name = 'table_number';
-                                    form.appendChild(hiddenInput);
-                                }
-                                hiddenInput.value = decodedMeja;
-                            }
-
-                            // 3. Banner visual notifikasi meja di bagian atas form checkout
-                            const coLeft = document.querySelector('.co-left') || form;
-                            if (coLeft && !document.getElementById('checkoutTableNotice')) {
-                                const notice = document.createElement('div');
-                                notice.id = 'checkoutTableNotice';
-                                notice.style.cssText = 'background:#ffffff; border:1px solid #86efac; border-radius:12px; padding:0.85rem 1.15rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 1px 4px rgba(30,179,73,0.06);';
-                                notice.innerHTML = `
-                                    <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-                                        <div style="width:34px; height:34px; border-radius:8px; background:#1eb349; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                <path d="M3 9h18M9 21V9" />
-                                            </svg>
-                                        </div>
-                                        <div style="min-width:0;">
-                                            <div style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Pesanan Dine-In Terdeteksi</div>
-                                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${decodedMeja}</div>
-                                        </div>
-                                    </div>
-                                    <div style="font-size:0.7rem; color:#15803d; font-weight:700; background:#dcfce7; padding:4px 10px; border-radius:99px; flex-shrink:0; border:1px solid #bbf7d0;">
-                                        Auto Diantar ke Meja
-                                    </div>
-                                `;
-                                coLeft.insertBefore(notice, coLeft.firstChild);
+                        // 1. Opsi F&B: Ubah ke Dine-In & Isi Nomor Meja
+                        const fnbSelect = document.getElementById('fnb_service_type_select');
+                        const fnbTableInput = document.getElementById('fnb_table_number_input');
+                        if (fnbSelect) {
+                            fnbSelect.value = 'dine_in';
+                            if (typeof toggleFnbFields === 'function') {
+                                toggleFnbFields('dine_in');
+                            } else {
+                                const dineInField = document.getElementById('fnb_field_dine_in');
+                                const deliveryField = document.getElementById('fnb_field_delivery');
+                                const takeawayField = document.getElementById('fnb_field_takeaway');
+                                if (dineInField) dineInField.style.display = 'block';
+                                if (deliveryField) deliveryField.style.display = 'none';
+                                if (takeawayField) takeawayField.style.display = 'none';
                             }
                         }
-                    @else
-                        // Bukan produk makanan: Bersihkan sesi meja agar tidak terbawa
-                        try { sessionStorage.removeItem('buyle_table_number'); } catch(e){}
-                    @endif
-                })();
-            });
-        </script>
+                        if (fnbTableInput) {
+                            fnbTableInput.value = decodedMeja;
+                        }
+
+                        // 2. Tambahkan hidden input table_number ke form checkout
+                        const form = document.getElementById('checkoutForm');
+                        if (form) {
+                            let hiddenInput = form.querySelector('input[name="table_number"]');
+                            if (!hiddenInput) {
+                                hiddenInput = document.createElement('input');
+                                hiddenInput.type = 'hidden';
+                                hiddenInput.name = 'table_number';
+                                form.appendChild(hiddenInput);
+                            }
+                            hiddenInput.value = decodedMeja;
+                        }
+
+                        // 3. Banner visual notifikasi meja di bagian atas form checkout
+                        const coLeft = document.querySelector('.co-left') || form;
+                        if (coLeft && !document.getElementById('checkoutTableNotice')) {
+                            const notice = document.createElement('div');
+                            notice.id = 'checkoutTableNotice';
+                            notice.style.cssText = 'background:#ffffff; border:1px solid #86efac; border-radius:12px; padding:0.85rem 1.15rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 1px 4px rgba(30,179,73,0.06);';
+                            notice.innerHTML = `
+                                            <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                                                <div style="width:34px; height:34px; border-radius:8px; background:#1eb349; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                        <path d="M3 9h18M9 21V9" />
+                                                    </svg>
+                                                </div>
+                                                <div style="min-width:0;">
+                                                    <div style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Pesanan</div>
+                                                    <div style="font-size:0.92rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${decodedMeja}</div>
+                                                </div>
+                                            </div>
+                                            <div style="font-size:0.7rem; color:#15803d; font-weight:700; background:#dcfce7; padding:4px 10px; border-radius:99px; flex-shrink:0; border:1px solid #bbf7d0;">
+                                                Auto Diantar ke Meja
+                                            </div>
+                                        `;
+                            coLeft.insertBefore(notice, coLeft.firstChild);
+                        }
+                    }
+                @else
+                    // Bukan produk makanan: Bersihkan sesi meja agar tidak terbawa
+                    try { sessionStorage.removeItem('buyle_table_number'); } catch (e) { }
+                @endif
+                    })();
+        });
+    </script>
 @endsection

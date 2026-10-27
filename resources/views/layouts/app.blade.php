@@ -939,6 +939,100 @@
                         </div>
                     </div>
                 </div>
+            @elseif(request()->routeIs('checkout.index') || request()->is('checkout'))
+                {{-- ── Checkout Page Skeleton (2-col: form left | summary right) ── --}}
+                <style>
+                    .skel-co-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+                    @@media(min-width: 900px) { .skel-co-grid { grid-template-columns: 1fr 360px; } }
+                    .skel-co-card { background:#fff; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.5rem; display:flex; flex-direction:column; gap:1rem; }
+                    .skel-co-row { display:flex; gap:0.75rem; align-items:center; }
+                    .skel-co-field { border-radius:10px; height:44px; width:100%; }
+                    .skel-co-field-sm { border-radius:10px; height:44px; }
+                    .skel-co-label { border-radius:4px; height:11px; width:90px; margin-bottom:0.1rem; }
+                    .skel-co-section-title { height:18px; border-radius:5px; width:180px; margin-bottom:0.25rem; }
+                </style>
+                {{-- Breadcrumb --}}
+                <div class="skel-shimmer" style="width:220px;height:12px;border-radius:999px;margin-bottom:1.5rem;"></div>
+                <div class="skel-co-grid">
+                    {{-- Left: Form --}}
+                    <div style="display:flex;flex-direction:column;gap:1rem;">
+                        {{-- Section 1: Buyer info --}}
+                        <div class="skel-co-card">
+                            <div class="skel-shimmer skel-co-section-title"></div>
+                            <div class="skel-co-row">
+                                <div style="flex:1;display:flex;flex-direction:column;gap:0.35rem;">
+                                    <div class="skel-shimmer skel-co-label"></div>
+                                    <div class="skel-shimmer skel-co-field"></div>
+                                </div>
+                                <div style="flex:1;display:flex;flex-direction:column;gap:0.35rem;">
+                                    <div class="skel-shimmer skel-co-label"></div>
+                                    <div class="skel-shimmer skel-co-field"></div>
+                                </div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:0.35rem;">
+                                <div class="skel-shimmer skel-co-label"></div>
+                                <div class="skel-shimmer skel-co-field"></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:0.35rem;">
+                                <div class="skel-shimmer skel-co-label"></div>
+                                <div class="skel-shimmer skel-co-field"></div>
+                            </div>
+                        </div>
+                        {{-- Section 2: Shipping --}}
+                        <div class="skel-co-card">
+                            <div class="skel-shimmer skel-co-section-title"></div>
+                            @for($r=0;$r<3;$r++)
+                            <div style="display:flex;flex-direction:column;gap:0.35rem;">
+                                <div class="skel-shimmer skel-co-label"></div>
+                                <div class="skel-shimmer skel-co-field"></div>
+                            </div>
+                            @endfor
+                            <div class="skel-co-row">
+                                <div style="flex:1;display:flex;flex-direction:column;gap:0.35rem;">
+                                    <div class="skel-shimmer skel-co-label"></div>
+                                    <div class="skel-shimmer skel-co-field"></div>
+                                </div>
+                                <div style="width:120px;display:flex;flex-direction:column;gap:0.35rem;">
+                                    <div class="skel-shimmer skel-co-label"></div>
+                                    <div class="skel-shimmer skel-co-field"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Right: Order Summary --}}
+                    <div>
+                        <div class="skel-co-card">
+                            <div class="skel-shimmer skel-co-section-title"></div>
+                            {{-- Product items --}}
+                            @for($p=0;$p<2;$p++)
+                            <div class="skel-co-row" style="padding:0.5rem 0;border-bottom:1px solid #F1F5F9;">
+                                <div class="skel-shimmer" style="width:52px;height:52px;border-radius:10px;flex-shrink:0;"></div>
+                                <div style="flex:1;display:flex;flex-direction:column;gap:0.4rem;">
+                                    <div class="skel-shimmer" style="width:80%;height:13px;border-radius:4px;"></div>
+                                    <div class="skel-shimmer" style="width:50%;height:11px;border-radius:3px;"></div>
+                                </div>
+                                <div class="skel-shimmer" style="width:70px;height:16px;border-radius:4px;flex-shrink:0;"></div>
+                            </div>
+                            @endfor
+                            {{-- Summary rows --}}
+                            @for($s=0;$s<4;$s++)
+                            <div style="display:flex;justify-content:space-between;margin-top:0.6rem;">
+                                <div class="skel-shimmer" style="width:90px;height:12px;border-radius:3px;"></div>
+                                <div class="skel-shimmer" style="width:70px;height:12px;border-radius:3px;"></div>
+                            </div>
+                            @endfor
+                            {{-- Divider + Total --}}
+                            <div style="border-top:2px solid #F1F5F9;margin-top:1rem;padding-top:0.75rem;display:flex;justify-content:space-between;align-items:center;">
+                                <div class="skel-shimmer" style="width:60px;height:15px;border-radius:4px;"></div>
+                                <div class="skel-shimmer" style="width:100px;height:22px;border-radius:5px;"></div>
+                            </div>
+                            {{-- Voucher button --}}
+                            <div class="skel-shimmer" style="width:100%;height:44px;border-radius:10px;margin-top:0.5rem;"></div>
+                            {{-- CTA button --}}
+                            <div class="skel-shimmer" style="width:100%;height:52px;border-radius:999px;margin-top:0.5rem;"></div>
+                        </div>
+                    </div>
+                </div>
             @else
                 <div class="skel-grid">
                     @for($i=0; $i<15; $i++) 
