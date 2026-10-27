@@ -896,6 +896,14 @@
                                 </div>
 
                                 {{-- LINK VIDEO OPSIONAL - di dalam section deskripsi --}}
+                                @php
+                                    $curPlatform = old('video_platform', $product->video_platform ?? 'youtube');
+                                    $pVideoUrls = old('tiktok_video_urls', $product->video_urls ?? []);
+                                    $ytPrefill = old('youtube_video_url', ($curPlatform === 'youtube' && !empty($pVideoUrls)) ? $pVideoUrls[0] : ($product->youtube_video_url ?? ''));
+                                    $tt1 = $pVideoUrls[0] ?? '';
+                                    $tt2 = $pVideoUrls[1] ?? '';
+                                    $tt3 = $pVideoUrls[2] ?? '';
+                                @endphp
                                 <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
                                     <div style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
                                         <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;" onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
@@ -904,18 +912,66 @@
                                             </div>
                                             <div style="flex:1;">
                                                 <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link Video <span style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span></div>
-                                                <div style="font-size:0.7rem; color:#64748b;">YouTube, TikTok, dan video lainnya</div>
+                                                <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok (hingga 3 video)</div>
                                             </div>
                                             <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;"><path d="m6 9 6 6 6-6"/></svg>
                                         </div>
-                                        <div id="videoLinkPanel" style="display:none; padding:1rem;">
-                                            <input type="url" name="youtube_video_url" id="videoUrlInput"
-                                                value="{{ old('youtube_video_url', $product->youtube_video_url ?? $product->tiktok_video_url) }}"
-                                                class="form-input" placeholder="Paste link YouTube atau TikTok di sini..."
-                                                oninput="debounceVideoPreview(this.value)"
-                                                style="margin-bottom:0.75rem;">
-                                            <div id="videoPreviewBox" style="display:none; border-radius:12px; overflow:hidden; background:#0f172a;"></div>
-                                            <span class="form-hint" style="margin-top:0.5rem;">Mendukung: YouTube, YouTube Shorts, TikTok. Preview otomatis muncul di bawah saat link diinput.</span>
+                                        <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
+                                            {{-- Platform Selection Tabs --}}
+                                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
+                                                <button type="button" id="btnPlatformYt" onclick="setVideoPlatform('youtube')"
+                                                    style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'youtube' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
+                                                    <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                                                    YouTube
+                                                </button>
+                                                <button type="button" id="btnPlatformTt" onclick="setVideoPlatform('tiktok')"
+                                                    style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'tiktok' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
+                                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+                                                    TikTok (Hingga 3 Video)
+                                                </button>
+                                            </div>
+                                            <input type="hidden" name="video_platform" id="videoPlatformInput" value="{{ $curPlatform }}">
+
+                                            {{-- YOUTUBE INPUT (1 Link) --}}
+                                            <div id="youtubeInputWrap" style="{{ $curPlatform === 'youtube' ? 'display:block;' : 'display:none;' }}">
+                                                <input type="url" name="youtube_video_url" id="videoUrlInput"
+                                                    value="{{ $ytPrefill }}"
+                                                    class="form-input" placeholder="Paste link YouTube atau YouTube Shorts di sini..."
+                                                    oninput="debounceVideoPreview(this.value)"
+                                                    style="margin-bottom:0.5rem;">
+                                                <span class="form-hint" style="display:block; margin-bottom:0.75rem;">Mendukung link video YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
+                                            </div>
+
+                                            {{-- TIKTOK INPUTS (Up to 3 Links) --}}
+                                            <div id="tiktokInputsWrap" style="{{ $curPlatform === 'tiktok' ? 'display:block;' : 'display:none;' }} margin-bottom:0.75rem;">
+                                                <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                                                    <div>
+                                                        <label style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link TikTok 1 <span style="color:#ef4444;">*</span></label>
+                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1" class="form-input tiktok-url-inp"
+                                                            value="{{ $tt1 }}"
+                                                            placeholder="https://www.tiktok.com/@username/video/..."
+                                                            oninput="debounceTiktokPreviews()">
+                                                    </div>
+                                                    <div>
+                                                        <label style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link TikTok 2 (Opsional)</label>
+                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2" class="form-input tiktok-url-inp"
+                                                            value="{{ $tt2 }}"
+                                                            placeholder="https://www.tiktok.com/@username/video/..."
+                                                            oninput="debounceTiktokPreviews()">
+                                                    </div>
+                                                    <div>
+                                                        <label style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link TikTok 3 (Opsional)</label>
+                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3" class="form-input tiktok-url-inp"
+                                                            value="{{ $tt3 }}"
+                                                            placeholder="https://www.tiktok.com/@username/video/..."
+                                                            oninput="debounceTiktokPreviews()">
+                                                    </div>
+                                                </div>
+                                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Di halaman produk pembeli, video akan tampil jejer horizontal rapi dan pas di dalam box deskripsi.</span>
+                                            </div>
+
+                                            {{-- VIDEO PREVIEW BOX --}}
+                                            <div id="videoPreviewBox" style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -949,37 +1005,41 @@
                             Upload Visual Produk
                         </div>
                         <div class="form-body">
+                            {{-- THUMBNAIL UTAMA: PROPORSIONAL 1:1 SQUARE --}}
                             <div class="form-group">
                                 <label class="form-label">Upload Thumbnail Utama</label>
-                                <div class="img-upload-area" id="thumbDropzone"
-                                    onclick="document.getElementById('thumb-input').click()"
-                                    style="margin-bottom:0.75rem; {{ $product->image ? 'display:none;' : '' }}">
-                                    <div>
-                                        <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
-                                            viewBox="0 0 24 24">
+                                <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                                    <div id="thumbDropzone" onclick="document.getElementById('thumb-input').click()"
+                                        style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:{{ $product->image ? 'none' : 'flex' }}; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
+                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8" viewBox="0 0 24 24">
                                             <rect x="3" y="3" width="18" height="18" rx="2" />
                                             <circle cx="8.5" cy="8.5" r="1.5" />
                                             <polyline points="21 15 16 10 5 21" />
                                         </svg>
-                                        <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
-                                            Ganti Thumbnail Utama (1 Foto)</p>
+                                        <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">Ganti Foto</div>
+                                        <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
                                     </div>
-                                </div>
-                                <div id="thumbPreviewWrap"
-                                    style="{{ $product->image ? 'display:block;' : 'display:none;' }} margin-bottom:1rem;">
-                                    <div
-                                        style="position:relative; display:inline-block; border-radius:12px; overflow:hidden; border:2px solid #1eb349;">
-                                        <img id="thumbPreviewImg"
-                                            src="{{ $product->image ? asset('storage/' . $product->image) : '' }}"
-                                            style="width:110px; height:110px; object-fit:cover;">
-                                        <button type="button" onclick="removeThumbnail()"
-                                            style="position:absolute; top:4px; right:4px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;"
-                                            title="Hapus">&times;</button>
+
+                                    <div id="thumbPreviewWrap" style="display:{{ $product->image ? 'block' : 'none' }};">
+                                        <div style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
+                                            <img id="thumbPreviewImg" src="{{ $product->image ? asset('storage/' . $product->image) : '' }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                            <div style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                                <button type="button" onclick="document.getElementById('thumb-input').click()"
+                                                    style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                    title="Ganti Foto">✎</button>
+                                                <button type="button" onclick="removeThumbnail()"
+                                                    style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                    title="Hapus Foto">✕</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <input type="file" name="image" id="thumb-input" accept="image/*"
                                     onchange="previewSingleThumb(event)" style="display:none;">
-                                <span class="form-hint">Biarkan kosong jika tidak ingin mengubah thumbnail saat ini.</span>
+                                <input type="hidden" name="remove_image" id="remove_image_input" value="0">
+                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan: Persegi (1:1), minimal 600x600 px. Biarkan kosong jika tidak ingin mengubah thumbnail.</span>
                             </div>
 
                             <div class="form-group" id="posterUploadWrap"
@@ -1034,39 +1094,42 @@
                                 <span class="form-hint">Biarkan kosong jika tidak ingin mengubah poster saat ini.</span>
                             </div>
 
+                            {{-- FOTO GALERI: GRID PROPORSIONAL 1:1 SQUARE DENGAN TOMBOL TAMBAH TERINTEGRASI --}}
                             <div class="form-group">
                                 <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
-                                <div class="img-upload-area" id="galleryDropzone"
-                                    onclick="document.getElementById('gallery-input').click()"
-                                    style="margin-bottom:0.75rem;">
-                                    <div>
-                                        <p style="font-size:0.8rem; color:#64748B; font-weight:600;">Klik untuk tambah foto galeri pendukung (Maksimal total 6 foto)</p>
-                                    </div>
-                                </div>
                                 <input type="hidden" name="existing_gallery_submitted" value="1">
-                                <div id="galleryPreview"
-                                    style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.75rem;">
-                                    @if(!empty($product->gallery) && is_array($product->gallery))
-                                        @foreach($product->gallery as $idx => $gal)
-                                            <div class="existing-gallery-item"
-                                                style="position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:1.5px solid #cbd5e1; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; display:inline-block;">
-                                                <input type="hidden" name="existing_gallery[]" value="{{ $gal }}">
-                                                <img src="{{ asset('storage/' . $gal) }}"
-                                                    style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                <button type="button" onclick="removeExistingGallery(this)" title="Hapus Foto Ini"
-                                                    style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:transform 0.15s ease;"
-                                                    onmouseover="this.style.transform='scale(1.15)'"
-                                                    onmouseout="this.style.transform='scale(1)'">✕</button>
-                                                <div
-                                                    style="position:absolute; bottom:0; left:0; right:0; background:rgba(15,23,42,0.7); color:#fff; font-size:9px; font-weight:600; text-align:center; padding:2px 0;">
-                                                    Lama #{{$idx + 1}}</div>
-                                            </div>
-                                        @endforeach
-                                    @endif
+                                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                                    <div id="galleryPreview" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                                        @if(!empty($product->gallery) && is_array($product->gallery))
+                                            @foreach($product->gallery as $idx => $gal)
+                                                <div class="existing-gallery-item"
+                                                    style="position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:1.5px solid #cbd5e1; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;">
+                                                    <input type="hidden" name="existing_gallery[]" value="{{ $gal }}">
+                                                    <img src="{{ asset('storage/' . $gal) }}"
+                                                        style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                    <button type="button" onclick="removeExistingGallery(this)" title="Hapus Foto Ini"
+                                                        style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:transform 0.15s ease;"
+                                                        onmouseover="this.style.transform='scale(1.15)'"
+                                                        onmouseout="this.style.transform='scale(1)'">✕</button>
+                                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(15,23,42,0.7); color:#fff; font-size:9px; font-weight:600; text-align:center; padding:2px 0;">
+                                                        Lama #{{$idx + 1}}</div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+
+                                    <div id="galleryDropzone" onclick="document.getElementById('gallery-input').click()"
+                                        style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
+                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">+ Foto</div>
+                                        <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">({{ count($product->gallery ?? []) }}/6)</div>
+                                    </div>
                                 </div>
                                 <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
                                     onchange="previewGalleryList(event)" style="display:none;">
-                                <span class="form-hint">Maksimal total 6 foto. Klik tombol (✕) merah untuk menghapus foto lama atau foto baru yang di-upload.</span>
+                                <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto galeri pendukung (proporsional 1:1).</span>
                             </div>
 
                             {{-- Link Video sudah dipindahkan ke section Deskripsi di tab Informasi Dasar --}}
@@ -1378,8 +1441,10 @@
         }
         function removeThumbnail() {
             document.getElementById('thumb-input').value = '';
+            const rmInp = document.getElementById('remove_image_input');
+            if (rmInp) rmInp.value = '1';
             document.getElementById('thumbPreviewWrap').style.display = 'none';
-            document.getElementById('thumbDropzone').style.display = 'block';
+            document.getElementById('thumbDropzone').style.display = 'flex';
         }
 
         // Sub Kategori
@@ -1510,7 +1575,7 @@
                 const file = galleryDataTransfer.files[i];
                 const item = document.createElement('div');
                 item.className = 'new-gallery-item';
-                item.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:1.5px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.08); background:#f8fafc; display:inline-block;';
+                item.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
 
                 const img = document.createElement('img');
                 img.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
@@ -1539,6 +1604,7 @@
                 item.appendChild(badge);
                 container.appendChild(item);
             }
+            updateGalleryCountUI();
         }
 
         function removeNewGalleryFile(index) {
@@ -1557,11 +1623,21 @@
         function removeExistingGallery(btn) {
             const item = btn.closest('.existing-gallery-item');
             if (item) {
-                item.style.display = 'none';
-                const hiddenInput = item.querySelector('input[name="existing_gallery[]"]');
-                if (hiddenInput) {
-                    hiddenInput.disabled = true;
-                }
+                item.remove();
+                updateGalleryCountUI();
+            }
+        }
+
+        function updateGalleryCountUI() {
+            const existingCount = document.querySelectorAll('.existing-gallery-item').length;
+            const newCount = galleryDataTransfer ? galleryDataTransfer.files.length : 0;
+            const total = existingCount + newCount;
+            const counterText = document.getElementById('galleryCounterText');
+            if (counterText) counterText.textContent = `(${total}/6)`;
+
+            const dropzone = document.getElementById('galleryDropzone');
+            if (dropzone) {
+                dropzone.style.display = total >= 6 ? 'none' : 'flex';
             }
         }
 
@@ -1765,8 +1841,61 @@
             panel.style.display = isOpen ? 'none' : 'block';
             if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
             if (!isOpen) {
-                const inp = document.getElementById('videoUrlInput');
-                if (inp && inp.value.trim()) renderVideoPreview(inp.value.trim());
+                const curPlatform = document.getElementById('videoPlatformInput')?.value || 'youtube';
+                if (curPlatform === 'youtube') {
+                    const inp = document.getElementById('videoUrlInput');
+                    if (inp && inp.value.trim()) renderVideoPreview(inp.value.trim());
+                } else {
+                    renderTiktokPreviews();
+                }
+            }
+        }
+
+        // ── Video Platform Selector (YouTube vs TikTok) ──
+        function setVideoPlatform(platform) {
+            const platformInput = document.getElementById('videoPlatformInput');
+            if (platformInput) platformInput.value = platform;
+
+            const btnYt = document.getElementById('btnPlatformYt');
+            const btnTt = document.getElementById('btnPlatformTt');
+            const ytWrap = document.getElementById('youtubeInputWrap');
+            const ttWrap = document.getElementById('tiktokInputsWrap');
+
+            if (platform === 'youtube') {
+                if (btnYt) {
+                    btnYt.style.background = '#fff';
+                    btnYt.style.color = '#0f172a';
+                    btnYt.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+                }
+                if (btnTt) {
+                    btnTt.style.background = 'transparent';
+                    btnTt.style.color = '#64748b';
+                    btnTt.style.boxShadow = 'none';
+                }
+                if (ytWrap) ytWrap.style.display = 'block';
+                if (ttWrap) ttWrap.style.display = 'none';
+
+                const ytInp = document.getElementById('videoUrlInput');
+                if (ytInp && ytInp.value.trim()) {
+                    renderVideoPreview(ytInp.value.trim());
+                } else {
+                    const box = document.getElementById('videoPreviewBox');
+                    if (box) { box.style.display = 'none'; box.innerHTML = ''; }
+                }
+            } else {
+                if (btnTt) {
+                    btnTt.style.background = '#fff';
+                    btnTt.style.color = '#0f172a';
+                    btnTt.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+                }
+                if (btnYt) {
+                    btnYt.style.background = 'transparent';
+                    btnYt.style.color = '#64748b';
+                    btnYt.style.boxShadow = 'none';
+                }
+                if (ytWrap) ytWrap.style.display = 'none';
+                if (ttWrap) ttWrap.style.display = 'block';
+                renderTiktokPreviews();
             }
         }
 
@@ -1790,28 +1919,78 @@
                 return;
             }
 
-            // TikTok
-            const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
-            if (ttMatch) {
-                box.innerHTML = `<div style="display:flex;justify-content:center;"><div style="width:100%;max-width:320px;aspect-ratio:9/16;max-height:500px;"><iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>`;
-                box.style.display = 'block';
-                return;
-            }
-
             // Other URL - show link card
             box.innerHTML = `<a href="${url}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;background:#1e293b;color:#e2e8f0;text-decoration:none;font-size:0.82rem;"><svg width="18" height="18" fill="none" stroke="#a5cf37" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${url}</span></a>`;
             box.style.display = 'block';
         }
 
+        let _ttDebounceTimer = null;
+        function debounceTiktokPreviews() {
+            clearTimeout(_ttDebounceTimer);
+            _ttDebounceTimer = setTimeout(() => renderTiktokPreviews(), 700);
+        }
+
+        function renderTiktokPreviews() {
+            const box = document.getElementById('videoPreviewBox');
+            if (!box) return;
+
+            const inputs = document.querySelectorAll('.tiktok-url-inp');
+            const validUrls = [];
+            inputs.forEach(inp => {
+                const val = (inp.value || '').trim();
+                if (val) validUrls.push(val);
+            });
+
+            if (validUrls.length === 0) {
+                box.style.display = 'none';
+                box.innerHTML = '';
+                return;
+            }
+
+            let html = '<div style="display:flex; gap:12px; overflow-x:auto; padding:12px; max-width:100%; box-sizing:border-box;">';
+            validUrls.forEach((url, i) => {
+                const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
+                if (ttMatch) {
+                    html += `
+                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                style="width:100%; height:100%; border:none; display:block;"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen loading="lazy"></iframe>
+                        </div>`;
+                } else {
+                    html += `
+                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                        </div>`;
+                }
+            });
+            html += '</div>';
+
+            box.innerHTML = html;
+            box.style.display = 'block';
+        }
+
         // Auto-open video panel if value exists on page load (for edit page)
         document.addEventListener('DOMContentLoaded', function() {
+            const platformInp = document.getElementById('videoPlatformInput');
+            const curPlatform = platformInp ? platformInp.value : 'youtube';
             const vidInp = document.getElementById('videoUrlInput');
-            if (vidInp && vidInp.value.trim()) {
+            const ttInp1 = document.getElementById('tiktokUrl1');
+
+            if (curPlatform === 'youtube' && vidInp && vidInp.value.trim()) {
                 const panel = document.getElementById('videoLinkPanel');
                 const chevron = document.getElementById('videoLinkChevron');
                 if (panel) panel.style.display = 'block';
                 if (chevron) chevron.style.transform = 'rotate(180deg)';
                 renderVideoPreview(vidInp.value.trim());
+            } else if (curPlatform === 'tiktok' && ttInp1 && ttInp1.value.trim()) {
+                const panel = document.getElementById('videoLinkPanel');
+                const chevron = document.getElementById('videoLinkChevron');
+                if (panel) panel.style.display = 'block';
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+                renderTiktokPreviews();
             }
         });
     </script>

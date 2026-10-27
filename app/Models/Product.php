@@ -139,6 +139,52 @@ class Product extends Model
     }
 
     /**
+     * Mengambil daftar URL video (bisa 1 link YouTube atau 1-3 link TikTok).
+     *
+     * @return array
+     */
+    public function getVideoUrlsAttribute(): array
+    {
+        $raw = $this->tiktok_video_url ?? $this->youtube_video_url ?? null;
+        if (empty($raw)) {
+            return [];
+        }
+
+        if (is_array($raw)) {
+            return array_values(array_filter($raw));
+        }
+
+        $trimmed = trim((string)$raw);
+        if (str_starts_with($trimmed, '[') || str_starts_with($trimmed, '{')) {
+            $decoded = json_decode($trimmed, true);
+            if (is_array($decoded)) {
+                return array_values(array_filter($decoded));
+            }
+        }
+
+        return [$trimmed];
+    }
+
+    /**
+     * Mendapatkan platform video yang dipakai ('youtube', 'tiktok', atau 'none').
+     *
+     * @return string
+     */
+    public function getVideoPlatformAttribute(): string
+    {
+        $urls = $this->video_urls;
+        if (empty($urls)) {
+            return 'none';
+        }
+        foreach ($urls as $u) {
+            if (str_contains(strtolower($u), 'tiktok.com')) {
+                return 'tiktok';
+            }
+        }
+        return 'youtube';
+    }
+
+    /**
      * Dapatkan atau generate kunci akses Gate Scanner untuk panitia event ini.
      */
     public function getOrGenerateGateKey(): string

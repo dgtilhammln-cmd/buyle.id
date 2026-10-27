@@ -1529,6 +1529,8 @@
     <div style="margin-top:1.5rem; display:flex; justify-content:center;">
       {{ $products->links() }}
     </div>
+  @endif
+
   {{-- FLOATING BULK ACTIONS DOCK BAR --}}
   <div id="bulkDockBar" class="bulk-dock-bar">
     <div class="bulk-count-pill">

@@ -74,7 +74,10 @@ class UpdateProductRequest extends FormRequest
             'whitelabel_price'          => ['nullable', 'numeric', 'min:0'],
             'whitelabel_terms'          => ['nullable', 'string', 'max:2000'],
             'affiliate_commission_rate' => ['nullable', 'numeric', 'min:5', 'max:100'],
-            'tiktok_video_url'          => ['nullable', 'string', 'max:500'],
+            'video_platform'            => ['nullable', 'string', 'in:youtube,tiktok'],
+            'tiktok_video_url'          => ['nullable', 'string', 'max:2000'],
+            'tiktok_video_urls'         => ['nullable', 'array', 'max:3'],
+            'tiktok_video_urls.*'       => ['nullable', 'string', 'max:500'],
             'youtube_video_url'         => ['nullable', 'string', 'max:500'],
             'meta_title'                => ['nullable', 'string', 'max:255'],
             'meta_desc'                 => ['nullable', 'string', 'max:1000'],
@@ -180,9 +183,21 @@ class UpdateProductRequest extends FormRequest
             }
         }
 
-        // Map youtube_video_url → tiktok_video_url (reuse column)
-        if ($this->has('youtube_video_url')) {
-            $merge['tiktok_video_url'] = $this->input('youtube_video_url');
+        // Map video URLs: YouTube (1 URL) or TikTok (up to 3 URLs)
+        $videoPlatform = $this->input('video_platform', 'youtube');
+        if ($videoPlatform === 'tiktok') {
+            $rawTt = (array) $this->input('tiktok_video_urls', []);
+            $ttUrls = array_values(array_filter($rawTt, fn($u) => !empty(trim((string)$u))));
+            if (!empty($ttUrls)) {
+                $merge['tiktok_video_url'] = count($ttUrls) === 1 ? $ttUrls[0] : json_encode(array_slice($ttUrls, 0, 3));
+            } elseif ($this->filled('tiktok_video_url')) {
+                $merge['tiktok_video_url'] = $this->input('tiktok_video_url');
+            } else {
+                $merge['tiktok_video_url'] = null;
+            }
+        } else {
+            $yt = trim((string)$this->input('youtube_video_url', ''));
+            $merge['tiktok_video_url'] = !empty($yt) ? $yt : null;
         }
 
         // Map meta_description → meta_desc

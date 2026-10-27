@@ -1,79 +1,148 @@
 @php
-    $videoUrl = $videoUrl ?? $product->tiktok_video_url ?? $product->youtube_video_url ?? $service->tiktok_video_url ?? null;
-@endphp
+    $rawVideo = $videoUrl ?? (isset($product) && method_exists($product, 'getVideoUrlsAttribute') ? $product->video_urls : ($product->tiktok_video_url ?? $product->youtube_video_url ?? ($service->tiktok_video_url ?? null)));
 
-@if(!empty($videoUrl))
-    @php
-        $ytId = null;
-        $ttId = null;
-        $isMp4 = false;
+    $allUrls = [];
+    if (!empty($rawVideo)) {
+        if (is_array($rawVideo)) {
+            $allUrls = array_values(array_filter($rawVideo));
+        } elseif (is_string($rawVideo)) {
+            $trimmed = trim($rawVideo);
+            if (str_starts_with($trimmed, '[') || str_starts_with($trimmed, '{')) {
+                $decoded = json_decode($trimmed, true);
+                if (is_array($decoded)) {
+                    $allUrls = array_values(array_filter($decoded));
+                } else {
+                    $allUrls = [$trimmed];
+                }
+            } else {
+                $allUrls = [$trimmed];
+            }
+        }
+    }
+
+    $ttItems = [];
+    $ytItem = null;
+    $otherItems = [];
+
+    foreach ($allUrls as $u) {
+        $uStr = trim((string)$u);
+        if (empty($uStr)) continue;
 
         // Check YouTube
-        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts|live)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i', $videoUrl, $ytMatches)) {
-            $ytId = $ytMatches[1];
+        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts|live)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i', $uStr, $ytMatches)) {
+            if (!$ytItem) $ytItem = ['url' => $uStr, 'id' => $ytMatches[1]];
         }
-        // Check TikTok
-        elseif (preg_match('/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i', $videoUrl, $ttMatches)) {
-            $ttId = $ttMatches[1];
+        // Check TikTok ID
+        elseif (preg_match('/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i', $uStr, $ttMatches)) {
+            $ttItems[] = ['url' => $uStr, 'id' => $ttMatches[1]];
         }
-        // Check direct mp4/webm
-        elseif (preg_match('/\.(mp4|webm|ogg)($|\?)/i', $videoUrl)) {
-            $isMp4 = true;
+        // TikTok fallback
+        elseif (str_contains(strtolower($uStr), 'tiktok.com')) {
+            $ttItems[] = ['url' => $uStr, 'id' => null];
         }
-    @endphp
+        // Direct mp4/webm or other
+        else {
+            $otherItems[] = $uStr;
+        }
+    }
+@endphp
 
-    <div class="pd-video-block" style="margin-top: 1.5rem; margin-bottom: 1.25rem;">
-        @if($ytId)
-            {{-- Minimalist YouTube 16:9 Embed --}}
-            <div style="position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#0f172a; border:1px solid #e2e8f0; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
-                <iframe src="https://www.youtube-nocookie.com/embed/{{ $ytId }}?rel=0"
+@if(!empty($ytItem) || !empty($ttItems) || !empty($otherItems))
+    <div class="pd-video-block" style="margin-top: 1.5rem; margin-bottom: 1.25rem; width:100%; max-width:100%; box-sizing:border-box; overflow:hidden;">
+        
+        {{-- YOUTUBE EMBED (16:9) --}}
+        @if($ytItem)
+            <div style="position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#0f172a; border:1px solid #e2e8f0; box-shadow:0 4px 16px rgba(0,0,0,0.06); max-width:100%; box-sizing:border-box;">
+                <iframe src="https://www.youtube-nocookie.com/embed/{{ $ytItem['id'] }}?rel=0"
                     style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen loading="lazy"></iframe>
             </div>
-        @elseif($ttId)
-            {{-- Minimalist TikTok Player Embed --}}
-            <div style="display:flex; justify-content:center; width:100%;">
-                <div style="width:100%; max-width:340px; aspect-ratio:9/16; max-height:560px; border-radius:14px; overflow:hidden; background:#000; border:1px solid #e2e8f0; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
-                    <iframe src="https://www.tiktok.com/player/v1/{{ $ttId }}?music_info=1&description=1"
-                        style="width:100%; height:100%; border:none; display:block;"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen loading="lazy"></iframe>
-                </div>
-            </div>
-        @elseif(str_contains($videoUrl, 'tiktok.com'))
-            {{-- TikTok Shortlink / Embed Script Fallback --}}
-            <div style="display:flex; justify-content:center; width:100%;">
-                <div style="width:100%; max-width:340px;">
-                    <blockquote class="tiktok-embed" cite="{{ $videoUrl }}" style="max-width:100%; min-width:280px; margin:0 auto; border-radius:14px;">
-                        <section><a target="_blank" href="{{ $videoUrl }}">Tonton Video di TikTok</a></section>
-                    </blockquote>
-                    <script async src="https://www.tiktok.com/embed.js"></script>
-                </div>
-            </div>
-        @elseif($isMp4)
-            {{-- Direct HTML5 Video --}}
-            <div style="width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#000; border:1px solid #e2e8f0; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
-                <video controls playsinline preload="metadata" style="width:100%; height:100%; object-fit:contain; display:block;">
-                    <source src="{{ $videoUrl }}">
-                    Browser Anda tidak mendukung tag video.
-                </video>
-            </div>
-        @else
-            {{-- Clean Card Fallback for other video links --}}
-            <a href="{{ $videoUrl }}" target="_blank" rel="noopener noreferrer"
-                style="display:flex; align-items:center; gap:0.85rem; padding:1rem 1.25rem; border-radius:14px; background:#f8fafc; border:1.5px solid #e2e8f0; text-decoration:none; color:#0f172a; transition:all 0.2s;"
-                onmouseover="this.style.borderColor='#1eb349';this.style.background='#f0fdf4';"
-                onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';">
-                <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-                <div style="flex:1; min-width:0;">
-                    <div style="font-size:0.88rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tonton Video Produk</div>
-                    <div style="font-size:0.75rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $videoUrl }}</div>
-                </div>
-                <svg width="18" height="18" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-            </a>
         @endif
+
+        {{-- TIKTOK EMBEDS: JEJER HORIZONTAL & AMAN DI DALAM BOX DESKRIPSI --}}
+        @if(!empty($ttItems))
+            <div style="width:100%; max-width:100%; box-sizing:border-box; overflow:hidden;">
+                @if(count($ttItems) > 1)
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem; font-size:0.8rem; font-weight:700; color:#334155;">
+                        <span style="display:flex; align-items:center; gap:0.35rem;">
+                            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+                            Video Review TikTok ({{ count($ttItems) }})
+                        </span>
+                        <span style="font-size:0.72rem; color:#94a3b8; font-weight:500;">Geser untuk melihat semua &rarr;</span>
+                    </div>
+                @endif
+
+                <div class="pd-tiktok-horizontal-row" style="
+                    display: flex;
+                    gap: 12px;
+                    overflow-x: auto;
+                    width: 100%;
+                    max-width: 100%;
+                    padding-bottom: 8px;
+                    box-sizing: border-box;
+                    scroll-snap-type: x mandatory;
+                    -webkit-overflow-scrolling: touch;
+                    scrollbar-width: thin;
+                ">
+                    @foreach($ttItems as $idx => $tt)
+                        <div class="pd-tiktok-card-item" style="
+                            flex: {{ count($ttItems) === 1 ? '0 0 min(320px, 100%)' : '0 0 min(260px, 78vw)' }};
+                            width: {{ count($ttItems) === 1 ? 'min(320px, 100%)' : 'min(260px, 78vw)' }};
+                            aspect-ratio: 9/16;
+                            max-height: 520px;
+                            border-radius: 14px;
+                            overflow: hidden;
+                            background: #000;
+                            border: 1.5px solid #e2e8f0;
+                            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+                            scroll-snap-align: start;
+                            flex-shrink: 0;
+                            box-sizing: border-box;
+                        ">
+                            @if(!empty($tt['id']))
+                                <iframe src="https://www.tiktok.com/player/v1/{{ $tt['id'] }}?music_info=1&description=1"
+                                    style="width:100%; height:100%; border:none; display:block;"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen loading="lazy"></iframe>
+                            @else
+                                <blockquote class="tiktok-embed" cite="{{ $tt['url'] }}" style="max-width:100%; margin:0 auto; padding:0;">
+                                    <section><a target="_blank" href="{{ $tt['url'] }}">Tonton di TikTok #{{ $idx+1 }}</a></section>
+                                </blockquote>
+                                <script async src="https://www.tiktok.com/embed.js"></script>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- OTHER VIDEOS / MP4 --}}
+        @foreach($otherItems as $oUrl)
+            @if(preg_match('/\.(mp4|webm|ogg)($|\?)/i', $oUrl))
+                <div style="width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#000; border:1px solid #e2e8f0; box-shadow:0 4px 16px rgba(0,0,0,0.06); margin-top:0.75rem; max-width:100%; box-sizing:border-box;">
+                    <video controls playsinline preload="metadata" style="width:100%; height:100%; object-fit:contain; display:block;">
+                        <source src="{{ $oUrl }}">
+                        Browser Anda tidak mendukung tag video.
+                    </video>
+                </div>
+            @else
+                <a href="{{ $oUrl }}" target="_blank" rel="noopener noreferrer"
+                    style="display:flex; align-items:center; gap:0.85rem; padding:0.85rem 1rem; border-radius:12px; background:#f8fafc; border:1.5px solid #e2e8f0; text-decoration:none; color:#0f172a; transition:all 0.2s; margin-top:0.75rem; max-width:100%; box-sizing:border-box;"
+                    onmouseover="this.style.borderColor='#1eb349';this.style.background='#f0fdf4';"
+                    onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';">
+                    <div style="width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-size:0.82rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tonton Video Produk</div>
+                        <div style="font-size:0.72rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $oUrl }}</div>
+                    </div>
+                    <svg width="16" height="16" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                </a>
+            @endif
+        @endforeach
+
     </div>
 @endif
+

@@ -34,8 +34,8 @@
         }
 
         /* ═══════════════════════════════════════
-                                           PAGE HERO — 100% sama dengan /products
-                                        ═══════════════════════════════════════ */
+                                               PAGE HERO — 100% sama dengan /products
+                                            ═══════════════════════════════════════ */
         .sv-hero-premium {
             position: relative;
             padding: 9rem 1.5rem 5rem;
@@ -446,8 +446,8 @@
         }
 
         /* ══════════════════════════════════════════════════════
-                                               PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
-                                            ══════════════════════════════════════════════════════ */
+                                                   PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
+                                                ══════════════════════════════════════════════════════ */
         .buyle-orbit-section {
             position: relative;
             padding: 8.5rem 1.5rem 5rem;
@@ -1119,10 +1119,10 @@
         }
 
         /* ── Flow Panels Wrapper – CSS Grid Stacking ──
-                                       Kedua panel menempati cell yang sama (grid-area: 1/1)
-                                       sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
-                                       Visibility dikendalikan via opacity + pointer-events agar
-                                       CSS transition dapat berjalan (display:none tidak bisa di-animate). */
+                                           Kedua panel menempati cell yang sama (grid-area: 1/1)
+                                           sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
+                                           Visibility dikendalikan via opacity + pointer-events agar
+                                           CSS transition dapat berjalan (display:none tidak bisa di-animate). */
         .buyle-flow-panels-wrap {
             display: grid;
             grid-template-columns: 1fr;
@@ -1869,7 +1869,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="orbit-node-pill">Pembayaran Terpadu</div>
+                        <div class="orbit-node-pill">Pembayaran Aman</div>
                     </div>
 
                 </div>
