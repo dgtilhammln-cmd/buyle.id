@@ -28,14 +28,34 @@ class CartController extends Controller
             'variant_value_id' => 'nullable|exists:product_variant_values,id',
             'qty'              => 'required|integer|min:1',
             'affiliate_id'     => 'nullable|exists:users,id',
+            'custom_price'     => 'nullable|integer|min:0', // Untuk traktir/PWYW
         ]);
 
         try {
+            // Resolve custom_price untuk traktir / PWYW
+            $customPrice = null;
+            $product = \App\Models\Product::findOrFail($request->product_id);
+            if ($product->isTraktir()) {
+                // Hitung: jumlah kopi × harga per kopi
+                $unitPrice = (float)($product->traktir_unit_price ?? 10000);
+                $qty = (int)$request->qty;
+                $customPrice = $unitPrice * $qty; // total custom price = unit × qty
+            } elseif ($product->isPayWhatYouWant()) {
+                // Pembeli bebas isi nominal (custom_price dikirim dari form)
+                $rawCustom = (int) preg_replace('/[^\d]/', '', (string) ($request->custom_price ?? 0));
+                $minPrice  = (float)($product->pwyw_min_price ?? 0);
+                if ($rawCustom < $minPrice) {
+                    throw new \Exception('Nominal minimum donasi adalah Rp ' . number_format($minPrice, 0, ',', '.') . '.');
+                }
+                $customPrice = $rawCustom > 0 ? $rawCustom : null;
+            }
+
             $this->cartService->add(
                 (int) $request->product_id,
                 $request->variant_value_id ? (int) $request->variant_value_id : null,
-                (int) $request->qty,
-                $request->affiliate_id ? (int) $request->affiliate_id : null
+                $product->isTraktir() ? 1 : (int) $request->qty, // Traktir qty selalu 1 (custom_price yg berubah)
+                $request->affiliate_id ? (int) $request->affiliate_id : null,
+                $customPrice
             );
 
             $summary = $this->cartService->getSummary();

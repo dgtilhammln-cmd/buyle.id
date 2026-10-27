@@ -34,6 +34,9 @@ class Product extends Model
         'social_follow_url', 'community_join_url', // Legacy fallback
         'follow_instagram_url', 'follow_tiktok_url', 'follow_x_url', 'follow_youtube_url',
         'join_whatsapp_url', 'join_telegram_url', 'join_discord_url',
+        // Flexible Pricing Model (Fixed, Free, PWYW, Traktir)
+        'pricing_type', 'pwyw_min_price', 'pwyw_suggested_price',
+        'traktir_unit_name', 'traktir_unit_icon', 'traktir_unit_price',
         // Kolom White Label & Reseller
         'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason',
         // Affiliate Commission
@@ -65,6 +68,10 @@ class Product extends Model
         'gate_scanner_enabled' => 'boolean',
         'gate_bypass_time'     => 'boolean',
         'require_follow_join'  => 'boolean',
+        // Pricing models casts
+        'pwyw_min_price'       => 'decimal:2',
+        'pwyw_suggested_price' => 'decimal:2',
+        'traktir_unit_price'   => 'decimal:2',
         // White Label casts
         'is_whitelabel'             => 'boolean',
         'whitelabel_price'          => 'decimal:2',
@@ -768,4 +775,51 @@ class Product extends Model
 
         return $items;
     }
+
+    // =========================================================================
+    // Pricing Type Helpers (Fixed, Free, Pay What You Want, Traktir)
+    // =========================================================================
+
+    public function isFixedPrice(): bool
+    {
+        return ($this->pricing_type ?? 'fixed') === 'fixed';
+    }
+
+    public function isFree(): bool
+    {
+        if (($this->pricing_type ?? '') === 'free') {
+            return true;
+        }
+        if ($this->isTraktir() || $this->isPayWhatYouWant()) {
+            return false;
+        }
+        $salePrice = $this->sale_price !== null ? (float) $this->sale_price : null;
+        $price = (float) ($this->price ?? 0);
+        return ($salePrice !== null && $salePrice <= 0) || ($salePrice === null && $price <= 0);
+    }
+
+    public function isPayWhatYouWant(): bool
+    {
+        return ($this->pricing_type ?? '') === 'pay_what_you_want';
+    }
+
+    public function isTraktir(): bool
+    {
+        return ($this->pricing_type ?? '') === 'traktir';
+    }
+
+    public function getEffectivePricingTypeAttribute(): string
+    {
+        if ($this->isTraktir()) {
+            return 'traktir';
+        }
+        if ($this->isPayWhatYouWant()) {
+            return 'pay_what_you_want';
+        }
+        if ($this->isFree()) {
+            return 'free';
+        }
+        return 'fixed';
+    }
 }
+

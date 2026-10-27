@@ -1333,6 +1333,17 @@
                                     @endif
                                     <div style="flex:1;">
                                         <div class="summary-title">{{ $item->product->name ?? 'Produk Telah Dihapus' }}</div>
+                                        @if($item->product && $item->product->isTraktir())
+                                            <div style="font-size:0.75rem; color:#d97706; font-weight:700; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:4px; background:#fef3c7; padding:2px 8px; border-radius:6px;">
+                                                <span>{{ $item->product->traktir_unit_icon ?? '☕' }}</span>
+                                                <span>Traktir {{ $item->product->traktir_unit_name ?? 'Kopi' }}</span>
+                                            </div>
+                                        @elseif($item->product && $item->product->isPayWhatYouWant())
+                                            <div style="font-size:0.75rem; color:#0284c7; font-weight:700; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:4px; background:#e0f2fe; padding:2px 8px; border-radius:6px;">
+                                                <span>💛</span>
+                                                <span>Dukungan Seikhlasnya</span>
+                                            </div>
+                                        @endif
                                         @if($item->variantValue)
                                             <div
                                                 style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:3px;">

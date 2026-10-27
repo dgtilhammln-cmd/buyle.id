@@ -201,8 +201,11 @@
 function checkFreeProductPrice() {
     const priceInput = document.getElementById('input_price');
     const salePriceInput = document.getElementById('input_sale_price');
+    const pricingTypeInput = document.getElementById('pricing_type_input');
     const wrap = document.getElementById('freeProductRequirementsWrap');
     if (!wrap) return;
+
+    const pricingType = pricingTypeInput ? pricingTypeInput.value : null;
 
     const rawPrice = (priceInput?.value || '').replace(/\D/g, '');
     const rawSalePrice = (salePriceInput?.value || '').replace(/\D/g, '');
@@ -210,8 +213,8 @@ function checkFreeProductPrice() {
     const price = rawPrice !== '' ? parseInt(rawPrice, 10) : null;
     const salePrice = rawSalePrice !== '' ? parseInt(rawSalePrice, 10) : null;
 
-    // Produk gratis jika salePrice === 0 ATAU (salePrice kosong dan price === 0)
-    const isFree = (salePrice !== null && salePrice === 0) || (salePrice === null && price === 0);
+    // Produk gratis jika pricingType === 'free', ATAU salePrice === 0 ATAU (salePrice kosong dan price === 0)
+    const isFree = pricingType === 'free' || (pricingType === null && ((salePrice !== null && salePrice === 0) || (salePrice === null && price === 0)));
 
     if (isFree) {
         wrap.style.display = 'block';

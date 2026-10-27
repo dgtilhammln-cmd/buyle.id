@@ -547,10 +547,29 @@
                 <h1 class="ps-title">{{ $prodTitle }}</h1>
 
                 <div class="ps-price-box">
-                    <span class="ps-price">Rp {{ number_format($price, 0, ',', '.') }}</span>
-                    @if($hasDiscount)
-                        <span class="ps-orig">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
-                        <span class="ps-save">Hemat {{ $discountPct }}%</span>
+                    @if($product && $product->isTraktir())
+                        <div>
+                            <span class="ps-price">{{ $product->traktir_unit_icon ?? '☕' }} Rp {{ number_format($product->traktir_unit_price ?? 10000, 0, ',', '.') }}</span>
+                            <span style="font-size:0.85rem; color:#64748b; font-weight:600;">/ {{ $product->traktir_unit_name ?? 'kopi' }}</span>
+                        </div>
+                    @elseif($product && $product->isPayWhatYouWant())
+                        <div>
+                            <span class="ps-price">Bayar Seikhlasnya</span>
+                            <div style="font-size:0.8rem; color:#64748b; font-weight:600; margin-top:2px;">
+                                Minimum: Rp {{ number_format($product->pwyw_min_price ?? 0, 0, ',', '.') }}
+                            </div>
+                        </div>
+                    @elseif(($product && $product->isFree()) || $price == 0)
+                        <span class="ps-price" style="color:#16a34a;">GRATIS</span>
+                        @if($origPrice > 0)
+                            <span class="ps-orig">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
+                        @endif
+                    @else
+                        <span class="ps-price">Rp {{ number_format($price, 0, ',', '.') }}</span>
+                        @if($hasDiscount)
+                            <span class="ps-orig">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
+                            <span class="ps-save">Hemat {{ $discountPct }}%</span>
+                        @endif
                     @endif
                 </div>
 
@@ -951,6 +970,225 @@
                             </div>
                         </div>
                         @endif
+                        @if($product && $product->isTraktir())
+                        {{-- WIDGET TRAKTIR KOPI (BIO) --}}
+                        @php
+                            $unitPrice = (float)($product->traktir_unit_price ?? 10000);
+                            $unitName  = $product->traktir_unit_name ?? 'kopi';
+                            $unitIcon  = $product->traktir_unit_icon ?? '☕';
+                        @endphp
+                        <div style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border: 1.5px solid #FDE68A; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-size: 1.5rem;">{{ $unitIcon }}</span>
+                                    <div>
+                                        <div style="font-size: 0.9rem; font-weight: 800; color: #92400E;">Traktir {{ ucfirst($unitName) }}</div>
+                                        <div style="font-size: 0.75rem; color: #B45309;">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 0.72rem; color: #B45309; font-weight: 600;">Total Traktir</div>
+                                    <div id="bio-traktir-total" style="font-size: 1.05rem; font-weight: 800; color: #78350F;">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
+                                </div>
+                            </div>
+
+                            {{-- Pilihan Cepat Qty --}}
+                            <div style="display: flex; gap: 0.4rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                                @foreach([1, 2, 3, 5, 10] as $presetQty)
+                                    <button type="button" onclick="setBioTraktirQty({{ $presetQty }})" class="bio-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}" data-qty="{{ $presetQty }}" style="flex: 1; min-width: 44px; padding: 0.4rem 0.5rem; background: #fff; border: 1.5px solid #FCD34D; border-radius: 10px; font-size: 0.82rem; font-weight: 700; color: #78350F; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                        {{ $presetQty }}x
+                                    </button>
+                                @endforeach
+                            </div>
+
+                            {{-- Custom Qty Counter --}}
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #FDE68A; border-radius: 12px; padding: 0.4rem 0.75rem;">
+                                <span style="font-size: 0.82rem; font-weight: 700; color: #78350F;">Jumlah {{ ucfirst($unitName) }}</span>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <button type="button" onclick="stepBioTraktirQty(-1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+                                    <input type="number" id="bio-traktir-qty-val" value="1" min="1" max="1000" style="width: 45px; text-align: center; border: none; font-size: 0.95rem; font-weight: 800; color: #78350F; outline: none; background: transparent;" oninput="updateBioTraktirTotal(this.value)">
+                                    <button type="button" onclick="stepBioTraktirQty(1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="{{ route('cart.add') }}" method="POST" id="bio-cart-form" style="display:contents;">
+                            @csrf
+                            <input type="hidden" name="action" id="bio_action_input" value="buy">
+                            <input type="hidden" name="product_id" value="{{ $prodId }}">
+                            <input type="hidden" name="qty" id="bio_traktir_form_qty" value="1">
+                            @if(!empty($affiliateUserId))
+                                <input type="hidden" name="affiliate_id" value="{{ $affiliateUserId }}">
+                            @endif
+                            <button type="submit" class="ps-btn-checkout" style="width:100%; justify-content:center; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);">
+                                <span>{{ $unitIcon }}</span>
+                                <span id="bio-traktir-btn-text">Traktir Sekarang (Rp {{ number_format($unitPrice, 0, ',', '.') }})</span>
+                            </button>
+                        </form>
+
+                        <script>
+                            (function() {
+                                var unitPrice = {{ $unitPrice }};
+                                window.setBioTraktirQty = function(q) {
+                                    q = parseInt(q) || 1;
+                                    document.getElementById('bio-traktir-qty-val').value = q;
+                                    updateBioTraktirTotal(q);
+                                };
+                                window.stepBioTraktirQty = function(d) {
+                                    var el = document.getElementById('bio-traktir-qty-val');
+                                    var current = parseInt(el.value) || 1;
+                                    var next = Math.max(1, current + d);
+                                    el.value = next;
+                                    updateBioTraktirTotal(next);
+                                };
+                                window.updateBioTraktirTotal = function(q) {
+                                    q = Math.max(1, parseInt(q) || 1);
+                                    var total = q * unitPrice;
+                                    var formatted = 'Rp ' + total.toLocaleString('id-ID');
+                                    document.getElementById('bio-traktir-total').textContent = formatted;
+                                    document.getElementById('bio_traktir_form_qty').value = q;
+                                    var btnText = document.getElementById('bio-traktir-btn-text');
+                                    if (btnText) btnText.textContent = 'Traktir Sekarang (' + formatted + ')';
+
+                                    document.querySelectorAll('.bio-traktir-pill').forEach(function(p) {
+                                        if (parseInt(p.dataset.qty) === q) {
+                                            p.style.background = '#F59E0B';
+                                            p.style.color = '#fff';
+                                            p.style.borderColor = '#D97706';
+                                        } else {
+                                            p.style.background = '#fff';
+                                            p.style.color = '#78350F';
+                                            p.style.borderColor = '#FCD34D';
+                                        }
+                                    });
+                                };
+                            })();
+                        </script>
+
+                        @elseif($product && $product->isPayWhatYouWant())
+                        {{-- WIDGET BAYAR SEIKHLASNYA / PWYW (BIO) --}}
+                        @php
+                            $minPrice = (float)($product->pwyw_min_price ?? 0);
+                            $suggestedPrice = (float)($product->pwyw_suggested_price ?? 0);
+                            $initialPrice = $suggestedPrice > 0 ? $suggestedPrice : ($minPrice > 0 ? $minPrice : 10000);
+                        @endphp
+                        <div style="background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%); border: 1.5px solid #BAE6FD; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-size: 1.4rem;">💛</span>
+                                    <div>
+                                        <div style="font-size: 0.9rem; font-weight: 800; color: #0369A1;">Bayar Seikhlasnya</div>
+                                        <div style="font-size: 0.75rem; color: #0284C7;">
+                                            @if($minPrice > 0)
+                                                Min. Rp {{ number_format($minPrice, 0, ',', '.') }}
+                                            @else
+                                                Bebas masukkan nominal berapa saja
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Pilihan Cepat Nominal --}}
+                            @php
+                                $presets = [10000, 25000, 50000, 100000];
+                                if ($minPrice > 0 && !in_array($minPrice, $presets)) {
+                                    array_unshift($presets, (int)$minPrice);
+                                    sort($presets);
+                                }
+                                if ($suggestedPrice > 0 && !in_array($suggestedPrice, $presets)) {
+                                    $presets[] = (int)$suggestedPrice;
+                                    sort($presets);
+                                }
+                            @endphp
+                            <div style="display: flex; gap: 0.4rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                                @foreach(array_slice($presets, 0, 4) as $presetNominal)
+                                    <button type="button" onclick="setBioPwywNominal({{ $presetNominal }})" class="bio-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}" data-nominal="{{ $presetNominal }}" style="flex: 1; min-width: 60px; padding: 0.4rem 0.5rem; background: {{ $presetNominal == $initialPrice ? '#0284C7' : '#fff' }}; color: {{ $presetNominal == $initialPrice ? '#fff' : '#0369A1' }}; border: 1.5px solid #7DD3FC; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                        {{ number_format($presetNominal / 1000, 0) }}k
+                                    </button>
+                                @endforeach
+                            </div>
+
+                            {{-- Input Nominal Bebas --}}
+                            <div style="position: relative;">
+                                <span style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 0.9rem; color: #0369A1;">Rp</span>
+                                <input type="text" id="bio-pwyw-input" value="{{ number_format($initialPrice, 0, ',', '.') }}" style="width: 100%; box-sizing: border-box; padding: 0.65rem 0.85rem 0.65rem 2.2rem; border: 1.5px solid #BAE6FD; border-radius: 12px; font-size: 0.95rem; font-weight: 800; color: #0F172A; background: #fff; outline: none;" oninput="formatBioPwywInput(this)">
+                            </div>
+                            <div id="bio-pwyw-error" style="display: none; color: #EF4444; font-size: 0.75rem; font-weight: 600; margin-top: 0.4rem;"></div>
+                        </div>
+
+                        <form action="{{ route('cart.add') }}" method="POST" id="bio-cart-form" style="display:contents;" onsubmit="return validateBioPwywForm()">
+                            @csrf
+                            <input type="hidden" name="action" id="bio_action_input" value="buy">
+                            <input type="hidden" name="product_id" value="{{ $prodId }}">
+                            <input type="hidden" name="qty" value="1">
+                            <input type="hidden" name="custom_price" id="bio_pwyw_custom_price" value="{{ (int)$initialPrice }}">
+                            @if(!empty($affiliateUserId))
+                                <input type="hidden" name="affiliate_id" value="{{ $affiliateUserId }}">
+                            @endif
+                            <button type="submit" class="ps-btn-checkout" style="width:100%; justify-content:center; background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);">
+                                <span>💛</span>
+                                <span id="bio-pwyw-btn-text">Dukung Sekarang (Rp {{ number_format($initialPrice, 0, ',', '.') }})</span>
+                            </button>
+                        </form>
+
+                        <script>
+                            (function() {
+                                var minPrice = {{ $minPrice }};
+                                window.setBioPwywNominal = function(val) {
+                                    var num = parseInt(val) || 0;
+                                    var formatted = num.toLocaleString('id-ID');
+                                    document.getElementById('bio-pwyw-input').value = formatted;
+                                    document.getElementById('bio_pwyw_custom_price').value = num;
+                                    var btnText = document.getElementById('bio-pwyw-btn-text');
+                                    if (btnText) btnText.textContent = 'Dukung Sekarang (Rp ' + formatted + ')';
+                                    document.getElementById('bio-pwyw-error').style.display = 'none';
+
+                                    document.querySelectorAll('.bio-pwyw-pill').forEach(function(p) {
+                                        if (parseInt(p.dataset.nominal) === num) {
+                                            p.style.background = '#0284C7';
+                                            p.style.color = '#fff';
+                                        } else {
+                                            p.style.background = '#fff';
+                                            p.style.color = '#0369A1';
+                                        }
+                                    });
+                                };
+
+                                window.formatBioPwywInput = function(el) {
+                                    var raw = el.value.replace(/\D/g, '');
+                                    var num = parseInt(raw, 10) || 0;
+                                    el.value = num.toLocaleString('id-ID');
+                                    document.getElementById('bio_pwyw_custom_price').value = num;
+                                    var btnText = document.getElementById('bio-pwyw-btn-text');
+                                    if (btnText) btnText.textContent = 'Dukung Sekarang (Rp ' + num.toLocaleString('id-ID') + ')';
+
+                                    var err = document.getElementById('bio-pwyw-error');
+                                    if (minPrice > 0 && num < minPrice) {
+                                        err.textContent = 'Nominal minimum donasi adalah Rp ' + minPrice.toLocaleString('id-ID');
+                                        err.style.display = 'block';
+                                    } else {
+                                        err.style.display = 'none';
+                                    }
+                                };
+
+                                window.validateBioPwywForm = function() {
+                                    var raw = (document.getElementById('bio-pwyw-input').value || '').replace(/\D/g, '');
+                                    var num = parseInt(raw, 10) || 0;
+                                    if (minPrice > 0 && num < minPrice) {
+                                        var err = document.getElementById('bio-pwyw-error');
+                                        err.textContent = 'Nominal minimum donasi adalah Rp ' + minPrice.toLocaleString('id-ID');
+                                        err.style.display = 'block';
+                                        return false;
+                                    }
+                                    document.getElementById('bio_pwyw_custom_price').value = num;
+                                    return true;
+                                };
+                            })();
+                        </script>
+
+                        @else
+                        {{-- STANDARD / FREE PRODUCT ROW --}}
                         <div class="ps-cta-row" style="{{ ($psIsExpired ?? false) ? 'pointer-events:none;opacity:0.45;' : '' }}">
                             <form action="{{ route('cart.add') }}" method="POST" id="bio-cart-form" style="display:contents;" class="ps-add-cart-form">
                                 @csrf
@@ -979,10 +1217,11 @@
                             @else
                                 <button type="button" class="ps-btn-checkout" onclick="bioDirectCheckout()">
                                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                                    Checkout
+                                    {{ ($product && $product->isFree()) || $price == 0 ? 'Klaim Gratis' : 'Checkout' }}
                                 </button>
                             @endif
                         </div>
+                        @endif
 
                         @if($isWarActive)
                         <script>

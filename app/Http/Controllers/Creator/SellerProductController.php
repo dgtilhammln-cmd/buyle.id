@@ -162,19 +162,32 @@ class SellerProductController extends Controller
             $data['whitelabel_approval_status'] = $data['is_whitelabel'] ? 'pending' : 'none';
         }
 
-        // Handle Syarat Klaim Produk Gratis (hanya aktif jika harga = 0)
+        // Handle Pricing Type & Prices
+        $data['pricing_type'] = $data['pricing_type'] ?? 'fixed';
+        if ($data['pricing_type'] === 'free') {
+            $data['price'] = 0;
+            $data['sale_price'] = null;
+        } elseif ($data['pricing_type'] === 'traktir') {
+            $data['price'] = (float)($data['traktir_unit_price'] ?? 10000);
+            $data['sale_price'] = null;
+        } elseif ($data['pricing_type'] === 'pay_what_you_want') {
+            $data['price'] = (float)($data['pwyw_min_price'] ?? 0);
+            $data['sale_price'] = null;
+        }
+
+        // Handle Syarat Klaim Produk Gratis (hanya aktif jika harga = 0 atau tipe gratis)
         $effectivePrice = isset($data['sale_price']) && $data['sale_price'] !== null && $data['sale_price'] !== ''
             ? (float) $data['sale_price']
             : (float) ($data['price'] ?? 0);
 
-        if ($effectivePrice > 0) {
-            $data['require_follow_join'] = false;
-            $data['social_follow_url']   = null;
-            $data['community_join_url']  = null;
-        } else {
+        if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
             $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
             $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
+        } else {
+            $data['require_follow_join'] = false;
+            $data['social_follow_url']   = null;
+            $data['community_join_url']  = null;
         }
 
         // Generate unique slug
@@ -340,19 +353,32 @@ class SellerProductController extends Controller
             }
         }
 
-        // Handle Syarat Klaim Produk Gratis (hanya aktif jika harga = 0)
+        // Handle Pricing Type & Prices
+        $data['pricing_type'] = $data['pricing_type'] ?? ($product->pricing_type ?? 'fixed');
+        if ($data['pricing_type'] === 'free') {
+            $data['price'] = 0;
+            $data['sale_price'] = null;
+        } elseif ($data['pricing_type'] === 'traktir') {
+            $data['price'] = (float)($data['traktir_unit_price'] ?? $product->traktir_unit_price ?? 10000);
+            $data['sale_price'] = null;
+        } elseif ($data['pricing_type'] === 'pay_what_you_want') {
+            $data['price'] = (float)($data['pwyw_min_price'] ?? $product->pwyw_min_price ?? 0);
+            $data['sale_price'] = null;
+        }
+
+        // Handle Syarat Klaim Produk Gratis (hanya aktif jika harga = 0 atau tipe gratis)
         $effectivePrice = isset($data['sale_price']) && $data['sale_price'] !== null && $data['sale_price'] !== ''
             ? (float) $data['sale_price']
             : (float) ($data['price'] ?? $product->price);
 
-        if ($effectivePrice > 0) {
-            $data['require_follow_join'] = false;
-            $data['social_follow_url']   = null;
-            $data['community_join_url']  = null;
-        } else {
+        if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
             $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
             $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
+        } else {
+            $data['require_follow_join'] = false;
+            $data['social_follow_url']   = null;
+            $data['community_join_url']  = null;
         }
 
         // Safety: Truncate fields yang mungkin melebihi batas kolom DB

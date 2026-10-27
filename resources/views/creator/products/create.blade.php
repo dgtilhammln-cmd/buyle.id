@@ -739,7 +739,9 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                @include('creator.products.partials.pricing-model-selector', ['product' => null])
+
+                                <div class="form-group" id="price-field-wrap">
                                     <label class="form-label">Harga Normal (Rp) <span>*</span></label>
                                     <input type="text" name="price" id="input_price"
                                         value="{{ old('price') ? number_format((float) preg_replace('/[^\d]/', '', old('price')), 0, ',', '.') : '' }}"
@@ -747,7 +749,7 @@
                                         autocomplete="off">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" id="sale-price-field-wrap">
                                     <label class="form-label">Harga Diskon / Promo (Rp)</label>
                                     <input type="text" name="sale_price" id="input_sale_price"
                                         value="{{ old('sale_price') ? number_format((float) preg_replace('/[^\d]/', '', old('sale_price')), 0, ',', '.') : '' }}"

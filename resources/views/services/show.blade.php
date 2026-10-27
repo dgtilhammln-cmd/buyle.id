@@ -1618,27 +1618,48 @@
                         </div>
 
                         {{-- PRICE --}}
-                        @if($service->price > 0 || $service->sale_price !== null)
-                            @php
-                                $isFreeProduct = $service->sale_price !== null && (float) $service->sale_price <= 0;
-                                $hasDiscount = !$isFreeProduct && $service->sale_price !== null && (float) $service->sale_price > 0 && (float) $service->sale_price < (float) $service->price;
-                            @endphp
-                            <div class="pd-price-box">
-                                @if($isFreeProduct)
-                                    {{-- GRATIS: harga normal dicoret, lalu GRATIS --}}
+                        <div class="pd-price-box">
+                            @if($service->isTraktir())
+                                <div>
+                                    <div class="pd-price-main" style="color:#d97706; display:flex; align-items:center; gap:6px;">
+                                        <span>{{ $service->traktir_unit_icon ?? '☕' }}</span>
+                                        <span>Rp{{ number_format($service->traktir_unit_price ?? 10000, 0, ',', '.') }}</span>
+                                        <span style="font-size:0.9rem; color:#64748b; font-weight:600;">/ {{ $service->traktir_unit_name ?? 'kopi' }}</span>
+                                    </div>
+                                    <div style="font-size:0.8rem; color:#92400e; font-weight:600; margin-top:3px;">
+                                        Pilih jumlah {{ $service->traktir_unit_name ?? 'kopi' }} untuk mentraktir creator
+                                    </div>
+                                </div>
+                            @elseif($service->isPayWhatYouWant())
+                                <div>
+                                    <div class="pd-price-main" style="color:#0284c7; display:flex; align-items:center; gap:6px;">
+                                        <span>💛</span>
+                                        <span>Bayar Seikhlasnya</span>
+                                    </div>
+                                    <div style="font-size:0.8rem; color:#64748b; font-weight:600; margin-top:3px;">
+                                        Minimum donasi: Rp{{ number_format($service->pwyw_min_price ?? 0, 0, ',', '.') }}
+                                    </div>
+                                </div>
+                            @elseif($service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0))
+                                {{-- GRATIS: harga normal dicoret, lalu GRATIS --}}
+                                @if($service->price > 0)
                                     <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
-                                    <div class="pd-price-main" style="color:#16a34a;">GRATIS</div>
-                                    <span class="pd-discount">100% OFF</span>
-                                @elseif($hasDiscount)
+                                @endif
+                                <div class="pd-price-main" style="color:#16a34a;">GRATIS</div>
+                                <span class="pd-discount">100% OFF</span>
+                            @else
+                                @php
+                                    $hasDiscount = $service->sale_price !== null && (float) $service->sale_price > 0 && (float) $service->sale_price < (float) $service->price;
+                                @endphp
+                                @if($hasDiscount)
                                     <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                                     <div class="pd-price-main">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
-                                    <span
-                                        class="pd-discount">{{ round((($service->price - $service->sale_price) / $service->price) * 100) }}%
-                                        OFF</span>
+                                    <span class="pd-discount">{{ round((($service->price - $service->sale_price) / $service->price) * 100) }}% OFF</span>
                                 @else
                                     <div class="pd-price-main">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                                 @endif
-                            </div>
+                            @endif
+                        </div>
 
                             @if($service->product_type === 'ticket')
                                 {{-- INFORMASI EVENT (KHUSUS TIKET) --}}
@@ -1855,6 +1876,7 @@
                                     </style>
                                 @endif
 
+                                @if(!$service->isTraktir() && !$service->isPayWhatYouWant())
                                 <div class="pd-attr-row" style="align-items:center;">
                                     <div class="pd-attr-label">Kuantitas</div>
                                     <div class="pd-attr-content">
@@ -1886,6 +1908,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                @else
+                                    <input type="hidden" id="qty_input" name="qty" value="1">
+                                @endif
 
                                 {{-- TICKET EXPIRED BANNER --}}
                                 @if($isExpired)
@@ -1959,6 +1984,208 @@
                                             </button>
                                         </div>
                                     </div>
+                                @elseif($service->isTraktir())
+                                    @php
+                                        $unitPrice = (float)($service->traktir_unit_price ?? 10000);
+                                        $unitName  = $service->traktir_unit_name ?? 'kopi';
+                                        $unitIcon  = $service->traktir_unit_icon ?? '☕';
+                                    @endphp
+                                    <div style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border: 1.5px solid #FDE68A; border-radius: 16px; padding: 1.25rem; margin-top: 1.25rem;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span style="font-size: 1.5rem;">{{ $unitIcon }}</span>
+                                                <div>
+                                                    <div style="font-size: 0.92rem; font-weight: 800; color: #92400E;">Traktir {{ ucfirst($unitName) }}</div>
+                                                    <div style="font-size: 0.75rem; color: #B45309;">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
+                                                </div>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <div style="font-size: 0.72rem; color: #B45309; font-weight: 600;">Total Traktir</div>
+                                                <div id="service-traktir-total" style="font-size: 1.1rem; font-weight: 800; color: #78350F;">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Preset Qty --}}
+                                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                                            @foreach([1, 2, 3, 5, 10] as $presetQty)
+                                                <button type="button" onclick="setServiceTraktirQty({{ $presetQty }})" class="service-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}" data-qty="{{ $presetQty }}" style="flex: 1; min-width: 45px; padding: 0.45rem 0.5rem; background: {{ $presetQty === 1 ? '#F59E0B' : '#fff' }}; color: {{ $presetQty === 1 ? '#fff' : '#78350F' }}; border: 1.5px solid {{ $presetQty === 1 ? '#D97706' : '#FCD34D' }}; border-radius: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                                    {{ $presetQty }}x
+                                                </button>
+                                            @endforeach
+                                        </div>
+
+                                        {{-- Custom Qty Counter --}}
+                                        <div style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #FDE68A; border-radius: 12px; padding: 0.5rem 0.85rem;">
+                                            <span style="font-size: 0.85rem; font-weight: 700; color: #78350F;">Jumlah {{ ucfirst($unitName) }}</span>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <button type="button" onclick="stepServiceTraktirQty(-1)" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+                                                <input type="number" id="service-traktir-qty-val" value="1" min="1" max="1000" style="width: 50px; text-align: center; border: none; font-size: 1rem; font-weight: 800; color: #78350F; outline: none; background: transparent;" oninput="updateServiceTraktirTotal(this.value)">
+                                                <button type="button" onclick="stepServiceTraktirQty(1)" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #78350F; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pd-actions" style="margin-top:1.25rem;">
+                                        <button type="button" onclick="submitPdCart('buy')" class="pd-btn" style="flex:1; width:100%; justify-content:center; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color:#fff; border:none; padding:0.9rem; font-size:1rem; font-weight:800; border-radius:12px; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35); cursor:pointer; display:flex; align-items:center; gap:0.5rem;">
+                                            <span>{{ $unitIcon }}</span>
+                                            <span id="service-traktir-btn-text">Traktir Sekarang (Rp {{ number_format($unitPrice, 0, ',', '.') }})</span>
+                                        </button>
+                                    </div>
+
+                                    <script>
+                                        (function() {
+                                            var unitPrice = {{ $unitPrice }};
+                                            window.setServiceTraktirQty = function(q) {
+                                                q = parseInt(q) || 1;
+                                                document.getElementById('service-traktir-qty-val').value = q;
+                                                updateServiceTraktirTotal(q);
+                                            };
+                                            window.stepServiceTraktirQty = function(d) {
+                                                var el = document.getElementById('service-traktir-qty-val');
+                                                var current = parseInt(el.value) || 1;
+                                                var next = Math.max(1, current + d);
+                                                el.value = next;
+                                                updateServiceTraktirTotal(next);
+                                            };
+                                            window.updateServiceTraktirTotal = function(q) {
+                                                q = Math.max(1, parseInt(q) || 1);
+                                                var total = q * unitPrice;
+                                                var formatted = 'Rp ' + total.toLocaleString('id-ID');
+                                                document.getElementById('service-traktir-total').textContent = formatted;
+                                                var qtyInput = document.getElementById('qty_input');
+                                                if (qtyInput) qtyInput.value = q;
+                                                var btnText = document.getElementById('service-traktir-btn-text');
+                                                if (btnText) btnText.textContent = 'Traktir Sekarang (' + formatted + ')';
+
+                                                document.querySelectorAll('.service-traktir-pill').forEach(function(p) {
+                                                    if (parseInt(p.dataset.qty) === q) {
+                                                        p.style.background = '#F59E0B';
+                                                        p.style.color = '#fff';
+                                                        p.style.borderColor = '#D97706';
+                                                    } else {
+                                                        p.style.background = '#fff';
+                                                        p.style.color = '#78350F';
+                                                        p.style.borderColor = '#FCD34D';
+                                                    }
+                                                });
+                                            };
+                                        })();
+                                    </script>
+
+                                @elseif($service->isPayWhatYouWant())
+                                    @php
+                                        $minPrice = (float)($service->pwyw_min_price ?? 0);
+                                        $suggestedPrice = (float)($service->pwyw_suggested_price ?? 0);
+                                        $initialPrice = $suggestedPrice > 0 ? $suggestedPrice : ($minPrice > 0 ? $minPrice : 10000);
+                                    @endphp
+                                    <input type="hidden" name="custom_price" id="service_pwyw_custom_price" value="{{ (int)$initialPrice }}">
+                                    <div style="background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%); border: 1.5px solid #BAE6FD; border-radius: 16px; padding: 1.25rem; margin-top: 1.25rem;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span style="font-size: 1.4rem;">💛</span>
+                                                <div>
+                                                    <div style="font-size: 0.92rem; font-weight: 800; color: #0369A1;">Bayar Seikhlasnya</div>
+                                                    <div style="font-size: 0.75rem; color: #0284C7;">
+                                                        @if($minPrice > 0)
+                                                            Min. Rp {{ number_format($minPrice, 0, ',', '.') }}
+                                                        @else
+                                                            Bebas masukkan nominal berapa saja
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Preset Nominal --}}
+                                        @php
+                                            $presets = [10000, 25000, 50000, 100000];
+                                            if ($minPrice > 0 && !in_array($minPrice, $presets)) {
+                                                array_unshift($presets, (int)$minPrice);
+                                                sort($presets);
+                                            }
+                                            if ($suggestedPrice > 0 && !in_array($suggestedPrice, $presets)) {
+                                                $presets[] = (int)$suggestedPrice;
+                                                sort($presets);
+                                            }
+                                        @endphp
+                                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                                            @foreach(array_slice($presets, 0, 4) as $presetNominal)
+                                                <button type="button" onclick="setServicePwywNominal({{ $presetNominal }})" class="service-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}" data-nominal="{{ $presetNominal }}" style="flex: 1; min-width: 65px; padding: 0.45rem 0.5rem; background: {{ $presetNominal == $initialPrice ? '#0284C7' : '#fff' }}; color: {{ $presetNominal == $initialPrice ? '#fff' : '#0369A1' }}; border: 1.5px solid #7DD3FC; border-radius: 10px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center;">
+                                                    {{ number_format($presetNominal / 1000, 0) }}k
+                                                </button>
+                                            @endforeach
+                                        </div>
+
+                                        {{-- Input Bebas --}}
+                                        <div style="position: relative;">
+                                            <span style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 0.95rem; color: #0369A1;">Rp</span>
+                                            <input type="text" id="service-pwyw-input" value="{{ number_format($initialPrice, 0, ',', '.') }}" style="width: 100%; box-sizing: border-box; padding: 0.7rem 0.85rem 0.7rem 2.4rem; border: 1.5px solid #BAE6FD; border-radius: 12px; font-size: 1rem; font-weight: 800; color: #0F172A; background: #fff; outline: none;" oninput="formatServicePwywInput(this)">
+                                        </div>
+                                        <div id="service-pwyw-error" style="display: none; color: #EF4444; font-size: 0.78rem; font-weight: 600; margin-top: 0.4rem;"></div>
+                                    </div>
+
+                                    <div class="pd-actions" style="margin-top:1.25rem;">
+                                        <button type="button" onclick="submitServicePwyw()" class="pd-btn" style="flex:1; width:100%; justify-content:center; background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); color:#fff; border:none; padding:0.9rem; font-size:1rem; font-weight:800; border-radius:12px; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35); cursor:pointer; display:flex; align-items:center; gap:0.5rem;">
+                                            <span>💛</span>
+                                            <span id="service-pwyw-btn-text">Dukung Sekarang (Rp {{ number_format($initialPrice, 0, ',', '.') }})</span>
+                                        </button>
+                                    </div>
+
+                                    <script>
+                                        (function() {
+                                            var minPrice = {{ $minPrice }};
+                                            window.setServicePwywNominal = function(val) {
+                                                var num = parseInt(val) || 0;
+                                                var formatted = num.toLocaleString('id-ID');
+                                                document.getElementById('service-pwyw-input').value = formatted;
+                                                document.getElementById('service_pwyw_custom_price').value = num;
+                                                var btnText = document.getElementById('service-pwyw-btn-text');
+                                                if (btnText) btnText.textContent = 'Dukung Sekarang (Rp ' + formatted + ')';
+                                                document.getElementById('service-pwyw-error').style.display = 'none';
+
+                                                document.querySelectorAll('.service-pwyw-pill').forEach(function(p) {
+                                                    if (parseInt(p.dataset.nominal) === num) {
+                                                        p.style.background = '#0284C7';
+                                                        p.style.color = '#fff';
+                                                    } else {
+                                                        p.style.background = '#fff';
+                                                        p.style.color = '#0369A1';
+                                                    }
+                                                });
+                                            };
+
+                                            window.formatServicePwywInput = function(el) {
+                                                var raw = el.value.replace(/\D/g, '');
+                                                var num = parseInt(raw, 10) || 0;
+                                                el.value = num.toLocaleString('id-ID');
+                                                document.getElementById('service_pwyw_custom_price').value = num;
+                                                var btnText = document.getElementById('service-pwyw-btn-text');
+                                                if (btnText) btnText.textContent = 'Dukung Sekarang (Rp ' + num.toLocaleString('id-ID') + ')';
+
+                                                var err = document.getElementById('service-pwyw-error');
+                                                if (minPrice > 0 && num < minPrice) {
+                                                    err.textContent = 'Nominal minimum donasi adalah Rp ' + minPrice.toLocaleString('id-ID');
+                                                    err.style.display = 'block';
+                                                } else {
+                                                    err.style.display = 'none';
+                                                }
+                                            };
+
+                                            window.submitServicePwyw = function() {
+                                                var raw = (document.getElementById('service-pwyw-input').value || '').replace(/\D/g, '');
+                                                var num = parseInt(raw, 10) || 0;
+                                                if (minPrice > 0 && num < minPrice) {
+                                                    var err = document.getElementById('service-pwyw-error');
+                                                    err.textContent = 'Nominal minimum donasi adalah Rp ' + minPrice.toLocaleString('id-ID');
+                                                    err.style.display = 'block';
+                                                    return false;
+                                                }
+                                                document.getElementById('service_pwyw_custom_price').value = num;
+                                                submitPdCart('buy');
+                                            };
+                                        })();
+                                    </script>
+
                                 @else
                                     <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
                                         <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
@@ -1969,7 +2196,7 @@
                                         <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;"
                                             @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0)
                                             disabled @endif onclick="submitPdCart('buy')">
-                                            Beli Sekarang
+                                            {{ $service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0) ? 'Klaim Gratis' : 'Beli Sekarang' }}
                                         </button>
                                     </div>
                                 @endif

@@ -18,6 +18,12 @@ class StoreProductRequest extends FormRequest
             'name'                => ['required', 'string', 'max:200'],
             'short_desc'          => ['nullable', 'string', 'max:500'],
             'description'         => ['nullable', 'string'],
+            'pricing_type'        => ['nullable', 'string', 'in:fixed,free,pay_what_you_want,traktir'],
+            'pwyw_min_price'      => ['nullable', 'numeric', 'min:0'],
+            'pwyw_suggested_price'=> ['nullable', 'numeric', 'min:0'],
+            'traktir_unit_name'   => ['nullable', 'string', 'max:50'],
+            'traktir_unit_icon'   => ['nullable', 'string', 'max:50'],
+            'traktir_unit_price'  => ['nullable', 'numeric', 'min:0'],
             'price'               => ['required', 'numeric', 'min:0'],
             'sale_price'          => ['nullable', 'numeric', 'min:0', 'lt:price'],
             'stock'               => ['nullable', 'integer', 'min:0'],
@@ -214,13 +220,48 @@ class StoreProductRequest extends FormRequest
             $merge['faqs'] = $faqs ?: null;
         }
 
-        if ($this->has('price') && $this->input('price') !== null) {
-            $merge['price'] = preg_replace('/[^\d]/', '', (string)$this->input('price'));
+        // Pricing Models (Fixed, Free, PWYW, Traktir)
+        $pricingType = $this->input('pricing_type', 'fixed');
+        if (!in_array($pricingType, ['fixed', 'free', 'pay_what_you_want', 'traktir'])) {
+            $pricingType = 'fixed';
         }
+        $merge['pricing_type'] = $pricingType;
 
-        if ($this->has('sale_price')) {
-            $rawSale = preg_replace('/[^\d]/', '', (string)$this->input('sale_price'));
-            $merge['sale_price'] = $rawSale !== '' ? $rawSale : null;
+        if ($this->has('pwyw_min_price')) {
+            $rawPwywMin = preg_replace('/[^\d]/', '', (string)$this->input('pwyw_min_price'));
+            $merge['pwyw_min_price'] = $rawPwywMin !== '' ? (float)$rawPwywMin : 0;
+        }
+        if ($this->has('pwyw_suggested_price')) {
+            $rawPwywSug = preg_replace('/[^\d]/', '', (string)$this->input('pwyw_suggested_price'));
+            $merge['pwyw_suggested_price'] = $rawPwywSug !== '' ? (float)$rawPwywSug : null;
+        }
+        if ($this->has('traktir_unit_price')) {
+            $rawTraktir = preg_replace('/[^\d]/', '', (string)$this->input('traktir_unit_price'));
+            $merge['traktir_unit_price'] = $rawTraktir !== '' ? (float)$rawTraktir : 10000;
+        }
+        $merge['traktir_unit_name'] = $this->input('traktir_unit_name') ?: 'Kopi';
+        $merge['traktir_unit_icon'] = $this->input('traktir_unit_icon') ?: 'coffee';
+
+        if ($pricingType === 'free') {
+            $merge['price'] = 0;
+            $merge['sale_price'] = null;
+        } elseif ($pricingType === 'pay_what_you_want') {
+            $merge['price'] = (float)($merge['pwyw_min_price'] ?? 0);
+            $merge['sale_price'] = null;
+            $merge['require_follow_join'] = false;
+        } elseif ($pricingType === 'traktir') {
+            $merge['price'] = (float)($merge['traktir_unit_price'] ?? 10000);
+            $merge['sale_price'] = null;
+            $merge['require_follow_join'] = false;
+        } else {
+            // Fixed
+            if ($this->has('price') && $this->input('price') !== null) {
+                $merge['price'] = preg_replace('/[^\d]/', '', (string)$this->input('price'));
+            }
+            if ($this->has('sale_price')) {
+                $rawSale = preg_replace('/[^\d]/', '', (string)$this->input('sale_price'));
+                $merge['sale_price'] = $rawSale !== '' ? $rawSale : null;
+            }
         }
 
         if ($this->has('variants') && is_array($this->input('variants'))) {

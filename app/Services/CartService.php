@@ -29,7 +29,7 @@ class CartService
     /**
      * Tambah item ke cart.
      */
-    public function add(int $productId, ?int $variantValueId = null, int $qty = 1, ?int $affiliateId = null): Cart
+    public function add(int $productId, ?int $variantValueId = null, int $qty = 1, ?int $affiliateId = null, ?float $customPrice = null): Cart
     {
         $product = Product::findOrFail($productId);
         
@@ -132,6 +132,7 @@ class CartService
             'product_id'       => $productId,
             'variant_value_id' => $variantValueId,
             'affiliate_id'     => $affiliateId,
+            'custom_price'     => $customPrice > 0 ? $customPrice : null,
             'qty'              => $qty,
         ]);
     }
