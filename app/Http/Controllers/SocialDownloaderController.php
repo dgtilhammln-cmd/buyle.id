@@ -73,6 +73,25 @@ class SocialDownloaderController extends Controller
             }
         }
 
+        // Bungkus setiap postingan di dalam feed profil (jika ada)
+        if (!empty($result['posts'])) {
+            $username = $result['author']['username'] ?? 'instagram';
+            $safeUser = preg_replace('/[^a-zA-Z0-9_]/', '', $username);
+
+            foreach ($result['posts'] as $idx => &$p) {
+                $p['direct_download_url'] = route('tools.social_downloader.stream', [
+                    'url'      => base64_encode($p['download_url']),
+                    'filename' => 'ig_' . $safeUser . '_' . ($idx + 1) . '.' . ($p['ext'] ?? 'mp4'),
+                ]);
+                if (!empty($p['image_url'])) {
+                    $p['direct_thumb_url'] = route('tools.social_downloader.stream', [
+                        'url'      => base64_encode($p['image_url']),
+                        'filename' => 'ig_' . $safeUser . '_' . ($idx + 1) . '_thumb.jpg',
+                    ]);
+                }
+            }
+        }
+
         return response()->json($result);
     }
 

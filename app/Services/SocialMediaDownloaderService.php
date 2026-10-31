@@ -264,7 +264,7 @@ class SocialMediaDownloaderService
     }
 
     /**
-     * Ambil foto profil Instagram resolusi HD.
+     * Ambil foto profil Instagram resolusi HD dan seluruh feed postingan.
      */
     protected function resolveInstagramProfile(string $input): array
     {
@@ -281,7 +281,13 @@ class SocialMediaDownloaderService
             return ['success' => false, 'message' => 'Username Instagram tidak valid.'];
         }
 
-        // Coba ambil profile data via Instagram Public Web Profile API
+        // 1. Coba via SaveInsta Profile Scraper (mendapatkan Foto Profil HD + Seluruh Postingan Feed)
+        $profileRes = $this->resolveInstagramProfileViaSaveInsta($username);
+        if (!empty($profileRes['success'])) {
+            return $profileRes;
+        }
+
+        // 2. Fallback via Instagram Public Web Profile API
         try {
             $response = Http::timeout(8)
                 ->withHeaders([
@@ -310,7 +316,7 @@ class SocialMediaDownloaderService
                         'downloads' => [
                             [
                                 'type'  => 'image',
-                                'label' => 'Download Foto Profil Resolusi Tinggi (HD)',
+                                'label' => 'Download Foto Profil HD (DP)',
                                 'url'   => $hdPic,
                                 'ext'   => 'jpg',
                             ]
@@ -326,7 +332,7 @@ class SocialMediaDownloaderService
             Log::warning('Instagram DP fetch gagal: ' . $e->getMessage());
         }
 
-        // Fallback oEmbed info
+        // 3. Fallback via oEmbed info
         try {
             $oembed = Http::timeout(8)->get("https://api.instagram.com/oembed/?url=https://www.instagram.com/{$username}/");
             if ($oembed->successful() && !empty($oembed->json('thumbnail_url'))) {
@@ -346,7 +352,7 @@ class SocialMediaDownloaderService
                     'downloads' => [
                         [
                             'type'  => 'image',
-                            'label' => 'Download Foto Profil HD',
+                            'label' => 'Download Foto Profil HD (DP)',
                             'url'   => $picUrl,
                             'ext'   => 'jpg',
                         ]
@@ -361,6 +367,151 @@ class SocialMediaDownloaderService
             'success' => false,
             'message' => 'Gagal mengambil foto profil Instagram. Pastikan akun bersifat publik dan username tertulis dengan benar.',
         ];
+    }
+
+    /**
+     * Ambil foto profil HD dan seluruh postingan timeline Instagram via SaveInsta Engine.
+     */
+    protected function resolveInstagramProfileViaSaveInsta(string $username): array
+    {
+        $cleanUrl = "https://www.instagram.com/{$username}/";
+
+        try {
+            // 1. Dapatkan token verifikasi
+            $resVerify = Http::timeout(10)->asForm()->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Origin'     => 'https://saveinsta.to',
+                'Referer'    => 'https://saveinsta.to/',
+            ])->post('https://saveinsta.to/api/userverify', [
+                'url' => $cleanUrl,
+            ]);
+
+            $token = $resVerify->json('token');
+            if (empty($token)) {
+                return ['success' => false, 'message' => 'Gagal memverifikasi profil Instagram.'];
+            }
+
+            // 2. Request ajaxSearch dengan tipe profile
+            $resSearch = Http::timeout(20)->asForm()->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Origin'     => 'https://saveinsta.to',
+                'Referer'    => 'https://saveinsta.to/',
+            ])->post('https://saveinsta.to/api/ajaxSearch', [
+                'q'       => $cleanUrl,
+                't'       => 'profile',
+                'lang'    => 'en',
+                'cftoken' => $token,
+            ]);
+
+            $html = $resSearch->json('data');
+            if (empty($html)) {
+                return ['success' => false, 'message' => 'Profil Instagram tidak ditemukan atau akun bersifat privat.'];
+            }
+
+            $dom = new \DOMDocument();
+            @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+            $xpath = new \DOMXPath($dom);
+
+            $items = $xpath->query('//div[contains(@class, "download-items")]');
+            if ($items->length === 0) {
+                return ['success' => false, 'message' => 'Tidak ada postingan publik ditemukan pada akun ini.'];
+            }
+
+            $avatarUrl = null;
+            $feedPosts = [];
+            $seenUrls = [];
+
+            foreach ($items as $idx => $it) {
+                $img = $xpath->query('.//img', $it)->item(0);
+                $thumbSrc = $img ? $img->getAttribute('src') : null;
+
+                $links = $xpath->query('.//a', $it);
+                $btnList = [];
+                $videoDlUrl = null;
+                $photoDlUrl = null;
+
+                foreach ($links as $l) {
+                    $href = $l->getAttribute('href');
+                    $text = trim($l->textContent);
+                    if ($href && $href !== '#' && !str_starts_with($href, 'javascript:')) {
+                        $btnList[] = ['text' => $text, 'url' => $href];
+                        if (stripos($text, 'video') !== false || stripos($href, '.mp4') !== false) {
+                            $videoDlUrl = $href;
+                        } elseif (stripos($text, 'image') !== false || stripos($text, 'photo') !== false || stripos($text, 'thumbnail') !== false) {
+                            $photoDlUrl = $href;
+                        }
+                    }
+                }
+
+                // Cek apakah item adalah Foto Profil (Avatar)
+                $isAvatar = false;
+                foreach ($btnList as $b) {
+                    if (stripos($b['text'], 'avatar') !== false) {
+                        $isAvatar = true;
+                        if (!$avatarUrl) {
+                            $avatarUrl = $b['url'];
+                        }
+                    }
+                }
+
+                if ($isAvatar) {
+                    continue;
+                }
+
+                $primaryDlUrl = $videoDlUrl ?: ($photoDlUrl ?: ($btnList[0]['url'] ?? $thumbSrc));
+                if (!$primaryDlUrl || in_array($primaryDlUrl, $seenUrls)) {
+                    continue;
+                }
+                $seenUrls[] = $primaryDlUrl;
+
+                $isVideo = !empty($videoDlUrl)
+                    || (stripos($primaryDlUrl, '.mp4') !== false)
+                    || ($xpath->query('.//i[contains(@class, "icon-dlvideo")]', $it)->length > 0);
+
+                $feedPosts[] = [
+                    'id'           => $idx,
+                    'thumb'        => $thumbSrc,
+                    'is_video'     => $isVideo,
+                    'download_url' => $primaryDlUrl,
+                    'video_url'    => $videoDlUrl,
+                    'image_url'    => $photoDlUrl ?: $thumbSrc,
+                    'label'        => $isVideo ? 'Download Video HD' : 'Download Foto HD',
+                    'ext'          => $isVideo ? 'mp4' : 'jpg',
+                ];
+            }
+
+            if (!$avatarUrl && !empty($feedPosts[0]['thumb'])) {
+                $avatarUrl = $feedPosts[0]['thumb'];
+            }
+
+            return [
+                'success'         => true,
+                'platform'        => 'instagram',
+                'type'            => 'profile',
+                'title'           => 'Profil Instagram: @' . $username,
+                'preview'         => $avatarUrl,
+                'author'          => [
+                    'name'     => $username,
+                    'username' => '@' . $username,
+                    'avatar'   => $avatarUrl,
+                ],
+                'is_video'        => false,
+                'downloads'       => $avatarUrl ? [
+                    [
+                        'type'  => 'image',
+                        'label' => 'Download Foto Profil HD (DP)',
+                        'url'   => $avatarUrl,
+                        'ext'   => 'jpg',
+                    ]
+                ] : [],
+                'is_profile_feed' => true,
+                'posts'           => $feedPosts,
+                'total_posts'     => count($feedPosts),
+            ];
+        } catch (\Throwable $e) {
+            Log::warning('Instagram Profile via SaveInsta Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'Gagal mengambil postingan profil Instagram.'];
+        }
     }
 
     /**

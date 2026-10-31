@@ -146,7 +146,7 @@
 
             {{-- Media Result Card --}}
             <div id="dlResultBox" class="dl-result-card" style="display: none;">
-                <div class="dl-result-header">
+                <div class="dl-result-header" id="resHeaderWrap" style="display: none;">
                     <div class="dl-author-wrap" id="resAuthorWrap">
                         <img id="resAuthorAvatar" class="dl-author-avatar" src="" alt="Avatar">
                         <div class="dl-author-info">
@@ -154,7 +154,6 @@
                             <div class="dl-author-username" id="resAuthorUsername">@user</div>
                         </div>
                     </div>
-                    <div class="dl-platform-tag" id="resPlatformTag">TikTok</div>
                 </div>
 
                 <div class="dl-result-body">
@@ -183,6 +182,53 @@
                             <span>Unduhan aman, tanpa iklan jebakan, dan file langsung tersimpan di galeri perangkat.</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {{-- Profile Feed Result Card with Grid and Infinite Scroll --}}
+            <div id="dlProfileFeedBox" class="dl-profile-feed-card" style="display: none;">
+                <div class="pf-header">
+                    <div class="pf-user-row">
+                        <div class="pf-avatar-wrap">
+                            <img id="pfAvatarImg" class="pf-avatar" src="" alt="Avatar Profil">
+                        </div>
+                        <div class="pf-info">
+                            <div class="pf-username-wrap">
+                                <h2 class="pf-username" id="pfUsername">@user</h2>
+                                <span class="pf-badge-count" id="pfTotalCount">0 Postingan</span>
+                            </div>
+                            <p class="pf-desc">Pilih dan unduh foto maupun video reels berkualitas HD langsung dari galeri postingan publik ini.</p>
+                            <div class="pf-action-row" id="pfHeaderActions">
+                                {{-- Download DP button injected here --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Posts Grid Header --}}
+                <div class="pf-grid-header">
+                    <h3 class="pf-grid-title">Galeri Postingan &amp; Reels</h3>
+                    <span class="pf-grid-counter" id="pfRenderedCounter">Menampilkan 0 postingan</span>
+                </div>
+
+                {{-- Posts Grid --}}
+                <div id="pfPostsGrid" class="pf-posts-grid"></div>
+
+                {{-- Sentinel for Infinite Scroll --}}
+                <div id="pfSentinel" class="pf-sentinel"></div>
+
+                {{-- Loading indicator --}}
+                <div id="pfLoadingMore" class="pf-loading-more" style="display: none;">
+                    <div class="dl-spinner-mini"></div>
+                    <span>Memuat postingan berikutnya...</span>
+                </div>
+
+                {{-- Manual Load More Button fallback --}}
+                <div id="pfLoadMoreWrap" class="pf-load-more-wrap" style="display: none;">
+                    <button type="button" class="btn-load-more-pf" onclick="renderNextProfileBatch()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <span>Muat Lebih Banyak Postingan</span>
+                    </button>
                 </div>
             </div>
 
@@ -805,18 +851,6 @@
         color: #64748b;
         font-weight: 500;
     }
-    .dl-platform-tag {
-        background: #f0fdf4;
-        color: #15803d;
-        border: 1px solid #86efac;
-        padding: 0.25rem 0.75rem;
-        border-radius: 999px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
     .dl-result-body {
         display: grid;
         grid-template-columns: 240px 1fr;
@@ -907,6 +941,247 @@
     .dl-safety-note svg {
         color: #15803d;
         flex-shrink: 0;
+    }
+
+    /* Profile Feed Styles */
+    .dl-profile-feed-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        padding: 2rem;
+        margin-top: 1.5rem;
+    }
+    .pf-header {
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 1.75rem;
+    }
+    .pf-user-row {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    .pf-avatar-wrap {
+        position: relative;
+        flex-shrink: 0;
+    }
+    .pf-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #1eb349;
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.2);
+    }
+    .pf-info {
+        flex: 1;
+    }
+    .pf-username-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.35rem;
+    }
+    .pf-username {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+    }
+    .pf-badge-count {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+    }
+    .pf-desc {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 0 0 1rem;
+    }
+    .pf-action-row {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .pf-grid-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+    }
+    .pf-grid-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+    .pf-grid-counter {
+        font-size: 0.82rem;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .pf-posts-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+    }
+    .pf-post-card {
+        background: #f8fafc;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .pf-post-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+    .pf-thumb-container {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+        overflow: hidden;
+    }
+    .pf-thumb-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .pf-post-card:hover .pf-thumb-img {
+        transform: scale(1.05);
+    }
+    .pf-type-badge {
+        position: absolute;
+        top: 0.65rem;
+        right: 0.65rem;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(4px);
+        color: #ffffff;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+    }
+    .pf-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 100%);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 0.85rem;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        z-index: 3;
+    }
+    .pf-post-card:hover .pf-overlay,
+    .pf-thumb-container:active .pf-overlay {
+        opacity: 1;
+    }
+    @media (hover: none) {
+        .pf-overlay {
+            opacity: 1;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, transparent 60%);
+        }
+    }
+    .btn-pf-download {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        color: #ffffff;
+        text-decoration: none;
+        padding: 0.55rem 0.95rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.4);
+        transition: transform 0.15s ease;
+    }
+    .btn-pf-download:hover {
+        transform: scale(1.02);
+    }
+    .pf-sentinel {
+        width: 100%;
+        height: 20px;
+    }
+    .pf-loading-more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 1.5rem 0;
+        color: #64748b;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .dl-spinner-mini {
+        width: 18px;
+        height: 18px;
+        border: 2.5px solid #e2e8f0;
+        border-top-color: #1eb349;
+        border-radius: 50%;
+        animation: dlSpin 0.7s linear infinite;
+    }
+    .pf-load-more-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+    .btn-load-more-pf {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #ffffff;
+        border: 1.5px solid #cbd5e1;
+        color: #334155;
+        padding: 0.65rem 1.35rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    .btn-load-more-pf:hover {
+        background: #f8fafc;
+        border-color: #1eb349;
+        color: #1eb349;
+    }
+
+    @media (max-width: 768px) {
+        .pf-posts-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.85rem;
+        }
+        .pf-user-row {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+        .pf-username-wrap {
+            justify-content: center;
+        }
+        .pf-action-row {
+            justify-content: center;
+        }
     }
 
     /* SEO Content Sections */
@@ -1248,6 +1523,9 @@ function handleFetchMedia(e) {
     // Reset states
     errorBox.style.display = 'none';
     resultBox.style.display = 'none';
+    var feedBox = document.getElementById('dlProfileFeedBox');
+    if (feedBox) feedBox.style.display = 'none';
+
     loadingBox.style.display = 'block';
     btn.disabled = true;
     btn.style.opacity = '0.6';
@@ -1291,14 +1569,166 @@ function handleFetchMedia(e) {
     });
 }
 
+var PROFILE_BATCH_SIZE = 12;
+window.allProfilePosts = [];
+window.profilePostsRendered = 0;
+window.profileScrollObserver = null;
+
 function renderResult(data) {
+    if (data.is_profile_feed && data.posts && data.posts.length > 0) {
+        renderProfileFeed(data);
+    } else {
+        var feedBox = document.getElementById('dlProfileFeedBox');
+        if (feedBox) feedBox.style.display = 'none';
+        renderSingleMediaResult(data);
+    }
+}
+
+function renderProfileFeed(data) {
     var resultBox = document.getElementById('dlResultBox');
+    var feedBox = document.getElementById('dlProfileFeedBox');
+
+    resultBox.style.display = 'none';
+    feedBox.style.display = 'block';
+
+    // Header info
+    var author = data.author || {};
+    var username = author.username || '@user';
+    document.getElementById('pfUsername').textContent = username;
+    document.getElementById('pfTotalCount').textContent = (data.total_posts || data.posts.length) + ' Postingan Tersedia';
+
+    var avatarEl = document.getElementById('pfAvatarImg');
+    if (author.avatar) {
+        avatarEl.src = author.avatar;
+    } else {
+        var initial = username.replace('@', '').charAt(0).toUpperCase();
+        avatarEl.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\' viewBox=\'0 0 80 80\'%3E%3Crect width=\'80\' height=\'80\' rx=\'40\' fill=\'%231eb349\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' font-family=\'sans-serif\' font-size=\'32\' font-weight=\'bold\' fill=\'%23ffffff\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3E' + initial + '%3C/text%3E%3C/svg%3E';
+    }
+
+    // Tombol Download Foto Profil (DP)
+    var actionRow = document.getElementById('pfHeaderActions');
+    actionRow.innerHTML = '';
+    if (data.downloads && data.downloads[0]) {
+        var dpBtn = document.createElement('a');
+        dpBtn.className = 'btn-dl-action btn-dl-primary';
+        dpBtn.href = data.downloads[0].direct_download_url || data.downloads[0].url;
+        dpBtn.setAttribute('download', '');
+        dpBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg><span>Download Foto Profil (DP) HD</span>';
+        actionRow.appendChild(dpBtn);
+    }
+
+    // Reset grid
+    var grid = document.getElementById('pfPostsGrid');
+    grid.innerHTML = '';
+
+    window.allProfilePosts = data.posts || [];
+    window.profilePostsRendered = 0;
+
+    // Render batch pertama
+    renderNextProfileBatch();
+
+    // Aktifkan lazy load infinite scroll
+    setupProfileInfiniteScroll();
+
+    feedBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderNextProfileBatch() {
+    var posts = window.allProfilePosts || [];
+    var start = window.profilePostsRendered;
+    var end = Math.min(start + PROFILE_BATCH_SIZE, posts.length);
+
+    if (start >= posts.length) {
+        document.getElementById('pfLoadMoreWrap').style.display = 'none';
+        document.getElementById('pfLoadingMore').style.display = 'none';
+        return;
+    }
+
+    var grid = document.getElementById('pfPostsGrid');
+    for (var i = start; i < end; i++) {
+        var card = createProfilePostCard(posts[i], i);
+        grid.appendChild(card);
+    }
+
+    window.profilePostsRendered = end;
+    document.getElementById('pfRenderedCounter').textContent = 'Menampilkan ' + end + ' dari ' + posts.length + ' postingan';
+
+    var loadMoreWrap = document.getElementById('pfLoadMoreWrap');
+    if (end < posts.length) {
+        loadMoreWrap.style.display = 'flex';
+    } else {
+        loadMoreWrap.style.display = 'none';
+    }
+}
+
+function createProfilePostCard(post, index) {
+    var card = document.createElement('div');
+    card.className = 'pf-post-card';
+
+    var thumbUrl = post.thumb || post.image_url || '';
+    var isVideo = post.is_video;
+    var dlUrl = post.direct_download_url || post.download_url;
+
+    var typeBadge = isVideo
+        ? '<div class="pf-type-badge" title="Video Reels"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>'
+        : '<div class="pf-type-badge" title="Foto Postingan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>';
+
+    var html = '<div class="pf-thumb-container">' +
+        '<img src="' + thumbUrl + '" alt="Post ' + (index + 1) + '" class="pf-thumb-img" loading="lazy">' +
+        typeBadge +
+        '<div class="pf-overlay">' +
+            '<a href="' + dlUrl + '" class="btn-pf-download" download title="Download ' + (isVideo ? 'Video' : 'Foto') + ' HD">' +
+                '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+                    '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
+                    '<polyline points="7 10 12 15 17 10"></polyline>' +
+                    '<line x1="12" y1="15" x2="12" y2="3"></line>' +
+                '</svg>' +
+                '<span>' + (isVideo ? 'Download Video' : 'Download Foto') + '</span>' +
+            '</a>' +
+        '</div>' +
+    '</div>';
+
+    card.innerHTML = html;
+    return card;
+}
+
+function setupProfileInfiniteScroll() {
+    if (window.profileScrollObserver) {
+        window.profileScrollObserver.disconnect();
+    }
+
+    var sentinel = document.getElementById('pfSentinel');
+    if (!sentinel || !window.IntersectionObserver) return;
+
+    window.profileScrollObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                var posts = window.allProfilePosts || [];
+                if (window.profilePostsRendered < posts.length) {
+                    var spinner = document.getElementById('pfLoadingMore');
+                    spinner.style.display = 'flex';
+                    setTimeout(function() {
+                        renderNextProfileBatch();
+                        spinner.style.display = 'none';
+                    }, 300);
+                }
+            }
+        });
+    }, { rootMargin: '300px' });
+
+    window.profileScrollObserver.observe(sentinel);
+}
+
+function renderSingleMediaResult(data) {
+    var resultBox = document.getElementById('dlResultBox');
+    var headerWrap = document.getElementById('resHeaderWrap');
 
     // Author
     var authorWrap = document.getElementById('resAuthorWrap');
     var author = data.author;
     if (author && (author.avatar || (author.username && author.username !== '@instagram' && author.username !== '@user'))) {
         authorWrap.style.display = 'flex';
+        if (headerWrap) headerWrap.style.display = 'flex';
         document.getElementById('resAuthorName').textContent = author.name || 'Kreator';
         document.getElementById('resAuthorUsername').textContent = author.username || '';
         var avatarEl = document.getElementById('resAuthorAvatar');
@@ -1311,11 +1741,10 @@ function renderResult(data) {
     } else {
         // Jika tidak ada info author asli, sembunyikan card author agar tidak polos abu-abu
         authorWrap.style.display = 'none';
+        if (headerWrap) headerWrap.style.display = 'none';
     }
 
-    // Platform tag
-    var tagEl = document.getElementById('resPlatformTag');
-    tagEl.textContent = (data.platform || 'Media').toUpperCase();
+    // Platform tag element removed (no badge shown)
 
     // Media Title
     document.getElementById('resMediaTitle').textContent = data.title || 'Pratinjau Media';
