@@ -937,83 +937,88 @@
                         @endphp
                         <style>
                             .bio-pricing-card {
-                                background: #ffffff;
-                                border: 1.5px solid #e2e8f0;
-                                border-radius: 16px;
-                                padding: 1.15rem;
-                                margin-bottom: 1.25rem;
-                                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+                                background: #fff;
+                                border: 1px solid #e8edf2;
+                                border-radius: 12px;
+                                padding: 0.9rem 1rem;
+                                margin-bottom: 1rem;
+                                box-shadow: 0 1px 4px rgba(0,0,0,0.04);
                                 font-family: 'Montserrat', sans-serif;
                             }
                             .bio-pricing-hdr {
                                 display: flex;
                                 align-items: center;
                                 justify-content: space-between;
-                                margin-bottom: 0.85rem;
+                                margin-bottom: 0.7rem;
+                                padding-bottom: 0.65rem;
+                                border-bottom: 1px solid #f1f5f9;
                             }
                             .bio-pill-grid {
                                 display: grid;
                                 grid-template-columns: repeat(5, 1fr);
-                                gap: 0.35rem;
-                                margin-bottom: 0.85rem;
+                                gap: 0.28rem;
+                                margin-bottom: 0.7rem;
                             }
                             .bio-amount-pill {
-                                padding: 0.5rem 0.25rem;
+                                padding: 0.38rem 0.2rem;
                                 background: #f8fafc;
-                                color: #334155;
-                                border: 1.5px solid #e2e8f0;
-                                border-radius: 10px;
-                                font-size: 0.82rem;
-                                font-weight: 700;
+                                color: #475569;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 8px;
+                                font-size: 0.77rem;
+                                font-weight: 600;
                                 cursor: pointer;
-                                transition: all 0.15s;
+                                transition: all 0.12s;
                                 text-align: center;
                                 font-family: 'Montserrat', sans-serif;
+                                letter-spacing: 0;
+                            }
+                            .bio-amount-pill:hover {
+                                border-color: #1eb349;
+                                color: #1eb349;
+                                background: #f0fdf4;
                             }
                             .bio-amount-pill.active {
                                 background: #1eb349;
-                                color: #ffffff;
+                                color: #fff;
                                 border-color: #1eb349;
-                                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
+                                font-weight: 700;
                             }
                             .bio-btn-checkout {
                                 width: 100%;
                                 justify-content: center;
-                                background: linear-gradient(135deg, #1eb349, #a5cf37);
+                                background: #1eb349;
                                 color: #fff;
                                 border: none;
-                                padding: 0.9rem;
-                                font-size: 0.95rem;
-                                font-weight: 800;
-                                border-radius: 999px;
-                                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
+                                padding: 0.75rem 1rem;
+                                font-size: 0.875rem;
+                                font-weight: 700;
+                                border-radius: 8px;
                                 cursor: pointer;
                                 display: flex;
                                 align-items: center;
-                                gap: 0.5rem;
+                                gap: 0.45rem;
                                 font-family: 'Montserrat', sans-serif;
-                                transition: all 0.15s;
+                                transition: background 0.15s;
+                                letter-spacing: 0.01em;
                             }
                             .bio-btn-checkout:hover {
-                                transform: translateY(-1px);
-                                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+                                background: #17a040;
                             }
                         </style>
 
                         <div class="bio-pricing-card">
                             <div class="bio-pricing-hdr">
-                                <div style="display: flex; align-items: center; gap: 0.6rem;">
-                                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(30,179,73,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                                        {{ $unitIcon }}
-                                    </div>
+                                <div style="display:flex;align-items:center;gap:0.5rem;">
+                                    <span style="font-size:1.15rem;line-height:1;">{{ $unitIcon }}</span>
                                     <div>
-                                        <div style="font-size: 0.9rem; font-weight: 800; color: #0f172a;">Traktir {{ ucfirst($unitName) }}</div>
-                                        <div style="font-size: 0.74rem; color: #64748b; font-weight: 600;">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
+                                        <div style="font-size:0.825rem;font-weight:700;color:#1a202c;">Traktir {{ ucfirst($unitName) }}</div>
+                                        <div style="font-size:0.68rem;color:#94a3b8;font-weight:500;margin-top:1px;">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
                                     </div>
                                 </div>
-                                <div style="text-align: right;">
-                                    <div style="font-size: 0.68rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Total</div>
-                                    <div id="bio-traktir-total" style="font-size: 1.05rem; font-weight: 800; color: #1eb349;">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:0.6rem;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Total</div>
+                                    <div id="bio-traktir-total" style="font-size:0.975rem;font-weight:700;color:#1eb349;">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
                                 </div>
                             </div>
 
@@ -1027,12 +1032,12 @@
                             </div>
 
                             {{-- Custom Qty Counter --}}
-                            <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 0.45rem 0.85rem;">
-                                <span style="font-size: 0.8rem; font-weight: 700; color: #334155;">Jumlah {{ ucfirst($unitName) }}</span>
-                                <div style="display: flex; align-items: center; gap: 0.4rem;">
-                                    <button type="button" onclick="stepBioTraktirQty(-1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
-                                    <input type="number" id="bio-traktir-qty-val" value="1" min="1" max="1000" style="width: 44px; text-align: center; border: none; font-size: 0.95rem; font-weight: 800; color: #0f172a; outline: none; background: transparent; font-family:'Montserrat',sans-serif;" oninput="updateBioTraktirTotal(this.value)">
-                                    <button type="button" onclick="stepBioTraktirQty(1)" style="width: 28px; height: 28px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                            <div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e8edf2;border-radius:8px;padding:0.38rem 0.75rem;margin-bottom:0;">
+                                <span style="font-size:0.75rem;font-weight:600;color:#475569;">Jumlah {{ ucfirst($unitName) }}</span>
+                                <div style="display:flex;align-items:center;gap:0.35rem;">
+                                    <button type="button" onclick="stepBioTraktirQty(-1)" style="width:24px;height:24px;border-radius:6px;border:1px solid #dde1e7;background:#fff;color:#334155;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">−</button>
+                                    <input type="number" id="bio-traktir-qty-val" value="1" min="1" max="1000" style="width:36px;text-align:center;border:none;font-size:0.875rem;font-weight:700;color:#1a202c;outline:none;background:transparent;font-family:'Montserrat',sans-serif;" oninput="updateBioTraktirTotal(this.value)">
+                                    <button type="button" onclick="stepBioTraktirQty(1)" style="width:24px;height:24px;border-radius:6px;border:1px solid #dde1e7;background:#fff;color:#334155;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">+</button>
                                 </div>
                             </div>
                         </div>
@@ -1046,8 +1051,8 @@
                                 <input type="hidden" name="affiliate_id" value="{{ $affiliateUserId }}">
                             @endif
                             <button type="submit" class="bio-btn-checkout">
-                                <span>{{ $unitIcon }}</span>
-                                <span id="bio-traktir-btn-text">Traktir Sekarang (Rp {{ number_format($unitPrice, 0, ',', '.') }})</span>
+                                <span style="font-size:1rem;">{{ $unitIcon }}</span>
+                                <span id="bio-traktir-btn-text">Traktir Sekarang · Rp {{ number_format($unitPrice, 0, ',', '.') }}</span>
                             </button>
                         </form>
 
@@ -1073,7 +1078,7 @@
                                     document.getElementById('bio-traktir-total').textContent = formatted;
                                     document.getElementById('bio_traktir_form_qty').value = q;
                                     var btnText = document.getElementById('bio-traktir-btn-text');
-                                    if (btnText) btnText.textContent = 'Traktir Sekarang (' + formatted + ')';
+                                    if (btnText) btnText.textContent = 'Traktir Sekarang · ' + formatted;
 
                                     document.querySelectorAll('.bio-traktir-pill').forEach(function(p) {
                                         if (parseInt(p.dataset.qty) === q) {
@@ -1777,52 +1782,7 @@
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeBioVariantModal();
-        });
-
-        // Simpan & Teruskan Nomor Meja QR Code — KHUSUS produk makanan/FnB saja
-        (function() {
-            // Hanya aktif jika produk bertipe makanan/FnB (via type, category, atau block category)
-            var pTypeFnb = {{ json_encode(in_array($pType, ['makanan', 'fnb', 'food']) || strtolower($category ?? '') === 'makanan' || in_array(strtolower($rawCat ?? ''), ['makanan', 'fnb', 'food', 'kuliner'])) }};
-            if (!pTypeFnb) {
-                // Bukan produk makanan — hapus sisa state meja agar tidak bocor ke produk lain
-                try {
-                    sessionStorage.removeItem('buyle_table_number');
-                    localStorage.removeItem('buyle_table_number');
-                } catch(e){}
-                const existingInput = document.querySelector('#bio-cart-form input[name="table_number"]');
-                if (existingInput) existingInput.remove();
-                return;
-            }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const meja = urlParams.get('meja') || sessionStorage.getItem('buyle_table_number');
-            if (meja) {
-                const decodedMeja = decodeURIComponent(meja).trim();
-                try {
-                    sessionStorage.setItem('buyle_table_number', decodedMeja);
-                    localStorage.removeItem('buyle_table_number');
-                } catch(e){}
-
-                const form = document.getElementById('bio-cart-form');
-                if (form) {
-                    let hidden = form.querySelector('input[name="table_number"]');
-                    if (!hidden) {
-                        hidden = document.createElement('input');
-                        hidden.type = 'hidden';
-                        hidden.name = 'table_number';
-                        form.appendChild(hidden);
-                    }
-                    hidden.value = decodedMeja;
-                }
-            }
-        })();
-    </script>
-
-    {{-- SMART RETARGETING TRACKER --}}
-    <script>
-        (function() {
-            try {
-                const prodData = {
+4                const prodData = {
                     id: {{ (int)$product->id }},
                     name: {!! json_encode($prodTitle) !!},
                     slug: {!! json_encode($product->slug) !!},

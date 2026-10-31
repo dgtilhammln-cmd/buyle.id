@@ -133,7 +133,7 @@ class AuthController extends Controller
         return view('auth.register_email');
     }
 
-    // ── Process Register (Step 1: Save Draft & Send OTP) ──
+    // ── Process Register (Step 1: Save Draft & Send OTP / or direct if AJAX OTP already verified) ──
     public function register(Request $request)
     {
         $request->validate([
@@ -161,6 +161,72 @@ class AuthController extends Controller
             'password.regex'     => 'Kata sandi wajib memenuhi standar keamanan: kombinasi huruf besar & kecil, angka, dan simbol.',
         ]);
 
+        // ── Cek apakah AJAX OTP inline sudah diverifikasi sebelumnya ──
+        $ajaxVerified = session('ajax_otp_verified');
+        if (
+            $ajaxVerified &&
+            !empty($ajaxVerified['verified']) &&
+            isset($ajaxVerified['email']) &&
+            strtolower(trim($ajaxVerified['email'])) === strtolower(trim($request->email))
+        ) {
+            // OTP sudah diverif via AJAX — langsung buat user tanpa OTP tambahan
+            $oldSessionId = $request->session()->getId();
+
+            $base     = Str::slug($request->name, '.');
+            $username = $base;
+            $i        = 1;
+            while (User::where('username', $username)->exists()) {
+                $username = $base . $i++;
+            }
+
+            $user = User::create([
+                'name'              => $request->name,
+                'email'             => $request->email,
+                'phone'             => $request->phone,
+                'username'          => $username,
+                'password'          => Hash::make($request->password),
+                'role'              => 'buyer',
+                'email_verified_at' => now(),
+            ]);
+
+            try {
+                $user->notify(new \App\Notifications\WelcomeNotification());
+            } catch (\Throwable $e) {
+                \Log::warning('WelcomeNotification failed: ' . $e->getMessage());
+            }
+
+            // Link guest orders ke akun baru
+            try {
+                \App\Models\Order::where('customer_email', $user->email)
+                    ->whereNull('user_id')
+                    ->update(['user_id' => $user->id]);
+            } catch (\Throwable $e) {
+                \Log::warning('Link guest orders on register failed: ' . $e->getMessage());
+            }
+
+            session()->forget(['ajax_otp', 'ajax_otp_verified', 'pending_register', 'otp_expires_at', 'otp_email']);
+
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            try {
+                app(\App\Services\CartService::class)->mergeGuestCart($user->id, $oldSessionId);
+            } catch (\Throwable $e) {
+                \Log::warning('Merge guest cart on register failed: ' . $e->getMessage());
+            }
+
+            $redirectRoute = route('account.profile');
+            if ($user->role === 'super_admin' || $user->role === 'admin') {
+                $redirectRoute = route('admin.dashboard');
+            } elseif ($user->role === 'seller') {
+                $redirectRoute = route('creator.dashboard');
+            }
+
+            return redirect()->to($redirectRoute)
+                ->with('success', 'Akun berhasil dibuat! Selamat datang di buyle.id, ' . $user->name . '!');
+        }
+
+        // ── Fallback: Kirim OTP ke email (flow lama tanpa inline OTP) ──
         $otpCode = (string) rand(100000, 999999);
         $expiresAt = time() + 60; // berlaku 1 menit (60 detik)
 
