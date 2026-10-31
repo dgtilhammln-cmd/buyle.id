@@ -1660,6 +1660,47 @@
                                 </label>
                             </div>
 
+                            @php
+                                $rekeningActive = $wedding->data_json['envelope_rekening_enabled'] ?? true;
+                            @endphp
+
+                            {{-- Toggle Mode: Rekening Manual vs Midtrans Gateway --}}
+                            <div class="form-group" style="background:#f1f5f9; padding:1.15rem; border-radius:12px; border:1px solid #cbd5e1; margin-bottom:1.25rem;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                                    <div style="max-width:540px;">
+                                        <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                            <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                                            </svg>
+                                            <span>Metode Pembayaran Amplop Digital</span>
+                                        </div>
+                                        <div style="font-size:0.75rem; color:#475569; margin-top:4px; line-height:1.45;">
+                                            Jika <strong>Rekening Bank dinonaktifkan</strong>, sistem otomatis menggunakan <strong>Payment Gateway Midtrans</strong> (QRIS, GoPay, OVO, Virtual Account). Form amplop akan terintegrasi langsung pada Konfirmasi Kehadiran &amp; Ucapan dengan pop-up Snap otomatis.
+                                        </div>
+                                    </div>
+                                    <label style="display:inline-flex; align-items:center; gap:0.6rem; cursor:pointer; background:#ffffff; padding:8px 16px; border-radius:99px; border:1.5px solid #cbd5e1; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                                        <input type="checkbox" name="envelope_rekening_enabled" value="1" id="envelopeRekeningToggle" {{ $rekeningActive ? 'checked' : '' }} onchange="toggleRekeningForm(this.checked)" style="width:18px; height:18px; accent-color:#2563eb;">
+                                        <span style="font-weight:700; font-size:0.8rem; color:#1e293b;" id="rekeningToggleLabel">{{ $rekeningActive ? 'Rekening Manual Aktif' : 'Pakai Midtrans (Rekening Off)' }}</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {{-- Midtrans Active Notice --}}
+                            <div id="midtransInfoWrap" style="{{ $rekeningActive ? 'display:none;' : '' }} background:#eff6ff; border:1.5px dashed #93c5fd; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                                <div style="display:flex; align-items:flex-start; gap:10px;">
+                                    <span style="background:#3b82f6; color:#fff; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; flex-shrink:0;">✓</span>
+                                    <div>
+                                        <div style="font-weight:800; font-size:0.82rem; color:#1e40af;">Mode Midtrans Payment Gateway Aktif</div>
+                                        <div style="font-size:0.74rem; color:#1e3a8a; margin-top:2px; line-height:1.4;">
+                                            Rekening bank manual disembunyikan dari halaman tamu. Tamu dapat mengirim amplop langsung di form <strong>Konfirmasi Kehadiran &amp; Ucapan</strong> (bisa diisi 0 jika tidak memberi amplop). Pop-up Midtrans Snap akan muncul saat nominal diketikkan.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Form Rekening Bank & QRIS Manual --}}
+                            <div id="manualRekeningWrap" style="{{ $rekeningActive ? '' : 'display:none;' }}">
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem;">
                                 <div>
                                     <div class="form-group">
@@ -1701,6 +1742,7 @@
                                         </div>
                                     @endif
                                 </div>
+                            </div>
                             </div>
 
                             <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
@@ -1805,10 +1847,17 @@
                                                     {{ $wish->created_at->diffForHumans() }}
                                                 </div>
                                             </div>
-                                            <span
-                                                class="badge-pill {{ $wish->attendance_status === 'hadir' ? 'success' : 'warning' }}">
-                                                {{ ucfirst($wish->attendance_status) }}
-                                            </span>
+                                            <div style="display:flex; gap:6px; align-items:center;">
+                                                @if($wish->envelope_amount > 0)
+                                                    <span class="badge-pill" style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-weight:800; font-size:0.75rem;">
+                                                        Amplop: Rp {{ number_format($wish->envelope_amount, 0, ',', '.') }}
+                                                    </span>
+                                                @endif
+                                                <span
+                                                    class="badge-pill {{ $wish->attendance_status === 'hadir' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($wish->attendance_status) }}
+                                                </span>
+                                            </div>
                                         </div>
                                         <p
                                             style="font-size:0.825rem; color:#334155; line-height:1.5; font-style:italic; margin:0.75rem 0;">
@@ -1869,7 +1918,7 @@
                             </div>
                             <div style="flex:1; min-width:220px;">
                                 <div style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; font-family:'Montserrat',sans-serif;">Photobooth Live Camera</div>
-                                <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin-bottom:1rem;">Tamu scan QR barcode di venue, kamera langsung terbuka, pilih frame pernikahan eksklusif, jepret foto, dan share ke Instagram Story secara instan — tanpa install aplikasi.</p>
+                                <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin-bottom:1rem;">Tamu scan QR barcode di venue, kamera langsung terbuka, pilih frame pernikahan eksklusif, jepret foto, dan share ke Instagram Story secara instan - tanpa install aplikasi.</p>
 
                                 <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
                                     {{-- Open Photobooth --}}
@@ -2575,7 +2624,7 @@
             // 7. Nama Tamu Pengirim
             ctx.fillStyle = '#38bdf8';
             ctx.font = 'bold 42px Montserrat, sans-serif';
-            ctx.fillText(`— ${sender}`, 540, 1400);
+            ctx.fillText(`- ${sender}`, 540, 1400);
 
             ctx.fillStyle = '#94a3b8';
             ctx.font = '28px Montserrat, sans-serif';

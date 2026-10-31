@@ -24,6 +24,51 @@ class MidtransService
         Config::$is3ds        = true;
     }
 
+    public function getClientKey(): string
+    {
+        return \App\Models\Setting::get('midtrans_client_key') ?: config('midtrans.client_key', '');
+    }
+
+    public function isProduction(): bool
+    {
+        return (bool) (\App\Models\Setting::get('midtrans_is_production') ?? config('midtrans.is_production', true));
+    }
+
+    /**
+     * Membuat Snap Token khusus Amplop Digital / Tanda Kasih Pernikahan (Tamu Undangan).
+     */
+    public function createWeddingEnvelopeSnapToken(\App\Models\Wedding $wedding, string $guestName, int $amount, string $midtransOrderId): ?string
+    {
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $midtransOrderId,
+                'gross_amount' => $amount,
+            ],
+            'customer_details' => [
+                'first_name' => !empty($guestName) ? $guestName : 'Tamu Undangan',
+                'email'      => 'guest@buyle.id',
+            ],
+            'item_details' => [
+                [
+                    'id'       => 'ENVELOPE_' . $wedding->id,
+                    'price'    => $amount,
+                    'quantity' => 1,
+                    'name'     => 'Amplop Digital: ' . substr(($wedding->groom_nickname ?? $wedding->groom_name) . ' & ' . ($wedding->bride_nickname ?? $wedding->bride_name), 0, 45),
+                ]
+            ],
+        ];
+
+        try {
+            return Snap::getSnapToken($params);
+        } catch (Exception $e) {
+            \Log::error('Midtrans Wedding Envelope Snap Error: ' . $e->getMessage(), [
+                'order_id' => $midtransOrderId,
+                'amount'   => $amount,
+            ]);
+            return null;
+        }
+    }
+
     /**
      * Membuat Snap Token untuk pesanan.
      */

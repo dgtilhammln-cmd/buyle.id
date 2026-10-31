@@ -122,6 +122,10 @@ class WeddingPublicController extends Controller
             }
         }
 
+        $envelopeAmount = (float) ($request->input('amount') ?? $request->input('envelope_amount', 0));
+        $midtransOrderId = $request->input('midtrans_order_id');
+        $paymentStatus = $envelopeAmount > 0 ? ($request->input('payment_status', 'settlement')) : null;
+
         $wish = $wedding->wishes()->create([
             'wedding_id'        => $wedding->id,
             'guest_id'          => $guestId,
@@ -129,6 +133,9 @@ class WeddingPublicController extends Controller
             'sender_city'       => !empty($city) ? $city : 'Indonesia',
             'message'           => $validated['message'],
             'attendance_status' => $validated['attendance_status'],
+            'envelope_amount'   => $envelopeAmount,
+            'payment_status'    => $paymentStatus,
+            'midtrans_order_id' => $midtransOrderId,
             'latitude'          => $lat,
             'longitude'         => $lng,
             'is_approved'       => true,
@@ -136,7 +143,86 @@ class WeddingPublicController extends Controller
             'user_agent'        => $request->userAgent(),
         ]);
 
+        if ($envelopeAmount > 0) {
+            if ($midtransOrderId) {
+                WeddingGift::updateOrCreate(
+                    ['midtrans_order_id' => $midtransOrderId],
+                    [
+                        'wedding_id'        => $wedding->id,
+                        'guest_id'          => $guestId,
+                        'sender_name'       => $validated['sender_name'],
+                        'amount'            => $envelopeAmount,
+                        'payment_method'    => 'midtrans',
+                        'payment_status'    => 'settlement',
+                        'message'           => $validated['message'],
+                    ]
+                );
+            } else {
+                $wedding->gifts()->create([
+                    'guest_id'          => $guestId,
+                    'sender_name'       => $validated['sender_name'],
+                    'amount'            => $envelopeAmount,
+                    'payment_method'    => 'midtrans',
+                    'payment_status'    => 'settlement',
+                    'message'           => $validated['message'],
+                ]);
+            }
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Terima kasih ' . e($validated['sender_name']) . ', doa dan konfirmasi kehadiran Anda berhasil dikirim!'
+            ]);
+        }
+
         return back()->with('wish_success', 'Terima kasih ' . e($validated['sender_name']) . ', doa dan konfirmasi kehadiran Anda berhasil dikirim!');
+    }
+
+    /**
+     * Generate Midtrans Snap Token untuk Amplop Digital Tamu Undangan.
+     */
+    public function getEnvelopeSnapToken(string $slug, Request $request)
+    {
+        $wedding = Wedding::where('slug', $slug)->firstOrFail();
+
+        $validated = $request->validate([
+            'amount'      => ['required', 'numeric', 'min:1000'],
+            'sender_name' => ['nullable', 'string', 'max:150'],
+        ]);
+
+        $amount = (int) $validated['amount'];
+        $senderName = trim($validated['sender_name'] ?? '') ?: 'Tamu Undangan';
+
+        $midtransOrderId = 'AMPLOP-' . $wedding->id . '-' . time() . '-' . rand(100, 999);
+
+        $midtransService = app(\App\Services\MidtransService::class);
+        $snapToken = $midtransService->createWeddingEnvelopeSnapToken($wedding, $senderName, $amount, $midtransOrderId);
+
+        if (!$snapToken) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat token pembayaran Midtrans. Silakan coba beberapa saat lagi.'
+            ], 500);
+        }
+
+        // Catat gift awal dengan status pending
+        $gift = $wedding->gifts()->create([
+            'wedding_id'        => $wedding->id,
+            'sender_name'       => $senderName,
+            'amount'            => $amount,
+            'payment_method'    => 'midtrans',
+            'payment_status'    => 'pending',
+            'midtrans_order_id' => $midtransOrderId,
+            'snap_token'        => $snapToken,
+        ]);
+
+        return response()->json([
+            'success'           => true,
+            'snap_token'        => $snapToken,
+            'midtrans_order_id' => $midtransOrderId,
+            'gift_id'           => $gift->id,
+        ]);
     }
 
     /**

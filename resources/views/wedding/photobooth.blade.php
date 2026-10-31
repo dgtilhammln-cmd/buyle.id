@@ -12,9 +12,9 @@
         $isDigicam = strpos($path, 'vintage_digicam') !== false;
         $label = $isArch ? 'Minimalist Arch (3 Foto)' : ($isDigicam ? 'Vintage Digicam' : ('Frame ' . ($idx + 1)));
         $url = $isArch
-            ? asset('images/frames/minimalist_arch_wedding.png')
+            ? asset('images/frames/minimalist_arch_wedding.png') . '?v=2'
             : ($isDigicam
-                ? asset('images/frames/vintage_digicam_wedding.png')
+                ? asset('images/frames/vintage_digicam_wedding.png') . '?v=2'
                 : \Illuminate\Support\Facades\Storage::disk('public')->url($path));
 
         $customFrames[] = [
@@ -104,6 +104,16 @@
             height: 100%;
             object-fit: contain;
             transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        /* Keep video stream actively decoding in DOM on Safari & Mobile Chrome */
+        video#cameraVideo.visually-hidden-feed {
+            position: absolute !important;
+            opacity: 0.001 !important;
+            pointer-events: none !important;
+            z-index: -10 !important;
+            width: 1px !important;
+            height: 1px !important;
         }
 
         /* Container for 3 sequential arch slots */
@@ -825,7 +835,7 @@
             <div id="liveGridGuide" class="live-grid-guide"></div>
 
             {{-- Custom PNG Frame Overlay (Real-time over live camera) --}}
-            <img id="liveCustomFrameImg" class="frame-overlay-img" alt="Custom Frame Overlay">
+            <img id="liveCustomFrameImg" class="frame-overlay-img" alt="" onerror="this.style.display='none';">
 
             {{-- Multi-Shot Progress HUD --}}
             <div id="shotHud" class="shot-hud" style="display:none;">
@@ -1457,8 +1467,13 @@
             document.querySelectorAll('#carouselFrame .selector-pill').forEach(el => el.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
 
+            liveCustomFrameImg.onload = function() {
+                liveCustomFrameImg.style.display = 'block';
+            };
+            liveCustomFrameImg.onerror = function() {
+                console.warn('Frame image gagal dimuat:', frameUrl);
+            };
             liveCustomFrameImg.src = frameUrl;
-            liveCustomFrameImg.style.display = 'block';
 
             const isArch = frameUrl.includes('minimalist_arch');
             const isDigicam = frameUrl.includes('vintage_digicam');
@@ -1477,7 +1492,8 @@
 
                 if (archContainer) archContainer.style.display = 'block';
                 if (digiContainer) digiContainer.style.display = 'none';
-                videoEl.style.display = 'none';
+                videoEl.classList.add('visually-hidden-feed');
+                videoEl.style.display = 'block';
                 if (videoBgEl) videoBgEl.style.display = 'none';
 
                 if (topDot) topDot.style.background = '#22c55e';
@@ -1492,7 +1508,8 @@
 
                 if (archContainer) archContainer.style.display = 'none';
                 if (digiContainer) digiContainer.style.display = 'block';
-                videoEl.style.display = 'none';
+                videoEl.classList.add('visually-hidden-feed');
+                videoEl.style.display = 'block';
                 if (videoBgEl) videoBgEl.style.display = 'none';
 
                 if (topDot) topDot.style.background = '#eab308';
@@ -1506,6 +1523,7 @@
 
                 if (archContainer) archContainer.style.display = 'none';
                 if (digiContainer) digiContainer.style.display = 'none';
+                videoEl.classList.remove('visually-hidden-feed');
                 videoEl.style.display = 'block';
                 if (videoBgEl) videoBgEl.style.display = 'block';
 

@@ -185,7 +185,7 @@ class WeddingController extends Controller
         $wedding     = $this->resolveActiveWedding($request);
 
         if (!$wedding) {
-            // Belum ada wedding sama sekali — tampilkan halaman kosong dengan modal buat pasangan
+            // Belum ada wedding sama sekali - tampilkan halaman kosong dengan modal buat pasangan
             return view('creator.wedding.index', [
                 'wedding'        => null,
                 'allWeddings'    => collect(),
@@ -508,6 +508,12 @@ class WeddingController extends Controller
         ]);
 
         $validated['digital_envelope_enabled'] = $request->has('digital_envelope_enabled');
+
+        $dataJson = $wedding->data_json ?? [];
+        $rekeningEnabled = $request->boolean('envelope_rekening_enabled', false);
+        $dataJson['envelope_rekening_enabled'] = $rekeningEnabled;
+        $dataJson['envelope_use_midtrans']     = !$rekeningEnabled;
+        $validated['data_json'] = $dataJson;
 
         if ($request->hasFile('qris_image')) {
             $validated['qris_image'] = $request->file('qris_image')->store('weddings/qris', 'public');

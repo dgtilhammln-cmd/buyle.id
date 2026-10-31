@@ -23,6 +23,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    @if($wedding->digital_envelope_enabled)
+        <script src="{{ app(\App\Services\MidtransService::class)->isProduction() ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ app(\App\Services\MidtransService::class)->getClientKey() }}"></script>
+    @endif
 
     <style>
         * {
@@ -505,7 +508,7 @@
             margin: 0.9rem 0;
         }
 
-        /* Nomor rekening — paksa putih, blokir auto-link biru pada mobile Safari / Android */
+        /* Nomor rekening - paksa putih, blokir auto-link biru pada mobile Safari / Android */
         .acct-number,
         .acct-number *,
         a[href^="tel"],
@@ -749,7 +752,7 @@
             </div>
         </div>
 
-        <!-- ③ CONTENT LAYER — fullscreen looping video -->
+        <!-- ③ CONTENT LAYER - fullscreen looping video -->
         <div id="contentLayer">
             <div class="video-wrapper">
                 <video id="weddingVideo" src="{{ asset('videos/Undangan_Findi_Nazil_v7.mp4') }}" class="wedding-video"
@@ -919,8 +922,33 @@
                         </div>
                     </div>
 
-                    {{-- Amplop Digital --}}
-                    @if($wedding->digital_envelope_enabled)
+                    {{-- Live Photobooth Card --}}
+                    <div class="d-card" style="text-align:center;">
+                        <div class="d-card-head" style="justify-content:center;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            Live Photobooth
+                        </div>
+                        <p style="font-size:0.75rem; color:rgba(255,255,255,0.6); margin:6px 0 12px; line-height:1.45;">
+                            Abadikan momen spesial Anda dengan bingkai eksklusif pernikahan kami secara langsung dari smartphone!
+                        </p>
+                        <a href="{{ route('wedding.photobooth', $wedding->slug) }}" class="btn-pill" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:9px 16px; font-weight:700; text-decoration:none; background:linear-gradient(135deg, #ec4899, #f43f5e); color:#ffffff; border-color:transparent; box-shadow:0 4px 14px rgba(236,72,153,0.35);">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <span>Buka Live Photobooth</span>
+                        </a>
+                    </div>
+
+                    @php
+                        $rekeningActive = $wedding->data_json['envelope_rekening_enabled'] ?? true;
+                    @endphp
+
+                    {{-- Amplop Digital (Hanya tampil jika Rekening Manual diaktifkan) --}}
+                    @if($wedding->digital_envelope_enabled && $rekeningActive)
                         <div class="d-card" style="text-align:center;">
                             <div class="d-card-head" style="justify-content:center;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
@@ -1017,6 +1045,25 @@
                                 <option value="tidak">Maaf, Berhalangan Hadir</option>
                                 <option value="ragu">Masih Ragu</option>
                             </select>
+                            @if($wedding->digital_envelope_enabled)
+                                <div style="margin: 0.65rem 0; text-align: left;">
+                                    <label style="font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                        <svg width="13" height="13" fill="none" stroke="#f43f5e" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                            <line x1="2" y1="10" x2="22" y2="10"></line>
+                                        </svg>
+                                        <span>Kirim Tanda Kasih / Amplop (Opsional)</span>
+                                    </label>
+                                    <div style="position: relative;">
+                                        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.6);">Rp</span>
+                                        <input type="number" name="amount" id="rsvpEnvelopeAmount" min="0" step="1000" placeholder="0 (Isi nominal jika ingin kirim amplop)" class="d-input" style="padding-left: 36px; margin-bottom: 4px;">
+                                    </div>
+                                    <div style="font-size: 0.65rem; color: rgba(255,255,255,0.45); line-height: 1.4;">
+                                        *Bisa diisi 0 jika hanya ingin mengirim doa &amp; konfirmasi kehadiran tanpa amplop. Jika nominal diisi, pembayaran digital (QRIS/Transfer) akan otomatis muncul.
+                                    </div>
+                                </div>
+                            @endif
+
                             <textarea name="message" class="d-textarea" placeholder="Tulis doa restu & ucapan Anda..."
                                 required></textarea>
                             <button type="submit" class="btn-submit" id="btnRsvp">Kirim Doa Restu</button>
@@ -1163,10 +1210,83 @@
             setTimeout(() => toast.style.opacity = '0', 2400);
         }
 
-        /* ── RSVP submit ── */
-        function onSubmitRsvp(e) {
+        /* ── RSVP submit dengan Dukungan Midtrans Snap ── */
+        async function onSubmitRsvp(e) {
+            e.preventDefault();
+            const form = e.target;
             const btn = document.getElementById('btnRsvp');
-            if (btn) { btn.disabled = true; btn.innerText = 'Mengirim...'; }
+            const amountInput = document.getElementById('rsvpEnvelopeAmount');
+            const amountVal = amountInput ? parseInt(amountInput.value) || 0 : 0;
+
+            if (btn) { btn.disabled = true; btn.innerText = 'Memproses...'; }
+
+            if (amountVal > 0) {
+                try {
+                    const senderName = form.querySelector('[name="sender_name"]').value;
+                    const res = await fetch("{{ route('wedding.envelope.snap', $wedding->slug) }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            amount: amountVal,
+                            sender_name: senderName
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (!data.success || !data.snap_token) {
+                        alert(data.message || 'Gagal memproses pembayaran. Silakan coba lagi.');
+                        if (btn) { btn.disabled = false; btn.innerText = 'Kirim Doa Restu'; }
+                        return;
+                    }
+
+                    window.snap.pay(data.snap_token, {
+                        onSuccess: function(result) {
+                            appendHiddenInput(form, 'midtrans_order_id', result.order_id || data.midtrans_order_id);
+                            appendHiddenInput(form, 'payment_status', 'settlement');
+                            form.submit();
+                        },
+                        onPending: function(result) {
+                            appendHiddenInput(form, 'midtrans_order_id', result.order_id || data.midtrans_order_id);
+                            appendHiddenInput(form, 'payment_status', 'pending');
+                            form.submit();
+                        },
+                        onError: function(result) {
+                            alert('Pembayaran gagal atau dibatalkan.');
+                            if (btn) { btn.disabled = false; btn.innerText = 'Kirim Doa Restu'; }
+                        },
+                        onClose: function() {
+                            if (confirm('Anda menutup jendela pembayaran. Ingin tetap mengirim doa dan konfirmasi kehadiran tanpa amplop?')) {
+                                if (amountInput) amountInput.value = 0;
+                                form.submit();
+                            } else {
+                                if (btn) { btn.disabled = false; btn.innerText = 'Kirim Doa Restu'; }
+                            }
+                        }
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    alert('Terjadi kesalahan koneksi.');
+                    if (btn) { btn.disabled = false; btn.innerText = 'Kirim Doa Restu'; }
+                }
+            } else {
+                form.submit();
+            }
+        }
+
+        function appendHiddenInput(form, name, value) {
+            let input = form.querySelector(`input[name="${name}"]`);
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                form.appendChild(input);
+            }
+            input.value = value;
         }
     </script>
 </body>

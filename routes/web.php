@@ -40,7 +40,7 @@ use App\Http\Controllers\AccountController;
 
 /*
 |--------------------------------------------------------------------------
-| Public Routes — buyle.id (Bahasa Indonesia, tanpa prefix locale)
+| Public Routes - buyle.id (Bahasa Indonesia, tanpa prefix locale)
 |--------------------------------------------------------------------------
 */
 
@@ -229,7 +229,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// Tracking endpoints — bio-click HARUS di atas wildcard {type}
+// Tracking endpoints - bio-click HARUS di atas wildcard {type}
 Route::post('/track-bio', [TrackingController::class, 'bioClick'])->name('track.bio-click');
 Route::post('/track/{type}', [TrackingController::class, 'track'])->name('track');
 
@@ -303,7 +303,7 @@ Route::get('/api/ig-thumb', function (\Illuminate\Http\Request $request) {
         ->header('Access-Control-Allow-Origin', '*');
 })->name('api.ig-thumb');
 
-// TikTok oEmbed proxy — server-side fetch to bypass CORS (same pattern as ig-thumb above)
+// TikTok oEmbed proxy - server-side fetch to bypass CORS (same pattern as ig-thumb above)
 Route::get('/api/tiktok-thumb', function (\Illuminate\Http\Request $request) {
     $url = $request->query('url');
     if (!$url || !str_contains($url, 'tiktok.com')) {
@@ -335,11 +335,11 @@ Route::get('/api/tiktok-thumb', function (\Illuminate\Http\Request $request) {
         ->header('Access-Control-Allow-Origin', '*');
 })->name('api.tiktok-thumb');
 
-// Webhook Midtrans — DEDICATED controller, reply < 1 detik, proses di queue
+// Webhook Midtrans - DEDICATED controller, reply < 1 detik, proses di queue
 // (Route ini dikecualikan dari CSRF di bootstrap/app.php)
 Route::post('/payment/callback', [\App\Http\Controllers\PaymentWebhookController::class, 'midtrans'])->name('payment.callback');
 
-// Magic Login Link — buyer bisa masuk 1-klik dari email
+// Magic Login Link - buyer bisa masuk 1-klik dari email
 Route::get('/magic-login', [\App\Http\Controllers\AuthController::class, 'magicLogin'])->name('buyer.magic.login');
 
 // Sitemap & robots
@@ -350,12 +350,12 @@ Route::get('/robots.txt', function () {
         'User-agent: *',
         'Allow: /',
         '',
-        '# Halaman transaksional — tidak perlu diindex Google',
+        '# Halaman transaksional - tidak perlu diindex Google',
         'Disallow: /admin',
         'Disallow: /admin/',
         'Disallow: /akun/',
         '',
-        '# Parameter filter/sort menciptakan URL duplikat — biarkan canonical yang handle',
+        '# Parameter filter/sort menciptakan URL duplikat - biarkan canonical yang handle',
         'Disallow: /*?q=',
         'Disallow: /*?sort=',
         'Disallow: /*?page=',
@@ -803,7 +803,7 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
     Route::get('/access-product/{product}', [\App\Http\Controllers\Buyer\BuyerOrderController::class, 'accessProduct'])->name('access.product');
 });
 
-// ── Public Bio Link Page — MUST be last route (/username)
+// ── Public Bio Link Page - MUST be last route (/username)
 // Reserved slugs are blocked in BioPageController
 
 // Products listing page: /{username}/produk
@@ -841,6 +841,7 @@ Route::prefix('wedding/{slug}')->group(function () {
     Route::post('/photobooth/save',              [\App\Http\Controllers\WeddingPublicController::class, 'savePhotoboothPhoto'])->name('wedding.photobooth.save');
     Route::post('/wish',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitWish'])->name('wedding.wish');
     Route::post('/gift',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitGift'])->name('wedding.gift');
+    Route::post('/envelope/snap-token',          [\App\Http\Controllers\WeddingPublicController::class, 'getEnvelopeSnapToken'])->name('wedding.envelope.snap');
     Route::match(['get', 'post'], '/buku-tamu', [\App\Http\Controllers\WeddingPublicController::class, 'reception'])->name('wedding.reception');
     Route::post('/buku-tamu/checkin',           [\App\Http\Controllers\WeddingPublicController::class, 'submitReceptionCheckin'])->name('wedding.reception.checkin');
 });
