@@ -127,11 +127,32 @@
                 <span>Contoh: Link video TikTok (vt.tiktok.com/..), Instagram Reel (/reel/..), atau @username untuk foto profil HD</span>
             </div>
 
-            {{-- Loading State --}}
-            <div id="dlLoadingState" class="dl-loading-box" style="display: none;">
-                <div class="dl-spinner"></div>
-                <div class="dl-loading-text">Sedang memproses tautan media Anda...</div>
-                <div class="dl-loading-sub">Mohon tunggu beberapa detik, sistem sedang mengambil kualitas terbaik.</div>
+            {{-- Loading State with Layout Skeleton --}}
+            <div id="dlLoadingState" class="dl-skeleton-wrapper" style="display: none;">
+                <div class="dl-skeleton-status-pill">
+                    <span class="dl-pulse-dot"></span>
+                    <span id="dlLoadingText">Mengambil data media kualitas HD...</span>
+                </div>
+
+                <div class="dl-skeleton-card">
+                    <div class="dl-skeleton-header">
+                        <div class="dl-skeleton-avatar dl-shimmer"></div>
+                        <div class="dl-skeleton-header-text">
+                            <div class="dl-skeleton-bar dl-sk-w50 dl-shimmer"></div>
+                            <div class="dl-skeleton-bar dl-sk-w30 dl-shimmer"></div>
+                        </div>
+                        <div class="dl-skeleton-pill dl-shimmer"></div>
+                    </div>
+
+                    <div class="dl-skeleton-grid">
+                        <div class="dl-skeleton-item"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                        <div class="dl-skeleton-item"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                        <div class="dl-skeleton-item"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                        <div class="dl-skeleton-item"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                        <div class="dl-skeleton-item"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                        <div class="dl-skeleton-item"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                    </div>
+                </div>
             </div>
 
             {{-- Error Alert --}}
@@ -195,7 +216,14 @@
                         <div class="pf-info">
                             <div class="pf-username-wrap">
                                 <h2 class="pf-username" id="pfUsername">@user</h2>
-                                <span class="pf-badge-count" id="pfTotalCount">0 Postingan</span>
+                                <span class="pf-badge-count" id="pfTotalCount">0 Postingan Tersedia</span>
+                            </div>
+                            <div class="pf-stats-row" id="pfStatsRow" style="display: none;">
+                                <span class="pf-stat-item"><strong id="pfStatPosts">0</strong> Postingan</span>
+                                <span class="pf-stat-dot">&bull;</span>
+                                <span class="pf-stat-item"><strong id="pfStatFollowers">0</strong> Pengikut</span>
+                                <span class="pf-stat-dot">&bull;</span>
+                                <span class="pf-stat-item"><strong id="pfStatFollowing">0</strong> Mengikuti</span>
                             </div>
                             <p class="pf-desc">Pilih dan unduh foto maupun video reels berkualitas HD langsung dari galeri postingan publik ini.</p>
                             <div class="pf-action-row" id="pfHeaderActions">
@@ -217,10 +245,11 @@
                 {{-- Sentinel for Infinite Scroll --}}
                 <div id="pfSentinel" class="pf-sentinel"></div>
 
-                {{-- Loading indicator --}}
-                <div id="pfLoadingMore" class="pf-loading-more" style="display: none;">
-                    <div class="dl-spinner-mini"></div>
-                    <span>Memuat postingan berikutnya...</span>
+                {{-- Skeleton Loading indicator matching layout --}}
+                <div id="pfLoadingMore" class="pf-skeleton-more-grid" style="display: none;">
+                    <div class="pf-post-card pf-skeleton-post"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                    <div class="pf-post-card pf-skeleton-post"><div class="dl-shimmer dl-skeleton-box"></div></div>
+                    <div class="pf-post-card pf-skeleton-post"><div class="dl-shimmer dl-skeleton-box"></div></div>
                 </div>
 
                 {{-- Manual Load More Button fallback --}}
@@ -760,36 +789,126 @@
         margin-left: 0.5rem;
     }
 
-    /* Loading Box */
-    .dl-loading-box {
-        text-align: center;
-        padding: 2.5rem 1rem;
-        background: #f8fafc;
-        border: 1px dashed #cbd5e1;
-        border-radius: 16px;
-        margin-top: 1.5rem;
+    /* Skeleton Loading & Shimmer Animation */
+    @keyframes dlShimmerWave {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
     }
-    .dl-spinner {
-        width: 38px;
-        height: 38px;
-        border: 3.5px solid #e2e8f0;
-        border-top-color: #1eb349;
+
+    .dl-shimmer {
+        background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 35%, #f8fafc 50%, #e2e8f0 65%, #f1f5f9 100%);
+        background-size: 300% 100%;
+        animation: dlShimmerWave 1.8s ease-in-out infinite;
+    }
+
+    .dl-skeleton-wrapper {
+        margin-top: 1.75rem;
+    }
+
+    .dl-skeleton-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        padding: 0.45rem 1rem;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #475569;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        margin-bottom: 1rem;
+    }
+
+    .dl-pulse-dot {
+        width: 8px;
+        height: 8px;
+        background: #1eb349;
         border-radius: 50%;
-        animation: dlSpin 0.75s linear infinite;
-        margin: 0 auto 1rem;
+        box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.7);
+        animation: dlPulseDot 1.6s infinite;
     }
-    @keyframes dlSpin {
-        to { transform: rotate(360deg); }
+
+    @keyframes dlPulseDot {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(30, 179, 73, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(30, 179, 73, 0); }
     }
-    .dl-loading-text {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
+
+    .dl-skeleton-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1.5px solid #e2e8f0;
+        padding: 1.75rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     }
-    .dl-loading-sub {
-        font-size: 0.8rem;
-        color: #64748b;
+
+    .dl-skeleton-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 1.5rem;
+    }
+
+    .dl-skeleton-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .dl-skeleton-header-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .dl-skeleton-bar {
+        height: 12px;
+        border-radius: 6px;
+    }
+    .dl-sk-w50 { width: 45%; max-width: 180px; height: 16px; }
+    .dl-sk-w40 { width: 40%; max-width: 150px; }
+    .dl-sk-w30 { width: 30%; max-width: 110px; }
+
+    .dl-skeleton-pill {
+        width: 110px;
+        height: 32px;
+        border-radius: 999px;
+    }
+
+    .dl-skeleton-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .dl-skeleton-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+    }
+
+    .dl-skeleton-item {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .dl-skeleton-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 
     /* Error Alert */
@@ -1118,27 +1237,50 @@
     .btn-pf-download:hover {
         transform: scale(1.02);
     }
+    .pf-stats-row {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-top: 0.35rem;
+        margin-bottom: 0.6rem;
+        font-size: 0.8rem;
+        color: #475569;
+        flex-wrap: wrap;
+    }
+    .pf-stat-item strong {
+        color: #0f172a;
+        font-weight: 700;
+    }
+    .pf-stat-dot {
+        color: #cbd5e1;
+        font-size: 0.8rem;
+    }
+
     .pf-sentinel {
         width: 100%;
         height: 20px;
     }
-    .pf-loading-more {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.6rem;
-        padding: 1.5rem 0;
-        color: #64748b;
-        font-size: 0.85rem;
-        font-weight: 600;
+    .pf-skeleton-more-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        margin-top: 1.25rem;
+        margin-bottom: 1.5rem;
     }
-    .dl-spinner-mini {
-        width: 18px;
-        height: 18px;
-        border: 2.5px solid #e2e8f0;
-        border-top-color: #1eb349;
-        border-radius: 50%;
-        animation: dlSpin 0.7s linear infinite;
+    @media (max-width: 768px) {
+        .pf-skeleton-more-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+    }
+    .pf-skeleton-post {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
     }
     .pf-load-more-wrap {
         display: flex;
@@ -1531,6 +1673,14 @@ function handleFetchMedia(e) {
     btn.style.opacity = '0.6';
     btnLabel.textContent = 'Memproses...';
 
+    var isProfile = (/instagram\.com\/[a-zA-Z0-9_\.]+\/?$/i.test(url) && !url.includes('/p/') && !url.includes('/reel/')) || /^@[a-zA-Z0-9_\.]+$/.test(url);
+    var statusText = document.getElementById('dlLoadingText');
+    if (statusText) {
+        statusText.textContent = isProfile 
+            ? 'Sedang mengambil galeri postingan & profil Instagram...' 
+            : 'Mengambil media kualitas HD tanpa watermark...';
+    }
+
     fetch('{{ route("tools.social_downloader.fetch") }}', {
         method: 'POST',
         headers: {
@@ -1595,7 +1745,26 @@ function renderProfileFeed(data) {
     var author = data.author || {};
     var username = author.username || '@user';
     document.getElementById('pfUsername').textContent = username;
-    document.getElementById('pfTotalCount').textContent = (data.total_posts || data.posts.length) + ' Postingan Tersedia';
+
+    // Tampilkan nominal riil postingan jika tersedia dari profil Instagram
+    if (data.nominal_posts) {
+        document.getElementById('pfTotalCount').textContent = data.nominal_posts + ' Postingan Tersedia';
+    } else {
+        document.getElementById('pfTotalCount').textContent = (data.total_posts || (data.posts ? data.posts.length : 0)) + ' Postingan Tersedia';
+    }
+
+    // Tampilkan baris statistik profil (Postingan riil, Pengikut, Mengikuti)
+    var statsRow = document.getElementById('pfStatsRow');
+    if (statsRow) {
+        if (author.followers || author.following || data.nominal_posts) {
+            statsRow.style.display = 'flex';
+            document.getElementById('pfStatPosts').textContent = data.nominal_posts || (data.posts ? data.posts.length : '0');
+            document.getElementById('pfStatFollowers').textContent = author.followers || '-';
+            document.getElementById('pfStatFollowing').textContent = author.following || '-';
+        } else {
+            statsRow.style.display = 'none';
+        }
+    }
 
     var avatarEl = document.getElementById('pfAvatarImg');
     if (author.avatar) {
@@ -1665,7 +1834,7 @@ function createProfilePostCard(post, index) {
     var card = document.createElement('div');
     card.className = 'pf-post-card';
 
-    var thumbUrl = post.thumb || post.image_url || '';
+    var thumbUrl = post.direct_thumb_url || post.thumb || post.image_url || '';
     var isVideo = post.is_video;
     var dlUrl = post.direct_download_url || post.download_url;
 
@@ -1673,8 +1842,12 @@ function createProfilePostCard(post, index) {
         ? '<div class="pf-type-badge" title="Video Reels"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>'
         : '<div class="pf-type-badge" title="Foto Postingan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>';
 
+    var fallbackThumbSvg = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'300\' viewBox=\'0 0 300 300\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f1f5f9\'/%3E%3Cpath d=\'M120 130a15 15 0 1 0 0-30 15 15 0 0 0 0 30zM80 210h140l-45-60-35 45-20-25-40 40z\' fill=\'%23cbd5e1\'/%3E%3C/svg%3E';
+
+    var finalThumb = thumbUrl || fallbackThumbSvg;
+
     var html = '<div class="pf-thumb-container">' +
-        '<img src="' + thumbUrl + '" alt="Post ' + (index + 1) + '" class="pf-thumb-img" loading="lazy">' +
+        '<img src="' + finalThumb + '" alt="Post ' + (index + 1) + '" class="pf-thumb-img" loading="lazy" onerror="this.onerror=null; this.src=\'' + fallbackThumbSvg + '\';">' +
         typeBadge +
         '<div class="pf-overlay">' +
             '<a href="' + dlUrl + '" class="btn-pf-download" download title="Download ' + (isVideo ? 'Video' : 'Foto') + ' HD">' +
@@ -1705,12 +1878,12 @@ function setupProfileInfiniteScroll() {
             if (entry.isIntersecting) {
                 var posts = window.allProfilePosts || [];
                 if (window.profilePostsRendered < posts.length) {
-                    var spinner = document.getElementById('pfLoadingMore');
-                    spinner.style.display = 'flex';
+                    var skeletonLoader = document.getElementById('pfLoadingMore');
+                    skeletonLoader.style.display = 'grid';
                     setTimeout(function() {
                         renderNextProfileBatch();
-                        spinner.style.display = 'none';
-                    }, 300);
+                        skeletonLoader.style.display = 'none';
+                    }, 350);
                 }
             }
         });

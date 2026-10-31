@@ -79,13 +79,20 @@ class SocialDownloaderController extends Controller
             $safeUser = preg_replace('/[^a-zA-Z0-9_]/', '', $username);
 
             foreach ($result['posts'] as $idx => &$p) {
-                $p['direct_download_url'] = route('tools.social_downloader.stream', [
-                    'url'      => base64_encode($p['download_url']),
-                    'filename' => 'ig_' . $safeUser . '_' . ($idx + 1) . '.' . ($p['ext'] ?? 'mp4'),
-                ]);
-                if (!empty($p['image_url'])) {
+                if (!empty($p['download_url']) && str_starts_with($p['download_url'], 'http')) {
+                    $p['direct_download_url'] = route('tools.social_downloader.stream', [
+                        'url'      => base64_encode($p['download_url']),
+                        'filename' => 'ig_' . $safeUser . '_' . ($idx + 1) . '.' . ($p['ext'] ?? 'mp4'),
+                    ]);
+                }
+
+                $thumbCandidate = (!empty($p['thumb']) && str_starts_with($p['thumb'], 'http'))
+                    ? $p['thumb']
+                    : ((!empty($p['image_url']) && str_starts_with($p['image_url'], 'http')) ? $p['image_url'] : null);
+
+                if ($thumbCandidate) {
                     $p['direct_thumb_url'] = route('tools.social_downloader.stream', [
-                        'url'      => base64_encode($p['image_url']),
+                        'url'      => base64_encode($thumbCandidate),
                         'filename' => 'ig_' . $safeUser . '_' . ($idx + 1) . '_thumb.jpg',
                     ]);
                 }

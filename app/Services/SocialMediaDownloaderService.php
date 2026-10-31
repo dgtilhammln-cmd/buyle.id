@@ -370,6 +370,51 @@ class SocialMediaDownloaderService
     }
 
     /**
+     * Ambil metadata profil Instagram (jumlah postingan riil, followers, bio) via Googlebot User-Agent.
+     */
+    protected function fetchInstagramProfileMetadata(string $username): ?array
+    {
+        try {
+            $resp = Http::timeout(6)->withHeaders([
+                'User-Agent'      => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                'Accept-Language' => 'en-US,en;q=0.9',
+            ])->get("https://www.instagram.com/{$username}/");
+
+            if (!$resp->successful()) {
+                return null;
+            }
+
+            $body = $resp->body();
+            $meta = [];
+
+            if (preg_match('/property="og:description"\s+content="([^"]+)"/i', $body, $m)) {
+                $desc = html_entity_decode($m[1]);
+                $meta['description'] = $desc;
+                if (preg_match('/([0-9,\.KkMm]+)\s+Followers,\s*([0-9,\.KkMm]+)\s+Following,\s*([0-9,\.KkMm]+)\s+Posts/i', $desc, $st)) {
+                    $meta['followers']   = $st[1];
+                    $meta['following']   = $st[2];
+                    $meta['posts_count'] = $st[3];
+                }
+            }
+
+            if (preg_match('/property="og:title"\s+content="([^"]+)"/i', $body, $m)) {
+                $meta['title'] = html_entity_decode($m[1]);
+                if (preg_match('/^([^\(@]+)/', $meta['title'], $nameMatch)) {
+                    $meta['full_name'] = trim($nameMatch[1]);
+                }
+            }
+
+            if (preg_match('/property="og:image"\s+content="([^"]+)"/i', $body, $m)) {
+                $meta['avatar'] = html_entity_decode($m[1]);
+            }
+
+            return $meta;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    /**
      * Ambil foto profil HD dan seluruh postingan timeline Instagram via SaveInsta Engine.
      */
     protected function resolveInstagramProfileViaSaveInsta(string $username): array
@@ -377,6 +422,9 @@ class SocialMediaDownloaderService
         $cleanUrl = "https://www.instagram.com/{$username}/";
 
         try {
+            // Ambil statistik riil profil Instagram (nominal postingan, followers, following)
+            $igMeta = $this->fetchInstagramProfileMetadata($username);
+
             // 1. Dapatkan token verifikasi
             $resVerify = Http::timeout(10)->asForm()->withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -412,7 +460,12 @@ class SocialMediaDownloaderService
             @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
             $xpath = new \DOMXPath($dom);
 
-            $items = $xpath->query('//div[contains(@class, "download-items")]');
+            // Target card utama .download-items secara tepat (hindari mencocokkan .download-items__thumb / .download-items__btn)
+            $items = $xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " download-items ")]');
+            if ($items->length === 0) {
+                // Fallback jika class div sedikit berbeda
+                $items = $xpath->query('//div[@class="download-items"]');
+            }
             if ($items->length === 0) {
                 return ['success' => false, 'message' => 'Tidak ada postingan publik ditemukan pada akun ini.'];
             }
@@ -423,7 +476,17 @@ class SocialMediaDownloaderService
 
             foreach ($items as $idx => $it) {
                 $img = $xpath->query('.//img', $it)->item(0);
-                $thumbSrc = $img ? $img->getAttribute('src') : null;
+                $thumbSrc = null;
+                if ($img) {
+                    $dataSrc = $img->getAttribute('data-src');
+                    $src = $img->getAttribute('src');
+                    // Hindari loader.gif untuk lazy loading gambar ke-9 ke atas
+                    if (!empty($dataSrc) && !str_contains($dataSrc, 'loader.gif')) {
+                        $thumbSrc = $dataSrc;
+                    } elseif (!empty($src) && !str_contains($src, 'loader.gif')) {
+                        $thumbSrc = $src;
+                    }
+                }
 
                 $links = $xpath->query('.//a', $it);
                 $btnList = [];
@@ -468,8 +531,13 @@ class SocialMediaDownloaderService
                     || (stripos($primaryDlUrl, '.mp4') !== false)
                     || ($xpath->query('.//i[contains(@class, "icon-dlvideo")]', $it)->length > 0);
 
+                // Jika thumbSrc belum terisi, gunakan photoDlUrl
+                if (!$thumbSrc && $photoDlUrl) {
+                    $thumbSrc = $photoDlUrl;
+                }
+
                 $feedPosts[] = [
-                    'id'           => $idx,
+                    'id'           => count($feedPosts),
                     'thumb'        => $thumbSrc,
                     'is_video'     => $isVideo,
                     'download_url' => $primaryDlUrl,
@@ -480,9 +548,17 @@ class SocialMediaDownloaderService
                 ];
             }
 
+            if (!$avatarUrl && !empty($igMeta['avatar'])) {
+                $avatarUrl = $igMeta['avatar'];
+            }
             if (!$avatarUrl && !empty($feedPosts[0]['thumb'])) {
                 $avatarUrl = $feedPosts[0]['thumb'];
             }
+
+            $fullName = !empty($igMeta['full_name']) ? $igMeta['full_name'] : $username;
+            $nominalPosts = !empty($igMeta['posts_count']) ? $igMeta['posts_count'] : null;
+            $followers = !empty($igMeta['followers']) ? $igMeta['followers'] : null;
+            $following = !empty($igMeta['following']) ? $igMeta['following'] : null;
 
             return [
                 'success'         => true,
@@ -491,9 +567,11 @@ class SocialMediaDownloaderService
                 'title'           => 'Profil Instagram: @' . $username,
                 'preview'         => $avatarUrl,
                 'author'          => [
-                    'name'     => $username,
-                    'username' => '@' . $username,
-                    'avatar'   => $avatarUrl,
+                    'name'      => $fullName,
+                    'username'  => '@' . $username,
+                    'avatar'    => $avatarUrl,
+                    'followers' => $followers,
+                    'following' => $following,
                 ],
                 'is_video'        => false,
                 'downloads'       => $avatarUrl ? [
@@ -506,7 +584,9 @@ class SocialMediaDownloaderService
                 ] : [],
                 'is_profile_feed' => true,
                 'posts'           => $feedPosts,
-                'total_posts'     => count($feedPosts),
+                'total_posts'     => $nominalPosts ? ($nominalPosts . ' Postingan') : count($feedPosts) . ' Postingan',
+                'nominal_posts'   => $nominalPosts,
+                'loaded_posts'    => count($feedPosts),
             ];
         } catch (\Throwable $e) {
             Log::warning('Instagram Profile via SaveInsta Error: ' . $e->getMessage());
