@@ -1,15 +1,21 @@
 @php
     $customFramePaths = $wedding->data_json['photobooth_frames'] ?? [];
     if (empty($customFramePaths)) {
-        $customFramePaths = ['wedding/frames/vintage_digicam_wedding.png'];
+        $customFramePaths = [
+            'wedding/frames/minimalist_arch_wedding.png',
+            'wedding/frames/vintage_digicam_wedding.png',
+        ];
     }
     $customFrames = [];
     foreach ($customFramePaths as $idx => $path) {
+        $isArch = strpos($path, 'minimalist_arch') !== false;
         $isDigicam = strpos($path, 'vintage_digicam') !== false;
-        $label = $isDigicam ? 'Vintage Digicam' : ('Frame ' . ($idx + 1));
-        $url = $isDigicam
-            ? asset('images/frames/vintage_digicam_wedding.png')
-            : \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        $label = $isArch ? 'Minimalist Arch (3 Foto)' : ($isDigicam ? 'Vintage Digicam' : ('Frame ' . ($idx + 1)));
+        $url = $isArch
+            ? asset('images/frames/minimalist_arch_wedding.png')
+            : ($isDigicam
+                ? asset('images/frames/vintage_digicam_wedding.png')
+                : \Illuminate\Support\Facades\Storage::disk('public')->url($path));
 
         $customFrames[] = [
             'id'    => 'custom_' . $idx,
@@ -733,12 +739,16 @@
             </div>
         </div>
 
-        {{-- ── Multi-Shot Mode Bar (1 Foto, 2 Foto, 3 Strip, 4 Grid) ─────────────── --}}
-        <div class="shots-selector-bar">
-            <button type="button" class="shot-btn active" data-shots="1" onclick="selectShotMode(1, this)">1 Foto</button>
-            <button type="button" class="shot-btn" data-shots="2" onclick="selectShotMode(2, this)">2 Foto</button>
-            <button type="button" class="shot-btn" data-shots="3" onclick="selectShotMode(3, this)">3 Strip</button>
-            <button type="button" class="shot-btn" data-shots="4" onclick="selectShotMode(4, this)">4 Grid</button>
+        {{-- ── Multi-Shot Mode Bar (Kunci Auto 3 Foto) ─────────────── --}}
+        <div style="position:absolute; top:72px; z-index:15; display:inline-flex; align-items:center; gap:6px; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); padding:5px 14px; border-radius:99px; border:1px solid rgba(255,255,255,0.18); font-size:0.7rem; font-weight:700; color:#ffffff;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#22c55e;"></span>
+            <span>Auto 3 Foto &bull; Strip Estetik</span>
+        </div>
+        <div class="shots-selector-bar" style="display:none !important;">
+            <button type="button" class="shot-btn" data-shots="1" onclick="selectShotMode(3, this)">1 Foto</button>
+            <button type="button" class="shot-btn" data-shots="2" onclick="selectShotMode(3, this)">2 Foto</button>
+            <button type="button" class="shot-btn active" data-shots="3" onclick="selectShotMode(3, this)">3 Strip</button>
+            <button type="button" class="shot-btn" data-shots="4" onclick="selectShotMode(3, this)">4 Grid</button>
         </div>
 
         {{-- ── 3. Bottom Frame / Filter Selector & Shutter ────────────────────────── --}}
@@ -938,8 +948,8 @@
         let isCapturing = false;
         let uploadedImageObj = null;
 
-        // Multi-Shot Mode: 1, 2, 3, or 4
-        let currentShotMode = 1;
+        // Multi-Shot Mode: Otomatis 3 Foto (Locked)
+        let currentShotMode = 3;
 
         const videoEl = document.getElementById('cameraVideo');
         const videoBgEl = document.getElementById('cameraVideoBg');
@@ -1256,13 +1266,15 @@
         // ── Helper: Draw Image with Rounded Corners & Cover Fit ───────────────────
         function drawCroppedToRect(ctx, src, rx, ry, rw, rh, radius = 20) {
             ctx.save();
-            ctx.beginPath();
-            if (ctx.roundRect) {
-                ctx.roundRect(rx, ry, rw, rh, radius);
-            } else {
-                ctx.rect(rx, ry, rw, rh);
+            if (radius > 0) {
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(rx, ry, rw, rh, radius);
+                } else {
+                    ctx.rect(rx, ry, rw, rh);
+                }
+                ctx.clip();
             }
-            ctx.clip();
 
             const sw = src.width;
             const sh = src.height;
@@ -1329,16 +1341,51 @@
                 drawCroppedToRect(ctx, capturedList[1], marginX, topY + cardH + gap, cardW, cardH, 24);
 
             } else if (shots === 3) {
-                // Layout 3: Classic Photobooth 3-Strip
-                const marginX = 60;
-                const cardW = 960;
-                const gap = 20;
-                const topY = 60;
-                const cardH = 586;
+                if (activeCustomUrl && activeCustomUrl.includes('minimalist_arch')) {
+                    // Layout 3: Minimalist Arch Shape Windows (Presisi Sesuai Template)
+                    // 1. Top Arch Window (Dome atas r=280 pada y=370, dasar datar y=670)
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(540, 370, 280, Math.PI, 0, false);
+                    ctx.lineTo(820, 670);
+                    ctx.lineTo(260, 670);
+                    ctx.closePath();
+                    ctx.clip();
+                    drawCroppedToRect(ctx, capturedList[0], 260, 90, 560, 580, 0);
+                    ctx.restore();
 
-                for (let k = 0; k < 3; k++) {
-                    const y = topY + k * (cardH + gap);
-                    drawCroppedToRect(ctx, capturedList[k], marginX, y, cardW, cardH, 20);
+                    // 2. Middle Rectangle Window (y=710 s/d 1210)
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.rect(260, 710, 560, 500);
+                    ctx.clip();
+                    drawCroppedToRect(ctx, capturedList[1], 260, 710, 560, 500, 0);
+                    ctx.restore();
+
+                    // 3. Bottom Inverted Arch Window (Atap datar y=1250, Dome bawah r=280 pada y=1550)
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(260, 1250);
+                    ctx.lineTo(820, 1250);
+                    ctx.lineTo(820, 1550);
+                    ctx.arc(540, 1550, 280, 0, Math.PI, false);
+                    ctx.lineTo(260, 1250);
+                    ctx.closePath();
+                    ctx.clip();
+                    drawCroppedToRect(ctx, capturedList[2], 260, 1250, 560, 580, 0);
+                    ctx.restore();
+                } else {
+                    // Layout 3: Classic Photobooth 3-Strip
+                    const marginX = 60;
+                    const cardW = 960;
+                    const gap = 20;
+                    const topY = 60;
+                    const cardH = 586;
+
+                    for (let k = 0; k < 3; k++) {
+                        const y = topY + k * (cardH + gap);
+                        drawCroppedToRect(ctx, capturedList[k], marginX, y, cardW, cardH, 20);
+                    }
                 }
 
             } else if (shots === 4) {
@@ -1517,6 +1564,15 @@
             } else {
                 liveCustomFrameImg.style.display = 'none';
             }
+
+            // Kunci auto 3 foto sesuai settingan otomatis
+            currentShotMode = 3;
+            if (liveGridGuide) {
+                liveGridGuide.className = 'live-grid-guide grid-3';
+            }
+
+            // Buka tab Filter Warna secara default agar tamu langsung bisa memilih filter
+            switchControlMode('filter');
 
             startCamera();
         });

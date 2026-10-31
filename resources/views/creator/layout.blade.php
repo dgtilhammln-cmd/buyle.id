@@ -272,7 +272,7 @@
             stroke-width: 2;
         }
 
-        /* ── Submenu Modul Aplikasi (Interaktif Hover) ────────────────── */
+        /* ── Submenu Modul Aplikasi (Interaktif Toggle & Minimalis) ────────── */
         .cr-nav-group {
             display: flex;
             flex-direction: column;
@@ -286,28 +286,30 @@
 
         .cr-nav-chevron {
             margin-left: auto;
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            opacity: 0.75;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+            opacity: 0.8;
             cursor: pointer;
             border-radius: 6px;
         }
 
         .cr-nav-chevron:hover {
             opacity: 1;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        .cr-nav-link:hover .cr-nav-chevron,
-        .cr-nav-group:hover .cr-nav-chevron,
-        .cr-nav-group.has-active .cr-nav-chevron,
-        .cr-nav-group.is-open .cr-nav-chevron {
+        .cr-nav-group.is-open .cr-nav-chevron,
+        .cr-nav-group.has-active:not(.is-closed) .cr-nav-chevron {
             transform: rotate(180deg);
             opacity: 1;
+        }
+
+        .cr-nav-group.is-closed .cr-nav-chevron {
+            transform: rotate(0deg) !important;
         }
 
         .cr-submenu {
@@ -318,109 +320,82 @@
             pointer-events: none;
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
-            margin-left: 1.35rem;
-            padding-left: 0.65rem;
-            border-left: 1.5px solid rgba(255, 255, 255, 0.2);
-            transition: max-height 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.25s ease, margin 0.25s ease;
+            gap: 0.2rem;
+            margin-left: 1.15rem;
+            padding-left: 0.6rem;
+            border-left: 1.5px solid rgba(255, 255, 255, 0.25);
+            transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, transform 0.22s ease, margin 0.22s ease;
         }
 
-        /* Hover Expansion on Desktop or when Active or Open */
-        .cr-nav-group:hover .cr-submenu,
-        .cr-nav-group.has-active .cr-submenu,
-        .cr-nav-group.is-open .cr-submenu {
-            max-height: 400px;
+        /* Default open if has-active or is-open, UNLESS explicitly closed (.is-closed) */
+        .cr-nav-group.has-active:not(.is-closed) .cr-submenu,
+        .cr-nav-group.is-open:not(.is-closed) .cr-submenu {
+            max-height: 350px;
             opacity: 1;
             overflow: visible;
             transform: translateY(0);
             pointer-events: auto;
-            margin-top: 0.35rem;
-            margin-bottom: 0.45rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .cr-nav-group.is-closed .cr-submenu {
+            max-height: 0 !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+            pointer-events: none !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            transform: translateY(-4px) !important;
         }
 
         .cr-sublink {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.45rem 0.65rem;
-            border-radius: 10px;
-            margin-right: 1.25rem;
+            gap: 0.5rem;
+            padding: 0.35rem 0.55rem;
+            border-radius: 8px;
+            margin-right: 0.75rem;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.76rem;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.74rem;
             font-weight: 600;
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
 
         .cr-sublink:hover {
             color: #ffffff;
             background: rgba(255, 255, 255, 0.16);
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateX(3px);
         }
 
         .cr-sublink.active {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.24);
+            background: rgba(255, 255, 255, 0.25);
             font-weight: 700;
-            box-shadow: inset 3px 0 0 #ffffff;
+            box-shadow: inset 2.5px 0 0 #ffffff;
         }
 
         .cr-sub-icon-box {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             background: var(--mod-bg, rgba(255, 255, 255, 0.15));
             color: #ffffff;
             flex-shrink: 0;
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .cr-sublink:hover .cr-sub-icon-box {
-            transform: scale(1.12);
-            background: #ffffff;
-            color: var(--mod-color, #1eb349);
-            box-shadow: 0 0 10px var(--mod-color, rgba(255, 255, 255, 0.5));
-        }
-
-        .cr-sublink.active .cr-sub-icon-box {
-            background: #ffffff;
-            color: var(--mod-color, #1eb349);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+            transition: all 0.2s ease;
         }
 
         .cr-sub-text {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        .cr-sub-badge {
-            font-size: 0.62rem;
-            font-weight: 700;
-            padding: 0.12rem 0.45rem;
-            border-radius: 999px;
-            background: rgba(0, 0, 0, 0.15);
-            color: rgba(255, 255, 255, 0.85);
-            margin-left: auto;
-            letter-spacing: 0.02em;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .cr-sublink:hover .cr-sub-badge {
-            background: rgba(255, 255, 255, 0.3);
-            color: #ffffff;
-        }
-
-        .cr-sublink.active .cr-sub-badge {
-            background: #ffffff;
-            color: var(--mod-color, #1eb349);
-            font-weight: 800;
+            font-size: 0.73rem;
+            letter-spacing: 0.1px;
         }
 
         .cr-sidebar-bottom {
@@ -966,7 +941,7 @@
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
                         @else
-                            <span class="cr-nav-chevron" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('crNavAppGroup').classList.toggle('is-open');" title="Toggle Modul">
+                            <span class="cr-nav-chevron" onclick="toggleAppSubmenu(event)" title="Buka/Tutup Submenu">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <polyline points="6 9 12 15 18 9" />
                                 </svg>
@@ -980,7 +955,8 @@
                             {{-- 1. Buyle POS --}}
                             <a href="{{ route('creator.pos.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.pos*') ? 'active' : '' }}"
-                                style="--mod-color:#0284c7; --mod-bg:rgba(2,132,199,0.22);">
+                                style="--mod-color:#0284c7; --mod-bg:rgba(2,132,199,0.22);"
+                                title="Buyle POS (Kasir)">
                                 <span class="cr-sub-icon-box">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <rect x="4" y="3" width="16" height="18" rx="2" />
@@ -991,14 +967,14 @@
                                         <line x1="14" y1="15" x2="16" y2="15" />
                                     </svg>
                                 </span>
-                                <span class="cr-sub-text">Buyle POS</span>
-                                <span class="cr-sub-badge">Kasir</span>
+                                <span class="cr-sub-text">Kasir POS</span>
                             </a>
 
                             {{-- 2. Web Builder --}}
                             <a href="{{ route('creator.bio.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.bio*') ? 'active' : '' }}"
-                                style="--mod-color:#1eb349; --mod-bg:rgba(30,179,73,0.22);">
+                                style="--mod-color:#1eb349; --mod-bg:rgba(30,179,73,0.22);"
+                                title="Web Builder (Bio Link)">
                                 <span class="cr-sub-icon-box">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="10" />
@@ -1006,28 +982,28 @@
                                         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                                     </svg>
                                 </span>
-                                <span class="cr-sub-text">Web Builder</span>
-                                <span class="cr-sub-badge">Bio Link</span>
+                                <span class="cr-sub-text">Bio Link</span>
                             </a>
 
                             {{-- 3. Buyle e-Ticket --}}
                             <a href="{{ route('creator.ticket.scanner') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.ticket*') ? 'active' : '' }}"
-                                style="--mod-color:#7c3aed; --mod-bg:rgba(124,58,237,0.22);">
+                                style="--mod-color:#7c3aed; --mod-bg:rgba(124,58,237,0.22);"
+                                title="Buyle e-Ticket (Scanner)">
                                 <span class="cr-sub-icon-box">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
                                         <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2" />
                                     </svg>
                                 </span>
-                                <span class="cr-sub-text">Buyle e-Ticket</span>
-                                <span class="cr-sub-badge">Scanner</span>
+                                <span class="cr-sub-text">Tiket Scanner</span>
                             </a>
 
                             {{-- 4. Automation Reply --}}
                             <a href="{{ route('creator.automation-reply.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.automation-reply*') ? 'active' : '' }}"
-                                style="--mod-color:#e1306c; --mod-bg:rgba(225,48,108,0.22);">
+                                style="--mod-color:#e1306c; --mod-bg:rgba(225,48,108,0.22);"
+                                title="Auto Reply IG (Bot DM)">
                                 <span class="cr-sub-icon-box">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -1035,21 +1011,20 @@
                                         <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                                     </svg>
                                 </span>
-                                <span class="cr-sub-text">Auto Reply IG</span>
-                                <span class="cr-sub-badge">Bot DM</span>
+                                <span class="cr-sub-text">Auto Reply DM</span>
                             </a>
 
                             {{-- 5. Buyle Wedding --}}
                             <a href="{{ route('creator.wedding.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.wedding*') ? 'active' : '' }}"
-                                style="--mod-color:#e11d48; --mod-bg:rgba(225,29,72,0.22);">
+                                style="--mod-color:#e11d48; --mod-bg:rgba(225,29,72,0.22);"
+                                title="Buyle Wedding (Undangan)">
                                 <span class="cr-sub-icon-box">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                     </svg>
                                 </span>
-                                <span class="cr-sub-text">Buyle Wedding</span>
-                                <span class="cr-sub-badge">Undangan</span>
+                                <span class="cr-sub-text">Undangan Digital</span>
                             </a>
                         </div>
                     @endif
@@ -1686,6 +1661,38 @@
             if (e) e.preventDefault();
             return false;
         }
+
+        // Toggle dan persist status Submenu Aplikasi Sidebar
+        function toggleAppSubmenu(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const group = document.getElementById('crNavAppGroup');
+            if (!group) return;
+            const isClosed = group.classList.contains('is-closed');
+            if (isClosed) {
+                group.classList.remove('is-closed');
+                group.classList.add('is-open');
+                try { localStorage.setItem('cr_app_submenu_closed', '0'); } catch(err){}
+            } else {
+                group.classList.add('is-closed');
+                group.classList.remove('is-open');
+                try { localStorage.setItem('cr_app_submenu_closed', '1'); } catch(err){}
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                if (localStorage.getItem('cr_app_submenu_closed') === '1') {
+                    const group = document.getElementById('crNavAppGroup');
+                    if (group) {
+                        group.classList.add('is-closed');
+                        group.classList.remove('is-open');
+                    }
+                }
+            } catch(err){}
+        });
     </script>
     @yield('scripts')
 </body>

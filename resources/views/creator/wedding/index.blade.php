@@ -1960,13 +1960,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <span style="font-weight:800; color:#0f172a;">Upload Frame Custom (9:16 PNG Transparan)</span>
-                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Hanya frame custom buatan Anda yang akan dipasang langsung di Live Camera photobooth tamu. Maks 6 frame.</div>
+                                <span style="font-weight:800; color:#0f172a;">Frame Photobooth</span>
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Frame yang dipasang otomatis di Live Camera tamu. Frame bawaan + custom upload (maks 6).</div>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        {{-- Error Flash --}}
                         @if(session('error'))
                             <div style="background:#fee2e2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:10px; font-size:0.82rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
@@ -1979,6 +1978,7 @@
                         @endphp
 
                         {{-- Galeri Custom Frame yang Sudah Diupload --}}
+                        <div style="margin-bottom:1.25rem;">
                         @if(count($customFrames) > 0)
                             <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
                                 @foreach($customFrames as $idx => $framePath)
@@ -2005,10 +2005,40 @@
                                 @endforeach
                             </div>
                         @else
-                            <div style="text-align:center; padding:1.25rem; background:#fdf4ff; border:1.5px dashed #c084fc; border-radius:12px; margin-bottom:1.25rem; color:#7c3aed; font-size:0.82rem; font-weight:600;">
-                                Belum ada frame custom yang diupload. Silakan upload minimal 1 frame agar live camera photobooth tamu memiliki bingkai estetik!
+                            {{-- No custom frames: show available templates --}}
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
+                                {{-- 1. Minimalist Arch 3-Photo (Active) --}}
+                                <div style="display:flex; align-items:center; gap:1rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #a855f7; border-radius:12px; box-shadow:0 2px 8px rgba(168,85,247,0.1);">
+                                    <div style="width:48px; height:86px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #c084fc; flex-shrink:0;">
+                                        <img src="{{ asset('images/frames/minimalist_arch_wedding.png') }}" alt="Minimalist Arch" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                    </div>
+                                    <div style="flex:1;">
+                                        <div style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:0.15rem;">Minimalist Arch (3 Foto)</div>
+                                        <div style="font-size:0.68rem; color:#64748b; line-height:1.4; margin-bottom:0.4rem;">Template estetik 3 jendela (arch &amp; rect) + nama mempelai.</div>
+                                        <div style="display:flex; gap:0.4rem; align-items:center;">
+                                            <span style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-size:0.56rem; font-weight:800; padding:2px 7px; border-radius:99px; text-transform:uppercase;">Aktif (Auto 3 Foto)</span>
+                                            <a href="{{ asset('images/frames/minimalist_arch_wedding.png') }}" download="Minimalist_Arch_Wedding.png" style="font-size:0.66rem; font-weight:700; color:#15803d; text-decoration:none;">Unduh PNG</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 2. Vintage Digicam --}}
+                                <div style="display:flex; align-items:center; gap:1rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px;">
+                                    <div style="width:48px; height:86px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #cbd5e1; flex-shrink:0;">
+                                        <img src="{{ asset('images/frames/vintage_digicam_wedding.png') }}" alt="Vintage Digicam" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                    </div>
+                                    <div style="flex:1;">
+                                        <div style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:0.15rem;">Vintage Digicam</div>
+                                        <div style="font-size:0.68rem; color:#64748b; line-height:1.4; margin-bottom:0.4rem;">Frame digital camera Y2K dengan live HUD &amp; buttons.</div>
+                                        <div style="display:flex; gap:0.4rem; align-items:center;">
+                                            <span style="background:#f1f5f9; color:#475569; font-size:0.56rem; font-weight:700; padding:2px 7px; border-radius:99px; text-transform:uppercase;">Pilihan Kedua</span>
+                                            <a href="{{ asset('images/frames/vintage_digicam_wedding.png') }}" download="Vintage_Digicam_Wedding.png" style="font-size:0.66rem; font-weight:700; color:#15803d; text-decoration:none;">Unduh PNG</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         @endif
+                        </div>
 
                         {{-- Upload Form --}}
                         @if(count($customFrames) < 6)
@@ -2181,158 +2211,6 @@
                                 </div>
                             </div>
                         @endif
-                    </div>
-                </div>
-                    <div class="card-body">
-                        {{-- Error / Success Flash --}}
-                        @if(session('error'))
-                            <div style="background:#fee2e2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:10px; font-size:0.82rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                                {{ session('error') }}
-                            </div>
-                        @endif
-
-                        @php
-                            $customFrames = $wedding->data_json['photobooth_frames'] ?? [];
-                        @endphp
-
-                        {{-- Frame Bawaan Eksklusif: Vintage Digicam --}}
-                        <div style="margin-bottom:1.25rem;">
-                            <div style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.5px;">Frame Aktif Photobooth</div>
-                            <div style="display:flex; align-items:center; gap:1.15rem; padding:1rem 1.25rem; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px;">
-                                <div style="width:62px; height:110px; border-radius:8px; overflow:hidden; background:#0f172a; border:1.5px solid #a855f7; flex-shrink:0; box-shadow:0 4px 12px rgba(168,85,247,0.15); position:relative;">
-                                    <img src="{{ asset('images/frames/vintage_digicam_wedding.png') }}" alt="Vintage Digicam" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                    <div style="position:absolute; bottom:3px; left:0; right:0; text-align:center; font-size:0.5rem; font-weight:800; background:rgba(0,0,0,0.7); color:#fff; padding:1px 0;">9:16 PNG</div>
-                                </div>
-                                <div style="flex:1;">
-                                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem; flex-wrap:wrap;">
-                                        <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">Vintage Digicam (The Wedding of Nazil &amp; Findi)</span>
-                                        <span style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-size:0.6rem; font-weight:800; padding:2px 8px; border-radius:99px; text-transform:uppercase;">Aktif di Live Cam</span>
-                                    </div>
-                                    <p style="font-size:0.76rem; color:#64748b; line-height:1.45; margin:0 0 0.6rem;">
-                                        Frame estetik digital camera Y2K dengan viewfinder HUD, reticle autofocus, status HDR, dan nama mempelai Nazil &amp; Findi. Otomatis terpasang melayang pada live camera tamu.
-                                    </p>
-                                    <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
-                                        <a href="{{ asset('images/frames/vintage_digicam_wedding.png') }}" target="_blank"
-                                           style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-weight:700; color:#2563eb; text-decoration:none; background:#eff6ff; padding:0.35rem 0.65rem; border-radius:6px;">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                            Lihat Fullsize
-                                        </a>
-                                        <a href="{{ asset('images/frames/vintage_digicam_wedding.png') }}" download="Vintage_Digicam_Nazil_Findi.png"
-                                           style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-weight:700; color:#15803d; text-decoration:none; background:#f0fdf4; padding:0.35rem 0.65rem; border-radius:6px;">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                            Unduh PNG Transparan (1080x1920)
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Galeri Custom Frame Tambahan yang Diupload --}}
-                        @if(count($customFrames) > 0)
-                            <div style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.5px;">Frame Kustom Tambahan Lainnya</div>
-                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
-                                @foreach($customFrames as $idx => $framePath)
-                                    <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:9/16; background:#0f172a; border:2px solid #a855f7; box-shadow:0 4px 16px rgba(168,85,247,0.2);">
-                                        <img src="{{ Storage::url($framePath) }}" alt="Custom Frame {{ $idx + 1 }}"
-                                            style="width:100%; height:100%; object-fit:cover; display:block;">
-                                        {{-- Badge Custom --}}
-                                        <div style="position:absolute; top:6px; left:6px; background:#a855f7; color:#fff; font-size:0.55rem; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase;">CUSTOM {{ $idx + 1 }}</div>
-                                        {{-- Delete Button --}}
-                                        <form action="{{ route('creator.wedding.photobooth-frame.delete', $idx) }}?w={{ $wedding->id }}" method="POST"
-                                              onsubmit="return confirm('Hapus frame custom ini?');"
-                                              style="position:absolute; top:6px; right:6px;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-
-                        {{-- Upload Form --}}
-                        @if(count($customFrames) < 6)
-                            <form action="{{ route('creator.wedding.photobooth-frame.upload') }}?w={{ $wedding->id }}"
-                                  method="POST" enctype="multipart/form-data"
-                                  id="frameUploadForm">
-                                @csrf
-                                <div id="frameDropZone"
-                                    style="border:2px dashed #c084fc; border-radius:14px; padding:2rem; text-align:center; background:#fdf4ff; cursor:pointer; transition:all 0.2s ease; position:relative;"
-                                    onclick="document.getElementById('frameFileInput').click()"
-                                    ondragover="event.preventDefault(); this.style.borderColor='#9333ea'; this.style.background='#f3e8ff';"
-                                    ondragleave="this.style.borderColor='#c084fc'; this.style.background='#fdf4ff';"
-                                    ondrop="handleFrameDrop(event)">
-                                    <input type="file" id="frameFileInput" name="frame" accept="image/png,image/webp,image/jpeg"
-                                        style="display:none;" onchange="previewFrameUpload(event)">
-
-                                    <div id="frameDropContent">
-                                        <div style="width:44px; height:44px; border-radius:50%; background:#e9d5ff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
-                                            <svg width="22" height="22" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
-                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                                <polyline points="17 8 12 3 7 8"></polyline>
-                                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                                            </svg>
-                                        </div>
-                                        <div style="font-size:0.85rem; font-weight:800; color:#581c87; margin-bottom:0.25rem;">Drag & Drop Frame PNG di sini</div>
-                                        <div style="font-size:0.75rem; color:#7c3aed; margin-bottom:0.75rem;">atau klik untuk pilih file</div>
-                                        <div style="font-size:0.7rem; color:#94a3b8; line-height:1.4;">
-                                            Format: PNG / WebP / JPG &bull; Rasio: 9:16 (InstaStory) &bull; Maks: 4 MB<br>
-                                            Tersisa <strong>{{ 6 - count($customFrames) }}</strong> slot dari 6 frame custom
-                                        </div>
-                                    </div>
-
-                                    <div id="framePreviewWrap" style="display:none;">
-                                        <img id="framePreviewImg" src="" alt="Preview"
-                                            style="max-height:200px; border-radius:10px; margin:0 auto 0.75rem; display:block; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
-                                        <div id="framePreviewName" style="font-size:0.78rem; font-weight:700; color:#581c87; margin-bottom:0.75rem;"></div>
-                                    </div>
-                                </div>
-
-                                {{-- Upload Submit Button (hidden until file selected) --}}
-                                <div id="frameUploadActions" style="display:none; margin-top:0.85rem; gap:0.65rem; flex-wrap:wrap;">
-                                    <button type="submit"
-                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.55rem 1.25rem; background:linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; border:none; border-radius:10px; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 4px 12px rgba(124,58,237,0.3);">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                            <polyline points="17 8 12 3 7 8"></polyline>
-                                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                                        </svg>
-                                        Upload Frame Sekarang
-                                    </button>
-                                    <button type="button" onclick="resetFrameUpload()"
-                                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 0.9rem; background:#f1f5f9; border:1.5px solid #e2e8f0; color:#475569; border-radius:10px; font-size:0.8rem; font-weight:600; cursor:pointer;">
-                                        Batal
-                                    </button>
-                                </div>
-                            </form>
-                        @else
-                            <div style="text-align:center; padding:1.5rem; background:#f8fafc; border-radius:12px; color:#64748b; font-size:0.82rem; font-weight:600; border:1.5px dashed #e2e8f0;">
-                                <svg width="24" height="24" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="margin:0 auto 0.5rem; display:block;"><circle cx="12" cy="12" r="10"></circle><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Slot custom frame sudah penuh (6/6). Hapus salah satu untuk menambah frame baru.
-                            </div>
-                        @endif
-
-                        {{-- Panduan Desain Frame --}}
-                        <div style="margin-top:1rem; padding:0.85rem 1rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;">
-                            <div style="font-size:0.78rem; font-weight:700; color:#92400e; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                Panduan Membuat Frame Custom di Canva:
-                            </div>
-                            <ol style="font-size:0.74rem; color:#78350f; line-height:1.7; margin:0; padding-left:1.25rem;">
-                                <li>Buka Canva → pilih template <strong>Instagram Story (1080 x 1920 px)</strong></li>
-                                <li>Desain frame dengan area tengah <strong>transparan</strong> (lubang untuk foto kamera)</li>
-                                <li>Tambahkan ornamen, teks nama pasangan, tanggal, dll. di pinggiran frame</li>
-                                <li>Download sebagai <strong>PNG dengan background transparan</strong></li>
-                                <li>Upload di sini — frame langsung muncul sebagai pilihan tamu di photobooth</li>
-                            </ol>
-                        </div>
                     </div>
                 </div>
 
