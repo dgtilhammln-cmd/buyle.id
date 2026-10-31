@@ -2642,12 +2642,8 @@
                             }
                             $cSalesCount = $cp?->total_sales ?? ($creatorUser->products_sum_sold_count ?? 0);
                             $cMarketCount = (int) ($creatorUser->products_count ?? 0);
-                            $cBioCount = (int) ($cp?->bio_products_count ?? 0);
+                            $cBioCount = (int) ($cp?->bio_blocks_count ?? 0);
                             $cTotalProducts = $cMarketCount + $cBioCount;
-
-                            // Jenis creator: punya digital store marketplace atau bio-only
-                            $cHasDigitalStore = $cMarketCount > 0;
-                            $cIsBioOnly       = !$cHasDigitalStore && $cBioCount > 0;
 
                             // Realtime Creator Rating & Verification Status from DB
                             $cIsVerified = $cp ? $cp->isVerified() : false;
@@ -2676,12 +2672,6 @@
                             <div class="popular-creator-banner">
                                 @if($cBanner)
                                     <img src="{{ $cBanner }}" alt="{{ $cName }}" class="popular-creator-banner-img" loading="lazy">
-                                @endif
-                                {{-- Badge tipe creator --}}
-                                @if($cIsBioOnly)
-                                    <span style="position:absolute;top:8px;right:8px;background:rgba(99,102,241,0.88);color:#fff;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:0.03em;backdrop-filter:blur(4px);">Link in Bio</span>
-                                @elseif($cHasDigitalStore)
-                                    <span style="position:absolute;top:8px;right:8px;background:rgba(16,185,129,0.85);color:#fff;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:0.03em;backdrop-filter:blur(4px);">Digital Store</span>
                                 @endif
                             </div>
 

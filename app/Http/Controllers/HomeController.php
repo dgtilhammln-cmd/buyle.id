@@ -95,38 +95,38 @@ class HomeController extends Controller
                     ->get();
             }
 
-            // Creator populer — tampil semua creator aktif baik yang punya digital store maupun link-in-bio saja
-            // Logika baru:
-            //   1. Tidak filter 'buyer' — beberapa creator bio-only mungkin masih ber-role seller/creator
-            //   2. Cukup punya creatorProfile dengan store_slug, is_active, dan minimal 1 produk aktif (marketplace ATAU bio)
-            //   3. Sorting: pinned creators dulu, lalu by total produk (marketplace + bio), lalu by produk marketplace
-            //   4. Limit lebih besar (20) lalu filter PHP agar tersedia cukup card
+            // Creator populer — tampil semua creator aktif baik yang punya digital store maupun link-in-bio di Buyle
             $popularCreators = \App\Models\User::whereHas('creatorProfile', function($q) {
                     $q->whereNotNull('store_slug')
                       ->where('store_slug', '!=', '')
                       ->where('store_name', 'NOT LIKE', '%copywriter%')
                       ->where('store_slug', 'NOT LIKE', '%copywriter%');
                 })
-                ->where('is_active', true)
+                ->where(function($q) {
+                    $q->where('is_active', true)->orWhereNull('is_active');
+                })
                 ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
                 ->where('name', 'NOT LIKE', '%copywriter%')
                 ->where(function($q) {
-                    // Punya produk marketplace aktif
+                    // 1. Punya produk marketplace aktif
                     $q->whereHas('products', function($pq) {
                         $pq->where('is_active', true);
                     })
-                    // ATAU punya bio block produk aktif (creator link-in-bio only)
+                    // 2. ATAU punya blok bio aktif (apapun tipenya: link, pdf, socials, custom_product, buyle_product, affiliate, dll)
                     ->orWhereHas('creatorProfile.bioBlocks', function($bq) {
-                        $bq->where('is_active', true)
-                           ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate', 'shopee', 'affiliate']);
+                        $bq->where('is_active', true);
+                    })
+                    // 3. ATAU sudah setup link-in-bio (memiliki bio_role atau bio_config)
+                    ->orWhereHas('creatorProfile', function($cq) {
+                        $cq->whereNotNull('bio_role')
+                           ->orWhereNotNull('bio_config');
                     });
                 })
                 ->with([
                     'creatorProfile' => function($q) {
                         $q->select('id', 'user_id', 'store_name', 'store_slug', 'is_verified', 'store_banner_1', 'store_banner_2', 'bio_config', 'bio_role')
-                          ->withCount(['bioBlocks as bio_products_count' => function($bq) {
-                              $bq->where('is_active', true)
-                                 ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate', 'shopee', 'affiliate']);
+                          ->withCount(['bioBlocks as bio_blocks_count' => function($bq) {
+                              $bq->where('is_active', true);
                           }]);
                     }
                 ])
@@ -148,13 +148,11 @@ class HomeController extends Controller
                         return false;
                     }
                     $marketCount = (int) ($u->products_count ?? 0);
-                    $bioCount    = (int) ($u->creatorProfile->bio_products_count ?? 0);
-                    // Tampilkan jika: punya produk marketplace ATAU bio produk aktif
-                    // isStoreActive() hanya wajib jika punya store marketplace (bukan bio-only)
-                    if ($marketCount > 0 && !$u->creatorProfile->isStoreActive()) {
-                        return false;
-                    }
-                    return ($marketCount + $bioCount) > 0;
+                    $bioBlocks   = (int) ($u->creatorProfile->bio_blocks_count ?? 0);
+                    $hasBioSetup = !empty($u->creatorProfile->bio_role) || !empty($u->creatorProfile->bio_config) || $bioBlocks > 0;
+
+                    // Lolos jika punya produk marketplace ATAU aktif menggunakan link in bio
+                    return ($marketCount > 0 || $hasBioSetup);
                 })
                 ->values();
 
