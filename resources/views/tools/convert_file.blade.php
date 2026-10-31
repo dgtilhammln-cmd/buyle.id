@@ -27,12 +27,6 @@
 
     {{-- Hero Section --}}
     <section class="convert-hero">
-        <div class="convert-hero-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-            </svg>
-            <span>Buyle Tools - Media Converter</span>
-        </div>
         <h1 class="convert-hero-title">Convert Format Foto & Gambar Online Gratis</h1>
         <p class="convert-hero-desc">
             Ubah format gambar JPG, PNG, WEBP, AVIF, GIF, dan BMP secara instan tanpa batas kuota. Dilengkapi opsi kompresi kualitas gambar yang fleksibel sesuai kebutuhan Anda.
@@ -421,7 +415,7 @@
     .convert-page-wrapper {
         max-width: 1140px;
         margin: 0 auto;
-        padding: 1.5rem 1rem 4rem;
+        padding: 7rem 1.25rem 4rem;
         font-family: 'Montserrat', sans-serif;
         color: #1e293b;
     }
@@ -466,20 +460,6 @@
         text-align: center;
         max-width: 780px;
         margin: 0 auto 2.5rem;
-    }
-    .convert-hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        background: #f0fdf4;
-        color: #15803d;
-        border: 1px solid #bbf7d0;
-        padding: 0.35rem 0.85rem;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        margin-bottom: 1rem;
     }
     .convert-hero-title {
         font-size: 2.15rem;
@@ -632,7 +612,7 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
     .toggle-checkbox:checked + .toggle-slider {
-        background-color: #1eb349;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
     }
     .toggle-checkbox:checked + .toggle-slider:before {
         transform: translateX(18px);
@@ -733,7 +713,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        background: #1eb349;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #ffffff;
         border: none;
         padding: 0.75rem 1.75rem;
@@ -742,13 +722,12 @@
         font-weight: 700;
         font-family: 'Montserrat', sans-serif;
         cursor: pointer;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.28);
-        transition: all 0.15s ease;
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        transition: transform 0.2s, box-shadow 0.2s;
     }
     .btn-select-files:hover {
-        background: #16a34a;
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
+        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
     }
     .drop-format-support {
         display: flex;
@@ -817,12 +796,14 @@
         background: #1e293b;
     }
     .btn-convert-now {
-        background: #1eb349;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #ffffff;
-        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.28);
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        transition: transform 0.2s, box-shadow 0.2s;
     }
     .btn-convert-now:hover {
-        background: #16a34a;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
     }
 
     /* File Queue List */
@@ -928,7 +909,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        background: #1eb349;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #ffffff;
         border: none;
         padding: 0.45rem 0.85rem;
@@ -937,10 +918,12 @@
         font-weight: 700;
         cursor: pointer;
         text-decoration: none;
-        transition: background 0.15s;
+        box-shadow: 0 2px 8px rgba(30, 179, 73, 0.3);
+        transition: transform 0.15s, box-shadow 0.15s;
     }
     .btn-download-item:hover {
-        background: #16a34a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.4);
     }
     .btn-remove-item {
         background: none;

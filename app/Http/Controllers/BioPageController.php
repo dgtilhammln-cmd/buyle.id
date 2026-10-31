@@ -36,13 +36,26 @@ class BioPageController extends Controller
         $config = $profile->bio_config ?? [];
         $blocks = $profile->bioBlocks;
 
-        // Auto-populate bio avatar from user's Google/profile avatar if not set
-        if (empty($config['avatar']) && $profile->user) {
-            $userAvatar = $profile->user->avatar ?? null;
-            if ($userAvatar) {
-                // Google avatars are full URLs, local ones are relative paths
+        // Auto-populate bio avatar from creator profile avatar or user's Google/profile avatar if not set
+        if (empty($config['avatar'])) {
+            if (!empty($profile->avatar)) {
+                $config['avatar'] = $profile->avatar;
+            } elseif ($profile->user && !empty($profile->user->avatar)) {
+                $userAvatar = $profile->user->avatar;
                 $config['_user_avatar'] = $userAvatar;
             }
+        }
+
+        // Auto-populate bio cover/banner from creator profile store banner if not set
+        if (empty($config['cover'])) {
+            if (!empty($profile->store_banner_1)) {
+                $config['cover'] = $profile->store_banner_1;
+            } elseif (!empty($profile->store_banner_2)) {
+                $config['cover'] = $profile->store_banner_2;
+            }
+        }
+        if (!empty($config['cover']) && \Illuminate\Support\Str::startsWith($config['cover'], 'storage/')) {
+            $config['cover'] = substr($config['cover'], 8);
         }
 
         // Resolve seller products from DB

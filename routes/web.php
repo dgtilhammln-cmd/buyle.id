@@ -86,6 +86,10 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/toko/{slug}', fn($slug) => redirect()->route('store.show', $slug, 301))->name('store.show.legacy');
     Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
     Route::get('/tools/convert-file', [\App\Http\Controllers\ToolController::class, 'convertFile'])->name('tools.convert_file');
+    Route::get('/tools/social-downloader', [\App\Http\Controllers\SocialDownloaderController::class, 'index'])->name('tools.social_downloader');
+    Route::post('/tools/social-downloader/fetch', [\App\Http\Controllers\SocialDownloaderController::class, 'fetchMedia'])->name('tools.social_downloader.fetch');
+    Route::get('/tools/social-downloader/download', [\App\Http\Controllers\SocialDownloaderController::class, 'downloadStream'])->name('tools.social_downloader.stream');
+    Route::get('/cron/clean-temp-images', [\App\Http\Controllers\ToolController::class, 'cronCleanTempImages'])->name('cron.clean_temp_images');
     Route::get('/ticketing',      [\App\Http\Controllers\TicketingController::class, 'index'])->name('ticketing');
     Route::get('/kontak',         [ContactController::class,'index'])->name('contact');
     Route::post('/kontak',        [ContactController::class,'send'])->name('contact.send');
