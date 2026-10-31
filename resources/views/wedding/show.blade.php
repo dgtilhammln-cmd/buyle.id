@@ -101,7 +101,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 5rem 2rem 3.5rem;
+            padding: 7rem 2rem 3.2rem;
             text-align: center;
             transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.7s ease;
         }
@@ -119,7 +119,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 1.5rem 0.5rem;
+            padding: 0.5rem 0.5rem;
+            margin-top: 1.2rem;
         }
 
         .cover-eyebrow {
@@ -204,7 +205,11 @@
             font-weight: 700;
             color: #ffffff;
             letter-spacing: 0.06em;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0;
+        }
+
+        .guest-name.has-pax {
+            margin-bottom: 0.35rem;
         }
 
         .guest-pax {
@@ -724,12 +729,9 @@
             <!-- Guest Card -->
             <div class="guest-card">
                 <div class="guest-label">Kepada Yth. Bapak/Ibu/Saudara/i:</div>
-                <div class="guest-name">{{ $guestName }}</div>
-                @if($guest)
-                    <div class="guest-pax">{{ $guest->group_name ?: 'Tamu Undangan' }} &bull; {{ $guest->pax ?: 1 }} Pax
-                    </div>
-                @else
-                    <div class="guest-pax">Tamu Undangan Terhormat</div>
+                <div class="guest-name {{ ($guest && ($guest->group_name || $guest->pax)) ? 'has-pax' : '' }}">{{ $guestName }}</div>
+                @if($guest && ($guest->group_name || $guest->pax))
+                    <div class="guest-pax">{{ $guest->group_name ?: 'Tamu Undangan' }} &bull; {{ $guest->pax ?: 1 }} Pax</div>
                 @endif
             </div>
 
