@@ -106,6 +106,148 @@
             transition: transform 0.2s ease, filter 0.2s ease;
         }
 
+        /* Container for 3 sequential arch slots */
+        .arch-slots-container {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .arch-slot {
+            position: absolute;
+            left: 24.074%;
+            width: 51.852%;
+            background: #0d121c;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .arch-slot canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Slot 1: Top Arch (Y: 4.6875%, H: 30.2083%) */
+        .arch-slot-1 {
+            top: 4.6875%;
+            height: 30.2083%;
+            border-top-left-radius: 9999px;
+            border-top-right-radius: 9999px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        /* Slot 2: Middle Rectangle (Y: 36.9792%, H: 26.0417%) */
+        .arch-slot-2 {
+            top: 36.9792%;
+            height: 26.0417%;
+            border-radius: 2px;
+        }
+
+        /* Slot 3: Bottom Inverted Arch (Y: 65.1042%, H: 30.2083%) */
+        .arch-slot-3 {
+            top: 65.1042%;
+            height: 30.2083%;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 9999px;
+            border-bottom-right-radius: 9999px;
+        }
+
+        /* Active Slot Indicator Pulse Glow */
+        .arch-slot.active-live {
+            box-shadow: 0 0 0 2.5px rgba(236, 72, 153, 0.95), 0 0 24px rgba(236, 72, 153, 0.6);
+        }
+
+        /* Slot Badge Indicator */
+        .arch-slot-badge {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            font-size: 0.64rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 99px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            pointer-events: none;
+            z-index: 6;
+            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .arch-slot-1 .arch-slot-badge {
+            top: 16px;
+        }
+
+        .arch-slot-badge .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #94a3b8;
+        }
+
+        .arch-slot-badge.active {
+            background: rgba(236, 72, 153, 0.88);
+            border-color: #fda4af;
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(236, 72, 153, 0.5);
+        }
+
+        .arch-slot-badge.active .badge-dot {
+            background: #ffffff;
+            animation: pulseBadgeDot 1s ease-in-out infinite alternate;
+        }
+
+        .arch-slot-badge.done {
+            background: rgba(16, 185, 129, 0.88);
+            border-color: #a7f3d0;
+            color: #ffffff;
+        }
+
+        .arch-slot-badge.done .badge-dot {
+            background: #ffffff;
+        }
+
+        @keyframes pulseBadgeDot {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            100% { transform: scale(1.3); opacity: 1; }
+        }
+
+        /* Digicam Slot Container */
+        .digicam-slot-wrapper {
+            position: absolute;
+            left: 9.722%;
+            top: 5.9375%;
+            width: 79.63%;
+            height: 69.8958%;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #000000;
+            z-index: 5;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+        }
+
+        .digicam-slot-wrapper canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
         /* Live Custom Frame Image Overlay: Selalu aktif pada live cam */
         .frame-overlay-img {
             position: absolute;
@@ -658,6 +800,27 @@
             {{-- Main live video --}}
             <video id="cameraVideo" autoplay playsinline muted></video>
 
+            {{-- Sequential 3 Arch Slots for Minimalist Arch --}}
+            <div id="archSlotsContainer" class="arch-slots-container" style="display:none;">
+                <div id="archSlot1" class="arch-slot arch-slot-1 active-live">
+                    <canvas id="archCanvas1" width="560" height="580"></canvas>
+                    <div id="archBadge1" class="arch-slot-badge active"><span class="badge-dot"></span><span id="archBadgeText1">Pose 1 &bull; Atas</span></div>
+                </div>
+                <div id="archSlot2" class="arch-slot arch-slot-2">
+                    <canvas id="archCanvas2" width="560" height="500"></canvas>
+                    <div id="archBadge2" class="arch-slot-badge"><span class="badge-dot"></span><span id="archBadgeText2">Pose 2 &bull; Tengah</span></div>
+                </div>
+                <div id="archSlot3" class="arch-slot arch-slot-3">
+                    <canvas id="archCanvas3" width="560" height="580"></canvas>
+                    <div id="archBadge3" class="arch-slot-badge"><span class="badge-dot"></span><span id="archBadgeText3">Pose 3 &bull; Bawah</span></div>
+                </div>
+            </div>
+
+            {{-- Digicam LCD Screen Slot for Vintage Digicam --}}
+            <div id="digicamSlotContainer" class="digicam-slot-wrapper" style="display:none;">
+                <canvas id="digicamCanvas" width="860" height="1342"></canvas>
+            </div>
+
             {{-- Live Multi-Shot Grid Helper Lines --}}
             <div id="liveGridGuide" class="live-grid-guide"></div>
 
@@ -739,10 +902,10 @@
             </div>
         </div>
 
-        {{-- ── Multi-Shot Mode Bar (Kunci Auto 3 Foto) ─────────────── --}}
-        <div style="position:absolute; top:72px; z-index:15; display:inline-flex; align-items:center; gap:6px; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); padding:5px 14px; border-radius:99px; border:1px solid rgba(255,255,255,0.18); font-size:0.7rem; font-weight:700; color:#ffffff;">
-            <span style="width:6px; height:6px; border-radius:50%; background:#22c55e;"></span>
-            <span>Auto 3 Foto &bull; Strip Estetik</span>
+        {{-- Multi-Shot Mode Bar (Kunci Auto 3 Foto / Mode 1 Foto) --}}
+        <div id="topShotBadge" style="position:absolute; top:72px; z-index:15; display:inline-flex; align-items:center; gap:6px; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); padding:5px 14px; border-radius:99px; border:1px solid rgba(255,255,255,0.18); font-size:0.7rem; font-weight:700; color:#ffffff;">
+            <span id="topShotDot" style="width:6px; height:6px; border-radius:50%; background:#22c55e;"></span>
+            <span id="topShotLabel">Auto 3 Foto &bull; Strip Estetik</span>
         </div>
         <div class="shots-selector-bar" style="display:none !important;">
             <button type="button" class="shot-btn" data-shots="1" onclick="selectShotMode(3, this)">1 Foto</button>
@@ -948,8 +1111,14 @@
         let isCapturing = false;
         let uploadedImageObj = null;
 
-        // Multi-Shot Mode: Otomatis 3 Foto (Locked)
+        // Multi-Shot & Box Preview State
         let currentShotMode = 3;
+        let isArchMode = true;
+        let isDigicamMode = false;
+        let archStep = 1; // 1 (atas), 2 (tengah), 3 (bawah)
+        let archSnapshots = [null, null, null];
+        let animFrameId = null;
+        let isLoopRunning = false;
 
         const videoEl = document.getElementById('cameraVideo');
         const videoBgEl = document.getElementById('cameraVideoBg');
@@ -974,6 +1143,166 @@
             setTimeout(() => {
                 toastNotif.style.display = 'none';
             }, duration);
+        }
+
+        // ── Helper: Draw Video Frame Cropped (Cover-Fit) to Target Canvas ────────
+        function drawVideoCoverToCanvas(targetCanvas, filterCss, isFrontCamera) {
+            if (!videoEl || videoEl.videoWidth === 0 || videoEl.videoHeight === 0) return;
+
+            const ctx = targetCanvas.getContext('2d');
+            const cw = targetCanvas.width;
+            const ch = targetCanvas.height;
+
+            ctx.save();
+            ctx.clearRect(0, 0, cw, ch);
+
+            if (filterCss && filterCss !== 'none') {
+                ctx.filter = filterCss;
+            }
+
+            if (isFrontCamera) {
+                ctx.translate(cw, 0);
+                ctx.scale(-1, 1);
+            }
+
+            const vw = videoEl.videoWidth;
+            const vh = videoEl.videoHeight;
+            const canvasAspect = cw / ch;
+            const videoAspect = vw / vh;
+
+            let sx, sy, sw, sh;
+            if (videoAspect > canvasAspect) {
+                sh = vh;
+                sw = vh * canvasAspect;
+                sx = (vw - sw) / 2;
+                sy = 0;
+            } else {
+                sw = vw;
+                sh = vw / canvasAspect;
+                sx = 0;
+                sy = (vh - sh) / 2;
+            }
+
+            ctx.drawImage(videoEl, sx, sy, sw, sh, 0, 0, cw, ch);
+            ctx.restore();
+        }
+
+        // Helper: Draw Aesthetic Dark Placeholder on Waiting Slot
+        function drawPlaceholder(ctx, w, h, title, subtitle) {
+            ctx.save();
+            ctx.fillStyle = '#0b0f19';
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([6, 6]);
+            ctx.strokeRect(20, 20, w - 40, h - 40);
+
+            ctx.font = '700 30px "Montserrat", sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(title, w / 2, h / 2 - 12);
+
+            ctx.font = '500 16px "Montserrat", sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+            ctx.fillText(subtitle, w / 2, h / 2 + 24);
+            ctx.restore();
+        }
+
+        // Helper: Update Arch Badge Indicators on UI
+        function updateArchBadges() {
+            for (let i = 1; i <= 3; i++) {
+                const slotEl = document.getElementById(`archSlot${i}`);
+                const badgeEl = document.getElementById(`archBadge${i}`);
+                const badgeText = document.getElementById(`archBadgeText${i}`);
+                const posNames = { 1: 'Atas', 2: 'Tengah', 3: 'Bawah' };
+
+                if (!slotEl || !badgeEl) continue;
+
+                slotEl.classList.remove('active-live');
+                badgeEl.classList.remove('active', 'done');
+
+                if (archSnapshots[i - 1]) {
+                    badgeEl.classList.add('done');
+                    if (badgeText) badgeText.innerHTML = `Pose ${i} ✓ OK`;
+                } else if (archStep === i) {
+                    slotEl.classList.add('active-live');
+                    badgeEl.classList.add('active');
+                    if (badgeText) badgeText.innerHTML = `Pose ${i} (${posNames[i]}) • Kamera Aktif`;
+                } else {
+                    if (badgeText) badgeText.innerHTML = `Pose ${i} (${posNames[i]}) • Menunggu`;
+                }
+            }
+        }
+
+        // Helper: Clone / Freeze Canvas to Offscreen Canvas
+        function captureSlotCanvas(canvas) {
+            const copy = document.createElement('canvas');
+            copy.width = canvas.width;
+            copy.height = canvas.height;
+            const ctx = copy.getContext('2d');
+            ctx.drawImage(canvas, 0, 0);
+            return copy;
+        }
+
+        // ── 60 FPS Live Box Preview Animation Loop ───────────────────────────────
+        function startLiveRenderLoop() {
+            if (isLoopRunning) return;
+            isLoopRunning = true;
+
+            function tick() {
+                if (stream && videoEl.readyState >= 2) {
+                    const filterDef = FILTER_DEFINITIONS[currentFilterKey];
+                    const filterCss = filterDef ? filterDef.css : 'none';
+                    const isFront = (currentFacingMode === 'user');
+
+                    if (isArchMode) {
+                        // Slot 1 (Atas)
+                        const c1 = document.getElementById('archCanvas1');
+                        if (c1) {
+                            if (archSnapshots[0]) {
+                                // Keep frozen snapshot
+                            } else if (archStep === 1) {
+                                drawVideoCoverToCanvas(c1, filterCss, isFront);
+                            } else {
+                                drawPlaceholder(c1.getContext('2d'), 560, 580, 'Pose 1 (Atas)', 'Bersiap foto pertama');
+                            }
+                        }
+
+                        // Slot 2 (Tengah)
+                        const c2 = document.getElementById('archCanvas2');
+                        if (c2) {
+                            if (archSnapshots[1]) {
+                                // Keep frozen snapshot
+                            } else if (archStep === 2) {
+                                drawVideoCoverToCanvas(c2, filterCss, isFront);
+                            } else if (archStep < 2) {
+                                drawPlaceholder(c2.getContext('2d'), 560, 500, 'Pose 2 (Tengah)', 'Menunggu Pose 1');
+                            }
+                        }
+
+                        // Slot 3 (Bawah)
+                        const c3 = document.getElementById('archCanvas3');
+                        if (c3) {
+                            if (archSnapshots[2]) {
+                                // Keep frozen snapshot
+                            } else if (archStep === 3) {
+                                drawVideoCoverToCanvas(c3, filterCss, isFront);
+                            } else if (archStep < 3) {
+                                drawPlaceholder(c3.getContext('2d'), 560, 580, 'Pose 3 (Bawah)', 'Menunggu Pose 2');
+                            }
+                        }
+                    } else if (isDigicamMode) {
+                        const cDigi = document.getElementById('digicamCanvas');
+                        if (cDigi) {
+                            drawVideoCoverToCanvas(cDigi, filterCss, isFront);
+                        }
+                    }
+                }
+                animFrameId = requestAnimationFrame(tick);
+            }
+            animFrameId = requestAnimationFrame(tick);
         }
 
         // ── Inisialisasi Kamera Native ───────────────────────────────────────────
@@ -1001,6 +1330,7 @@
 
                 applyTransform();
                 applyFilterToVideo();
+                startLiveRenderLoop();
             } catch (err) {
                 console.warn('Fallback ke constraint sederhana:', err);
                 try {
@@ -1013,6 +1343,7 @@
                     uploadedImageObj = null;
                     applyTransform();
                     applyFilterToVideo();
+                    startLiveRenderLoop();
                 } catch (fallbackErr) {
                     console.warn('Gagal total membuka kamera:', fallbackErr);
                     cameraNotice.style.display = 'block';
@@ -1062,13 +1393,12 @@
             }
         }
 
-        // ── Multi-Shot Mode Selector (1, 2, 3, 4) ────────────────────────────────
+        // Multi-Shot Mode Selector
         function selectShotMode(mode, btnEl) {
             currentShotMode = parseInt(mode) || 1;
             document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
 
-            // Update live grid helper overlay
             liveGridGuide.className = 'live-grid-guide';
             if (currentShotMode > 1) {
                 liveGridGuide.classList.add('grid-' + currentShotMode);
@@ -1118,7 +1448,7 @@
             }
         }
 
-        // Select Custom PNG Frame (uploaded by creator)
+        // Select Custom PNG Frame
         function selectCustomFrame(frameId, frameUrl, btnEl) {
             selectedFrame = frameId;
             isCustomFrame = true;
@@ -1130,7 +1460,58 @@
             liveCustomFrameImg.src = frameUrl;
             liveCustomFrameImg.style.display = 'block';
 
-            showToast('Frame custom terpasang pada kamera live!', 1500);
+            const isArch = frameUrl.includes('minimalist_arch');
+            const isDigicam = frameUrl.includes('vintage_digicam');
+
+            const topDot = document.getElementById('topShotDot');
+            const topLabel = document.getElementById('topShotLabel');
+            const archContainer = document.getElementById('archSlotsContainer');
+            const digiContainer = document.getElementById('digicamSlotContainer');
+
+            if (isArch) {
+                isArchMode = true;
+                isDigicamMode = false;
+                currentShotMode = 3; // KUNCI AUTO 3 FOTO!
+                archStep = 1;
+                archSnapshots = [null, null, null];
+
+                if (archContainer) archContainer.style.display = 'block';
+                if (digiContainer) digiContainer.style.display = 'none';
+                videoEl.style.display = 'none';
+                if (videoBgEl) videoBgEl.style.display = 'none';
+
+                if (topDot) topDot.style.background = '#22c55e';
+                if (topLabel) topLabel.innerHTML = 'Auto 3 Foto &bull; Strip Estetik';
+
+                updateArchBadges();
+                showToast('Minimalist Arch: Preview langsung di tiap box (Auto 3 Foto)', 2200);
+            } else if (isDigicam) {
+                isArchMode = false;
+                isDigicamMode = true;
+                currentShotMode = 1; // KUNCI 1 FOTO GABISA DISETTING!
+
+                if (archContainer) archContainer.style.display = 'none';
+                if (digiContainer) digiContainer.style.display = 'block';
+                videoEl.style.display = 'none';
+                if (videoBgEl) videoBgEl.style.display = 'none';
+
+                if (topDot) topDot.style.background = '#eab308';
+                if (topLabel) topLabel.innerHTML = 'Mode 1 Foto &bull; Vintage Digicam';
+
+                showToast('Vintage Digicam: Kunci 1 Foto estetik', 2000);
+            } else {
+                isArchMode = false;
+                isDigicamMode = false;
+                currentShotMode = 1;
+
+                if (archContainer) archContainer.style.display = 'none';
+                if (digiContainer) digiContainer.style.display = 'none';
+                videoEl.style.display = 'block';
+                if (videoBgEl) videoBgEl.style.display = 'block';
+
+                if (topDot) topDot.style.background = '#38bdf8';
+                if (topLabel) topLabel.innerHTML = 'Mode 1 Foto &bull; Custom';
+            }
         }
 
         // Fallback: Jika tamu memilih upload foto dari galeri
@@ -1157,50 +1538,120 @@
             isCapturing = true;
             mainShutterBtn.classList.add('capturing-sequence');
 
-            const totalShots = currentShotMode;
-            const capturedList = [];
+            if (isArchMode) {
+                // Minimalist Arch: 3-Pose Sequential Box Capture
+                archSnapshots = [null, null, null];
+                const posNames = { 1: 'Atas', 2: 'Tengah', 3: 'Bawah' };
 
-            for (let i = 1; i <= totalShots; i++) {
-                // Update HUD
-                if (totalShots > 1) {
-                    shotHudText.textContent = `Pose ${i} dari ${totalShots}: Bersiap!`;
+                for (let step = 1; step <= 3; step++) {
+                    archStep = step;
+                    updateArchBadges();
+
+                    shotHudText.textContent = `Pose ${step} (${posNames[step]}): Bersiap!`;
                     shotHud.style.display = 'block';
-                }
 
-                // Countdown per pose: jika timer aktif pakai timer, jika tidak dan multi-shot kasih 3s per pose
-                let countdownSec = timerSeconds > 0 ? timerSeconds : (totalShots > 1 ? 3 : 0);
-
-                if (countdownSec > 0) {
+                    let countdownSec = timerSeconds > 0 ? timerSeconds : 3;
                     await runCountdown(countdownSec);
+
+                    // Shutter flash
+                    flashOverlay.classList.add('active');
+                    setTimeout(() => flashOverlay.classList.remove('active'), 120);
+                    playShutterSound();
+
+                    // Freeze canvas snapshot
+                    const activeCanvas = document.getElementById(`archCanvas${step}`);
+                    const frozenSnap = captureSlotCanvas(activeCanvas);
+                    archSnapshots[step - 1] = frozenSnap;
+
+                    // Draw permanent frozen image onto slot canvas
+                    const actCtx = activeCanvas.getContext('2d');
+                    actCtx.drawImage(frozenSnap, 0, 0);
+
+                    updateArchBadges();
+
+                    if (step < 3) {
+                        shotHudText.textContent = `Pose ${step} tersimpan! Ganti gaya untuk box ${posNames[step + 1]}...`;
+                        await delay(1200);
+                    }
                 }
 
-                // Shutter snapshot
+                shotHud.style.display = 'none';
+                mainShutterBtn.classList.remove('capturing-sequence');
+                isCapturing = false;
+
+                processingText.textContent = 'Menyatukan 3 Pose Estetik...';
+                processingOverlay.style.display = 'flex';
+
+                setTimeout(() => {
+                    renderCollage(archSnapshots, false);
+                }, 150);
+
+            } else if (isDigicamMode) {
+                // Vintage Digicam: Strict 1 Photo
+                if (timerSeconds > 0) {
+                    shotHudText.textContent = 'Bersiap foto Vintage...';
+                    shotHud.style.display = 'block';
+                    await runCountdown(timerSeconds);
+                }
+
                 flashOverlay.classList.add('active');
                 setTimeout(() => flashOverlay.classList.remove('active'), 120);
                 playShutterSound();
 
-                // Capture snapshot dari video
-                const frameSnapshot = captureVideoFrame();
-                capturedList.push(frameSnapshot);
+                const digiCanvas = document.getElementById('digicamCanvas');
+                const snap = captureSlotCanvas(digiCanvas);
 
-                // Jika masih ada pose berikutnya, beri jeda untuk ganti gaya
-                if (i < totalShots) {
-                    shotHudText.textContent = `Foto ${i} tersimpan! Ganti gaya berikutnya...`;
-                    await delay(1200);
+                shotHud.style.display = 'none';
+                mainShutterBtn.classList.remove('capturing-sequence');
+                isCapturing = false;
+
+                processingText.textContent = 'Memproses Foto Vintage Digicam...';
+                processingOverlay.style.display = 'flex';
+
+                setTimeout(() => {
+                    renderCollage([snap], false);
+                }, 150);
+
+            } else {
+                // Standard multi-shot or single photo fallback
+                const totalShots = currentShotMode;
+                const capturedList = [];
+
+                for (let i = 1; i <= totalShots; i++) {
+                    if (totalShots > 1) {
+                        shotHudText.textContent = `Pose ${i} dari ${totalShots}: Bersiap!`;
+                        shotHud.style.display = 'block';
+                    }
+
+                    let countdownSec = timerSeconds > 0 ? timerSeconds : (totalShots > 1 ? 3 : 0);
+                    if (countdownSec > 0) {
+                        await runCountdown(countdownSec);
+                    }
+
+                    flashOverlay.classList.add('active');
+                    setTimeout(() => flashOverlay.classList.remove('active'), 120);
+                    playShutterSound();
+
+                    const frameSnapshot = captureVideoFrame();
+                    capturedList.push(frameSnapshot);
+
+                    if (i < totalShots) {
+                        shotHudText.textContent = `Foto ${i} tersimpan! Ganti gaya berikutnya...`;
+                        await delay(1200);
+                    }
                 }
+
+                shotHud.style.display = 'none';
+                mainShutterBtn.classList.remove('capturing-sequence');
+                isCapturing = false;
+
+                processingText.textContent = totalShots > 1 ? 'Membuat Kolase Photobooth...' : 'Memproses Foto Estetik...';
+                processingOverlay.style.display = 'flex';
+
+                setTimeout(() => {
+                    renderCollage(capturedList, false);
+                }, 100);
             }
-
-            shotHud.style.display = 'none';
-            mainShutterBtn.classList.remove('capturing-sequence');
-            isCapturing = false;
-
-            // Render ke canvas 1080x1920
-            processingText.textContent = totalShots > 1 ? 'Membuat Kolase Photobooth...' : 'Memproses Foto Estetik...';
-            processingOverlay.style.display = 'flex';
-
-            setTimeout(() => {
-                renderCollage(capturedList, false);
-            }, 100);
         }
 
         function runCountdown(seconds) {
@@ -1309,72 +1760,46 @@
 
             const shots = capturedList.length;
 
-            if (shots === 1 || isStaticUpload) {
-                // Layout 1: Single Photo Full / Contain with Ambient
+            if (activeCustomUrl && activeCustomUrl.includes('vintage_digicam')) {
+                // Layout Vintage Digicam: Crop foto tepat di dalam layar LCD Digicam (X:105, Y:114, W:860, H:1342)
                 const src = capturedList[0];
-                const sw = src.width;
-                const sh = src.height;
+                drawCroppedToRect(ctx, src, 105, 114, 860, 1342, 24);
 
-                // Ambient Blur Background
+            } else if (activeCustomUrl && activeCustomUrl.includes('minimalist_arch')) {
+                // Layout 3: Minimalist Arch Shape Windows (Presisi Sesuai Template)
+                // 1. Top Arch Window (Dome atas r=280 pada y=370, dasar datar y=670)
                 ctx.save();
-                ctx.filter = 'blur(40px) brightness(0.4) saturate(1.2)';
-                ctx.drawImage(src, 0, 0, sw, sh, -100, -100, 1280, 2120);
+                ctx.beginPath();
+                ctx.arc(540, 370, 280, Math.PI, 0, false);
+                ctx.lineTo(820, 670);
+                ctx.lineTo(260, 670);
+                ctx.closePath();
+                ctx.clip();
+                drawCroppedToRect(ctx, capturedList[0], 260, 90, 560, 580, 0);
                 ctx.restore();
 
-                // Main Photo Center
-                const scaleFit = Math.min(1080 / sw, 1920 / sh);
-                const drawW = sw * scaleFit;
-                const drawH = sh * scaleFit;
-                const drawX = (1080 - drawW) / 2;
-                const drawY = (1920 - drawH) / 2;
-                ctx.drawImage(src, 0, 0, sw, sh, drawX, drawY, drawW, drawH);
+                // 2. Middle Rectangle Window (y=710 s/d 1210)
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(260, 710, 560, 500);
+                ctx.clip();
+                drawCroppedToRect(ctx, capturedList[1] || capturedList[0], 260, 710, 560, 500, 0);
+                ctx.restore();
 
-            } else if (shots === 2) {
-                // Layout 2: Split 2 Vertikal (Top & Bottom)
-                const marginX = 50;
-                const cardW = 980;
-                const gap = 24;
-                const topY = 70;
-                const cardH = 878;
+                // 3. Bottom Inverted Arch Window (Atap datar y=1250, Dome bawah r=280 pada y=1550)
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(260, 1250);
+                ctx.lineTo(820, 1250);
+                ctx.lineTo(820, 1550);
+                ctx.arc(540, 1550, 280, 0, Math.PI, false);
+                ctx.lineTo(260, 1250);
+                ctx.closePath();
+                ctx.clip();
+                drawCroppedToRect(ctx, capturedList[2] || capturedList[0], 260, 1250, 560, 580, 0);
+                ctx.restore();
 
-                drawCroppedToRect(ctx, capturedList[0], marginX, topY, cardW, cardH, 24);
-                drawCroppedToRect(ctx, capturedList[1], marginX, topY + cardH + gap, cardW, cardH, 24);
-
-            } else if (shots === 3) {
-                if (activeCustomUrl && activeCustomUrl.includes('minimalist_arch')) {
-                    // Layout 3: Minimalist Arch Shape Windows (Presisi Sesuai Template)
-                    // 1. Top Arch Window (Dome atas r=280 pada y=370, dasar datar y=670)
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(540, 370, 280, Math.PI, 0, false);
-                    ctx.lineTo(820, 670);
-                    ctx.lineTo(260, 670);
-                    ctx.closePath();
-                    ctx.clip();
-                    drawCroppedToRect(ctx, capturedList[0], 260, 90, 560, 580, 0);
-                    ctx.restore();
-
-                    // 2. Middle Rectangle Window (y=710 s/d 1210)
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.rect(260, 710, 560, 500);
-                    ctx.clip();
-                    drawCroppedToRect(ctx, capturedList[1], 260, 710, 560, 500, 0);
-                    ctx.restore();
-
-                    // 3. Bottom Inverted Arch Window (Atap datar y=1250, Dome bawah r=280 pada y=1550)
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.moveTo(260, 1250);
-                    ctx.lineTo(820, 1250);
-                    ctx.lineTo(820, 1550);
-                    ctx.arc(540, 1550, 280, 0, Math.PI, false);
-                    ctx.lineTo(260, 1250);
-                    ctx.closePath();
-                    ctx.clip();
-                    drawCroppedToRect(ctx, capturedList[2], 260, 1250, 560, 580, 0);
-                    ctx.restore();
-                } else {
+            } else if (shots === 1 || isStaticUpload) {
                     // Layout 3: Classic Photobooth 3-Strip
                     const marginX = 60;
                     const cardW = 960;
@@ -1473,6 +1898,19 @@
         // Retake / Foto Ulang
         function retakePhoto() {
             resultModal.style.display = 'none';
+            if (isArchMode) {
+                archStep = 1;
+                archSnapshots = [null, null, null];
+                updateArchBadges();
+
+                // Bersihkan slot canvas dan siapkan placeholder tunggu
+                const c1 = document.getElementById('archCanvas1');
+                if (c1) c1.getContext('2d').clearRect(0, 0, 560, 580);
+                const c2 = document.getElementById('archCanvas2');
+                if (c2) drawPlaceholder(c2.getContext('2d'), 560, 500, 'Pose 2 (Tengah)', 'Menunggu Pose 1');
+                const c3 = document.getElementById('archCanvas3');
+                if (c3) drawPlaceholder(c3.getContext('2d'), 560, 580, 'Pose 3 (Bawah)', 'Menunggu Pose 2');
+            }
             if (!stream && !uploadedImageObj) {
                 startCamera();
             }
@@ -1556,19 +1994,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Pasang custom frame pertama jika tersedia
             if (CUSTOM_FRAMES && CUSTOM_FRAMES.length > 0) {
-                selectedFrame = CUSTOM_FRAMES[0].id;
-                isCustomFrame = true;
-                activeCustomUrl = CUSTOM_FRAMES[0].url;
-                liveCustomFrameImg.src = activeCustomUrl;
-                liveCustomFrameImg.style.display = 'block';
+                const firstPill = document.querySelector('#carouselFrame .selector-pill');
+                selectCustomFrame(CUSTOM_FRAMES[0].id, CUSTOM_FRAMES[0].url, firstPill);
             } else {
                 liveCustomFrameImg.style.display = 'none';
-            }
-
-            // Kunci auto 3 foto sesuai settingan otomatis
-            currentShotMode = 3;
-            if (liveGridGuide) {
-                liveGridGuide.className = 'live-grid-guide grid-3';
             }
 
             // Buka tab Filter Warna secara default agar tamu langsung bisa memilih filter
