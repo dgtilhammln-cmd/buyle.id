@@ -245,7 +245,7 @@ class SocialMediaDownloaderService
     protected function resolveInstagram(string $url, string $type): array
     {
         // 1. Jika request adalah Foto Profil / DP
-        if ($type === 'profile' || !str_contains($url, '/p/') && !str_contains($url, '/reel/')) {
+        if ($type === 'profile' || (!str_contains($url, '/p/') && !str_contains($url, '/reel/') && !str_contains($url, '/reels/'))) {
             return $this->resolveInstagramProfile($url);
         }
 
@@ -358,6 +358,12 @@ class SocialMediaDownloaderService
      */
     protected function resolveInstagramPostOrReel(string $url): array
     {
+        // 1. Prioritas Utama: Resolver SaveInsta (sangat handal untuk Post, Carousel, dan Reels)
+        $saveInstaRes = $this->resolveInstagramViaSaveInsta($url);
+        if (!empty($saveInstaRes['success'])) {
+            return $saveInstaRes;
+        }
+
         // Ekstrak shortcode
         preg_match('/(p|reel|reels)\/([a-zA-Z0-9_\-]+)/', $url, $matches);
         $shortcode = $matches[2] ?? null;
@@ -366,7 +372,7 @@ class SocialMediaDownloaderService
             return ['success' => false, 'message' => 'Tautan postingan atau Reels Instagram tidak valid.'];
         }
 
-        // 1. Coba via GraphQL / Public Embed API
+        // 2. Coba via Direct Instagram Embed / API
         try {
             $response = Http::timeout(10)
                 ->withHeaders([
@@ -386,43 +392,6 @@ class SocialMediaDownloaderService
             }
         } catch (\Throwable $e) {
             Log::warning('Instagram Direct API gagal: ' . $e->getMessage());
-        }
-
-        // 2. Fallback via public resolver service
-        try {
-            $endpoint = "https://api.vkrdown.com/api/getMedia?url=" . urlencode($url);
-            $res = Http::timeout(10)->get($endpoint);
-
-            if ($res->successful() && !empty($res->json('data.downloadUrl'))) {
-                $data = $res->json('data');
-                $videoUrl = $data['downloadUrl'];
-                $cover = $data['thumbnail'] ?? null;
-
-                return [
-                    'success'   => true,
-                    'platform'  => 'instagram',
-                    'type'      => 'reels',
-                    'title'     => $data['title'] ?? 'Instagram Reels',
-                    'preview'   => $cover,
-                    'author'    => [
-                        'name'     => 'Kreator Instagram',
-                        'username' => '@instagram',
-                        'avatar'   => null,
-                    ],
-                    'is_video'  => true,
-                    'video_url' => $videoUrl,
-                    'downloads' => [
-                        [
-                            'type'  => 'video',
-                            'label' => 'Download Video Reels HD (MP4)',
-                            'url'   => $videoUrl,
-                            'ext'   => 'mp4',
-                        ]
-                    ],
-                ];
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Instagram VKR API gagal: ' . $e->getMessage());
         }
 
         // 3. Fallback via oEmbed (minimum thumbnail & author info)
@@ -460,6 +429,182 @@ class SocialMediaDownloaderService
             'success' => false,
             'message' => 'Gagal memproses media Instagram. Pastikan akun dan postingan bersifat publik.',
         ];
+    }
+
+    /**
+     * Resolusi Instagram via SaveInsta Engine (mendukung Foto, Video Reels, dan Multi-Slide Carousel).
+     */
+    protected function resolveInstagramViaSaveInsta(string $url): array
+    {
+        // Bersihkan query string pelacak dari URL
+        $cleanUrl = preg_replace('/\?.*/', '', trim($url));
+        if (!str_ends_with($cleanUrl, '/')) {
+            $cleanUrl .= '/';
+        }
+
+        try {
+            // 1. Ambil token verifikasi dari SaveInsta
+            $resVerify = Http::timeout(10)->asForm()->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Origin'     => 'https://saveinsta.to',
+                'Referer'    => 'https://saveinsta.to/',
+            ])->post('https://saveinsta.to/api/userverify', [
+                'url' => $cleanUrl,
+            ]);
+
+            $token = $resVerify->json('token');
+            if (empty($token)) {
+                return ['success' => false, 'message' => 'Gagal mendapatkan token verifikasi Instagram.'];
+            }
+
+            // 2. Ambil token dinamis k_exp & k_token dari halaman SaveInsta
+            $k_exp = '';
+            $k_token = '';
+            try {
+                $basePage = Http::timeout(6)->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                ])->get('https://saveinsta.to/en');
+                if (preg_match('/k_exp\s*=\s*[\"\\\']([^\"\\\']+)[\"\\\']/', $basePage->body(), $mExp)) {
+                    $k_exp = $mExp[1];
+                }
+                if (preg_match('/k_token\s*=\s*[\"\\\']([^\"\\\']+)[\"\\\']/', $basePage->body(), $mTok)) {
+                    $k_token = $mTok[1];
+                }
+            } catch (\Throwable $e) {
+                // Abaikan jika gagal ambil token base
+            }
+
+            // 3. Request ajaxSearch ke SaveInsta
+            $resSearch = Http::timeout(14)->asForm()->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Origin'     => 'https://saveinsta.to',
+                'Referer'    => 'https://saveinsta.to/',
+            ])->post('https://saveinsta.to/api/ajaxSearch', [
+                'q'       => $cleanUrl,
+                't'       => 'media',
+                'lang'    => 'en',
+                'cftoken' => $token,
+                'k_exp'   => $k_exp,
+                'k_token' => $k_token,
+            ]);
+
+            $html = $resSearch->json('data');
+            if (empty($html)) {
+                $msg = $resSearch->json('mess') ?? '';
+                if (stripos($msg, 'private') !== false) {
+                    return ['success' => false, 'message' => 'Postingan ini bersifat privat atau telah dihapus oleh pemiliknya.'];
+                }
+                return ['success' => false, 'message' => 'Tidak dapat menemukan media pada link ini.'];
+            }
+
+            // 4. Parse DOM hasil pencarian
+            $dom = new \DOMDocument();
+            @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+            $xpath = new \DOMXPath($dom);
+
+            $items = $xpath->query('//div[contains(@class, "download-items")]');
+            if ($items->length === 0) {
+                return ['success' => false, 'message' => 'Tidak ada media ditemukan dalam postingan ini.'];
+            }
+
+            $downloads = [];
+            $mainPreview = null;
+            $hasVideo = false;
+            $firstVideoUrl = null;
+
+            foreach ($items as $idx => $item) {
+                $img = $xpath->query('.//img', $item)->item(0);
+                $thumbSrc = $img ? $img->getAttribute('src') : null;
+                if (!$mainPreview && $thumbSrc) {
+                    $mainPreview = $thumbSrc;
+                }
+
+                // Cari tombol download
+                $linkNodes = $xpath->query('.//a[contains(@class, "abutton") or contains(@class, "download-btn")]', $item);
+                $itemUrl = null;
+                $itemLabel = null;
+
+                foreach ($linkNodes as $ln) {
+                    $href = $ln->getAttribute('href');
+                    $text = trim($ln->textContent);
+                    if ($href && $href !== '#' && !str_starts_with($href, 'javascript:')) {
+                        $itemUrl = $href;
+                        $itemLabel = $text;
+                        break;
+                    }
+                }
+
+                // Jika tidak ada tag <a> langsung (carousel preview slide), ekstrak dari token di thumbnail
+                if (!$itemUrl && $thumbSrc && preg_match('/token=([^&]+)/', $thumbSrc, $m)) {
+                    $parts = explode('.', $m[1]);
+                    if (isset($parts[1])) {
+                        $payload = json_decode(base64_decode(str_pad(strtr($parts[1], '-_', '+/'), strlen($parts[1]) % 4, '=', STR_PAD_RIGHT)), true);
+                        if (!empty($payload['url'])) {
+                            $itemUrl = $payload['url'];
+                        }
+                    }
+                }
+
+                if (!$itemUrl) {
+                    continue;
+                }
+
+                // Tentukan apakah item adalah video
+                $isItemVideo = (stripos($itemLabel ?? '', 'video') !== false)
+                    || (stripos($itemUrl, '.mp4') !== false)
+                    || ($xpath->query('.//i[contains(@class, "icon-dlvideo")]', $item)->length > 0);
+
+                $itemType = $isItemVideo ? 'video' : 'image';
+                $itemExt  = $isItemVideo ? 'mp4' : 'jpg';
+
+                if ($isItemVideo) {
+                    $hasVideo = true;
+                    if (!$firstVideoUrl) {
+                        $firstVideoUrl = $itemUrl;
+                    }
+                }
+
+                // Label tombol
+                $label = $isItemVideo ? 'Download Video HD' : 'Download Foto HD';
+                if ($items->length > 1) {
+                    $label .= ' (Slide ' . ($idx + 1) . ')';
+                }
+
+                $downloads[] = [
+                    'type'  => $itemType,
+                    'label' => $label,
+                    'url'   => $itemUrl,
+                    'ext'   => $itemExt,
+                ];
+            }
+
+            if (empty($downloads)) {
+                return ['success' => false, 'message' => 'Gagal mengekstrak tautan unduhan dari media ini.'];
+            }
+
+            $isCarousel = count($downloads) > 1;
+            $platformType = $hasVideo ? 'reels' : ($isCarousel ? 'carousel' : 'post');
+            $title = $hasVideo ? 'Instagram Reels HD' : ($isCarousel ? 'Instagram Carousel (' . count($downloads) . ' Slide)' : 'Instagram Post HD');
+
+            return [
+                'success'   => true,
+                'platform'  => 'instagram',
+                'type'      => $platformType,
+                'title'     => $title,
+                'preview'   => $mainPreview,
+                'author'    => [
+                    'name'     => 'Kreator Instagram',
+                    'username' => '@instagram',
+                    'avatar'   => null,
+                ],
+                'is_video'  => $hasVideo,
+                'video_url' => $firstVideoUrl,
+                'downloads' => $downloads,
+            ];
+        } catch (\Throwable $e) {
+            Log::warning('SaveInsta Resolver Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'Terjadi kendala saat menghubungkan ke server unduhan Instagram.'];
+        }
     }
 
     /**

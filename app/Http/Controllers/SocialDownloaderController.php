@@ -97,11 +97,19 @@ class SocialDownloaderController extends Controller
         $safeFilename = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $filename);
 
         try {
+            $headers = [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            ];
+
+            if (str_contains($realUrl, 'snapcdn') || str_contains($realUrl, 'saveinsta')) {
+                $headers['Referer'] = 'https://saveinsta.to/';
+                $headers['Origin']  = 'https://saveinsta.to';
+            } elseif (str_contains($realUrl, 'tiktok') || str_contains($realUrl, 'tikwm')) {
+                $headers['Referer'] = 'https://www.tiktok.com/';
+            }
+
             $stream = Http::timeout(60)
-                ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                    'Referer'    => 'https://www.tiktok.com/',
-                ])
+                ->withHeaders($headers)
                 ->get($realUrl);
 
             if (!$stream->successful()) {

@@ -78,20 +78,22 @@
                            placeholder="Tempel link TikTok, Reels IG, Post, atau username profil di sini..."
                            autocomplete="off" required>
 
-                    <button type="button" class="btn-paste-clipboard" id="btnPaste" onclick="pasteFromClipboard()" title="Tempel dari Clipboard">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                        </svg>
-                        <span>Tempel</span>
-                    </button>
+                    <div class="dl-input-suffix-actions">
+                        <button type="button" class="btn-clear-input" id="btnClear" onclick="clearInputUrl()" style="display:none;" title="Bersihkan kolom">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
 
-                    <button type="button" class="btn-clear-input" id="btnClear" onclick="clearInputUrl()" style="display:none;" title="Bersihkan">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
+                        <button type="button" class="btn-paste-clipboard" id="btnPaste" onclick="pasteFromClipboard()" title="Tempel dari Clipboard">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            </svg>
+                            <span>Tempel</span>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" id="btnSubmitDl" class="btn-fetch-dl">
@@ -523,22 +525,28 @@
         border-color: #1eb349;
         box-shadow: 0 0 0 4px rgba(30, 179, 73, 0.14);
     }
-    .btn-paste-clipboard {
+    .dl-input-suffix-actions {
         position: absolute;
         right: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .btn-paste-clipboard {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
         background: #ffffff;
         border: 1px solid #cbd5e1;
         color: #334155;
-        padding: 0.4rem 0.75rem;
+        padding: 0.45rem 0.85rem;
         border-radius: 999px;
-        font-size: 0.75rem;
+        font-size: 0.78rem;
         font-weight: 700;
         font-family: 'Montserrat', sans-serif;
         cursor: pointer;
         transition: all 0.15s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     }
     .btn-paste-clipboard:hover {
         background: #f1f5f9;
@@ -546,19 +554,22 @@
         border-color: #86efac;
     }
     .btn-clear-input {
-        position: absolute;
-        right: 4.8rem;
-        background: none;
-        border: none;
-        color: #94a3b8;
-        cursor: pointer;
-        padding: 0.35rem;
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.15s ease;
     }
     .btn-clear-input:hover {
+        background: #fee2e2;
         color: #ef4444;
+        transform: scale(1.05);
     }
 
     .btn-fetch-dl {
@@ -1036,9 +1047,16 @@ function clearInputUrl() {
 function onUrlInputChange() {
     var val = document.getElementById('dlUrlInput').value.trim();
     var clearBtn = document.getElementById('btnClear');
+    var pasteBtn = document.getElementById('btnPaste');
     var iconEl = document.getElementById('dlInputPlatformIcon');
 
-    clearBtn.style.display = val ? 'flex' : 'none';
+    if (val.length > 0) {
+        clearBtn.style.display = 'inline-flex';
+        pasteBtn.style.display = 'none';
+    } else {
+        clearBtn.style.display = 'none';
+        pasteBtn.style.display = 'inline-flex';
+    }
 
     // Auto-detect platform icon
     if (/tiktok\.com/i.test(val)) {
