@@ -760,9 +760,10 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
         Route::post('/calculate-price', [\App\Http\Controllers\Creator\WeddingController::class, 'calculatePrice'])->name('calculate-price');
         Route::post('/order-couple',    [\App\Http\Controllers\Creator\WeddingController::class, 'orderCouple'])->name('order-couple');
         Route::post('/payment-success/{wedding}', [\App\Http\Controllers\Creator\WeddingController::class, 'paymentSuccess'])->name('payment-success');
-        // Photobooth custom frame management
+        // Photobooth custom frame & photo management
         Route::post('/photobooth-frame',          [\App\Http\Controllers\Creator\WeddingController::class, 'uploadPhotoboothFrame'])->name('photobooth-frame.upload');
         Route::delete('/photobooth-frame/{index}',[\App\Http\Controllers\Creator\WeddingController::class, 'deletePhotoboothFrame'])->name('photobooth-frame.delete');
+        Route::delete('/photobooth-photo/{index}',[\App\Http\Controllers\Creator\WeddingController::class, 'deletePhotoboothPhoto'])->name('photobooth-photo.delete');
     });
 });
 
@@ -837,6 +838,7 @@ Route::get('/wedding', [\App\Http\Controllers\WeddingPublicController::class, 'l
 Route::prefix('wedding/{slug}')->group(function () {
     Route::get('/',                             [\App\Http\Controllers\WeddingPublicController::class, 'show'])->name('wedding.show');
     Route::get('/photobooth',                   [\App\Http\Controllers\WeddingPublicController::class, 'photobooth'])->name('wedding.photobooth');
+    Route::post('/photobooth/save',              [\App\Http\Controllers\WeddingPublicController::class, 'savePhotoboothPhoto'])->name('wedding.photobooth.save');
     Route::post('/wish',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitWish'])->name('wedding.wish');
     Route::post('/gift',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitGift'])->name('wedding.gift');
     Route::match(['get', 'post'], '/buku-tamu', [\App\Http\Controllers\WeddingPublicController::class, 'reception'])->name('wedding.reception');

@@ -242,4 +242,75 @@ class WeddingPublicController extends Controller
             'guest'   => $guest,
         ]);
     }
+
+    /**
+     * Simpan hasil foto photobooth (Base64 JPEG/PNG).
+     * Disimpan ke storage/app/public/wedding/{slug}/photobooth/
+     * dan dicatat di data_json['photobooth_photos'].
+     */
+    public function savePhotoboothPhoto(string $slug, Request $request)
+    {
+        $wedding = Wedding::where('slug', $slug)->firstOrFail();
+
+        $request->validate([
+            'image' => ['required', 'string'],
+            'shots' => ['nullable', 'integer'],
+        ]);
+
+        $imageRaw = $request->input('image');
+        $type = 'jpg';
+        if (preg_match('/^data:image\/(\w+);base64,/', $imageRaw, $matches)) {
+            $imageRaw = substr($imageRaw, strpos($imageRaw, ',') + 1);
+            $ext = strtolower($matches[1]);
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) {
+                $type = $ext === 'jpeg' ? 'jpg' : $ext;
+            }
+        }
+
+        $imageBinary = base64_decode($imageRaw);
+        if ($imageBinary === false) {
+            return response()->json(['success' => false, 'message' => 'Format gambar tidak valid.'], 422);
+        }
+
+        $filename = 'pb_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $type;
+        $relPath  = 'wedding/' . $wedding->slug . '/photobooth/' . $filename;
+
+        \Illuminate\Support\Facades\Storage::disk('public')->put($relPath, $imageBinary);
+
+        // Mirror ke public_html/storage jika folder fisik public_html ada
+        $publicHtmlStorageDir = base_path('public_html/storage/' . dirname($relPath));
+        if (is_dir(base_path('public_html/storage'))) {
+            @mkdir($publicHtmlStorageDir, 0775, true);
+            @file_put_contents(base_path('public_html/storage/' . $relPath), $imageBinary);
+        }
+
+        $data   = $wedding->data_json ?? [];
+        $photos = $data['photobooth_photos'] ?? [];
+
+        $newPhoto = [
+            'id'         => uniqid('pb_'),
+            'path'       => $relPath,
+            'url'        => \Illuminate\Support\Facades\Storage::disk('public')->url($relPath),
+            'shots'      => (int) ($request->input('shots') ?? 1),
+            'guest_name' => $request->input('guest_name', 'Tamu Spesial'),
+            'created_at' => now()->toIso8601String(),
+        ];
+
+        // Foto terbaru selalu di urutan teratas
+        array_unshift($photos, $newPhoto);
+
+        // Maksimal simpan 200 riwayat foto photobooth
+        if (count($photos) > 200) {
+            $photos = array_slice($photos, 0, 200);
+        }
+
+        $data['photobooth_photos'] = $photos;
+        $wedding->update(['data_json' => $data]);
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Foto berhasil disimpan ke galeri photobooth.',
+            'photo_url' => $newPhoto['url'],
+        ]);
+    }
 }

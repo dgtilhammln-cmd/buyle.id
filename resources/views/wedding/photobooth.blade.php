@@ -4,7 +4,7 @@
     foreach ($customFramePaths as $idx => $path) {
         $customFrames[] = [
             'id'    => 'custom_' . $idx,
-            'label' => 'Custom ' . ($idx + 1),
+            'label' => 'Frame ' . ($idx + 1),
             'url'   => \Illuminate\Support\Facades\Storage::disk('public')->url($path),
             'type'  => 'image',
         ];
@@ -15,8 +15,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Photobooth InstaStory • {{ $wedding->groom_nickname ?? $wedding->groom_name }} & {{ $wedding->bride_nickname ?? $wedding->bride_name }}</title>
-    <meta name="description" content="Live Camera Wedding Photobooth. Ambil foto dengan frame eksklusif pernikahan dan bagikan ke Instagram Story & WhatsApp!">
+    <title>Photobooth • {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp; {{ $wedding->bride_nickname ?? $wedding->bride_name }}</title>
+    <meta name="description" content="Live Camera Wedding Photobooth. Ambil foto multi-shot dengan frame eksklusif pernikahan dan bagikan ke Instagram Story &amp; WhatsApp!">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +43,6 @@
             justify-content: center;
         }
 
-        /* ── Container 9:16 Mobile First ─────────────────────────────────────────── */
         .photobooth-container {
             position: relative;
             width: 100%;
@@ -69,7 +68,7 @@
             justify-content: center;
         }
 
-        /* Ambient blurred live background - fills the vertical 9:16 frame so there are no raw black gaps */
+        /* Ambient blurred live background */
         video#cameraVideoBg {
             position: absolute;
             inset: -40px;
@@ -82,68 +81,121 @@
             transition: transform 0.2s ease, filter 0.2s ease;
         }
 
-        /* Main camera video - Default is 'contain' (100% bawaan kamera asli, ZERO CROP, NO UNNATURAL ZOOM) */
+        /* Main camera video */
         video#cameraVideo {
             position: relative;
             z-index: 2;
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Bawaan kamera alami tanpa zoom potong */
+            object-fit: contain;
             transition: transform 0.2s ease, filter 0.2s ease;
         }
 
-        /* Live Frame Overlay SVG */
-        .frame-overlay-svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* Live Custom Frame Image Overlay */
+        /* Live Custom Frame Image Overlay: Selalu aktif pada live cam */
         .frame-overlay-img {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: fill;
             pointer-events: none;
-            z-index: 11;
-            display: none;
+            z-index: 12;
+            display: block;
         }
 
-        /* ── Fit Mode Pill (Bawaan Kamera vs Layar Penuh) ─────────────────────────── */
-        .view-mode-pill {
+        /* ── Multi-Shot Selector (1, 2, 3, 4 Foto) ─────────────────────────────────── */
+        .shots-selector-bar {
             position: absolute;
-            top: calc(env(safe-area-inset-top, 16px) + 54px);
+            top: calc(env(safe-area-inset-top, 16px) + 52px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 28;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(0, 0, 0, 0.55);
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            padding: 5px 12px;
+            padding: 4px 6px;
             border-radius: 99px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .shot-btn {
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.75);
             font-size: 0.72rem;
             font-weight: 700;
+            padding: 4px 11px;
+            border-radius: 99px;
             cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            white-space: nowrap;
         }
 
-        .view-mode-pill:active {
-            transform: translateX(-50%) scale(0.95);
+        .shot-btn.active {
+            background: #ffffff;
+            color: #06080c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
         }
 
-        .view-mode-pill svg {
-            color: #fbbf24;
+        /* Live Multi-Shot Grid Overlay Lines */
+        .live-grid-guide {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 6;
+            display: none;
+        }
+        .live-grid-guide.grid-2 {
+            display: block;
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.4);
+            height: 50%;
+        }
+        .live-grid-guide.grid-3 {
+            display: block;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent calc(33.333% - 1px),
+                rgba(255, 255, 255, 0.4) calc(33.333% - 1px),
+                rgba(255, 255, 255, 0.4) 33.333%
+            );
+        }
+        .live-grid-guide.grid-4 {
+            display: block;
+            background-image:
+                linear-gradient(to right, transparent calc(50% - 1px), rgba(255, 255, 255, 0.4) calc(50% - 1px), rgba(255, 255, 255, 0.4) 50%, transparent 50%),
+                linear-gradient(to bottom, transparent calc(50% - 1px), rgba(255, 255, 255, 0.4) calc(50% - 1px), rgba(255, 255, 255, 0.4) 50%, transparent 50%);
+        }
+
+        /* Multi-Shot Progress HUD */
+        .shot-hud {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 16px) + 94px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 29;
+            pointer-events: none;
+        }
+        .shot-hud-pill {
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 5px 14px;
+            border-radius: 99px;
+            box-shadow: 0 4px 16px rgba(244, 63, 94, 0.5);
+            letter-spacing: 0.5px;
+            animation: pulseHud 1.2s ease-in-out infinite alternate;
+            white-space: nowrap;
+        }
+        @keyframes pulseHud {
+            0% { transform: scale(0.96); }
+            100% { transform: scale(1.04); }
         }
 
         /* ── Header Controls ──────────────────────────────────────────────────────── */
@@ -153,7 +205,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: calc(env(safe-area-inset-top, 16px) + 12px) 16px 12px;
+            padding: calc(env(safe-area-inset-top, 16px) + 10px) 16px 8px;
             background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
         }
 
@@ -198,145 +250,135 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
         }
 
         .icon-btn:active {
-            transform: scale(0.9);
-            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0.92);
         }
 
         .icon-btn.active {
-            background: #10b981;
-            border-color: #10b981;
-            color: #ffffff;
+            background: #f59e0b;
+            color: #06080c;
+            border-color: #fbbf24;
         }
 
         /* ── Bottom Controls ──────────────────────────────────────────────────────── */
         .bottom-bar {
             position: relative;
             z-index: 30;
-            padding: 10px 16px calc(env(safe-area-inset-bottom, 16px) + 12px);
-            background: linear-gradient(0deg, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0) 100%);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+            padding: 12px 16px calc(env(safe-area-inset-bottom, 16px) + 12px);
+            background: linear-gradient(0deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0) 100%);
         }
 
-        /* Mode Switcher: Frame vs Filter */
+        /* Mode Tabs: Frame vs Filter */
         .mode-tab-bar {
             display: flex;
-            align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 2px;
         }
 
         .mode-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.74rem;
+            font-weight: 700;
             padding: 5px 14px;
             border-radius: 99px;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #cbd5e1;
-            font-size: 0.72rem;
-            font-weight: 700;
             cursor: pointer;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s ease;
         }
 
         .mode-tab.active {
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
+            color: #06080c;
             border-color: #ffffff;
-            color: #0f172a;
-            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.25);
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
         }
 
-        /* Carousel Containers */
+        /* Horizontal Carousel (Custom Frames & Filters) */
         .carousel-container {
             display: flex;
-            align-items: center;
             gap: 8px;
             overflow-x: auto;
+            padding: 4px 4px 6px;
             scrollbar-width: none;
-            padding: 4px 2px;
             -ms-overflow-style: none;
+            justify-content: flex-start;
         }
 
         .carousel-container::-webkit-scrollbar {
             display: none;
         }
 
-        /* Frame & Filter Pills */
         .selector-pill {
             flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 99px;
+            padding: 7px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 13px;
-            border-radius: 99px;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            font-size: 0.74rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            backdrop-filter: blur(8px);
         }
 
-        .selector-pill:active {
-            transform: scale(0.95);
+        .selector-pill:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .selector-pill.active {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            border-color: #fde68a;
-            color: #000000;
-            font-weight: 700;
-            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
-        }
-
-        .selector-pill.filter-pill.active {
-            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
-            border-color: #c084fc;
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            border-color: #fda4af;
             color: #ffffff;
-            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+            box-shadow: 0 4px 14px rgba(236, 72, 153, 0.45);
         }
 
-        .selector-pill.custom-pill.active {
-            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-            border-color: #f472b6;
-            color: #ffffff;
-            box-shadow: 0 4px 14px rgba(219, 39, 119, 0.4);
-        }
-
-        /* Shutter Controls Row */
+        /* Shutter Bar */
         .shutter-row {
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding-top: 4px;
+            padding: 4px 0;
         }
 
-        /* Shutter Button */
         .shutter-outer {
-            width: 74px;
-            height: 74px;
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
             border: 4px solid #ffffff;
-            padding: 3px;
+            padding: 4px;
+            background: transparent;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.15s ease;
-            background: transparent;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .shutter-outer:hover {
+            transform: scale(1.04);
+        }
+
+        .shutter-outer:active {
+            transform: scale(0.92);
         }
 
         .shutter-inner {
@@ -347,75 +389,75 @@
             transition: all 0.15s ease;
         }
 
-        .shutter-outer:active {
-            transform: scale(0.92);
+        .shutter-outer.capturing-sequence {
+            border-color: #f43f5e;
+            animation: pulseShutter 0.8s ease-in-out infinite alternate;
+        }
+        .shutter-outer.capturing-sequence .shutter-inner {
+            background: #f43f5e;
+        }
+        @keyframes pulseShutter {
+            0% { transform: scale(0.94); }
+            100% { transform: scale(1.06); }
         }
 
-        .shutter-outer:active .shutter-inner {
-            background: #fbbf24;
-            transform: scale(0.9);
-        }
-
-        /* Countdown Overlay */
-        .countdown-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 50;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(2px);
-        }
-
-        .countdown-number {
-            font-size: 8rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-            animation: pulseCount 0.9s infinite;
-        }
-
-        @keyframes pulseCount {
-            0% { transform: scale(0.6); opacity: 0; }
-            50% { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.9; }
-        }
-
-        /* Camera Flash Effect */
+        /* ── Overlays ─────────────────────────────────────────────────────────────── */
         .flash-overlay {
             position: absolute;
             inset: 0;
             background: #ffffff;
             opacity: 0;
             pointer-events: none;
-            z-index: 60;
-            transition: opacity 0.08s ease-out;
+            z-index: 50;
+            transition: opacity 0.08s ease;
         }
 
         .flash-overlay.active {
-            opacity: 1;
+            opacity: 0.95;
         }
 
-        /* Processing Loader */
+        .countdown-overlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 45;
+        }
+
+        .countdown-number {
+            font-size: 7.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
+            animation: pulseCount 0.9s ease-in-out infinite;
+        }
+
+        @keyframes pulseCount {
+            0% { transform: scale(1.2); opacity: 1; }
+            50% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
         .processing-overlay {
             position: absolute;
             inset: 0;
-            z-index: 65;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(9, 13, 22, 0.85);
-            backdrop-filter: blur(8px);
-            gap: 14px;
+            background: rgba(7, 9, 14, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 60;
+            gap: 16px;
         }
 
         .processing-spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top-color: #fbbf24;
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            border-top-color: #f43f5e;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -424,164 +466,24 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ── Preview Result Modal (9:16 Snapshot) ─────────────────────────────────── */
-        .result-modal {
-            position: absolute;
-            inset: 0;
-            z-index: 70;
-            background: #090d16;
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-            animation: fadeIn 0.25s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .result-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: calc(env(safe-area-inset-top, 16px) + 12px) 16px 12px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 80;
-        }
-
-        .result-image-wrap {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000000;
-            padding: calc(env(safe-area-inset-top, 16px) + 60px) 12px calc(env(safe-area-inset-bottom, 16px) + 160px);
-        }
-
-        #resultCanvas {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 14px;
-            box-shadow: 0 12px 50px rgba(0,0,0,0.9);
-        }
-
-        .result-footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 80;
-            padding: 16px 16px calc(env(safe-area-inset-bottom, 16px) + 16px);
-            background: linear-gradient(0deg, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn-action-primary {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #e1306c 0%, #f77737 50%, #fbad50 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            font-size: 0.92rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 18px rgba(225, 48, 108, 0.4);
-            font-family: 'Montserrat', sans-serif;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-action-primary:active {
-            transform: scale(0.98);
-        }
-
-        .btn-action-wa {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.35);
-            font-family: 'Montserrat', sans-serif;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-action-wa:active {
-            transform: scale(0.98);
-        }
-
-        .btn-action-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .btn-action-secondary {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .btn-action-secondary:active {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Fallback Permission / Error Card */
+        /* Camera Notice / Permission Error */
         .camera-notice-card {
             position: absolute;
-            inset: 20px;
-            margin: auto;
-            max-width: 360px;
-            height: fit-content;
+            z-index: 25;
             background: rgba(15, 23, 42, 0.95);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(20px);
             padding: 24px 20px;
+            border-radius: 20px;
             text-align: center;
-            z-index: 40;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
             display: none;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
         }
 
         .camera-notice-card h3 {
-            font-size: 1.1rem;
-            font-weight: 800;
+            font-size: 1.05rem;
+            font-weight: 700;
             margin-bottom: 8px;
             color: #ffffff;
         }
@@ -594,35 +496,135 @@
         }
 
         .camera-notice-card button {
-            background: #10b981;
+            background: linear-gradient(135deg, #10b981, #059669);
             color: #ffffff;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 0.85rem;
             font-weight: 700;
+            font-size: 0.84rem;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 99px;
             cursor: pointer;
         }
 
-        /* Toast Notification */
+        /* ── Result Modal Preview (9:16) ─────────────────────────────────────────── */
+        .result-modal {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: calc(env(safe-area-inset-top, 16px) + 8px) 16px 8px;
+            z-index: 10;
+        }
+
+        .result-image-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            max-height: 72vh;
+        }
+
+        #resultCanvas {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            object-fit: contain;
+        }
+
+        .result-footer {
+            padding: 12px 16px calc(env(safe-area-inset-bottom, 16px) + 12px);
+            background: linear-gradient(0deg, rgba(7,9,14,0.98) 0%, rgba(7,9,14,0.8) 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .btn-action-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ec4899, #f43f5e, #fb923c);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-action-wa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: #22c55e;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-action-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action-secondary {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+
         .toast-notif {
-            position: absolute;
-            top: 70px;
+            position: fixed;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.25);
             color: #ffffff;
-            padding: 10px 18px;
+            padding: 8px 18px;
             border-radius: 99px;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            z-index: 90;
+            z-index: 200;
             display: none;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            white-space: nowrap;
-            pointer-events: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
     </style>
 </head>
@@ -635,29 +637,24 @@
 
         {{-- ── 1. Viewfinder Camera Stream ────────────────────────────────────────── --}}
         <div class="viewfinder-wrapper" id="viewfinderWrapper">
-            {{-- Background ambient blur (mengisi ruang 9:16 agar tidak ada ruang kosong hitam kaku) --}}
+            {{-- Background ambient blur --}}
             <video id="cameraVideoBg" autoplay playsinline muted></video>
 
-            {{-- Main live video: Bawaan Kamera Asli (object-fit: contain, ZERO CROP) --}}
+            {{-- Main live video --}}
             <video id="cameraVideo" autoplay playsinline muted></video>
 
-            {{-- Default SVG Frame Overlay --}}
-            <svg id="liveFrameSvg" class="frame-overlay-svg" viewBox="0 0 1080 1920" preserveAspectRatio="none">
-                {{-- Dynamic SVG Frame Template injected by JS --}}
-            </svg>
+            {{-- Live Multi-Shot Grid Helper Lines --}}
+            <div id="liveGridGuide" class="live-grid-guide"></div>
 
-            {{-- Custom PNG Frame Overlay --}}
+            {{-- Custom PNG Frame Overlay (Real-time over live camera) --}}
             <img id="liveCustomFrameImg" class="frame-overlay-img" alt="Custom Frame Overlay">
 
-            {{-- Toggle Mode: Bawaan Kamera (Alami) vs Layar Penuh (Zoom) --}}
-            <button type="button" class="view-mode-pill" id="btnViewModeToggle" onclick="toggleViewMode()" title="Klik untuk beralih antara Kamera Alami atau Layar Penuh">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polygon points="12 8 8 12 12 16 12 8"></polygon>
-                    <polygon points="12 8 16 12 12 16 12 8"></polygon>
-                </svg>
-                <span id="viewModeLabel">Kamera Asli (Alami)</span>
-            </button>
+            {{-- Multi-Shot Progress HUD --}}
+            <div id="shotHud" class="shot-hud" style="display:none;">
+                <div class="shot-hud-pill">
+                    <span id="shotHudText">Pose 1 dari 4</span>
+                </div>
+            </div>
 
             {{-- Flash Effect --}}
             <div id="flashOverlay" class="flash-overlay"></div>
@@ -667,10 +664,10 @@
                 <span id="countdownNumber" class="countdown-number">3</span>
             </div>
 
-            {{-- Processing / Saving Loader --}}
+            {{-- Processing Loader --}}
             <div id="processingOverlay" class="processing-overlay">
                 <div class="processing-spinner"></div>
-                <div style="font-size:0.85rem; font-weight:800; color:#fbbf24; text-shadow:0 2px 8px rgba(0,0,0,0.8);">
+                <div id="processingText" style="font-size:0.85rem; font-weight:800; color:#fbbf24; text-shadow:0 2px 8px rgba(0,0,0,0.8);">
                     Memproses Foto Estetik...
                 </div>
             </div>
@@ -727,9 +724,17 @@
             </div>
         </div>
 
+        {{-- ── Multi-Shot Mode Bar (1 Foto, 2 Foto, 3 Strip, 4 Grid) ─────────────── --}}
+        <div class="shots-selector-bar">
+            <button type="button" class="shot-btn active" data-shots="1" onclick="selectShotMode(1, this)">1 Foto</button>
+            <button type="button" class="shot-btn" data-shots="2" onclick="selectShotMode(2, this)">2 Foto</button>
+            <button type="button" class="shot-btn" data-shots="3" onclick="selectShotMode(3, this)">3 Strip</button>
+            <button type="button" class="shot-btn" data-shots="4" onclick="selectShotMode(4, this)">4 Grid</button>
+        </div>
+
         {{-- ── 3. Bottom Frame / Filter Selector & Shutter ────────────────────────── --}}
         <div class="bottom-bar">
-            {{-- Switcher Tab: Bingkai (Frame) vs Filter Warna --}}
+            {{-- Switcher Tab: Bingkai Custom vs Filter Warna --}}
             <div class="mode-tab-bar">
                 <button type="button" class="mode-tab active" id="tabModeFrame" onclick="switchControlMode('frame')">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
@@ -737,7 +742,7 @@
                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
                         <path d="M21 15l-5-5L5 21"></path>
                     </svg>
-                    <span>Bingkai (Frame)</span>
+                    <span>Bingkai Custom</span>
                 </button>
                 <button type="button" class="mode-tab" id="tabModeFilter" onclick="switchControlMode('filter')">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
@@ -748,49 +753,25 @@
                 </button>
             </div>
 
-            {{-- 1. Carousel Frame Pilihan (Default + Custom PNG) --}}
+            {{-- 1. Carousel Frame Custom (Hanya Frame Custom Buatan Pengantin) --}}
             <div id="carouselFrame" class="carousel-container">
-                {{-- Default SVG Frames --}}
-                <button type="button" class="selector-pill active" onclick="selectFrame('gold_arch', this)">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    Classic Gold
-                </button>
-                <button type="button" class="selector-pill" onclick="selectFrame('romantic_floral', this)">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                    Floral Romance
-                </button>
-                <button type="button" class="selector-pill" onclick="selectFrame('modern_arch', this)">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                    </svg>
-                    Minimalist Arch
-                </button>
-                <button type="button" class="selector-pill" onclick="selectFrame('polaroid_retro', this)">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                    Polaroid Strip
-                </button>
-
-                {{-- Custom Frames Diupload Pengantin --}}
-                @foreach($customFrames as $cf)
-                    <button type="button" class="selector-pill custom-pill" onclick="selectCustomFrame('{{ $cf['id'] }}', '{{ $cf['url'] }}', this)">
+                @forelse($customFrames as $idx => $cf)
+                    <button type="button" class="selector-pill {{ $idx === 0 ? 'active' : '' }}" onclick="selectCustomFrame('{{ $cf['id'] }}', '{{ $cf['url'] }}', this)">
                         <svg width="13" height="13" fill="none" stroke="#f472b6" stroke-width="2.3" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
                         <span>{{ $cf['label'] }}</span>
-                        <small style="font-size:0.6rem; background:#ec4899; color:#fff; padding:1px 5px; border-radius:99px;">Custom</small>
                     </button>
-                @endforeach
+                @empty
+                    <div style="font-size:0.75rem; color:#94a3b8; padding:6px 12px; font-weight:600; text-align:center; width:100%;">
+                        Belum ada frame custom diupload pengantin.
+                    </div>
+                @endforelse
             </div>
 
-            {{-- 2. Carousel Filter Warna (Hidden by default, shown when mode is 'filter') --}}
+            {{-- 2. Carousel Filter Warna --}}
             <div id="carouselFilter" class="carousel-container" style="display:none;">
                 <button type="button" class="selector-pill filter-pill active" onclick="selectFilter('normal', this)">
                     <span style="width:10px; height:10px; border-radius:50%; background:#ffffff; display:inline-block;"></span>
@@ -834,7 +815,7 @@
                 </label>
 
                 {{-- Shutter Button --}}
-                <button type="button" class="shutter-outer" onclick="triggerCapture()" title="Jepret Foto">
+                <button type="button" class="shutter-outer" id="mainShutterBtn" onclick="triggerCapture()" title="Jepret Foto">
                     <div class="shutter-inner"></div>
                 </button>
 
@@ -869,7 +850,7 @@
             </div>
 
             <div class="result-footer">
-                {{-- 1. Share ke Instagram Story (Web Share API / Direct Download + Guide) --}}
+                {{-- Share ke Instagram Story --}}
                 <button type="button" id="btnShareStory" class="btn-action-primary" onclick="shareToInstaStory()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -879,7 +860,7 @@
                     <span>Share ke Instagram Story</span>
                 </button>
 
-                {{-- 2. Kirim ke WhatsApp --}}
+                {{-- Kirim ke WhatsApp --}}
                 <button type="button" id="btnShareWa" class="btn-action-wa" onclick="shareToWhatsApp()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                         <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
@@ -888,7 +869,7 @@
                 </button>
 
                 <div class="btn-action-row">
-                    {{-- 3. Download Button --}}
+                    {{-- Download Button --}}
                     <button type="button" class="btn-action-secondary" onclick="downloadPhoto()">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -898,7 +879,7 @@
                         <span>Unduh Foto HD</span>
                     </button>
 
-                    {{-- 4. Retake Button --}}
+                    {{-- Retake Button --}}
                     <button type="button" class="btn-action-secondary" onclick="retakePhoto()">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                             <path d="M23 4v6h-6"></path>
@@ -919,7 +900,9 @@
             bride: {!! json_encode($wedding->bride_nickname ?? $wedding->bride_name) !!},
             date: {!! json_encode($wedding->event_date ? $wedding->event_date->translatedFormat('d F Y') : date('d F Y')) !!},
             slug: {!! json_encode($wedding->slug) !!},
-            guestName: {!! json_encode($guestName) !!}
+            guestName: {!! json_encode($guestName) !!},
+            saveUrl: {!! json_encode(route('wedding.photobooth.save', $wedding->slug)) !!},
+            csrfToken: {!! json_encode(csrf_token()) !!}
         };
 
         const CUSTOM_FRAMES = {!! json_encode($customFrames) !!};
@@ -938,7 +921,7 @@
         // Camera & Control State
         let stream = null;
         let currentFacingMode = 'user'; // 'user' (front) or 'environment' (back)
-        let selectedFrame = 'gold_arch';
+        let selectedFrame = '';
         let isCustomFrame = false;
         let activeCustomUrl = '';
         let currentFilterKey = 'normal';
@@ -946,21 +929,25 @@
         let isCapturing = false;
         let uploadedImageObj = null;
 
-        // View Mode: 'contain' = Bawaan Kamera Asli (Zero Crop / Alami), 'cover' = Layar Penuh (Zoom Crop)
-        let activeViewMode = 'contain';
+        // Multi-Shot Mode: 1, 2, 3, or 4
+        let currentShotMode = 1;
 
         const videoEl = document.getElementById('cameraVideo');
         const videoBgEl = document.getElementById('cameraVideoBg');
-        const liveFrameSvg = document.getElementById('liveFrameSvg');
         const liveCustomFrameImg = document.getElementById('liveCustomFrameImg');
+        const liveGridGuide = document.getElementById('liveGridGuide');
+        const shotHud = document.getElementById('shotHud');
+        const shotHudText = document.getElementById('shotHudText');
         const flashOverlay = document.getElementById('flashOverlay');
         const countdownOverlay = document.getElementById('countdownOverlay');
         const countdownNumber = document.getElementById('countdownNumber');
         const processingOverlay = document.getElementById('processingOverlay');
+        const processingText = document.getElementById('processingText');
         const resultModal = document.getElementById('resultModal');
         const resultCanvas = document.getElementById('resultCanvas');
         const cameraNotice = document.getElementById('cameraNotice');
         const toastNotif = document.getElementById('toastNotif');
+        const mainShutterBtn = document.getElementById('mainShutterBtn');
 
         function showToast(msg, duration = 2500) {
             toastNotif.textContent = msg;
@@ -970,7 +957,7 @@
             }, duration);
         }
 
-        // ── Inisialisasi Kamera Native Bebas Paksaan Crop ───────────────────────────────
+        // ── Inisialisasi Kamera Native ───────────────────────────────────────────
         async function startCamera() {
             cameraNotice.style.display = 'none';
 
@@ -978,7 +965,6 @@
                 stream.getTracks().forEach(track => track.stop());
             }
 
-            // Gunakan constraint native alami dari perangkat tanpa memaksakan ukuran terbalik
             const constraints = {
                 audio: false,
                 video: {
@@ -1015,35 +1001,15 @@
             }
         }
 
-        // Apply scale, flip, and fit mode to video elements
+        // Apply scale & flip to video elements
         function applyTransform() {
             const flipX = currentFacingMode === 'user' ? -1 : 1;
             videoEl.style.transform = `scaleX(${flipX})`;
             if (videoBgEl) {
                 videoBgEl.style.transform = `scale(1.15) scaleX(${flipX})`;
             }
-
-            if (activeViewMode === 'contain') {
-                videoEl.style.objectFit = 'contain';
-                if (videoBgEl) videoBgEl.style.display = 'block';
-            } else {
-                videoEl.style.objectFit = 'cover';
-                if (videoBgEl) videoBgEl.style.display = 'none';
-            }
-        }
-
-        // Toggle View Mode: Bawaan Kamera (Alami / No Crop) vs Layar Penuh (Zoom Crop)
-        function toggleViewMode() {
-            activeViewMode = activeViewMode === 'contain' ? 'cover' : 'contain';
-            const label = document.getElementById('viewModeLabel');
-            if (activeViewMode === 'contain') {
-                label.textContent = 'Kamera Asli (Alami)';
-                showToast('Mode: Kamera Bawaan Asli (Tanpa Zoom / Crop)', 2000);
-            } else {
-                label.textContent = 'Layar Penuh (Zoom)';
-                showToast('Mode: Layar Penuh (Di-crop menyesuaikan layar)', 2000);
-            }
-            applyTransform();
+            videoEl.style.objectFit = 'contain';
+            if (videoBgEl) videoBgEl.style.display = 'block';
         }
 
         // Flip Camera (Front / Back)
@@ -1075,6 +1041,22 @@
                 ind.style.display = 'none';
                 showToast('Timer dimatikan', 1400);
             }
+        }
+
+        // ── Multi-Shot Mode Selector (1, 2, 3, 4) ────────────────────────────────
+        function selectShotMode(mode, btnEl) {
+            currentShotMode = parseInt(mode) || 1;
+            document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            // Update live grid helper overlay
+            liveGridGuide.className = 'live-grid-guide';
+            if (currentShotMode > 1) {
+                liveGridGuide.classList.add('grid-' + currentShotMode);
+            }
+
+            const names = { 1: '1 Foto (Tunggal)', 2: '2 Foto (Split)', 3: '3 Foto (Strip)', 4: '4 Foto (Grid Instagram)' };
+            showToast(`Mode: ${names[currentShotMode] || mode + ' Foto'}`, 1500);
         }
 
         // Switch bottom carousel: Frame vs Filter
@@ -1117,22 +1099,6 @@
             }
         }
 
-        // Select Default SVG Frame
-        function selectFrame(frameType, btnEl) {
-            selectedFrame = frameType;
-            isCustomFrame = false;
-            activeCustomUrl = '';
-
-            document.querySelectorAll('#carouselFrame .selector-pill').forEach(el => el.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-
-            liveCustomFrameImg.style.display = 'none';
-            liveFrameSvg.style.display = 'block';
-
-            const coupleTitle = `${WEDDING_DATA.groom} & ${WEDDING_DATA.bride}`;
-            liveFrameSvg.innerHTML = getFrameSvgContent(selectedFrame, coupleTitle, WEDDING_DATA.date);
-        }
-
         // Select Custom PNG Frame (uploaded by creator)
         function selectCustomFrame(frameId, frameUrl, btnEl) {
             selectedFrame = frameId;
@@ -1142,11 +1108,10 @@
             document.querySelectorAll('#carouselFrame .selector-pill').forEach(el => el.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
 
-            liveFrameSvg.style.display = 'none';
             liveCustomFrameImg.src = frameUrl;
             liveCustomFrameImg.style.display = 'block';
 
-            showToast('Memilih frame custom pernikahan', 1500);
+            showToast('Frame custom terpasang pada kamera live!', 1500);
         }
 
         // Fallback: Jika tamu memilih upload foto dari galeri
@@ -1160,81 +1125,68 @@
                 img.onload = function() {
                     uploadedImageObj = img;
                     cameraNotice.style.display = 'none';
-                    renderFinalSnapshot(img, true);
+                    renderCollage([img], true);
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        // ── 4 Template Frame Photobooth 9:16 (Bebas font network @import untuk mencegah CORS) ──
-        function getFrameSvgContent(frameType, coupleName, dateStr) {
-            if (frameType === 'gold_arch') {
-                return `
-                    <defs>
-                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fef08a" />
-                            <stop offset="50%" stop-color="#eab308" />
-                            <stop offset="100%" stop-color="#ca8a04" />
-                        </linearGradient>
-                    </defs>
-                    <rect x="30" y="30" width="1020" height="1860" rx="36" fill="none" stroke="url(#goldGrad)" stroke-width="4" opacity="0.9" />
-                    <rect x="46" y="46" width="988" height="1828" rx="26" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="10 8" opacity="0.7" />
-                    <path d="M 120 180 Q 540 80 960 180" fill="none" stroke="url(#goldGrad)" stroke-width="3" opacity="0.8" />
-                    <text x="540" y="140" fill="#fef08a" font-family="'Playfair Display', serif" font-size="34" font-weight="700" letter-spacing="6" text-anchor="middle">THE WEDDING CELEBRATION</text>
-                    <text x="540" y="240" fill="#ffffff" font-family="'Playfair Display', serif" font-size="64" font-weight="800" text-anchor="middle">${coupleName}</text>
-                    <circle cx="50" cy="50" r="14" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
-                    <circle cx="1030" cy="50" r="14" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
-                    <circle cx="50" cy="1870" r="14" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
-                    <circle cx="1030" cy="1870" r="14" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
-                    <rect x="240" y="1740" width="600" height="70" rx="35" fill="rgba(0,0,0,0.6)" stroke="url(#goldGrad)" stroke-width="1.5" />
-                    <text x="540" y="1785" fill="#fef08a" font-family="'Montserrat', sans-serif" font-size="28" font-weight="600" letter-spacing="3" text-anchor="middle">${dateStr}</text>
-                    <text x="540" y="1855" fill="#ffffff" font-family="'Montserrat', sans-serif" font-size="20" font-weight="500" opacity="0.75" letter-spacing="4" text-anchor="middle">BUYLE.ID &bull; PHOTOBOOTH</text>
-                `;
-            } else if (frameType === 'romantic_floral') {
-                return `
-                    <defs>
-                        <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fda4af" />
-                            <stop offset="100%" stop-color="#f43f5e" />
-                        </linearGradient>
-                    </defs>
-                    <rect x="40" y="40" width="1000" height="1840" rx="40" fill="none" stroke="#fecdd3" stroke-width="3" opacity="0.85" />
-                    <text x="540" y="130" fill="#fda4af" font-family="'Cormorant Garamond', serif" font-size="44" font-style="italic" font-weight="600" text-anchor="middle">Happily Ever After</text>
-                    <text x="540" y="210" fill="#ffffff" font-family="'Playfair Display', serif" font-size="58" font-weight="800" text-anchor="middle">${coupleName}</text>
-                    <path d="M 80 1720 Q 540 1660 1000 1720 L 1000 1850 Q 540 1880 80 1850 Z" fill="rgba(15,23,42,0.65)" />
-                    <text x="540" y="1775" fill="#fecdd3" font-family="'Montserrat', sans-serif" font-size="26" font-weight="700" letter-spacing="4" text-anchor="middle">${dateStr}</text>
-                    <text x="540" y="1825" fill="#ffffff" font-family="'Montserrat', sans-serif" font-size="20" font-weight="600" opacity="0.7" letter-spacing="3" text-anchor="middle">#${coupleName.replace(/[^a-zA-Z]/g, '')}</text>
-                `;
-            } else if (frameType === 'modern_arch') {
-                return `
-                    <path d="M 60 1860 L 60 540 A 480 480 0 0 1 1020 540 L 1020 1860 Z" fill="none" stroke="#ffffff" stroke-width="3.5" opacity="0.9" />
-                    <text x="540" y="140" fill="#ffffff" font-family="'Montserrat', sans-serif" font-size="26" font-weight="800" letter-spacing="10" text-anchor="middle">V O W S  &amp;  F O R E V E R</text>
-                    <text x="540" y="215" fill="#ffffff" font-family="'Playfair Display', serif" font-size="62" font-weight="800" text-anchor="middle">${coupleName}</text>
-                    <rect x="80" y="1740" width="920" height="75" rx="8" fill="rgba(0,0,0,0.6)" />
-                    <text x="120" y="1788" fill="#ffffff" font-family="'Montserrat', sans-serif" font-size="26" font-weight="700" letter-spacing="2">${dateStr}</text>
-                    <text x="960" y="1788" fill="#10b981" font-family="'Montserrat', sans-serif" font-size="24" font-weight="800" text-anchor="end">BUYLE.ID</text>
-                `;
-            } else if (frameType === 'polaroid_retro') {
-                return `
-                    <rect x="0" y="0" width="1080" height="1920" fill="none" stroke="#ffffff" stroke-width="60" />
-                    <rect x="0" y="1560" width="1080" height="360" fill="#ffffff" />
-                    <text x="540" y="1670" fill="#0f172a" font-family="'Playfair Display', serif" font-size="64" font-weight="800" text-anchor="middle">${coupleName}</text>
-                    <text x="540" y="1740" fill="#475569" font-family="'Montserrat', sans-serif" font-size="30" font-weight="600" letter-spacing="4" text-anchor="middle">${dateStr}</text>
-                    <line x1="280" y1="1780" x2="800" y2="1780" stroke="#cbd5e1" stroke-width="2" />
-                    <text x="540" y="1840" fill="#94a3b8" font-family="'Montserrat', sans-serif" font-size="22" font-weight="700" letter-spacing="6" text-anchor="middle">INSTASTORY PHOTOBOOTH</text>
-                `;
+        // ── Shutter Action & Multi-Shot Sequence Engine ──────────────────────────
+        async function triggerCapture() {
+            if (isCapturing) return;
+            isCapturing = true;
+            mainShutterBtn.classList.add('capturing-sequence');
+
+            const totalShots = currentShotMode;
+            const capturedList = [];
+
+            for (let i = 1; i <= totalShots; i++) {
+                // Update HUD
+                if (totalShots > 1) {
+                    shotHudText.textContent = `Pose ${i} dari ${totalShots}: Bersiap!`;
+                    shotHud.style.display = 'block';
+                }
+
+                // Countdown per pose: jika timer aktif pakai timer, jika tidak dan multi-shot kasih 3s per pose
+                let countdownSec = timerSeconds > 0 ? timerSeconds : (totalShots > 1 ? 3 : 0);
+
+                if (countdownSec > 0) {
+                    await runCountdown(countdownSec);
+                }
+
+                // Shutter snapshot
+                flashOverlay.classList.add('active');
+                setTimeout(() => flashOverlay.classList.remove('active'), 120);
+                playShutterSound();
+
+                // Capture snapshot dari video
+                const frameSnapshot = captureVideoFrame();
+                capturedList.push(frameSnapshot);
+
+                // Jika masih ada pose berikutnya, beri jeda untuk ganti gaya
+                if (i < totalShots) {
+                    shotHudText.textContent = `Foto ${i} tersimpan! Ganti gaya berikutnya...`;
+                    await delay(1200);
+                }
             }
-            return '';
+
+            shotHud.style.display = 'none';
+            mainShutterBtn.classList.remove('capturing-sequence');
+            isCapturing = false;
+
+            // Render ke canvas 1080x1920
+            processingText.textContent = totalShots > 1 ? 'Membuat Kolase Photobooth...' : 'Memproses Foto Estetik...';
+            processingOverlay.style.display = 'flex';
+
+            setTimeout(() => {
+                renderCollage(capturedList, false);
+            }, 100);
         }
 
-        // ── Shutter Action & Timer Countdown ───────────────────────────────────────────
-        function triggerCapture() {
-            if (isCapturing) return;
-
-            if (timerSeconds > 0) {
-                isCapturing = true;
-                let count = timerSeconds;
+        function runCountdown(seconds) {
+            return new Promise(resolve => {
+                let count = seconds;
                 countdownNumber.textContent = count;
                 countdownOverlay.style.display = 'flex';
 
@@ -1245,32 +1197,34 @@
                     } else {
                         clearInterval(interval);
                         countdownOverlay.style.display = 'none';
-                        isCapturing = false;
-                        executeSnap();
+                        resolve();
                     }
                 }, 1000);
-            } else {
-                executeSnap();
-            }
+            });
         }
 
-        function executeSnap() {
-            // Flash Effect
-            flashOverlay.classList.add('active');
-            setTimeout(() => {
-                flashOverlay.classList.remove('active');
-            }, 120);
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
 
-            // Shutter Beep via Web Audio API
-            playShutterSound();
+        function captureVideoFrame() {
+            const offscreen = document.createElement('canvas');
+            offscreen.width = videoEl.videoWidth || 1080;
+            offscreen.height = videoEl.videoHeight || 1920;
+            const octx = offscreen.getContext('2d');
 
-            // Tampilkan loader memproses
-            processingOverlay.style.display = 'flex';
+            const filterDef = FILTER_DEFINITIONS[currentFilterKey];
+            if (filterDef && filterDef.css !== 'none') {
+                octx.filter = filterDef.css;
+            }
 
-            // Sedikit delay agar efek flash terasa natural
-            setTimeout(() => {
-                renderFinalSnapshot(videoEl, false);
-            }, 80);
+            if (currentFacingMode === 'user') {
+                octx.translate(offscreen.width, 0);
+                octx.scale(-1, 1);
+            }
+
+            octx.drawImage(videoEl, 0, 0, offscreen.width, offscreen.height);
+            return offscreen;
         }
 
         function playShutterSound() {
@@ -1290,89 +1244,114 @@
             } catch (e) {}
         }
 
-        // ── Render Foto + Frame + Filter ke Canvas 1080x1920 (9:16 InstaStory) ─────────
-        function renderFinalSnapshot(sourceMedia, isStaticImage) {
+        // ── Helper: Draw Image with Rounded Corners & Cover Fit ───────────────────
+        function drawCroppedToRect(ctx, src, rx, ry, rw, rh, radius = 20) {
+            ctx.save();
+            ctx.beginPath();
+            if (ctx.roundRect) {
+                ctx.roundRect(rx, ry, rw, rh, radius);
+            } else {
+                ctx.rect(rx, ry, rw, rh);
+            }
+            ctx.clip();
+
+            const sw = src.width;
+            const sh = src.height;
+            const rectAspect = rw / rh;
+            const srcAspect = sw / sh;
+            let dw, dh, dx, dy;
+
+            if (srcAspect > rectAspect) {
+                dh = rh;
+                dw = rh * srcAspect;
+                dx = rx - (dw - rw) / 2;
+                dy = ry;
+            } else {
+                dw = rw;
+                dh = rw / srcAspect;
+                dx = rx;
+                dy = ry - (dh - rh) / 2;
+            }
+
+            ctx.drawImage(src, 0, 0, sw, sh, dx, dy, dw, dh);
+            ctx.restore();
+        }
+
+        // ── Render Kolase Multi-Shot + Frame Custom ke Canvas 1080x1920 ──────────
+        function renderCollage(capturedList, isStaticUpload) {
             const ctx = resultCanvas.getContext('2d');
             ctx.clearRect(0, 0, 1080, 1920);
 
-            const cw = 1080;
-            const ch = 1920;
-            let sw, sh;
+            // Background canvas: Dark luxury marble
+            ctx.fillStyle = '#090d16';
+            ctx.fillRect(0, 0, 1080, 1920);
 
-            if (isStaticImage) {
-                sw = sourceMedia.width;
-                sh = sourceMedia.height;
-            } else {
-                sw = sourceMedia.videoWidth || 1080;
-                sh = sourceMedia.videoHeight || 1920;
-            }
+            const shots = capturedList.length;
 
-            const filterDef = FILTER_DEFINITIONS[currentFilterKey];
-            const filterCss = filterDef && filterDef.css !== 'none' ? filterDef.css : 'none';
+            if (shots === 1 || isStaticUpload) {
+                // Layout 1: Single Photo Full / Contain with Ambient
+                const src = capturedList[0];
+                const sw = src.width;
+                const sh = src.height;
 
-            if (activeViewMode === 'contain') {
-                // ── 1. AMBIENT BLUR BACKGROUND (Mempercantik rasio 9:16 InstaStory tanpa crop foto) ──
+                // Ambient Blur Background
                 ctx.save();
-                ctx.filter = filterCss !== 'none'
-                    ? `${filterCss} blur(40px) brightness(0.4) saturate(1.2)`
-                    : 'blur(40px) brightness(0.4) saturate(1.2)';
-
-                if (!isStaticImage && currentFacingMode === 'user') {
-                    ctx.translate(cw, 0);
-                    ctx.scale(-1, 1);
-                }
-                ctx.drawImage(sourceMedia, 0, 0, sw, sh, -100, -100, cw + 200, ch + 200);
+                ctx.filter = 'blur(40px) brightness(0.4) saturate(1.2)';
+                ctx.drawImage(src, 0, 0, sw, sh, -100, -100, 1280, 2120);
                 ctx.restore();
 
-                // ── 2. FOTO ASLI ALAMI DI TENGAH (100% Kamera Asli, Nol Crop, Nol Zoom) ──
-                ctx.save();
-                ctx.filter = filterCss;
-                if (!isStaticImage && currentFacingMode === 'user') {
-                    ctx.translate(cw, 0);
-                    ctx.scale(-1, 1);
-                }
-
-                // Fit contain math
-                const scaleFit = Math.min(cw / sw, ch / sh);
+                // Main Photo Center
+                const scaleFit = Math.min(1080 / sw, 1920 / sh);
                 const drawW = sw * scaleFit;
                 const drawH = sh * scaleFit;
-                const drawX = (cw - drawW) / 2;
-                const drawY = (ch - drawH) / 2;
+                const drawX = (1080 - drawW) / 2;
+                const drawY = (1920 - drawH) / 2;
+                ctx.drawImage(src, 0, 0, sw, sh, drawX, drawY, drawW, drawH);
 
-                ctx.drawImage(sourceMedia, 0, 0, sw, sh, drawX, drawY, drawW, drawH);
-                ctx.restore();
-            } else {
-                // ── MODE LAYAR PENUH (Cover Center Crop) ──
-                const canvasAspect = cw / ch;
-                const sourceAspect = sw / sh;
-                let renderW, renderH, offsetX, offsetY;
+            } else if (shots === 2) {
+                // Layout 2: Split 2 Vertikal (Top & Bottom)
+                const marginX = 50;
+                const cardW = 980;
+                const gap = 24;
+                const topY = 70;
+                const cardH = 878;
 
-                if (sourceAspect > canvasAspect) {
-                    renderH = sh;
-                    renderW = sh * canvasAspect;
-                    offsetX = (sw - renderW) / 2;
-                    offsetY = 0;
-                } else {
-                    renderW = sw;
-                    renderH = sw / canvasAspect;
-                    offsetX = 0;
-                    offsetY = (sh - renderH) / 2;
+                drawCroppedToRect(ctx, capturedList[0], marginX, topY, cardW, cardH, 24);
+                drawCroppedToRect(ctx, capturedList[1], marginX, topY + cardH + gap, cardW, cardH, 24);
+
+            } else if (shots === 3) {
+                // Layout 3: Classic Photobooth 3-Strip
+                const marginX = 60;
+                const cardW = 960;
+                const gap = 20;
+                const topY = 60;
+                const cardH = 586;
+
+                for (let k = 0; k < 3; k++) {
+                    const y = topY + k * (cardH + gap);
+                    drawCroppedToRect(ctx, capturedList[k], marginX, y, cardW, cardH, 20);
                 }
 
-                ctx.save();
-                ctx.filter = filterCss;
-                if (!isStaticImage && currentFacingMode === 'user') {
-                    ctx.translate(cw, 0);
-                    ctx.scale(-1, 1);
-                }
-                ctx.drawImage(sourceMedia, offsetX, offsetY, renderW, renderH, 0, 0, cw, ch);
-                ctx.restore();
+            } else if (shots === 4) {
+                // Layout 4: Instagram 2x2 Grid Photobooth
+                const marginX = 45;
+                const cardW = 485;
+                const gapX = 20;
+                const topY = 100;
+                const cardH = 848;
+                const gapY = 24;
+
+                // Cell 1: Top-Left
+                drawCroppedToRect(ctx, capturedList[0], marginX, topY, cardW, cardH, 22);
+                // Cell 2: Top-Right
+                drawCroppedToRect(ctx, capturedList[1], marginX + cardW + gapX, topY, cardW, cardH, 22);
+                // Cell 3: Bottom-Left
+                drawCroppedToRect(ctx, capturedList[2], marginX, topY + cardH + gapY, cardW, cardH, 22);
+                // Cell 4: Bottom-Right
+                drawCroppedToRect(ctx, capturedList[3], marginX + cardW + gapX, topY + cardH + gapY, cardW, cardH, 22);
             }
 
-            // Selesai menggambar video, reset filter untuk overlay frame
-            ctx.filter = 'none';
-
-            // ── 3. OVERLAY FRAME (Custom PNG atau Default SVG) ──
+            // ── OVERLAY FRAME CUSTOM (Di atas seluruh foto) ─────────────────────────
             if (isCustomFrame && activeCustomUrl) {
                 const customImg = new Image();
                 customImg.crossOrigin = 'anonymous';
@@ -1381,41 +1360,58 @@
                     finishRender();
                 };
                 customImg.onerror = function() {
-                    console.warn('Gagal load frame custom overlay, lanjut render foto.');
+                    console.warn('Gagal memuat frame custom ke canvas, lanjut render.');
                     finishRender();
                 };
                 customImg.src = activeCustomUrl;
             } else {
-                // Default Frame SVG
-                const coupleTitle = `${WEDDING_DATA.groom} & ${WEDDING_DATA.bride}`;
-                const svgContent = getFrameSvgContent(selectedFrame, coupleTitle, WEDDING_DATA.date);
-                const svgData = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
-                        ${svgContent}
-                    </svg>
-                `;
-
-                const svgImg = new Image();
-                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-                const url = URL.createObjectURL(svgBlob);
-
-                svgImg.onload = function() {
-                    ctx.drawImage(svgImg, 0, 0, 1080, 1920);
-                    URL.revokeObjectURL(url);
-                    finishRender();
-                };
-                svgImg.onerror = function(err) {
-                    console.warn('SVG frame rendering fallback:', err);
-                    URL.revokeObjectURL(url);
-                    finishRender();
-                };
-                svgImg.src = url;
+                // Jika belum ada frame custom, beri watermark footer minimalis
+                ctx.font = "bold 28px 'Montserrat', sans-serif";
+                ctx.fillStyle = "rgba(255,255,255,0.9)";
+                ctx.textAlign = "center";
+                ctx.fillText(`${WEDDING_DATA.groom} & ${WEDDING_DATA.bride} • ${WEDDING_DATA.date}`, 540, 1870);
+                finishRender();
             }
         }
 
         function finishRender() {
             processingOverlay.style.display = 'none';
             resultModal.style.display = 'flex';
+
+            // Simpan foto otomatis ke dashboard creator
+            autoSavePhotoToCreator();
+        }
+
+        // ── Auto-Save Foto ke Dashboard Creator ──────────────────────────────────
+        function autoSavePhotoToCreator() {
+            try {
+                const dataUrl = resultCanvas.toDataURL('image/jpeg', 0.92);
+
+                fetch(WEDDING_DATA.saveUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': WEDDING_DATA.csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: dataUrl,
+                        shots: currentShotMode,
+                        guest_name: WEDDING_DATA.guestName || 'Tamu Undangan'
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        showToast('Foto otomatis tersimpan di galeri photobooth!', 2400);
+                    }
+                })
+                .catch(err => {
+                    console.warn('Auto-save photobooth error:', err);
+                });
+            } catch (err) {
+                console.warn('Canvas export toDataURL error:', err);
+            }
         }
 
         // Retake / Foto Ulang
@@ -1435,7 +1431,7 @@
             showToast('Foto berhasil diunduh ke Galeri!', 2500);
         }
 
-        // Bagikan ke Instagram Story (Web Share API)
+        // Bagikan ke Instagram Story
         async function shareToInstaStory() {
             resultCanvas.toBlob(async (blob) => {
                 if (!blob) {
@@ -1460,9 +1456,8 @@
                         }
                     }
                 } else {
-                    // Fallback jika Web Share API files tidak didukung (e.g. Chrome desktop)
                     downloadPhoto();
-                    alert('Foto berhasil diunduh ke galeri! Silakan buka aplikasi Instagram Anda dan bagikan di Story.');
+                    alert('Foto berhasil diunduh ke galeri! Buka aplikasi Instagram dan bagikan foto ini ke Story Anda.');
                 }
             }, 'image/jpeg', 0.95);
         }
@@ -1477,7 +1472,6 @@
 
                 const file = new File([blob], `Wedding_${WEDDING_DATA.slug}.jpg`, { type: 'image/jpeg' });
 
-                // Coba gunakan Web Share API agar langsung bisa memilih kontak WhatsApp
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     try {
                         await navigator.share({
@@ -1492,7 +1486,6 @@
                     }
                 }
 
-                // Fallback: Unduh foto dan buka WhatsApp dengan pesan teks
                 downloadPhoto();
                 const waText = encodeURIComponent(`Halo! Ini hasil foto photobooth pernikahan ${WEDDING_DATA.groom} & ${WEDDING_DATA.bride}!\nFoto telah saya download. Kamu juga bisa coba photobooth di: ${window.location.href}`);
                 window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
@@ -1500,12 +1493,22 @@
         }
 
         function showHelpModal() {
-            alert('Petunjuk Penggunaan Photobooth:\n1. Tampilan kamera menggunakan format asli (alami) tanpa zoom terpotong.\n2. Jika ingin tampilan layar penuh, klik tombol "Kamera Asli (Alami)" di atas untuk beralih.\n3. Pilih Bingkai (Frame) atau Filter Warna di bawah.\n4. Tekan tombol bulat di tengah untuk jepret foto.\n5. Hasil foto langsung siap di-share ke Instagram Story, WhatsApp, atau download foto HD!');
+            alert('Petunjuk Penggunaan Photobooth:\n1. Pilih jumlah foto (1 Foto, 2 Foto, 3 Strip, atau 4 Grid Instagram) di atas.\n2. Pilih Bingkai Custom atau Filter Warna di bawah.\n3. Bingkai custom pengantin otomatis terpasang langsung pada kamera live.\n4. Tekan tombol bulat di tengah untuk mulai berfoto.\n5. Hasil foto otomatis tersimpan di dashboard dan siap dibagikan ke Instagram Story atau WhatsApp!');
         }
 
-        // Start default
+        // Inisialisasi awal saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
-            selectFrame('gold_arch', document.querySelector('#carouselFrame .selector-pill.active'));
+            // Pasang custom frame pertama jika tersedia
+            if (CUSTOM_FRAMES && CUSTOM_FRAMES.length > 0) {
+                selectedFrame = CUSTOM_FRAMES[0].id;
+                isCustomFrame = true;
+                activeCustomUrl = CUSTOM_FRAMES[0].url;
+                liveCustomFrameImg.src = activeCustomUrl;
+                liveCustomFrameImg.style.display = 'block';
+            } else {
+                liveCustomFrameImg.style.display = 'none';
+            }
+
             startCamera();
         });
     </script>

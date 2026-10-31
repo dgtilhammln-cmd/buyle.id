@@ -611,18 +611,6 @@
         $midtransEnv = ($midtransIsProduction ?? false) ? 'production' : 'sandbox';
     @endphp
 
-    {{-- Alert Messages --}}
-    @if(session('success'))
-        <div
-            style="background:#ecfdf5; border:1.5px solid #a7f3d0; color:#065f46; padding:0.9rem 1.25rem; border-radius:14px; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.65rem; font-size:0.85rem; font-weight:600;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
-
     {{-- Web Builder Banner --}}
     <div class="wb-page-banner">
         <div class="wb-page-banner-info">
@@ -1909,117 +1897,52 @@
                     </div>
                 </div>
 
-                {{-- QR Code Stand Banner & Info --}}
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem;" class="photobooth-grid">
-
-                    {{-- QR Code Stand --}}
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon" style="background:#eff6ff; color:#3b82f6;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-                                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
-                                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-                                    </svg>
-                                </div>
-                                <span>QR Code Barcode Stand</span>
+                {{-- QR Code Stand Banner & Custom Frame Info --}}
+                <div class="prof-card" style="margin-bottom:1.25rem;">
+                    <div class="prof-card-head">
+                        <div class="head-title-wrap">
+                            <div class="head-icon" style="background:#eff6ff; color:#3b82f6;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                                    <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                                    <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                                    <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                                </svg>
                             </div>
+                            <span>QR Code Stand Photobooth Venue</span>
                         </div>
-                        <div class="card-body" style="text-align:center; padding:1.5rem 1.25rem;">
-                            <div style="font-size:0.78rem; color:#64748b; margin-bottom:1rem; line-height:1.5;">
-                                Print QR Code ini sebagai stand di venue. Tamu scan untuk langsung buka photobooth tanpa ketik link.
-                            </div>
-                            {{-- QR Code (pakai Google Chart API, no JS library needed) --}}
+                    </div>
+                    <div class="card-body" style="padding:1.5rem;">
+                        <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap; justify-content:center;">
                             @php
                                 $pbUrl = route('wedding.photobooth', $wedding->slug);
                                 $qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&format=png&ecc=M&data=' . urlencode($pbUrl);
                             @endphp
-                            <div style="display:inline-block; padding:12px; background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
-                                <img src="{{ $qrApiUrl }}" alt="QR Photobooth" width="200" height="200" style="display:block; border-radius:8px;" loading="lazy">
+                            <div style="text-align:center;">
+                                <div style="display:inline-block; padding:12px; background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+                                    <img src="{{ $qrApiUrl }}" alt="QR Photobooth" width="180" height="180" style="display:block; border-radius:8px;" loading="lazy">
+                                </div>
+                                <div style="margin-top:0.75rem;">
+                                    <a href="{{ $qrApiUrl }}" download="QR_Photobooth_{{ $wedding->slug }}.png" target="_blank"
+                                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe; border-radius:8px; font-size:0.78rem; font-weight:700; text-decoration:none;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                        Unduh QR Stand (PNG)
+                                    </a>
+                                </div>
                             </div>
-                            <div style="margin-top:1rem;">
-                                <code style="font-size:0.65rem; color:#64748b; word-break:break-all; line-height:1.4; display:block;">{{ $pbUrl }}</code>
-                            </div>
-                            {{-- Download QR --}}
-                            <a href="{{ $qrApiUrl }}" download="QR_Photobooth_{{ $wedding->slug }}.png" target="_blank"
-                                style="display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.45rem 1rem; background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe; border-radius:8px; font-size:0.78rem; font-weight:700; text-decoration:none;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Unduh QR Code (PNG)
-                            </a>
-                        </div>
-                    </div>
-
-                    {{-- Frame Preview Cards --}}
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon" style="background:#fdf4ff; color:#a855f7;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                        <rect x="3" y="3" width="18" height="18" rx="3"></rect>
-                                        <circle cx="12" cy="10" r="3"></circle>
-                                        <path d="M3 20l4-4 2 2 4-4 5 6"></path>
-                                    </svg>
+                            <div style="flex:1; min-width:260px;">
+                                <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem;">Cetak &amp; Pajang di Meja / Pintu Resepsi</div>
+                                <p style="font-size:0.8rem; color:#64748b; line-height:1.6; margin-bottom:0.75rem;">
+                                    Tamu cukup arahkan kamera smartphone ke QR Code ini. Halaman Photobooth langsung aktif dengan kamera live dan frame custom yang Anda upload di bawah.
+                                </p>
+                                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.6rem 0.85rem; margin-bottom:0.75rem;">
+                                    <div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:2px;">Tautan Langsung</div>
+                                    <code style="font-size:0.75rem; color:#1d4ed8; word-break:break-all; font-weight:600;">{{ $pbUrl }}</code>
                                 </div>
-                                <span>Template Frame Tersedia (9:16)</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-
-                                {{-- Frame 1: Classic Gold --}}
-                                <div style="border:1.5px solid #fde68a; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:linear-gradient(160deg,#0f172a 0%, #1e293b 50%, #0b1215 100%);">
-                                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; gap:4px;">
-                                        <div style="width:100%; height:100%; border:2px solid rgba(251,191,36,0.6); border-radius:6px; position:absolute; inset:4px; width:calc(100% - 8px); height:calc(100% - 8px);"></div>
-                                        <div style="font-size:0.45rem; font-weight:800; color:#fbbf24; letter-spacing:1px; text-align:center; position:relative; z-index:1;">WEDDING</div>
-                                        <div style="font-size:0.6rem; font-weight:800; color:#ffffff; text-align:center; font-family:serif; position:relative; z-index:1;">Ilham & Buyle</div>
-                                    </div>
-                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:4px; text-align:center;">
-                                        <span style="font-size:0.55rem; color:#fbbf24; font-weight:700;">Classic Gold</span>
-                                    </div>
-                                </div>
-
-                                {{-- Frame 2: Floral Romance --}}
-                                <div style="border:1.5px solid #fecdd3; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:linear-gradient(160deg,#1e0a12 0%, #2d1228 100%);">
-                                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; gap:4px;">
-                                        <div style="font-size:0.45rem; font-weight:700; color:#fda4af; font-style:italic; text-align:center; position:relative; z-index:1;">Happy Ever After</div>
-                                        <div style="font-size:0.6rem; font-weight:800; color:#ffffff; text-align:center; font-family:serif; position:relative; z-index:1;">Ilham & Buyle</div>
-                                    </div>
-                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:4px; text-align:center;">
-                                        <span style="font-size:0.55rem; color:#fda4af; font-weight:700;">Floral Romance</span>
-                                    </div>
-                                </div>
-
-                                {{-- Frame 3: Modern Arch --}}
-                                <div style="border:1.5px solid #e2e8f0; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:#0f172a;">
-                                    <div style="position:absolute; inset:6px; border:2px solid rgba(255,255,255,0.8); border-radius:50% 50% 4px 4px / 30% 30% 4px 4px;"></div>
-                                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; gap:4px;">
-                                        <div style="font-size:0.6rem; font-weight:800; color:#ffffff; text-align:center; font-family:serif; position:relative; z-index:1;">Ilham & Buyle</div>
-                                    </div>
-                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:4px; text-align:center;">
-                                        <span style="font-size:0.55rem; color:#ffffff; font-weight:700;">Minimalist Arch</span>
-                                    </div>
-                                </div>
-
-                                {{-- Frame 4: Polaroid --}}
-                                <div style="border:2px solid #ffffff; border-radius:12px; overflow:hidden; aspect-ratio:9/16; position:relative; background:#1a1a2e;">
-                                    <div style="position:absolute; bottom:0; left:0; right:0; height:30%; background:#ffffff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
-                                        <div style="font-size:0.6rem; font-weight:800; color:#0f172a; text-align:center;">Ilham & Buyle</div>
-                                        <div style="font-size:0.4rem; color:#64748b; letter-spacing:1px;">PHOTOBOOTH</div>
-                                    </div>
-                                    <div style="position:absolute; top:0; left:0; right:0; bottom:30%; display:flex; align-items:center; justify-content:center;">
-                                        <div style="width:60%; height:60%; border:1px solid rgba(255,255,255,0.3); border-radius:4px;"></div>
-                                    </div>
-                                    <div style="position:absolute; top:4px; left:0; right:0; text-align:center;">
-                                        <span style="font-size:0.5rem; color:#94a3b8; font-weight:700;">Polaroid Strip</span>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -2037,11 +1960,229 @@
                                 </svg>
                             </div>
                             <div>
-                                <span style="font-weight:800; color:#0f172a;">Upload Frame Custom (9:16 PNG/WebP)</span>
-                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Buat desain frame InstaStory di Canva / Photoshop → export PNG → upload di sini. Tamu bisa pilih frame bawaan atau frame custom Anda. Maks 6 frame.</div>
+                                <span style="font-weight:800; color:#0f172a;">Upload Frame Custom (9:16 PNG Transparan)</span>
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Hanya frame custom buatan Anda yang akan dipasang langsung di Live Camera photobooth tamu. Maks 6 frame.</div>
                             </div>
                         </div>
                     </div>
+                    <div class="card-body">
+                        {{-- Error Flash --}}
+                        @if(session('error'))
+                            <div style="background:#fee2e2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:10px; font-size:0.82rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        @php
+                            $customFrames = $wedding->data_json['photobooth_frames'] ?? [];
+                        @endphp
+
+                        {{-- Galeri Custom Frame yang Sudah Diupload --}}
+                        @if(count($customFrames) > 0)
+                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
+                                @foreach($customFrames as $idx => $framePath)
+                                    <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:9/16; background:#0f172a; border:2px solid #a855f7; box-shadow:0 4px 16px rgba(168,85,247,0.2);">
+                                        <img src="{{ Storage::url($framePath) }}" alt="Custom Frame {{ $idx + 1 }}"
+                                            style="width:100%; height:100%; object-fit:cover; display:block;">
+                                        {{-- Badge Custom --}}
+                                        <div style="position:absolute; top:6px; left:6px; background:#a855f7; color:#fff; font-size:0.55rem; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase;">FRAME {{ $idx + 1 }}</div>
+                                        {{-- Delete Button --}}
+                                        <form action="{{ route('creator.wedding.photobooth-frame.delete', $idx) }}?w={{ $wedding->id }}" method="POST"
+                                              onsubmit="return confirm('Hapus frame custom ini?');"
+                                              style="position:absolute; top:6px; right:6px;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div style="text-align:center; padding:1.25rem; background:#fdf4ff; border:1.5px dashed #c084fc; border-radius:12px; margin-bottom:1.25rem; color:#7c3aed; font-size:0.82rem; font-weight:600;">
+                                Belum ada frame custom yang diupload. Silakan upload minimal 1 frame agar live camera photobooth tamu memiliki bingkai estetik!
+                            </div>
+                        @endif
+
+                        {{-- Upload Form --}}
+                        @if(count($customFrames) < 6)
+                            <form action="{{ route('creator.wedding.photobooth-frame.upload') }}?w={{ $wedding->id }}"
+                                  method="POST" enctype="multipart/form-data"
+                                  id="frameUploadForm">
+                                @csrf
+                                <div id="frameDropZone"
+                                    style="border:2px dashed #c084fc; border-radius:14px; padding:2rem; text-align:center; background:#fdf4ff; cursor:pointer; transition:all 0.2s ease; position:relative;"
+                                    onclick="document.getElementById('frameFileInput').click()"
+                                    ondragover="event.preventDefault(); this.style.borderColor='#9333ea'; this.style.background='#f3e8ff';"
+                                    ondragleave="this.style.borderColor='#c084fc'; this.style.background='#fdf4ff';"
+                                    ondrop="handleFrameDrop(event)">
+                                    <input type="file" id="frameFileInput" name="frame" accept="image/png,image/webp,image/jpeg"
+                                        style="display:none;" onchange="previewFrameUpload(event)">
+
+                                    <div id="frameDropContent">
+                                        <div style="width:44px; height:44px; border-radius:50%; background:#e9d5ff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
+                                            <svg width="22" height="22" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                        </div>
+                                        <div style="font-size:0.85rem; font-weight:800; color:#581c87; margin-bottom:0.25rem;">Drag &amp; Drop Frame PNG di sini</div>
+                                        <div style="font-size:0.75rem; color:#7c3aed; margin-bottom:0.75rem;">atau klik untuk pilih file</div>
+                                        <div style="font-size:0.7rem; color:#94a3b8; line-height:1.4;">
+                                            Format: PNG Transparan / WebP &bull; Rasio: 9:16 (1080 x 1920 px) &bull; Maks: 4 MB<br>
+                                            Tersisa <strong>{{ 6 - count($customFrames) }}</strong> slot dari 6 frame custom
+                                        </div>
+                                    </div>
+
+                                    <div id="framePreviewWrap" style="display:none;">
+                                        <img id="framePreviewImg" src="" alt="Preview"
+                                            style="max-height:200px; border-radius:10px; margin:0 auto 0.75rem; display:block; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+                                        <div id="framePreviewName" style="font-size:0.78rem; font-weight:700; color:#581c87; margin-bottom:0.75rem;"></div>
+                                    </div>
+                                </div>
+
+                                {{-- Upload Submit Button --}}
+                                <div id="frameUploadActions" style="display:none; margin-top:0.85rem; gap:0.65rem; flex-wrap:wrap;">
+                                    <button type="submit"
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.55rem 1.25rem; background:linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; border:none; border-radius:10px; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 4px 12px rgba(124,58,237,0.3);">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        Upload Frame Sekarang
+                                    </button>
+                                    <button type="button" onclick="resetFrameUpload()"
+                                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 0.9rem; background:#f1f5f9; border:1.5px solid #e2e8f0; color:#475569; border-radius:10px; font-size:0.8rem; font-weight:600; cursor:pointer;">
+                                        Batal
+                                    </button>
+                                </div>
+                            </form>
+                        @else
+                            <div style="text-align:center; padding:1.5rem; background:#f8fafc; border-radius:12px; color:#64748b; font-size:0.82rem; font-weight:600; border:1.5px dashed #e2e8f0;">
+                                <svg width="24" height="24" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="margin:0 auto 0.5rem; display:block;"><circle cx="12" cy="12" r="10"></circle><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Slot custom frame sudah penuh (6/6). Hapus salah satu untuk menambah frame baru.
+                            </div>
+                        @endif
+
+                        {{-- Panduan Desain Frame --}}
+                        <div style="margin-top:1rem; padding:0.85rem 1rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;">
+                            <div style="font-size:0.78rem; font-weight:700; color:#92400e; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                Panduan Membuat Frame Custom di Canva:
+                            </div>
+                            <ol style="font-size:0.74rem; color:#78350f; line-height:1.7; margin:0; padding-left:1.25rem;">
+                                <li>Buka Canva → pilih template <strong>Instagram Story (1080 x 1920 px)</strong></li>
+                                <li>Desain pinggiran frame (nama pasangan, tanggal, ornamen). Biarkan bagian tengah <strong>transparan</strong></li>
+                                <li>Download sebagai <strong>PNG Transparan</strong></li>
+                                <li>Upload di sini: frame otomatis terpasang pada Live Camera photobooth tamu</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ── 🌟 GALERI FOTO TERJEPRET DARI PHOTOBOOTH TAMU ──────────────── --}}
+                @php
+                    $savedPhotos = $wedding->data_json['photobooth_photos'] ?? [];
+                @endphp
+                <div class="prof-card" style="margin-top:1.25rem;" id="photoboothGallerySection">
+                    <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div class="head-title-wrap">
+                            <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <span style="font-weight:800; color:#0f172a;">Galeri Hasil Foto Tamu (Live Photobooth)</span>
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Foto yang dijepret oleh tamu dengan frame custom langsung tersimpan di sini secara real-time.</div>
+                            </div>
+                        </div>
+                        <span style="background:#10b981; color:#fff; font-size:0.72rem; font-weight:800; padding:3px 10px; border-radius:99px;">
+                            {{ count($savedPhotos) }} Foto Tersimpan
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        @if(count($savedPhotos) > 0)
+                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:1rem;">
+                                @foreach($savedPhotos as $pIdx => $photo)
+                                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04); display:flex; flex-direction:column;">
+                                        <div style="position:relative; aspect-ratio:9/16; background:#0f172a; overflow:hidden;">
+                                            <img src="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}" alt="Hasil Foto {{ $pIdx + 1 }}"
+                                                style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy">
+                                            
+                                            {{-- Badges --}}
+                                            <div style="position:absolute; top:6px; left:6px; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); color:#fff; font-size:0.6rem; font-weight:700; padding:2px 6px; border-radius:6px;">
+                                                {{ ($photo['shots'] ?? 1) }} Foto
+                                            </div>
+                                            
+                                            {{-- Delete Button --}}
+                                            <form action="{{ route('creator.wedding.photobooth-photo.delete', $pIdx) }}?w={{ $wedding->id }}" method="POST"
+                                                  onsubmit="return confirm('Hapus foto hasil photobooth ini dari galeri?');"
+                                                  style="position:absolute; top:6px; right:6px;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" title="Hapus foto"
+                                                    style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div style="padding:0.65rem 0.75rem; display:flex; flex-direction:column; gap:0.4rem; flex:1; justify-content:space-between;">
+                                            <div>
+                                                <div style="font-size:0.75rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                    {{ $photo['guest_name'] ?? 'Tamu Undangan' }}
+                                                </div>
+                                                <div style="font-size:0.65rem; color:#94a3b8;">
+                                                    @if(!empty($photo['created_at']))
+                                                        {{ \Carbon\Carbon::parse($photo['created_at'])->diffForHumans() }}
+                                                    @else
+                                                        Baru saja
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div style="display:flex; gap:0.35rem;">
+                                                <a href="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}" target="_blank"
+                                                    style="flex:1; text-align:center; padding:0.3rem 0.4rem; background:#eff6ff; color:#1d4ed8; border-radius:6px; font-size:0.68rem; font-weight:700; text-decoration:none;">
+                                                    Lihat
+                                                </a>
+                                                <a href="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}" download="Photobooth_{{ $pIdx + 1 }}.jpg"
+                                                    style="flex:1; text-align:center; padding:0.3rem 0.4rem; background:#f0fdf4; color:#15803d; border-radius:6px; font-size:0.68rem; font-weight:700; text-decoration:none;">
+                                                    Unduh
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div style="text-align:center; padding:2.5rem 1rem; color:#94a3b8;">
+                                <div style="width:48px; height:48px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; color:#94a3b8;">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                </div>
+                                <div style="font-size:0.85rem; font-weight:700; color:#64748b; margin-bottom:0.25rem;">Belum ada foto yang terjepret</div>
+                                <div style="font-size:0.75rem; color:#94a3b8; max-width:320px; margin:0 auto; line-height:1.5;">
+                                    Tamu yang berfoto di photobooth akan otomatis tersimpan di sini. Bagikan tautan photobooth atau pasang QR code di venue untuk memulai.
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
                     <div class="card-body">
                         {{-- Error / Success Flash --}}
                         @if(session('error'))

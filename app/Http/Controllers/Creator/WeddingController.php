@@ -613,4 +613,36 @@ class WeddingController extends Controller
         return redirect()->route('creator.wedding.index', ['tab' => 'tab-photobooth', 'w' => $wedding->id])
             ->with('success', 'Frame custom berhasil dihapus.');
     }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // DELETE: Hapus satu foto hasil Photobooth by index
+    // ──────────────────────────────────────────────────────────────────────────
+    public function deletePhotoboothPhoto(Request $request, int $index)
+    {
+        $wedding = $this->resolveActiveWedding($request);
+        if (!$wedding || $wedding->user_id !== auth()->id()) abort(403);
+
+        $data   = $wedding->data_json ?? [];
+        $photos = $data['photobooth_photos'] ?? [];
+
+        if (!isset($photos[$index])) {
+            return back()->with('error', 'Foto tidak ditemukan.');
+        }
+
+        $photo = $photos[$index];
+        if (!empty($photo['path'])) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($photo['path']);
+            $mirror = base_path('public_html/storage/' . $photo['path']);
+            if (file_exists($mirror)) {
+                @unlink($mirror);
+            }
+        }
+
+        array_splice($photos, $index, 1);
+        $data['photobooth_photos'] = $photos;
+        $wedding->update(['data_json' => $data]);
+
+        return redirect()->route('creator.wedding.index', ['tab' => 'tab-photobooth', 'w' => $wedding->id])
+            ->with('success', 'Foto photobooth berhasil dihapus.');
+    }
 }
