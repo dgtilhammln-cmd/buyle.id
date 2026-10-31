@@ -1,11 +1,20 @@
 @php
     $customFramePaths = $wedding->data_json['photobooth_frames'] ?? [];
+    if (empty($customFramePaths)) {
+        $customFramePaths = ['wedding/frames/vintage_digicam_wedding.png'];
+    }
     $customFrames = [];
     foreach ($customFramePaths as $idx => $path) {
+        $isDigicam = strpos($path, 'vintage_digicam') !== false;
+        $label = $isDigicam ? 'Vintage Digicam' : ('Frame ' . ($idx + 1));
+        $url = $isDigicam
+            ? asset('images/frames/vintage_digicam_wedding.png')
+            : \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+
         $customFrames[] = [
             'id'    => 'custom_' . $idx,
-            'label' => 'Frame ' . ($idx + 1),
-            'url'   => \Illuminate\Support\Facades\Storage::disk('public')->url($path),
+            'label' => $label,
+            'url'   => $url,
             'type'  => 'image',
         ];
     }

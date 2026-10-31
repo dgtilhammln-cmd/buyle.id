@@ -2196,15 +2196,48 @@
                             $customFrames = $wedding->data_json['photobooth_frames'] ?? [];
                         @endphp
 
-                        {{-- Galeri Custom Frame yang Sudah Diupload --}}
+                        {{-- Frame Bawaan Eksklusif: Vintage Digicam --}}
+                        <div style="margin-bottom:1.25rem;">
+                            <div style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.5px;">Frame Aktif Photobooth</div>
+                            <div style="display:flex; align-items:center; gap:1.15rem; padding:1rem 1.25rem; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px;">
+                                <div style="width:62px; height:110px; border-radius:8px; overflow:hidden; background:#0f172a; border:1.5px solid #a855f7; flex-shrink:0; box-shadow:0 4px 12px rgba(168,85,247,0.15); position:relative;">
+                                    <img src="{{ asset('images/frames/vintage_digicam_wedding.png') }}" alt="Vintage Digicam" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                    <div style="position:absolute; bottom:3px; left:0; right:0; text-align:center; font-size:0.5rem; font-weight:800; background:rgba(0,0,0,0.7); color:#fff; padding:1px 0;">9:16 PNG</div>
+                                </div>
+                                <div style="flex:1;">
+                                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem; flex-wrap:wrap;">
+                                        <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">Vintage Digicam (The Wedding of Nazil &amp; Findi)</span>
+                                        <span style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-size:0.6rem; font-weight:800; padding:2px 8px; border-radius:99px; text-transform:uppercase;">Aktif di Live Cam</span>
+                                    </div>
+                                    <p style="font-size:0.76rem; color:#64748b; line-height:1.45; margin:0 0 0.6rem;">
+                                        Frame estetik digital camera Y2K dengan viewfinder HUD, reticle autofocus, status HDR, dan nama mempelai Nazil &amp; Findi. Otomatis terpasang melayang pada live camera tamu.
+                                    </p>
+                                    <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+                                        <a href="{{ asset('images/frames/vintage_digicam_wedding.png') }}" target="_blank"
+                                           style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-weight:700; color:#2563eb; text-decoration:none; background:#eff6ff; padding:0.35rem 0.65rem; border-radius:6px;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                            Lihat Fullsize
+                                        </a>
+                                        <a href="{{ asset('images/frames/vintage_digicam_wedding.png') }}" download="Vintage_Digicam_Nazil_Findi.png"
+                                           style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-weight:700; color:#15803d; text-decoration:none; background:#f0fdf4; padding:0.35rem 0.65rem; border-radius:6px;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                            Unduh PNG Transparan (1080x1920)
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Galeri Custom Frame Tambahan yang Diupload --}}
                         @if(count($customFrames) > 0)
+                            <div style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.5px;">Frame Kustom Tambahan Lainnya</div>
                             <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
                                 @foreach($customFrames as $idx => $framePath)
                                     <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:9/16; background:#0f172a; border:2px solid #a855f7; box-shadow:0 4px 16px rgba(168,85,247,0.2);">
                                         <img src="{{ Storage::url($framePath) }}" alt="Custom Frame {{ $idx + 1 }}"
                                             style="width:100%; height:100%; object-fit:cover; display:block;">
                                         {{-- Badge Custom --}}
-                                        <div style="position:absolute; top:6px; left:6px; background:#a855f7; color:#fff; font-size:0.55rem; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase;">CUSTOM</div>
+                                        <div style="position:absolute; top:6px; left:6px; background:#a855f7; color:#fff; font-size:0.55rem; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase;">CUSTOM {{ $idx + 1 }}</div>
                                         {{-- Delete Button --}}
                                         <form action="{{ route('creator.wedding.photobooth-frame.delete', $idx) }}?w={{ $wedding->id }}" method="POST"
                                               onsubmit="return confirm('Hapus frame custom ini?');"
