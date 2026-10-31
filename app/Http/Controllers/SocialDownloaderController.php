@@ -26,9 +26,9 @@ class SocialDownloaderController extends Controller
         $siteName = $settings['site_name'] ?? 'buyle.id';
 
         $seo = [
-            'title'       => 'Download Video TikTok Tanpa Watermark & Reels IG HD Gratis - ' . $siteName,
-            'description' => 'Unduh video TikTok tanpa watermark, Instagram Reels, postingan foto carousel, dan foto profil (DP) Instagram kualitas HD online gratis, cepat, dan tanpa aplikasi.',
-            'keywords'    => 'download video tiktok tanpa watermark, download reels ig hd, download foto profil ig, instagram reels downloader, tiktok downloader gratis, buyle tools',
+            'title'       => 'Instagram Downloader & TikTok Downloader HD Tanpa Watermark - ' . $siteName,
+            'description' => 'Instagram Downloader dan TikTok Downloader online gratis tercepat. Download video TikTok tanpa watermark, Reels IG HD, foto postingan carousel, audio MP3, dan foto profil DP Instagram tanpa aplikasi.',
+            'keywords'    => 'instagram downloader, tiktok downloader, download video tiktok tanpa watermark, download reels ig, ig downloader, tiktok video download no watermark, download story ig, download foto instagram, tiktok mp3 downloader, download dp instagram hd, save reels, download tiktok hd, buyle tools',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/' . $settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('images/og-default.jpg')),
             'canonical'   => route('tools.social_downloader'),
         ];

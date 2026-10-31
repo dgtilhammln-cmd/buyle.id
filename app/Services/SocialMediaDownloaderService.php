@@ -130,16 +130,26 @@ class SocialMediaDownloaderService
                 if (!empty($data['hdplay'])) {
                     $downloads[] = [
                         'type'  => 'video',
-                        'label' => 'Video HD (Tanpa Watermark)',
+                        'label' => 'Download Video HD (Tanpa Watermark)',
                         'url'   => $data['hdplay'],
                         'ext'   => 'mp4',
                     ];
                 } elseif (!empty($data['play'])) {
                     $downloads[] = [
                         'type'  => 'video',
-                        'label' => 'Video (Tanpa Watermark)',
+                        'label' => 'Download Video (Tanpa Watermark)',
                         'url'   => $data['play'],
                         'ext'   => 'mp4',
+                    ];
+                }
+
+                // Cover / Thumbnail Video HD
+                if (!empty($data['cover'])) {
+                    $downloads[] = [
+                        'type'  => 'image',
+                        'label' => 'Download Cover / Thumbnail HD',
+                        'url'   => $data['cover'],
+                        'ext'   => 'jpg',
                     ];
                 }
 
@@ -147,7 +157,7 @@ class SocialMediaDownloaderService
                 if (!empty($data['music'])) {
                     $downloads[] = [
                         'type'  => 'audio',
-                        'label' => 'Audio Musik MP3',
+                        'label' => 'Download Audio Musik MP3',
                         'url'   => $data['music'],
                         'ext'   => 'mp3',
                     ];
@@ -578,28 +588,109 @@ class SocialMediaDownloaderService
                 ];
             }
 
-            if (empty($downloads)) {
+            // Ekstrak username kreator dari URL jika ada (contoh instagram.com/username/reel/..)
+            $authorData = null;
+            if (preg_match('/instagram\.com\/([a-zA-Z0-9_\.\-]+)\/(?:reel|reels|p)\//i', $cleanUrl, $uMatch)) {
+                if (!in_array(strtolower($uMatch[1]), ['reel', 'reels', 'p', 'stories', 'explore'])) {
+                    $authorData = [
+                        'name'     => $uMatch[1],
+                        'username' => '@' . $uMatch[1],
+                        'avatar'   => null,
+                    ];
+                }
+            }
+
+            // Jika konten adalah Video atau Reels
+            $isReelUrl = str_contains($cleanUrl, '/reel/') || str_contains($cleanUrl, '/reels/');
+            if ($hasVideo || $isReelUrl) {
+                $targetVideoUrl = $firstVideoUrl;
+                if (!$targetVideoUrl && !empty($downloads[0]['url'])) {
+                    $targetVideoUrl = $downloads[0]['url'];
+                }
+
+                $finalDownloads = [
+                    [
+                        'type'  => 'video',
+                        'label' => 'Download Video HD (MP4)',
+                        'url'   => $targetVideoUrl,
+                        'ext'   => 'mp4',
+                    ]
+                ];
+
+                if (!empty($mainPreview)) {
+                    $finalDownloads[] = [
+                        'type'  => 'image',
+                        'label' => 'Download Cover / Thumbnail HD (JPG)',
+                        'url'   => $mainPreview,
+                        'ext'   => 'jpg',
+                    ];
+                }
+
+                return [
+                    'success'   => true,
+                    'platform'  => 'instagram',
+                    'type'      => 'reels',
+                    'title'     => 'Instagram Reels HD',
+                    'preview'   => $mainPreview,
+                    'author'    => $authorData,
+                    'is_video'  => true,
+                    'video_url' => $targetVideoUrl,
+                    'downloads' => $finalDownloads,
+                ];
+            }
+
+            // Jika konten adalah Foto Carousel atau Foto Tunggal
+            $uniqueImages = [];
+            $seenUrls = [];
+            foreach ($downloads as $d) {
+                if (!in_array($d['url'], $seenUrls)) {
+                    $seenUrls[] = $d['url'];
+                    $uniqueImages[] = $d;
+                }
+            }
+
+            if (empty($uniqueImages)) {
                 return ['success' => false, 'message' => 'Gagal mengekstrak tautan unduhan dari media ini.'];
             }
 
-            $isCarousel = count($downloads) > 1;
-            $platformType = $hasVideo ? 'reels' : ($isCarousel ? 'carousel' : 'post');
-            $title = $hasVideo ? 'Instagram Reels HD' : ($isCarousel ? 'Instagram Carousel (' . count($downloads) . ' Slide)' : 'Instagram Post HD');
+            if (count($uniqueImages) > 1) {
+                foreach ($uniqueImages as $i => &$ui) {
+                    $ui['label'] = 'Download Foto HD (Slide ' . ($i + 1) . ')';
+                }
+                $finalDownloads = $uniqueImages;
+                $platformType = 'carousel';
+                $title = 'Instagram Carousel (' . count($finalDownloads) . ' Foto)';
+            } else {
+                $finalDownloads = [
+                    [
+                        'type'  => 'image',
+                        'label' => 'Download Foto HD (JPG)',
+                        'url'   => $uniqueImages[0]['url'],
+                        'ext'   => 'jpg',
+                    ]
+                ];
+                if (!empty($mainPreview) && $mainPreview !== $uniqueImages[0]['url']) {
+                    $finalDownloads[] = [
+                        'type'  => 'image',
+                        'label' => 'Download Cover / Thumbnail HD (JPG)',
+                        'url'   => $mainPreview,
+                        'ext'   => 'jpg',
+                    ];
+                }
+                $platformType = 'post';
+                $title = 'Instagram Post HD';
+            }
 
             return [
                 'success'   => true,
                 'platform'  => 'instagram',
                 'type'      => $platformType,
                 'title'     => $title,
-                'preview'   => $mainPreview,
-                'author'    => [
-                    'name'     => 'Kreator Instagram',
-                    'username' => '@instagram',
-                    'avatar'   => null,
-                ],
-                'is_video'  => $hasVideo,
-                'video_url' => $firstVideoUrl,
-                'downloads' => $downloads,
+                'preview'   => $mainPreview ?: ($finalDownloads[0]['url'] ?? null),
+                'author'    => $authorData,
+                'is_video'  => false,
+                'video_url' => null,
+                'downloads' => $finalDownloads,
             ];
         } catch (\Throwable $e) {
             Log::warning('SaveInsta Resolver Error: ' . $e->getMessage());

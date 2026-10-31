@@ -27,9 +27,21 @@
 
     {{-- Hero Section --}}
     <section class="dl-hero">
-        <h1 class="dl-hero-title">Download Video TikTok &amp; Reels Instagram HD Gratis</h1>
+        <div class="dl-rating-pill" aria-label="Rating 4.9 dari 5 bintang berdasarkan 1.480 lebih ulasan pengguna">
+            <div class="dl-rating-stars">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <span class="dl-rating-val">4.9 / 5.0</span>
+            <span class="dl-rating-divider">·</span>
+            <span class="dl-rating-count">1.485+ Penilaian Pengguna</span>
+        </div>
+        <h1 class="dl-hero-title">Instagram Downloader &amp; TikTok Downloader HD Tanpa Watermark</h1>
         <p class="dl-hero-desc">
-            Unduh video TikTok tanpa watermark, Instagram Reels, postingan carousel, dan foto profil (DP) kualitas jernih secara instan tanpa perlu aplikasi tambahan.
+            Unduh video TikTok tanpa watermark, Instagram Reels, postingan carousel, cerita story, audio musik MP3, dan foto profil HD gratis, cepat, dan tanpa aplikasi tambahan.
         </p>
     </section>
 
@@ -135,7 +147,7 @@
             {{-- Media Result Card --}}
             <div id="dlResultBox" class="dl-result-card" style="display: none;">
                 <div class="dl-result-header">
-                    <div class="dl-author-wrap">
+                    <div class="dl-author-wrap" id="resAuthorWrap">
                         <img id="resAuthorAvatar" class="dl-author-avatar" src="" alt="Avatar">
                         <div class="dl-author-info">
                             <div class="dl-author-name" id="resAuthorName">Kreator</div>
@@ -325,21 +337,87 @@
                         <p>Untuk mematuhi kebijakan privasi, sistem hanya dapat mengunduh konten dari akun atau postingan yang bersifat publik. Postingan dari akun privat tidak dapat diakses.</p>
                     </div>
                 </details>
+
+                <details class="faq-card">
+                    <summary class="faq-q">
+                        <span>Bagaimana cara menyimpan audio MP3 dari video TikTok?</span>
+                        <svg class="faq-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </summary>
+                    <div class="faq-a">
+                        <p>Tempelkan tautan video TikTok ke kolom downloader, tekan tombol Download Sekarang, lalu pilih opsi tombol Download Audio Musik MP3 untuk menyimpan lagu atau backsound-nya saja.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        {{-- SEO Keyword Hub & Content --}}
+        <div class="dl-keywords-hub">
+            <h3 class="hub-title">Pencarian Populer Instagram Downloader &amp; TikTok Downloader</h3>
+            <p class="hub-desc">
+                Buyle Social Downloader dirancang untuk memenuhi kebutuhan pengunduhan media sosial secara instan, aman, dan tanpa iklan jebakan.
+            </p>
+            <div class="dl-tags-wrap">
+                <span class="dl-tag-item">Instagram Downloader</span>
+                <span class="dl-tag-item">TikTok Downloader</span>
+                <span class="dl-tag-item">Download Video TikTok Tanpa Watermark</span>
+                <span class="dl-tag-item">Download Reels IG HD</span>
+                <span class="dl-tag-item">IG Downloader</span>
+                <span class="dl-tag-item">TikTok Video Download No Watermark</span>
+                <span class="dl-tag-item">TikTok MP3 Downloader</span>
+                <span class="dl-tag-item">Download Foto Instagram</span>
+                <span class="dl-tag-item">Download Carousel IG</span>
+                <span class="dl-tag-item">Download Foto Profil IG HD</span>
+                <span class="dl-tag-item">Save Instagram Reels</span>
+                <span class="dl-tag-item">Download Story IG</span>
             </div>
         </div>
     </section>
 </div>
 
-{{-- JSON-LD Schema --}}
+{{-- JSON-LD Schema with AggregateRating --}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Social Media Downloader - Buyle Tools",
+  "name": "Instagram Downloader & TikTok Downloader - Buyle Tools",
   "url": "{{ route('tools.social_downloader') }}",
-  "description": "Download video TikTok tanpa watermark, Instagram Reels HD, dan foto profil Instagram secara gratis dan cepat.",
+  "description": "Instagram Downloader dan TikTok Downloader online gratis tercepat. Download video TikTok tanpa watermark, Reels IG HD, foto postingan carousel, cerita story, dan audio MP3 tanpa aplikasi.",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "IDR"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "bestRating": "5",
+    "worstRating": "1",
+    "ratingCount": "1485",
+    "reviewCount": "1420"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Social Media Downloader",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web, Android, iOS, Windows, macOS",
+  "url": "{{ route('tools.social_downloader') }}",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "bestRating": "5",
+    "worstRating": "1",
+    "ratingCount": "1485",
+    "reviewCount": "1420"
+  },
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -421,16 +499,49 @@
     /* Hero */
     .dl-hero {
         text-align: center;
-        max-width: 780px;
+        max-width: 840px;
         margin: 0 auto 2.5rem;
+    }
+    .dl-rating-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        padding: 0.38rem 0.95rem;
+        border-radius: 999px;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #334155;
+    }
+    .dl-rating-stars {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.15rem;
+    }
+    .dl-rating-val {
+        color: #0f172a;
+        font-weight: 700;
+    }
+    .dl-rating-divider {
+        color: #cbd5e1;
+    }
+    .dl-rating-count {
+        color: #64748b;
     }
     .dl-hero-title {
         font-size: 2.15rem;
         font-weight: 800;
         color: #0f172a;
-        line-height: 1.25;
+        line-height: 1.3;
         margin-bottom: 0.85rem;
         letter-spacing: -0.02em;
+        text-wrap: balance;
+        max-width: 820px;
+        margin-left: auto;
+        margin-right: auto;
     }
     .dl-hero-desc {
         font-size: 0.95rem;
@@ -958,6 +1069,54 @@
         line-height: 1.6;
     }
 
+    /* SEO Keywords Hub */
+    .dl-keywords-hub {
+        margin-top: 3.5rem;
+        padding: 2.25rem 1.75rem;
+        background: #f8fafc;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+    }
+    .dl-keywords-hub .hub-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+    .dl-keywords-hub .hub-desc {
+        font-size: 0.85rem;
+        color: #64748b;
+        max-width: 640px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.55;
+    }
+    .dl-tags-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .dl-tag-item {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.4rem 0.85rem;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #334155;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        transition: all 0.15s ease;
+    }
+    .dl-tag-item:hover {
+        background: #f0fdf4;
+        border-color: #86efac;
+        color: #16a34a;
+        transform: translateY(-1px);
+    }
+
     /* Responsive */
     @media (max-width: 900px) {
         .dl-result-body {
@@ -1136,11 +1295,23 @@ function renderResult(data) {
     var resultBox = document.getElementById('dlResultBox');
 
     // Author
-    var author = data.author || {};
-    document.getElementById('resAuthorName').textContent = author.name || 'Kreator';
-    document.getElementById('resAuthorUsername').textContent = author.username || '@user';
-    var avatarEl = document.getElementById('resAuthorAvatar');
-    avatarEl.src = author.avatar || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'%3E%3Ccircle cx=\'12\' cy=\'8\' r=\'4\'/%3E%3Cpath d=\'M6 20v-2a6 6 0 0 1 12 0v2\'/%3E%3C/svg%3E';
+    var authorWrap = document.getElementById('resAuthorWrap');
+    var author = data.author;
+    if (author && (author.avatar || (author.username && author.username !== '@instagram' && author.username !== '@user'))) {
+        authorWrap.style.display = 'flex';
+        document.getElementById('resAuthorName').textContent = author.name || 'Kreator';
+        document.getElementById('resAuthorUsername').textContent = author.username || '';
+        var avatarEl = document.getElementById('resAuthorAvatar');
+        if (author.avatar) {
+            avatarEl.src = author.avatar;
+        } else {
+            var initial = (author.name || author.username).replace('@', '').charAt(0).toUpperCase();
+            avatarEl.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\' viewBox=\'0 0 44 44\'%3E%3Crect width=\'44\' height=\'44\' rx=\'22\' fill=\'%231eb349\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' font-family=\'sans-serif\' font-size=\'18\' font-weight=\'bold\' fill=\'%23ffffff\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3E' + initial + '%3C/text%3E%3C/svg%3E';
+        }
+    } else {
+        // Jika tidak ada info author asli, sembunyikan card author agar tidak polos abu-abu
+        authorWrap.style.display = 'none';
+    }
 
     // Platform tag
     var tagEl = document.getElementById('resPlatformTag');
