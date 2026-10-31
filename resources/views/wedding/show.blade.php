@@ -23,9 +23,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    @if($wedding->digital_envelope_enabled)
-        <script src="{{ app(\App\Services\MidtransService::class)->isProduction() ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ app(\App\Services\MidtransService::class)->getClientKey() }}"></script>
-    @endif
+    <script src="{{ app(\App\Services\MidtransService::class)->isProduction() ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ app(\App\Services\MidtransService::class)->getClientKey() }}"></script>
 
     <style>
         * {
@@ -1003,6 +1001,20 @@
                             Konfirmasi Kehadiran &amp; Ucapan
                         </div>
 
+                        @if(session('wish_success'))
+                            <div style="background:rgba(16,185,129,0.25); border:1px solid #10b981; color:#a7f3d0; padding:10px 14px; border-radius:10px; font-size:0.78rem; font-weight:700; margin-bottom:12px; text-align:center;">
+                                {{ session('wish_success') }}
+                            </div>
+                        @endif
+
+                        @if($errors->any())
+                            <div style="background:rgba(239,68,68,0.25); border:1px solid #ef4444; color:#fca5a5; padding:10px 14px; border-radius:10px; font-size:0.75rem; font-weight:700; margin-bottom:12px; text-align:center;">
+                                @foreach($errors->all() as $err)
+                                    <div>{{ $err }}</div>
+                                @endforeach
+                            </div>
+                        @endif
+
                         <form action="{{ route('wedding.wish', ['slug' => $wedding->slug]) }}" method="POST"
                             onsubmit="onSubmitRsvp(event)">
                             @csrf
@@ -1013,7 +1025,7 @@
 
                             <!-- Kota Asal dengan deteksi lokasi -->
                             <div class="city-input-wrap">
-                                <input type="text" name="city" id="cityInput" class="d-input" list="cityList"
+                                <input type="text" name="sender_city" id="cityInput" class="d-input" list="cityList"
                                     placeholder="Kota Asal (atau deteksi otomatis)">
                                 <datalist id="cityList">
                                     <option value="Jakarta">
@@ -1028,6 +1040,7 @@
                                     <option value="Solo">
                                     <option value="Malang">
                                     <option value="Palembang">
+                                    <option value="Mojokerto">
                                 </datalist>
                                 <button type="button" class="btn-detect-loc" id="btnDetectLoc" onclick="detectMyCity()"
                                     title="Deteksi lokasi saya">
@@ -1040,29 +1053,29 @@
                                 </button>
                             </div>
 
-                            <select name="attendance" class="d-input">
+                            <select name="attendance_status" class="d-input">
                                 <option value="hadir">Saya Akan Hadir</option>
-                                <option value="tidak">Maaf, Berhalangan Hadir</option>
+                                <option value="tidak_hadir">Maaf, Berhalangan Hadir</option>
                                 <option value="ragu">Masih Ragu</option>
                             </select>
-                            @if($wedding->digital_envelope_enabled)
-                                <div style="margin: 0.65rem 0; text-align: left;">
-                                    <label style="font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                                        <svg width="13" height="13" fill="none" stroke="#f43f5e" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                                            <line x1="2" y1="10" x2="22" y2="10"></line>
-                                        </svg>
-                                        <span>Kirim Tanda Kasih / Amplop (Opsional)</span>
-                                    </label>
-                                    <div style="position: relative;">
-                                        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.6);">Rp</span>
-                                        <input type="number" name="amount" id="rsvpEnvelopeAmount" min="0" step="1000" placeholder="0 (Isi nominal jika ingin kirim amplop)" class="d-input" style="padding-left: 36px; margin-bottom: 4px;">
-                                    </div>
-                                    <div style="font-size: 0.65rem; color: rgba(255,255,255,0.45); line-height: 1.4;">
-                                        *Bisa diisi 0 jika hanya ingin mengirim doa &amp; konfirmasi kehadiran tanpa amplop. Jika nominal diisi, pembayaran digital (QRIS/Transfer) akan otomatis muncul.
-                                    </div>
+
+                            {{-- Nominal Amplop Digital (Midtrans) - Selalu aktif agar tamu bisa kirim amplop digital kapan saja --}}
+                            <div style="margin: 0.65rem 0; text-align: left;">
+                                <label style="font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                    <svg width="13" height="13" fill="none" stroke="#f43f5e" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                                    </svg>
+                                    <span>Kirim Tanda Kasih / Amplop (Opsional)</span>
+                                </label>
+                                <div style="position: relative;">
+                                    <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.6);">Rp</span>
+                                    <input type="number" name="amount" id="rsvpEnvelopeAmount" min="0" step="1000" placeholder="0 (Isi nominal jika ingin kirim amplop)" class="d-input" style="padding-left: 36px; margin-bottom: 4px;">
                                 </div>
-                            @endif
+                                <div style="font-size: 0.65rem; color: rgba(255,255,255,0.45); line-height: 1.4;">
+                                    *Bisa diisi 0 jika hanya ingin mengirim doa &amp; konfirmasi kehadiran tanpa amplop. Jika nominal diisi, pembayaran digital (QRIS/Transfer) akan otomatis muncul.
+                                </div>
+                            </div>
 
                             <textarea name="message" class="d-textarea" placeholder="Tulis doa restu & ucapan Anda..."
                                 required></textarea>

@@ -88,15 +88,24 @@ class WeddingPublicController extends Controller
     {
         $wedding = Wedding::where('slug', $slug)->firstOrFail();
 
+        // Normalisasi status kehadiran (support 'attendance' maupun 'attendance_status')
+        $attendance = $request->input('attendance_status') ?? $request->input('attendance', 'hadir');
+        if ($attendance === 'tidak') {
+            $attendance = 'tidak_hadir';
+        }
+        if (!in_array($attendance, ['hadir', 'tidak_hadir', 'ragu'])) {
+            $attendance = 'hadir';
+        }
+
+        // Normalisasi kota
+        $city = trim($request->input('sender_city') ?? $request->input('city', ''));
+
         $validated = $request->validate([
-            'sender_name'       => ['required', 'string', 'max:150'],
-            'sender_city'       => ['nullable', 'string', 'max:100'],
-            'message'           => ['required', 'string', 'max:1000'],
-            'attendance_status' => ['required', 'in:hadir,tidak_hadir,ragu'],
-            'guest_id'          => ['nullable', 'exists:wedding_guests,id'],
+            'sender_name' => ['required', 'string', 'max:150'],
+            'message'     => ['required', 'string', 'max:1000'],
+            'guest_id'    => ['nullable', 'exists:wedding_guests,id'],
         ]);
 
-        $city = trim($validated['sender_city'] ?? '');
         $lat = null;
         $lng = null;
 
@@ -132,7 +141,7 @@ class WeddingPublicController extends Controller
             'sender_name'       => $validated['sender_name'],
             'sender_city'       => !empty($city) ? $city : 'Indonesia',
             'message'           => $validated['message'],
-            'attendance_status' => $validated['attendance_status'],
+            'attendance_status' => $attendance,
             'envelope_amount'   => $envelopeAmount,
             'payment_status'    => $paymentStatus,
             'midtrans_order_id' => $midtransOrderId,
