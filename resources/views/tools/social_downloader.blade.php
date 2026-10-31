@@ -448,6 +448,21 @@
                 <span class="dl-tag-item">Download Story IG</span>
             </div>
         </div>
+
+        {{-- Legal & DMCA Disclaimer Notice --}}
+        <div class="dl-disclaimer-box">
+            <div class="dl-disclaimer-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <div class="dl-disclaimer-content">
+                <h4>Pernyataan Hak Cipta &amp; Ketentuan Layanan</h4>
+                <p>
+                    Layanan Buyle Social Downloader tidak berafiliasi, didukung, atau disponsori oleh TikTok maupun Instagram (Meta Platforms, Inc.). Sistem kami <strong>sama sekali tidak menyimpan berkas video, foto, atau hak cipta apa pun di server kami</strong>. Seluruh proses pengunduhan diteruskan secara langsung dari server Content Delivery Network (CDN) publik platform terkait. Pengguna bertanggung jawab penuh atas hak cipta dan pemanfaatan berkas yang diunduh untuk keperluan arsip pribadi secara wajar (fair use).
+                </p>
+            </div>
+        </div>
     </section>
 </div>
 
@@ -1532,6 +1547,43 @@
         border-color: #86efac;
         color: #16a34a;
         transform: translateY(-1px);
+    }
+
+    /* Legal & DMCA Disclaimer Notice Box */
+    .dl-disclaimer-box {
+        margin-top: 2rem;
+        padding: 1.5rem 1.75rem;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #1eb349;
+        border-radius: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .dl-disclaimer-icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #f0fdf4;
+        color: #16a34a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dl-disclaimer-content h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.35rem;
+    }
+    .dl-disclaimer-content p {
+        font-size: 0.8rem;
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0;
     }
 
     /* Responsive */

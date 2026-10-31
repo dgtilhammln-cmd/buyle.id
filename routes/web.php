@@ -87,8 +87,12 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
     Route::get('/tools/convert-file', [\App\Http\Controllers\ToolController::class, 'convertFile'])->name('tools.convert_file');
     Route::get('/tools/social-downloader', [\App\Http\Controllers\SocialDownloaderController::class, 'index'])->name('tools.social_downloader');
-    Route::post('/tools/social-downloader/fetch', [\App\Http\Controllers\SocialDownloaderController::class, 'fetchMedia'])->name('tools.social_downloader.fetch');
-    Route::get('/tools/social-downloader/download', [\App\Http\Controllers\SocialDownloaderController::class, 'downloadStream'])->name('tools.social_downloader.stream');
+    Route::post('/tools/social-downloader/fetch', [\App\Http\Controllers\SocialDownloaderController::class, 'fetchMedia'])
+        ->middleware('throttle:30,1')
+        ->name('tools.social_downloader.fetch');
+    Route::get('/tools/social-downloader/download', [\App\Http\Controllers\SocialDownloaderController::class, 'downloadStream'])
+        ->middleware('throttle:60,1')
+        ->name('tools.social_downloader.stream');
     Route::get('/cron/clean-temp-images', [\App\Http\Controllers\ToolController::class, 'cronCleanTempImages'])->name('cron.clean_temp_images');
     Route::get('/ticketing',      [\App\Http\Controllers\TicketingController::class, 'index'])->name('ticketing');
     Route::get('/kontak',         [ContactController::class,'index'])->name('contact');

@@ -64,7 +64,7 @@
             100% { transform: scale(1.08) translate(0, 2%); }
         }
 
-        /* ── Cover Layer (before open) ── */
+        /* ── Cover Layer ── */
         #coverLayer {
             position: absolute;
             inset: 0;
@@ -84,43 +84,99 @@
             pointer-events: none;
         }
 
-        /* ── Curved SVG Names ── */
-        .monogram-ring {
-            width: 240px; height: 240px;
-            position: relative;
-            display: flex; align-items: center; justify-content: center;
+        /* ── Simple Elegant Centered Names ── */
+        .cover-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem 0.5rem;
         }
 
-        .monogram-svg {
-            width: 100%; height: 100%; overflow: visible;
-        }
-
-        .ring-name-text {
+        .cover-eyebrow {
             font-family: 'Cinzel', serif;
-            font-size: 17px;
-            font-weight: 700;
-            fill: #ffffff;
+            font-size: 0.72rem;
             letter-spacing: 0.38em;
+            color: rgba(255, 255, 255, 0.75);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
         }
 
-        /* Botanical center */
-        .botanical {
+        .cover-names {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+        }
+
+        .c-name {
+            font-family: 'Cinzel', serif;
+            font-size: 2.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            line-height: 1.25;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+        }
+
+        .c-amp {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.7rem;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1;
+            margin: 0.25rem 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        /* ── Fullscreen Looping Video ── */
+        .video-wrapper {
             position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex; align-items: center; gap: 10px;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
         }
 
-        .botanical svg.rose {
-            width: 48px; height: 48px;
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+        .wedding-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #000000;
         }
 
-        .botanical .dot {
-            width: 5px; height: 5px;
-            background: #ffffff;
+        .video-play-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.85);
+            width: 68px;
+            height: 68px;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 50%;
-            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .video-play-badge.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         /* Cover guest card */
@@ -171,203 +227,16 @@
             margin-top: 0.7rem; letter-spacing: 0.06em;
         }
 
-        /* ── Content Panels (over marble bg) ── */
+        /* ── Content Layer (video fullscreen) ── */
         #contentLayer {
             position: absolute;
             inset: 0; z-index: 50;
             display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
         }
 
         #contentLayer.show {
-            display: flex;
+            display: block;
         }
-
-        /* Each panel */
-        .panel {
-            position: absolute;
-            inset: 0;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 3.5rem 2rem;
-            opacity: 0;
-            transition: opacity 0.9s ease;
-            pointer-events: none;
-        }
-
-        .panel.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* ── Panel 1: Monogram Names ── */
-        /* (reuses .monogram-ring above) */
-
-        /* ── Panel 2: Save The Date Circle ── */
-        .date-circle {
-            width: 200px; height: 200px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.65);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 2px;
-            background: rgba(6, 8, 12, 0.18);
-            box-shadow: 0 0 40px rgba(0,0,0,0.3);
-        }
-
-        .date-day {
-            font-family: 'Cinzel', serif;
-            font-size: 0.82rem; font-weight: 600;
-            letter-spacing: 0.28em; color: #ffffff;
-            text-transform: uppercase;
-        }
-
-        .date-num {
-            font-family: 'Cinzel', serif;
-            font-size: 3.8rem; font-weight: 700;
-            color: #ffffff; line-height: 1;
-        }
-
-        .date-month-year {
-            font-family: 'Cinzel', serif;
-            font-size: 0.78rem; font-weight: 600;
-            letter-spacing: 0.2em; color: #ffffff;
-            text-transform: uppercase;
-        }
-
-        /* ── Panel 3: We Invite You ── */
-        .invite-line {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem; font-weight: 600;
-            letter-spacing: 0.38em; color: #ffffff;
-            text-transform: uppercase; line-height: 2.0;
-            text-shadow: 0 2px 14px rgba(0,0,0,0.9);
-        }
-
-        /* ── Panel 4: Scripture ── */
-        .verse {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem; font-style: italic;
-            line-height: 1.75; color: #ffffff;
-            max-width: 310px;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.8);
-            margin-bottom: 1rem;
-        }
-
-        .verse-ref {
-            font-family: 'Cinzel', serif;
-            font-size: 0.72rem; letter-spacing: 0.22em;
-            color: rgba(255,255,255,0.8); font-style: normal;
-            display: block; margin-top: 0.4rem; font-weight: 600;
-        }
-
-        .verse-sub {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem; color: rgba(255,255,255,0.8);
-            line-height: 1.6; max-width: 290px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        }
-
-        /* ── Panel 5: Couple Names ── */
-        .couple-name {
-            font-family: 'Alex Brush', cursive;
-            font-size: 3.2rem; color: #ffffff; line-height: 1.15;
-            text-shadow: 0 2px 14px rgba(0,0,0,0.8);
-        }
-
-        .couple-parents {
-            font-size: 0.72rem; color: rgba(255,255,255,0.65); margin-top: 2px;
-        }
-
-        .couple-amp {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.9rem; font-style: italic;
-            color: rgba(255,255,255,0.8); margin: 0.35rem 0;
-        }
-
-        /* ── Panel 6: Events ── */
-        .event-block { margin-bottom: 1.6rem; }
-        .event-block:last-child { margin-bottom: 0; }
-
-        .event-title {
-            font-family: 'Alex Brush', cursive;
-            font-size: 2.3rem; color: #ffffff; line-height: 1;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-bottom: 0.25rem;
-        }
-
-        .event-time {
-            font-family: 'Cinzel', serif; font-size: 0.76rem;
-            font-weight: 700; color: #ffffff; letter-spacing: 0.14em;
-            text-transform: uppercase; margin-bottom: 0.2rem;
-        }
-
-        .event-place { font-size: 0.82rem; font-weight: 700; color: #ffffff; }
-        .event-addr { font-size: 0.7rem; color: rgba(255,255,255,0.65); line-height: 1.4; max-width: 280px; margin: 0 auto; }
-
-        /* ── Panel 7: Kindly Deliver ── */
-        .deliver-title {
-            font-family: 'Alex Brush', cursive;
-            font-size: 2.8rem; color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-bottom: 0.85rem;
-        }
-
-        .deliver-guest {
-            font-family: 'Cinzel', serif; font-size: 1.2rem;
-            font-weight: 700; color: #ffffff; letter-spacing: 0.1em;
-        }
-
-        .deliver-pax {
-            font-size: 0.7rem; color: rgba(255,255,255,0.65);
-            margin-top: 0.4rem; letter-spacing: 0.08em;
-        }
-
-        /* ── Panel 8: Thank You ── */
-        .thankyou-text {
-            font-family: 'Alex Brush', cursive;
-            font-size: 5rem; color: #ffffff; line-height: 1.05;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 2rem;
-        }
-
-        .btn-details {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 0.8rem 2rem;
-            background: rgba(8,10,16,0.7); color: #ffffff;
-            font-family: 'Cinzel', serif; font-size: 0.76rem;
-            font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
-            border: 1px solid rgba(255,255,255,0.3); border-radius: 999px;
-            cursor: pointer; backdrop-filter: blur(10px);
-            transition: all 0.2s;
-        }
-        .btn-details:hover { background: #ffffff; color: #06080c; }
-
-        /* ── Navigation dots ── */
-        .nav-dots {
-            position: absolute; bottom: 55px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; gap: 6px; z-index: 60;
-        }
-
-        .nav-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transition: all 0.35s ease; cursor: pointer;
-        }
-
-        .nav-dot.active {
-            background: #ffffff;
-            width: 18px; border-radius: 4px;
-        }
-
-        /* ── Tap zones ── */
-        .tap-left, .tap-right {
-            position: absolute; top: 0; bottom: 0;
-            width: 40%; z-index: 55; cursor: pointer;
-        }
-        .tap-left { left: 0; }
-        .tap-right { right: 0; }
 
         /* ── Bottom Floating Controls ── */
         .bottom-controls {
@@ -376,16 +245,13 @@
             pointer-events: none;
         }
 
-        .btn-music {
+        .btn-sound {
             width: 40px; height: 40px; border-radius: 50%;
             background: rgba(8,10,16,0.75); backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.22); color: #ffffff;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; pointer-events: auto; transition: all 0.2s;
         }
-
-        .btn-music.spin { animation: spin 5s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         .btn-open-drawer {
             display: inline-flex; align-items: center; gap: 6px;
@@ -413,22 +279,42 @@
             background: rgba(10, 13, 20, 0.97);
             border-top: 1px solid rgba(255,255,255,0.15);
             border-radius: 26px 26px 0 0;
-            padding: 0.85rem 1.4rem 2.5rem;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             transform: translateY(100%);
             transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .drawer-overlay.open .drawer-sheet { transform: translateY(0); }
 
-        .drawer-pill {
-            width: 42px; height: 4px; background: rgba(255,255,255,0.3);
-            border-radius: 999px; margin: 0 auto 1.2rem; cursor: pointer;
+        /* Scrollbar minimalis dark/gold theme */
+        .drawer-body::-webkit-scrollbar { width: 3px; }
+        .drawer-body::-webkit-scrollbar-track { background: transparent; }
+        .drawer-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 999px; }
+        .drawer-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+        .drawer-body { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+
+        .drawer-pill-wrap {
+            padding: 0.85rem 1.4rem 0;
+            flex-shrink: 0;
+            background: rgba(10, 13, 20, 0.97);
         }
 
+        .drawer-pill {
+            width: 42px; height: 4px; background: rgba(255,255,255,0.3);
+            border-radius: 999px; margin: 0 auto 1rem; cursor: pointer;
+        }
+
+        /* Sticky header dalam drawer */
         .drawer-head {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(10, 13, 20, 0.98);
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.2rem; padding-bottom: 0.75rem;
+            padding: 0.6rem 1.4rem 0.75rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
         }
 
         .drawer-head-title {
@@ -443,6 +329,13 @@
             cursor: pointer;
         }
 
+        /* Scrollable body drawer */
+        .drawer-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.85rem 1.4rem 2.5rem;
+        }
+
         .d-card {
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.12);
@@ -454,6 +347,55 @@
             font-family: 'Cinzel', serif; font-size: 0.78rem;
             font-weight: 700; letter-spacing: 0.1em; color: #ffffff;
             margin-bottom: 0.85rem;
+        }
+
+        /* Waktu & Lokasi event rows */
+        .event-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .event-datetime {
+            font-family: 'Cinzel', serif;
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .event-datetime .ev-sep {
+            color: rgba(255,255,255,0.35);
+            font-size: 0.7rem;
+        }
+
+        .event-venue {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .event-addr-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.45;
+        }
+
+        .event-divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            margin: 0.85rem 0;
         }
 
         .d-input {
@@ -495,6 +437,34 @@
         }
         .btn-pill:hover { background: #ffffff; color: #06080c; }
 
+        /* Geolocation city input wrapper */
+        .city-input-wrap {
+            position: relative;
+            margin-bottom: 0.7rem;
+        }
+        .city-input-wrap .d-input {
+            margin-bottom: 0;
+            padding-right: 44px;
+        }
+        .btn-detect-loc {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+        .btn-detect-loc:hover { color: #ffffff; }
+        .btn-detect-loc.detecting { animation: spinLoc 1s linear infinite; }
+        @keyframes spinLoc { 100% { transform: translateY(-50%) rotate(360deg); } }
+
         .wish-box {
             background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 11px; padding: 0.7rem 0.85rem; margin-bottom: 0.5rem;
@@ -530,53 +500,13 @@
 
     <!-- ② COVER LAYER -->
     <div id="coverLayer">
-        <!-- Curved Monogram -->
-        <div>
-            <div style="font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.35em; color:rgba(255,255,255,0.75); text-transform:uppercase; margin-bottom:1.6rem;">
-                The Wedding Celebration of
-            </div>
-
-            <div class="monogram-ring">
-                <svg viewBox="0 0 260 260" class="monogram-svg">
-                    <defs>
-                        <path id="arcTop" d="M 40,130 A 90,90 0 0,1 220,130" fill="none"/>
-                        <path id="arcBot" d="M 40,130 A 90,90 0 0,0 220,130" fill="none"/>
-                    </defs>
-                    <!-- Thin ring guide -->
-                    <circle cx="130" cy="130" r="90" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
-                    <text class="ring-name-text">
-                        <textPath href="#arcTop" startOffset="50%" text-anchor="middle">
-                            {{ strtoupper($wedding->groom_nickname ?: 'ANDREW') }}
-                        </textPath>
-                    </text>
-                    <text class="ring-name-text">
-                        <textPath href="#arcBot" startOffset="50%" text-anchor="middle">
-                            {{ strtoupper($wedding->bride_nickname ?: 'LUCIA') }}
-                        </textPath>
-                    </text>
-                </svg>
-
-                <!-- Center Rose + Dots -->
-                <div class="botanical">
-                    <div class="dot"></div>
-                    <svg class="rose" viewBox="0 0 64 64" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                        <!-- Stem -->
-                        <path d="M32 52 Q30 42 32 36"/>
-                        <!-- Leaf left -->
-                        <path d="M32 44 Q22 40 20 34 Q28 34 32 40"/>
-                        <!-- Leaf right -->
-                        <path d="M32 40 Q42 36 44 30 Q36 32 32 38"/>
-                        <!-- Petals outer -->
-                        <path d="M32 12 C28 16 22 18 22 24 C22 30 27 33 32 34 C37 33 42 30 42 24 C42 18 36 16 32 12Z"/>
-                        <path d="M24 16 C18 14 14 18 15 24 C16 28 20 31 25 32"/>
-                        <path d="M40 16 C46 14 50 18 49 24 C48 28 44 31 39 32"/>
-                        <path d="M20 26 C16 30 16 36 20 38 C24 36 27 32 27 27"/>
-                        <path d="M44 26 C48 30 48 36 44 38 C40 36 37 32 37 27"/>
-                        <!-- Inner -->
-                        <path d="M29 20 C29 24 30 27 32 28 C34 27 35 24 35 20 C34 18 30 18 29 20Z"/>
-                    </svg>
-                    <div class="dot"></div>
-                </div>
+        <!-- Simple elegant centered names -->
+        <div class="cover-hero">
+            <div class="cover-eyebrow">The Wedding Celebration of</div>
+            <div class="cover-names">
+                <span class="c-name">{{ strtoupper($wedding->groom_nickname ?: 'NAZIL') }}</span>
+                <span class="c-amp">&amp;</span>
+                <span class="c-name">{{ strtoupper($wedding->bride_nickname ?: 'FINDI') }}</span>
             </div>
         </div>
 
@@ -600,160 +530,42 @@
                 </svg>
                 <span>Buka Undangan</span>
             </button>
-            <div class="cover-hint">Ketuk untuk membuka &amp; mendengarkan musik</div>
+            <div class="cover-hint">Ketuk untuk membuka &amp; memutar video</div>
         </div>
     </div>
 
-    <!-- ③ CONTENT LAYER (panels that fade over the same marble bg) -->
+    <!-- ③ CONTENT LAYER — fullscreen looping video -->
     <div id="contentLayer">
-
-        <!-- Tap zones for prev/next -->
-        <div class="tap-left" onclick="prevPanel()"></div>
-        <div class="tap-right" onclick="nextPanel()"></div>
-
-        <!-- PANEL 0: Monogram (same as cover) -->
-        <div class="panel active" id="panel0">
-            <div class="monogram-ring" style="width:260px;height:260px;">
-                <svg viewBox="0 0 260 260" class="monogram-svg">
-                    <defs>
-                        <path id="arcTopC" d="M 40,130 A 90,90 0 0,1 220,130" fill="none"/>
-                        <path id="arcBotC" d="M 40,130 A 90,90 0 0,0 220,130" fill="none"/>
-                    </defs>
-                    <circle cx="130" cy="130" r="90" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="0.8"/>
-                    <text class="ring-name-text">
-                        <textPath href="#arcTopC" startOffset="50%" text-anchor="middle">
-                            {{ strtoupper($wedding->groom_nickname ?: 'ANDREW') }}
-                        </textPath>
-                    </text>
-                    <text class="ring-name-text">
-                        <textPath href="#arcBotC" startOffset="50%" text-anchor="middle">
-                            {{ strtoupper($wedding->bride_nickname ?: 'LUCIA') }}
-                        </textPath>
-                    </text>
+        <div class="video-wrapper" onclick="toggleVideoPlayback()">
+            <video id="weddingVideo"
+                   src="{{ asset('videos/Undangan_Findi_Nazil_v7.mp4') }}"
+                   class="wedding-video"
+                   playsinline
+                   loop
+                   muted></video>
+            <!-- Play badge (shows when paused) -->
+            <div class="video-play-badge" id="videoBadge">
+                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
                 </svg>
-                <div class="botanical">
-                    <div class="dot"></div>
-                    <svg class="rose" viewBox="0 0 64 64" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M32 52 Q30 42 32 36"/>
-                        <path d="M32 44 Q22 40 20 34 Q28 34 32 40"/>
-                        <path d="M32 40 Q42 36 44 30 Q36 32 32 38"/>
-                        <path d="M32 12 C28 16 22 18 22 24 C22 30 27 33 32 34 C37 33 42 30 42 24 C42 18 36 16 32 12Z"/>
-                        <path d="M24 16 C18 14 14 18 15 24 C16 28 20 31 25 32"/>
-                        <path d="M40 16 C46 14 50 18 49 24 C48 28 44 31 39 32"/>
-                        <path d="M20 26 C16 30 16 36 20 38 C24 36 27 32 27 27"/>
-                        <path d="M44 26 C48 30 48 36 44 38 C40 36 37 32 37 27"/>
-                        <path d="M29 20 C29 24 30 27 32 28 C34 27 35 24 35 20 C34 18 30 18 29 20Z"/>
-                    </svg>
-                    <div class="dot"></div>
-                </div>
             </div>
-        </div>
-
-        <!-- PANEL 1: Save The Date -->
-        <div class="panel" id="panel1">
-            <div style="font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.3em; color:rgba(255,255,255,0.75); text-transform:uppercase; margin-bottom:1.5rem;">
-                Save The Date
-            </div>
-            <div class="date-circle">
-                <div class="date-day">
-                    {{ $wedding->event_date ? $wedding->event_date->isoFormat('dddd') : 'Saturday' }}
-                </div>
-                <div class="date-num">
-                    {{ $wedding->event_date ? $wedding->event_date->format('d') : '10' }}
-                </div>
-                <div class="date-month-year">
-                    {{ $wedding->event_date ? $wedding->event_date->isoFormat('MMMM Y') : 'July 2021' }}
-                </div>
-            </div>
-        </div>
-
-        <!-- PANEL 2: We Invite You -->
-        <div class="panel" id="panel2">
-            <div class="invite-line">
-                WE INVITE YOU<br>
-                TO CELEBRATE<br>
-                OUR WEDDING
-            </div>
-        </div>
-
-        <!-- PANEL 3: Scripture -->
-        <div class="panel" id="panel3">
-            <div class="verse">
-                &ldquo;So, they are no longer two, but one.<br>
-                Therefore what God has joined together,<br>
-                let man not separate.&rdquo;
-                <span class="verse-ref">&bull; Matthew 19:6 &bull;</span>
-            </div>
-            <div class="verse-sub">
-                Request the honour of your presence<br>at the marriage of our beloved children
-            </div>
-        </div>
-
-        <!-- PANEL 4: The Couple -->
-        <div class="panel" id="panel4">
-            <div class="couple-name">{{ $wedding->groom_name }}</div>
-            @if($wedding->groom_parents)
-                <div class="couple-parents">{{ $wedding->groom_parents }}</div>
-            @endif
-            <div class="couple-amp">&amp;</div>
-            <div class="couple-name">{{ $wedding->bride_name }}</div>
-            @if($wedding->bride_parents)
-                <div class="couple-parents">{{ $wedding->bride_parents }}</div>
-            @endif
-        </div>
-
-        <!-- PANEL 5: Events -->
-        <div class="panel" id="panel5">
-            @if($wedding->ceremony_date)
-                <div class="event-block">
-                    <div class="event-title">Holy Matrimony</div>
-                    <div class="event-time">{{ $wedding->ceremony_date->format('H:i') }} WIB</div>
-                    <div class="event-place">{{ $wedding->ceremony_location_name }}</div>
-                    <div class="event-addr">{{ $wedding->ceremony_address }}</div>
-                </div>
-            @endif
-            <div class="event-block">
-                <div class="event-title">Wedding Reception</div>
-                <div class="event-time">{{ $wedding->event_date ? $wedding->event_date->format('H:i') . ' WIB' : '18:00 WIB' }}</div>
-                <div class="event-place">{{ $wedding->event_location_name }}</div>
-                <div class="event-addr">{{ $wedding->event_address }}</div>
-            </div>
-        </div>
-
-        <!-- PANEL 6: Kindly Deliver -->
-        <div class="panel" id="panel6">
-            <div class="deliver-title">Kindly deliver to You</div>
-            <div class="deliver-guest">{{ $guestName }}</div>
-            @if($guest)
-                <div class="deliver-pax">{{ $guest->group_name ?: 'Tamu Undangan' }} &bull; {{ $guest->pax ?: 1 }} Pax</div>
-            @endif
-        </div>
-
-        <!-- PANEL 7: Thank You -->
-        <div class="panel" id="panel7">
-            <div class="thankyou-text">Thank you</div>
-            <button type="button" class="btn-details" onclick="openDrawer()">
-                <span>Rincian &amp; RSVP</span>
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path d="M19 9l-7 7-7-7"/>
-                </svg>
-            </button>
-        </div>
-
-        <!-- Nav Dots -->
-        <div class="nav-dots" id="navDots">
-            @for($i = 0; $i < 8; $i++)
-                <div class="nav-dot {{ $i === 0 ? 'active' : '' }}" onclick="goPanel({{ $i }})"></div>
-            @endfor
         </div>
     </div>
 
     <!-- ④ Bottom Controls (visible after open) -->
     <div class="bottom-controls" id="bottomControls" style="display:none;">
-        <button type="button" class="btn-music" id="btnMusic" onclick="toggleMusic()" title="Musik">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M9 18V5l12-2v13"/>
-                <circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+        <button type="button" class="btn-sound" id="btnSound" onclick="toggleVideoMute()" title="Suara">
+            <!-- Sound ON icon -->
+            <svg id="iconSoundOn" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+            <!-- Sound OFF icon (hidden by default) -->
+            <svg id="iconSoundOff" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
             </svg>
         </button>
         <button type="button" class="btn-open-drawer" onclick="openDrawer()">
@@ -767,8 +579,12 @@
     <!-- ⑤ Bottom Sheet Drawer -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="onDrawerBg(event)">
         <div class="drawer-sheet">
-            <div class="drawer-pill" onclick="closeDrawer()"></div>
+            <!-- Pill handle (outside sticky head, scrolls away) -->
+            <div class="drawer-pill-wrap">
+                <div class="drawer-pill" onclick="closeDrawer()"></div>
+            </div>
 
+            <!-- STICKY HEADER -->
             <div class="drawer-head">
                 <div class="drawer-head-title">Informasi &amp; Kehadiran</div>
                 <button type="button" class="btn-close-drawer" onclick="closeDrawer()">
@@ -778,236 +594,274 @@
                 </button>
             </div>
 
-            {{-- VIP QR Ticket --}}
-            @if($guest)
-                <div class="d-card" style="text-align:center;">
-                    <div class="d-card-head" style="justify-content:center;">TIKET MASUK VIP &bull; QR CHECK-IN</div>
-                    <div style="font-family:'Cinzel',serif; font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:3px;">{{ $guest->name }}</div>
-                    <div style="font-size:0.7rem; color:rgba(255,255,255,0.55); margin-bottom:0.75rem;">Tunjukkan QR ini ke petugas saat tiba di lokasi.</div>
-                    <div class="qr-wrap">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data={{ urlencode($guest->qr_code) }}" alt="QR" style="display:block; width:124px; height:124px;">
-                    </div>
-                    <div style="font-family:monospace; font-weight:800; font-size:0.9rem; color:#fff; margin-top:4px;">{{ $guest->qr_code }}</div>
-                    <div style="font-size:0.65rem; color:rgba(255,255,255,0.5); margin-top:2px;">Kuota: {{ $guest->pax ?: 1 }} orang &bull; {{ $guest->group_name ?: 'Tamu' }}</div>
-                </div>
-            @endif
+            <!-- SCROLLABLE BODY -->
+            <div class="drawer-body">
 
-            {{-- Waktu & Lokasi --}}
-            <div class="d-card">
-                <div class="d-card-head">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                    Waktu &amp; Lokasi Acara
-                </div>
-
-                @if($wedding->ceremony_date)
-                    <div style="margin-bottom:0.9rem; padding-bottom:0.85rem; border-bottom:1px solid rgba(255,255,255,0.07);">
-                        <div style="font-size:0.68rem; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Akad Nikah / Pemberkatan</div>
-                        <div style="font-family:'Cinzel',serif; font-size:0.84rem; font-weight:700; color:#fff; margin:2px 0;">{{ $wedding->ceremony_date->isoFormat('dddd, D MMMM Y') }} &bull; {{ $wedding->ceremony_date->format('H:i') }} WIB</div>
-                        <div style="font-size:0.78rem; font-weight:600; color:#fff;">{{ $wedding->ceremony_location_name }}</div>
-                        <div style="font-size:0.7rem; color:rgba(255,255,255,0.5); margin-top:2px;">{{ $wedding->ceremony_address }}</div>
+                {{-- VIP QR Ticket --}}
+                @if($guest)
+                    <div class="d-card" style="text-align:center;">
+                        <div class="d-card-head" style="justify-content:center;">TIKET MASUK VIP &bull; QR CHECK-IN</div>
+                        <div style="font-family:'Cinzel',serif; font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:3px;">{{ $guest->name }}</div>
+                        <div style="font-size:0.7rem; color:rgba(255,255,255,0.55); margin-bottom:0.75rem;">Tunjukkan QR ini ke petugas saat tiba di lokasi.</div>
+                        <div class="qr-wrap">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data={{ urlencode($guest->qr_code) }}" alt="QR" style="display:block; width:124px; height:124px;">
+                        </div>
+                        <div style="font-family:monospace; font-weight:800; font-size:0.9rem; color:#fff; margin-top:4px;">{{ $guest->qr_code }}</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.5); margin-top:2px;">Kuota: {{ $guest->pax ?: 1 }} orang &bull; {{ $guest->group_name ?: 'Tamu' }}</div>
                     </div>
                 @endif
 
-                <div>
-                    <div style="font-size:0.68rem; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Resepsi Pernikahan</div>
-                    <div style="font-family:'Cinzel',serif; font-size:0.84rem; font-weight:700; color:#fff; margin:2px 0;">
-                        {{ $wedding->event_date ? $wedding->event_date->isoFormat('dddd, D MMMM Y') . ' &bull; ' . $wedding->event_date->format('H:i') . ' WIB' : '-' }}
-                    </div>
-                    <div style="font-size:0.78rem; font-weight:600; color:#fff;">{{ $wedding->event_location_name }}</div>
-                    <div style="font-size:0.7rem; color:rgba(255,255,255,0.5); margin-top:2px;">{{ $wedding->event_address }}</div>
-                    <div style="display:flex; gap:8px; margin-top:0.85rem; flex-wrap:wrap;">
-                        @if($wedding->event_map_url)
-                            <a href="{{ $wedding->event_map_url }}" target="_blank" class="btn-pill" style="flex:1;">
-                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                Google Maps
-                            </a>
-                        @endif
-                        <a href="https://waze.com/ul?q={{ urlencode($wedding->event_location_name ?: $wedding->event_address) }}" target="_blank" class="btn-pill" style="flex:1;">Waze</a>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Amplop Digital --}}
-            @if($wedding->digital_envelope_enabled)
-                <div class="d-card" style="text-align:center;">
-                    <div class="d-card-head" style="justify-content:center;">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
-                        Amplop Digital
-                    </div>
-                    <p style="font-size:0.72rem; color:rgba(255,255,255,0.55); margin-bottom:0.85rem; line-height:1.45;">Doa restu Anda merupakan karunia terindah bagi kami.</p>
-
-                    @if($wedding->bank_name && $wedding->bank_account_number)
-                        <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:0.95rem; margin-bottom:0.75rem;">
-                            <div style="font-family:'Cinzel',serif; font-size:0.82rem; font-weight:700; color:#fff;">{{ $wedding->bank_name }}</div>
-                            <div style="font-family:monospace; font-size:1.1rem; font-weight:800; color:#fff; margin:0.25rem 0;">{{ $wedding->bank_account_number }}</div>
-                            <div style="font-size:0.68rem; color:rgba(255,255,255,0.5); margin-bottom:0.6rem;">a.n. {{ $wedding->bank_account_name }}</div>
-                            <button type="button" onclick="copyText('{{ $wedding->bank_account_number }}')" class="btn-pill">Salin Nomor</button>
-                        </div>
-                    @endif
-
-                    @if($wedding->ewallet_name && $wedding->ewallet_number)
-                        <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:0.95rem;">
-                            <div style="font-family:'Cinzel',serif; font-size:0.82rem; font-weight:700; color:#fff;">{{ $wedding->ewallet_name }}</div>
-                            <div style="font-family:monospace; font-size:1.1rem; font-weight:800; color:#fff; margin:0.25rem 0;">{{ $wedding->ewallet_number }}</div>
-                            <div style="font-size:0.68rem; color:rgba(255,255,255,0.5); margin-bottom:0.6rem;">a.n. {{ $wedding->ewallet_account_name }}</div>
-                            <button type="button" onclick="copyText('{{ $wedding->ewallet_number }}')" class="btn-pill">Salin Nomor</button>
-                        </div>
-                    @endif
-                </div>
-            @endif
-
-            {{-- RSVP Form --}}
-            <div class="d-card">
-                <div class="d-card-head">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    Konfirmasi Kehadiran &amp; Ucapan
-                </div>
-
-                <form action="{{ route('wedding.wish', ['slug' => $wedding->slug]) }}" method="POST" onsubmit="onSubmitRsvp(event)">
-                    @csrf
-                    <input type="hidden" name="guest_id" value="{{ $guest ? $guest->id : '' }}">
-                    <input type="text" name="sender_name" class="d-input" placeholder="Nama Anda"
-                           value="{{ $guest ? $guest->name : ($guestName !== 'Tamu Undangan' ? $guestName : '') }}" required>
-                    <input type="text" name="city" class="d-input" list="cityList" placeholder="Kota Asal">
-                    <datalist id="cityList">
-                        <option value="Jakarta"><option value="Surabaya"><option value="Bandung">
-                        <option value="Medan"><option value="Semarang"><option value="Yogyakarta">
-                        <option value="Bali"><option value="Makassar">
-                    </datalist>
-                    <select name="attendance" class="d-input">
-                        <option value="hadir">Saya Akan Hadir</option>
-                        <option value="tidak">Maaf, Berhalangan Hadir</option>
-                        <option value="ragu">Masih Ragu</option>
-                    </select>
-                    <textarea name="message" class="d-textarea" placeholder="Tulis doa restu & ucapan Anda..." required></textarea>
-                    <button type="submit" class="btn-submit" id="btnRsvp">Kirim Doa Restu</button>
-                </form>
-            </div>
-
-            {{-- Wishes --}}
-            @if(isset($wishes) && $wishes->count() > 0)
+                {{-- Waktu & Lokasi --}}
                 <div class="d-card">
-                    <div class="d-card-head">Ucapan &amp; Doa ({{ $wishes->count() }})</div>
-                    <div style="max-height:200px; overflow-y:auto;">
-                        @foreach($wishes as $wish)
-                            <div class="wish-box">
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <div class="wish-sender">{{ $wish->sender_name }}</div>
-                                    <div class="wish-time">{{ $wish->created_at?->diffForHumans() }}</div>
-                                </div>
-                                <div class="wish-msg">{{ $wish->message }}</div>
+                    <div class="d-card-head">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        Waktu &amp; Lokasi Acara
+                    </div>
+
+                    @if($wedding->ceremony_date)
+                        <div>
+                            <div class="event-label">Akad Nikah / Pemberkatan</div>
+                            <div class="event-datetime">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                {{ $wedding->ceremony_date->isoFormat('dddd, D MMMM Y') }}
+                                <span class="ev-sep">&bull;</span>
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                {{ $wedding->ceremony_date->format('H:i') }} WIB
                             </div>
-                        @endforeach
+                            <div class="event-venue">{{ $wedding->ceremony_location_name }}</div>
+                            <div class="event-addr-text">{{ $wedding->ceremony_address }}</div>
+                        </div>
+                        <hr class="event-divider">
+                    @endif
+
+                    <div>
+                        <div class="event-label">Resepsi Pernikahan</div>
+                        <div class="event-datetime">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            @if($wedding->event_date)
+                                {{ $wedding->event_date->isoFormat('dddd, D MMMM Y') }}
+                                <span class="ev-sep">&bull;</span>
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                {{ $wedding->event_date->format('H:i') }} WIB
+                            @else
+                                -
+                            @endif
+                        </div>
+                        <div class="event-venue">{{ $wedding->event_location_name }}</div>
+                        <div class="event-addr-text">{{ $wedding->event_address }}</div>
+                        <div style="display:flex; gap:8px; margin-top:0.85rem; flex-wrap:wrap;">
+                            @if($wedding->event_map_url)
+                                <a href="{{ $wedding->event_map_url }}" target="_blank" class="btn-pill" style="flex:1;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    Google Maps
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            @endif
 
-            <div style="text-align:center; padding-top:0.75rem;">
-                <div style="font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.18em; color:rgba(255,255,255,0.35);">
-                    BUYLE.ID &bull; DIGITAL WEDDING
+                {{-- Amplop Digital --}}
+                @if($wedding->digital_envelope_enabled)
+                    <div class="d-card" style="text-align:center;">
+                        <div class="d-card-head" style="justify-content:center;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+                            Amplop Digital
+                        </div>
+                        <p style="font-size:0.72rem; color:rgba(255,255,255,0.55); margin-bottom:0.85rem; line-height:1.45;">Doa restu Anda merupakan karunia terindah bagi kami.</p>
+
+                        @if($wedding->bank_name && $wedding->bank_account_number)
+                            <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:0.95rem; margin-bottom:0.75rem;">
+                                <div style="font-family:'Cinzel',serif; font-size:0.82rem; font-weight:700; color:#fff;">{{ $wedding->bank_name }}</div>
+                                <div style="font-family:monospace; font-size:1.1rem; font-weight:800; color:#fff; margin:0.25rem 0;">{{ $wedding->bank_account_number }}</div>
+                                <div style="font-size:0.68rem; color:rgba(255,255,255,0.5); margin-bottom:0.6rem;">a.n. {{ $wedding->bank_account_name }}</div>
+                                <button type="button" onclick="copyText('{{ $wedding->bank_account_number }}')" class="btn-pill">Salin Nomor</button>
+                            </div>
+                        @endif
+
+                        @if($wedding->ewallet_name && $wedding->ewallet_number)
+                            <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:0.95rem;">
+                                <div style="font-family:'Cinzel',serif; font-size:0.82rem; font-weight:700; color:#fff;">{{ $wedding->ewallet_name }}</div>
+                                <div style="font-family:monospace; font-size:1.1rem; font-weight:800; color:#fff; margin:0.25rem 0;">{{ $wedding->ewallet_number }}</div>
+                                <div style="font-size:0.68rem; color:rgba(255,255,255,0.5); margin-bottom:0.6rem;">a.n. {{ $wedding->ewallet_account_name }}</div>
+                                <button type="button" onclick="copyText('{{ $wedding->ewallet_number }}')" class="btn-pill">Salin Nomor</button>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+
+                {{-- RSVP Form --}}
+                <div class="d-card">
+                    <div class="d-card-head">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Konfirmasi Kehadiran &amp; Ucapan
+                    </div>
+
+                    <form action="{{ route('wedding.wish', ['slug' => $wedding->slug]) }}" method="POST" onsubmit="onSubmitRsvp(event)">
+                        @csrf
+                        <input type="hidden" name="guest_id" value="{{ $guest ? $guest->id : '' }}">
+                        <input type="text" name="sender_name" class="d-input" placeholder="Nama Anda"
+                               value="{{ $guest ? $guest->name : ($guestName !== 'Tamu Undangan' ? $guestName : '') }}" required>
+
+                        <!-- Kota Asal dengan deteksi lokasi -->
+                        <div class="city-input-wrap">
+                            <input type="text" name="city" id="cityInput" class="d-input"
+                                   list="cityList" placeholder="Kota Asal (atau deteksi otomatis)">
+                            <datalist id="cityList">
+                                <option value="Jakarta"><option value="Surabaya"><option value="Bandung">
+                                <option value="Medan"><option value="Semarang"><option value="Yogyakarta">
+                                <option value="Bali"><option value="Makassar"><option value="Purwokerto">
+                                <option value="Solo"><option value="Malang"><option value="Palembang">
+                            </datalist>
+                            <button type="button" class="btn-detect-loc" id="btnDetectLoc"
+                                    onclick="detectMyCity()" title="Deteksi lokasi saya">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+                                    <path d="M12 2a10 10 0 1 0 10 10"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <select name="attendance" class="d-input">
+                            <option value="hadir">Saya Akan Hadir</option>
+                            <option value="tidak">Maaf, Berhalangan Hadir</option>
+                            <option value="ragu">Masih Ragu</option>
+                        </select>
+                        <textarea name="message" class="d-textarea" placeholder="Tulis doa restu & ucapan Anda..." required></textarea>
+                        <button type="submit" class="btn-submit" id="btnRsvp">Kirim Doa Restu</button>
+                    </form>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Background Music -->
-    <audio id="bgAudio" loop preload="auto">
-        @if($wedding->music_url)
-            <source src="{{ $wedding->music_url }}" type="audio/mpeg">
-        @else
-            <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-wedding-love-680.mp3" type="audio/mpeg">
-        @endif
-    </audio>
-</div>
+                {{-- Wishes --}}
+                @if(isset($wishes) && $wishes->count() > 0)
+                    <div class="d-card">
+                        <div class="d-card-head">Ucapan &amp; Doa ({{ $wishes->count() }})</div>
+                        <div style="max-height:200px; overflow-y:auto;">
+                            @foreach($wishes as $wish)
+                                <div class="wish-box">
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <div class="wish-sender">{{ $wish->sender_name }}</div>
+                                        <div class="wish-time">{{ $wish->created_at?->diffForHumans() }}</div>
+                                    </div>
+                                    <div class="wish-msg">{{ $wish->message }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                <div style="text-align:center; padding-top:0.75rem;">
+                    <div style="font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.18em; color:rgba(255,255,255,0.35);">
+                        BUYLE.ID &bull; DIGITAL WEDDING
+                    </div>
+                </div>
+
+            </div>{{-- end .drawer-body --}}
+        </div>{{-- end .drawer-sheet --}}
+    </div>{{-- end .drawer-overlay --}}
+
+</div>{{-- end .phone-wrap --}}
 
 <!-- Toast -->
 <div id="toast">Nomor Berhasil Disalin!</div>
 
 <script>
-    /* ── Config ── */
-    const TOTAL = 8;
-    const DURATION = 5500; // ms per panel
-
-    let cur = 0;
-    let timer = null;
-    let startTime = 0;
-    let paused = false;
-    let musicPlaying = false;
-    const audio = document.getElementById('bgAudio');
+    /* ── Video elements ── */
+    const video = document.getElementById('weddingVideo');
+    const videoBadge = document.getElementById('videoBadge');
+    const iconSoundOn = document.getElementById('iconSoundOn');
+    const iconSoundOff = document.getElementById('iconSoundOff');
 
     /* ── Open Invitation ── */
     function openInvitation() {
         document.getElementById('coverLayer').classList.add('hide');
         document.getElementById('contentLayer').classList.add('show');
         document.getElementById('bottomControls').style.display = 'flex';
-        playMusic();
-        startAutoPlay();
+        // Start video playback (muted for autoplay policy)
+        video.muted = true;
+        video.play().then(() => {
+            // Video started, hide badge
+            videoBadge.classList.remove('show');
+            // Show sound-on icon since video is muted initially
+            iconSoundOn.style.display = 'none';
+            iconSoundOff.style.display = 'block';
+        }).catch(() => {
+            videoBadge.classList.add('show');
+        });
     }
 
-    /* ── Auto-play engine ── */
-    function startAutoPlay() {
-        stopAutoPlay();
-        startTime = performance.now();
-        (function tick(now) {
-            if (!paused) {
-                const elapsed = now - startTime;
-                if (elapsed >= DURATION) {
-                    const next = cur + 1 < TOTAL ? cur + 1 : cur;
-                    if (next !== cur) goPanel(next);
-                    else stopAutoPlay();
-                    return;
-                }
-            }
-            timer = requestAnimationFrame(tick);
-        })(startTime);
+    /* ── Toggle video play/pause on tap ── */
+    function toggleVideoPlayback() {
+        if (video.paused) {
+            video.play();
+            videoBadge.classList.remove('show');
+        } else {
+            video.pause();
+            videoBadge.classList.add('show');
+        }
     }
 
-    function stopAutoPlay() {
-        if (timer) { cancelAnimationFrame(timer); timer = null; }
+    /* ── Toggle video sound ── */
+    function toggleVideoMute() {
+        video.muted = !video.muted;
+        if (video.muted) {
+            iconSoundOn.style.display = 'none';
+            iconSoundOff.style.display = 'block';
+        } else {
+            iconSoundOn.style.display = 'block';
+            iconSoundOff.style.display = 'none';
+        }
     }
-
-    function goPanel(index) {
-        if (index < 0 || index >= TOTAL) return;
-        document.getElementById('panel' + cur).classList.remove('active');
-        document.querySelectorAll('.nav-dot')[cur].classList.remove('active');
-        cur = index;
-        document.getElementById('panel' + cur).classList.add('active');
-        document.querySelectorAll('.nav-dot')[cur].classList.add('active');
-        if (cur < TOTAL - 1) startAutoPlay();
-    }
-
-    function nextPanel() { goPanel(cur < TOTAL - 1 ? cur + 1 : cur); }
-    function prevPanel() { goPanel(cur > 0 ? cur - 1 : 0); }
 
     /* ── Drawer ── */
     function openDrawer() {
-        paused = true;
         document.getElementById('drawerOverlay').classList.add('open');
     }
     function closeDrawer() {
         document.getElementById('drawerOverlay').classList.remove('open');
-        paused = false;
-        startAutoPlay();
     }
     function onDrawerBg(e) {
         if (e.target.id === 'drawerOverlay') closeDrawer();
     }
 
-    /* ── Music ── */
-    function playMusic() {
-        audio.play().then(() => {
-            musicPlaying = true;
-            document.getElementById('btnMusic').classList.add('spin');
-        }).catch(() => {});
-    }
-    function toggleMusic() {
-        if (audio.paused) {
-            audio.play(); musicPlaying = true;
-            document.getElementById('btnMusic').classList.add('spin');
-        } else {
-            audio.pause(); musicPlaying = false;
-            document.getElementById('btnMusic').classList.remove('spin');
+    /* ── Geolocation detect city ── */
+    function detectMyCity() {
+        if (!navigator.geolocation) {
+            showToast('Browser tidak mendukung deteksi lokasi');
+            return;
         }
+        const btn = document.getElementById('btnDetectLoc');
+        const input = document.getElementById('cityInput');
+        btn.classList.add('detecting');
+        input.placeholder = 'Mendeteksi lokasi...';
+
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                // Reverse geocode via Nominatim (free, no API key)
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&accept-language=id`)
+                    .then(r => r.json())
+                    .then(data => {
+                        btn.classList.remove('detecting');
+                        const addr = data.address || {};
+                        const city = addr.city || addr.town || addr.village || addr.county || addr.state || 'Lokasi Terdeteksi';
+                        input.value = city;
+                        input.placeholder = 'Kota Asal (atau deteksi otomatis)';
+                    })
+                    .catch(() => {
+                        btn.classList.remove('detecting');
+                        input.placeholder = 'Kota Asal (atau deteksi otomatis)';
+                        showToast('Gagal mendapatkan nama kota');
+                    });
+            },
+            function() {
+                btn.classList.remove('detecting');
+                input.placeholder = 'Kota Asal (atau deteksi otomatis)';
+                showToast('Izin lokasi ditolak');
+            },
+            { timeout: 8000, maximumAge: 60000 }
+        );
     }
 
     /* ── Copy & Toast ── */
@@ -1020,7 +874,12 @@
             t.select(); document.execCommand('copy');
             document.body.removeChild(t);
         }
+        showToast('Nomor Berhasil Disalin!');
+    }
+
+    function showToast(msg) {
         const toast = document.getElementById('toast');
+        toast.textContent = msg;
         toast.style.opacity = '1';
         setTimeout(() => toast.style.opacity = '0', 2400);
     }
