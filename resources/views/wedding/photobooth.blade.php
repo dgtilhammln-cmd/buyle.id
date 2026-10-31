@@ -106,14 +106,17 @@
             transition: transform 0.2s ease, filter 0.2s ease;
         }
 
-        /* Keep video stream actively decoding in DOM on Safari & Mobile Chrome */
+        /* Keep video stream actively decoding in DOM on Safari & Mobile Chrome without being throttled */
         video#cameraVideo.visually-hidden-feed {
             position: absolute !important;
-            opacity: 0.001 !important;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            opacity: 0.005 !important;
             pointer-events: none !important;
-            z-index: -10 !important;
-            width: 1px !important;
-            height: 1px !important;
+            z-index: 1 !important;
+            object-fit: cover !important;
         }
 
         /* Container for 3 sequential arch slots */
@@ -835,7 +838,7 @@
             <div id="liveGridGuide" class="live-grid-guide"></div>
 
             {{-- Custom PNG Frame Overlay (Real-time over live camera) --}}
-            <img id="liveCustomFrameImg" class="frame-overlay-img" alt="" onerror="this.style.display='none';">
+            <img id="liveCustomFrameImg" class="frame-overlay-img" alt="" style="display:none;" onerror="this.style.display='none';">
 
             {{-- Multi-Shot Progress HUD --}}
             <div id="shotHud" class="shot-hud" style="display:none;">
@@ -1338,6 +1341,9 @@
                 if (videoBgEl) videoBgEl.srcObject = stream;
                 uploadedImageObj = null;
 
+                try { await videoEl.play(); } catch(e) {}
+                if (videoBgEl) { try { await videoBgEl.play(); } catch(e) {} }
+
                 applyTransform();
                 applyFilterToVideo();
                 startLiveRenderLoop();
@@ -1351,6 +1357,10 @@
                     videoEl.srcObject = stream;
                     if (videoBgEl) videoBgEl.srcObject = stream;
                     uploadedImageObj = null;
+
+                    try { await videoEl.play(); } catch(e) {}
+                    if (videoBgEl) { try { await videoBgEl.play(); } catch(e) {} }
+
                     applyTransform();
                     applyFilterToVideo();
                     startLiveRenderLoop();
@@ -1818,17 +1828,30 @@
                 ctx.restore();
 
             } else if (shots === 1 || isStaticUpload) {
-                    // Layout 3: Classic Photobooth 3-Strip
-                    const marginX = 60;
-                    const cardW = 960;
-                    const gap = 20;
-                    const topY = 60;
-                    const cardH = 586;
+                // Layout 1: Single Photo Full
+                drawCroppedToRect(ctx, capturedList[0], 0, 0, 1080, 1920, 0);
 
-                    for (let k = 0; k < 3; k++) {
-                        const y = topY + k * (cardH + gap);
-                        drawCroppedToRect(ctx, capturedList[k], marginX, y, cardW, cardH, 20);
-                    }
+            } else if (shots === 2) {
+                // Layout 2: 2 Photo Split Vertical
+                const marginX = 60;
+                const cardW = 960;
+                const topY = 80;
+                const cardH = 860;
+                const gap = 40;
+                drawCroppedToRect(ctx, capturedList[0], marginX, topY, cardW, cardH, 20);
+                drawCroppedToRect(ctx, capturedList[1] || capturedList[0], marginX, topY + cardH + gap, cardW, cardH, 20);
+
+            } else if (shots === 3) {
+                // Layout 3: Classic Photobooth 3-Strip
+                const marginX = 60;
+                const cardW = 960;
+                const gap = 20;
+                const topY = 60;
+                const cardH = 586;
+
+                for (let k = 0; k < 3; k++) {
+                    const y = topY + k * (cardH + gap);
+                    drawCroppedToRect(ctx, capturedList[k] || capturedList[0], marginX, y, cardW, cardH, 20);
                 }
 
             } else if (shots === 4) {
@@ -2010,6 +2033,16 @@
 
         // Inisialisasi awal saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
+            // Siapkan placeholder visual di slot canvas agar tidak blank saat pertama dimuat
+            const c1 = document.getElementById('archCanvas1');
+            if (c1) drawPlaceholder(c1.getContext('2d'), 560, 580, 'Pose 1 (Atas)', 'Menyiapkan kamera...');
+            const c2 = document.getElementById('archCanvas2');
+            if (c2) drawPlaceholder(c2.getContext('2d'), 560, 500, 'Pose 2 (Tengah)', 'Menunggu Pose 1');
+            const c3 = document.getElementById('archCanvas3');
+            if (c3) drawPlaceholder(c3.getContext('2d'), 560, 580, 'Pose 3 (Bawah)', 'Menunggu Pose 2');
+            const cDigi = document.getElementById('digicamCanvas');
+            if (cDigi) drawPlaceholder(cDigi.getContext('2d'), 860, 1342, 'Vintage Digicam', 'Menyiapkan kamera...');
+
             // Pasang custom frame pertama jika tersedia
             if (CUSTOM_FRAMES && CUSTOM_FRAMES.length > 0) {
                 const firstPill = document.querySelector('#carouselFrame .selector-pill');
@@ -2017,9 +2050,6 @@
             } else {
                 liveCustomFrameImg.style.display = 'none';
             }
-
-            // Buka tab Filter Warna secara default agar tamu langsung bisa memilih filter
-            switchControlMode('filter');
 
             startCamera();
         });
