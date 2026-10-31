@@ -85,6 +85,7 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/c/{slug}/{groupSlug?}', [\App\Http\Controllers\CreatorStoreController::class, 'show'])->name('store.show');
     Route::get('/toko/{slug}', fn($slug) => redirect()->route('store.show', $slug, 301))->name('store.show.legacy');
     Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
+    Route::get('/tools/convert-file', [\App\Http\Controllers\ToolController::class, 'convertFile'])->name('tools.convert_file');
     Route::get('/ticketing',      [\App\Http\Controllers\TicketingController::class, 'index'])->name('ticketing');
     Route::get('/kontak',         [ContactController::class,'index'])->name('contact');
     Route::post('/kontak',        [ContactController::class,'send'])->name('contact.send');

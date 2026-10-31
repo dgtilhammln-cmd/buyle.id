@@ -12,7 +12,7 @@ class BioPageController extends Controller
         'login', 'register', 'logout', 'admin', 'creator', 'c', 'api',
         'shop', 'catalog', 'account', 'checkout', 'cart', 'about',
         'contact', 'terms', 'privacy', 'sitemap', 'robots.txt',
-        'password', 'verify', 'email', 'dashboard', 'home',
+        'password', 'verify', 'email', 'dashboard', 'home', 'tools',
     ];
 
     public function show(string $username)

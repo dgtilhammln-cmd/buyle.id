@@ -257,6 +257,61 @@
         color: #16a34a;
     }
 
+    /* Submenu Tools in Shortcut Dropdown */
+    .shortcut-submenu-wrap {
+        position: relative;
+    }
+
+    .shortcut-submenu-wrap .shortcut-arrow {
+        color: #94A3B8;
+        transition: transform 0.2s ease, color 0.15s ease;
+    }
+
+    .shortcut-submenu-wrap.active .shortcut-arrow,
+    .shortcut-submenu-wrap:hover .shortcut-arrow {
+        transform: rotate(180deg);
+        color: #16a34a;
+    }
+
+    .shortcut-submenu-list {
+        display: none;
+        padding: 0.15rem 0.25rem 0.35rem 1.6rem;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .shortcut-submenu-wrap.active .shortcut-submenu-list,
+    .shortcut-submenu-wrap:hover .shortcut-submenu-list {
+        display: flex;
+    }
+
+    .shortcut-sub-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #475569;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .shortcut-sub-item svg {
+        color: #94A3B8;
+        transition: color 0.15s;
+    }
+
+    .shortcut-sub-item:hover {
+        background: #F0FDF4;
+        color: #16a34a;
+    }
+
+    .shortcut-sub-item:hover svg {
+        color: #16a34a;
+    }
+
     /* ── User Account Dropdown (Hover & Click) ── */
     #user-menu-wrap {
         position: relative;
@@ -985,8 +1040,34 @@
                             <line x1="12" y1="16" x2="12" y2="12"></line>
                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
-                        <span>Tentang Buyle</span>
+                        <span>Profil Buyle</span>
                     </a>
+
+                    <div class="shortcut-submenu-wrap">
+                        <div class="shortcut-menu-item shortcut-parent-item" onclick="this.parentElement.classList.toggle('active')" style="cursor: pointer; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 0.65rem;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                </svg>
+                                <span>Tools</span>
+                            </div>
+                            <svg class="shortcut-arrow" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="shortcut-submenu-list">
+                            <a href="{{ route('tools.convert_file') }}" class="shortcut-sub-item">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <span>Convert File</span>
+                            </a>
+                        </div>
+                    </div>
 
                     <a href="{{ route('ticketing') }}" class="shortcut-menu-item">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
