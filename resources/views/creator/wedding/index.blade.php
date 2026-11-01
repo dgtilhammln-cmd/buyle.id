@@ -1157,6 +1157,40 @@
                         </div>
                     </div>
 
+                    {{-- Card Tampilan Cover Undangan --}}
+                    <div class="prof-card" style="margin-bottom:0;">
+                        <div class="prof-card-head">
+                            <div class="head-title-wrap">
+                                <div class="head-icon">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                                        <path d="M3 9h18"></path>
+                                        <path d="M9 21V9"></path>
+                                    </svg>
+                                </div>
+                                <span>Tampilan Cover Undangan</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
+                                <div>
+                                    <div style="font-size:0.85rem; font-weight:700; color:#0f172a;">Tampilkan Card Tamu Undangan</div>
+                                    <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Jika dimatikan, cover halaman hanya menampilkan nama pengantin tanpa card Kepada Yth.</div>
+                                </div>
+                                <label id="labelGuestCardToggle" style="position:relative; display:inline-block; width:44px; height:24px; flex-shrink:0; margin-left:1rem; cursor:pointer;">
+                                    <input type="checkbox" id="chkShowGuestCard" name="show_guest_card" value="1"
+                                        {{ ($wedding->data_json['show_guest_card'] ?? true) ? 'checked' : '' }}
+                                        style="opacity:0; width:0; height:0; position:absolute;">
+                                    <span id="sliderGuestCard"
+                                        style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
+                                               background:{{ ($wedding->data_json['show_guest_card'] ?? true) ? '#22c55e' : '#cbd5e1' }};
+                                               border-radius:24px; transition:.3s;"
+                                        onclick="toggleGuestCardUI();"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="display:flex; justify-content:flex-end;">
                         <button type="submit" class="wb-btn-primary" style="padding:0.75rem 2rem; font-size:0.9rem;">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -3109,5 +3143,14 @@
                 setTimeout(() => initGuestDistributionMap(), 300);
             @endif
         });
+
+        // Toggle Tampilkan Card Tamu Undangan
+        function toggleGuestCardUI() {
+            var chk = document.getElementById('chkShowGuestCard');
+            var slider = document.getElementById('sliderGuestCard');
+            if (!chk || !slider) return;
+            chk.checked = !chk.checked;
+            slider.style.background = chk.checked ? '#22c55e' : '#cbd5e1';
+        }
     </script>
 @endsection

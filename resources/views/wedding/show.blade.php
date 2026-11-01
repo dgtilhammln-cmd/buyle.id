@@ -254,6 +254,20 @@
             letter-spacing: 0.06em;
         }
 
+        /* No guest card mode: center content vertically */
+        #coverLayer.no-guest-card {
+            justify-content: center;
+            gap: 3.5rem;
+        }
+
+        #coverLayer.no-guest-card .cover-hero {
+            margin-top: 0;
+        }
+
+        #coverLayer.no-guest-card .c-name {
+            font-size: 2.75rem;
+        }
+
         /* ── Content Layer (video fullscreen) ── */
         #contentLayer {
             position: absolute;
@@ -716,7 +730,7 @@
         <div class="bg-marble"></div>
 
         <!-- ② COVER LAYER -->
-        <div id="coverLayer">
+        <div id="coverLayer" class="{{ $showGuestCard ? '' : 'no-guest-card' }}">
             <!-- Simple elegant centered names -->
             <div class="cover-hero">
                 <div class="cover-eyebrow">The Wedding Celebration of</div>
@@ -727,6 +741,7 @@
                 </div>
             </div>
 
+            @if($showGuestCard)
             <!-- Guest Card -->
             <div class="guest-card">
                 <div class="guest-label">Kepada Yth. Bapak/Ibu/Saudara/i:</div>
@@ -735,6 +750,10 @@
                     <div class="guest-pax">{{ $guest->group_name ?: 'Tamu Undangan' }} &bull; {{ $guest->pax ?: 1 }} Pax</div>
                 @endif
             </div>
+            @else
+            {{-- Jika guest card dimatikan: spacer kosong --}}
+            <div></div>
+            @endif
 
             <!-- Open Button -->
             <div>
@@ -746,7 +765,7 @@
                     </svg>
                     <span>Buka Undangan</span>
                 </button>
-                <div class="cover-hint">Ketuk untuk membuka &amp; memutar video</div>
+                <div class="cover-hint">Ketuk untuk membuka.</div>
             </div>
         </div>
 
@@ -943,6 +962,7 @@
 
                     @php
                         $rekeningActive = $wedding->data_json['envelope_rekening_enabled'] ?? true;
+                        $showGuestCard  = $wedding->data_json['show_guest_card'] ?? true;
                     @endphp
 
                     {{-- Amplop Digital (Hanya tampil jika Rekening Manual diaktifkan) --}}

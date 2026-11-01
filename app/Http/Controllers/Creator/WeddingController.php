@@ -327,6 +327,11 @@ class WeddingController extends Controller
 
         $wedding->update($validated);
 
+        // Simpan pengaturan tampilan cover (data_json)
+        $dataJson = $wedding->data_json ?? [];
+        $dataJson['show_guest_card'] = $request->boolean('show_guest_card', true);
+        $wedding->update(['data_json' => $dataJson]);
+
         return redirect()->route('creator.wedding.index', ['tab' => 'tab-info', 'w' => $wedding->id])
             ->with('success', 'Informasi acara & mempelai berhasil disimpan!');
     }
