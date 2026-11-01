@@ -932,7 +932,7 @@
                         <p style="font-size:0.75rem; color:rgba(255,255,255,0.6); margin:6px 0 12px; line-height:1.45;">
                             Abadikan momen spesial Anda dengan bingkai eksklusif pernikahan kami secara langsung dari smartphone!
                         </p>
-                        <a href="{{ route('wedding.photobooth', $wedding->slug) }}" class="btn-pill" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:9px 16px; font-weight:700; text-decoration:none; background:linear-gradient(135deg, #ec4899, #f43f5e); color:#ffffff; border-color:transparent; box-shadow:0 4px 14px rgba(236,72,153,0.35);">
+                        <a href="{{ route('wedding.photobooth', $wedding->slug) }}" class="btn-pill" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:10px 18px; text-decoration:none; background:linear-gradient(135deg, #d4af37 0%, #f6e27a 45%, #e1b849 70%, #b8860b 100%); color:#0b0c10; font-family:'Cinzel', serif; font-weight:800; letter-spacing:0.05em; border-color:transparent; box-shadow:0 4px 18px rgba(212,175,55,0.38);">
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                                 <circle cx="12" cy="13" r="4"></circle>
@@ -1062,7 +1062,7 @@
                             {{-- Nominal Amplop Digital (Midtrans) - Selalu aktif agar tamu bisa kirim amplop digital kapan saja --}}
                             <div style="margin: 0.65rem 0; text-align: left;">
                                 <label style="font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                                    <svg width="13" height="13" fill="none" stroke="#f43f5e" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <svg width="13" height="13" fill="none" stroke="#d4af37" stroke-width="2.2" viewBox="0 0 24 24">
                                         <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                                         <line x1="2" y1="10" x2="22" y2="10"></line>
                                     </svg>
