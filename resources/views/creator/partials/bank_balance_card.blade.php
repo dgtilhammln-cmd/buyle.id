@@ -25,7 +25,7 @@
 
     <div class="bank-divider"></div>
 
-    <div class="bank-sub-list">
+    <div class="bank-sub-box">
         <div class="bank-sub-row">
             <div class="bank-sub-left">
                 <span>Hold Reguler</span>
@@ -52,7 +52,7 @@
 
         <div class="bank-sub-row">
             <div class="bank-sub-left">
-                <span>Deposit Kasir POS</span>
+                <span>Deposit POS</span>
                 <span class="bank-sub-tag kasir">Kasir</span>
             </div>
             <div class="bank-sub-right">
@@ -63,4 +63,3 @@
         </div>
     </div>
 </div>
-

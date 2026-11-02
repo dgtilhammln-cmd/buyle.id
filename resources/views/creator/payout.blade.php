@@ -27,23 +27,23 @@
             min-width: 0;
         }
 
-        /* ── Bank Super App Balance Card ── */
+        /* ── Bank Super App Balance Card (Buyle Light Theme) ── */
         .bank-balance-card {
-            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            background: #ffffff;
             border-radius: 18px;
-            padding: 1.35rem 1.25rem 1.15rem;
-            color: #ffffff;
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.22), 0 4px 10px -2px rgba(15, 23, 42, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.15rem;
+            color: #0f172a;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+            border: 1.5px solid #e2e8f0;
             position: relative;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .bank-balance-card .bank-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.65rem;
+            margin-bottom: 0.5rem;
         }
 
         .bank-balance-card .bank-title-wrap {
@@ -53,28 +53,29 @@
         }
 
         .bank-balance-card .bank-live-dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: #22c55e;
-            box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
+            background: #1eb349;
+            box-shadow: 0 0 8px rgba(30, 179, 73, 0.6);
+            flex-shrink: 0;
         }
 
         .bank-balance-card .bank-label {
             font-size: 0.68rem;
             font-weight: 800;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #94a3b8;
+            color: #64748b;
         }
 
         .bank-balance-card .bank-eye-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #cbd5e1;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
             width: 32px;
             height: 32px;
-            border-radius: 9px;
+            border-radius: 8px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -84,8 +85,9 @@
         }
 
         .bank-balance-card .bank-eye-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-            color: #ffffff;
+            background: #f0fdf4;
+            color: #1eb349;
+            border-color: #bbf7d0;
             transform: scale(1.05);
         }
 
@@ -97,76 +99,82 @@
         }
 
         .bank-balance-card .bank-curr {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #94a3b8;
+            color: #1eb349;
         }
 
         .bank-balance-card .bank-amount {
-            font-size: 1.85rem;
+            font-size: 1.95rem;
             font-weight: 800;
             letter-spacing: -0.03em;
             line-height: 1.15;
-            color: #ffffff;
+            color: #0f172a;
             font-family: inherit;
         }
 
         .bank-balance-card .bank-masked-dots {
             font-size: 1.6rem;
             letter-spacing: 0.15em;
-            color: #cbd5e1;
+            color: #64748b;
             font-weight: 800;
             line-height: 1.2;
             display: inline-block;
         }
 
         .bank-balance-card .bank-note {
-            font-size: 0.7rem;
-            color: #94a3b8;
+            font-size: 0.72rem;
+            color: #64748b;
             font-weight: 500;
-            margin-bottom: 1.1rem;
+            margin-bottom: 0.95rem;
         }
 
         .bank-balance-card .bank-divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.09);
+            background: #f1f5f9;
             margin-bottom: 0.85rem;
         }
 
-        .bank-balance-card .bank-sub-list {
+        .bank-balance-card .bank-sub-box {
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 0.75rem 0.85rem;
             display: flex;
             flex-direction: column;
-            gap: 0.55rem;
+            gap: 0.65rem;
         }
 
         .bank-balance-card .bank-sub-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.75rem;
+            font-size: 0.76rem;
+            gap: 0.5rem;
         }
 
         .bank-balance-card .bank-sub-left {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            color: #94a3b8;
+            gap: 0.35rem;
+            color: #64748b;
             font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .bank-balance-card .bank-sub-tag {
-            font-size: 0.6rem;
+            font-size: 0.62rem;
             font-weight: 700;
             padding: 1px 6px;
             border-radius: 5px;
-            background: rgba(255, 255, 255, 0.07);
-            color: #cbd5e1;
+            background: #e2e8f0;
+            color: #475569;
         }
 
         .bank-balance-card .bank-sub-tag.kasir {
-            background: rgba(16, 185, 129, 0.16);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.25);
+            background: #dcfce7;
+            color: #166534;
         }
 
         .bank-balance-card .bank-sub-right {
@@ -174,25 +182,32 @@
             align-items: center;
             gap: 0.45rem;
             font-weight: 700;
-            color: #f1f5f9;
+            color: #0f172a;
+            white-space: nowrap;
+            margin-left: auto;
         }
 
         .bank-balance-card .bank-btn-transfer {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            color: #6ee7b7;
+            background: #1eb349;
+            border: none;
+            color: #ffffff;
             padding: 2px 7px;
             border-radius: 6px;
             font-size: 0.65rem;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             text-decoration: none;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1.3;
         }
 
         .bank-balance-card .bank-btn-transfer:hover {
-            background: rgba(16, 185, 129, 0.35);
-            color: #ffffff;
+            background: #16a34a;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(30, 179, 73, 0.3);
         }
 
         /* ── Legacy fallback balance cards ── */
