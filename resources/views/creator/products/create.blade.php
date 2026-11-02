@@ -317,6 +317,24 @@
             gap: 0.4rem;
         }
 
+        
+        /* Sidebar Action Buttons on Desktop */
+        .sidebar-action-btns {
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e7f0e7;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        /* Default desktop: form footer hidden because buttons are in the sidebar */
+        @media(min-width: 769px) {
+            .form-footer {
+                display: none !important;
+            }
+        }
+
         /* ---- MOBILE RESPONSIVE ---- */
         @media(max-width:768px) {
             .prof-layout {
@@ -354,6 +372,9 @@
             /* Hide "Pengaturan Form" section on mobile - move toggle inside form */
             .prof-sidebar > div:last-child {
                 display: none;
+            }
+            .sidebar-action-btns {
+                display: none !important;
             }
 
             .tab-btn {
@@ -473,6 +494,21 @@
                             & Schema FAQ</div>
                     </div>
                 </label>
+            </div>
+
+            {{-- ACTION BUTTONS DESKTOP (Di bawah pengaturan form sesuai request) --}}
+            <div class="sidebar-action-btns">
+                <button type="submit" form="productForm" class="btn-submit" style="width:100%; justify-content:center; box-sizing:border-box;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Simpan & Publikasikan
+                </button>
+                <a href="{{ route('creator.products.index') }}" class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
+                    Batal
+                </a>
             </div>
         </div>
 
@@ -1082,9 +1118,6 @@
                                     onchange="previewGalleryList(event)" style="display:none;">
                                 <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto galeri pendukung (proporsional 1:1).</span>
                             </div>
-                        </div>                         </div>
-
-                            {{-- Link Video sudah dipindahkan ke section Deskripsi di tab Informasi Dasar --}}
                         </div>
                     </div>
 
@@ -1246,6 +1279,25 @@
 @section('scripts')
     <script>
         // Tab switching
+        
+        // Auto-switch tab if an invalid element exists in a hidden tab
+        const prodForm = document.getElementById('productForm');
+        if (prodForm) {
+            prodForm.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('invalid', function () {
+                    const pane = input.closest('.tab-pane');
+                    if (pane && !pane.classList.contains('active')) {
+                        const targetTabId = pane.id;
+                        document.querySelectorAll('.tab-btn').forEach(btn => {
+                            if (btn.getAttribute('data-tab') === targetTabId) {
+                                btn.click();
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabPanes = document.querySelectorAll('.tab-pane');
         tabBtns.forEach(btn => {

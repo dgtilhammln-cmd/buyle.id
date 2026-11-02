@@ -317,16 +317,67 @@
             gap: 0.4rem;
         }
 
+        /* Sidebar Action Buttons on Desktop */
+        .sidebar-action-btns {
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e7f0e7;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        /* Default desktop: form footer hidden because buttons are in the sidebar */
+        @media(min-width: 769px) {
+            .form-footer {
+                display: none !important;
+            }
+        }
+
+        /* ---- MOBILE RESPONSIVE ---- */
         @media(max-width:768px) {
             .prof-layout {
                 flex-direction: column;
                 width: 100%;
+                gap: 0.75rem;
             }
 
             .prof-sidebar {
                 width: 100%;
                 position: static;
                 box-sizing: border-box;
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                border-radius: 16px;
+                padding: 0.75rem;
+                background: #fff;
+            }
+
+            .prof-sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide "Pengaturan Form" and desktop action buttons on mobile */
+            .prof-sidebar > div:nth-child(n+4) {
+                display: none !important;
+            }
+
+            .sidebar-action-btns {
+                display: none !important;
+            }
+
+            .tab-btn {
+                flex-shrink: 0;
+                width: auto;
+                white-space: nowrap;
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+                border-radius: 999px;
+                margin-bottom: 0;
             }
 
             .prof-content {
@@ -341,7 +392,52 @@
             }
 
             .form-body {
-                padding: 1.25rem 1rem;
+                padding: 1rem 0.9rem;
+            }
+
+            .prof-card-head {
+                padding: 1rem;
+                font-size: 0.875rem;
+            }
+
+            /* Footer buttons: full width sticky at bottom */
+            .form-footer {
+                display: flex !important;
+                position: sticky;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                border-radius: 0;
+                border-top: 1px solid #e2e8f0;
+                padding: 0.85rem 1rem;
+                box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+                gap: 0.6rem;
+                justify-content: stretch;
+            }
+
+            .btn-cancel {
+                flex: 1;
+                justify-content: center;
+                text-align: center;
+                font-size: 0.85rem;
+            }
+
+            .btn-submit {
+                flex: 2;
+                justify-content: center;
+                text-align: center;
+                font-size: 0.875rem;
+                font-weight: 700;
+            }
+
+            .form-input {
+                font-size: 16px;
+                min-height: 44px;
+            }
+
+            select.form-input {
+                min-height: 44px;
             }
         }
     </style>
@@ -391,6 +487,21 @@
                             & Schema FAQ</div>
                     </div>
                 </label>
+            </div>
+
+            {{-- ACTION BUTTONS DESKTOP (Di bawah pengaturan form sesuai request) --}}
+            <div class="sidebar-action-btns">
+                <button type="submit" form="productForm" class="btn-submit" style="width:100%; justify-content:center; box-sizing:border-box;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Simpan Perubahan
+                </button>
+                <a href="{{ route('creator.products.index') }}" class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
+                    Batal
+                </a>
             </div>
         </div>
 
@@ -1349,6 +1460,25 @@
 @section('scripts')
     <script>
         // Tab switching
+        
+        // Auto-switch tab if an invalid element exists in a hidden tab
+        const prodForm = document.getElementById('productForm');
+        if (prodForm) {
+            prodForm.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('invalid', function () {
+                    const pane = input.closest('.tab-pane');
+                    if (pane && !pane.classList.contains('active')) {
+                        const targetTabId = pane.id;
+                        document.querySelectorAll('.tab-btn').forEach(btn => {
+                            if (btn.getAttribute('data-tab') === targetTabId) {
+                                btn.click();
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabPanes = document.querySelectorAll('.tab-pane');
         tabBtns.forEach(btn => {
