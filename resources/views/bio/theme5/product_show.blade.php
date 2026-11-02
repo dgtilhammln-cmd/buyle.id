@@ -1427,13 +1427,8 @@
                                 <div style="flex:1;">
                                     <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; font-weight:700;">Waktu Pelaksanaan</div>
                                     <div style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-top:2px;">
-                                        {{ \Carbon\Carbon::parse($tEventDate)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                        {{ \Carbon\Carbon::parse($tEventDate)->locale('id')->isoFormat('dddd, D MMMM Y') }}@if($tEventTime)<span style="color:#64748b; font-weight:600;"> &nbsp;·&nbsp; {{ $tEventTime }}</span>@endif
                                     </div>
-                                    @if($tEventTime)
-                                        <div style="display:inline-block; margin-top:3px; padding:1px 8px; background:#f0fdf4; color:#166534; border-radius:999px; font-size:0.75rem; font-weight:600; border:1px solid #bbf7d0;">
-                                            {{ $tEventTime }}
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -1760,8 +1755,17 @@
                         @php
                             $unitPrice = (float)($product->traktir_unit_price ?? 10000);
                             $unitName  = $product->traktir_unit_name ?? 'kopi';
-                            $rawUnitIcon = $product->traktir_unit_icon ?? '☕';
-                            $unitIcon  = (empty($rawUnitIcon) || in_array(strtolower(trim($rawUnitIcon)), ['coffee', 'kopi', 'icon', 'none'])) ? '☕' : $rawUnitIcon;
+                            $rawUnitIcon = trim((string)($product->traktir_unit_icon ?? 'coffee'));
+                            // Map nama ikon ke emoji yang sesuai
+                            $traktirIconMap = [
+                                'coffee' => '☕', 'kopi'  => '☕',
+                                'tea'    => '🍵', 'teh'   => '🍵',
+                                'meal'   => '🍔', 'burger'=> '🍔',
+                                'pizza'  => '🍕',
+                                'gift'   => '🎁', 'hadiah'=> '🎁',
+                                'heart'  => '❤️', 'hati'  => '❤️',
+                            ];
+                            $unitIcon = $traktirIconMap[strtolower($rawUnitIcon)] ?? (strlen($rawUnitIcon) <= 3 ? $rawUnitIcon : '☕');
                         @endphp
                         <style>
                             .t5-pricing-card {
