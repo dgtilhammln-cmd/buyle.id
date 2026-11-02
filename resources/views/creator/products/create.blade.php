@@ -317,16 +317,53 @@
             gap: 0.4rem;
         }
 
+        /* ---- MOBILE RESPONSIVE ---- */
         @media(max-width:768px) {
             .prof-layout {
                 flex-direction: column;
                 width: 100%;
+                gap: 0.75rem;
             }
 
             .prof-sidebar {
                 width: 100%;
                 position: static;
                 box-sizing: border-box;
+                border-radius: 16px;
+                padding: 0.75rem;
+                /* Tabs jadi horizontal scroll */
+            }
+
+            /* Tabs horizontal scroll on mobile */
+            .prof-sidebar {
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                border-radius: 16px;
+                padding: 0.75rem;
+                background: #fff;
+            }
+
+            .prof-sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide "Pengaturan Form" section on mobile - move toggle inside form */
+            .prof-sidebar > div:last-child {
+                display: none;
+            }
+
+            .tab-btn {
+                flex-shrink: 0;
+                width: auto;
+                white-space: nowrap;
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+                border-radius: 999px;
+                margin-bottom: 0;
             }
 
             .prof-content {
@@ -341,7 +378,52 @@
             }
 
             .form-body {
-                padding: 1.25rem 1rem;
+                padding: 1rem 0.9rem;
+            }
+
+            .prof-card-head {
+                padding: 1rem;
+                font-size: 0.875rem;
+            }
+
+            /* Footer buttons: full width sticky at bottom */
+            .form-footer {
+                position: sticky;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                border-radius: 0;
+                border-top: 1px solid #e2e8f0;
+                padding: 0.85rem 1rem;
+                box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+                gap: 0.6rem;
+                justify-content: stretch;
+            }
+
+            .btn-cancel {
+                flex: 1;
+                justify-content: center;
+                text-align: center;
+                font-size: 0.85rem;
+            }
+
+            .btn-submit {
+                flex: 2;
+                justify-content: center;
+                text-align: center;
+                font-size: 0.875rem;
+                font-weight: 700;
+            }
+
+            /* Input & select touch-friendly */
+            .form-input {
+                font-size: 16px; /* Prevent iOS zoom */
+                min-height: 44px;
+            }
+
+            select.form-input {
+                min-height: 44px;
             }
         }
     </style>
