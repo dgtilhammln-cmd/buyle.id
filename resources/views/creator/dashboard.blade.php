@@ -506,11 +506,6 @@
 
                     {{-- Saldo Utama (Minimalist Clean Typography) --}}
                     <div class="nina-balance-center">
-                        <div class="nina-currency-badge">
-                            <i class="ph-bold ph-coins" style="color:#1eb349; font-size:0.75rem;"></i>
-                            <span>IDR · RUPIAH</span>
-                        </div>
-
                         <div class="nina-balance-amount">
                             Rp {{ number_format($availableBalance, 0, ',', '.') }}
                         </div>
