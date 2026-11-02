@@ -299,36 +299,86 @@
       }
     }
 
-    /* Status Tabs & Toggle Pill */
+        /* Floating Action Buttons (Mobile Only - 2 Minimalist Buttons) */
+    .prod-mobile-fab-group {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .prod-mobile-fab-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        position: fixed;
+        right: 16px;
+        bottom: 82px;
+        z-index: 9990;
+        pointer-events: auto;
+      }
+
+      .prod-fab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 8px 14px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+        border: none;
+      }
+
+      .prod-fab-btn:active {
+        transform: scale(0.95);
+      }
+
+      .prod-fab-import {
+        background: #ffffff;
+        color: #0f172a;
+        border: 1px solid #e2e8f0;
+      }
+
+      .prod-fab-add {
+        background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.35);
+      }
+    }
+
+    /* Status Tabs & Toggle Pill (Minimalist Super App) */
     .status-tab-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.9rem;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      gap: 0.35rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 500;
       color: #64748b;
       text-decoration: none;
       transition: all 0.2s;
     }
     .status-tab-btn:hover {
       color: #0f172a;
-      background: rgba(255,255,255,0.7);
     }
     .status-tab-btn.active {
       background: #ffffff;
       color: #0f172a;
-      font-weight: 700;
+      font-weight: 600;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
     .status-tab-btn .tab-badge {
-      font-size: 0.72rem;
-      padding: 0.1rem 0.5rem;
-      border-radius: 99px;
-      background: #e2e8f0;
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.06);
       color: #475569;
-      font-weight: 700;
+      font-weight: 600;
     }
     .status-toggle-pill {
       display: inline-flex;
@@ -1224,62 +1274,84 @@
   {{-- REAL PRODUCTS CONTENT CONTAINER --}}
   <div id="products-real-content" style="opacity: 0; transition: opacity 0.25s ease;">
 
-  {{-- FILTER STATUS TAB: SEMUA / AKTIF / ARSIP --}}
-  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
-    <div style="display:flex; align-items:center; gap:0.35rem; background:#f1f5f9; padding:0.25rem; border-radius:12px;">
+  {{-- 1. SEARCH INPUT BAR (SUPER APP MODERN MINIMALIST) --}}
+  <div class="prod-search-bar-wrap" style="margin-bottom: 0.75rem;">
+    <form action="{{ route('creator.products.index') }}" method="GET" style="display:flex; align-items:center; position:relative; width:100%;">
+      @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
+      @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif
+      <div style="position:absolute; left:14px; display:flex; align-items:center; pointer-events:none; color:#94a3b8;">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      </div>
+      <input type="text" name="search" value="{{ request('search') }}"
+        placeholder="Cari produk Anda..."
+        style="width:100%; height:42px; padding:0 38px 0 40px; border-radius:12px; background:#ffffff; border:1px solid #e2e8f0; font-size:0.82rem; font-family:'Montserrat',sans-serif; color:#0f172a; outline:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.02); box-sizing:border-box;"
+        onfocus="this.style.borderColor='#1eb349'; this.style.boxShadow='0 0 0 3px rgba(30,179,73,0.1)';"
+        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.02)';">
+      @if(request('search'))
+        <a href="{{ route('creator.products.index', array_merge(request()->except('search', 'page'))) }}"
+           style="position:absolute; right:12px; width:22px; height:22px; border-radius:50%; background:#f1f5f9; color:#64748b; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:0.75rem;"
+           title="Hapus pencarian">✕</a>
+      @endif
+    </form>
+  </div>
+
+  {{-- 2. STATUS FILTER TAB: SEMUA / AKTIF / ARSIP (MINIMALIST MONOCHROME) --}}
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.75rem;">
+    <div style="display:inline-flex; align-items:center; gap:3px; background:#f1f5f9; padding:3px; border-radius:999px; border:1px solid #e2e8f0;">
       <a href="{{ route('creator.products.index', array_merge(request()->except('status', 'page'))) }}"
          class="status-tab-btn {{ !request('status') ? 'active' : '' }}">
          Semua <span class="tab-badge">{{ $totalCount ?? $products->total() }}</span>
       </a>
       <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'active'])) }}"
          class="status-tab-btn {{ request('status') === 'active' ? 'active' : '' }}">
-         <span style="width:7px; height:7px; border-radius:50%; background:#10B981; display:inline-block;"></span>
-         Aktif <span class="tab-badge" style="background:rgba(16,185,129,0.15); color:#047857;">{{ $activeCount ?? 0 }}</span>
+         Aktif <span class="tab-badge">{{ $activeCount ?? 0 }}</span>
       </a>
       <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'archived'])) }}"
          class="status-tab-btn {{ request('status') === 'archived' ? 'active' : '' }}">
-         <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
-         Diarsipkan <span class="tab-badge" style="background:rgba(245,158,11,0.15); color:#B45309;">{{ $archivedCount ?? 0 }}</span>
+         Diarsipkan <span class="tab-badge">{{ $archivedCount ?? 0 }}</span>
       </a>
     </div>
 
     @if(request('status') === 'archived')
-      <div style="font-size:0.78rem; color:#92400e; display:flex; align-items:center; gap:0.4rem; background:#fef3c7; padding:0.35rem 0.75rem; border-radius:8px; border:1px solid #fde68a;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Produk yang diarsipkan tidak akan muncul di marketplace dan storefront pembeli.
+      <div style="font-size:0.75rem; color:#64748b; display:flex; align-items:center; gap:0.35rem; background:#f8fafc; padding:0.3rem 0.65rem; border-radius:8px; border:1px solid #e2e8f0;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Produk yang diarsipkan tidak tampil di storefront pembeli.
       </div>
     @endif
   </div>
 
-  {{-- FILTER PILLS TIPE PRODUK --}}
-  <div style="display:flex; align-items:center; gap:0.5rem; overflow-x:auto; margin-bottom:1.25rem; padding-bottom:0.25rem; scrollbar-width:none;">
+  {{-- 3. FILTER PILLS TIPE PRODUK (MINIMALIST SUPER APP CHIPS) --}}
+  <div style="display:flex; align-items:center; gap:0.45rem; overflow-x:auto; margin-bottom:1.15rem; padding-bottom:0.25rem; scrollbar-width:none;">
     <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}" 
-       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ !request('type') ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       Semua Tipe Produk
+       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ !request('type') ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ !request('type') ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
+       Semua Tipe
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'makanan'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'makanan' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'makanan' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'makanan' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
+       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
        Makanan / Resto
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'external_link'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'external_link' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-       Digital / Link Access
+       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'external_link' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'external_link' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
+       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+       Digital & Akses
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'physical'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'physical' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'physical' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'physical' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
+       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
        Barang Fisik
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'service'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'service' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-       Jasa & Layanan
+       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'service' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'service' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
+       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+       Jasa Layanan
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'ticket'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'ticket' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"></path><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line></svg>
+       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'ticket' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'ticket' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
+       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"></path><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line></svg>
        Tiket Event
     </a>
   </div>
@@ -1964,6 +2036,28 @@
 
   </div>
 </div>
+  {{-- FLOATING ACTION BUTTONS (MOBILE ONLY: 2 MINIMALIST BUTTONS) --}}
+  <div class="prod-mobile-fab-group">
+    {{-- 1. Smart Import FAB --}}
+    <button type="button" onclick="openSmartImport()" class="prod-fab-btn prod-fab-import" title="Smart Import Produk">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="17 8 12 3 7 8" />
+        <line x1="12" y1="3" x2="12" y2="15" />
+      </svg>
+      <span>Smart Import</span>
+    </button>
+
+    {{-- 2. Tambah Produk FAB --}}
+    <a href="{{ route('creator.products.create') }}" class="prod-fab-btn prod-fab-add" title="Tambah Produk">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+      <span>Tambah Produk</span>
+    </a>
+  </div>
+
 @endsection
 
 @section('scripts')
