@@ -3136,67 +3136,75 @@
 
                     <!-- TAB 5: KELOLA MEJA & BARCODE QR DINE-IN -->
                     <div id="paneSettingTables" style="display:none;">
-                        <!-- Header & Info Card -->
-                        <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.1rem; margin-bottom:1.2rem;">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
-                                <div>
-                                    <div style="font-size:0.9rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:6px;">
-                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" />
-                                            <path d="M3 9h18M9 21V9" />
-                                        </svg>
-                                        Kelola Meja &amp; Barcode QR Dine-In
-                                    </div>
-                                    <div style="font-size:0.75rem; color:#64748b; margin-top:3px; line-height:1.45;">
-                                        Setiap meja memiliki Barcode QR khusus yang terhubung ke Link in Bio (Tema 1-4). Pelanggan tinggal scan untuk memesan, dan nomor meja langsung terisi otomatis saat checkout!
-                                    </div>
+                        
+                        <!-- Guidance Alert Box (Identik dengan Staf Kasir) -->
+                        <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:12px; padding:12px 14px; margin-bottom:1.1rem; display:flex; gap:10px; align-items:flex-start;">
+                            <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <div style="font-size:0.75rem; color:#1e40af; line-height:1.45;">
+                                <strong>Dine-In Barcode QR Meja:</strong> Setiap meja memiliki Barcode QR khusus yang terhubung ke Link in Bio (Tema 1-4). Pelanggan tinggal scan untuk memesan, dan nomor meja langsung terisi otomatis saat checkout!
+                            </div>
+                        </div>
+
+                        <!-- Top Action Bar (Identik dengan Staf Kasir) -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                            <div>
+                                <div style="font-size:0.88rem; font-weight:800; color:#0f172a;">Daftar Meja &amp; Barcode QR</div>
+                                <div style="font-size:0.72rem; color:#64748b;">Kelola nomor meja, kapasitas kursi, dan generate barcode QR untuk dine-in</div>
+                            </div>
+                            <button type="button" class="btn-submit-green" onclick="toggleAddTableForm()" style="width:auto; padding:0.45rem 1rem; font-size:0.76rem; border-radius:999px;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                + Tambah Meja
+                            </button>
+                        </div>
+
+                        <!-- Collapsible Form Tambah Meja (Identik dengan Drawer Staf Kasir) -->
+                        <div id="formAddTableBox" style="display:none; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:1.1rem; margin-bottom:1.25rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                                <div style="font-size:0.85rem; font-weight:800; color:#0f172a;">
+                                    Tambah Meja Baru
                                 </div>
-                                <button type="button" class="btn-primary-bio" onclick="toggleAddTableForm()"
-                                    style="padding:0.4rem 0.95rem; font-size:0.75rem; border-radius:8px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                    + Tambah Meja
-                                </button>
+                                <button type="button" onclick="toggleAddTableForm(false)" style="background:none; border:none; font-size:1.1rem; color:#64748b; cursor:pointer; line-height:1;">&times;</button>
                             </div>
 
-                            <!-- Add Table Form (Collapsible) -->
-                            <div id="formAddTableBox" style="display:none; margin-top:1rem; padding-top:1rem; border-top:1.5px dashed #cbd5e1;">
-                                <div style="display:grid; grid-template-columns: 2fr 1fr 2fr auto; gap:8px; align-items:flex-end;">
-                                    <div>
-                                        <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Nama Meja / Nomor <span style="color:#ef4444;">*</span></label>
-                                        <input type="text" id="newTableName" class="form-input" style="height:34px; font-size:0.78rem;" placeholder="Contoh: Meja 01, VIP 1">
-                                    </div>
-                                    <div>
-                                        <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Kursi</label>
-                                        <input type="number" id="newTableSeats" class="form-input" style="height:34px; font-size:0.78rem;" placeholder="4" min="1" value="4">
-                                    </div>
-                                    <div>
-                                        <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Area / Catatan</label>
-                                        <input type="text" id="newTableArea" class="form-input" style="height:34px; font-size:0.78rem;" placeholder="Contoh: Indoor Lt 1 / Outdoor">
-                                    </div>
-                                    <div style="display:flex; gap:6px;">
-                                        <button type="button" class="btn-primary-bio" onclick="confirmAddTable()" style="height:34px; padding:0 12px; font-size:0.75rem; border-radius:6px; font-weight:700;">
-                                            Simpan
-                                        </button>
-                                        <button type="button" onclick="toggleAddTableForm(false)" style="height:34px; padding:0 10px; font-size:0.75rem; border-radius:6px; border:1px solid #cbd5e1; background:#fff; color:#64748b; cursor:pointer;">
-                                            Batal
-                                        </button>
-                                    </div>
+                            <div style="display:grid; grid-template-columns: 2fr 1fr 2fr; gap:10px; margin-bottom:12px;">
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Nama Meja / Nomor <span style="color:#ef4444;">*</span></label>
+                                    <input type="text" id="newTableName" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: Meja 01, VIP 1">
                                 </div>
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Kapasitas Kursi</label>
+                                    <input type="number" id="newTableSeats" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="4" min="1" value="4">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#334155; margin-bottom:3px;">Area / Catatan</label>
+                                    <input type="text" id="newTableArea" class="form-input" style="height:36px; font-size:0.8rem;" placeholder="Contoh: Indoor Lt 1 / Outdoor">
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid #e2e8f0; padding-top:10px;">
+                                <button type="button" class="btn-outline-bio" onclick="toggleAddTableForm(false)" style="padding:0.45rem 1rem; font-size:0.76rem; border-radius:8px;">Batal</button>
+                                <button type="button" class="btn-submit-green" onclick="confirmAddTable()" style="width:auto; padding:0.45rem 1.25rem; font-size:0.76rem; border-radius:8px;">
+                                    Simpan Meja
+                                </button>
                             </div>
                         </div>
 
                         <!-- Table List Container -->
-                        <div id="tableRowsListContainer" style="display:flex; flex-direction:column; gap:10px;">
+                        <div id="tableRowsListContainer" style="display:flex; flex-direction:column; gap:8px;">
                             <!-- Rendered by renderTablesSettingsList() -->
                         </div>
 
-                        <!-- Bottom Save Notice & Button -->
+                        <!-- Bottom Save Notice & Button (Identik tombol hijau POS) -->
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.2rem; padding-top:1rem; border-top:1.5px solid #f1f5f9;">
                             <div style="font-size:0.72rem; color:#64748b;">
                                 Perubahan meja otomatis tersinkronisasi dengan kasir POS dan Link in Bio.
                             </div>
-                            <button type="button" class="btn-primary-bio" id="btnSaveTablesSettings" onclick="saveTablesSettings()"
-                                style="padding:0.48rem 1.25rem; font-size:0.78rem; border-radius:8px; font-weight:800; display:inline-flex; align-items:center; gap:6px;">
+                            <button type="button" class="btn-submit-green" id="btnSaveTablesSettings" onclick="saveTablesSettings()"
+                                style="width:auto; padding:0.48rem 1.4rem; font-size:0.78rem; border-radius:999px;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                                 Simpan Perubahan Meja
                             </button>
@@ -5997,38 +6005,38 @@
             container.innerHTML = posTablesData.map((table, idx) => {
                 const tableUrl = posBioBaseUrl + (posBioBaseUrl.includes('?') ? '&' : '?') + 'meja=' + encodeURIComponent(table.name);
                 return `
-                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
-                        <div style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
-                            <div id="tableQrThumb_${idx}" style="width:48px; height:48px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
+                    <div class="table-card-item" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
+                        <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                            <div id="tableQrThumb_${idx}" style="width:40px; height:40px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
                             <div style="min-width:0;">
                                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                    <span style="font-size:0.92rem; font-weight:800; color:#0f172a;">${escapeHtml(table.name)}</span>
-                                    ${table.seats ? `<span style="font-size:0.68rem; font-weight:700; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:4px;">${table.seats} Kursi</span>` : ''}
-                                    ${table.area ? `<span style="font-size:0.68rem; font-weight:700; background:#f0fdf4; color:#166534; padding:2px 7px; border-radius:4px; border:1px solid #bbf7d0;">${escapeHtml(table.area)}</span>` : ''}
+                                    <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(table.name)}</span>
+                                    ${table.seats ? `<span style="font-size:0.7rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-weight:600;">${table.seats} Kursi</span>` : ''}
+                                    ${table.area ? `<span style="font-size:0.7rem; color:#15803d; background:#dcfce7; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; font-weight:600;">${escapeHtml(table.area)}</span>` : ''}
                                 </div>
-                                <div style="font-size:0.7rem; color:#94a3b8; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:400px;">
+                                <div style="font-size:0.7rem; color:#94a3b8; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:380px;">
                                     ${escapeHtml(tableUrl)}
                                 </div>
                             </div>
                         </div>
 
                         <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                            <button type="button" class="btn-primary-bio" onclick="downloadTableQr(${idx})"
-                                style="padding:6px 12px; font-size:0.74rem; border-radius:7px; font-weight:700; display:inline-flex; align-items:center; gap:5px;"
+                            <button type="button" class="btn-outline-bio" onclick="downloadTableQr(${idx})"
+                                style="padding:4px 10px; font-size:0.72rem; border-radius:6px; text-decoration:none;"
                                 title="Download Barcode QR Meja ini">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                 Download Barcode
                             </button>
                             <a href="${tableUrl}" target="_blank"
-                                style="padding:6px 10px; font-size:0.74rem; border-radius:7px; border:1px solid #cbd5e1; background:#fff; color:#475569; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600;"
+                                style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"
                                 title="Buka Link di Tab Baru">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                                 Tes Link
                             </a>
                             <button type="button" onclick="deleteTable(${idx})"
-                                style="padding:6px 8px; font-size:0.74rem; border-radius:7px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer;"
+                                style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;"
                                 title="Hapus Meja">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                         </div>
                     </div>
