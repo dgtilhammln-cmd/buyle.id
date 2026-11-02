@@ -2,1380 +2,665 @@
 
 @section('title', 'Overview – Creator Studio')
 @section('page_title', 'Overview')
-@section('page_subtitle', 'Ringkasan performa toko, saldo real-time, dan saran Buyle AI.')
+@section('page_subtitle', 'Ringkasan performa toko, saldo real-time, dan transaksi terbaru.')
 
 @section('styles')
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
 <style>
-    /* ── PALETTE & DESIGN SYSTEM (MATCHING /creator/bio) ── */
     :root {
         --brand-green: #1eb349;
         --brand-lime: #a5cf37;
         --brand-gradient: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
         --dark-slate: #0f172a;
-        --dark-card: #0b120c;
-        --gray-bg: #f8fafc;
+        --dark-pill: #181d27;
+        --bg-card-top: #eef0f4;
         --border-color: #e2e8f0;
         --text-muted: #64748b;
     }
 
     body {
-        font-family: 'Montserrat', sans-serif !important;
+        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        background: #f4f5f8;
     }
 
-    /* Outer Wrapper */
-    .cr-dash-container {
+    /* Outer Wrapper Presisi 100% Mirip Referensi Gambar 1 */
+    .nina-dash-wrapper {
+        max-width: 480px;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
         gap: 1.25rem;
+        padding-bottom: 2rem;
     }
 
-    /* ── WIDGET 1: WELCOME & LINK BIO SOSMED BANNER HEADER ── */
-    .ai-header-banner {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 1.75rem 2rem;
-        color: #0f172a;
+    @media (min-width: 1025px) {
+        .nina-dash-wrapper {
+            max-width: 540px;
+        }
+    }
+
+    /* ── CARD 1: MAIN BALANCE & GREETING CARD (LIGHT/LAVENDER-GRAY) ── */
+    .nina-balance-card {
+        background: var(--bg-card-top);
+        border-radius: 36px;
+        padding: 1.75rem 1.5rem 1.35rem;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.8);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-        border: 1.5px solid var(--border-color);
+    }
+
+    /* Baris Sapaan & Ikon Aksi */
+    .nina-card-topbar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1.5rem;
-        flex-wrap: wrap;
+        margin-bottom: 1.25rem;
     }
 
-    .ai-header-banner::before {
-        content: '';
-        position: absolute;
-        top: -60px;
-        right: -60px;
-        width: 220px;
-        height: 220px;
-        background: radial-gradient(circle, rgba(30, 179, 73, 0.08) 0%, rgba(30, 179, 73, 0) 70%);
-        pointer-events: none;
-    }
-
-    .ai-banner-title {
-        font-size: 1.5rem;
-        font-weight: 700;
+    .nina-greeting-title {
+        font-size: 1.15rem;
+        font-weight: 800;
         color: #0f172a;
-        letter-spacing: -0.01em;
-        margin: 0 0 0.35rem 0;
-        line-height: 1.2;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
     }
 
-    .ai-banner-sub {
+    .nina-greeting-title span {
+        font-weight: 500;
+        color: #64748b;
+    }
+
+    .nina-greeting-sub {
         font-size: 0.82rem;
         color: #64748b;
-        font-weight: 500;
-        max-width: 580px;
-        margin: 0;
+        font-weight: 600;
+        margin-top: 2px;
     }
 
-    .ai-banner-actions {
+    .nina-top-buttons {
         display: flex;
-    }
-
-    .btn-dropdown-trigger {
-        background: var(--brand-gradient);
-        color: #ffffff !important;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.82rem;
-        font-weight: 700;
-        padding: 0.65rem 1.15rem;
-        border-radius: 14px;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
-        transition: all 0.2s ease;
     }
 
-    .btn-dropdown-trigger:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
-    }
-
-    .banner-dropdown-wrapper {
-        position: relative;
-        z-index: 50;
-    }
-
-    .banner-dropdown-menu {
-        position: absolute;
-        top: calc(100% + 0.5rem);
-        right: 0;
-        min-width: 270px;
+    .nina-circle-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
         background: #ffffff;
-        border-radius: 18px;
-        padding: 0.6rem;
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-        border: 1px solid var(--border-color);
-        display: none;
-        flex-direction: column;
-        gap: 0.25rem;
-        z-index: 100;
-        animation: dropFade 0.2s ease;
-    }
-
-    .banner-dropdown-menu.show {
-        display: flex;
-    }
-
-    @keyframes dropFade {
-        from { opacity: 0; transform: translateY(-8px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .dropdown-section-header {
-        font-size: 0.65rem;
-        font-weight: 800;
-        color: var(--text-muted);
-        letter-spacing: 0.08em;
-        padding: 0.4rem 0.6rem 0.2rem 0.6rem;
-        text-transform: uppercase;
-    }
-
-    .dropdown-menu-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.6rem 0.75rem;
-        border-radius: 12px;
-        text-decoration: none;
-        color: var(--dark-slate);
-        background: transparent;
-        border: none;
-        width: 100%;
-        text-align: left;
-        cursor: pointer;
-        transition: background 0.15s ease;
-    }
-
-    .dropdown-menu-item:hover {
-        background: #f8fafc;
-    }
-
-    .dropdown-item-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 10px;
+        color: #0f172a;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.05rem;
-        flex-shrink: 0;
-    }
-
-    .dropdown-item-icon.green { background: #f0fdf4; color: var(--brand-green); }
-    .dropdown-item-icon.lime  { background: #f7fee7; color: #65a30d; }
-    .dropdown-item-icon.blue  { background: #f0f9ff; color: #0284c7; }
-
-    .dropdown-item-text {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .dropdown-item-text .title {
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--dark-slate);
-    }
-
-    .dropdown-item-text .sub {
-        font-size: 0.68rem;
-        color: var(--text-muted);
-        font-weight: 500;
-    }
-
-    .dropdown-divider {
-        height: 1px;
-        background: #f1f5f9;
-        margin: 0.2rem 0;
-    }
-
-    /* ── GRID ROW 1: SALDO (WIDGET 2) & TRAFFIC WAVE (WIDGET 5) ── */
-    .cr-grid-main {
-        display: grid;
-        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-        gap: 1.25rem;
-        min-width: 0;
-    }
-
-    .bio-card {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-        border: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        gap: 1rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Card Saldo */
-    .balance-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-    }
-
-    .balance-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    .balance-val {
-        font-size: 1.9rem;
-        font-weight: 700;
-        color: var(--dark-slate);
-        letter-spacing: -0.02em;
-        margin: 0.15rem 0 0.4rem 0;
-    }
-
-    .balance-sub-info {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-        font-size: 0.78rem;
-        color: #64748b;
-        font-weight: 500;
-    }
-
-    .balance-sub-info span strong {
-        color: var(--dark-slate);
-    }
-
-    .btn-withdraw {
-        background: #f0fdf4;
-        color: var(--brand-green) !important;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.78rem;
-        font-weight: 700;
-        padding: 0.5rem 0.9rem;
-        border-radius: 12px;
-        border: 1.5px solid #bbf7d0;
         text-decoration: none;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+    }
+
+    .nina-circle-btn:hover {
+        transform: scale(1.08);
+        color: #1eb349;
+    }
+
+    /* Badge Currency Pill */
+    .nina-currency-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 5px;
+        background: #ffffff;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: 0.04em;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e2e8f0;
+        margin: 0 auto 0.4rem;
+    }
+
+    /* Nominal Saldo Raksasa */
+    .nina-balance-center {
+        text-align: center;
+        padding: 0.5rem 0 1rem;
+    }
+
+    .nina-balance-amount {
+        font-size: clamp(2.1rem, 7vw, 2.85rem);
+        font-weight: 900;
+        color: #0f172a;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+        margin-bottom: 0.6rem;
+    }
+
+    .nina-balance-amount small {
+        font-size: 0.55em;
+        font-weight: 700;
+        color: #64748b;
+    }
+
+    /* Badge Pertumbuhan Hijau */
+    .nina-growth-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #1eb349;
+        color: #ffffff;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);
+    }
+
+    /* Action Pill Bar (Hitam Sleek Sesuai Gambar 1) */
+    .nina-action-bar {
+        background: var(--dark-pill);
+        border-radius: 22px;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1rem;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+        gap: 6px;
+    }
+
+    .nina-action-btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+        padding: 11px 14px;
+        border-radius: 18px;
+        text-decoration: none;
+        font-size: 0.82rem;
+        font-weight: 700;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: none;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .nina-action-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    .nina-action-icon-center {
+        width: 44px;
+        height: 44px;
+        border-radius: 16px;
+        background: #ffffff;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        text-decoration: none;
         transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .btn-withdraw:hover {
-        background: var(--brand-green);
-        color: #ffffff !important;
-        border-color: var(--brand-green);
+    .nina-action-icon-center:hover {
+        transform: scale(1.08);
+        color: #1eb349;
     }
 
-    /* Chart SVG Slow-mo */
-    .balance-chart-box {
-        position: relative;
-        width: 100%;
-        margin-top: 0.5rem;
+    /* ── GRID 2 KOLOM: SHORTCUT & YOUR INCOME ── */
+    .nina-mid-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
     }
 
-    .balance-chart-svg {
-        width: 100%;
-        height: 75px;
-        display: block;
-        overflow: visible;
+    @media (max-width: 400px) {
+        .nina-mid-grid {
+            gap: 0.75rem;
+        }
     }
 
-    .draw-line-slow {
-        stroke-dasharray: 1200;
-        stroke-dashoffset: 1200;
-        animation: dashSlow 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    @keyframes dashSlow {
-        to { stroke-dashoffset: 0; }
-    }
-
-    .fade-fill-slow {
-        opacity: 0;
-        animation: fadeFillSlow 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    @keyframes fadeFillSlow {
-        0%, 50% { opacity: 0; }
-        100% { opacity: 1; }
-    }
-
-    /* Traffic Wave Card */
-    .wave-header {
+    .nina-section-title {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 0.75rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
 
-    .wave-title {
-        font-size: 0.78rem;
-        font-weight: 700;
-        color: var(--dark-slate);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
+    .nina-section-title a {
+        font-size: 0.9rem;
+        color: #64748b;
+        text-decoration: none;
+        transition: color 0.15s;
     }
 
-    .live-dot-badge {
-        background: #f0fdf4;
-        color: var(--brand-green);
-        border: 1px solid #dcfce7;
-        font-size: 0.65rem;
-        font-weight: 700;
-        padding: 0.2rem 0.65rem;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
+    .nina-section-title a:hover {
+        color: #1eb349;
     }
 
-    .pulse-dot {
-        width: 6px;
-        height: 6px;
-        background: var(--brand-green);
-        border-radius: 50%;
-        animation: livePulse 1.8s infinite;
-    }
-    @keyframes livePulse {
-        0% { transform: scale(0.9); opacity: 0.7; }
-        50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 10px var(--brand-green); }
-        100% { transform: scale(0.9); opacity: 0.7; }
-    }
-
-    .stats-counter-grid {
+    /* 2x2 Squircle Shortcut Grid (Ganti Send Again) */
+    .nina-shortcuts-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr 1fr;
         gap: 0.65rem;
     }
 
-    .counter-item {
-        background: #f8fafc;
-        border: 1px solid #f1f5f9;
-        border-radius: 14px;
-        padding: 0.75rem 0.5rem;
-        text-align: center;
-    }
-
-    .counter-item-label {
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        margin-bottom: 0.15rem;
-    }
-
-    .counter-item-val {
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: var(--dark-slate);
-    }
-
-    /* ── WIDGET 3: BUYLE AI SMART ASSISTANT (OPTIMASI TOKO) ── */
-    .ai-assistant-card {
+    .nina-shortcut-card {
         background: #ffffff;
         border-radius: 20px;
-        padding: 1.5rem;
-        border: 1.5px solid rgba(30, 179, 73, 0.25);
-        box-shadow: 0 4px 16px rgba(30, 179, 73, 0.05);
-        position: relative;
-    }
-
-    .ai-assistant-header {
+        padding: 0.9rem 0.5rem;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-        padding-bottom: 0.85rem;
-        border-bottom: 1px solid var(--border-color);
+        justify-content: center;
+        text-decoration: none;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
     }
 
-    .ai-assistant-title-group {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+    .nina-shortcut-card:hover {
+        transform: translateY(-3px);
+        border-color: #1eb349;
+        box-shadow: 0 8px 20px rgba(30, 179, 73, 0.12);
     }
 
-    .ai-icon-wrapper {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        background: var(--brand-gradient);
-        color: #ffffff;
+    .nina-shortcut-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #f8fafc;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.25rem;
-        box-shadow: 0 4px 10px rgba(30, 179, 73, 0.25);
+        color: #0f172a;
+        margin-bottom: 0.4rem;
+        transition: all 0.2s;
     }
 
-    .ai-card-title {
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: var(--dark-slate);
-        margin: 0;
-    }
-
-    .ai-card-sub {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        font-weight: 500;
-        margin-top: 0.1rem;
-    }
-
-    .btn-ai-scan {
-        background: #f0fdf4;
-        color: var(--brand-green);
-        border: 1.5px solid #bbf7d0;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
-        font-weight: 700;
-        padding: 0.45rem 0.85rem;
-        border-radius: 10px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        transition: all 0.2s ease;
-    }
-
-    .btn-ai-scan:hover {
-        background: var(--brand-green);
+    .nina-shortcut-card:hover .nina-shortcut-icon {
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #ffffff;
     }
 
-    /* Score Ring Progress */
-    .ai-health-row {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-        background: #f8fafc;
-        border: 1px solid #f1f5f9;
-        border-radius: 16px;
-        padding: 1rem 1.25rem;
-        margin-bottom: 1.25rem;
-    }
-
-    .score-circle-box {
-        position: relative;
-        width: 56px;
-        height: 56px;
-        flex-shrink: 0;
-    }
-
-    .score-circle-svg {
-        width: 56px;
-        height: 56px;
-        transform: rotate(-90deg);
-    }
-
-    .score-circle-bg {
-        stroke: #e2e8f0;
-        stroke-width: 5.5;
-        fill: none;
-    }
-
-    .score-circle-val {
-        stroke: url(#aiScoreGrad);
-        stroke-width: 5.5;
-        fill: none;
-        stroke-linecap: round;
-        transition: stroke-dasharray 1s ease;
-    }
-
-    .score-text-num {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 0.85rem;
-        font-weight: 800;
-        color: var(--dark-slate);
-    }
-
-    .ai-health-info {
-        flex: 1;
-    }
-
-    .ai-health-title {
-        font-size: 0.88rem;
+    .nina-shortcut-label {
+        font-size: 0.76rem;
         font-weight: 700;
-        color: var(--dark-slate);
-        margin: 0 0 0.2rem 0;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
+        color: #0f172a;
+        letter-spacing: -0.01em;
+        text-align: center;
     }
 
-    .ai-health-desc {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin: 0;
-        line-height: 1.35;
-    }
-
-    /* AI Suggestions Checklist */
-    .ai-recs-list {
+    /* Card Your Income */
+    .nina-income-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 1rem 1.15rem;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        justify-content: space-between;
     }
 
-    .ai-rec-item {
+    .nina-income-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1rem;
-        padding: 0.85rem 1rem;
-        border-radius: 14px;
-        background: #ffffff;
-        border: 1px solid var(--border-color);
-        transition: all 0.2s ease;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #64748b;
     }
 
-    .ai-rec-item:hover {
-        border-color: #cbd5e1;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.03);
-    }
-
-    .ai-rec-left {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .ai-rec-status-icon {
-        width: 30px;
-        height: 30px;
-        border-radius: 9px;
+    .nina-income-dropdown-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #f1f5f9;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1rem;
-        flex-shrink: 0;
+        color: #0f172a;
+        font-size: 0.75rem;
     }
 
-    .status-done {
-        background: #f0fdf4;
-        color: var(--brand-green);
+    /* Wave Curve SVG */
+    .nina-income-wave {
+        width: 100%;
+        height: 52px;
+        margin: 0.75rem 0;
     }
 
-    .status-warn {
-        background: #fffbeb;
-        color: #d97706;
+    .nina-income-val {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.02em;
     }
 
-    .ai-rec-title {
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: var(--dark-slate);
-        margin: 0 0 0.1rem 0;
-    }
-
-    .ai-rec-desc {
-        font-size: 0.72rem;
-        color: var(--text-muted);
-        margin: 0;
-    }
-
-    .btn-ai-action {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 0.4rem 0.75rem;
-        border-radius: 9px;
-        text-decoration: none;
-        white-space: nowrap;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        transition: all 0.2s ease;
-    }
-
-    .btn-ai-action.primary {
-        background: var(--brand-gradient);
-        color: #ffffff !important;
-    }
-
-    .btn-ai-action.secondary {
-        background: #f1f5f9;
-        color: var(--dark-slate) !important;
-    }
-
-    .btn-ai-action:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-    }
-
-    /* ── GRID ROW 3: RECENT SALES & RECENT PRODUCTS ── */
-    .cr-grid-bottom {
-        display: grid;
-        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-        gap: 1.25rem;
-        min-width: 0;
-    }
-
-    .section-card-title {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--dark-slate);
-        margin-bottom: 0.5rem;
+    .nina-income-footer {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-top: 0.25rem;
     }
 
-    .table-custom {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.78rem;
+    /* ── CARD 3: RECENT ACTIVITY (RIWAYAT ORDERAN MASUK) ── */
+    .nina-activity-wrap {
+        margin-top: 0.25rem;
     }
 
-    .table-custom th {
-        text-align: left;
-        padding: 0.5rem 0.75rem;
-        color: var(--text-muted);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.65rem;
-        border-bottom: 1px solid var(--border-color);
+    .nina-activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
     }
 
-    .table-custom td {
-        padding: 0.75rem;
-        border-bottom: 1px solid #f1f5f9;
-        color: var(--dark-slate);
-        font-weight: 500;
-    }
-
-    .product-mini-item {
+    .nina-activity-item {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 0.9rem 1.1rem;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.65rem 0;
-        border-bottom: 1px solid #f1f5f9;
+        justify-content: space-between;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s ease;
+        text-decoration: none;
+        color: inherit;
     }
 
-    .product-mini-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        object-fit: cover;
-        background: #f1f5f9;
+    .nina-activity-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        border-color: #cbd5e1;
     }
 
-    /* ── RESPONSIVE BREAKPOINTS (fluid — works at any zoom level) ── */
-
-    /* Container always full width, no overflow */
-    .cr-dash-container {
-        width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
+    .nina-act-left {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
     }
 
-    /* When viewport is too narrow for 2-col (covers zoom-out too) */
-    @media (max-width: 1100px) {
-        .cr-grid-main,
-        .cr-grid-bottom {
-            grid-template-columns: 1fr;
-        }
+    .nina-act-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+        color: #0f172a;
+        flex-shrink: 0;
     }
 
-    /* Tablet */
-    @media (max-width: 768px) {
-        .ai-header-banner {
-            padding: 1.1rem 1rem;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.85rem;
-        }
-
-        /* Hide subtitle text on mobile banner */
-        .ai-banner-sub {
-            display: none;
-        }
-
-        .ai-banner-actions {
-            width: 100%;
-        }
-
-        .btn-dropdown-trigger {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .balance-val {
-            font-size: 1.45rem;
-        }
-
-        .ai-health-row {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .ai-rec-item {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .btn-ai-action {
-            width: 100%;
-            justify-content: center;
-            margin-top: 0.35rem;
-        }
-
-        .stats-counter-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .bio-card {
-            padding: 1.1rem;
-        }
-
-        .ai-assistant-card {
-            padding: 1.1rem;
-        }
-
-        /* Verified creator card inner padding */
-        .ai-header-banner + div > div:last-child {
-            padding: 1rem;
-        }
+    .nina-act-buyer {
+        font-size: 0.92rem;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.25;
     }
 
-    /* Small mobile */
-    @media (max-width: 480px) {
-        .cr-dash-container {
-            gap: 0.85rem;
-        }
+    .nina-act-sub {
+        font-size: 0.74rem;
+        color: #64748b;
+        font-weight: 600;
+        margin-top: 2px;
+    }
 
-        .ai-banner-title {
-            font-size: 1.15rem;
-        }
+    .nina-act-right {
+        text-align: right;
+        flex-shrink: 0;
+    }
 
-        .balance-val {
-            font-size: 1.3rem;
-        }
+    .nina-act-amount {
+        font-size: 0.98rem;
+        font-weight: 800;
+        color: #1eb349;
+        letter-spacing: -0.01em;
+    }
 
-        .stats-counter-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.45rem;
-        }
-
-        .counter-item {
-            padding: 0.6rem 0.3rem;
-        }
-
-        .counter-item-val {
-            font-size: 1rem;
-        }
-
-        .counter-item-label {
-            font-size: 0.6rem;
-        }
-
-        .table-custom {
-            font-size: 0.72rem;
-        }
-
-        .table-custom td,
-        .table-custom th {
-            padding: 0.55rem 0.45rem;
-        }
+    .nina-act-status {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: #15803d;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 999px;
+        padding: 1px 6px;
+        display: inline-block;
+        margin-top: 2px;
     }
 </style>
 @endsection
 
-@section('content')
-
 @php
-    $cp = $seller->creatorProfile;
-    $storeName = $cp?->store_name ?: ($seller->name ?: 'Toko Buyle');
-    $storeSlug = $cp?->store_slug ?: '';
-    $hasDomain  = !empty($cp?->custom_domain);
-    $hasPayout  = !empty($seller->bank_account_number) || !empty($seller->ewallet_number);
-    $hasBioLink = !empty($cp?->bio_title) || !empty($cp?->bio_description);
+    $storeName = $seller->name;
+    $creatorProfile = $seller->creatorProfile;
+    if ($creatorProfile && !empty($creatorProfile->store_name)) {
+        $storeName = $creatorProfile->store_name;
+    }
 
-    // Links for bio & digital store
-    $bioUrl   = $storeSlug ? url('/' . $storeSlug) : '';
-    $storeUrl = $storeSlug ? url('/c/' . $storeSlug) : '';
+    // Pendapatan bulan ini
+    $thisMonthSales = $recentSales->filter(function($order) {
+        return \Carbon\Carbon::parse($order->created_at)->isCurrentMonth();
+    });
+    $incomeThisMonth = $thisMonthSales->sum(fn($o) => $o->items->sum('subtotal'));
+    if ($incomeThisMonth <= 0 && $gmv > 0) {
+        $incomeThisMonth = $gmv;
+    }
 
-    // Dynamic Buyle AI Score Calculation (Smart Local Logic)
-    $score = 40;
-    if ($hasBioLink) $score += 15;
-    if ($totalProducts > 0) $score += 20;
-    if ($totalProducts >= 3) $score += 10;
-    if ($hasDomain) $score += 10;
-    if ($hasPayout) $score += 5;
-
-    $score = min(100, $score);
-    $dashOffset = 188 - (188 * $score / 100);
+    $bioUrl = url('/' . $seller->username);
 @endphp
 
-<div class="cr-dash-container">
+@section('content')
+<div class="nina-dash-wrapper">
 
-    {{-- ── WIDGET 1: WELCOME & LINK BIO / TOKO SOSMED BANNER ── --}}
-    <div class="ai-header-banner">
-        <div>
-            <h1 class="ai-banner-title">Halo, {{ $storeName }}!</h1>
-            <p class="ai-banner-sub">
-                Gunakan link resmi di bawah ini untuk dipasang pada Bio Instagram, TikTok, atau WhatsApp Anda agar calon pembeli dapat langsung bertransaksi.
-            </p>
-        </div>
-        <div class="ai-banner-actions">
-            @if($storeSlug)
-                <div class="banner-dropdown-wrapper">
-                    <button type="button" class="btn-dropdown-trigger" onclick="toggleLinkDropdown(event)">
-                        <i class="ph ph-share-network" style="font-size: 1.15rem;"></i>
-                        <span>Bagikan / Kelola Link</span>
-                        <i class="ph ph-caret-down" style="font-size: 0.85rem; margin-left: 0.15rem;"></i>
-                    </button>
-                    <div class="banner-dropdown-menu" id="linkDropdownMenu">
-                        <div class="dropdown-section-header">PILIHAN LINK TOKO SOSMED</div>
-                        
-                        <button type="button" class="dropdown-menu-item" onclick="copyStoreUrl('{{ $bioUrl }}', 'Link Bio'); hideLinkDropdown();">
-                            <div class="dropdown-item-icon green"><i class="ph ph-copy"></i></div>
-                            <div class="dropdown-item-text">
-                                <span class="title">Salin Link Bio</span>
-                                <span class="sub">Untuk Bio Instagram / TikTok / WA</span>
-                            </div>
-                        </button>
-
-                        <a href="{{ $bioUrl }}" target="_blank" class="dropdown-menu-item" onclick="hideLinkDropdown();">
-                            <div class="dropdown-item-icon blue"><i class="ph ph-arrow-square-out"></i></div>
-                            <div class="dropdown-item-text">
-                                <span class="title">Buka Halaman Bio</span>
-                                <span class="sub">Pratinjau tampilan bio Anda</span>
-                            </div>
-                        </a>
-
-                        <div class="dropdown-divider"></div>
-
-                        <button type="button" class="dropdown-menu-item" onclick="copyStoreUrl('{{ $storeUrl }}', 'Toko Digital'); hideLinkDropdown();">
-                            <div class="dropdown-item-icon lime"><i class="ph ph-shopping-bag-open"></i></div>
-                            <div class="dropdown-item-text">
-                                <span class="title">Salin Link Toko Digital</span>
-                                <span class="sub">Katalog produk digital Anda</span>
-                            </div>
-                        </button>
-
-                        <a href="{{ $storeUrl }}" target="_blank" class="dropdown-menu-item" onclick="hideLinkDropdown();">
-                            <div class="dropdown-item-icon blue"><i class="ph ph-arrow-square-out"></i></div>
-                            <div class="dropdown-item-text">
-                                <span class="title">Buka Toko Digital</span>
-                                <span class="sub">Pratinjau halaman toko digital</span>
-                            </div>
-                        </a>
-                    </div>
+    {{-- ── 1. MAIN WALLET & BALANCE CARD (100% Sesuai Gambar 1) ── --}}
+    <div class="nina-balance-card">
+        
+        {{-- Topbar: Sapaan Creator & Ikon Aksi --}}
+        <div class="nina-card-topbar">
+            <div>
+                <div class="nina-greeting-title">
+                    Halo, {{ $storeName }}! <span>Selamat datang</span>
                 </div>
-            @else
-                <a href="{{ route('creator.bio.index') }}" class="btn-dropdown-trigger">
-                    <i class="ph ph-plus-circle" style="font-size: 1.1rem;"></i>
-                    Set Up Link Bio & Toko
+                <div class="nina-greeting-sub">
+                    di Creator Studio Anda
+                </div>
+            </div>
+            <div class="nina-top-buttons">
+                <a href="{{ route('creator.app.index') }}" class="nina-circle-btn" title="Semua Aplikasi">
+                    <i class="ph ph-squares-four" style="font-size: 1.2rem;"></i>
                 </a>
-            @endif
-    </div>
-
-    {{-- ── WIDGET: VERIFIED CREATOR & TINGKATAN CREATOR CARD ── --}}
-    <div style="background: #ffffff; border-radius: 20px; overflow: hidden; border: 1.5px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-        {{-- Banner Header Gradient --}}
-        <div style="background: {{ $tierInfo['header_bg'] ?? 'linear-gradient(135deg, #475569 0%, #64748b 100%)' }}; padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #ffffff; font-weight: 700; font-size: 0.82rem; background: rgba(0, 0, 0, 0.18); backdrop-filter: blur(4px); padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                <span>{{ $cp?->is_verified ? 'Verified Creator' : 'Belum Verified' }}</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #ffffff; font-weight: 700; font-size: 0.82rem; background: rgba(0, 0, 0, 0.18); backdrop-filter: blur(4px); padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/><path d="M12 15.5l-4 6 4-2 4 2z"/></svg>
-                <span>{{ $tierInfo['badge'] }}</span>
+                <a href="{{ route('creator.sales.report') }}" class="nina-circle-btn" title="Notifikasi Order">
+                    <i class="ph ph-bell" style="font-size: 1.2rem;"></i>
+                </a>
             </div>
         </div>
 
-        {{-- Content Body --}}
-        <div style="padding: 1.25rem 1.5rem;">
-            @if($cp?->is_verified)
-                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #1eb349; font-weight: 800; font-size: 1.05rem; margin-bottom: 0.25rem;">
-                            <i class="ph-fill ph-seal-check" style="font-size: 1.4rem;"></i>
-                            <span>Selamat! Toko Terverifikasi (Verified Creator)</span>
-                        </div>
-                        <p style="font-size: 0.82rem; color: #64748b; margin: 0;">
-                            Toko Anda secara otomatis telah memenuhi syarat 10+ transaksi order. Badge Verified Creator & Tingkatan <strong>{{ $tierInfo['name'] }}</strong> aktif di halaman toko Anda.
-                        </p>
-                    </div>
-                    <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 0.55rem 1rem; color: #166534; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem;">
-                        <i class="ph ph-check-circle" style="font-size: 1.1rem; color: #1eb349;"></i>
-                        <span>Status: Terverifikasi Otomatis</span>
-                    </div>
-                </div>
-            @else
-                @php
-                    $targetTrans = 10;
-                    $currentTrans = min($targetTrans, (int)$totalTransactions);
-                    $remainingTrans = max(0, $targetTrans - $currentTrans);
-                    $percentTrans = round(($currentTrans / $targetTrans) * 100, 1);
-                @endphp
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                        <div>
-                            <div style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem;">
-                                <i class="ph ph-shield-check" style="font-size: 1.2rem; color: #1eb349;"></i>
-                                Fitur Request Verified Creator
-                            </div>
-                            <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.15rem;">
-                                Syarat minimal: <strong>10 Transaksi Order</strong>. Saat mencapai 10 transaksi, toko Anda akan <strong>otomatis terverifikasi</strong>!
-                            </div>
-                        </div>
-                        <div style="font-size: 0.78rem; font-weight: 700; color: #1eb349; background: #f0fdf4; border: 1px solid #dcfce7; padding: 0.35rem 0.75rem; border-radius: 8px;">
-                            Tingkatan Saat Ini: {{ $tierInfo['badge'] }}
-                        </div>
-                    </div>
-
-                    {{-- Progress Bar Minimalis --}}
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1rem;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: #334155; margin-bottom: 0.5rem;">
-                            <span>Transaksi Order: <strong style="color: #1eb349;">{{ $currentTrans }} / {{ $targetTrans }}</strong></span>
-                            @if($remainingTrans > 0)
-                                <span style="color: #d97706; font-size: 0.75rem; font-weight: 600; background: #fffbeb; padding: 0.2rem 0.55rem; border-radius: 6px; border: 1px solid #fef3c7;">
-                                    Kurang {{ $remainingTrans }} transaksi order lagi
-                                </span>
-                            @else
-                                <span style="color: #166534; font-size: 0.75rem; font-weight: 600; background: #f0fdf4; padding: 0.2rem 0.55rem; border-radius: 6px; border: 1px solid #bbf7d0;">
-                                    Siap Diklaim!
-                                </span>
-                            @endif
-                        </div>
-                        <div style="width: 100%; height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; position: relative;">
-                            <div style="height: 100%; width: {{ $percentTrans }}%; background: linear-gradient(90deg, #1eb349 0%, #a5cf37 100%); border-radius: 999px; transition: width 0.5s ease;"></div>
-                        </div>
-                    </div>
-
-                    {{-- Action Button --}}
-                    <div style="display: flex; align-items: center; justify-content: flex-end;">
-                        @if($currentTrans < $targetTrans)
-                            <button type="button" class="btn-verify-disabled" disabled style="background: #f1f5f9; color: #94a3b8; border: 1px solid #cbd5e1; border-radius: 12px; padding: 0.6rem 1.25rem; font-weight: 700; font-size: 0.8rem; cursor: not-allowed; display: inline-flex; align-items: center; gap: 0.4rem;" title="Syarat 10 transaksi belum terpenuhi">
-                                <i class="ph ph-lock-key" style="font-size: 1rem;"></i>
-                                Request Verified Creator (Kurang {{ $remainingTrans }} Transaksi)
-                            </button>
-                        @else
-                            <form method="POST" action="{{ route('creator.request-verification') }}">
-                                @csrf
-                                <button type="submit" style="background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; border: none; border-radius: 12px; padding: 0.65rem 1.35rem; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 14px rgba(30,179,73,0.35);">
-                                    <i class="ph ph-seal-check" style="font-size: 1.1rem;"></i>
-                                    Klaim / Request Verified Creator Sekarang
-                                </button>
-                            </form>
-                        @endif
-                    </div>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    {{-- ── GRID ROW 1: SALDO (WIDGET 2) & TRAFFIC WAVE (WIDGET 5) ── --}}
-    <div class="cr-grid-main">
-        {{-- Card 2: Saldo & Keuangan Real-Time --}}
-        <div class="bio-card">
-            <div>
-                <div class="balance-top">
-                    <div>
-                        <div class="balance-label">SALDO UTAMA SIAP CAIR</div>
-                        <div class="balance-val" id="rt-balance">
-                            Rp {{ number_format($availableBalance ?? 0, 0, ',', '.') }}
-                        </div>
-                    </div>
-                    <a href="{{ route('creator.payout.settings') }}" class="btn-withdraw">
-                        <i class="ph ph-wallet"></i> + Tarik Saldo
-                    </a>
-                </div>
-
-                <div class="balance-sub-info">
-                    <span>Total Pendapatan: <strong>Rp {{ number_format($gmv ?? 0, 0, ',', '.') }}</strong></span>
-                    <span>Penarikan: <strong>Rp {{ number_format($totalPayout ?? 0, 0, ',', '.') }}</strong></span>
-                </div>
+        {{-- Saldo Utama (Nominal Rupiah Raksasa) --}}
+        <div class="nina-balance-center">
+            <div class="nina-currency-badge">
+                <i class="ph-bold ph-coins" style="color:#1eb349;"></i>
+                <span>IDR / RUPIAH</span>
             </div>
 
-            {{-- Slow-mo Revenue SVG Growth Chart --}}
-            <div class="balance-chart-box">
-                <svg class="balance-chart-svg" viewBox="0 0 500 100" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="balChartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#1eb349" stop-opacity="0.35"/>
-                            <stop offset="100%" stop-color="#a5cf37" stop-opacity="0.0"/>
-                        </linearGradient>
-                        <linearGradient id="balLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#1eb349"/>
-                            <stop offset="100%" stop-color="#a5cf37"/>
-                        </linearGradient>
-                    </defs>
-                    <path class="fade-fill-slow" d="M 0,90 L 60,80 L 140,50 L 220,70 L 300,30 L 380,45 L 500,10 L 500,100 L 0,100 Z" fill="url(#balChartGrad)"/>
-                    <path class="draw-line-slow" d="M 0,90 L 60,80 L 140,50 L 220,70 L 300,30 L 380,45 L 500,10" fill="none" stroke="url(#balLineGrad)" stroke-width="4" stroke-linecap="round"/>
-                </svg>
+            <div class="nina-balance-amount">
+                Rp {{ number_format($availableBalance, 0, ',', '.') }}
+            </div>
+
+            <div class="nina-growth-pill">
+                <i class="ph-bold ph-trend-up"></i>
+                <span>Saldo Siap Ditarik</span>
             </div>
         </div>
 
-        {{-- Card 5: Traffic Wave & Performa Analytics --}}
-        <div class="bio-card">
-            <div>
-                <div class="wave-header">
-                    <div class="wave-title">
-                        <i class="ph ph-chart-line-up" style="color: var(--brand-green); font-size: 1.1rem;"></i>
-                        TRAFFIC WAVE
-                    </div>
-                    <div class="live-dot-badge">
-                        <span class="pulse-dot"></span> LIVE AI MONITORING
-                    </div>
-                </div>
+        {{-- Dark Action Bar: Tarik Saldo, QR / Link Bio, Bagikan --}}
+        <div class="nina-action-bar">
+            <a href="{{ route('creator.payout.settings') }}" class="nina-action-btn">
+                <span>Tarik Saldo</span>
+                <i class="ph-bold ph-arrow-up-right" style="font-size: 0.9rem;"></i>
+            </a>
 
-                {{-- Smooth Wave SVG --}}
-                <svg viewBox="0 0 500 90" preserveAspectRatio="none" style="width:100%; height:65px; overflow:visible;">
-                    <defs>
-                        <linearGradient id="trafficGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#1eb349" stop-opacity="0.3"/>
-                            <stop offset="100%" stop-color="#1eb349" stop-opacity="0.0"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M 0,70 Q 70,10 140,50 T 280,30 T 420,60 T 500,20 L 500,90 L 0,90 Z" fill="url(#trafficGrad)"/>
-                    <path d="M 0,70 Q 70,10 140,50 T 280,30 T 420,60 T 500,20" fill="none" stroke="var(--brand-green)" stroke-width="3" stroke-linecap="round"/>
-                </svg>
-            </div>
+            <a href="{{ $bioUrl }}" target="_blank" class="nina-action-icon-center" title="Buka Toko / Web Bio">
+                <i class="ph ph-qr-code" style="font-size: 1.35rem;"></i>
+            </a>
 
-            <div class="stats-counter-grid">
-                <div class="counter-item">
-                    <div class="counter-item-label">TOTAL VIEWS</div>
-                    <div class="counter-item-val" id="rt-views">
-                        {{ number_format(($totalProducts * 18) + 32, 0, ',', '.') }}
-                    </div>
-                </div>
-                <div class="counter-item">
-                    <div class="counter-item-label">TRANSAKSI</div>
-                    <div class="counter-item-val" id="rt-clicks">
-                        {{ number_format($totalTransactions ?? 0, 0, ',', '.') }}
-                    </div>
-                </div>
-                <div class="counter-item">
-                    <div class="counter-item-label">KONVERSI</div>
-                    <div class="counter-item-val">
-                        @php
-                            $viewsCount = ($totalProducts * 18) + 32;
-                            $convRate = $viewsCount > 0 ? round(($totalTransactions / $viewsCount) * 100, 1) : 0;
-                        @endphp
-                        {{ $convRate }}%
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- ── WIDGET 3: BUYLE AI SMART ASSISTANT (ASISTEN OPTIMASI TOKO) ── --}}
-    <div class="ai-assistant-card">
-        <div class="ai-assistant-header">
-            <div class="ai-assistant-title-group">
-                <div class="ai-icon-wrapper">
-                    <i class="ph ph-robot"></i>
-                </div>
-                <div>
-                    <h3 class="ai-card-title">Buyle AI – Asisten Optimasi Toko</h3>
-                    <p class="ai-card-sub">Analisis pintar otomatis untuk meningkatkan penjualan & konversi bio Anda (Gratis Selamanya / Tanpa Token AI).</p>
-                </div>
-            </div>
-            <button onclick="runAiScan()" class="btn-ai-scan" id="btnAiScan">
-                <i class="ph ph-arrows-clockwise" id="iconAiScan"></i> Jalankan Analisis AI
+            <button type="button" class="nina-action-btn" onclick="navigator.clipboard.writeText('{{ $bioUrl }}'); alert('Link toko berhasil disalin ke clipboard!');">
+                <i class="ph-bold ph-share-network" style="font-size: 0.9rem;"></i>
+                <span>Bagikan</span>
             </button>
         </div>
 
-        {{-- Score Health Progress --}}
-        <div class="ai-health-row">
-            <div class="score-circle-box">
-                <svg class="score-circle-svg" viewBox="0 0 70 70">
-                    <defs>
-                        <linearGradient id="aiScoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#1eb349"/>
-                            <stop offset="100%" stop-color="#a5cf37"/>
-                        </linearGradient>
-                    </defs>
-                    <circle class="score-circle-bg" cx="35" cy="35" r="30"></circle>
-                    <circle class="score-circle-val" cx="35" cy="35" r="30"
-                            stroke-dasharray="188"
-                            stroke-dashoffset="{{ $dashOffset }}"></circle>
-                </svg>
-                <div class="score-text-num" id="aiScoreText">{{ $score }}%</div>
-            </div>
-            <div class="ai-health-info">
-                <h4 class="ai-health-title" id="aiHealthStatusTitle">
-                    @if($score >= 80)
-                        Sangat Bagus! Toko & Bio Siap Menghasilkan Max Konversi
-                        <i class="ph ph-fire" style="color:#e11d48; margin-left:0.25rem;"></i>
-                    @elseif($score >= 50)
-                        Performa Cukup Baik - Tingkatkan Beberapa Langkah Lagi
-                        <i class="ph ph-rocket-launch" style="color:var(--brand-green); margin-left:0.25rem;"></i>
-                    @else
-                        Optimasi Diperlukan Agar Toko Lebih Menarik Pembeli
-                        <i class="ph ph-warning-circle" style="color:#d97706; margin-left:0.25rem;"></i>
-                    @endif
-                </h4>
-                <p class="ai-health-desc">
-                    Buyle AI merekomendasikan beberapa tindakan langsung di bawah ini untuk mengoptimalkan impresi pembeli dan mempercepat transaksi.
-                </p>
-            </div>
-        </div>
-
-        {{-- Checklist Suggestions --}}
-        <div class="ai-recs-list">
-            {{-- Rec 1: Digital Products --}}
-            <div class="ai-rec-item">
-                <div class="ai-rec-left">
-                    <div class="ai-rec-status-icon {{ $totalProducts >= 3 ? 'status-done' : 'status-warn' }}">
-                        <i class="ph {{ $totalProducts >= 3 ? 'ph-check-circle' : 'ph-warning-circle' }}"></i>
-                    </div>
-                    <div>
-                        <h5 class="ai-rec-title">Produk Digital ({{ $totalProducts }} Aktif)</h5>
-                        <p class="ai-rec-desc">
-                            @if($totalProducts >= 3)
-                                Produk digital Anda cukup bervariasi. Pembeli memiliki banyak pilihan.
-                            @elseif($totalProducts > 0)
-                                Tambahkan minimal 3 produk digital untuk meningkatkan potensi konversi hingga 40%.
-                            @else
-                                Belum ada produk digital. Upload produk digital pertama Anda untuk mulai menerima pesanan.
-                            @endif
-                        </p>
-                    </div>
-                </div>
-                <a href="{{ route('creator.products.create') }}" class="btn-ai-action primary">
-                    <i class="ph ph-plus"></i> Tambah Produk
-                </a>
-            </div>
-
-            {{-- Rec 2: Custom Domain --}}
-            <div class="ai-rec-item">
-                <div class="ai-rec-left">
-                    <div class="ai-rec-status-icon {{ $hasDomain ? 'status-done' : 'status-warn' }}">
-                        <i class="ph {{ $hasDomain ? 'ph-check-circle' : 'ph-globe-hemisphere-west' }}"></i>
-                    </div>
-                    <div>
-                        <h5 class="ai-rec-title">Custom Domain ({{ $hasDomain ? $cp->custom_domain : 'Belum Ada' }})</h5>
-                        <p class="ai-rec-desc">
-                            @if($hasDomain)
-                                Domain kustom aktif! Brand Anda terlihat sangat profesional.
-                            @else
-                                Gunakan domain pribadi seperti <code>namamu.com</code> agar brand lebih dipercaya pembeli.
-                            @endif
-                        </p>
-                    </div>
-                </div>
-                <a href="{{ route('creator.bio.index') }}" class="btn-ai-action {{ $hasDomain ? 'secondary' : 'primary' }}">
-                    <i class="ph ph-magnifying-glass"></i> Cari Domain
-                </a>
-            </div>
-
-            {{-- Rec 3: Payout Settings --}}
-            <div class="ai-rec-item">
-                <div class="ai-rec-left">
-                    <div class="ai-rec-status-icon {{ $hasPayout ? 'status-done' : 'status-warn' }}">
-                        <i class="ph {{ $hasPayout ? 'ph-check-circle' : 'ph-bank' }}"></i>
-                    </div>
-                    <div>
-                        <h5 class="ai-rec-title">Metode Penarikan Saldo ({{ $hasPayout ? 'Terhubung' : 'Belum Disetting' }})</h5>
-                        <p class="ai-rec-desc">
-                            @if($hasPayout)
-                                Rekening / E-wallet Anda sudah siap untuk menerima pencairan otomatis.
-                            @else
-                                Daftarkan rekening bank atau nomor E-wallet Anda untuk mempermudah penarikan saldo.
-                            @endif
-                        </p>
-                    </div>
-                </div>
-                <a href="{{ route('creator.payout.settings') }}" class="btn-ai-action {{ $hasPayout ? 'secondary' : 'primary' }}">
-                    <i class="ph ph-gear"></i> Setting Payout
-                </a>
-            </div>
-        </div>
     </div>
 
-    {{-- ── GRID ROW 3: RECENT SALES & RECENT PRODUCTS ── --}}
-    <div class="cr-grid-bottom">
-        {{-- Recent Sales --}}
-        <div class="bio-card">
-            <div class="section-card-title">
-                <span>Penjualan Terbaru (30 Hari)</span>
-                <a href="{{ route('creator.sales.report') }}" style="font-size: 0.78rem; color: var(--brand-green); font-weight: 700; text-decoration: none;">
-                    Lihat Semua &rarr;
+    {{-- ── 2. GRID 2 KOLOM: SHORTCUT & YOUR INCOME ── --}}
+    <div class="nina-mid-grid">
+
+        {{-- Kolom Kiri: Shortcut (Produk, Tambah Produk, Pencairan, Web) --}}
+        <div>
+            <div class="nina-section-title">
+                <span>Shortcut</span>
+            </div>
+
+            <div class="nina-shortcuts-grid">
+                {{-- 1. Produk --}}
+                <a href="{{ route('creator.products.index') }}" class="nina-shortcut-card">
+                    <div class="nina-shortcut-icon">
+                        <i class="ph ph-tote"></i>
+                    </div>
+                    <span class="nina-shortcut-label">Produk</span>
+                </a>
+
+                {{-- 2. Tambah Produk --}}
+                <a href="{{ route('creator.products.create') }}" class="nina-shortcut-card">
+                    <div class="nina-shortcut-icon">
+                        <i class="ph ph-plus-circle"></i>
+                    </div>
+                    <span class="nina-shortcut-label">Tambah</span>
+                </a>
+
+                {{-- 3. Pencairan --}}
+                <a href="{{ route('creator.payout.settings') }}" class="nina-shortcut-card">
+                    <div class="nina-shortcut-icon">
+                        <i class="ph ph-wallet"></i>
+                    </div>
+                    <span class="nina-shortcut-label">Pencairan</span>
+                </a>
+
+                {{-- 4. Web Builder / Toko --}}
+                <a href="{{ route('creator.bio.index') }}" class="nina-shortcut-card">
+                    <div class="nina-shortcut-icon">
+                        <i class="ph ph-globe"></i>
+                    </div>
+                    <span class="nina-shortcut-label">Web Bio</span>
                 </a>
             </div>
-            @if($recentSales->count() > 0)
-                <div style="overflow-x: auto; margin-top: 0.25rem;">
-                    <table class="table-custom">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Pembeli</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($recentSales as $sale)
-                                @php
-                                    $saleTotal = $sale->items->sum('subtotal') ?: ($sale->total ?: 0);
-                                    $custName  = $sale->user?->name ?: ($sale->shipping_address['receiver_name'] ?? ($sale->shipping_address['name'] ?? 'Pembeli'));
-                                @endphp
-                                <tr>
-                                    <td style="font-weight:700;">#{{ $sale->order_number ?: $sale->id }}</td>
-                                    <td>{{ $custName }}</td>
-                                    <td style="color: var(--brand-green); font-weight: 700;">
-                                        Rp {{ number_format($saleTotal, 0, ',', '.') }}
-                                    </td>
-                                    <td>
-                                        <span style="background: #f0fdf4; color: var(--brand-green); padding: 0.2rem 0.6rem; border-radius: 999px; font-weight:700; font-size:0.68rem;">
-                                            LUNAS
-                                        </span>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 0.85rem;">
-                    <i class="ph ph-shopping-bag-open" style="font-size: 2.5rem; margin-bottom: 0.5rem; display: block; opacity: 0.4;"></i>
-                    Belum ada transaksi dalam 30 hari terakhir.
-                </div>
-            @endif
         </div>
 
-        {{-- Recent Active Products --}}
-        <div class="bio-card">
-            <div class="section-card-title">
-                <span>Produk Digital Anda</span>
-                <a href="{{ route('creator.products.index') }}" style="font-size: 0.78rem; color: var(--brand-green); font-weight: 700; text-decoration: none;">
-                    Kelola &rarr;
-                </a>
+        {{-- Kolom Kanan: Your Income (Grafik & Pendapatan Bulan Ini) --}}
+        <div>
+            <div class="nina-section-title">
+                <span>Your Income</span>
             </div>
-            @if($recentProducts->count() > 0)
-                <div style="display: flex; flex-direction: column; margin-top: 0.25rem;">
-                    @foreach($recentProducts as $prod)
-                        <div class="product-mini-item">
-                            <img src="{{ $prod->image_url ?: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&q=80' }}"
-                                 alt="{{ $prod->name }}" class="product-mini-img">
-                            <div style="flex: 1; min-width: 0;">
-                                <div style="font-size: 0.82rem; font-weight: 700; color: var(--dark-slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    {{ $prod->name }}
-                                </div>
-                                <div style="font-size: 0.75rem; color: var(--brand-green); font-weight: 700;">
-                                    Rp {{ number_format($prod->price, 0, ',', '.') }}
-                                </div>
-                            </div>
+
+            <div class="nina-income-card">
+                <div class="nina-income-header">
+                    <span>Bulan Ini</span>
+                    <div class="nina-income-dropdown-icon">
+                        <i class="ph ph-caret-down"></i>
+                    </div>
+                </div>
+
+                {{-- Smooth Wave Curve (Persis Gambar 1) --}}
+                <svg class="nina-income-wave" viewBox="0 0 160 50" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="incomeWaveGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#1eb349" stop-opacity="0.35" />
+                            <stop offset="100%" stop-color="#1eb349" stop-opacity="0.0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 0,35 Q 35,42 70,25 T 140,12 T 160,8 L 160,50 L 0,50 Z" fill="url(#incomeWaveGrad)" />
+                    <path d="M 0,35 Q 35,42 70,25 T 140,12 T 160,8" fill="none" stroke="#1eb349" stroke-width="2.8" stroke-linecap="round" />
+                </svg>
+
+                <div class="nina-income-footer">
+                    <div class="nina-income-val">
+                        Rp {{ number_format($incomeThisMonth, 0, ',', '.') }}
+                    </div>
+                    <div class="nina-growth-pill" style="padding: 2px 8px; font-size: 0.68rem;">
+                        <i class="ph-bold ph-trend-up"></i>
+                        <span>+100%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {{-- ── 3. RECENT ACTIVITY (RIWAYAT ORDERAN MASUK) ── --}}
+    <div class="nina-activity-wrap">
+        <div class="nina-section-title">
+            <span>Recent Activity</span>
+            <a href="{{ route('creator.sales.report') }}" title="Lihat Semua Laporan">
+                <i class="ph-bold ph-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="nina-activity-list">
+            @forelse($recentSales->take(6) as $order)
+                @php
+                    $firstItem = $order->items->first();
+                    $prodName = $firstItem?->product?->name ?? 'Produk Kreator';
+                    $buyerName = $order->customer_name ?: ($order->user?->name ?: 'Pembeli');
+                    $orderTime = \Carbon\Carbon::parse($order->created_at)->locale('id')->diffForHumans();
+                    $orderTotal = $order->items->sum('subtotal') ?: $order->total_amount;
+                @endphp
+                <a href="{{ route('creator.sales.report') }}" class="nina-activity-item">
+                    <div class="nina-act-left">
+                        <div class="nina-act-icon">
+                            <i class="ph-bold ph-shopping-bag"></i>
                         </div>
-                    @endforeach
+                        <div>
+                            <div class="nina-act-buyer">{{ $buyerName }}</div>
+                            <div class="nina-act-sub">{{ $prodName }} · {{ $orderTime }}</div>
+                        </div>
+                    </div>
+                    <div class="nina-act-right">
+                        <div class="nina-act-amount">+Rp {{ number_format($orderTotal, 0, ',', '.') }}</div>
+                        <span class="nina-act-status">Berhasil</span>
+                    </div>
+                </a>
+            @empty
+                <div style="background:#ffffff; border-radius:22px; padding:2rem 1.5rem; text-align:center; border:1px dashed #cbd5e1;">
+                    <div style="width:48px; height:48px; border-radius:50%; background:#f8fafc; color:#64748b; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.5rem;">
+                        <i class="ph ph-receipt"></i>
+                    </div>
+                    <div style="font-weight:700; color:#0f172a; font-size:0.92rem;">Belum Ada Orderan Masuk</div>
+                    <div style="font-size:0.78rem; color:#64748b; margin-top:3px; max-width:280px; margin:4px auto 0;">
+                        Bagikan link toko atau produk Anda ke media sosial untuk mulai menerima pesanan.
+                    </div>
                 </div>
-            @else
-                <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 0.85rem;">
-                    <i class="ph ph-package" style="font-size: 2.5rem; margin-bottom: 0.5rem; display: block; opacity: 0.4;"></i>
-                    Belum ada produk digital.
-                </div>
-            @endif
+            @endforelse
         </div>
     </div>
 
 </div>
-
-@endsection
-
-@section('scripts')
-<script>
-    // Toggle Link Share Dropdown
-    function toggleLinkDropdown(e) {
-        if (e) e.stopPropagation();
-        const menu = document.getElementById('linkDropdownMenu');
-        if (menu) menu.classList.toggle('show');
-    }
-
-    function hideLinkDropdown() {
-        const menu = document.getElementById('linkDropdownMenu');
-        if (menu) menu.classList.remove('show');
-    }
-
-    // Close dropdown on outside click
-    document.addEventListener('click', function(e) {
-        const menu = document.getElementById('linkDropdownMenu');
-        const trigger = document.querySelector('.btn-dropdown-trigger');
-        if (menu && trigger && !menu.contains(e.target) && !trigger.contains(e.target)) {
-            menu.classList.remove('show');
-        }
-    });
-
-    // Copy Bio / Store Link Toast
-    function copyStoreUrl(url, label) {
-        if (!url) return;
-        navigator.clipboard.writeText(url).then(() => {
-            alert((label || 'Link') + ' berhasil disalin! Pasang link ini di Bio Instagram/TikTok Anda:\n' + url);
-        }).catch(() => {
-            prompt('Salin ' + (label || 'link') + ' berikut:', url);
-        });
-    }
-
-    // AI Scan Button Animation & Realtime Refresh
-    function runAiScan() {
-        const btn = document.getElementById('btnAiScan');
-        const icon = document.getElementById('iconAiScan');
-        if (!btn || !icon) return;
-
-        icon.classList.add('ph-spin');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Menganalisis...';
-
-        setTimeout(() => {
-            icon.classList.remove('ph-spin');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="ph ph-check-circle" style="color: var(--brand-green);"></i> Teranalisis!';
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i class="ph ph-arrows-clockwise" id="iconAiScan"></i> Jalankan Analisis AI';
-            }, 2500);
-        }, 1200);
-    }
-
-    // Realtime Stats Polling (every 30s)
-    const statsUrl = '{{ route("creator.stats.realtime") }}';
-
-    async function fetchRealtimeStats() {
-        try {
-            const resp = await fetch(statsUrl, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-            });
-            if (!resp.ok) return;
-            const data = await resp.json();
-
-            const balEl   = document.getElementById('rt-balance');
-            const viewEl  = document.getElementById('rt-views');
-            const clickEl = document.getElementById('rt-clicks');
-
-            if (balEl && data.available_balance !== undefined) {
-                balEl.textContent = 'Rp ' + Number(data.available_balance).toLocaleString('id-ID');
-            }
-            if (viewEl && data.total_views !== undefined) {
-                viewEl.textContent = Number(data.total_views).toLocaleString('id-ID');
-            }
-            if (clickEl && data.total_transactions !== undefined) {
-                clickEl.textContent = Number(data.total_transactions).toLocaleString('id-ID');
-            }
-        } catch(e) {}
-    }
-
-    setInterval(fetchRealtimeStats, 30000);
-</script>
 @endsection
