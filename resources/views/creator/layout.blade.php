@@ -574,17 +574,9 @@
                 padding-bottom: 88px;
             }
 
+            /* Sembunyikan kotak hijau mobile bar */
             .cr-mobile-bar {
-                display: flex;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 80;
-                height: 64px;
-                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-                border-radius: 0;
+                display: none !important;
             }
 
             /* Hide hamburger from top bar since bottom nav has Menu button */
@@ -624,9 +616,9 @@
             .cr-main-wrapper {
                 margin-left: 0 !important;
                 padding: 0;
-                padding-top: 54px;
+                padding-top: 0.75rem !important;
                 height: auto;
-                min-height: calc(100vh - 64px - 88px);
+                min-height: calc(100vh - 88px);
                 max-width: 100vw;
                 overflow-x: hidden;
                 overflow-y: visible;
