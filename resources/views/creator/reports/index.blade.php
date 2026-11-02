@@ -711,7 +711,215 @@
             color: #15803d;
         }
 
-        /* Mini Stats Grid (2x2 beside Luxury Card) */
+        /* ── Modern Horizontal Pill Tab Navigation ────────────────── */
+        .rp-tab-nav-wrapper {
+            margin-bottom: 1.25rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 2px;
+        }
+
+        .rp-tab-nav-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .rp-tab-nav-clean {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: #f1f5f9;
+            padding: 0.3rem 0.35rem;
+            border-radius: 999px;
+            white-space: nowrap;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .rp-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.5rem 0.85rem;
+            border: none;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #64748b;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex: 1 1 0;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .rp-pill-btn:hover {
+            color: #1e293b;
+        }
+
+        .rp-pill-btn.active {
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .rp-pill-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 0.35rem;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            background: #e2e8f0;
+            color: #475569;
+            transition: all 0.2s ease;
+        }
+
+        .rp-pill-btn.active .rp-pill-badge {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        /* ── Compact Unified 4-Stat Box (Image 3) ─────────────────── */
+        .stat-group-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 1rem 1.15rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-group-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.85rem;
+        }
+
+        .stat-group-item {
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 14px;
+            padding: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .stat-group-item:hover {
+            border-color: #e2e8f0;
+            background: #f1f5f9;
+        }
+
+        .sgi-head {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .sgi-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sgi-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sgi-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-top: 0.45rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sgi-subnote {
+            font-size: 0.65rem;
+            color: #10b981;
+            font-weight: 600;
+            margin-top: 0.2rem;
+        }
+
+        .sgi-action-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.15rem 0.5rem;
+            background: #0f172a;
+            color: #ffffff;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .sgi-action-pill:hover {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        /* ── Unified Switchable Wave Chart (Image 4) ───────────────── */
+        .chart-switch-group {
+            display: inline-flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 999px;
+            gap: 0.25rem;
+        }
+
+        .chart-switch-btn {
+            border: none;
+            background: transparent;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s ease;
+        }
+
+        .chart-switch-btn:hover {
+            color: #0f172a;
+        }
+
+        .chart-switch-btn.active {
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Mini Stats Grid (Legacy fallback) */
         .stats-mini-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1746,48 +1954,55 @@
         $salesVal = (float) ($totalSales ?? 0);
         $sellerStoreName = $config['name'] ?? $profile->store_name ?? auth()->user()->name ?? 'CREATOR';
 
+        // Sync tier definitions with CreatorProfile::getTierInfo()
         if ($salesVal >= 500000000) {
-            $tierName = 'FINANCIAL FREEDOM';
+            $tierName     = 'FINANCIAL FREEDOM';
             $tierSubtitle = 'Solid Carbon Fiber Ultra-Card';
-            $tierClass = 'tier-carbon';
+            $tierClass    = 'tier-carbon';
+            $tierBadge    = 'Financial Freedom';
             $nextTierTarget = null;
-            $nextTierName = null;
-            $tierProgress = 100;
+            $nextTierName   = null;
+            $tierProgress   = 100;
         } elseif ($salesVal >= 200000000) {
-            $tierName = 'EKSEKUTIF SENIOR';
-            $tierSubtitle = 'Obsidian Matte Black Priority';
-            $tierClass = 'tier-obsidian';
+            $tierName     = 'EKSEKUTIF SENIOR';
+            $tierSubtitle = 'Obsidian Matte Black Silver';
+            $tierClass    = 'tier-obsidian';
+            $tierBadge    = 'Eksekutif Senior';
             $nextTierTarget = 500000000;
-            $nextTierName = 'Financial Freedom (500 Juta)';
-            $tierProgress = round(($salesVal / 500000000) * 100, 1);
+            $nextTierName   = 'Financial Freedom (500 Juta)';
+            $tierProgress   = round(($salesVal / 500000000) * 100, 1);
         } elseif ($salesVal >= 100000000) {
-            $tierName = 'EKSEKUTIF MUDA';
-            $tierSubtitle = 'Deep Emerald Platinum Card';
-            $tierClass = 'tier-emerald';
+            $tierName     = 'EKSEKUTIF MUDA';
+            $tierSubtitle = 'Deep Emerald Platinum';
+            $tierClass    = 'tier-emerald';
+            $tierBadge    = 'Enterprise';
             $nextTierTarget = 200000000;
-            $nextTierName = 'Eksekutif Senior (200 Juta)';
-            $tierProgress = round(($salesVal / 200000000) * 100, 1);
+            $nextTierName   = 'Eksekutif Senior (200 Juta)';
+            $tierProgress   = round(($salesVal / 200000000) * 100, 1);
         } elseif ($salesVal >= 50000000) {
-            $tierName = 'PENGUSAHA MUDA';
-            $tierSubtitle = 'Rose Gold Minimalist Card';
-            $tierClass = 'tier-rosegold';
+            $tierName     = 'PENGUSAHA MUDA';
+            $tierSubtitle = 'Rose Gold / Champagne Gold';
+            $tierClass    = 'tier-rosegold';
+            $tierBadge    = 'Pengusaha Muda';
             $nextTierTarget = 100000000;
-            $nextTierName = 'Eksekutif Muda (100 Juta)';
-            $tierProgress = round(($salesVal / 100000000) * 100, 1);
+            $nextTierName   = 'Eksekutif Muda (100 Juta)';
+            $tierProgress   = round(($salesVal / 100000000) * 100, 1);
         } elseif ($salesVal >= 10000000) {
-            $tierName = 'PEJUANG / HUSTLER';
-            $tierSubtitle = 'Titanium Gray Metallic Card';
-            $tierClass = 'tier-titanium';
+            $tierName     = 'PEJUANG / HUSTLER';
+            $tierSubtitle = 'Titanium Gray Metallic';
+            $tierClass    = 'tier-titanium';
+            $tierBadge    = 'Pejuang / Hustler';
             $nextTierTarget = 50000000;
-            $nextTierName = 'Pengusaha Muda (50 Juta)';
-            $tierProgress = round(($salesVal / 50000000) * 100, 1);
+            $nextTierName   = 'Pengusaha Muda (50 Juta)';
+            $tierProgress   = round(($salesVal / 50000000) * 100, 1);
         } else {
-            $tierName = 'PERINTIS';
-            $tierSubtitle = 'Matte Silver Brushed Steel';
-            $tierClass = 'tier-silver';
+            $tierName     = 'PERINTIS';
+            $tierSubtitle = 'Matte Silver / Brushed Steel';
+            $tierClass    = 'tier-silver';
+            $tierBadge    = 'Perintis';
             $nextTierTarget = 10000000;
-            $nextTierName = 'Pejuang / Hustler (10 Juta)';
-            $tierProgress = round(($salesVal / 10000000) * 100, 1);
+            $nextTierName   = 'Pejuang / Hustler (10 Juta)';
+            $tierProgress   = round(($salesVal / 10000000) * 100, 1);
         }
     @endphp
 
@@ -1818,37 +2033,31 @@
         </div>
     </div>
 
-    {{-- ── MAIN TAB NAVIGATION ────────────────────────────────────────── --}}
-    <div class="rp-tab-nav"
-        style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 8px rgba(0,0,0,0.03); flex-wrap:wrap; gap:1rem;">
-        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="rp-tab-btn {{ $activeTab === 'pembeli' ? 'active' : '' }}"
-                onclick="switchReportTab('pembeli')" id="tabBtnPembeli"
-                style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'pembeli' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'pembeli' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    {{-- ── MAIN TAB NAVIGATION (Horizontal Pill Bar) ────────────────────────── --}}
+    <div class="rp-tab-nav-wrapper">
+        <div class="rp-tab-nav-clean">
+            <button type="button" class="rp-pill-btn {{ $activeTab === 'pembeli' ? 'active' : '' }}"
+                onclick="switchReportTab('pembeli')" id="tabBtnPembeli">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <span>Produk & Jasa Digital</span>
-                <span
-                    style="background:{{ $activeTab === 'pembeli' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($buyers ?? []) }}</span>
+                <span>Produk Digital</span>
+                <span class="rp-pill-badge">{{ count($buyers ?? []) }}</span>
             </button>
-            <button type="button" class="rp-tab-btn {{ $activeTab === 'leads' ? 'active' : '' }}"
-                onclick="switchReportTab('leads')" id="tabBtnLeads"
-                style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'leads' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'leads' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <button type="button" class="rp-pill-btn {{ $activeTab === 'leads' ? 'active' : '' }}"
+                onclick="switchReportTab('leads')" id="tabBtnLeads">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 3-3.87" />
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
-                <span>Data Leads Website</span>
-                <span
-                    style="background:{{ $activeTab === 'leads' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($leads ?? []) }}</span>
+                <span>Data Leads</span>
+                <span class="rp-pill-badge">{{ count($leads ?? []) }}</span>
             </button>
-            <button type="button" class="rp-tab-btn {{ $activeTab === 'pos' ? 'active' : '' }}"
-                onclick="switchReportTab('pos')" id="tabBtnPos"
-                style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'pos' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'pos' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <button type="button" class="rp-pill-btn {{ $activeTab === 'pos' ? 'active' : '' }}"
+                onclick="switchReportTab('pos')" id="tabBtnPos">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="4" y="3" width="16" height="18" rx="2" />
                     <line x1="8" y1="7" x2="16" y2="7" />
                     <line x1="8" y1="11" x2="10" y2="11" />
@@ -1856,9 +2065,8 @@
                     <line x1="8" y1="15" x2="10" y2="15" />
                     <line x1="14" y1="15" x2="16" y2="15" />
                 </svg>
-                <span>Kasir Digital (POS)</span>
-                <span
-                    style="background:{{ $activeTab === 'pos' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($posOrders ?? []) }}</span>
+                <span>Kasir POS</span>
+                <span class="rp-pill-badge">{{ count($posOrders ?? []) }}</span>
             </button>
         </div>
     </div>
@@ -1956,101 +2164,104 @@
                 </div>
             </div>
 
-            {{-- Right Column: 4 Stat Cards in 2x2 Grid --}}
-            <div class="stats-mini-grid">
-                <div class="stat-mini-card">
-                    <div class="sm-icon green">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                            <path
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="sm-label">Total Visitor</div>
-                        <div class="sm-value">{{ number_format($totalVisitors) }}</div>
-                    </div>
-                </div>
-                <a href="{{ route('creator.payout.settings') }}" class="stat-mini-card stat-mini-card-payout"
-                    style="text-decoration:none;position:relative;border:1.5px solid #86efac;background:linear-gradient(135deg,#ffffff 0%,#f0fdf4 100%);cursor:pointer;">
-                    <div class="sm-icon green"
-                        style="background:#dcfce7;color:#15803d;box-shadow:0 2px 8px rgba(22,163,74,0.15);">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="2" y="6" width="20" height="12" rx="2" />
-                            <circle cx="16" cy="12" r="2" />
-                            <path d="M6 12h.01" />
-                        </svg>
-                    </div>
-                    <div style="flex:1;min-width:0;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.3rem;">
-                            <div class="sm-label" style="color:#15803d;font-weight:800;">Saldo Siap Ditarik</div>
-                            <span
-                                style="background:#16a34a;color:#fff;font-size:0.6rem;font-weight:800;padding:0.15rem 0.45rem;border-radius:6px;letter-spacing:0.02em;">TARIK</span>
+            {{-- Right Column: Compact Unified 4-Stat Card --}}
+            <div class="stat-group-card">
+                <div class="stat-group-grid">
+                    {{-- Stat 1: Total Visitor --}}
+                    <div class="stat-group-item">
+                        <div class="sgi-head">
+                            <div class="sgi-icon">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </div>
+                            <span class="sgi-label">Total Visitor</span>
                         </div>
-                        <div class="sm-value" style="color:#14532d;font-size:1.15rem;">
-                            Rp {{ number_format($availableBalance ?? 0, 0, ',', '.') }}
+                        <div class="sgi-value">{{ number_format($totalVisitors) }}</div>
+                    </div>
+
+                    {{-- Stat 2: Saldo Siap Ditarik --}}
+                    <a href="{{ route('creator.payout.settings') }}" class="stat-group-item" style="text-decoration:none;">
+                        <div class="sgi-head" style="justify-content:space-between;">
+                            <div style="display:flex;align-items:center;gap:0.45rem;">
+                                <div class="sgi-icon">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="2" y="6" width="20" height="12" rx="2"/>
+                                        <circle cx="16" cy="12" r="2"/>
+                                        <path d="M6 12h.01"/>
+                                    </svg>
+                                </div>
+                                <span class="sgi-label">Saldo</span>
+                            </div>
+                            <span class="sgi-action-pill">Tarik</span>
                         </div>
-                        <div
-                            style="font-size:0.68rem;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:0.25rem;margin-top:0.15rem;">
-                            <span>100% Tanpa Potongan</span>
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <polyline points="9 18 15 12 9 6" />
-                            </svg>
+                        <div class="sgi-value" style="font-size:0.95rem;">Rp {{ number_format($availableBalance ?? 0, 0, ',', '.') }}</div>
+                        <div class="sgi-subnote">100% Tanpa Potongan</div>
+                    </a>
+
+                    {{-- Stat 3: Total Transaksi --}}
+                    <div class="stat-group-item">
+                        <div class="sgi-head">
+                            <div class="sgi-icon">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                                </svg>
+                            </div>
+                            <span class="sgi-label">Transaksi</span>
                         </div>
+                        <div class="sgi-value">{{ number_format($totalOrders) }}</div>
                     </div>
-                </a>
-                <div class="stat-mini-card">
-                    <div class="sm-icon purple">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                            <line x1="3" y1="6" x2="21" y2="6" />
-                            <path d="M16 10a4 4 0 0 1-8 0" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="sm-label">Total Transaksi</div>
-                        <div class="sm-value">{{ number_format($totalOrders) }}</div>
-                    </div>
-                </div>
-                <div class="stat-mini-card">
-                    <div class="sm-icon orange">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="sm-label">Link Klik Bio</div>
-                        <div class="sm-value">{{ number_format($totalBioClicks) }}</div>
+
+                    {{-- Stat 4: Klik Link Bio --}}
+                    <div class="stat-group-item">
+                        <div class="sgi-head">
+                            <div class="sgi-icon">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                </svg>
+                            </div>
+                            <span class="sgi-label">Klik Bio</span>
+                        </div>
+                        <div class="sgi-value">{{ number_format($totalBioClicks) }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- ── 2 Wave Cards Grid: Visitors Wave & Sales Wave ──────────────── --}}
-        <div class="charts-wave-grid">
-            {{-- Card Kiri: Grafik Wave Visitor --}}
-            <div class="wave-card" style="margin-bottom:0;">
-                <div class="wave-header">
-                    <span class="wave-title">GRAFIK WAVE VISITOR</span>
-                    <span class="wave-live-badge"><span class="wave-live-dot"></span> LIVE</span>
+        {{-- ── Single Switchable Wave Chart Card ─────────────────────────── --}}
+        <div class="wave-card" style="margin-bottom:1.5rem;">
+            <div class="wave-header">
+                <div style="display:flex;flex-direction:column;gap:0.15rem;">
+                    <span class="wave-title" id="mainChartTitle">Grafik Visitor</span>
+                    <span style="font-size:0.7rem;color:#94a3b8;font-weight:500;">Kunjungan harian</span>
                 </div>
-                <div class="chart-wrap">
-                    <canvas id="trafficChart"></canvas>
+                <div class="chart-switch-group">
+                    <button type="button" class="chart-switch-btn active" id="chartBtnVisitor" onclick="switchMainChart('visitor')">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        Visitor
+                    </button>
+                    <button type="button" class="chart-switch-btn" id="chartBtnOrder" onclick="switchMainChart('order')">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        Order
+                    </button>
                 </div>
             </div>
-
-            {{-- Card Kanan: Grafik Wave Penjualan --}}
-            <div class="wave-card" style="margin-bottom:0;">
-                <div class="wave-header">
-                    <span class="wave-title">GRAFIK WAVE PENJUALAN</span>
-                    <span class="wave-live-badge" style="background:#e0e7ff; color:#3730a3;"><span class="wave-live-dot"
-                            style="background:#4338ca;"></span> RP</span>
-                </div>
-                <div class="chart-wrap">
-                    <canvas id="salesChart"></canvas>
-                </div>
+            <div id="wrapTrafficChart" class="chart-wrap">
+                <canvas id="trafficChart"></canvas>
+            </div>
+            <div id="wrapSalesChart" class="chart-wrap" style="display:none;">
+                <canvas id="salesChart"></canvas>
             </div>
         </div>
 
@@ -3026,54 +3237,57 @@
             const tabBtnPos = document.getElementById('tabBtnPos');
             const modalTabInput = document.getElementById('modalTabInput');
 
-            // Reset all tab content
-            if (pembeliContent) pembeliContent.style.display = 'none';
-            if (leadsContent) leadsContent.style.display = 'none';
-            if (posContent) posContent.style.display = 'none';
+            // Hide all content
+            [pembeliContent, leadsContent, posContent].forEach(el => { if (el) el.style.display = 'none'; });
 
-            // Reset all tab buttons
+            // Reset all pill buttons (remove .active)
             [tabBtnPembeli, tabBtnLeads, tabBtnPos].forEach(btn => {
-                if (btn) {
-                    btn.style.color = '#64748b';
-                    btn.style.background = 'transparent';
-                    btn.classList.remove('active');
-                    const badge = btn.querySelector('span:last-child');
-                    if (badge) badge.style.background = '#94a3b8';
-                }
+                if (btn) btn.classList.remove('active');
             });
 
             if (tabName === 'leads') {
                 if (leadsContent) leadsContent.style.display = 'block';
-                if (tabBtnLeads) {
-                    tabBtnLeads.style.color = '#15803D';
-                    tabBtnLeads.style.background = '#F0FDF4';
-                    tabBtnLeads.classList.add('active');
-                    const badge = tabBtnLeads.querySelector('span:last-child');
-                    if (badge) badge.style.background = '#1eb349';
-                }
+                if (tabBtnLeads) tabBtnLeads.classList.add('active');
             } else if (tabName === 'pos') {
                 if (posContent) posContent.style.display = 'block';
-                if (tabBtnPos) {
-                    tabBtnPos.style.color = '#15803D';
-                    tabBtnPos.style.background = '#F0FDF4';
-                    tabBtnPos.classList.add('active');
-                    const badge = tabBtnPos.querySelector('span:last-child');
-                    if (badge) badge.style.background = '#1eb349';
-                }
+                if (tabBtnPos) tabBtnPos.classList.add('active');
             } else {
                 tabName = 'pembeli';
                 if (pembeliContent) pembeliContent.style.display = 'block';
-                if (tabBtnPembeli) {
-                    tabBtnPembeli.style.color = '#15803D';
-                    tabBtnPembeli.style.background = '#F0FDF4';
-                    tabBtnPembeli.classList.add('active');
-                    const badge = tabBtnPembeli.querySelector('span:last-child');
-                    if (badge) badge.style.background = '#1eb349';
-                }
+                if (tabBtnPembeli) tabBtnPembeli.classList.add('active');
             }
 
             if (modalTabInput) modalTabInput.value = tabName;
             updateFilterUrls(tabName);
+        }
+
+        function switchMainChart(mode) {
+            const wrapTraffic = document.getElementById('wrapTrafficChart');
+            const wrapSales   = document.getElementById('wrapSalesChart');
+            const btnVisitor  = document.getElementById('chartBtnVisitor');
+            const btnOrder    = document.getElementById('chartBtnOrder');
+            const titleEl     = document.getElementById('mainChartTitle');
+
+            if (mode === 'order') {
+                if (wrapTraffic) wrapTraffic.style.display = 'none';
+                if (wrapSales)   wrapSales.style.display   = 'block';
+                if (btnVisitor)  btnVisitor.classList.remove('active');
+                if (btnOrder)    btnOrder.classList.add('active');
+                if (titleEl)     titleEl.textContent = 'Grafik Order / Penjualan';
+                // Trigger resize so Chart.js redraws correctly
+                setTimeout(() => {
+                    if (window.salesChartInstance) window.salesChartInstance.resize();
+                }, 50);
+            } else {
+                if (wrapSales)   wrapSales.style.display   = 'none';
+                if (wrapTraffic) wrapTraffic.style.display = 'block';
+                if (btnOrder)    btnOrder.classList.remove('active');
+                if (btnVisitor)  btnVisitor.classList.add('active');
+                if (titleEl)     titleEl.textContent = 'Grafik Visitor';
+                setTimeout(() => {
+                    if (window.trafficChartInstance) window.trafficChartInstance.resize();
+                }, 50);
+            }
         }
 
         function updateFilterUrls(currentTab) {
@@ -3121,7 +3335,7 @@
             const ctx = document.getElementById('trafficChart');
             if (!ctx) return;
 
-            new Chart(ctx, {
+            window.trafficChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels,
@@ -3186,7 +3400,7 @@
             const ctx = document.getElementById('salesChart');
             if (!ctx) return;
 
-            new Chart(ctx, {
+            window.salesChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels,
