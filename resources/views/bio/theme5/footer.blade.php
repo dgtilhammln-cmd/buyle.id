@@ -345,7 +345,7 @@
             order: 3;
             width: 100%;
             text-align: center;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .t5-footer-social-wrap {
@@ -535,11 +535,11 @@
             $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
 
             $berandaLink = $isHome ? 'javascript:void(0)' : $homeUrl;
-            $aboutLink   = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=about';
+            $aboutLink = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=about';
             $contactLink = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=contact';
 
             $berandaOnClick = $isHome ? "t5ScrollTo('top'); return false;" : "";
-            $aboutOnClick   = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
+            $aboutOnClick = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
             $contactOnClick = $isHome ? "t5ScrollTo('contact-section'); return false;" : "";
         @endphp
         {{-- Navigation Links (Top Row) --}}
@@ -615,7 +615,8 @@
 {{-- POP-UP LEAD FORM MODAL --}}
 <div class="t5-lead-modal-backdrop" id="t5LeadModal">
     <div class="t5-lead-modal-card">
-        <button type="button" class="t5-modal-close-btn" onclick="closeT5LeadModal()" aria-label="Tutup modal">&times;</button>
+        <button type="button" class="t5-modal-close-btn" onclick="closeT5LeadModal()"
+            aria-label="Tutup modal">&times;</button>
 
         <div class="t5-modal-head-box">
             <div class="t5-modal-badge">
@@ -683,7 +684,7 @@
     }
 
     // Global WhatsApp Click Interceptor for Tema 5
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         const waLink = e.target.closest('a[href*="wa.me"], a[href*="whatsapp.com"], .t5-btn-wa, .t5-floating-wa, .social-icon[title="WhatsApp"]');
         if (waLink) {
             e.preventDefault();
@@ -695,10 +696,10 @@
                     const urlObj = new URL(waLink.href, window.location.origin);
                     customMsg = urlObj.searchParams.get('text') || '';
                 }
-            } catch(err) {}
+            } catch (err) { }
 
             if (!customMsg) {
-                customMsg = 'Halo, saya tertarik berkonsultasi & terhubung via WhatsApp.';
+                customMsg = 'Halo, saya tertarik berkonsultasi.';
             }
 
             openT5LeadModal(customMsg);

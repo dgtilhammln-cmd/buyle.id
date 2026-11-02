@@ -27,7 +27,175 @@
             min-width: 0;
         }
 
-        /* ── Sidebar balance cards ── */
+        /* ── Bank Super App Balance Card ── */
+        .bank-balance-card {
+            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 18px;
+            padding: 1.35rem 1.25rem 1.15rem;
+            color: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.22), 0 4px 10px -2px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .bank-balance-card .bank-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.65rem;
+        }
+
+        .bank-balance-card .bank-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .bank-balance-card .bank-live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
+        }
+
+        .bank-balance-card .bank-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        .bank-balance-card .bank-eye-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .bank-balance-card .bank-eye-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        .bank-balance-card .bank-main-val-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 0.35rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .bank-balance-card .bank-curr {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .bank-balance-card .bank-amount {
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            color: #ffffff;
+            font-family: inherit;
+        }
+
+        .bank-balance-card .bank-masked-dots {
+            font-size: 1.6rem;
+            letter-spacing: 0.15em;
+            color: #cbd5e1;
+            font-weight: 800;
+            line-height: 1.2;
+            display: inline-block;
+        }
+
+        .bank-balance-card .bank-note {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 1.1rem;
+        }
+
+        .bank-balance-card .bank-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.09);
+            margin-bottom: 0.85rem;
+        }
+
+        .bank-balance-card .bank-sub-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .bank-balance-card .bank-sub-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+        }
+
+        .bank-balance-card .bank-sub-left {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .bank-balance-card .bank-sub-tag {
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.07);
+            color: #cbd5e1;
+        }
+
+        .bank-balance-card .bank-sub-tag.kasir {
+            background: rgba(16, 185, 129, 0.16);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .bank-balance-card .bank-sub-right {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .bank-balance-card .bank-btn-transfer {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #6ee7b7;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .bank-balance-card .bank-btn-transfer:hover {
+            background: rgba(16, 185, 129, 0.35);
+            color: #ffffff;
+        }
+
+        /* ── Legacy fallback balance cards ── */
         .saldo-grid {
             display: flex;
             flex-direction: column;
@@ -42,86 +210,6 @@
             flex-direction: column;
             gap: 0.35rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-        }
-
-        .saldo-card.cleared {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border: 1.5px solid #86efac;
-        }
-
-        .saldo-card.hold {
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-            border: 1.5px solid #fde68a;
-        }
-
-        .saldo-card.escrow {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border: 1.5px solid #93c5fd;
-        }
-
-        .saldo-card.pos-deposit {
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-            border: 1.5px solid #6ee7b7;
-        }
-
-        .saldo-card-label {
-            font-size: 0.72rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .saldo-card.cleared .saldo-card-label {
-            color: #15803d;
-        }
-
-        .saldo-card.hold .saldo-card-label {
-            color: #92400e;
-        }
-
-        .saldo-card.escrow .saldo-card-label {
-            color: #1e40af;
-        }
-
-        .saldo-card-value {
-            font-size: 1.35rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-        }
-
-        .saldo-card.cleared .saldo-card-value {
-            color: #14532d;
-        }
-
-        .saldo-card.hold .saldo-card-value {
-            color: #78350f;
-        }
-
-        .saldo-card.escrow .saldo-card-value {
-            color: #1e3a8a;
-        }
-
-        .saldo-card-sub {
-            font-size: 0.7rem;
-            font-weight: 600;
-            line-height: 1.3;
-            margin-top: 0.15rem;
-        }
-
-        .saldo-card.cleared .saldo-card-sub {
-            color: #16a34a;
-        }
-
-        .saldo-card.hold .saldo-card-sub {
-            color: #d97706;
-        }
-
-        .saldo-card.escrow .saldo-card-sub {
-            color: #2563eb;
         }
 
         /* ── Tab Sidebar ── */
@@ -764,67 +852,9 @@
         {{-- SIDEBAR --}}
         <div class="bio-sidebar">
 
-            {{-- Saldo Cards (Desktop) --}}
+            {{-- Saldo Cards (Desktop - Bank Super App Minimalist) --}}
             <div class="sidebar-balance-hide">
-                <div class="saldo-grid">
-                    <div class="saldo-card cleared">
-                        <div class="saldo-card-label">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                <polyline points="22 4 12 14.01 9 11.01" />
-                            </svg>
-                            Siap Ditarik
-                        </div>
-                        <div class="saldo-card-value">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
-                        <div class="saldo-card-sub">Dapat ditarik kapan saja</div>
-                    </div>
-                    <div class="saldo-card hold">
-                        <div class="saldo-card-label">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" />
-                                <polyline points="12 6 12 12 16 14" />
-                            </svg>
-                            Hold Reguler (3 Hari)
-                        </div>
-                        <div class="saldo-card-value">Rp {{ number_format($standardHoldBalance ?? 0, 0, ',', '.') }}</div>
-                        <div class="saldo-card-sub">Otomatis cair setelah 3x24 jam</div>
-                    </div>
-                    @if(($ticketEscrowBalance ?? 0) > 0)
-                        <div class="saldo-card escrow">
-                            <div class="saldo-card-label">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                </svg>
-                                Escrow Tiket Event
-                            </div>
-                            <div class="saldo-card-value">Rp {{ number_format($ticketEscrowBalance, 0, ',', '.') }}</div>
-                            <div class="saldo-card-sub">Cair H+3 setelah acara terlaksana</div>
-                        </div>
-                    @endif
-
-                    {{-- Card Saldo Deposit Kasir POS --}}
-                    <div class="saldo-card pos-deposit">
-                        <div class="saldo-card-label" style="display:flex; justify-content:space-between; align-items:center; color:#047857;">
-                            <span style="display:flex; align-items:center; gap:0.4rem;">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                                    <circle cx="16" cy="12" r="2" />
-                                </svg>
-                                Deposit Kasir POS
-                            </span>
-                            <span style="font-size:0.6rem; font-weight:800; background:#d1fae5; color:#065f46; padding:1px 6px; border-radius:999px;">Kasir</span>
-                        </div>
-                        <div class="saldo-card-value" style="color:#064e3b;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</div>
-                        <div class="saldo-card-sub" style="display:flex; justify-content:space-between; align-items:center; color:#059669;">
-                            <span>Fee kasir tunai</span>
-                            <button type="button" onclick="openTransferPosModal()" style="background:none; border:none; padding:0; color:#047857; font-weight:800; font-size:0.68rem; cursor:pointer; text-decoration:underline;">+ Pindah</button>
-                        </div>
-                    </div>
-                </div>
+                @include('creator.partials.bank_balance_card')
             </div>
 
             <div class="bio-tabs-list">
@@ -878,46 +908,9 @@
             {{-- TAB 1: TARIK SALDO --}}
             <div id="tab-withdraw" class="payout-tab-pane" style="display:block">
 
-                {{-- Mobile: Saldo Summary --}}
-                <div style="display:none" class="mobile-saldo-bar">
-                    <div class="prof-card" style="margin-bottom:1rem;">
-                        <div class="form-body" style="padding:1rem 1.25rem;">
-                            <div class="saldo-grid"
-                                style="display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:0.5rem;">
-                                <div class="saldo-card cleared" style="flex:1;min-width:130px;">
-                                    <div class="saldo-card-label">Siap Ditarik</div>
-                                    <div class="saldo-card-value">Rp {{ number_format($availableBalance, 0, ',', '.') }}
-                                    </div>
-                                    <div class="saldo-card-sub">Dapat ditarik</div>
-                                </div>
-                                <div class="saldo-card hold" style="flex:1;min-width:130px;">
-                                    <div class="saldo-card-label">Hold Reguler</div>
-                                    <div class="saldo-card-value">Rp
-                                        {{ number_format($standardHoldBalance ?? 0, 0, ',', '.') }}</div>
-                                    <div class="saldo-card-sub">Hold 3 hari</div>
-                                </div>
-                                @if(($ticketEscrowBalance ?? 0) > 0)
-                                    <div class="saldo-card escrow" style="flex:100%;min-width:100%;">
-                                        <div class="saldo-card-label">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                            </svg>
-                                            Escrow Tiket Event
-                                        </div>
-                                        <div class="saldo-card-value">Rp {{ number_format($ticketEscrowBalance, 0, ',', '.') }}
-                                        </div>
-                                        <div class="saldo-card-sub">Cair H+3 setelah acara terlaksana</div>
-                                    </div>
-                                @endif
-                                <div class="saldo-card pos-deposit" style="flex:1;min-width:130px;">
-                                    <div class="saldo-card-label" style="color:#047857;">Deposit POS</div>
-                                    <div class="saldo-card-value" style="color:#064e3b;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</div>
-                                    <div class="saldo-card-sub"><button type="button" onclick="openTransferPosModal()" style="background:none;border:none;padding:0;color:#047857;font-weight:700;text-decoration:underline;cursor:pointer;">+ Pindah Saldo</button></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                {{-- Mobile: Saldo Summary (Bank Super App Minimalist) --}}
+                <div style="display:none; margin-bottom:1.25rem;" class="mobile-saldo-bar">
+                    @include('creator.partials.bank_balance_card')
                 </div>
 
                 {{-- BANNER: SALDO DEPOSIT KASIR POS & PINDAH SALDO CEPAT --}}
@@ -1477,6 +1470,41 @@
     </style>
 
     <script>
+        // ── Bank Balance Card: Sembunyikan/Tampilkan Saldo ──
+        function toggleBalanceVisibility() {
+            const isCurrentlyHidden = localStorage.getItem('buyle_hide_balance') === '1';
+            const newHidden = !isCurrentlyHidden;
+            localStorage.setItem('buyle_hide_balance', newHidden ? '1' : '0');
+            applyBalanceVisibility(newHidden);
+        }
+
+        function applyBalanceVisibility(hidden) {
+            document.querySelectorAll('.bank-balance-card').forEach(card => {
+                const eyeOpen = card.querySelector('.eye-open-icon');
+                const eyeClosed = card.querySelector('.eye-closed-icon');
+                const realVals = card.querySelectorAll('.val-real');
+                const maskedVals = card.querySelectorAll('.val-masked');
+
+                if (hidden) {
+                    if (eyeOpen) eyeOpen.style.display = 'none';
+                    if (eyeClosed) eyeClosed.style.display = 'block';
+                    realVals.forEach(el => el.style.display = 'none');
+                    maskedVals.forEach(el => el.style.display = 'inline-block');
+                } else {
+                    if (eyeOpen) eyeOpen.style.display = 'block';
+                    if (eyeClosed) eyeClosed.style.display = 'none';
+                    realVals.forEach(el => el.style.display = 'inline-block');
+                    maskedVals.forEach(el => el.style.display = 'none');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('buyle_hide_balance') === '1') {
+                applyBalanceVisibility(true);
+            }
+        });
+
         // ── Tab Switcher ──
         function switchPayoutTab(tabId, btn) {
             document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');

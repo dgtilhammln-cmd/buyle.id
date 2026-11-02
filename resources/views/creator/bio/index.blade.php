@@ -5701,13 +5701,6 @@
         <div class="wb-intro-modal" onclick="event.stopPropagation()">
             <div class="wb-intro-header">
                 <div class="wb-intro-title-wrap">
-                    <span class="wb-intro-badge">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                        Panduan Resmi
-                    </span>
                     <h3 class="wb-intro-title">Pengenalan Web Builder</h3>
                     <p class="wb-intro-subtitle">Pelajari cara mudah membuat dan mempersonalisasi halaman Web Builder Anda.
                     </p>

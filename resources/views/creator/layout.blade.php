@@ -974,7 +974,7 @@
                             <a href="{{ route('creator.bio.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.bio*') ? 'active' : '' }}"
                                 style="--mod-color:#1eb349; --mod-bg:rgba(30,179,73,0.22);"
-                                title="Web Builder (Bio Link)">
+                                title="Web Builder">
                                 <span class="cr-sub-icon-box">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="10" />
@@ -982,7 +982,7 @@
                                         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                                     </svg>
                                 </span>
-                                <span class="cr-sub-text">Bio Link</span>
+                                <span class="cr-sub-text">Web Builder</span>
                             </a>
 
                             {{-- 3. Buyle e-Ticket --}}
