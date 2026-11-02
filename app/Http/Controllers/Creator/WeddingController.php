@@ -305,6 +305,7 @@ class WeddingController extends Controller
             'ceremony_date'          => ['nullable', 'date'],
             'ceremony_location_name' => ['nullable', 'string', 'max:255'],
             'ceremony_address'       => ['nullable', 'string'],
+            'ceremony_map_url'       => ['nullable', 'string', 'max:500'],
             'reception_pin'          => ['required', 'string', 'min:4', 'max:10'],
             'theme'                  => ['nullable', 'string', 'max:50'],
             'music_url'              => ['nullable', 'string', 'max:500'],
@@ -325,12 +326,13 @@ class WeddingController extends Controller
             $validated['music_url'] = asset('storage/' . $musicPath);
         }
 
-        $wedding->update($validated);
-
-        // Simpan pengaturan tampilan cover (data_json)
+        // Simpan pengaturan cover & ceremony map url ke data_json
         $dataJson = $wedding->data_json ?? [];
         $dataJson['show_guest_card'] = $request->boolean('show_guest_card', false);
-        $wedding->update(['data_json' => $dataJson]);
+        $dataJson['ceremony_map_url'] = $request->input('ceremony_map_url');
+        $validated['data_json'] = $dataJson;
+
+        $wedding->update($validated);
 
         return redirect()->route('creator.wedding.index', ['tab' => 'tab-info', 'w' => $wedding->id])
             ->with('success', 'Informasi acara & mempelai berhasil disimpan!');

@@ -1032,7 +1032,7 @@
                                     <div class="form-group" style="margin-bottom:0;">
                                         <label class="form-label">URL Google Maps Akad</label>
                                         <input type="url" name="ceremony_map_url"
-                                            value="{{ old('ceremony_map_url', $wedding->ceremony_map_url) }}"
+                                            value="{{ old('ceremony_map_url', $wedding->ceremony_map_url ?: ($wedding->data_json['ceremony_map_url'] ?? '')) }}"
                                             placeholder="https://maps.app.goo.gl/..." class="form-input">
                                         <span class="form-hint">Tautan petunjuk arah Google Maps lokasi akad.</span>
                                     </div>
