@@ -189,9 +189,15 @@ class UpdateProductRequest extends FormRequest
             }
         }
 
+        // Normalisasi video_platform: jika kosong atau di luar youtube/tiktok, ubah jadi null
+        $vPlatform = strtolower(trim((string) $this->input('video_platform', '')));
+        if (!in_array($vPlatform, ['youtube', 'tiktok'], true)) {
+            $vPlatform = null;
+        }
+        $merge['video_platform'] = $vPlatform;
+
         // Map video URLs: YouTube (1 URL) or TikTok (up to 3 URLs)
-        $videoPlatform = $this->input('video_platform', 'youtube');
-        if ($videoPlatform === 'tiktok') {
+        if ($vPlatform === 'tiktok') {
             $rawTt = (array) $this->input('tiktok_video_urls', []);
             $ttUrls = array_values(array_filter($rawTt, fn($u) => !empty(trim((string)$u))));
             if (!empty($ttUrls)) {
@@ -201,9 +207,11 @@ class UpdateProductRequest extends FormRequest
             } else {
                 $merge['tiktok_video_url'] = null;
             }
-        } else {
+        } elseif ($vPlatform === 'youtube') {
             $yt = trim((string)$this->input('youtube_video_url', ''));
             $merge['tiktok_video_url'] = !empty($yt) ? $yt : null;
+        } else {
+            $merge['tiktok_video_url'] = null;
         }
 
         // Map meta_description → meta_desc
