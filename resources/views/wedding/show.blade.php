@@ -722,6 +722,9 @@
     </style>
 </head>
 
+@php
+    $showGuestCard = $wedding->data_json['show_guest_card'] ?? true;
+@endphp
 <body>
 
     <div class="phone-wrap" id="phoneWrap">
@@ -962,7 +965,6 @@
 
                     @php
                         $rekeningActive = $wedding->data_json['envelope_rekening_enabled'] ?? true;
-                        $showGuestCard  = $wedding->data_json['show_guest_card'] ?? true;
                     @endphp
 
                     {{-- Amplop Digital (Hanya tampil jika Rekening Manual diaktifkan) --}}
