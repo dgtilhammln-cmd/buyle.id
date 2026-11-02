@@ -642,7 +642,7 @@
                             if ($sellerProfile && $sellerProfile->has_custom_fee) {
                                 $tFee = $sellerProfile->calculateTicketFees($ci->subtotal, $ci->qty);
                                 $platformFeeCart += $tFee['platform_fee'];
-                                $adminFeeCart    += $tFee['admin_fee'];
+                                $adminFeeCart += $tFee['admin_fee'];
                             } else {
                                 $platformFeeCart += round($ci->subtotal * $ticketPlatformFeeRate / 100);
                                 $adminFeeCart += $ticketAdminFeeFlat * $ci->qty;
@@ -655,10 +655,10 @@
                     }
                     $estimatedTotal = $summary['subtotal'] + $platformFeeCart + $adminFeeCart;
                     $pfLabelCart = $hasTicketItemC && !$hasNonTicketItemC
-                        ? 'Platform Fee (5%)'
+                        ? 'Platform Fee'
                         : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int) $pfRate : $pfRate) . '%)';
                     $afLabelCart = $hasTicketItemC && !$hasNonTicketItemC
-                        ? 'Admin Fee (Rp 5.000/tiket)'
+                        ? 'Admin Fee'
                         : 'Admin Fee (' . ($afRate % 1 == 0 ? (int) $afRate : $afRate) . '%)';
                 @endphp
                 <div class="footer-row">
