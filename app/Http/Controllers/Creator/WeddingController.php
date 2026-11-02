@@ -329,7 +329,7 @@ class WeddingController extends Controller
 
         // Simpan pengaturan tampilan cover (data_json)
         $dataJson = $wedding->data_json ?? [];
-        $dataJson['show_guest_card'] = $request->boolean('show_guest_card', true);
+        $dataJson['show_guest_card'] = $request->boolean('show_guest_card', false);
         $wedding->update(['data_json' => $dataJson]);
 
         return redirect()->route('creator.wedding.index', ['tab' => 'tab-info', 'w' => $wedding->id])
