@@ -736,6 +736,17 @@
                 stroke-width: 2.5;
                 stroke: #1eb349;
             }
+
+            /* Avatar di bottom nav */
+            .superapp-nav-avatar {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #e2e8f0;
+                display: block;
+                flex-shrink: 0;
+            }
         }
     </style>
     @yield('styles')
