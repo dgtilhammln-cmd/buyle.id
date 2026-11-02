@@ -3820,7 +3820,7 @@
                             $rOrigPrice = $r->sale_price > 0 && $r->sale_price < $r->price ? $r->price : null;
                             $rHasDiscount = !empty($rOrigPrice) && $rOrigPrice > $rPrice;
                             $rDiscountPct = $rHasDiscount ? round((($rOrigPrice - $rPrice) / $rOrigPrice) * 100) : 0;
-                            $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/buyle-og.png');
+                            $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/service-default.jpg');
                             $rSellerCp = $r->seller?->creatorProfile;
                             $rIsVerified = $rSellerCp ? (bool) $rSellerCp->is_verified : false;
                             $rRatingVal = $r->getEffectiveRating();
@@ -3834,7 +3834,7 @@
                                 {{-- Image 1:1 Aspect Ratio --}}
                                 <div
                                     style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $rImage }}" alt="{{ $r->name }}"
+                                    <img src="{{ $rImage }}" alt="{{ $r->name }}" onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img">
 
@@ -3949,7 +3949,7 @@
                             $rOrigPrice = $r->sale_price > 0 && $r->sale_price < $r->price ? $r->price : null;
                             $rHasDiscount = !empty($rOrigPrice) && $rOrigPrice > $rPrice;
                             $rDiscountPct = $rHasDiscount ? round((($rOrigPrice - $rPrice) / $rOrigPrice) * 100) : 0;
-                            $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/buyle-og.png');
+                            $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/service-default.jpg');
                             $rSellerCp = $r->seller?->creatorProfile;
                             $rIsVerified = $rSellerCp ? (bool) $rSellerCp->is_verified : false;
                             $rRatingVal = $r->getEffectiveRating();
@@ -3963,7 +3963,7 @@
                                 {{-- Image 1:1 Aspect Ratio --}}
                                 <div
                                     style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $rImage }}" alt="{{ $r->name }}"
+                                    <img src="{{ $rImage }}" alt="{{ $r->name }}" onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img">
 

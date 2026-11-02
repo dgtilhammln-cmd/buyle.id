@@ -40,7 +40,7 @@
 
         $stock       = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : ($product ? $product->stock : null);
         $isOutOfStock = ($stock !== null && $stock <= 0);
-        $firstImage  = !empty($images[0]) ? (\Illuminate\Support\Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/buyle-og.png');
+        $firstImage  = !empty($images[0]) ? (\Illuminate\Support\Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/service-default.jpg');
         $bioName     = $config['name'] ?? $profile->store_name ?? $username;
         $pageTitle   = $prodTitle . ' - ' . $bioName . ' | buyle.id';
         $rawDesc     = !empty($block->data_json['description']) ? $block->data_json['description'] : ($product ? ($product->description ?: $product->short_desc) : '');

@@ -1894,7 +1894,7 @@
                                                         <div style="position: absolute; top: 0.3rem; left: 0.3rem; background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 4px;">Diskon</div>
                                                     @endif
                                                     @if($cProd->image)
-                                                        <img src="{{ asset('storage/' . $cProd->image) }}" alt="{{ $cProd->name }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                                                        <img src="{{ asset('storage/' . $cProd->image) }}" alt="{{ $cProd->name }}" onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
                                                     @else
                                                         <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#CBD5E1;">
                                                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>

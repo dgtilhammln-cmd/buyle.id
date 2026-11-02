@@ -1,7 +1,7 @@
 @if(isset($services) && $services->count() > 0)
     @foreach($services as $sv)
         @php
-            $svImg        = $sv->image ? asset('storage/'.$sv->image) : asset('images/buyle-og.png');
+            $svImg        = $sv->image ? asset('storage/'.$sv->image) : asset('images/service-default.jpg');
             $svIsFree     = $sv->sale_price !== null && (float)$sv->sale_price <= 0;
             $svPrice      = $svIsFree ? 0 : (($sv->sale_price > 0 && $sv->sale_price < $sv->price) ? (float)$sv->sale_price : (float)$sv->price);
             $svOrigPrice  = $svIsFree ? $sv->price : (($sv->sale_price > 0 && $sv->sale_price < $sv->price) ? $sv->price : null);
@@ -19,7 +19,7 @@
 
                 {{-- Image Wrap 1:1 Square --}}
                 <div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;" class="sp-card-img-wrap">
-                    <img src="{{ $svImg }}" alt="{{ $sv->name }}"
+                    <img src="{{ $svImg }}" alt="{{ $sv->name }}" onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';"
                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                         class="article-banner-img" loading="lazy">
 

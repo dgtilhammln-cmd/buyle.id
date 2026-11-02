@@ -53,7 +53,7 @@
 
         $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int) $block->data_json['stock'] : ($product ? $product->stock : null);
         $isOutOfStock = ($stock !== null && $stock <= 0);
-        $firstImage = !empty($images[0]) ? (\Illuminate\Support\Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/buyle-og.png');
+        $firstImage = !empty($images[0]) ? (\Illuminate\Support\Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/service-default.jpg');
         $bioName = $config['name'] ?? $profile->store_name ?? $username;
         $pageTitle = $prodTitle . ' - ' . $bioName . ' | buyle.id';
         $rawDesc = '';
@@ -2402,7 +2402,7 @@
                             $opImgs = [$op->data_json['image']];
                         if (empty($opImgs) && $opProd && $opProd->image)
                             $opImgs = [$opProd->image];
-                        $opImg = !empty($opImgs[0]) ? (\Illuminate\Support\Str::startsWith($opImgs[0], 'http') ? $opImgs[0] : asset('storage/' . $opImgs[0])) : asset('images/buyle-og.png');
+                        $opImg = !empty($opImgs[0]) ? (\Illuminate\Support\Str::startsWith($opImgs[0], 'http') ? $opImgs[0] : asset('storage/' . $opImgs[0])) : asset('images/service-default.jpg');
                         // Rating (Dynamic realtime dari DB)
                         $opRatingVal = $opProd ? $opProd->getEffectiveRating() : null;
                         // Sales
