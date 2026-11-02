@@ -317,42 +317,53 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
                 </div>
             </div>
 
-            {{-- Right Navigation Columns (Like Celestix in Image 1) --}}
+            {{-- Right Navigation Columns --}}
             <div class="cv-footer-nav-cols">
 
-                {{-- Column 1: Tentang Buyle.id --}}
+                {{-- Column 1: Produk & Ekosistem --}}
                 <div class="cv-footer-col">
-                    <div class="cv-footer-col-title">Tentang Buyle.id</div>
+                    <div class="cv-footer-col-title">Produk & Solusi</div>
+                    <ul class="cv-footer-links">
+                        <li><a href="{{ route_locale('products') }}">Semua Produk & Jasa</a></li>
+                        <li><a href="{{ route_locale('ticketing') }}">Tiket Event & Wisata</a></li>
+                        <li><a href="{{ route('wedding.landing') }}">Undangan Digital</a></li>
+                        <li><a href="{{ route_locale('articles') }}">Artikel & Edukasi</a></li>
+                    </ul>
+                </div>
+
+                {{-- Column 2: Tools Gratis --}}
+                <div class="cv-footer-col">
+                    <div class="cv-footer-col-title">Tools Gratis</div>
+                    <ul class="cv-footer-links">
+                        <li><a href="{{ route_locale('tools.convert_file') }}">File Converter</a></li>
+                        <li><a href="{{ route_locale('tools.social_downloader') }}">Video Downloader</a></li>
+                        <li><a href="{{ url('/qr-code') }}">QR Code Generator</a></li>
+                        <li><a href="{{ route('register') }}">Gabung Jadi Kreator</a></li>
+                    </ul>
+                </div>
+
+                {{-- Column 3: Perusahaan & Legal --}}
+                <div class="cv-footer-col">
+                    <div class="cv-footer-col-title">Perusahaan & Legal</div>
                     <ul class="cv-footer-links">
                         <li><a href="{{ route_locale('about') }}">Tentang Kami</a></li>
-                        <li><a href="{{ route_locale('products') }}">Semua Produk & Jasa</a></li>
-                        <li><a href="{{ route_locale('articles') }}">Artikel & Tips</a></li>
-                    </ul>
-                </div>
-
-                {{-- Column 2: Tautan --}}
-                <div class="cv-footer-col">
-                    <div class="cv-footer-col-title">Tautan</div>
-                    <ul class="cv-footer-links">
-                        <li><a href="{{ route_locale('faqs') }}">FAQ & Bantuan</a></li>
                         <li><a href="{{ route_locale('faqs.show', 'syarat-ketentuan') }}">Syarat & Ketentuan</a></li>
                         <li><a href="{{ route_locale('faqs.show', 'kebijakan-privasi') }}">Kebijakan Privasi</a></li>
-                        <li><a href="{{ route_locale('products') }}?category=digital">Produk Digital</a></li>
                     </ul>
                 </div>
 
-                {{-- Column 3: Dukungan --}}
+                {{-- Column 4: Bantuan & Dukungan --}}
                 <div class="cv-footer-col">
-                    <div class="cv-footer-col-title">Dukungan</div>
+                    <div class="cv-footer-col-title">Bantuan</div>
                     <ul class="cv-footer-links">
+                        <li><a href="{{ route_locale('faqs') }}">FAQ & Panduan</a></li>
                         <li><a href="{{ route_locale('contact') }}">Hubungi Kami</a></li>
-                        <li><a href="{{ route_locale('contact') }}">Kerja Sama</a></li>
                         <li>
                             @if($wa)
                                 <a href="javascript:void(0)" onclick="openOrderModal('Footer Help')">Customer Service</a>
                             @else
                                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $s['whatsapp'] ?? '6281234567890') }}"
-                                    target="_blank" rel="noopener">Customer Service</a>
+                                    target="_blank" rel="noopener">WhatsApp CS</a>
                             @endif
                         </li>
                     </ul>
