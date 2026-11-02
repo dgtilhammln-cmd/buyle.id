@@ -1161,32 +1161,43 @@
                     <div class="prof-card" style="margin-bottom:0;">
                         <div class="prof-card-head">
                             <div class="head-title-wrap">
-                                <div class="head-icon">
+                                <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <rect x="3" y="3" width="18" height="18" rx="3"></rect>
                                         <path d="M3 9h18"></path>
                                         <path d="M9 21V9"></path>
                                     </svg>
                                 </div>
-                                <span>Tampilan Cover Undangan</span>
+                                <span>Pengaturan Cover &amp; Card Tamu</span>
                             </div>
                         </div>
                         <div class="card-body">
-                            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
-                                <div>
-                                    <div style="font-size:0.85rem; font-weight:700; color:#0f172a;">Tampilkan Card Tamu Undangan</div>
-                                    <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Jika dimatikan, cover halaman hanya menampilkan nama pengantin tanpa card Kepada Yth.</div>
+                            @php
+                                $isGuestCardOn = ($wedding->data_json['show_guest_card'] ?? true);
+                            @endphp
+                            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; padding:0.4rem 0;">
+                                <div style="max-width:540px;">
+                                    <div style="font-size:0.9rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                                        <span>Tampilkan Card "Kepada Yth. Tamu Undangan"</span>
+                                        <span id="guestCardBadge" class="badge-pill {{ $isGuestCardOn ? 'success' : 'secondary' }}" style="font-size:0.68rem; padding:2px 8px;">
+                                            {{ $isGuestCardOn ? 'Aktif (Tampil)' : 'Nonaktif (Sembunyi)' }}
+                                        </span>
+                                    </div>
+                                    <div style="font-size:0.75rem; color:#64748b; margin-top:4px; line-height:1.45;">
+                                        Jika <strong>dinonaktifkan</strong>, card <em>"Kepada Yth. Bapak/Ibu/Saudara/i: Tamu Undangan"</em> di cover depan otomatis disembunyikan dan diganti dengan <strong>nama pengantin yang terpusat (center) &amp; lebih proporsional</strong>.
+                                    </div>
                                 </div>
-                                <label id="labelGuestCardToggle" style="position:relative; display:inline-block; width:44px; height:24px; flex-shrink:0; margin-left:1rem; cursor:pointer;">
-                                    <input type="checkbox" id="chkShowGuestCard" name="show_guest_card" value="1"
-                                        {{ ($wedding->data_json['show_guest_card'] ?? true) ? 'checked' : '' }}
-                                        style="opacity:0; width:0; height:0; position:absolute;">
-                                    <span id="sliderGuestCard"
-                                        style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
-                                               background:{{ ($wedding->data_json['show_guest_card'] ?? true) ? '#22c55e' : '#cbd5e1' }};
-                                               border-radius:24px; transition:.3s;"
-                                        onclick="toggleGuestCardUI();"></span>
-                                </label>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    {{-- Hidden input fallback: memastikan nilai 0 terkirim bila checkbox uncheck --}}
+                                    <input type="hidden" name="show_guest_card" value="0">
+                                    <label for="chkShowGuestCard" style="position:relative; display:inline-flex; align-items:center; width:52px; height:28px; background:{{ $isGuestCardOn ? '#10b981' : '#cbd5e1' }}; border-radius:99px; cursor:pointer; transition:all 0.25s ease; padding:3px; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);" id="guestCardTrack">
+                                        <input type="checkbox" id="chkShowGuestCard" name="show_guest_card" value="1"
+                                            {{ $isGuestCardOn ? 'checked' : '' }}
+                                            onchange="handleGuestCardToggle(this.checked)"
+                                            style="opacity:0; width:0; height:0; position:absolute;">
+                                        <span id="guestCardKnob" style="display:block; width:22px; height:22px; background:#ffffff; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.25); transform:translateX({{ $isGuestCardOn ? '24px' : '0px' }}); transition:transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);"></span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3145,12 +3156,16 @@
         });
 
         // Toggle Tampilkan Card Tamu Undangan
-        function toggleGuestCardUI() {
-            var chk = document.getElementById('chkShowGuestCard');
-            var slider = document.getElementById('sliderGuestCard');
-            if (!chk || !slider) return;
-            chk.checked = !chk.checked;
-            slider.style.background = chk.checked ? '#22c55e' : '#cbd5e1';
+        function handleGuestCardToggle(isChecked) {
+            var track = document.getElementById('guestCardTrack');
+            var knob = document.getElementById('guestCardKnob');
+            var badge = document.getElementById('guestCardBadge');
+            if (track) track.style.background = isChecked ? '#10b981' : '#cbd5e1';
+            if (knob) knob.style.transform = isChecked ? 'translateX(24px)' : 'translateX(0px)';
+            if (badge) {
+                badge.textContent = isChecked ? 'Aktif (Tampil)' : 'Nonaktif (Sembunyi)';
+                badge.className = 'badge-pill ' + (isChecked ? 'success' : 'secondary');
+            }
         }
     </script>
 @endsection

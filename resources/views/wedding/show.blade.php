@@ -254,18 +254,26 @@
             letter-spacing: 0.06em;
         }
 
-        /* No guest card mode: center content vertically */
+        /* No guest card mode: Center couple names & button perfectly */
         #coverLayer.no-guest-card {
-            justify-content: center;
-            gap: 3.5rem;
+            justify-content: center !important;
+            gap: 3.5rem !important;
+            padding: 2rem 2rem 3.5rem !important;
         }
 
         #coverLayer.no-guest-card .cover-hero {
-            margin-top: 0;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         #coverLayer.no-guest-card .c-name {
-            font-size: 2.75rem;
+            font-size: 2.75rem !important;
+            letter-spacing: 0.28em !important;
+        }
+
+        #coverLayer.no-guest-card .c-amp {
+            font-size: 2.1rem !important;
+            margin: 0.4rem 0 !important;
         }
 
         /* ── Content Layer (video fullscreen) ── */
@@ -753,9 +761,6 @@
                     <div class="guest-pax">{{ $guest->group_name ?: 'Tamu Undangan' }} &bull; {{ $guest->pax ?: 1 }} Pax</div>
                 @endif
             </div>
-            @else
-            {{-- Jika guest card dimatikan: spacer kosong --}}
-            <div></div>
             @endif
 
             <!-- Open Button -->
