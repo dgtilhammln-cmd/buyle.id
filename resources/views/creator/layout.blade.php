@@ -1297,16 +1297,25 @@
         </main>
     </div>
 
-    {{-- ── Super App Bottom Navigation (Mobile Only) ── --}}
+    {{-- ── Super App Bottom Navigation (Mobile Only - 100% Sesuai Gambar 3) ── --}}
     <nav class="superapp-bottom-nav" id="superappBottomNav">
         @php
             $bottomNavIsBuyer = auth()->user()->role === 'buyer';
             $bottomNavIsCashier = auth()->user()->isPosCashier();
+            $navUser = auth()->user();
+            $navCp = $navUser->creatorProfile;
+            $navRawAvatar = $navCp?->avatar ?? $navUser->avatar ?? null;
+            $navAvatarUrl = null;
+            if ($navRawAvatar) {
+                $navAvatarUrl = \Illuminate\Support\Str::startsWith($navRawAvatar, ['http://', 'https://'])
+                    ? $navRawAvatar
+                    : asset('storage/' . $navRawAvatar);
+            }
         @endphp
 
         @if($bottomNavIsCashier)
             <a href="{{ route('creator.pos.index') }}"
-                class="superapp-nav-item active" style="min-width:80px;">
+                class="superapp-nav-item active" title="Kasir POS">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <rect x="2" y="4" width="20" height="16" rx="2" />
                     <line x1="2" y1="10" x2="22" y2="10" />
@@ -1314,85 +1323,84 @@
                     <line x1="12" y1="15" x2="12.01" y2="15" stroke-width="3" />
                     <line x1="17" y1="15" x2="17.01" y2="15" stroke-width="3" />
                 </svg>
-                <span>Kasir POS</span>
             </a>
 
             <button type="button" class="superapp-nav-item"
-                onclick="document.getElementById('logout-form').submit();" style="min-width:80px; color:rgba(255,255,255,0.85);">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                onclick="document.getElementById('logout-form').submit();" title="Logout">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
                     <polyline points="16 17 21 12 16 7" />
                     <line x1="21" y1="12" x2="9" y2="12" />
                 </svg>
-                <span>Logout</span>
             </button>
         @else
-            {{-- Overview --}}
+            {{-- 1. Overview / Home --}}
             <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.dashboard') }}"
                 onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
-                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
+                class="superapp-nav-item {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}"
+                title="Overview">
+                <svg width="22" height="22" fill="{{ request()->routeIs('creator.dashboard') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z" />
                 </svg>
-                <span>Overview</span>
             </a>
 
-            {{-- Produk --}}
+            {{-- 2. Produk --}}
             <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.products.index') }}"
                 onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
+                class="superapp-nav-item {{ request()->routeIs('creator.products*') ? 'active' : '' }}"
+                title="Produk">
                 <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <rect x="2" y="7" width="20" height="14" rx="2" />
                     <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
                 </svg>
-                <span>Produk</span>
             </a>
 
-            {{-- Laporan Penjualan --}}
+            {{-- 3. Laporan Penjualan --}}
             <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
                 onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
+                class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}"
+                title="Laporan Penjualan">
                 <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                 </svg>
-                <span>Laporan</span>
             </a>
 
-            {{-- Aplikasi --}}
+            {{-- 4. Aplikasi --}}
             <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.app.index') }}"
                 onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.app*') ? 'active' : '' }}">
+                class="superapp-nav-item {{ request()->routeIs('creator.app*') ? 'active' : '' }}"
+                title="Aplikasi">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="1.5" />
                     <rect x="14" y="3" width="7" height="7" rx="1.5" />
                     <rect x="14" y="14" width="7" height="7" rx="1.5" />
                     <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
-                <span>Aplikasi</span>
             </a>
 
-            {{-- Saldo --}}
+            {{-- 5. Saldo --}}
             <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.payout.settings') }}"
                 onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                class="superapp-nav-item {{ request()->routeIs('creator.payout*') ? 'active' : '' }}"
+                title="Saldo">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <rect x="2" y="6" width="20" height="12" rx="2" />
                     <circle cx="16" cy="12" r="2" />
                     <path d="M6 12h.01" />
                 </svg>
-                <span>Saldo</span>
             </a>
 
-            {{-- Menu (open sidebar drawer) --}}
+            {{-- 6. Profil / Menu Drawer (Avatar Bulat Persis Gambar 3) --}}
             <button type="button" class="superapp-nav-item"
-                onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-                <span>Menu</span>
+                onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');"
+                title="Menu & Profil">
+                @if($navAvatarUrl)
+                    <img src="{{ $navAvatarUrl }}" alt="{{ $navUser->name }}" class="superapp-nav-avatar">
+                @else
+                    <div class="superapp-nav-avatar" style="background:#0f172a; color:#ffffff; font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center;">
+                        {{ strtoupper(substr($navUser->name ?? 'U', 0, 1)) }}
+                    </div>
+                @endif
             </button>
         @endif
     </nav>
@@ -1693,6 +1701,40 @@
                 }
             } catch(err){}
         });
+
+        // Auto-hide bottom nav saat scroll kebawah, munculkan kembali saat scroll keatas
+        (function() {
+            let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            let ticking = false;
+            const nav = document.getElementById('superappBottomNav');
+            if (!nav) return;
+
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+                        const scrollDelta = currentScrollY - lastScrollY;
+
+                        // Jika di paling atas (<= 30px), selalu tampilkan
+                        if (currentScrollY <= 30) {
+                            nav.classList.remove('nav-hidden');
+                        } 
+                        // Scroll ke bawah > 8px -> sembunyikan
+                        else if (scrollDelta > 8 && currentScrollY > 60) {
+                            nav.classList.add('nav-hidden');
+                        } 
+                        // Scroll ke atas > 8px -> munculkan kembali
+                        else if (scrollDelta < -8) {
+                            nav.classList.remove('nav-hidden');
+                        }
+
+                        lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
     </script>
     @yield('scripts')
 </body>
