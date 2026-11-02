@@ -87,4 +87,9 @@ class Wedding extends Model
     {
         return url('/wedding/' . $this->slug . '/buku-tamu');
     }
+
+    public function getCeremonyMapUrlAttribute(): ?string
+    {
+        return $this->attributes['ceremony_map_url'] ?? ($this->data_json['ceremony_map_url'] ?? null);
+    }
 }

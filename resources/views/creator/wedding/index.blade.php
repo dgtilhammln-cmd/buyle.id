@@ -1029,6 +1029,13 @@
                                         <textarea name="ceremony_address" class="form-input" rows="2"
                                             placeholder="Jl. Diponegoro No. 10...">{{ old('ceremony_address', $wedding->ceremony_address) }}</textarea>
                                     </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">URL Google Maps Akad</label>
+                                        <input type="url" name="ceremony_map_url"
+                                            value="{{ old('ceremony_map_url', $wedding->ceremony_map_url) }}"
+                                            placeholder="https://maps.app.goo.gl/..." class="form-input">
+                                        <span class="form-hint">Tautan petunjuk arah Google Maps lokasi akad.</span>
+                                    </div>
                                 </div>
 
                                 {{-- Resepsi Pernikahan --}}

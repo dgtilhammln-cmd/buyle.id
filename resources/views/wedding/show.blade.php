@@ -866,85 +866,130 @@
                             Waktu &amp; Lokasi Acara
                         </div>
 
-                        @if($wedding->ceremony_date)
+                        @php
+                            $hasCeremony = !empty($wedding->ceremony_date) || !empty($wedding->ceremony_location_name);
+                            $hasReception = !empty($wedding->event_date) || !empty($wedding->event_location_name);
+                            $ceremonyMapUrl = $wedding->ceremony_map_url ?? ($wedding->data_json['ceremony_map_url'] ?? null);
+                            $receptionMapUrl = $wedding->event_map_url;
+
+                            // Fallback pintar: Jika hanya ada akad (resepsi kosong) tapi ada event_map_url, jadikan maps akad
+                            if ($hasCeremony && !$hasReception && empty($ceremonyMapUrl) && !empty($receptionMapUrl)) {
+                                $ceremonyMapUrl = $receptionMapUrl;
+                            }
+                        @endphp
+
+                        {{-- 1. Bagian Akad Nikah / Pemberkatan --}}
+                        @if($hasCeremony)
                             <div>
                                 <div class="event-label">Akad Nikah / Pemberkatan</div>
-                                <div class="event-row">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" />
-                                        <line x1="16" y1="2" x2="16" y2="6" />
-                                        <line x1="8" y1="2" x2="8" y2="6" />
-                                        <line x1="3" y1="10" x2="21" y2="10" />
-                                    </svg>
-                                    <span>{{ $wedding->ceremony_date->isoFormat('dddd, D MMMM Y') }}</span>
-                                </div>
-                                <div class="event-row">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <path d="M12 6v6l4 2" />
-                                    </svg>
-                                    <span>{{ $wedding->ceremony_date->format('H:i') }} WIB</span>
-                                </div>
-                                <div class="event-row">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                    <div>
-                                        <div>{{ $wedding->ceremony_location_name }}</div>
-                                        @if($wedding->ceremony_address)
-                                            <span class="event-subtext">{{ $wedding->ceremony_address }}</span>
-                                        @endif
+                                @if($wedding->ceremony_date)
+                                    <div class="event-row">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                        </svg>
+                                        <span>{{ $wedding->ceremony_date->isoFormat('dddd, D MMMM Y') }}</span>
                                     </div>
-                                </div>
-                            </div>
-                            <hr class="event-divider">
-                        @endif
-
-                        <div>
-                            <div class="event-label">Resepsi Pernikahan</div>
-                            <div class="event-row">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                                    <line x1="16" y1="2" x2="16" y2="6" />
-                                    <line x1="8" y1="2" x2="8" y2="6" />
-                                    <line x1="3" y1="10" x2="21" y2="10" />
-                                </svg>
-                                <span>{{ $wedding->event_date ? $wedding->event_date->isoFormat('dddd, D MMMM Y') : '-' }}</span>
-                            </div>
-                            <div class="event-row">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <path d="M12 6v6l4 2" />
-                                </svg>
-                                <span>{{ $wedding->event_date ? $wedding->event_date->format('H:i') . ' WIB' : '-' }}</span>
-                            </div>
-                            <div class="event-row">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                    <circle cx="12" cy="10" r="3" />
-                                </svg>
-                                <div>
-                                    <div>{{ $wedding->event_location_name }}</div>
-                                    @if($wedding->event_address)
-                                        <span class="event-subtext">{{ $wedding->event_address }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div style="display:flex; gap:8px; margin-top:0.85rem; flex-wrap:wrap;">
-                                @if($wedding->event_map_url)
-                                    <a href="{{ $wedding->event_map_url }}" target="_blank" class="btn-pill"
-                                        style="flex:1;">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
+                                    <div class="event-row">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path d="M12 6v6l4 2" />
+                                        </svg>
+                                        <span>{{ $wedding->ceremony_date->format('H:i') }} WIB</span>
+                                    </div>
+                                @endif
+                                @if($wedding->ceremony_location_name || $wedding->ceremony_address)
+                                    <div class="event-row">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                             <circle cx="12" cy="10" r="3" />
                                         </svg>
-                                        Google Maps
-                                    </a>
+                                        <div>
+                                            @if($wedding->ceremony_location_name)
+                                                <div style="font-weight:700;">{{ $wedding->ceremony_location_name }}</div>
+                                            @endif
+                                            @if($wedding->ceremony_address)
+                                                <span class="event-subtext">{{ $wedding->ceremony_address }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                                @if($ceremonyMapUrl)
+                                    <div style="display:flex; gap:8px; margin-top:0.85rem; flex-wrap:wrap;">
+                                        <a href="{{ $ceremonyMapUrl }}" target="_blank" class="btn-pill"
+                                            style="flex:1;">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                <circle cx="12" cy="10" r="3" />
+                                            </svg>
+                                            Google Maps
+                                        </a>
+                                    </div>
                                 @endif
                             </div>
-                        </div>
+                        @endif
+
+                        {{-- Pembatas jika kedua acara diisi --}}
+                        @if($hasCeremony && $hasReception)
+                            <hr class="event-divider">
+                        @endif
+
+                        {{-- 2. Bagian Resepsi Pernikahan (Otomatis sembunyi jika kosong) --}}
+                        @if($hasReception)
+                            <div>
+                                <div class="event-label">Resepsi Pernikahan</div>
+                                @if($wedding->event_date)
+                                    <div class="event-row">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                        </svg>
+                                        <span>{{ $wedding->event_date->isoFormat('dddd, D MMMM Y') }}</span>
+                                    </div>
+                                    <div class="event-row">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path d="M12 6v6l4 2" />
+                                        </svg>
+                                        <span>{{ $wedding->event_date->format('H:i') . ' WIB' }}</span>
+                                    </div>
+                                @endif
+                                @if($wedding->event_location_name || $wedding->event_address)
+                                    <div class="event-row">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
+                                        <div>
+                                            @if($wedding->event_location_name)
+                                                <div style="font-weight:700;">{{ $wedding->event_location_name }}</div>
+                                            @endif
+                                            @if($wedding->event_address)
+                                                <span class="event-subtext">{{ $wedding->event_address }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                                @if($receptionMapUrl)
+                                    <div style="display:flex; gap:8px; margin-top:0.85rem; flex-wrap:wrap;">
+                                        <a href="{{ $receptionMapUrl }}" target="_blank" class="btn-pill"
+                                            style="flex:1;">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                <circle cx="12" cy="10" r="3" />
+                                            </svg>
+                                            Google Maps
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                     </div>
 
                     {{-- Live Photobooth Card --}}
