@@ -74,7 +74,7 @@ class StoreProductRequest extends FormRequest
             'whitelabel_price'          => ['nullable', 'numeric', 'min:0'],
             'whitelabel_terms'          => ['nullable', 'string', 'max:2000'],
             'affiliate_commission_rate' => ['nullable', 'numeric', 'min:5', 'max:100'],
-            'video_platform'            => ['nullable', 'string', 'in:youtube,tiktok'],
+            'video_platform'            => ['nullable', 'string', 'in:youtube,tiktok,'],
             'tiktok_video_url'          => ['nullable', 'string', 'max:2000'],
             'tiktok_video_urls'         => ['nullable', 'array', 'max:3'],
             'tiktok_video_urls.*'       => ['nullable', 'string', 'max:500'],
@@ -244,8 +244,12 @@ class StoreProductRequest extends FormRequest
             $merge['pwyw_suggested_price'] = $rawPwywSug !== '' ? (float)$rawPwywSug : null;
         }
         if ($this->has('traktir_unit_price')) {
-            $rawTraktir = preg_replace('/[^\d]/', '', (string)$this->input('traktir_unit_price'));
-            $merge['traktir_unit_price'] = $rawTraktir !== '' ? (float)$rawTraktir : 10000;
+            // Ambil input - bisa berupa: "10.000" (formatted), "10000", atau "10000.00" (dari decimal:2 cast)
+            // Strip thousand-separator (titik) lalu cast ke float → int agar aman
+            $rawTraktirInput = (string) $this->input('traktir_unit_price');
+            $cleanedTraktir  = str_replace('.', '', $rawTraktirInput); // hapus separator ribuan
+            $cleanedTraktir  = preg_replace('/[^\d]/', '', $cleanedTraktir); // buang karakter lain
+            $merge['traktir_unit_price'] = $cleanedTraktir !== '' ? (int) $cleanedTraktir : 10000;
         }
         $merge['traktir_unit_name'] = $this->input('traktir_unit_name') ?: 'Kopi';
         $merge['traktir_unit_icon'] = $this->input('traktir_unit_icon') ?: 'coffee';
