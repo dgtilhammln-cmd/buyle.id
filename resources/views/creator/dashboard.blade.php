@@ -491,7 +491,7 @@
                     <div class="nina-card-topbar">
                         <div>
                             <div class="nina-greeting-title">
-                                Halo, {{ $storeName }}! <span>Selamat datang</span>
+                                Halo, {{ $storeName }}!
                             </div>
                         </div>
                         <div class="nina-top-buttons">
