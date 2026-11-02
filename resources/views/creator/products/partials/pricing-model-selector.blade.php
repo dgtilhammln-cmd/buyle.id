@@ -7,7 +7,7 @@
 @php
   $pt       = old('pricing_type', $product->pricing_type ?? 'fixed');
   $pUnit    = old('traktir_unit_name', $product->traktir_unit_name ?? 'Kopi');
-  $pIcon    = old('traktir_unit_icon', $product->traktir_unit_icon ?? 'coffee');
+  $pIcon    = old('traktir_unit_icon', $product->traktir_unit_icon_key ?? 'coffee');
   $pPrice   = (int) round((float) old('traktir_unit_price', $product->traktir_unit_price ?? 10000));
   $pwywMin  = old('pwyw_min_price', $product->pwyw_min_price ?? 0);
   $pwywSug  = old('pwyw_suggested_price', $product->pwyw_suggested_price ?? null);

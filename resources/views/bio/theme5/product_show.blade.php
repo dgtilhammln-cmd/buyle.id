@@ -1426,9 +1426,14 @@
                                 </div>
                                 <div style="flex:1;">
                                     <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; font-weight:700;">Waktu Pelaksanaan</div>
-                                    <div style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-top:2px;">
-                                        {{ \Carbon\Carbon::parse($tEventDate)->locale('id')->isoFormat('dddd, D MMMM Y') }}@if($tEventTime)<span style="color:#64748b; font-weight:600;"> &nbsp;·&nbsp; {{ $tEventTime }}</span>@endif
+                                    <div style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-top:2px; line-height:1.35;">
+                                        {{ \Carbon\Carbon::parse($tEventDate)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                                     </div>
+                                    @if($tEventTime)
+                                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a; margin-top:2px;">
+                                            {{ $tEventTime }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endif

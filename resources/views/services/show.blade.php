@@ -1669,25 +1669,27 @@
                                         <div class="pd-attr-label">Pelaksanaan</div>
                                         <div class="pd-attr-content">
                                             <div>
-                                                <div
-                                                    style="display:flex; align-items:center; gap:6px; color:var(--text-main); font-weight:700;">
+                                                <div style="display:flex; align-items:flex-start; gap:8px;">
                                                     <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.2"
-                                                        viewBox="0 0 24 24">
+                                                        viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
                                                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                                         <line x1="16" y1="2" x2="16" y2="6" />
                                                         <line x1="8" y1="2" x2="8" y2="6" />
                                                         <line x1="3" y1="10" x2="21" y2="10" />
                                                     </svg>
-                                                    <span>{{ \Carbon\Carbon::parse($service->event_date)->locale('id')->isoFormat('dddd, D MMMM Y') }}</span>
-                                                    @if($service->event_time)
-                                                        <span
-                                                            style="font-size:0.75rem; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; padding:2px 8px; border-radius:999px; font-weight:600;">
-                                                            {{ $service->event_time }}
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:3px;">
-                                                    Jadwal tanggal dan waktu berlangsungnya acara / event.
+                                                    <div>
+                                                        <div style="color:var(--text-main); font-weight:700; font-size:0.92rem; line-height:1.35;">
+                                                            {{ \Carbon\Carbon::parse($service->event_date)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                                        </div>
+                                                        @if($service->event_time)
+                                                            <div style="color:var(--text-main); font-weight:700; font-size:0.92rem; margin-top:2px;">
+                                                                {{ $service->event_time }}
+                                                            </div>
+                                                        @endif
+                                                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">
+                                                            Jadwal tanggal dan waktu berlangsungnya acara / event.
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

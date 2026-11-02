@@ -821,5 +821,29 @@ class Product extends Model
         }
         return 'fixed';
     }
-}
 
+    public function getTraktirUnitIconAttribute($value): string
+    {
+        $map = [
+            'coffee' => '☕', 'kopi'   => '☕',
+            'tea'    => '🍵', 'teh'    => '🍵',
+            'meal'   => '🍔', 'burger' => '🍔',
+            'pizza'  => '🍕',
+            'gift'   => '🎁', 'hadiah' => '🎁',
+            'heart'  => '❤️', 'hati'   => '❤️',
+        ];
+
+        $key = strtolower(trim((string) $value));
+        return $map[$key] ?? ($value ?: '☕');
+    }
+
+    public function getTraktirUnitIconKeyAttribute(): string
+    {
+        $raw = strtolower(trim((string) ($this->attributes['traktir_unit_icon'] ?? 'coffee')));
+        $emojiToKey = [
+            '☕' => 'coffee', '🍵' => 'tea', '🍔' => 'meal',
+            '🍕' => 'pizza',  '🎁' => 'gift', '❤️' => 'heart',
+        ];
+        return $emojiToKey[$raw] ?? ($raw ?: 'coffee');
+    }
+}
