@@ -1,9 +1,16 @@
 @php
     $bioName  = $config['name'] ?? $profile->store_name ?? $username;
     $roleTitle = $profile->bio_role ? ucfirst(str_replace('_', ' ', $profile->bio_role)) : 'Professional Creator';
-    $avatarUrl = !empty($config['avatar']) 
-        ? asset('storage/' . $config['avatar']) 
-        : (!empty($config['_user_avatar']) ? (Str::startsWith($config['_user_avatar'], ['http://', 'https://']) ? $config['_user_avatar'] : asset('storage/' . $config['_user_avatar'])) : null);
+    $avatarUrl = null;
+    if (!empty($config['avatar'])) {
+        $avatarUrl = Str::startsWith($config['avatar'], ['http://', 'https://']) ? $config['avatar'] : asset('storage/' . $config['avatar']);
+    } elseif (!empty($config['_user_avatar'])) {
+        $avatarUrl = Str::startsWith($config['_user_avatar'], ['http://', 'https://']) ? $config['_user_avatar'] : asset('storage/' . $config['_user_avatar']);
+    } elseif (!empty($profile->avatar)) {
+        $avatarUrl = Str::startsWith($profile->avatar, ['http://', 'https://']) ? $profile->avatar : asset('storage/' . $profile->avatar);
+    } elseif (isset($profile->user) && !empty($profile->user->avatar)) {
+        $avatarUrl = Str::startsWith($profile->user->avatar, ['http://', 'https://']) ? $profile->user->avatar : asset('storage/' . $profile->user->avatar);
+    }
     
     $storeSlug = $profile->store_slug ?? $username;
     $products  = $products ?? collect();
@@ -118,17 +125,18 @@
         color: #15803d;
     }
     .t5-btn-wa {
-        background: #f0fdf4;
-        color: #15803d;
-        border-color: #bbf7d0;
-        font-weight: 600;
-    }
-    .t5-btn-wa:hover {
         background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
         color: #ffffff !important;
         border-color: transparent !important;
+        font-weight: 700;
+        box-shadow: 0 3px 12px rgba(30, 179, 73, 0.28);
+    }
+    .t5-btn-wa:hover {
+        background: linear-gradient(135deg, #16a34a 0%, #84cc16 100%) !important;
+        color: #ffffff !important;
+        border-color: transparent !important;
         transform: translateY(-2px) scale(1.04);
-        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.42);
     }
     .t5-btn-cart {
         background: #ffffff;
@@ -545,9 +553,9 @@
                 @endphp
                 <a href="https://buyle.id/keranjang" class="t5-action-btn t5-btn-cart" title="Keranjang Belanja">
                     <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
                     <span class="t5-cart-badge" id="t5HeaderCartBadge" style="{{ $cartBadgeVal > 0 ? '' : 'display:none;' }}">{{ $cartBadgeVal }}</span>
                 </a>

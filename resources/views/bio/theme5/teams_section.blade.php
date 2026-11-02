@@ -372,11 +372,13 @@
             </div>
 
             <div class="t5-teams-carousel-wrap">
+                @if(count($teams) > 4)
                 <button type="button" class="t5-teams-nav-btn t5-teams-prev" onclick="scrollT5Teams('left')" aria-label="Sebelumnya">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
                 </button>
+                @endif
 
                 <div class="t5-teams-track" id="t5TeamsTrack">
                     @foreach($teams as $tItem)
@@ -408,11 +410,13 @@
                     @endforeach
                 </div>
 
+                @if(count($teams) > 4)
                 <button type="button" class="t5-teams-nav-btn t5-teams-next" onclick="scrollT5Teams('right')" aria-label="Berikutnya">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                 </button>
+                @endif
             </div>
         </section>
 

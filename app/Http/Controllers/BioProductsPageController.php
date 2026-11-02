@@ -21,6 +21,15 @@ class BioProductsPageController extends Controller
         $config = $profile->bio_config ?? [];
         $blocks = $profile->bioBlocks;
 
+        // Auto-populate bio avatar from creator profile avatar or user's Google/profile avatar if not set
+        if (empty($config['avatar'])) {
+            if (!empty($profile->avatar)) {
+                $config['avatar'] = $profile->avatar;
+            } elseif ($profile->user && !empty($profile->user->avatar)) {
+                $config['_user_avatar'] = $profile->user->avatar;
+            }
+        }
+
         $creatorGroups = CreatorProductGroup::where('seller_id', $profile->user_id)
             ->where('is_active', true)
             ->withCount('products')

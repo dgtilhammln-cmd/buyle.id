@@ -1,9 +1,16 @@
 @php
     $bioName = $config['name'] ?? $profile->store_name ?? $username;
     $bioText = $config['bio'] ?? $profile->store_description ?? 'Solusi digital terpercaya untuk kebutuhan bisnis & personal Anda.';
-    $avatarUrl = !empty($config['avatar'])
-        ? asset('storage/' . $config['avatar'])
-        : (!empty($config['_user_avatar']) ? (Str::startsWith($config['_user_avatar'], ['http://', 'https://']) ? $config['_user_avatar'] : asset('storage/' . $config['_user_avatar'])) : null);
+    $avatarUrl = null;
+    if (!empty($config['avatar'])) {
+        $avatarUrl = Str::startsWith($config['avatar'], ['http://', 'https://']) ? $config['avatar'] : asset('storage/' . $config['avatar']);
+    } elseif (!empty($config['_user_avatar'])) {
+        $avatarUrl = Str::startsWith($config['_user_avatar'], ['http://', 'https://']) ? $config['_user_avatar'] : asset('storage/' . $config['_user_avatar']);
+    } elseif (!empty($profile->avatar)) {
+        $avatarUrl = Str::startsWith($profile->avatar, ['http://', 'https://']) ? $profile->avatar : asset('storage/' . $profile->avatar);
+    } elseif (isset($profile->user) && !empty($profile->user->avatar)) {
+        $avatarUrl = Str::startsWith($profile->user->avatar, ['http://', 'https://']) ? $profile->user->avatar : asset('storage/' . $profile->user->avatar);
+    }
 
     $locationText = !empty($config['location']) ? $config['location'] : ($profile->address ?? $profile->store_location ?? null);
     $sellerWa = !empty($config['wa']) ? $config['wa'] : ($profile->phone ?? '');

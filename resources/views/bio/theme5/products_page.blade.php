@@ -45,11 +45,15 @@
     @php
         $bioName = $config['name'] ?? $profile->store_name ?? $username;
         $avatarUrl = null;
-        if (!empty($config['avatar']))
-            $avatarUrl = asset('storage/' . $config['avatar']);
-        elseif (!empty($config['_user_avatar'])) {
+        if (!empty($config['avatar'])) {
+            $avatarUrl = \Illuminate\Support\Str::startsWith($config['avatar'], ['http://', 'https://']) ? $config['avatar'] : asset('storage/' . $config['avatar']);
+        } elseif (!empty($config['_user_avatar'])) {
             $ua = $config['_user_avatar'];
             $avatarUrl = \Illuminate\Support\Str::startsWith($ua, ['http://', 'https://']) ? $ua : asset('storage/' . $ua);
+        } elseif (!empty($profile->avatar)) {
+            $avatarUrl = \Illuminate\Support\Str::startsWith($profile->avatar, ['http://', 'https://']) ? $profile->avatar : asset('storage/' . $profile->avatar);
+        } elseif (isset($profile->user) && !empty($profile->user->avatar)) {
+            $avatarUrl = \Illuminate\Support\Str::startsWith($profile->user->avatar, ['http://', 'https://']) ? $profile->user->avatar : asset('storage/' . $profile->user->avatar);
         }
     @endphp
 
