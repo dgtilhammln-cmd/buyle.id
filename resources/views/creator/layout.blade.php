@@ -566,12 +566,13 @@
 
         @media (max-width: 1024px) {
             body {
-                flex-direction: column;
+                display: block !important;
                 height: auto;
                 min-height: 100vh;
                 overflow-x: hidden;
                 overflow-y: auto;
-                padding-bottom: 88px;
+                padding-bottom: 0;
+                background: #f4f6f8;
             }
 
             /* Sembunyikan kotak hijau mobile bar */
@@ -590,6 +591,9 @@
             }
 
             .cr-sidebar {
+                position: fixed !important;
+                top: 0;
+                left: 0;
                 width: 280px;
                 background: linear-gradient(180deg, #1eb349 0%, #a5cf37 100%) !important;
                 transform: translateX(-100%);
@@ -598,6 +602,7 @@
                 box-shadow: 10px 0 40px rgba(0, 0, 0, 0.4);
                 height: 100vh;
                 padding-right: 1.25rem;
+                overflow-y: auto;
             }
 
             .cr-sidebar.open {
@@ -616,29 +621,28 @@
             .cr-main-wrapper {
                 margin-left: 0 !important;
                 padding: 0;
-                padding-top: 0.75rem !important;
+                padding-top: 0 !important;
                 height: auto;
-                min-height: calc(100vh - 88px);
+                min-height: 100vh;
+                width: 100vw;
                 max-width: 100vw;
                 overflow-x: hidden;
                 overflow-y: visible;
                 box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-                background: transparent;
+                display: block;
+                background: #f4f6f8;
             }
 
             .cr-main-canvas {
                 border-radius: 0;
-                padding: 0.75rem;
+                padding: 1rem 0.9rem 100px;
                 margin: 0;
-                min-height: calc(100vh - 64px - 88px);
+                min-height: 100vh;
                 width: 100%;
                 max-width: 100%;
                 box-sizing: border-box;
                 overflow-x: hidden;
-                align-self: stretch;
+                background: #f4f6f8;
             }
 
             .cr-nav-link.active::before,
@@ -667,25 +671,30 @@
                 stroke: #1eb349 !important;
             }
 
-            /* ── Super App Floating Capsule Bottom Nav ── */
+            /* -- Super App Floating Capsule Bottom Nav (WHITE PILL) -- */
             .superapp-bottom-nav {
                 display: flex;
                 position: fixed;
                 bottom: 14px;
                 left: 50%;
-                transform: translateX(-50%);
-                width: calc(100% - 28px);
-                max-width: 480px;
-                background: linear-gradient(135deg, rgba(30, 179, 73, 0.97) 0%, rgba(165, 207, 55, 0.97) 100%);
-                backdrop-filter: blur(20px) saturate(1.8);
-                -webkit-backdrop-filter: blur(20px) saturate(1.8);
-                border: 1.5px solid rgba(255, 255, 255, 0.22);
+                transform: translate(-50%, 0);
+                width: calc(100% - 32px);
+                max-width: 460px;
+                background: #ffffff;
+                border: 1px solid rgba(226, 232, 240, 0.9);
                 border-radius: 999px;
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(18, 104, 41, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
                 z-index: 9998;
-                padding: 8px 16px;
+                padding: 6px 12px;
                 justify-content: space-around;
                 align-items: center;
+                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+                opacity: 1;
+            }
+
+            .superapp-bottom-nav.nav-hidden {
+                transform: translate(-50%, 120%) !important;
+                opacity: 0 !important;
             }
 
             .superapp-nav-item {
@@ -694,42 +703,38 @@
                 align-items: center;
                 justify-content: center;
                 text-decoration: none;
-                color: rgba(255, 255, 255, 0.65);
-                font-size: 0.6rem;
-                font-weight: 600;
-                letter-spacing: 0.02em;
-                gap: 3px;
-                padding: 0.4rem 0.6rem;
+                color: #94a3b8;
+                gap: 0;
+                padding: 0.55rem 0.75rem;
                 border-radius: 999px;
-                transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+                transition: all 0.2s ease;
                 background: transparent;
                 border: none;
                 cursor: pointer;
                 font-family: 'Montserrat', sans-serif;
-                min-width: 48px;
+                min-width: 44px;
+                min-height: 44px;
             }
 
             .superapp-nav-item:hover,
             .superapp-nav-item:active {
-                color: #ffffff;
-                transform: translateY(-2px);
+                color: #1eb349;
+                background: rgba(30, 179, 73, 0.08);
             }
 
             .superapp-nav-item.active {
-                color: #ffffff;
-                background: rgba(255, 255, 255, 0.18);
-                font-weight: 500;
-                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                color: #1eb349;
+                background: linear-gradient(135deg, rgba(30,179,73,0.12) 0%, rgba(165,207,55,0.12) 100%);
             }
 
             .superapp-nav-item svg {
                 stroke-width: 2;
-                transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+                transition: transform 0.2s ease;
             }
 
             .superapp-nav-item.active svg {
                 stroke-width: 2.5;
-                transform: scale(1.1);
+                stroke: #1eb349;
             }
         }
     </style>
