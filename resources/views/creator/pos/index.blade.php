@@ -2936,6 +2936,41 @@
             justify-content: center !important;
         }
 
+
+        /* Mobile Layout Optimizations: Zero Top Space & Screen 2 Focus */
+        @media (max-width: 991px) {
+            .cr-topbar-header-row {
+                display: none !important;
+            }
+            .cr-main-canvas {
+                padding: 0.5rem 0.75rem 150px 0.75rem !important;
+                min-height: auto !important;
+                background: #fbf8f4 !important;
+                display: block !important;
+            }
+            .cr-main-wrapper {
+                min-height: auto !important;
+                background: #fbf8f4 !important;
+            }
+            #pos-real-content {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+            .pos-wrapper {
+                padding-top: 0 !important;
+            }
+            /* Eliminate Image 1 Modal completely on mobile */
+            #posHistoryModal {
+                display: none !important;
+                pointer-events: none !important;
+            }
+            /* Screen 2 Transactions full width wrapper on mobile */
+            #posScreenTransactions {
+                max-width: 480px;
+                margin: 0 auto;
+                padding: 0 0 160px 0;
+            }
+        }
     </style>
 @endsection
 
@@ -3103,9 +3138,6 @@
     @if($midtransClientKey)
         <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
     @endif
-
-    
-    </div>
 
     <!-- POS Real Content Wrapper -->
     <div id="pos-real-content" style="opacity: 1; position: relative; z-index: 1;">
@@ -5892,6 +5924,10 @@
 
             // Custom Modal Helpers (Vanilla JS - Independent from Bootstrap)
             function openModal(modalId) {
+                if (modalId === 'posHistoryModal' && window.innerWidth <= 991) {
+                    switchPosScreen('transactions');
+                    return;
+                }
                 if (modalId === 'posLogoModal') {
                     openPosSettingsModal('struk');
                     return;
@@ -9472,7 +9508,9 @@
                 if (screen === 'transactions') {
                     if (navTrans) navTrans.classList.add('active');
                     if (screenCat) screenCat.style.display = 'none';
-                    if (floatingBar) floatingBar.style.display = 'none';
+                    if (floatingBar && window.innerWidth <= 991) {
+                        floatingBar.style.display = 'flex';
+                    }
 
                     if (screenTrans) {
                         screenTrans.style.display = 'block';
@@ -9866,7 +9904,7 @@
             </button>
 
             <!-- 3. Laporan / Analytics -->
-            <button type="button" class="pos-nav-item" id="posNavBtnReports" onclick="openModal('posHistoryModal')" title="Laporan & Rekap Shift">
+            <button type="button" class="pos-nav-item" id="posNavBtnReports" onclick="switchPosScreen('transactions')" title="Transaksi & Rekap Shift">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <line x1="18" y1="20" x2="18" y2="10"/>
                     <line x1="12" y1="20" x2="12" y2="4"/>
