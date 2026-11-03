@@ -186,7 +186,7 @@ class PosController extends Controller
         }
 
         $result = $posProducts->unique('id')->values();
-        $result->load(['variantOptions.values']);
+        $result->loadMissing(['variantOptions.values']);
         return $result;
     }
 
