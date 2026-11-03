@@ -3215,7 +3215,7 @@
                                     </svg>
                                 </div>
                                 <div style="min-width: 0; flex: 1;">
-                                    <div style="font-size: 0.68rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">Revenue (Hari Ini)</div>
+                                    <div style="font-size: 0.68rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">Revenue <br>(Hari Ini)</div>
                                     <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;" id="posStatRevenueDisplay">
                                         Rp {{ number_format($todayGrossSales, 0, ',', '.') }}
                                     </div>
@@ -10233,7 +10233,6 @@
         </div>
     </div>
 @endsection
-
 
 
 
