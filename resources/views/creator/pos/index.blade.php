@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 
 @section('title', 'Kasir Digital (POS)')
 @section('page_title', 'Kasir Digital (POS)')
@@ -13,7 +13,7 @@
             box-sizing: border-box;
         }
 
-        /* ── Card Styling (Sama dengan Profil & Web Builder) ──────────────── */
+        /* â”€â”€ Card Styling (Sama dengan Profil & Web Builder) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .prof-card {
             background: #ffffff;
             border-radius: 20px;
@@ -45,7 +45,7 @@
             padding: 1.5rem;
         }
 
-        /* ── Form Inputs & Controls ───────────────────────────────────────── */
+        /* â”€â”€ Form Inputs & Controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -93,7 +93,7 @@
             box-shadow: 0 0 0 4px rgba(30, 179, 73, 0.12);
         }
 
-        /* ── Web Builder Signature Green Buttons ──────────────────────────── */
+        /* â”€â”€ Web Builder Signature Green Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .btn-submit-green {
             background: linear-gradient(135deg, #1eb349, #a5cf37);
             border-radius: 999px !important;
@@ -154,7 +154,7 @@
             transform: translateY(-1px);
         }
 
-        /* ── POS Layout Grid ──────────────────────────────────────────────── */
+        /* â”€â”€ POS Layout Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .pos-wrapper {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(300px, 350px);
@@ -188,7 +188,7 @@
             }
         }
 
-        /* ── Search Input ─────────────────────────────────────────────────── */
+        /* â”€â”€ Search Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .search-input-wrap {
             position: relative;
             margin-bottom: 0.85rem;
@@ -205,7 +205,7 @@
             padding-left: 42px;
         }
 
-        /* ── Product Grid ────────────────────────────────────────────────── */
+        /* â”€â”€ Product Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -377,7 +377,7 @@
             }
         }
 
-        /* ── Cart Items List ─────────────────────────────────────────────── */
+        /* â”€â”€ Cart Items List â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .cart-items-container {
             max-height: 260px;
             overflow-y: auto;
@@ -494,7 +494,7 @@
             text-align: center;
         }
 
-        /* ── Summary & Calculator Box ────────────────────────────────────── */
+        /* â”€â”€ Summary & Calculator Box â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .summary-box {
             background: #f8fafc;
             border: 1.5px solid #e2e8f0;
@@ -529,7 +529,7 @@
             margin-top: 0.75rem;
         }
 
-        /* ── Thermal Receipt Printer Animation ───────────────────────────── */
+        /* â”€â”€ Thermal Receipt Printer Animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .receipt-printer-box {
             position: relative;
             background: #ffffff;
@@ -600,7 +600,7 @@
             border: 1.5px solid #10b981 !important;
         }
 
-        /* ── Discount Type Toggle ────────────────────────────────────────── */
+        /* â”€â”€ Discount Type Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .disc-toggle {
             display: flex;
             border: 1.5px solid #cbd5e1;
@@ -627,7 +627,7 @@
             color: #fff;
         }
 
-        /* ── CUSTOM MODAL OVERLAY SYSTEM (Ultra Compact & Minimalist) ──── */
+        /* â”€â”€ CUSTOM MODAL OVERLAY SYSTEM (Ultra Compact & Minimalist) â”€â”€â”€â”€ */
         .pos-modal-overlay {
             display: none;
             position: fixed;
@@ -698,7 +698,7 @@
             flex-shrink: 0;
         }
 
-        /* ── Custom Table Styles (Independent from Bootstrap) ───────────── */
+        /* â”€â”€ Custom Table Styles (Independent from Bootstrap) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .pos-table-wrap {
             width: 100%;
             overflow-x: auto;
@@ -734,7 +734,7 @@
             background: #f8fafc;
         }
 
-        /* ── Close Button ────────────────────────────────────────────────── */
+        /* â”€â”€ Close Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .pos-modal-close {
             background: #f1f5f9;
             border: none;
@@ -757,7 +757,7 @@
             transform: rotate(90deg);
         }
 
-        /* ── Payment Options Cards (Minimalist Compact) ──────────────────── */
+        /* â”€â”€ Payment Options Cards (Minimalist Compact) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .pay-option-card {
             border: 1.5px solid #e2e8f0;
             border-radius: 12px;
@@ -782,7 +782,7 @@
             box-shadow: 0 0 0 1px #1eb349;
         }
 
-        /* ── Quick Money Pill Buttons ────────────────────────────────────── */
+        /* â”€â”€ Quick Money Pill Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .btn-quick-cash {
             background: #ffffff;
             border: 1px solid #cbd5e1;
@@ -801,7 +801,7 @@
             border-color: #1eb349;
         }
 
-        /* ── Deposit Preset Buttons ──────────────────────────────────────── */
+        /* â”€â”€ Deposit Preset Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .btn-deposit-preset {
             padding: 8px 10px;
             font-size: 0.8rem;
@@ -827,7 +827,7 @@
             color: #ffffff;
         }
 
-        /* ── History & Closing Shift Tabs ────────────────────────────────── */
+        /* â”€â”€ History & Closing Shift Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .history-tab-btn {
             background: transparent;
             border: none;
@@ -856,7 +856,7 @@
             border-top-right-radius: 8px;
         }
 
-        /* ── Mobile Fixed Bottom Drawer Bar ──────────────────────────────── */
+        /* â”€â”€ Mobile Fixed Bottom Drawer Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .mobile-cart-bar {
             display: none;
             position: fixed;
@@ -879,7 +879,7 @@
             }
         }
 
-        /* ── Thermal Receipt Styles ──────────────────────────────────────── */
+        /* â”€â”€ Thermal Receipt Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         @media print {
             body * {
                 visibility: hidden !important;
@@ -910,7 +910,7 @@
             }
         }
 
-        /* ── Privacy Blur Overlay ───────────────────────────────── */
+        /* â”€â”€ Privacy Blur Overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         #midtransBlurOverlay {
             display: none;
             position: fixed;
@@ -934,7 +934,7 @@
             z-index: 999999 !important;
         }
 
-        /* ── POS Lightweight CSS Shimmer Skeletons ──────────────── */
+        /* â”€â”€ POS Lightweight CSS Shimmer Skeletons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         @keyframes posSkeletonShimmer {
             0% {
                 background-position: -600px 0;
@@ -962,7 +962,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
 
-        /* ── Minimalist Topbar Controls ──────────────── */
+        /* â”€â”€ Minimalist Topbar Controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .pos-topbar-bar {
             display: flex;
             align-items: center;
@@ -1098,7 +1098,7 @@
             }
         }
 
-        /* ── Fee & Discount Setting Components ──────────────── */
+        /* â”€â”€ Fee & Discount Setting Components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .fee-card-row {
             background: #ffffff;
             border: 1.5px solid #e2e8f0;
@@ -1217,7 +1217,7 @@
             border-radius: 999px;
         }
 
-        /* ── POS Settings Hover Dropdown ──────────────────── */
+        /* â”€â”€ POS Settings Hover Dropdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .pos-settings-dropdown-wrap {
             position: relative;
             display: inline-flex;
@@ -1342,10 +1342,10 @@
             z-index: 1;
         }
 
-        /* ═══════════════════════════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                        MOBILE-FIRST POS OVERHAUL (100% Sesuai Mockup Gambar 3-Layar)
                        Pure Light Theme - Zero Dark Blocks - Shimmer Skeleton Effect
-                       ═══════════════════════════════════════════════════════════════ */
+                       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
         /* Shimmer Skeleton Animation */
         @keyframes shimmerSkel {
@@ -1716,7 +1716,7 @@
             text-align: center;
         }
 
-        /* ── Floating Cart Bar (Screen 1 Mockup) ── */
+        /* â”€â”€ Floating Cart Bar (Screen 1 Mockup) â”€â”€ */
         .pos-mobile-floating-bar {
             display: none;
             position: fixed;
@@ -1804,7 +1804,7 @@
             transform: scale(0.95);
         }
 
-        /* ── Slide-up Cart Drawer Sheet on Mobile ── */
+        /* â”€â”€ Slide-up Cart Drawer Sheet on Mobile â”€â”€ */
         .pos-cart-drawer-overlay {
             display: none;
             position: fixed;
@@ -1873,7 +1873,7 @@
             flex: 1;
         }
 
-        /* ── Confirm Sale & Screen 3 Polish (Modal Customization) ── */
+        /* â”€â”€ Confirm Sale & Screen 3 Polish (Modal Customization) â”€â”€ */
         .confirm-sale-grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1945,7 +1945,7 @@
             background: #dcfce7;
         }
 
-        /* ── Screen 2 Transactions (Mobile List UI) ── */
+        /* â”€â”€ Screen 2 Transactions (Mobile List UI) â”€â”€ */
         .pos-trx-card {
             background: #ffffff;
             border: 1.5px solid #f1f5f9;
@@ -2014,7 +2014,7 @@
             display: inline-block;
         }
 
-        /* ── Responsive Mobile Overrides (< 991px) ── */
+        /* â”€â”€ Responsive Mobile Overrides (< 991px) â”€â”€ */
         @media (max-width: 991px) {
             .pos-mobile-top-header {
                 display: flex !important;
@@ -2111,9 +2111,9 @@
         }
 
         
-        /* ═══════════════════════════════════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
            PIXEL-PERFECT BUYLE POS (100% MATCHING REFERENCE MOCKUP SCREENSHOT)
-           ═══════════════════════════════════════════════════════════════════════ */
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         
         /* Background & Container */
         @media (max-width: 991px) {
@@ -2673,7 +2673,7 @@
             }
         }
 
-        /* ── BUYLE POS TOP HEADER (Buyle POS + Settings + Add Item) ── */
+        /* â”€â”€ BUYLE POS TOP HEADER (Buyle POS + Settings + Add Item) â”€â”€ */
         .pos-header-custom {
             display: flex;
             align-items: center;
@@ -2738,7 +2738,7 @@
             transform: scale(0.94);
         }
 
-        /* ── POPUP OPTIONS MODAL (+ Add Item) ── */
+        /* â”€â”€ POPUP OPTIONS MODAL (+ Add Item) â”€â”€ */
         .pos-add-option-card {
             background: #ffffff;
             border: 1.5px solid #f1f5f9;
@@ -2770,7 +2770,7 @@
             flex-shrink: 0;
         }
 
-        /* ── SCREEN 2: TRANSACTIONS VIEW (Mockup Image 4) ── */
+        /* â”€â”€ SCREEN 2: TRANSACTIONS VIEW (Mockup Image 4) â”€â”€ */
         #posScreenTransactions {
             display: none;
             padding-bottom: 160px;
@@ -3047,7 +3047,7 @@
     @endif
 
     <!-- SKELETON LOADING PLACEHOLDER (Smooth & Lightweight) -->
-    <div id="pos-skeleton" class="pos-wrapper" style="margin-bottom: 2rem;">
+    <div id="pos-skeleton" class="pos-wrapper" style="position: absolute; top: 0; left: 0; right: 0; z-index: 10; background: #fbf8f4; min-height: 100vh; margin-bottom: 0;">
         <!-- LEFT COLUMN: SKELETON KATALOG -->
         <div>
             <div class="prof-card">
@@ -3159,7 +3159,7 @@
     </div>
 
     <!-- POS Real Content Wrapper -->
-    <div id="pos-real-content" style="opacity:0; transition:opacity 0.25s ease;">
+    <div id="pos-real-content" style="opacity:0; transition:opacity 0.3s ease; position:relative; z-index:1;">
         <!-- SCREEN 1: Kasir & Katalog Produk -->
         <div id="posScreenCatalog">
             <!-- POS Main Grid Wrapper -->
@@ -3186,17 +3186,16 @@
                     <div class="prof-card-body">
                         <!-- 1. Header (Screen 1 Reference 100% Match) -->
                         <div class="pos-ref-header">
-                            <button type="button" class="pos-ref-menu-btn" onclick="openModal('posSettingsModal')" title="Pengaturan POS">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <line x1="4" y1="7" x2="20" y2="7" />
-                                    <line x1="4" y1="12" x2="16" y2="12" />
-                                    <line x1="4" y1="17" x2="18" y2="17" />
+                            <button type="button" class="pos-ref-menu-btn" onclick="openPosSettingsModal('struk')" title="Pengaturan POS">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
                                 </svg>
                             </button>
                             <h1 class="pos-ref-title">Buyle POS</h1>
-                            <button type="button" class="pos-ref-add-btn" onclick="openModal('posAddOptionsModal')" title="Tambah Item">
-                                Add Item
-                            </button>
+                            <a href="{{ route('creator.products.create') }}" class="pos-ref-add-btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;" title="Tambah Produk Baru">
+                                + Add Item
+                            </a>
                         </div>
 
                         <!-- 2. Search Bar Capsule (Screen 1 Reference 100% Match) -->
@@ -3556,7 +3555,7 @@
                             <span class="pos-trans-badge-paid">{{ $isPaidOrd ? 'Paid' : 'Pending' }}</span>
                         </div>
                         <div class="pos-trans-time">
-                            {{ \Carbon\Carbon::parse($ord->created_at)->translatedFormat('d M Y · H:i') }}
+                            {{ \Carbon\Carbon::parse($ord->created_at)->translatedFormat('d M Y Â· H:i') }}
                         </div>
                     </div>
                 @empty
@@ -3591,7 +3590,7 @@
         </div>
     </div> <!-- Close #pos-real-content -->
 
-    <!-- ── Floating Cart Bar (100% Sesuai Screen 1 Mockup) ── -->
+    <!-- â”€â”€ Floating Cart Bar (100% Sesuai Screen 1 Mockup) â”€â”€ -->
     <div class="pos-mobile-floating-bar" id="posMobileFloatingBar">
         <div class="pos-mf-left" onclick="toggleCartDrawer()">
             <div class="pos-mf-chevron" id="posMfChevron">
@@ -3613,7 +3612,7 @@
         </button>
     </div>
 
-    <!-- ── Slide-up Cart Drawer Sheet on Mobile ── -->
+    <!-- â”€â”€ Slide-up Cart Drawer Sheet on Mobile â”€â”€ -->
     <div class="pos-cart-drawer-overlay" id="posCartDrawerOverlay" onclick="closeCartDrawer()"></div>
     <div class="pos-cart-drawer" id="posCartDrawer">
         <div class="pos-drawer-handle"></div>
@@ -3760,7 +3759,7 @@
 
                     <div
                         style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:0.73rem; color:#1e40af; line-height:1.4;">
-                        ⚡ <strong>Pindah Saldo Toko:</strong> Memindahkan dana penjualan Anda langsung ke deposit POS tanpa
+                        âš¡ <strong>Pindah Saldo Toko:</strong> Memindahkan dana penjualan Anda langsung ke deposit POS tanpa
                         perlu bayar QRIS. Saldo siap ditarik otomatis terpotong saat ini juga.
                     </div>
 
@@ -4043,7 +4042,7 @@
             </div>
 
             <div class="pos-modal-body" id="posReceiptModalContent" style="padding: 1.1rem 1.25rem;">
-                <!-- ── MODERN TICKET BILL CARD (Sesuai Mockup Image 4) ── -->
+                <!-- â”€â”€ MODERN TICKET BILL CARD (Sesuai Mockup Image 4) â”€â”€ -->
                 <div id="printablePosReceiptArea" style="background:#ffffff; border-radius:20px; border:1.5px solid #e2e8f0; padding:1.25rem 1.25rem 1rem; position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
                     <!-- Header Bill -->
                     <div style="text-align:center; padding-bottom:10px; border-bottom:1.5px dashed #e2e8f0;">
@@ -4104,7 +4103,7 @@
                     </div>
                 </div>
 
-                <!-- ── SHARE & ACTIONS (Direct WA + Auto Generate Gambar Bill) ── -->
+                <!-- â”€â”€ SHARE & ACTIONS (Direct WA + Auto Generate Gambar Bill) â”€â”€ -->
                 <div class="no-print" style="margin-top: 1rem; display:flex; flex-direction:column; gap:8px;">
                     <!-- 1. Tombol Kirim Struk ke WhatsApp (Direct WA) -->
                     <button type="button" onclick="shareBillToWhatsApp()"
@@ -4144,7 +4143,7 @@
     </div>
     <!-- CUSTOM OVERLAY MODAL: Pengaturan Modul POS (Logo, Alamat, No Telp, Staf Kasir) -->
     <div class="pos-modal-overlay" id="posSettingsModal" data-static-backdrop="true">
-        <div class="pos-modal-card" style="max-width: 780px; width: 95vw; max-height: 92vh;">
+        <div class="pos-modal-card" style="max-width: 520px; width: 92vw; max-height: 85vh; border-radius: 20px;">
             <!-- Modal Header -->
             <div class="pos-modal-head" style="border-bottom: 1.5px solid #f1f5f9; padding: 1.1rem 1.4rem;">
                 <div style="display:flex; align-items:center; gap:10px;">
@@ -4255,9 +4254,9 @@
                 <!-- Real Settings Content Wrapper -->
                 <div id="posSettingsRealContent" style="transition: opacity 0.2s ease;">
 
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <!-- TAB 1: STRUK & PROFIL TOKO                         -->
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <div id="paneSettingStruk" style="display: block;">
                         <div style="display: grid; grid-template-columns: 1fr; gap: 1.25rem;">
 
@@ -4368,7 +4367,7 @@
                                 style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:12px 16px; background:#ffffff; text-align:center;">
                                 <div
                                     style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#64748b; margin-bottom:8px;">
-                                    — Live Preview Header Struk —
+                                    â€” Live Preview Header Struk â€”
                                 </div>
                                 <div id="prevReceiptHeader"
                                     style="font-family:'Montserrat',sans-serif; color:#000; line-height:1.35; max-width:280px; margin:0 auto;">
@@ -4407,9 +4406,9 @@
                         </div>
                     </div>
 
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <!-- TAB 2: PAJAK & BIAYA TAMBAHAN                       -->
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <div id="paneSettingFees" style="display: none;">
                         <!-- Guidance Alert Box -->
                         <div
@@ -4487,9 +4486,9 @@
                         </div>
                     </div>
 
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <!-- TAB 3: DISKON & PROMO PRODUK                        -->
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <div id="paneSettingDiscounts" style="display: none;">
                         <!-- Guidance Alert Box -->
                         <div
@@ -4670,9 +4669,9 @@
                         </div>
                     </div>
 
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <!-- TAB 4: STAF KASIR & SHIFT                          -->
-                    <!-- ═══════════════════════════════════════════════════ -->
+                    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
                     <div id="paneSettingStaff" style="display: none;">
 
                         <!-- Guidance Alert Box -->
@@ -5034,7 +5033,7 @@
                         </div>
                     </div>
 
-                    <!-- ══ TAB 6: PEMBAYARAN CASHLESS & BEBAN FEE POS ══ -->
+                    <!-- â•â• TAB 6: PEMBAYARAN CASHLESS & BEBAN FEE POS â•â• -->
                     <div id="paneSettingPayment" style="display:none;">
                         <!-- Info Alert -->
                         <div
@@ -5202,7 +5201,7 @@
                                         </div>
                                         <div
                                             style="font-size:0.68rem; color:#b45309; margin-top:6px; background:#fffbeb; padding:4px 8px; border-radius:6px; border:1px solid #fef3c7; line-height:1.35;">
-                                            ⚠️ Jika deposit tidak mencukupi, transaksi POS tidak dapat diproses.
+                                            âš ï¸ Jika deposit tidak mencukupi, transaksi POS tidak dapat diproses.
                                         </div>
                                     </div>
                                 </label>
@@ -5397,7 +5396,7 @@
                 <button type="button" class="btn-submit-green" id="btnStaticQrisConfirmDone"
                     onclick="confirmStaticQrisDone()"
                     style="flex: 2; padding: 0.65rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
-                    ✓ Pembayaran Diterima (Selesai)
+                    âœ“ Pembayaran Diterima (Selesai)
                 </button>
             </div>
         </div>
@@ -5613,7 +5612,7 @@
                                         Sale #{{ $loop->iteration }}</div>
                                     <div class="pos-trx-num">{{ $isCash ? 'Cash Sale' : 'QRIS / Digital' }}</div>
                                     <div class="pos-trx-meta">
-                                        <span>{{ $tOrd->created_at->format('d M Y • H:i') }}</span>
+                                        <span>{{ $tOrd->created_at->format('d M Y â€¢ H:i') }}</span>
                                     </div>
                                 </div>
                                 <div class="pos-trx-right">
@@ -5688,7 +5687,7 @@
                                                 <div style="font-size:0.73rem; color:#64748b;">
                                                     {{ $tOrd->created_at->format('H:i') }} WIB
                                                     @if(!empty($tCashierName))
-                                                        • <span style="color:#0369a1; font-weight:700;">Kasir:
+                                                        â€¢ <span style="color:#0369a1; font-weight:700;">Kasir:
                                                             {{ $tCashierName }}</span>
                                                     @endif
                                                 </div>
@@ -6028,7 +6027,7 @@
                                                     `;
 
                 let iconColor = type === 'success' ? '#1eb349' : (type === 'error' ? '#ef4444' : '#3b82f6');
-                toast.innerHTML = `<span style="color:${iconColor}; font-weight:800;">●</span> <span>${escapeHtml(message)}</span>`;
+                toast.innerHTML = `<span style="color:${iconColor}; font-weight:800;">â—</span> <span>${escapeHtml(message)}</span>`;
 
                 container.appendChild(toast);
                 setTimeout(() => {
@@ -6226,7 +6225,7 @@
                 renderCart();
             }
 
-            // ══ Variant & Notes Modal Logic ══
+            // â•â• Variant & Notes Modal Logic â•â•
             let currentVariantProduct = null;
             let currentVariantSelections = {};
             let currentVariantModalQty = 1;
@@ -6323,7 +6322,7 @@
                 });
                 unitPrice = Math.max(0, unitPrice);
                 const totalPrice = unitPrice * currentVariantModalQty;
-                document.getElementById('btnVariantModalAdd').innerText = `Tambah ke Pesanan — Rp ${formatRupiah(totalPrice)}`;
+                document.getElementById('btnVariantModalAdd').innerText = `Tambah ke Pesanan â€” Rp ${formatRupiah(totalPrice)}`;
             }
 
             function confirmVariantModalAdd() {
@@ -6405,12 +6404,12 @@
                                             <div class="cart-item-title">${escapeHtml(item.name)}</div>
                                             ${item.variant_name ? `
                                                 <div style="font-size:0.71rem; color:#15803d; font-weight:700; margin-top:2px; display:inline-flex; align-items:center; gap:3px; background:#f0fdf4; padding:1px 6px; border-radius:4px;">
-                                                    ✦ ${escapeHtml(item.variant_name)}
+                                                    âœ¦ ${escapeHtml(item.variant_name)}
                                                 </div>
                                             ` : ''}
                                             ${item.notes ? `
                                                 <div style="font-size:0.71rem; color:#64748b; font-style:italic; margin-top:2px;">
-                                                    📝 "${escapeHtml(item.notes)}"
+                                                    ðŸ“ "${escapeHtml(item.notes)}"
                                                 </div>
                                             ` : ''}
                                             <div class="cart-item-unit-price" style="margin-top:2px;">Rp ${formatRupiah(itemSub)}</div>
@@ -6525,7 +6524,7 @@
             function calculateTotals() {
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-                // ── Discount Calculation (scoped) ──
+                // â”€â”€ Discount Calculation (scoped) â”€â”€
                 let discountVal = parseFloat(document.getElementById('posDiscountInput').value) || 0;
                 let discountAmount = 0;
                 const preset = window._selectedDiscountPreset;
@@ -6551,7 +6550,7 @@
                     }
                 }
 
-                // ── Custom Fees ──
+                // â”€â”€ Custom Fees â”€â”€
                 let customFeesTotal = 0;
                 (posFeesData || []).forEach(fee => {
                     if (!fee.is_active) return;
@@ -6561,7 +6560,7 @@
                     customFeesTotal += amt;
                 });
 
-                // ── System Fees ──
+                // â”€â”€ System Fees â”€â”€
                 const platformFee = (subtotal * platformFeeRate) / 100;
                 const adminFee = (subtotal * adminFeeRate) / 100;
                 const systemFees = platformFee + adminFee;
@@ -6956,7 +6955,7 @@
                     });
             }
 
-            // ── Order Status Real-Time Polling & Status Badge ─────────────────────
+            // â”€â”€ Order Status Real-Time Polling & Status Badge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             let orderStatusPollTimer = null;
             let currentPollingOrderId = null;
 
@@ -7362,7 +7361,7 @@
                 return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
             }
 
-            // ── Thermal Printing Mechanical Sound Effect ──────────────────────────
+            // â”€â”€ Thermal Printing Mechanical Sound Effect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function playThermalPrintSound() {
                 try {
                     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -7407,7 +7406,7 @@
                 }
             }
 
-            // ── Cetak Struk POS dengan Animasi Eject Kertas & Hidden Iframe ────────
+            // â”€â”€ Cetak Struk POS dengan Animasi Eject Kertas & Hidden Iframe â”€â”€â”€â”€â”€â”€â”€â”€
             function printPosReceipt() {
                 const receiptArea = document.getElementById('printablePosReceiptArea');
                 if (!receiptArea) return;
@@ -7502,9 +7501,9 @@
                 }, 300);
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // PENGATURAN MODUL POS & STAF KASIR
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             let currentPosLogoUrl = {!! !empty($posLogoUrl) ? json_encode($posLogoUrl) : 'null' !!};
             let storeNameText = {!! json_encode($storeName) !!};
             let storeAddressText = {!! json_encode($posStoreAddress ?: ($profile?->address ?? '')) !!};
@@ -7726,9 +7725,9 @@
                 }
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // FEES MANAGEMENT (Tab Pajak & Biaya)
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
             function renderFeeSettingsList() {
                 const container = document.getElementById('feeRowsListContainer');
@@ -7771,7 +7770,7 @@
                                                     <option value="nominal" ${fee.type === 'nominal' ? 'selected' : ''}>Rp</option>
                                                 </select>
                                                 <button onclick="removeFeeRow(${idx})"
-                                                    style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                                                    style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">Ã—</button>
                                             </div>
                                         </div>
                                     `).join('');
@@ -7935,9 +7934,9 @@
                 }).join('');
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // DISCOUNTS MANAGEMENT (Tab Diskon & Promo)
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
             function renderDiscountSettingsList() {
                 const container = document.getElementById('discountListContainer');
@@ -7973,7 +7972,7 @@
                                                         <span style="font-size:0.68rem; background:${disc.is_active ? '#dcfce7' : '#f1f5f9'}; color:${disc.is_active ? '#15803d' : '#64748b'}; font-weight:700; padding:1px 7px; border-radius:999px; flex-shrink:0;">${disc.is_active ? 'Aktif' : 'Nonaktif'}</span>
                                                     </div>
                                                     <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
-                                                        Potongan <strong>${valueLabel}</strong> &nbsp;·&nbsp; ${scopeLabel}
+                                                        Potongan <strong>${valueLabel}</strong> &nbsp;Â·&nbsp; ${scopeLabel}
                                                     </div>
                                                 </div>
                                             </div>
@@ -7981,7 +7980,7 @@
                                                 <button onclick="openEditDiscountDrawer(${idx})"
                                                     style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; border-radius:6px; padding:4px 9px; font-size:0.7rem; font-weight:700; cursor:pointer;">Edit</button>
                                                 <button onclick="removeDiscount(${idx})"
-                                                    style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                                                    style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">Ã—</button>
                                             </div>
                                         </div>`;
                 }).join('');
@@ -8012,7 +8011,7 @@
                 calculateTotals();
             }
 
-            // ── Discount Drawer ──
+            // â”€â”€ Discount Drawer â”€â”€
             let discountEditIndex = -1;
 
             function openAddDiscountDrawer() {
@@ -8117,7 +8116,7 @@
                     .catch(() => showPosAlert('Terjadi kesalahan jaringan.', 'Error', 'error'));
             }
 
-            // ── Product Picker for Discount ──
+            // â”€â”€ Product Picker for Discount â”€â”€
             function renderDiscountProductPicker() {
                 const list = document.getElementById('discountProductPickerList');
                 if (!list) return;
@@ -8160,7 +8159,7 @@
                 if (badge) badge.innerText = count + ' produk dipilih';
             }
 
-            // ── Cart Preset Dropdown ──
+            // â”€â”€ Cart Preset Dropdown â”€â”€
             function renderDiscountPresetDropdown() {
                 const sel = document.getElementById('posDiscountPresetSelect');
                 const wrap = document.getElementById('cartDiscountPresetWrap');
@@ -8398,9 +8397,9 @@
                 }
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // KELOLA STAF KASIR & SHIFT (AJAX CRUD)
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
             function syncCashierShiftTime() {
                 const start = document.getElementById('cashierShiftStart')?.value || '08:00';
@@ -8677,9 +8676,9 @@
                 return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // TABLE MANAGEMENT (Kelola Meja & Barcode QR)
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
             function toggleAddTableForm(show) {
                 const box = document.getElementById('formAddTableBox');
@@ -8933,7 +8932,7 @@
                     if (table.area || table.seats) {
                         ctx.fillStyle = '#16a34a';
                         ctx.font = '600 18px Montserrat, sans-serif';
-                        const subInfo = [table.area, table.seats ? (table.seats + ' Kursi') : ''].filter(Boolean).join(' • ');
+                        const subInfo = [table.area, table.seats ? (table.seats + ' Kursi') : ''].filter(Boolean).join(' â€¢ ');
                         ctx.fillText(subInfo, 300, 635);
                     }
 
@@ -8960,7 +8959,7 @@
                 const btn = document.getElementById('btnSaveTablesSettings');
                 if (btn && showNotification) {
                     btn.disabled = true;
-                    btn.innerHTML = '<span style="display:inline-block; animation:spin 1s linear infinite;">↻</span> Menyimpan...';
+                    btn.innerHTML = '<span style="display:inline-block; animation:spin 1s linear infinite;">â†»</span> Menyimpan...';
                 }
 
                 fetch('{{ route("creator.pos.update-settings") }}', {
@@ -9005,9 +9004,9 @@
                     });
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // DEPOSIT POS FUNCTIONS (STORE TRANSFER & QRIS)
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
             let currentStoreBalance = {{ (int) $availableStoreBalance }};
 
@@ -9313,9 +9312,9 @@
                 }
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // REKAP SHIFT / HISTORY TAB SWITCHING
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
             function switchHistoryTab(tabId, clickedBtn) {
                 // Map short key to actual pane element ID
@@ -9352,9 +9351,9 @@
                 if (target) target.style.display = tabId === 'shift' ? 'block' : 'block';
             }
 
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // CETAK STRUK CLOSING SHIFT
-            // ═══════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
             function printClosingReceipt() {
                 const receiptEl = document.getElementById('printableClosingReceiptArea');
@@ -9399,15 +9398,20 @@
             styleEl.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
             document.head.appendChild(styleEl);
 
-            // Smooth POS Skeleton Reveal Transition
+                        // Smooth POS Skeleton Reveal Transition
             (function () {
                 function revealPos() {
-                    const skel = document.getElementById('pos-skeleton');
-                    const real = document.getElementById('pos-real-content');
-                    if (skel) skel.style.display = 'none';
-                    if (real) real.style.opacity = '1';
-
-                    // Initial render for fees, discounts, and tables
+                    var skel = document.getElementById('pos-skeleton');
+                    var real = document.getElementById('pos-real-content');
+                    if (real) {
+                        real.style.opacity = '1';
+                        real.style.zIndex = '2';
+                    }
+                    if (skel) {
+                        skel.style.opacity = '0';
+                        skel.style.pointerEvents = 'none';
+                        setTimeout(function() { if (skel && skel.parentNode) skel.parentNode.removeChild(skel); }, 350);
+                    }
                     try {
                         if (typeof renderCartFees === 'function') renderCartFees();
                         if (typeof renderDiscountPresetDropdown === 'function') renderDiscountPresetDropdown();
@@ -9415,11 +9419,12 @@
                         if (typeof updateTablesBadgeCount === 'function') updateTablesBadgeCount();
                     } catch (e) { }
                 }
-                if (document.readyState === 'complete') {
-                    setTimeout(revealPos, 120);
+                if (document.readyState !== 'loading') {
+                    revealPos();
                 } else {
-                    window.addEventListener('load', () => setTimeout(revealPos, 120));
+                    document.addEventListener('DOMContentLoaded', revealPos);
                 }
+                window.addEventListener('load', revealPos);
             })();
 
 
@@ -9430,7 +9435,7 @@
                 if (el) {
                     const isHidden = el.style.display === 'none';
                     el.style.display = isHidden ? 'block' : 'none';
-                    if (ico) ico.innerText = isHidden ? '−' : '+';
+                    if (ico) ico.innerText = isHidden ? 'âˆ’' : '+';
                 }
             }
 
@@ -9443,7 +9448,7 @@
             }
 
         
-            // ── BUYLE POS SCREEN SWITCHER (Screen 1: Catalog vs Screen 2: Transactions) ──
+            // â”€â”€ BUYLE POS SCREEN SWITCHER (Screen 1: Catalog vs Screen 2: Transactions) â”€â”€
             let currentPosActiveScreen = 'catalog';
             let transFilterTimeMode = 'all';
 
@@ -9721,7 +9726,7 @@
             }
 
 
-            // ── Render Payment Modal Order Items (Minimalis) ──
+            // â”€â”€ Render Payment Modal Order Items (Minimalis) â”€â”€
             function renderPaymentModalOrderItems() {
                 const container = document.getElementById('paymentModalOrderItems');
                 const itemsCountEl = document.getElementById('modalPayItemsCount');
@@ -9748,7 +9753,7 @@
                 if (itemsCountEl) itemsCountEl.innerText = `${totalQty} Items`;
             }
 
-            // ── Share Bill to WhatsApp (Direct WA) ──
+            // â”€â”€ Share Bill to WhatsApp (Direct WA) â”€â”€
             function shareBillToWhatsApp() {
                 if (!currentCompletedOrder) {
                     showPosAlert('Data transaksi tidak ditemukan.', 'Perhatian', 'warning');
@@ -9770,14 +9775,14 @@
                 const custName = (order.customer_name || document.getElementById('posCustomerName')?.value || 'Pelanggan').trim();
                 const tableInfo = document.getElementById('posTableQuickSelect')?.value ? `\nMeja: ${document.getElementById('posTableQuickSelect').value}` : '';
 
-                const msg = `🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*\nPelanggan: ${custName}${tableInfo}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*TOTAL: Rp ${totalFormatted}*\nMetode: ${order.payment_method ? order.payment_method.toUpperCase() : 'LUNAS'}\nStatus: *LUNAS (BERHASIL)* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
+                const msg = `ðŸ§¾ *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*\nPelanggan: ${custName}${tableInfo}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*TOTAL: Rp ${totalFormatted}*\nMetode: ${order.payment_method ? order.payment_method.toUpperCase() : 'LUNAS'}\nStatus: *LUNAS (BERHASIL)* âœ…\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
 
                 const encodedMsg = encodeURIComponent(msg);
                 const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
                 window.open(waUrl, '_blank');
             }
 
-            // ── Auto Generate Bill Image via html2canvas ──
+            // â”€â”€ Auto Generate Bill Image via html2canvas â”€â”€
             function generateBillImage() {
                 const billArea = document.getElementById('printablePosReceiptArea');
                 const btn = document.getElementById('btnDownloadBillImg');
@@ -9831,7 +9836,7 @@
 
 </script>
 
-    <!-- ── BUYLE POS BOTTOM NAVIGATION BAR (100% Sesuai Mockup Image 3 & 4) ── -->
+    <!-- â”€â”€ BUYLE POS BOTTOM NAVIGATION BAR (100% Sesuai Mockup Image 3 & 4) â”€â”€ -->
     <div class="pos-bottom-nav-wrap" id="posBottomNavWrap">
         <div class="pos-bottom-nav-bar">
             <!-- 1. Home / Kasir -->
@@ -9885,7 +9890,7 @@
         </div>
     </div>
 
-    <!-- ── POP-UP MODAL: PILIHAN TAMBAH (+ Add Item) ── -->
+    <!-- â”€â”€ POP-UP MODAL: PILIHAN TAMBAH (+ Add Item) â”€â”€ -->
     <div class="pos-modal-overlay" id="posAddOptionsModal" style="z-index: 100025;">
         <div class="pos-modal-card" style="max-width: 420px; width: 92vw; border-radius: 24px; padding: 1.4rem;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem;">
@@ -9942,7 +9947,7 @@
         </div>
     </div>
 
-    <!-- ── POP-UP MODAL: FORM TAMBAH PRODUK CEPAT ── -->
+    <!-- â”€â”€ POP-UP MODAL: FORM TAMBAH PRODUK CEPAT â”€â”€ -->
     <div class="pos-modal-overlay" id="posQuickProductModal" style="z-index: 100030;">
         <div class="pos-modal-card" style="max-width: 460px; width: 94vw; border-radius: 24px; padding: 1.4rem;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem;">
@@ -10004,7 +10009,7 @@
         </div>
     </div>
 
-    <!-- ── POP-UP MODAL: FORM TAMBAH KELOMPOK PRODUK CEPAT ── -->
+    <!-- â”€â”€ POP-UP MODAL: FORM TAMBAH KELOMPOK PRODUK CEPAT â”€â”€ -->
     <div class="pos-modal-overlay" id="posQuickCategoryModal" style="z-index: 100030;">
         <div class="pos-modal-card" style="max-width: 400px; width: 92vw; border-radius: 24px; padding: 1.4rem;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem;">
@@ -10038,3 +10043,8 @@
         </div>
     </div>
 @endsection
+
+
+
+
+
