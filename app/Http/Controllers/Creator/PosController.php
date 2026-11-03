@@ -781,7 +781,7 @@ class PosController extends Controller
         ]);
 
         $seller  = auth()->user();
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
         $amount  = (float) $request->amount;
 
         $deposit = PosDeposit::create([
@@ -824,7 +824,7 @@ class PosController extends Controller
         ]);
 
         $seller  = auth()->user();
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
         $deposit = PosDeposit::where('creator_id', $profile->id)
             ->where('deposit_number', $request->deposit_number)
             ->first();
@@ -910,7 +910,7 @@ class PosController extends Controller
     public function closingReport(Request $request)
     {
         $seller  = auth()->user();
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
         $dateStr = $request->query('date', now()->toDateString());
         $date    = Carbon::parse($dateStr);
 
@@ -1073,7 +1073,7 @@ class PosController extends Controller
         $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
             ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
             : $authUser;
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
 
         if ($request->hasFile('logo')) {
             if ($profile->pos_logo) {
@@ -1105,7 +1105,7 @@ class PosController extends Controller
         $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
             ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
             : $authUser;
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
 
         if ($profile->pos_logo) {
             \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_logo);
@@ -1131,7 +1131,7 @@ class PosController extends Controller
         $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
             ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
             : $authUser;
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
 
         if ($request->hasFile('qris_image')) {
             if ($profile->pos_qris_image) {
@@ -1164,7 +1164,7 @@ class PosController extends Controller
         $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
             ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
             : $authUser;
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
 
         if ($profile->pos_qris_image) {
             \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_qris_image);
@@ -1186,7 +1186,7 @@ class PosController extends Controller
         $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
             ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
             : $authUser;
-        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
 
         $request->validate([
             'store_name'        => 'nullable|string|max:100',
@@ -1525,5 +1525,206 @@ class PosController extends Controller
                 'slug' => $cat->slug
             ]
         ]);
+    }
+/**
+     * Halaman Laporan POS Super App (Mobile Friendly, Anti-Besar, Anti-Nabrak).
+     * Identik datanya dengan /creator/sales-report?tab=pos.
+     */
+    public function reports(Request $request)
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        // Filter periode
+        $filter = $request->query('filter', '30');
+        $endDate = Carbon::now()->endOfDay();
+        $startDate = match ($filter) {
+            'today'      => Carbon::now()->startOfDay(),
+            'yesterday'  => Carbon::yesterday()->startOfDay(),
+            '7'          => Carbon::now()->subDays(7)->startOfDay(),
+            '30'         => Carbon::now()->subDays(30)->startOfDay(),
+            '90'         => Carbon::now()->subDays(90)->startOfDay(),
+            'this_month' => Carbon::now()->startOfMonth(),
+            'this_year'  => Carbon::now()->startOfYear(),
+            'all'        => Carbon::create(2020, 1, 1)->startOfDay(),
+            'custom'     => $request->filled('start_date')
+                            ? Carbon::parse($request->query('start_date'))->startOfDay()
+                            : Carbon::now()->subDays(30)->startOfDay(),
+            default      => Carbon::now()->subDays(30)->startOfDay(),
+        };
+
+        if ($filter === 'custom' && $request->filled('end_date')) {
+            $endDate = Carbon::parse($request->query('end_date'))->endOfDay();
+        } elseif ($filter === 'yesterday') {
+            $endDate = Carbon::yesterday()->endOfDay();
+        }
+
+        $posPaymentMethod = $request->query('pos_method', 'all');
+        $posQuery = Order::where('source', 'pos')
+            ->where(function($q) use ($seller) {
+                $q->where('seller_id', $seller->id)
+                  ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
+            })
+            ->whereIn('status', [
+                OrderStatus::Confirmed,
+                OrderStatus::Processing,
+                OrderStatus::Shipped,
+                OrderStatus::Delivered,
+            ])
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($posPaymentMethod && $posPaymentMethod !== 'all') {
+            if ($posPaymentMethod === 'cash') {
+                $posQuery->where(function($q) {
+                    $q->where('shipping_address->payment_method', 'cash')
+                      ->orWhereHas('payment', fn($pq) => $pq->where('method', 'cash'));
+                });
+            } elseif ($posPaymentMethod === 'qris') {
+                $posQuery->where(function($q) {
+                    $q->where('shipping_address->payment_method', 'qris')
+                      ->orWhereHas('payment', fn($pq) => $pq->where('method', 'qris'));
+                });
+            } elseif ($posPaymentMethod === 'transfer') {
+                $posQuery->where(function($q) {
+                    $q->whereIn('shipping_address->payment_method', ['transfer', 'bank_transfer'])
+                      ->orWhereHas('payment', fn($pq) => $pq->whereIn('method', ['transfer', 'bank_transfer']));
+                });
+            }
+        }
+
+        $posOrders = $posQuery->with(['items.product', 'payment', 'user'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $posTotalSales = (float) $posOrders->sum('total');
+        $posCashTotal = (float) $posOrders->filter(function($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m === 'cash';
+        })->sum('total');
+
+        $posDigitalTotal = (float) $posOrders->filter(function($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m !== 'cash';
+        })->sum('total');
+
+        $posFeesTotal = (float) $posOrders->filter(function($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m === 'cash';
+        })->sum(function($o) {
+            return (float) ($o->platform_fee ?? 0) + (float) ($o->admin_fee ?? 0);
+        });
+
+        $posTotalTransactions = $posOrders->count();
+        $posAov = $posTotalTransactions > 0 ? round($posTotalSales / $posTotalTransactions) : 0;
+
+        // Saldo Deposit POS & Mutasi Ledger
+        $creatorProfile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
+        $posBalance = (float) ($creatorProfile->pos_balance ?? 0);
+
+        $posMutations = PosBalanceMutation::where('creator_id', $creatorProfile->id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $posTotalTopup = (float) $posMutations->where('type', 'topup')->sum('amount');
+        $posTotalFeeMutations = (float) abs($posMutations->where('type', 'fee_deduction')->sum('amount'));
+
+        // Top Menu / Produk Terlaris Periode Ini
+        $orderIds = $posOrders->pluck('id');
+        $topProducts = OrderItem::whereIn('order_id', $orderIds)
+            ->selectRaw('product_id, product_name, SUM(quantity) as total_qty, SUM(subtotal) as total_revenue')
+            ->groupBy('product_id', 'product_name')
+            ->orderByDesc('total_qty')
+            ->take(10)
+            ->get();
+
+        return view('creator.pos.reports', compact(
+            'seller', 'creatorProfile',
+            'filter', 'startDate', 'endDate',
+            'posOrders', 'posTotalSales', 'posCashTotal', 'posDigitalTotal', 'posFeesTotal',
+            'posTotalTransactions', 'posAov', 'posBalance', 'posMutations', 'posTotalTopup', 'posTotalFeeMutations',
+            'posPaymentMethod', 'topProducts'
+        ));
+    }
+
+    /**
+     * Halaman Profil & Menu Hub POS (Mirip 100% dengan /creator/menu).
+     */
+    public function profileMenu()
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $cp = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
+
+        $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $gmv              = $balanceData['gmv'] ?? 0;
+        $availableBalance = $balanceData['available_balance'] ?? 0;
+
+        $tierInfo = $cp->getTierInfo($gmv);
+        $storeSlug = $cp->slug ?? $seller->username ?? null;
+        $hasPushSub = \App\Models\PushSubscription::where('user_id', $seller->id)->exists();
+        $hasPin = !empty($seller->security_pin);
+        $biometricEnabled = (bool) $seller->biometric_enabled;
+
+        return view('creator.pos.profile', compact(
+            'seller', 'cp', 'gmv', 'availableBalance', 'tierInfo', 'storeSlug', 'hasPushSub',
+            'hasPin', 'biometricEnabled'
+        ));
+    }
+
+    /**
+     * Halaman Pengaturan POS Baru (Dedicated Page, Sinkron Lengkap).
+     */
+    public function settings(Request $request)
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $profile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
+
+        $posLogoUrl = $profile->pos_logo ? asset('storage/' . $profile->pos_logo) : null;
+        $posStoreAddress = $profile->pos_store_address ?? $profile->address ?? '';
+        $posStorePhone   = $profile->pos_store_phone ?? $seller->phone ?? '';
+
+        $posCashlessMode = $profile->pos_cashless_mode ?? 'snap_midtrans';
+        $posQrisUrl      = $profile->pos_qris_image ? asset('storage/' . $profile->pos_qris_image) : null;
+        $posFeePayer     = $profile->pos_fee_payer ?? 'seller';
+
+        $posFees = $profile->getPosFees();
+        $posDiscounts = $profile->getPosDiscounts();
+        $posTables = $profile->getPosTables();
+
+        $cashiers = \App\Models\User::where('parent_seller_id', $seller->id)
+            ->orderBy('name')
+            ->get();
+
+        $platformFeeRate = (float) Setting::get('pos_platform_fee_percent', 0.5);
+        $adminFeeRate    = (float) Setting::get('pos_admin_fee_fixed', 500);
+        $posBalance      = (float) ($profile->pos_balance ?? 0);
+
+        return view('creator.pos.settings', compact(
+            'seller',
+            'profile',
+            'posLogoUrl',
+            'posStoreAddress',
+            'posStorePhone',
+            'posCashlessMode',
+            'posQrisUrl',
+            'posFeePayer',
+            'posFees',
+            'posDiscounts',
+            'posTables',
+            'cashiers',
+            'platformFeeRate',
+            'adminFeeRate',
+            'posBalance'
+        ));
     }
 }

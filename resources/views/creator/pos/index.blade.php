@@ -7667,6 +7667,8 @@
 
             // Buka Pop-up Pengaturan POS (Dengan efek Shimmer Skeleton Premium)
             function openPosSettingsModal(initialTab = 'struk') {
+                window.location.href = "{{ route('creator.pos.settings') }}" + (initialTab ? '?tab=' + initialTab : '');
+                return;
                 switchSettingTab(initialTab);
                 openModal('posSettingsModal');
 
@@ -10290,7 +10292,7 @@
 
 </script>
 
-    <!-- ── BUYLE POS BOTTOM NAVIGATION BAR (100% Sesuai Mockup Image 3 & 4) ── -->
+    <!-- ── BUYLE POS BOTTOM NAVIGATION BAR (Home, Transaksi, Laporan, Profil) ── -->
     <div class="pos-bottom-nav-wrap" id="posBottomNavWrap">
         <div class="pos-bottom-nav-bar">
             <!-- 1. Home / Kasir -->
@@ -10302,7 +10304,7 @@
                 <span class="pos-nav-label">Home</span>
             </button>
 
-            <!-- 2. Transactions (Image 4) -->
+            <!-- 2. Transactions -->
             <button type="button" class="pos-nav-item" id="posNavBtnTrans" onclick="switchPosScreen('transactions')" title="Transaksi">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -10313,15 +10315,24 @@
                 <span class="pos-nav-label">Transaksi</span>
             </button>
 
-            <!-- 3. Laporan / Analytics -->
-            <button type="button" class="pos-nav-item" id="posNavBtnReports" onclick="switchPosScreen('transactions')" title="Transaksi & Rekap Shift">
+            <!-- 3. Laporan (Halaman Baru /pos/reports) -->
+            <a href="{{ route('creator.pos.reports') }}" class="pos-nav-item" id="posNavBtnReports" title="Laporan POS">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <line x1="18" y1="20" x2="18" y2="10"/>
                     <line x1="12" y1="20" x2="12" y2="4"/>
                     <line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
                 <span class="pos-nav-label">Laporan</span>
-            </button>
+            </a>
+
+            <!-- 4. Profile (Halaman Baru /pos/profile) -->
+            <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item" id="posNavBtnProfile" title="Profil Kasir & Toko">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span class="pos-nav-label">Profil</span>
+            </a>
         </div>
     </div>
 
