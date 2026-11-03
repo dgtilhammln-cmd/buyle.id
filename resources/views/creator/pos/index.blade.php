@@ -2082,7 +2082,7 @@
                 margin: auto !important;
                 display: flex !important;
                 flex-direction: column !important;
-                border: 1.5px solid #f1ece4 !important;
+                border: 1.5px solid #e2e8f0 !important;
                 padding: 0 !important;
                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25) !important;
                 overflow: hidden !important;
@@ -2167,7 +2167,7 @@
             height: 44px;
             border-radius: 50%;
             background: #ffffff;
-            border: 1.5px solid #f1ece4;
+            border: 1.5px solid #e2e8f0;
             color: #2d2013;
             display: flex;
             align-items: center;
@@ -2192,7 +2192,7 @@
         }
         .pos-ref-add-btn {
             background: #ffffff;
-            border: 1.5px solid #f1ece4;
+            border: 1.5px solid #e2e8f0;
             border-radius: 999px;
             padding: 8px 18px;
             font-size: 0.8rem;
@@ -2206,7 +2206,7 @@
         }
         .pos-ref-add-btn:active {
             transform: scale(0.94);
-            background: #fdf5ec;
+            background: #ffffff;
         }
 
         /* 2. Search Bar Capsule (Screen 1 Reference) */
@@ -2221,7 +2221,7 @@
             padding-left: 48px !important;
             padding-right: 52px !important;
             border-radius: 999px !important;
-            border: 1.5px solid #f1ece4 !important;
+            border: 1.5px solid #e2e8f0 !important;
             background: #ffffff !important;
             font-size: 0.85rem !important;
             color: #2d2013 !important;
@@ -2249,7 +2249,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: #fdf5ec;
+            background: #ffffff;
             border: none;
             display: flex;
             align-items: center;
@@ -2278,23 +2278,29 @@
             display: none;
         }
         .pos-ref-cat-pill {
-            border: none;
-            background: transparent;
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
             font-size: 0.85rem;
             font-weight: 600;
-            color: #8c7e72;
-            padding: 8px 16px;
+            color: #64748b;
+            padding: 8px 18px;
             border-radius: 999px;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .pos-ref-cat-pill:hover {
+            color: #166534;
+            border-color: #cbd5e1;
+            background: #f8fafc;
         }
         .pos-ref-cat-pill.active {
-            background: #fdf5ec !important;
-            color: #166534 !important;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
             font-weight: 800 !important;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-            border: 1.5px solid #bbf7d0 !important;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
+            border: 1.5px solid transparent !important;
         }
 
         /* 4. Product Card & 2-Col Grid (Screen 1 Reference) */
@@ -2320,7 +2326,7 @@
             background: #ffffff !important;
             border-radius: 20px !important;
             padding: 10px !important;
-            border: 1.5px solid #f1ece4 !important;
+            border: 1.5px solid #e2e8f0 !important;
             box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
             display: flex !important;
             flex-direction: column !important;
@@ -2433,7 +2439,7 @@
             display: flex !important;
             align-items: center !important;
             gap: 3px !important;
-            background: #fdf5ec !important;
+            background: #ffffff !important;
             border-radius: 999px !important;
             padding: 2px 4px !important;
         }
@@ -2478,7 +2484,7 @@
             border-radius: 999px !important;
             padding: 6px 8px 6px 14px !important;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
-            border: 1.5px solid #f1ece4 !important;
+            border: 1.5px solid #e2e8f0 !important;
             align-items: center !important;
             justify-content: space-between !important;
             z-index: 9980 !important;
@@ -2498,7 +2504,7 @@
             width: 38px !important;
             height: 38px !important;
             border-radius: 50% !important;
-            background: #fdf5ec !important;
+            background: #ffffff !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -2861,7 +2867,7 @@
             justify-content: space-between !important;
             padding: 0.35rem 0.65rem !important;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
-            border: 1.5px solid #f1ece4 !important;
+            border: 1.5px solid #e2e8f0 !important;
         }
 
         .pos-mobile-floating-bar {
@@ -2877,7 +2883,7 @@
             border-radius: 999px !important;
             padding: 6px 8px 6px 14px !important;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
-            border: 1.5px solid #f1ece4 !important;
+            border: 1.5px solid #e2e8f0 !important;
             align-items: center !important;
             justify-content: space-between !important;
             z-index: 9990 !important;
@@ -3183,7 +3189,7 @@
                                 </svg>
                             </button>
                             <h1 class="pos-ref-title">Buyle POS</h1>
-                            <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-ref-add-btn" id="posBtnHeaderAdd" title="Kelola Produk di Buyle" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #f1ece4; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                            <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-ref-add-btn" id="posBtnHeaderAdd" title="Kelola Produk di Buyle" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #e2e8f0; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </a>
                         </div>
@@ -3191,7 +3197,7 @@
                         <!-- Mini Stats Cards (Saldo Deposit & Revenue Hari Ini) -->
                         <div class="pos-stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0.85rem;">
                             <!-- Card Kiri: Saldo Deposit -->
-                            <div class="pos-stat-card" onclick="openDepositModal()" style="background: #ffffff; border: 1.5px solid #f1ece4; border-radius: 18px; padding: 0.75rem 0.95rem; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.2s ease;">
+                            <div class="pos-stat-card" onclick="openDepositModal()" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 0.75rem 0.95rem; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.2s ease;">
                                 <div style="width: 36px; height: 36px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; color: #16a34a; flex-shrink: 0;">
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                         <rect x="2" y="5" width="20" height="14" rx="2"/>
@@ -3207,7 +3213,7 @@
                             </div>
 
                             <!-- Card Kanan: Revenue (Hari Ini) -->
-                            <div class="pos-stat-card" onclick="switchPosScreen('transactions')" style="background: #ffffff; border: 1.5px solid #f1ece4; border-radius: 18px; padding: 0.75rem 0.95rem; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.2s ease;">
+                            <div class="pos-stat-card" onclick="switchPosScreen('transactions')" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 0.75rem 0.95rem; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.2s ease;">
                                 <div style="width: 36px; height: 36px; border-radius: 12px; background: #eff6ff; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; color: #2563eb; flex-shrink: 0;">
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                         <line x1="12" y1="1" x2="12" y2="23"/>
@@ -3318,11 +3324,11 @@
                                         @if($imgUrl)
                                             <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
                                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:#fdf5ec;">
+                                            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:#ffffff;">
                                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                             </div>
                                         @else
-                                            <div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#fdf5ec;">
+                                            <div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#ffffff;">
                                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                             </div>
                                         @endif
@@ -3582,11 +3588,6 @@
                     </svg>
                     <span>Payment In</span>
                 </button>
-                <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-trans-btn-plus" title="Kelola Produk" style="text-decoration:none;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                </a>
                 <button type="button" class="pos-trans-btn-act" onclick="switchPosScreen('catalog')">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -5523,7 +5524,7 @@
                             <div style="font-size:0.72rem; color:#6d28d9; margin-top:2px;">QRIS &amp; Transfer Bank</div>
                         </div>
 
-                        <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:14px; padding:12px 14px;">
+                        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:12px 14px;">
                             <div
                                 style="font-size:0.7rem; font-weight:700; color:#c2410c; text-transform:uppercase; letter-spacing:0.04em;">
                                 Fee Terpotong Deposit</div>
@@ -5609,7 +5610,7 @@
                             style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:18px; padding:0.75rem 1rem; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <div
-                                    style="width:34px; height:34px; border-radius:50%; background:#fff7ed; border:1px solid #fed7aa; display:flex; align-items:center; justify-content:center; color:#ea580c;">
+                                    style="width:34px; height:34px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a;">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -5667,9 +5668,9 @@
                         @endforelse
 
                         <!-- Bottom Action Pills (Screen 2 Mockup) -->
-                        <div style="display:flex; align-items:center; gap:8px; margin-top:1.25rem;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-top:1.25rem;">
                             <button type="button" onclick="closeModal('posHistoryModal'); openDepositModal();"
-                                style="flex:1; padding:0.75rem 1rem; border-radius:999px; background:#f97316; color:#ffffff; font-size:0.82rem; font-weight:800; border:none; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(249,115,22,0.3); cursor:pointer;">
+                                style="flex:1; padding:0.75rem 1rem; border-radius:999px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; font-size:0.82rem; font-weight:800; border:none; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(30,179,73,0.3); cursor:pointer;">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewBox="0 0 24 24">
                                     <rect x="2" y="5" width="20" height="14" rx="2" />
@@ -5678,15 +5679,11 @@
                                 <span>Payment In</span>
                             </button>
                             <button type="button" onclick="closeModal('posHistoryModal')"
-                                style="width:44px; height:44px; border-radius:50%; background:#ffffff; border:1.5px solid #e2e8f0; color:#0f172a; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                    <line x1="5" y1="12" x2="19" y2="12" />
-                                </svg>
-                            </button>
-                            <button type="button" onclick="closeModal('posHistoryModal')"
                                 style="flex:1; padding:0.75rem 1rem; border-radius:999px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.82rem; font-weight:800; border:none; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(30,179,73,0.35); cursor:pointer;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                                </svg>
                                 <span>New Sale</span>
                             </button>
                         </div>
@@ -9787,7 +9784,7 @@
                         if (pillsContainer) {
                             const newPill = document.createElement('button');
                             newPill.type = 'button';
-                            newPill.className = 'pos-cat-pill';
+                            newPill.className = 'pos-ref-cat-pill';
                             newPill.setAttribute('data-cat', 'cat-' + cat.id);
                             newPill.innerText = cat.name;
                             newPill.onclick = function() { setPosCategoryFilter('cat-' + cat.id, this); };
