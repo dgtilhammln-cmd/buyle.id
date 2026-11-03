@@ -626,6 +626,12 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 // 2. Seller Dashboard (Creator)
 Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Creator\SellerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/menu', [\App\Http\Controllers\Creator\SellerController::class, 'menu'])->name('menu');
+    Route::post('/push-subscription', [\App\Http\Controllers\Creator\SellerController::class, 'savePushSubscription'])->name('push.subscribe');
+    Route::post('/pin/update', [\App\Http\Controllers\Creator\SellerController::class, 'updatePin'])->name('pin.update');
+    Route::post('/pin/toggle-biometric', [\App\Http\Controllers\Creator\SellerController::class, 'toggleBiometric'])->name('pin.toggle-biometric');
+    Route::post('/pin/verify', [\App\Http\Controllers\Creator\SellerController::class, 'verifyPin'])->name('pin.verify');
+    Route::post('/pin/remove', [\App\Http\Controllers\Creator\SellerController::class, 'removePin'])->name('pin.remove');
     Route::get('/app', [\App\Http\Controllers\Creator\AppLauncherController::class, 'index'])->name('app.index');
     Route::post('/request-verification', [\App\Http\Controllers\Creator\SellerController::class, 'requestVerification'])->name('request-verification');
     Route::post('/upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('upload.image');

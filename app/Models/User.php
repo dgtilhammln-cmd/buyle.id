@@ -17,9 +17,10 @@ class User extends Authenticatable
         'name', 'email', 'password', 'username', 'phone', 'avatar', 'google_id', 
         'role', 'parent_seller_id', 'shift_hours', 'cashier_role_title',
         'menu_permissions', 'is_active', 'last_seen_at', 
-        'bank_name', 'bank_account_number', 'bank_account_name'
+        'bank_name', 'bank_account_number', 'bank_account_name',
+        'security_pin', 'biometric_enabled', 'biometric_credential_id'
     ];
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'security_pin'];
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 

@@ -25,6 +25,14 @@
             width: 100%;
             background-color: #F0F9FF;
             overflow-x: hidden;
+            touch-action: pan-x pan-y;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        @media (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
         }
 
         body {
@@ -360,5 +368,13 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+    document.addEventListener('touchmove', function(e) {
+        if (e.scale !== undefined && e.scale !== 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+</script>
 </body>
 </html>

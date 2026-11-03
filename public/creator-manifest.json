@@ -1,0 +1,31 @@
+{
+  "name": "Buyle Creator Studio",
+  "short_name": "Buyle Studio",
+  "description": "Creator Dashboard & Super App Buyle.id",
+  "start_url": "/creator/dashboard",
+  "scope": "/creator/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/buyle-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/buyle-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

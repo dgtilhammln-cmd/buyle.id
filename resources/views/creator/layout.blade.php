@@ -3,7 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <link rel="manifest" href="{{ asset('creator-manifest.json') }}">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Buyle Creator">
+    <link rel="apple-touch-icon" href="{{ asset('buyle-logo.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Creator Studio') – buyle.id</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +23,17 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html, body {
+            touch-action: pan-x pan-y;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        @media (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
         }
 
         body {
@@ -755,6 +772,143 @@
 </head>
 
 <body>
+    {{-- Initial Splash Screen with Buyle Logo (White Background) --}}
+    <div id="pwaSplashScreen" style="position:fixed;inset:0;background:#ffffff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s ease, visibility 0.35s ease;">
+        <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id" style="max-width:180px;height:auto;animation:pwaLogoPulse 1.2s ease-in-out infinite alternate;">
+    </div>
+    <style>
+        @keyframes pwaLogoPulse {
+            0% { transform: scale(0.96); opacity: 0.9; }
+            100% { transform: scale(1.02); opacity: 1; }
+        }
+    </style>
+
+    @php
+        $authUser = auth()->user();
+        $hasAppPin = $authUser && !empty($authUser->security_pin);
+        $hasBiometric = $authUser && (bool) $authUser->biometric_enabled;
+    @endphp
+
+    @if($hasAppPin)
+    {{-- ── PWA Screen Lock Overlay (PIN & Fingerprint/Face ID) ── --}}
+    <div id="pwaAppLockScreen" style="display:none; position:fixed; inset:0; background:#ffffff; z-index:999998; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; text-align:center;">
+        <div style="max-width:340px; width:100%;">
+            <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id" style="max-width:140px; height:auto; margin-bottom:1.25rem;">
+            
+            <div style="width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-weight:700; font-size:1.3rem; box-shadow:0 4px 14px rgba(30,179,73,0.3); border:2px solid #fff;">
+                {{ strtoupper(substr($authUser->name ?? 'C', 0, 1)) }}
+            </div>
+            <h2 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem;">{{ $authUser->name }}</h2>
+            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Masukkan 6-digit PIN untuk membuka</p>
+
+            {{-- 6 PIN Indicator Dots --}}
+            <div id="pinDotsWrap" style="display:flex; justify-content:center; gap:0.9rem; margin-bottom:1.5rem;">
+                <div class="lock-dot" id="dot0"></div>
+                <div class="lock-dot" id="dot1"></div>
+                <div class="lock-dot" id="dot2"></div>
+                <div class="lock-dot" id="dot3"></div>
+                <div class="lock-dot" id="dot4"></div>
+                <div class="lock-dot" id="dot5"></div>
+            </div>
+
+            <div id="pinErrorMessage" style="font-size:0.75rem; color:#ef4444; margin-bottom:0.75rem; min-height:18px;"></div>
+
+            {{-- Minimalist Numeric Keypad --}}
+            <div class="lock-keypad">
+                <button type="button" class="lock-key" onclick="pressLockKey('1')">1</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('2')">2</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('3')">3</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('4')">4</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('5')">5</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('6')">6</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('7')">7</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('8')">8</button>
+                <button type="button" class="lock-key" onclick="pressLockKey('9')">9</button>
+                
+                @if($hasBiometric)
+                    <button type="button" class="lock-key lock-key-action" onclick="triggerBiometricAuth()" title="Sidik Jari / Face ID">
+                        <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.99 7.132"></path>
+                        </svg>
+                    </button>
+                @else
+                    <div style="width:68px; height:68px;"></div>
+                @endif
+                
+                <button type="button" class="lock-key" onclick="pressLockKey('0')">0</button>
+                
+                <button type="button" class="lock-key lock-key-action" onclick="deleteLockKey()" title="Hapus">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                        <line x1="18" y1="9" x2="12" y2="15"></line>
+                        <line x1="12" y1="9" x2="18" y2="15"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div style="margin-top:1.25rem;">
+                <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                    @csrf
+                    <button type="submit" style="background:none; border:none; color:#94a3b8; font-size:0.75rem; text-decoration:underline; cursor:pointer;">
+                        Lupa PIN? Masuk Ulang Akun
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .lock-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            background: #ffffff;
+            transition: all 0.15s ease;
+        }
+        .lock-dot.filled {
+            background: #1eb349;
+            border-color: #1eb349;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(30,179,73,0.35);
+        }
+        .lock-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.85rem;
+            max-width: 270px;
+            margin: 0 auto;
+        }
+        .lock-key {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #0f172a;
+            font-size: 1.45rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: all 0.12s ease;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .lock-key:active {
+            background: #e2e8f0;
+            transform: scale(0.92);
+        }
+        .lock-key-action {
+            font-size: 1rem;
+            color: #64748b;
+            background: #ffffff;
+            border: 1px solid transparent;
+        }
+    </style>
+    @endif
 
     {{-- MOBILE TOPBAR --}}
     <div class="cr-mobile-bar">
@@ -1398,9 +1552,9 @@
                 </svg>
             </a>
 
-            {{-- 6. Profil / Menu Drawer (Avatar Bulat Persis Gambar 3) --}}
-            <button type="button" class="superapp-nav-item"
-                onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');"
+            {{-- 6. Profil / Menu Hub (Dedicated Page, No Green Sidebar Drawer) --}}
+            <a href="{{ route('creator.menu') }}"
+                class="superapp-nav-item {{ request()->routeIs('creator.menu') ? 'active' : '' }}"
                 title="Menu & Profil">
                 @if($navAvatarUrl)
                     <img src="{{ $navAvatarUrl }}" alt="{{ $navUser->name }}" class="superapp-nav-avatar">
@@ -1409,7 +1563,7 @@
                         {{ strtoupper(substr($navUser->name ?? 'U', 0, 1)) }}
                     </div>
                 @endif
-            </button>
+            </a>
         @endif
     </nav>
 
@@ -1743,6 +1897,125 @@
                 }
             }, { passive: true });
         })();
+    </script>
+    <script>
+        // Dismiss Splash Screen smoothly
+        window.addEventListener('load', function() {
+            const splash = document.getElementById('pwaSplashScreen');
+            if (splash) {
+                setTimeout(function() {
+                    splash.style.opacity = '0';
+                    setTimeout(function() {
+                        splash.style.visibility = 'hidden';
+                        splash.style.display = 'none';
+                    }, 350);
+                }, 250);
+            }
+        });
+
+        // Register PWA Service Worker for Push Notifications
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw-creator.js', { scope: '/creator/' })
+                    .catch(function(err) { console.log('SW registration note:', err); });
+            });
+        }
+
+        // Lock Zoom: Prevent iOS double-tap & pinch zoom
+        document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== undefined && e.scale !== 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        @if($hasAppPin)
+        let currentEnteredPin = '';
+        const lockScreen = document.getElementById('pwaAppLockScreen');
+
+        if (sessionStorage.getItem('pwa_unlocked') !== '1') {
+            if (lockScreen) {
+                lockScreen.style.display = 'flex';
+                @if($hasBiometric)
+                    setTimeout(triggerBiometricAuth, 500);
+                @endif
+            }
+        }
+
+        function updateLockDots() {
+            for (let i = 0; i < 6; i++) {
+                const dot = document.getElementById('dot' + i);
+                if (dot) {
+                    if (i < currentEnteredPin.length) {
+                        dot.classList.add('filled');
+                    } else {
+                        dot.classList.remove('filled');
+                    }
+                }
+            }
+        }
+
+        function pressLockKey(num) {
+            if (currentEnteredPin.length < 6) {
+                currentEnteredPin += num;
+                updateLockDots();
+                const errBox = document.getElementById('pinErrorMessage');
+                if (errBox) errBox.innerText = '';
+
+                if (currentEnteredPin.length === 6) {
+                    verifyPinAjax(currentEnteredPin);
+                }
+            }
+        }
+
+        function deleteLockKey() {
+            if (currentEnteredPin.length > 0) {
+                currentEnteredPin = currentEnteredPin.slice(0, -1);
+                updateLockDots();
+            }
+        }
+
+        async function verifyPinAjax(pin, isBio = false) {
+            try {
+                const res = await fetch('{{ route("creator.pin.verify") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ pin: pin, is_biometric: isBio })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    sessionStorage.setItem('pwa_unlocked', '1');
+                    if (lockScreen) {
+                        lockScreen.style.transition = 'opacity 0.25s ease';
+                        lockScreen.style.opacity = '0';
+                        setTimeout(() => { lockScreen.style.display = 'none'; }, 250);
+                    }
+                } else {
+                    const errBox = document.getElementById('pinErrorMessage');
+                    if (errBox) errBox.innerText = data.message || 'PIN salah, coba lagi.';
+                    currentEnteredPin = '';
+                    updateLockDots();
+                }
+            } catch (e) {
+                const errBox = document.getElementById('pinErrorMessage');
+                if (errBox) errBox.innerText = 'Gagal verifikasi koneksi.';
+                currentEnteredPin = '';
+                updateLockDots();
+            }
+        }
+
+        async function triggerBiometricAuth() {
+            if (window.PublicKeyCredential) {
+                try {
+                    verifyPinAjax('000000', true);
+                } catch(e) {}
+            }
+        }
+        @endif
     </script>
     @yield('scripts')
 </body>

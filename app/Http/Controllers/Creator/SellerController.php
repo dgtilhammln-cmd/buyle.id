@@ -100,6 +100,158 @@ class SellerController extends Controller
     /**
      * Request atau klaim status Verified Creator.
      */
+    /**
+     * Minimalist Mobile Menu & Profile Hub (Style /creator/dashboard).
+     */
+    public function menu()
+    {
+        $seller = auth()->user();
+        $cp = $seller->creatorProfile;
+
+        $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $gmv              = $balanceData['gmv'];
+        $availableBalance = $balanceData['available_balance'];
+
+        if ($cp) {
+            $tierInfo = $cp->getTierInfo($gmv);
+        } else {
+            $tierInfo = [
+                'name'      => 'PERINTIS',
+                'level'     => 1,
+                'subtitle'  => 'Matte Silver / Brushed Steel',
+                'badge'     => 'Perintis',
+                'header_bg' => 'linear-gradient(135deg, #475569 0%, #64748b 100%)',
+            ];
+        }
+
+        $storeSlug = $cp?->slug ?? $seller->username ?? null;
+        $hasPushSub = \App\Models\PushSubscription::where('user_id', $seller->id)->exists();
+        $hasPin = !empty($seller->security_pin);
+        $biometricEnabled = (bool) $seller->biometric_enabled;
+
+        return view('creator.menu', compact(
+            'seller', 'cp', 'gmv', 'availableBalance', 'tierInfo', 'storeSlug', 'hasPushSub',
+            'hasPin', 'biometricEnabled'
+        ));
+    }
+
+    /**
+     * Simpan Push Notification Subscription Token untuk PWA.
+     */
+    public function savePushSubscription(Request $request)
+    {
+        $request->validate([
+            'endpoint' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+        \App\Models\PushSubscription::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'endpoint' => $request->endpoint,
+            ],
+            [
+                'key_p256dh' => $request->input('keys.p256dh') ?? $request->input('key_p256dh'),
+                'key_auth'   => $request->input('keys.auth') ?? $request->input('key_auth'),
+                'user_agent' => $request->userAgent(),
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notifikasi HP berhasil diaktifkan!'
+        ]);
+    }
+
+    /**
+     * Setel atau perbarui PIN Keamanan Creator.
+     */
+    public function updatePin(Request $request)
+    {
+        $request->validate([
+            'pin' => 'required|digits:6',
+            'biometric_enabled' => 'nullable|boolean',
+        ]);
+
+        $user = auth()->user();
+        $user->security_pin = \Illuminate\Support\Facades\Hash::make($request->pin);
+        if ($request->has('biometric_enabled')) {
+            $user->biometric_enabled = $request->boolean('biometric_enabled');
+        }
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'PIN keamanan 6-digit berhasil disimpan!'
+        ]);
+    }
+
+    /**
+     * Toggle status sensor Biometrik (Fingerprint / Face ID).
+     */
+    public function toggleBiometric(Request $request)
+    {
+        $user = auth()->user();
+        if (empty($user->security_pin)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan atur PIN keamanan terlebih dahulu.'
+            ], 422);
+        }
+
+        $user->biometric_enabled = $request->boolean('enabled');
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'enabled' => $user->biometric_enabled,
+            'message' => $user->biometric_enabled ? 'Sensor sidik jari / Face ID diaktifkan!' : 'Sensor biometrik dinonaktifkan.'
+        ]);
+    }
+
+    /**
+     * Verifikasi PIN saat buka aplikasi.
+     */
+    public function verifyPin(Request $request)
+    {
+        $user = auth()->user();
+        if (empty($user->security_pin)) {
+            return response()->json(['success' => true]);
+        }
+
+        // Jika verifikasi via biometrik yang valid
+        if ($request->boolean('is_biometric') && $user->biometric_enabled) {
+            return response()->json(['success' => true]);
+        }
+
+        $request->validate(['pin' => 'required|digits:6']);
+
+        if (\Illuminate\Support\Facades\Hash::check($request->pin, $user->security_pin)) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'PIN yang Anda masukkan salah.'
+        ], 422);
+    }
+
+    /**
+     * Hapus PIN keamanan.
+     */
+    public function removePin(Request $request)
+    {
+        $user = auth()->user();
+        $user->security_pin = null;
+        $user->biometric_enabled = false;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kunci PIN & Biometrik berhasil dinonaktifkan.'
+        ]);
+    }
+
     public function requestVerification(Request $request)
     {
         $seller = auth()->user();

@@ -50,7 +50,8 @@ class AuthController extends Controller
         $fieldType    = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $credentials  = [$fieldType => $loginInput, 'password' => $request->password];
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $remember = $request->boolean('remember', true);
+        if (Auth::attempt($credentials, $remember)) {
             if (Auth::user()->is_active === false || Auth::user()->is_active === 0) {
                 Auth::logout();
                 return back()->withInput()->withErrors([

@@ -306,8 +306,62 @@ select.form-input { cursor: pointer; }
     .form-grid.cols-3 { grid-template-columns: 1fr 1fr; }
     .banner-grid { grid-template-columns: 1fr; }
     .avatar-section { flex-direction: column; text-align: center; }
-    .tab-btn span.tab-label { display: none; }
-    .submit-bar { flex-direction: column; gap: 0.75rem; }
+    .tab-nav {
+        display: flex;
+        gap: 0.35rem;
+        padding: 0.35rem;
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+        padding: 0.45rem 0.75rem;
+        font-size: 0.75rem;
+        gap: 0.35rem;
+        border-radius: 10px;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+    .tab-btn span.tab-label {
+        display: inline-block !important;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .submit-bar { display: none; }
+}
+
+/* Floating Save Button di pojok kanan diatas bottom navbar (Mobile Minimalist) */
+.floating-save-btn {
+    position: fixed;
+    right: 18px;
+    bottom: 84px;
+    z-index: 990;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.15rem;
+    background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(30, 179, 73, 0.42), 0 2px 6px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.floating-save-btn:active {
+    transform: scale(0.95);
+}
+@media (min-width: 1025px) {
+    .floating-save-btn {
+        display: none;
+    }
 }
 @media (max-width: 480px) {
     .form-grid.cols-3 { grid-template-columns: 1fr; }
@@ -340,23 +394,23 @@ select.form-input { cursor: pointer; }
     {{-- ── Tab Navigation ───────────────────────────────────────────── --}}
     <div class="tab-nav">
         <button type="button" class="tab-btn active" data-tab="tab-identity">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span class="tab-label">Identitas Toko</span>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span class="tab-label">Toko</span>
         </button>
         <button type="button" class="tab-btn" data-tab="tab-media">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span class="tab-label">Foto & Banner</span>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span class="tab-label">Media</span>
         </button>
         <button type="button" class="tab-btn" data-tab="tab-social">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-            <span class="tab-label">Sosial Media</span>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            <span class="tab-label">Medsos</span>
         </button>
         <button type="button" class="tab-btn" data-tab="tab-location">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <span class="tab-label">Lokasi</span>
         </button>
         <button type="button" class="tab-btn" data-tab="tab-seo">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <span class="tab-label">SEO</span>
         </button>
     </div>
@@ -384,7 +438,7 @@ select.form-input { cursor: pointer; }
                             <span class="slug-prefix">buyle.id/c/</span>
                             <input type="text" name="store_slug" class="slug-input" value="{{ old('store_slug', $profile->store_slug) }}" placeholder="nama-toko-anda">
                         </div>
-                        <span class="form-hint">Hanya huruf kecil, angka, dan strip (-). Kosongkan untuk auto-generate dari nama toko.</span>
+                        <span class="form-hint">Format huruf kecil, angka, dan strip (-).</span>
                         @error('store_slug')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
 
@@ -444,12 +498,10 @@ select.form-input { cursor: pointer; }
                             </label>
                         </div>
 
-                        {{-- Catatan Khusus Produk Digital / UMKM --}}
-                        <div style="background: #fffbeb; border: 1px solid #fcd34d; padding: 0.75rem 0.9rem; border-radius: 10px; font-size: 0.76rem; color: #92400e; display: flex; align-items: flex-start; gap: 0.55rem; line-height: 1.5;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px; color:#d97706;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                            <div>
-                                <strong>Catatan Penting Khusus Produk Digital & Kreator:</strong> Fitur Online Store ini dirancang khusus untuk etalase publik **Produk Digital, E-Book, Lisensi, & Jasa Digital**. Bagi UMKM produk fisik atau akun yang belum siap membuka toko publik, <em>mohon jangan asal mengaktifkan toggle ini</em> agar etalase toko Anda tidak muncul secara publik di pencarian marketplace.
-                            </div>
+                        {{-- Catatan Ringkas --}}
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.55rem 0.8rem; border-radius: 9px; font-size: 0.74rem; color: #166534; display: flex; align-items: center; gap: 0.45rem;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span>Toko & katalog produk akan tampil di pencarian marketplace Buyle.id.</span>
                         </div>
                     </div>
                         @error('creator_type')<span class="form-error">{{ $message }}</span>@enderror
@@ -846,7 +898,7 @@ select.form-input { cursor: pointer; }
         </div>
     </div>
 
-    {{-- ── Submit Bar ────────────────────────────────────────────────── --}}
+    {{-- ── Submit Bar (Desktop) ───────────────────────────────────────── --}}
     <div class="submit-bar">
         <span class="submit-bar-info">Semua perubahan disimpan secara bersamaan.</span>
         <button type="submit" class="btn-save" id="btnSave">
@@ -854,6 +906,15 @@ select.form-input { cursor: pointer; }
             Simpan Perubahan
         </button>
     </div>
+
+    {{-- ── Floating Save Button (Mobile Minimalist di pojok kanan diatas bottom nav) ── --}}
+    <button type="submit" class="floating-save-btn" id="floatingSaveBtn" title="Simpan Perubahan">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+        </svg>
+        <span>Simpan</span>
+    </button>
 
 </form>
 
