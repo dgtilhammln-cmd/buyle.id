@@ -2452,11 +2452,7 @@
             box-shadow: 0 2px 6px rgba(30,179,73,0.3) !important;
         }
         .product-card .card-stepper-num {
-            font-size: 0.76rem !important;
-            font-weight: 800 !important;
-            color: #0f172a !important;
-            min-width: 16px !important;
-            text-align: center !important;
+            display: none !important;
         }
 
         /* 5. Floating Cart Bar (Screen 1 Reference) */
@@ -2825,7 +2821,105 @@
         .pos-trans-btn-plus:active {
             transform: scale(0.92);
         }
-</style>
+
+        /* -- ELEVATED FLOATING BOTTOM BARS (No Collision, Clean Margin) -- */
+        .pos-bottom-nav-wrap {
+            display: none;
+            position: fixed !important;
+            bottom: 16px !important;
+            left: 14px !important;
+            right: 14px !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            z-index: 10000 !important;
+            pointer-events: auto !important;
+            justify-content: center !important;
+            background: transparent !important;
+            padding: 0 !important;
+        }
+        @media (max-width: 991px) {
+            .pos-bottom-nav-wrap {
+                display: flex !important;
+            }
+        }
+        .pos-bottom-nav-bar {
+            width: 100% !important;
+            height: 62px !important;
+            background: #ffffff !important;
+            border-radius: 999px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0.35rem 0.65rem !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            border: 1.5px solid #f1ece4 !important;
+        }
+
+        .pos-mobile-floating-bar {
+            display: none;
+            position: fixed !important;
+            bottom: 92px !important;
+            left: 14px !important;
+            right: 14px !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            height: 60px !important;
+            background: #ffffff !important;
+            border-radius: 999px !important;
+            padding: 6px 8px 6px 14px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            border: 1.5px solid #f1ece4 !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            z-index: 9990 !important;
+        }
+        @media (max-width: 991px) {
+            .pos-mobile-floating-bar {
+                display: flex !important;
+            }
+            .product-grid {
+                padding-bottom: 210px !important;
+            }
+        }
+
+        /* 1-Line Clean Price & Hide Card Stepper */
+        .product-card .product-price {
+            font-size: 0.92rem !important;
+            font-weight: 800 !important;
+            color: #166534 !important;
+            white-space: nowrap !important;
+            line-height: 1.2 !important;
+            margin: 0 !important;
+        }
+        .product-card-bottom {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            margin-top: auto !important;
+            gap: 6px !important;
+        }
+        .card-btn-add {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            color: #ffffff !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            flex-shrink: 0 !important;
+            box-shadow: 0 3px 8px rgba(30, 179, 73, 0.3) !important;
+        }
+        .card-stepper, .product-card .card-stepper {
+            display: none !important;
+        }
+
+    </style>
 @endsection
 
 @section('topbar_actions')
@@ -3140,9 +3234,9 @@
                                 </svg>
                             </button>
                             <h1 class="pos-ref-title">Buyle POS</h1>
-                            <a href="{{ route('creator.products.create') }}" class="pos-ref-add-btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;" title="Tambah Produk Baru">
-                                + Add Item
-                            </a>
+                            <button type="button" class="pos-ref-add-btn" onclick="openModal('posAddOptionsModal')" title="Tambah Produk atau Kelompok" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:400; border:1.5px solid #f1ece4; background:#fff; cursor:pointer;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </button>
                         </div>
 
                         <!-- 2. Search Bar Capsule (Screen 1 Reference 100% Match) -->
@@ -3161,22 +3255,10 @@
                             </button>
                         </div>
 
-                        <!-- 3. Category Filter Horizontal Bar (Screen 1 Reference 100% Match) -->
+                        <!-- 3. Category Filter - Kelompok Produk Creator -->
                         <div class="pos-ref-cat-bar" id="posCategoryPillsContainer">
                             <button type="button" class="pos-ref-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
-                                All
-                            </button>
-                            <button type="button" class="pos-ref-cat-pill" data-cat="fnb" onclick="setPosCategoryFilter('fnb', this)">
-                                Makanan
-                            </button>
-                            <button type="button" class="pos-ref-cat-pill" data-cat="drink" onclick="setPosCategoryFilter('drink', this)">
-                                Minuman
-                            </button>
-                            <button type="button" class="pos-ref-cat-pill" data-cat="snack" onclick="setPosCategoryFilter('snack', this)">
-                                Snacks
-                            </button>
-                            <button type="button" class="pos-ref-cat-pill" data-cat="physical" onclick="setPosCategoryFilter('physical', this)">
-                                Barang Fisik
+                                Semua
                             </button>
                             @if(isset($categories) && count($categories) > 0)
                                 @foreach($categories as $cItem)
@@ -3241,7 +3323,7 @@
                                     }
                                 @endphp
                                 <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
-                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}"
+                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}" data-category-id="{{ $prod->category_id ?? '' }}"
                                     data-image="{{ $imgUrl ?? '' }}"
                                     onclick="handleProductClick({{ $prod->id }})">
 
@@ -3268,16 +3350,9 @@
                                         <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
                                         <button type="button" class="card-btn-add" id="card-add-btn-{{ $prod->id }}"
                                             onclick="event.stopPropagation(); handleProductClick({{ $prod->id }});"
-                                            aria-label="Tambah">
+                                            aria-label="Tambah Produk">
                                             +
                                         </button>
-                                        <div class="card-stepper" id="card-stepper-{{ $prod->id }}" style="display:none;">
-                                            <button type="button" class="card-stepper-btn minus"
-                                                onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, -1);">&minus;</button>
-                                            <span class="card-stepper-num" id="card-qty-num-{{ $prod->id }}">1</span>
-                                            <button type="button" class="card-stepper-btn plus"
-                                                onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, 1);">&plus;</button>
-                                        </div>
                                     </div>
                                 </div>
                             @empty
@@ -6005,7 +6080,7 @@
 
             function setPosCategoryFilter(cat, btn) {
                 activePosCategory = cat;
-                document.querySelectorAll('.pos-cat-pill').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.pos-ref-cat-pill').forEach(p => p.classList.remove('active'));
                 if (btn) btn.classList.add('active');
                 filterProducts();
             }
@@ -6025,6 +6100,7 @@
                 cards.forEach(card => {
                     const name = (card.getAttribute('data-name') || '').toLowerCase();
                     const cat = card.getAttribute('data-category') || 'physical';
+                    const cardCatId = card.getAttribute('data-category-id') || '';
 
                     // Match text query
                     const textMatch = !query || name.includes(query);
@@ -6035,7 +6111,15 @@
                         else if (cat === 'digital') countDigital++;
                     }
 
-                    const catMatch = (activePosCategory === 'all') || (cat === activePosCategory);
+                    // Match category (All, specific type, or Creator's Category ID)
+                    let catMatch = false;
+                    if (activePosCategory === 'all') {
+                        catMatch = true;
+                    } else if (activePosCategory === ('cat-' + cardCatId) || activePosCategory === String(cardCatId)) {
+                        catMatch = true;
+                    } else if (activePosCategory === cat) {
+                        catMatch = true;
+                    }
                     const matches = textMatch && catMatch;
 
                     // Use both style and class to ensure hiding works even with in-cart styles
@@ -6428,8 +6512,8 @@
                     if (card && totalQty > 0) {
                         card.classList.add('in-cart');
                         if (checkBadge) checkBadge.style.display = 'flex';
-                        if (stepper) stepper.style.display = 'flex';
-                        if (addBtn) addBtn.style.display = 'none';
+                        if (stepper) stepper.style.display = 'none';
+                        if (addBtn) addBtn.style.display = 'flex';
                         if (qtyNum) qtyNum.innerText = totalQty;
                         if (badgeQty) {
                             badgeQty.innerText = 'x' + totalQty;
