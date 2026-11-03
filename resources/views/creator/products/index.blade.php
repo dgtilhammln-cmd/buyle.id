@@ -1,3 +1,22 @@
+
+@push('styles')
+<style>
+  .superapp-bottom-nav,
+  #superappBottomNav,
+  .pos-bottom-nav-wrap,
+  #posBottomNavWrap {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  body {
+    padding-bottom: 0 !important;
+  }
+  .cr-main-canvas {
+    padding-bottom: 2rem !important;
+  }
+</style>
+@endpush
 @extends('creator.layout')
 @section('title', 'Produk Saya')
 @section('page_title', 'Produk Saya')

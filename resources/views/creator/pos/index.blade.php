@@ -2829,7 +2829,7 @@
             bottom: 16px !important;
             left: 14px !important;
             right: 14px !important;
-            max-width: 440px !important;
+            max-width: 320px !important;
             margin: 0 auto !important;
             z-index: 10000 !important;
             pointer-events: auto !important;
@@ -3174,9 +3174,9 @@
                                 </svg>
                             </button>
                             <h1 class="pos-ref-title">Buyle POS</h1>
-                            <button type="button" class="pos-ref-add-btn" id="posBtnHeaderAdd" onclick="openPosAddOptionsModal(event)" title="Tambah Produk atau Kelompok" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:400; border:1.5px solid #f1ece4; background:#fff; cursor:pointer;">
+                            <a href="{{ route('creator.products.index') }}" class="pos-ref-add-btn" id="posBtnHeaderAdd" title="Kelola Produk di Buyle" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #f1ece4; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            </button>
+                            </a>
                         </div>
 
                         <!-- 2. Search Bar Capsule (Screen 1 Reference 100% Match) -->
@@ -3536,11 +3536,11 @@
                     </svg>
                     <span>Payment In</span>
                 </button>
-                <button type="button" class="pos-trans-btn-plus" onclick="openModal('posAddOptionsModal')" title="Tambah Cepat">
+                <a href="{{ route('creator.products.index') }}" class="pos-trans-btn-plus" title="Kelola Produk" style="text-decoration:none;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
-                </button>
+                </a>
                 <button type="button" class="pos-trans-btn-act" onclick="switchPosScreen('catalog')">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -9422,20 +9422,10 @@
             };
             console.log("%c[Buyle POS Ready] Debug console active. Any error will be logged in full detail.", "color: #16a34a; font-weight: bold;");
 
-            // Open + Add Options Modal Handler
+            // Direct redirect to Products page
             function openPosAddOptionsModal(e) {
-                if (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-                console.log("[Buyle POS] Header (+) button clicked -> opening posAddOptionsModal");
-                var m = document.getElementById('posAddOptionsModal');
-                if (m) {
-                    m.classList.add('show');
-                    m.style.display = 'flex';
-                } else {
-                    console.error("[Buyle POS] Element #posAddOptionsModal not found in DOM!");
-                }
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                window.location.href = "{{ route('creator.products.index') }}";
             }
 
             // Move bottom navbar to <body> to escape overflow:hidden stacking context
@@ -9911,25 +9901,6 @@
                     <line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
                 <span class="pos-nav-label">Laporan</span>
-            </button>
-
-            <!-- 4. Kelompok / Produk -->
-            <button type="button" class="pos-nav-item" id="posNavBtnProducts" onclick="switchPosScreen('catalog'); document.getElementById('productGridContainer')?.scrollIntoView({behavior:'smooth'});" title="Katalog & Kelompok Produk">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <polyline points="21 8 21 21 3 21 3 8"/>
-                    <rect x="1" y="3" width="22" height="5"/>
-                    <line x1="10" y1="12" x2="14" y2="12"/>
-                </svg>
-                <span class="pos-nav-label">Item</span>
-            </button>
-
-            <!-- 5. Kasir / Profil Staf -->
-            <button type="button" class="pos-nav-item" id="posNavBtnAccount" onclick="openPosSettingsModal('staff')" title="Staf Kasir & Akun">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-                <span class="pos-nav-label">Kasir</span>
             </button>
         </div>
     </div>

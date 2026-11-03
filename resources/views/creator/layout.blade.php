@@ -805,7 +805,24 @@
             }
         }
 </style>
-</head>
+
+        @if(request()->is('creator/products*'))
+        <style>
+            .superapp-bottom-nav, #superappBottomNav,
+            .pos-bottom-nav-wrap, #posBottomNavWrap {
+                display: none !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+            body {
+                padding-bottom: 0 !important;
+            }
+            .cr-main-canvas {
+                padding-bottom: 2rem !important;
+            }
+        </style>
+        @endif
+    </head>
 
 <body>
     {{-- Initial Splash Screen with Buyle Logo (HANYA Muncul Diawal Masuk Aplikasi, TIDAK Muncul Saat Berpindah Halaman) --}}
@@ -1521,6 +1538,7 @@
     </div>
 
     {{-- ── Super App Bottom Navigation (Mobile Only - 100% Sesuai Gambar 3) ── --}}
+    @if(!request()->is('creator/products*'))
     <nav class="superapp-bottom-nav" id="superappBottomNav">
         @php
             $bottomNavIsBuyer = auth()->user()->role === 'buyer';
