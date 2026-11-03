@@ -809,14 +809,19 @@
 
 <body>
     {{-- Initial Splash Screen with Buyle Logo (HANYA Muncul Diawal Masuk Aplikasi, TIDAK Muncul Saat Berpindah Halaman) --}}
-    <script>
-        if (sessionStorage.getItem('pwa_splash_shown') === '1') {
-            document.write('<style>#pwaSplashScreen { display: none !important; }</style>');
-        }
-    </script>
-    <div id="pwaSplashScreen" style="position:fixed;inset:0;background:#ffffff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s ease, visibility 0.35s ease;">
+    <div id="pwaSplashScreen" style="display:none;position:fixed;inset:0;background:#ffffff;z-index:999999;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s ease, visibility 0.35s ease;">
         <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id" style="max-width:180px;height:auto;animation:pwaLogoPulse 1.2s ease-in-out infinite alternate;">
     </div>
+    <script>
+        (function() {
+            if (sessionStorage.getItem('pwa_splash_shown') !== '1') {
+                var splash = document.getElementById('pwaSplashScreen');
+                if (splash) {
+                    splash.style.display = 'flex';
+                }
+            }
+        })();
+    </script>
     <style>
         @keyframes pwaLogoPulse {
             0% { transform: scale(0.96); opacity: 0.9; }
@@ -909,6 +914,7 @@
                     </button>
                 </form>
             </div>
+            @endif
         </div>
     </div>
 
@@ -1085,7 +1091,7 @@
             $isPosCashier = $authUser ? $authUser->isPosCashier() : false;
             $isBuyer = $authUser ? $authUser->role === 'buyer' : false;
             $cp = $authUser ? ($isPosCashier && $authUser->parent_seller_id ? $authUser->parentSeller?->creatorProfile : $authUser->creatorProfile) : null;
-            $storeSlug = $cp->store_slug ?? '';
+            $storeSlug = $cp?->store_slug ?? '';
         @endphp
 
         {{-- Brand / Logo Only --}}
@@ -1654,7 +1660,6 @@
                     Isi Data Sekarang
                 </button>
             </div>
-            @endif
         </div>
     </div>
     <style>
@@ -1955,9 +1960,14 @@
     </script>
     <script>
         // Dismiss Splash Screen smoothly & Catat Hanya Muncul Diawal Masuk
-        window.addEventListener('load', function() {
+        (function() {
             const splash = document.getElementById('pwaSplashScreen');
-            if (splash && sessionStorage.getItem('pwa_splash_shown') !== '1') {
+            if (!splash) return;
+            if (sessionStorage.getItem('pwa_splash_shown') === '1') {
+                splash.style.display = 'none';
+                return;
+            }
+            function hideSplash() {
                 setTimeout(function() {
                     splash.style.opacity = '0';
                     setTimeout(function() {
@@ -1965,11 +1975,15 @@
                         splash.style.display = 'none';
                         sessionStorage.setItem('pwa_splash_shown', '1');
                     }, 350);
-                }, 300);
-            } else if (splash) {
-                splash.style.display = 'none';
+                }, 250);
             }
-        });
+            if (document.readyState === 'complete') {
+                hideSplash();
+            } else {
+                window.addEventListener('load', hideSplash, { once: true });
+                setTimeout(hideSplash, 1200); // safety fallback
+            }
+        })();
 
         // Register PWA Service Worker for Push Notifications
         if ('serviceWorker' in navigator) {
