@@ -1527,16 +1527,15 @@
                 </svg>
             </a>
 
-            {{-- 4. Aplikasi --}}
-            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.app.index') }}"
+            {{-- 4. Web Builder (Bio Link) --}}
+            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.bio.index') }}"
                 onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.app*') ? 'active' : '' }}"
-                title="Aplikasi">
+                class="superapp-nav-item {{ request()->routeIs('creator.bio*') ? 'active' : '' }}"
+                title="Web Builder">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                 </svg>
             </a>
 

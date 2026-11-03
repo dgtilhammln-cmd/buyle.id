@@ -697,7 +697,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
 
     // Ticket Gate Scanner & Attendance Data
     Route::get('/event-attendance', [\App\Http\Controllers\TicketScannerController::class, 'index'])->name('ticket.scanner');
-    Route::get('/scanner', fn() => redirect()->route('creator.ticket.scanner'));
+    Route::get('/scanner', fn() => redirect()->route('creator.ticket.scanner'))->name('scanner.index');
     Route::post('/scanner/verify', [\App\Http\Controllers\TicketScannerController::class, 'verify'])->name('ticket.scanner.verify');
     Route::post('/scanner/toggle-checkin/{ticket}', [\App\Http\Controllers\TicketScannerController::class, 'toggleCheckin'])->name('ticket.scanner.toggle-checkin');
     Route::get('/scanner/export', [\App\Http\Controllers\TicketScannerController::class, 'exportCsv'])->name('ticket.scanner.export');

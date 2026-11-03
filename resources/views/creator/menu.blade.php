@@ -630,6 +630,30 @@
 
     {{-- 5. Group 2: Aplikasi Creator Studio --}}
     <div class="menu-group-card">
+        {{-- Pusat Aplikasi Bisnis --}}
+        <a href="{{ route('creator.app.index') }}" class="menu-group-item">
+            <div class="menu-item-left">
+                <div class="menu-item-icon" style="color: #6366f1; background: #e0e7ff;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="menu-item-title" style="display:block;">Pusat Aplikasi Bisnis</span>
+                    <span style="font-size:0.7rem; color:#94a3b8;">Katalog seluruh modul & tools</span>
+                </div>
+            </div>
+            <div class="menu-item-right">
+                <span class="menu-item-badge" style="color:#6366f1; background:#e0e7ff;">Semua Modul</span>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+        </a>
+
         {{-- Kasir Digital POS --}}
         <a href="{{ route('creator.pos.index') }}" class="menu-group-item">
             <div class="menu-item-left">
@@ -668,7 +692,7 @@
         </a>
 
         {{-- Tiket Scanner --}}
-        <a href="{{ route('creator.scanner.index') }}" class="menu-group-item">
+        <a href="{{ route('creator.ticket.scanner') }}" class="menu-group-item">
             <div class="menu-item-left">
                 <div class="menu-item-icon" style="color: #8b5cf6; background: #ede9fe;">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
