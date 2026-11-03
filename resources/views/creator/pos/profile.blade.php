@@ -653,7 +653,7 @@
         </a>
 
         {{-- Pengaturan Akun Umum --}}
-        <a href="{{ route('creator.settings.index') }}" class="menu-group-item">
+        <a href="{{ route('creator.profile.edit') }}" class="menu-group-item">
             <div class="menu-item-left">
                 <div class="menu-item-icon">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

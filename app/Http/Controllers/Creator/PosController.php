@@ -1634,7 +1634,7 @@ class PosController extends Controller
         // Top Menu / Produk Terlaris Periode Ini
         $orderIds = $posOrders->pluck('id');
         $topProducts = OrderItem::whereIn('order_id', $orderIds)
-            ->selectRaw('product_id, product_name, SUM(quantity) as total_qty, SUM(subtotal) as total_revenue')
+            ->selectRaw('product_id, product_name, SUM(qty) as total_qty, SUM(subtotal) as total_revenue')
             ->groupBy('product_id', 'product_name')
             ->orderByDesc('total_qty')
             ->take(10)

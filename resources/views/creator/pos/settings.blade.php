@@ -2,246 +2,229 @@
 
 @section('title', 'Pengaturan Kasir POS – Creator Studio')
 @section('page_title', 'Pengaturan POS')
-@section('page_subtitle', 'Kelola profil struk, logo toko, pajak, diskon, staf kasir, dan pembayaran.')
 
 @section('styles')
 <style>
-    :root {
-        --pos-green: #1eb349;
-        --pos-green-dark: #16933b;
-        --pos-gradient: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
-    }
+    :root { --pg: linear-gradient(135deg,#1eb349 0%,#a5cf37 100%); }
+    body { background:#f8fafc !important; }
 
-    body {
-        background-color: #f8fafc !important;
-    }
-
-    .pos-set-container {
-        max-width: 580px;
+    .ps-wrap {
+        max-width: 520px;
         margin: 0 auto;
-        padding: 0.75rem 0.85rem 6.5rem 0.85rem;
-        min-height: 100vh;
+        padding: 0.65rem 0.75rem 6rem;
     }
 
-    /* Top Navigation Header */
-    .pos-set-header {
+    /* ── Header ── */
+    .ps-hdr {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        gap: 0.6rem;
         margin-bottom: 0.85rem;
-        gap: 0.5rem;
     }
-
-    .pos-set-header-left {
-        display: flex;
-        align-items: center;
-        gap: 0.65rem;
-    }
-
-    .pos-set-back-btn {
-        width: 38px;
-        height: 38px;
+    .ps-back {
+        width: 36px; height: 36px;
         border-radius: 50%;
-        background: #ffffff;
+        background: #fff;
         border: 1px solid #e2e8f0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex; align-items: center; justify-content: center;
         color: #334155;
         text-decoration: none;
-        transition: all 0.18s ease;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         flex-shrink: 0;
+        box-shadow: 0 1px 3px rgba(0,0,0,.04);
     }
-
-    .pos-set-back-btn:hover {
-        background: #f1f5f9;
-        color: #0f172a;
-    }
-
-    .pos-set-title {
-        font-size: 1.15rem;
+    .ps-hdr-text h1 {
+        margin: 0;
+        font-size: 1.05rem;
         font-weight: 700;
         color: #0f172a;
-        margin: 0;
         line-height: 1.2;
     }
-
-    .pos-set-subtitle {
-        font-size: 0.72rem;
+    .ps-hdr-text p {
+        margin: 2px 0 0;
+        font-size: 0.68rem;
         color: #64748b;
-        margin: 2px 0 0 0;
     }
 
-    /* Horizontal Pill Tabs */
-    .pos-set-nav {
-        display: flex;
-        align-items: center;
+    /* ── Tab Grid 2×3 ── */
+    .ps-tab-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 0.4rem;
-        overflow-x: auto;
-        padding-bottom: 0.45rem;
         margin-bottom: 0.85rem;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
     }
-
-    .pos-set-nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    .pos-set-tab-btn {
-        display: inline-flex;
+    .ps-tab-btn {
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 5px;
-        white-space: nowrap;
-        padding: 0.45rem 0.9rem;
-        border-radius: 999px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+        justify-content: center;
+        gap: 3px;
+        padding: 0.45rem 0.2rem;
+        border-radius: 12px;
+        background: #fff;
+        border: 1.5px solid #e2e8f0;
         color: #475569;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.15s ease;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        transition: all .15s;
+        line-height: 1.2;
+        text-align: center;
     }
-
-    .pos-set-tab-btn.active {
-        background: var(--pos-gradient);
+    .ps-tab-btn svg { flex-shrink: 0; }
+    .ps-tab-btn.active {
+        background: var(--pg);
         border-color: transparent;
-        color: #ffffff !important;
-        box-shadow: 0 3px 10px rgba(30, 179, 73, 0.3);
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(30,179,73,.28);
     }
 
-    /* Content Card */
-    .pos-set-card {
-        background: #ffffff;
-        border-radius: 20px;
+    /* ── Card ── */
+    .ps-card {
+        background: #fff;
+        border-radius: 18px;
         border: 1px solid #e2e8f0;
-        padding: 1.15rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-        margin-bottom: 1rem;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,.02);
+        margin-bottom: 0.75rem;
     }
-
-    .pos-form-group {
-        margin-bottom: 0.9rem;
-    }
-
-    .pos-form-group:last-child {
-        margin-bottom: 0;
-    }
-
-    .pos-form-label {
-        display: block;
-        font-size: 0.78rem;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 0.35rem;
-    }
-
-    .pos-form-input, .pos-form-textarea, .pos-form-select {
-        width: 100%;
-        background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 0.55rem 0.85rem;
-        font-size: 0.82rem;
-        color: #0f172a;
-        outline: none;
-        box-sizing: border-box;
-        transition: border-color 0.15s ease, background 0.15s ease;
-        font-family: inherit;
-    }
-
-    .pos-form-input:focus, .pos-form-textarea:focus, .pos-form-select:focus {
-        border-color: var(--pos-green);
-        background: #ffffff;
-    }
-
-    .pos-btn-save {
-        width: 100%;
-        background: var(--pos-gradient);
-        color: #ffffff;
+    .ps-card-title {
         font-size: 0.85rem;
         font-weight: 700;
-        padding: 0.75rem 1rem;
+        color: #0f172a;
+        margin: 0 0 0.15rem;
+    }
+    .ps-card-sub {
+        font-size: 0.68rem;
+        color: #64748b;
+        margin: 0 0 0.85rem;
+    }
+
+    /* ── Form Controls ── */
+    .ps-field { margin-bottom: 0.7rem; }
+    .ps-label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    .ps-input, .ps-textarea, .ps-select {
+        width: 100%;
+        box-sizing: border-box;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        color: #0f172a;
+        outline: none;
+        font-family: inherit;
+        transition: border-color .15s;
+    }
+    .ps-input:focus, .ps-textarea:focus, .ps-select:focus {
+        border-color: #1eb349;
+        background: #fff;
+    }
+    .ps-textarea { resize: vertical; min-height: 56px; }
+
+    /* ── Logo Box ── */
+    .ps-logo-box {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: #f8fafc;
+        border: 1.5px dashed #cbd5e1;
         border-radius: 14px;
+        padding: 0.7rem;
+        margin-bottom: 0.7rem;
+    }
+    .ps-logo-thumb {
+        width: 52px; height: 52px;
+        border-radius: 10px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .ps-logo-thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* ── Save Button ── */
+    .ps-save {
+        width: 100%;
+        background: var(--pg);
+        color: #fff;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 0.7rem;
+        border-radius: 12px;
         border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
-        transition: transform 0.1s ease, box-shadow 0.1s ease;
+        gap: 5px;
+        box-shadow: 0 4px 12px rgba(30,179,73,.3);
+        margin-top: 0.85rem;
+        transition: opacity .15s;
     }
+    .ps-save:disabled { opacity: .65; cursor: not-allowed; }
 
-    .pos-btn-save:active {
-        transform: scale(0.98);
-    }
-
-    .pos-btn-save:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-
-    /* Logo Uploader */
-    .pos-logo-box {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+    /* ── Row Item (fees/discounts/tables) ── */
+    .ps-row {
         background: #f8fafc;
-        border: 1.5px dashed #cbd5e1;
-        border-radius: 16px;
-        padding: 0.85rem;
-        margin-bottom: 0.9rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 0.55rem 0.7rem;
+        margin-bottom: 0.45rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .ps-row-inner { flex: 1; }
+    .ps-row-inner .ps-input { margin-bottom: 4px; }
+    .ps-row-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-top: 2px; }
+
+    /* ── Section Add Button ── */
+    .ps-add-btn {
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border: 1.5px solid;
+        cursor: pointer;
+        background: none;
     }
 
-    .pos-logo-preview {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        overflow: hidden;
+    /* ── Cashier Row ── */
+    .ps-cashier-row {
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 0.6rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 0.55rem 0.7rem;
+        margin-bottom: 0.4rem;
+    }
+    .ps-cashier-avatar {
+        width: 34px; height: 34px;
+        border-radius: 9px;
+        background: #ede9fe;
+        color: #6d28d9;
+        font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.85rem;
         flex-shrink: 0;
     }
+    .ps-cashier-info { flex: 1; min-width: 0; }
+    .ps-cashier-name { font-size: 0.8rem; font-weight: 700; color: #0f172a; }
+    .ps-cashier-sub { font-size: 0.67rem; color: #64748b; }
 
-    .pos-logo-preview img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
+    /* ── Payment Mode label ── */
+    .ps-mode-note { font-size: 0.68rem; color: #64748b; margin-top: 3px; }
 
-    /* Switch toggle */
-    .pos-switch-label {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.65rem 0.85rem;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        margin-bottom: 0.5rem;
-        cursor: pointer;
-    }
-
-    /* Cashier & Table list card */
-    .pos-row-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.65rem 0.85rem;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 14px;
-        margin-bottom: 0.5rem;
-    }
-
-    /* POS Bottom Navigation Bar */
+    /* ── POS Bottom Nav ── */
     .pos-bottom-nav-wrap {
         display: flex !important;
         position: fixed !important;
@@ -253,880 +236,555 @@
         z-index: 10000 !important;
         justify-content: center !important;
     }
-
     .pos-bottom-nav-bar {
         width: 100% !important;
-        height: 62px !important;
-        background: #ffffff !important;
+        height: 60px !important;
+        background: #fff !important;
         border-radius: 999px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
-        padding: 0.35rem 0.65rem !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+        padding: 0.3rem 0.6rem !important;
+        box-shadow: 0 8px 28px rgba(0,0,0,.1), 0 2px 6px rgba(0,0,0,.04) !important;
         border: 1.5px solid #f1f5f9 !important;
     }
-
     .pos-nav-item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        color: #64748b;
-        padding: 0;
+        display: flex; align-items: center; justify-content: center;
+        border: none; background: transparent; cursor: pointer;
+        transition: all .22s cubic-bezier(.16,1,.3,1);
+        color: #64748b; padding: 0;
         text-decoration: none;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        outline: none;
+        width: 42px; height: 42px;
+        border-radius: 50%; outline: none;
     }
-
     .pos-nav-item.active {
-        background: var(--pos-gradient) !important;
-        color: #ffffff !important;
-        padding: 0.5rem 1.1rem !important;
+        background: var(--pg) !important;
+        color: #fff !important;
+        padding: 0.45rem 1rem !important;
         border-radius: 999px !important;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
-        gap: 6px !important;
+        box-shadow: 0 4px 14px rgba(30,179,73,.35) !important;
+        gap: 5px !important;
         width: auto !important;
     }
-
-    .pos-nav-label {
-        display: none;
-    }
-
+    .pos-nav-label { display: none; }
     .pos-nav-item.active .pos-nav-label {
         display: inline-block;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: 700;
-        color: #ffffff;
+        color: #fff;
     }
 </style>
 @endsection
 
 @section('content')
-<div class="pos-set-container">
-    {{-- Header Top Bar --}}
-    <div class="pos-set-header">
-        <div class="pos-set-header-left">
-            <a href="{{ route('creator.pos.index') }}" class="pos-set-back-btn" title="Kembali ke Kasir">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-            </a>
-            <div>
-                <h1 class="pos-set-title">Pengaturan POS</h1>
-                <p class="pos-set-subtitle">Profil Struk, Pajak, Diskon & Staf Kasir</p>
-            </div>
-        </div>
+<div class="ps-wrap">
 
-        <a href="{{ route('creator.pos.profile') }}" class="pos-set-back-btn" title="Menu & Profil">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
+    {{-- Header --}}
+    <div class="ps-hdr">
+        <a href="{{ route('creator.pos.index') }}" class="ps-back" title="Kembali ke Kasir">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
         </a>
+        <div class="ps-hdr-text">
+            <h1>Pengaturan POS</h1>
+            <p>Struk, Biaya, Diskon, Staf & Metode Bayar</p>
+        </div>
     </div>
 
-    {{-- Horizontal Capsule Tabs --}}
-    @php
-        $activeTab = request('tab', 'struk');
-    @endphp
-    <div class="pos-set-nav">
-        <button type="button" class="pos-set-tab-btn {{ $activeTab === 'struk' ? 'active' : '' }}" onclick="switchPosTab('struk', this)">
-            🧾 Struk & Toko
+    {{-- Tab Grid 2×3 --}}
+    @php $activeTab = request('tab', 'struk'); @endphp
+    <div class="ps-tab-grid">
+        <button type="button" class="ps-tab-btn {{ $activeTab === 'struk' ? 'active' : '' }}" onclick="switchTab('struk',this)">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Struk & Logo
         </button>
-        <button type="button" class="pos-set-tab-btn {{ $activeTab === 'fees' ? 'active' : '' }}" onclick="switchPosTab('fees', this)">
-            💰 Pajak & Biaya
+        <button type="button" class="ps-tab-btn {{ $activeTab === 'fees' ? 'active' : '' }}" onclick="switchTab('fees',this)">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Pajak & Biaya
         </button>
-        <button type="button" class="pos-set-tab-btn {{ $activeTab === 'discounts' ? 'active' : '' }}" onclick="switchPosTab('discounts', this)">
-            🏷️ Diskon & Promo
+        <button type="button" class="ps-tab-btn {{ $activeTab === 'discounts' ? 'active' : '' }}" onclick="switchTab('discounts',this)">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+            Diskon
         </button>
-        <button type="button" class="pos-set-tab-btn {{ $activeTab === 'tables' ? 'active' : '' }}" onclick="switchPosTab('tables', this)">
-            🪑 Kelola Meja
+        <button type="button" class="ps-tab-btn {{ $activeTab === 'tables' ? 'active' : '' }}" onclick="switchTab('tables',this)">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Kelola Meja
         </button>
-        <button type="button" class="pos-set-tab-btn {{ $activeTab === 'staff' ? 'active' : '' }}" onclick="switchPosTab('staff', this)">
-            👥 Staf Kasir
+        <button type="button" class="ps-tab-btn {{ $activeTab === 'staff' ? 'active' : '' }}" onclick="switchTab('staff',this)">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Staf Kasir
         </button>
-        <button type="button" class="pos-set-tab-btn {{ $activeTab === 'payment' ? 'active' : '' }}" onclick="switchPosTab('payment', this)">
-            💳 Metode Bayar
+        <button type="button" class="ps-tab-btn {{ $activeTab === 'payment' ? 'active' : '' }}" onclick="switchTab('payment',this)">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Metode Bayar
         </button>
     </div>
 
-    {{-- ── TAB 1: STRUK & TOKO ── --}}
-    <div id="tabStruk" class="pos-set-tab-pane" style="{{ $activeTab === 'struk' ? 'display:block;' : 'display:none;' }}">
-        <div class="pos-set-card">
-            {{-- Logo Struk --}}
-            <div class="pos-form-group">
-                <label class="pos-form-label">Logo Struk POS (Tampil di Gambar & Cetak)</label>
-                <div class="pos-logo-box">
-                    <div class="pos-logo-preview" id="logoPreviewWrap">
+    {{-- ── TAB 1: STRUK & LOGO ── --}}
+    <div id="pane-struk" class="ps-pane" style="{{ $activeTab === 'struk' ? '' : 'display:none;' }}">
+        <div class="ps-card">
+            <p class="ps-card-title">Struk & Profil Toko</p>
+            <p class="ps-card-sub">Logo, nama, alamat & pesan footer struk kasir</p>
+
+            {{-- Logo --}}
+            <div class="ps-field">
+                <label class="ps-label">Logo Struk (Tampil di Struk, Email & WA)</label>
+                <div class="ps-logo-box">
+                    <div class="ps-logo-thumb">
                         @if($posLogoUrl)
-                            <img src="{{ $posLogoUrl }}" id="posLogoImg" alt="Logo Toko">
+                            <img src="{{ $posLogoUrl }}" alt="Logo">
                         @else
-                            <svg width="24" height="24" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24" id="posLogoPlaceholder">
-                                <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" />
+                            <svg width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
                             </svg>
                         @endif
                     </div>
                     <div style="flex:1;">
-                        <input type="file" id="posLogoFileInput" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none;" onchange="uploadPosLogo(this)">
-                        <button type="button" onclick="document.getElementById('posLogoFileInput').click()" class="pos-form-input" style="cursor:pointer; text-align:center; font-weight:600; padding:0.4rem 0.75rem; margin-bottom:5px; background:#ffffff;">
-                            Ganti Logo Toko
+                        <input type="file" id="posLogoInput" accept="image/*" style="display:none;" onchange="uploadPosLogo(this)">
+                        <button type="button" onclick="document.getElementById('posLogoInput').click()" class="ps-input" style="cursor:pointer; text-align:center; font-weight:600; padding:0.38rem 0.6rem;">
+                            Ganti Logo
                         </button>
                         @if($posLogoUrl)
-                            <button type="button" onclick="removePosLogo()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; font-weight:600; cursor:pointer;">
-                                Hapus Logo
-                            </button>
+                            <div style="margin-top:4px;">
+                                <button type="button" onclick="removePosLogo()" style="border:none; background:none; color:#ef4444; font-size:0.7rem; font-weight:600; cursor:pointer; padding:0;">Hapus Logo</button>
+                            </div>
                         @endif
                     </div>
                 </div>
             </div>
 
-            {{-- Nama Toko --}}
-            <div class="pos-form-group">
-                <label class="pos-form-label">Nama Brand / Toko</label>
-                <input type="text" id="setStoreName" class="pos-form-input" value="{{ $profile->store_name ?? $seller->name }}" placeholder="Nama Toko Anda">
+            <div class="ps-field">
+                <label class="ps-label">Nama Brand / Toko</label>
+                <input type="text" id="setStoreName" class="ps-input" value="{{ $profile->store_name ?? $seller->name }}" placeholder="Nama Toko">
             </div>
-
-            {{-- Alamat Toko --}}
-            <div class="pos-form-group">
-                <label class="pos-form-label">Alamat Toko (Dicetak pada Struk)</label>
-                <textarea id="setStoreAddress" class="pos-form-textarea" rows="2" placeholder="Jl. Raya Utama No. 123, Kota...">{{ $posStoreAddress }}</textarea>
+            <div class="ps-field">
+                <label class="ps-label">Alamat Toko</label>
+                <textarea id="setStoreAddress" class="ps-textarea" placeholder="Jl. Contoh No. 1...">{{ $posStoreAddress }}</textarea>
             </div>
-
-            {{-- Telepon Toko --}}
-            <div class="pos-form-group">
-                <label class="pos-form-label">No. Telepon / WhatsApp Toko</label>
-                <input type="text" id="setStorePhone" class="pos-form-input" value="{{ $posStorePhone }}" placeholder="08xxxxxxxxxx">
+            <div class="ps-field">
+                <label class="ps-label">No. Telepon / WhatsApp</label>
+                <input type="text" id="setStorePhone" class="ps-input" value="{{ $posStorePhone }}" placeholder="08xxxxxxxxxx">
             </div>
-
-            {{-- Catatan Footer Struk --}}
-            <div class="pos-form-group">
-                <label class="pos-form-label">Pesan / Footer Struk</label>
-                <input type="text" id="setReceiptFooter" class="pos-form-input" value="{{ $profile->pos_receipt_footer ?? 'Terima Kasih Atas Kunjungan Anda!' }}" placeholder="Terima Kasih!">
+            <div class="ps-field">
+                <label class="ps-label">Pesan Footer Struk</label>
+                <input type="text" id="setReceiptFooter" class="ps-input" value="{{ $profile->pos_receipt_footer ?? 'Terima Kasih Atas Kunjungan Anda!' }}" placeholder="Terima kasih!">
             </div>
-
-            <div style="margin-top: 1.25rem;">
-                <button type="button" class="pos-btn-save" id="btnSaveStore" onclick="saveStoreSettings()">
-                    Simpan Pengaturan Struk
-                </button>
-            </div>
+            <button type="button" class="ps-save" id="btnSaveStore" onclick="saveStoreSettings()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Simpan Pengaturan Struk
+            </button>
         </div>
     </div>
 
     {{-- ── TAB 2: PAJAK & BIAYA ── --}}
-    <div id="tabFees" class="pos-set-tab-pane" style="{{ $activeTab === 'fees' ? 'display:block;' : 'display:none;' }}">
-        <div class="pos-set-card">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem;">
+    <div id="pane-fees" class="ps-pane" style="{{ $activeTab === 'fees' ? '' : 'display:none;' }}">
+        <div class="ps-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.65rem;">
                 <div>
-                    <h5 style="margin:0; font-size:0.9rem; font-weight:700; color:#0f172a;">Pajak & Biaya Tambahan</h5>
-                    <div style="font-size:0.7rem; color:#64748b;">PB1 Restoran, Service Charge, atau Biaya Kemasan</div>
+                    <p class="ps-card-title">Pajak & Biaya Tambahan</p>
+                    <p class="ps-card-sub" style="margin-bottom:0;">PB1 Restoran, Service Charge, dsb.</p>
                 </div>
-                <button type="button" onclick="addNewFeeRow()" style="padding:0.35rem 0.75rem; border-radius:999px; background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.75rem; font-weight:700; cursor:pointer;">
-                    + Tambah
-                </button>
+                <button type="button" class="ps-add-btn" style="border-color:#86efac; color:#166534;" onclick="addFeeRow()">+ Tambah</button>
             </div>
-
-            <div id="feesListContainer">
-                @forelse($posFees as $idx => $f)
-                    <div class="pos-row-item fee-item-row" data-idx="{{ $idx }}">
-                        <div style="flex:1; margin-right:8px;">
-                            <input type="text" class="pos-form-input fee-name" value="{{ $f['name'] ?? '' }}" placeholder="Nama Biaya (misal PB1)" style="margin-bottom:4px; font-weight:600;">
-                            <div style="display:flex; gap:6px;">
-                                <select class="pos-form-select fee-type" style="width:110px;">
-                                    <option value="percent" {{ ($f['type'] ?? '') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
-                                    <option value="fixed" {{ ($f['type'] ?? '') === 'fixed' ? 'selected' : '' }}>Nominal (Rp)</option>
+            <div id="feesContainer">
+                @forelse($posFees as $f)
+                    <div class="ps-row fee-row">
+                        <div class="ps-row-inner">
+                            <input type="text" class="ps-input fee-name" value="{{ $f['name'] ?? '' }}" placeholder="Nama Biaya" style="margin-bottom:4px;">
+                            <div style="display:flex; gap:5px;">
+                                <select class="ps-select fee-type" style="width:100px;">
+                                    <option value="percent" {{ ($f['type']??'') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
+                                    <option value="fixed" {{ ($f['type']??'') === 'fixed' ? 'selected' : '' }}>Nominal (Rp)</option>
                                 </select>
-                                <input type="number" class="pos-form-input fee-amount" value="{{ $f['amount'] ?? 0 }}" placeholder="Nilai">
+                                <input type="number" class="ps-input fee-amount" value="{{ $f['amount'] ?? 0 }}" placeholder="0">
                             </div>
                         </div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-                            <label style="font-size:0.7rem; color:#475569; display:flex; align-items:center; gap:4px; cursor:pointer;">
+                        <div class="ps-row-actions">
+                            <label style="font-size:0.67rem; color:#475569; display:flex; align-items:center; gap:3px; cursor:pointer; white-space:nowrap;">
                                 <input type="checkbox" class="fee-enabled" {{ !empty($f['is_active']) ? 'checked' : '' }}> Aktif
                             </label>
-                            <button type="button" onclick="this.closest('.fee-item-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; cursor:pointer;">Hapus</button>
+                            <button type="button" onclick="this.closest('.fee-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.67rem; cursor:pointer; padding:0;">Hapus</button>
                         </div>
                     </div>
                 @empty
-                    <div id="emptyFeePlaceholder" style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.75rem;">
-                        Belum ada pengaturan biaya tambahan. Klik tombol "+ Tambah" di atas.
-                    </div>
+                    <div id="feesEmpty" style="text-align:center; padding:1.25rem; color:#94a3b8; font-size:0.73rem;">Belum ada biaya tambahan. Klik "+ Tambah".</div>
                 @endforelse
             </div>
-
-            <div style="margin-top: 1.25rem;">
-                <button type="button" class="pos-btn-save" id="btnSaveFees" onclick="saveFeesSettings()">
-                    Simpan Biaya & Pajak
-                </button>
-            </div>
+            <button type="button" class="ps-save" id="btnSaveFees" onclick="saveFeesSettings()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Simpan Pajak & Biaya
+            </button>
         </div>
     </div>
 
-    {{-- ── TAB 3: DISKON & PROMO ── --}}
-    <div id="tabDiscounts" class="pos-set-tab-pane" style="{{ $activeTab === 'discounts' ? 'display:block;' : 'display:none;' }}">
-        <div class="pos-set-card">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem;">
+    {{-- ── TAB 3: DISKON ── --}}
+    <div id="pane-discounts" class="ps-pane" style="{{ $activeTab === 'discounts' ? '' : 'display:none;' }}">
+        <div class="ps-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.65rem;">
                 <div>
-                    <h5 style="margin:0; font-size:0.9rem; font-weight:700; color:#0f172a;">Diskon & Promo Struk</h5>
-                    <div style="font-size:0.7rem; color:#64748b;">Potongan harga pesanan otomatis / manual di kasir</div>
+                    <p class="ps-card-title">Diskon & Promo</p>
+                    <p class="ps-card-sub" style="margin-bottom:0;">Potongan harga di struk kasir</p>
                 </div>
-                <button type="button" onclick="addNewDiscountRow()" style="padding:0.35rem 0.75rem; border-radius:999px; background:#fefce8; border:1px solid #fef08a; color:#854d0e; font-size:0.75rem; font-weight:700; cursor:pointer;">
-                    + Tambah
-                </button>
+                <button type="button" class="ps-add-btn" style="border-color:#fef08a; color:#854d0e;" onclick="addDiscountRow()">+ Tambah</button>
             </div>
-
-            <div id="discountsListContainer">
-                @forelse($posDiscounts as $idx => $d)
-                    <div class="pos-row-item discount-item-row" data-idx="{{ $idx }}">
-                        <div style="flex:1; margin-right:8px;">
-                            <input type="text" class="pos-form-input disc-name" value="{{ $d['name'] ?? '' }}" placeholder="Nama Diskon (misal Member 10%)" style="margin-bottom:4px; font-weight:600;">
-                            <div style="display:flex; gap:6px;">
-                                <select class="pos-form-select disc-type" style="width:110px;">
-                                    <option value="percent" {{ ($d['type'] ?? '') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
-                                    <option value="fixed" {{ ($d['type'] ?? '') === 'fixed' ? 'selected' : '' }}>Nominal (Rp)</option>
+            <div id="discountsContainer">
+                @forelse($posDiscounts as $d)
+                    <div class="ps-row disc-row">
+                        <div class="ps-row-inner">
+                            <input type="text" class="ps-input disc-name" value="{{ $d['name'] ?? '' }}" placeholder="Nama Diskon" style="margin-bottom:4px;">
+                            <div style="display:flex; gap:5px;">
+                                <select class="ps-select disc-type" style="width:100px;">
+                                    <option value="percent" {{ ($d['type']??'') === 'percent' ? 'selected' : '' }}>Persen (%)</option>
+                                    <option value="fixed" {{ ($d['type']??'') === 'fixed' ? 'selected' : '' }}>Nominal (Rp)</option>
                                 </select>
-                                <input type="number" class="pos-form-input disc-amount" value="{{ $d['amount'] ?? 0 }}" placeholder="Nilai">
+                                <input type="number" class="ps-input disc-amount" value="{{ $d['amount'] ?? 0 }}" placeholder="0">
                             </div>
                         </div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-                            <label style="font-size:0.7rem; color:#475569; display:flex; align-items:center; gap:4px; cursor:pointer;">
+                        <div class="ps-row-actions">
+                            <label style="font-size:0.67rem; color:#475569; display:flex; align-items:center; gap:3px; cursor:pointer; white-space:nowrap;">
                                 <input type="checkbox" class="disc-enabled" {{ !empty($d['is_active']) ? 'checked' : '' }}> Aktif
                             </label>
-                            <button type="button" onclick="this.closest('.discount-item-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; cursor:pointer;">Hapus</button>
+                            <button type="button" onclick="this.closest('.disc-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.67rem; cursor:pointer; padding:0;">Hapus</button>
                         </div>
                     </div>
                 @empty
-                    <div id="emptyDiscPlaceholder" style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.75rem;">
-                        Belum ada diskon terdaftar. Klik "+ Tambah" untuk membuat diskon baru.
-                    </div>
+                    <div id="discEmpty" style="text-align:center; padding:1.25rem; color:#94a3b8; font-size:0.73rem;">Belum ada diskon. Klik "+ Tambah".</div>
                 @endforelse
             </div>
-
-            <div style="margin-top: 1.25rem;">
-                <button type="button" class="pos-btn-save" id="btnSaveDiscounts" onclick="saveDiscountsSettings()">
-                    Simpan Diskon & Promo
-                </button>
-            </div>
+            <button type="button" class="ps-save" id="btnSaveDisc" onclick="saveDiscountsSettings()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Simpan Diskon & Promo
+            </button>
         </div>
     </div>
 
-    {{-- ── TAB 4: KELOLA MEJA ── --}}
-    <div id="tabTables" class="pos-set-tab-pane" style="{{ $activeTab === 'tables' ? 'display:block;' : 'display:none;' }}">
-        <div class="pos-set-card">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem;">
+    {{-- ── TAB 4: MEJA ── --}}
+    <div id="pane-tables" class="ps-pane" style="{{ $activeTab === 'tables' ? '' : 'display:none;' }}">
+        <div class="ps-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.65rem;">
                 <div>
-                    <h5 style="margin:0; font-size:0.9rem; font-weight:700; color:#0f172a;">Kelola Meja Dine-in</h5>
-                    <div style="font-size:0.7rem; color:#64748b;">Nomor meja untuk pesanan makan di tempat</div>
+                    <p class="ps-card-title">Kelola Meja Dine-in</p>
+                    <p class="ps-card-sub" style="margin-bottom:0;">Nomor meja makan di tempat</p>
                 </div>
-                <button type="button" onclick="addNewTableRow()" style="padding:0.35rem 0.75rem; border-radius:999px; background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; font-size:0.75rem; font-weight:700; cursor:pointer;">
-                    + Tambah Meja
-                </button>
+                <button type="button" class="ps-add-btn" style="border-color:#fed7aa; color:#c2410c;" onclick="addTableRow()">+ Meja</button>
             </div>
-
-            <div id="tablesListContainer">
-                @forelse($posTables as $idx => $t)
-                    <div class="pos-row-item table-item-row" data-idx="{{ $idx }}">
-                        <div style="display:flex; align-items:center; gap:8px; flex:1;">
-                            <div style="width:34px; height:34px; border-radius:8px; background:#ffedd5; color:#c2410c; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">
-                                🪑
-                            </div>
-                            <div style="flex:1;">
-                                <input type="text" class="pos-form-input table-name" value="{{ $t['name'] ?? '' }}" placeholder="Nomor Meja (misal Meja 01)" style="font-weight:600;">
-                            </div>
+            <div id="tablesContainer">
+                @forelse($posTables as $t)
+                    <div class="ps-row table-row" style="align-items:center;">
+                        <div style="width:30px; height:30px; border-radius:8px; background:#ffedd5; color:#c2410c; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
                         </div>
-                        <button type="button" onclick="this.closest('.table-item-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; cursor:pointer; margin-left:8px;">Hapus</button>
+                        <input type="text" class="ps-input table-name" value="{{ $t['name'] ?? '' }}" placeholder="Meja 01" style="flex:1; margin:0 6px;">
+                        <button type="button" onclick="this.closest('.table-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.67rem; cursor:pointer; padding:0;">Hapus</button>
                     </div>
                 @empty
-                    <div id="emptyTablePlaceholder" style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.75rem;">
-                        Belum ada meja dikonfigurasi. Klik "+ Tambah Meja".
-                    </div>
+                    <div id="tableEmpty" style="text-align:center; padding:1.25rem; color:#94a3b8; font-size:0.73rem;">Belum ada meja. Klik "+ Meja".</div>
                 @endforelse
             </div>
-
-            <div style="margin-top: 1.25rem;">
-                <button type="button" class="pos-btn-save" id="btnSaveTables" onclick="saveTablesSettings()">
-                    Simpan Tata Letak Meja
-                </button>
-            </div>
+            <button type="button" class="ps-save" id="btnSaveTables" onclick="saveTablesSettings()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Simpan Data Meja
+            </button>
         </div>
     </div>
 
     {{-- ── TAB 5: STAF KASIR ── --}}
-    <div id="tabStaff" class="pos-set-tab-pane" style="{{ $activeTab === 'staff' ? 'display:block;' : 'display:none;' }}">
-        <div class="pos-set-card">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem;">
+    <div id="pane-staff" class="ps-pane" style="{{ $activeTab === 'staff' ? '' : 'display:none;' }}">
+        <div class="ps-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.65rem;">
                 <div>
-                    <h5 style="margin:0; font-size:0.9rem; font-weight:700; color:#0f172a;">Staf Kasir Terdaftar</h5>
-                    <div style="font-size:0.7rem; color:#64748b;">Kelola akun kasir untuk melayani transaksi</div>
+                    <p class="ps-card-title">Staf Kasir</p>
+                    <p class="ps-card-sub" style="margin-bottom:0;">Kelola akun staf yang bisa login kasir</p>
                 </div>
-                <button type="button" onclick="document.getElementById('addCashierCard').style.display='block'" style="padding:0.35rem 0.75rem; border-radius:999px; background:#f5f3ff; border:1px solid #ddd6fe; color:#6d28d9; font-size:0.75rem; font-weight:700; cursor:pointer;">
-                    + Tambah Kasir
-                </button>
+                <button type="button" class="ps-add-btn" style="border-color:#ddd6fe; color:#6d28d9;" onclick="document.getElementById('addCashierBox').style.display='block'">+ Tambah</button>
             </div>
 
-            {{-- Form Tambah Kasir (Inline collapsible) --}}
-            <div id="addCashierCard" style="display:none; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.85rem; margin-bottom:0.85rem;">
-                <div style="font-weight:700; font-size:0.8rem; color:#0f172a; margin-bottom:6px;">Tambah Akun Staf Kasir</div>
-                <div class="pos-form-group">
-                    <input type="text" id="newCashierName" class="pos-form-input" placeholder="Nama Kasir (misal: Budi Santoso)">
-                </div>
-                <div class="pos-form-group">
-                    <input type="text" id="newCashierUsername" class="pos-form-input" placeholder="Username Kasir (untuk login)">
-                </div>
-                <div class="pos-form-group">
-                    <input type="password" id="newCashierPassword" class="pos-form-input" placeholder="PIN / Password (min 6 karakter)">
-                </div>
-                <div style="display:flex; gap:6px; margin-top:8px;">
-                    <button type="button" onclick="saveNewCashier()" class="pos-btn-save" style="flex:1; padding:0.5rem;">Simpan Kasir</button>
-                    <button type="button" onclick="document.getElementById('addCashierCard').style.display='none'" class="pos-form-input" style="width:auto; padding:0.5rem 0.85rem; cursor:pointer;">Batal</button>
+            {{-- Form Tambah Kasir --}}
+            <div id="addCashierBox" style="display:none; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.7rem; margin-bottom:0.65rem;">
+                <div style="font-size:0.75rem; font-weight:700; color:#0f172a; margin-bottom:6px;">Akun Staf Kasir Baru</div>
+                <div class="ps-field"><input type="text" id="newCashierName" class="ps-input" placeholder="Nama Kasir"></div>
+                <div class="ps-field"><input type="text" id="newCashierUsername" class="ps-input" placeholder="Username Login"></div>
+                <div class="ps-field"><input type="password" id="newCashierPassword" class="ps-input" placeholder="PIN / Password (min 6 karakter)"></div>
+                <div style="display:flex; gap:5px; margin-top:4px;">
+                    <button type="button" onclick="saveNewCashier()" class="ps-save" style="flex:1; margin-top:0; padding:0.5rem;">Simpan Kasir</button>
+                    <button type="button" onclick="document.getElementById('addCashierBox').style.display='none'" class="ps-input" style="width:auto; padding:0.5rem 0.75rem; cursor:pointer; border-radius:10px;">Batal</button>
                 </div>
             </div>
 
-            <div id="cashiersListContainer">
+            <div id="cashiersContainer">
                 @forelse($cashiers as $c)
-                    <div class="pos-row-item">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <div style="width:36px; height:36px; border-radius:10px; background:#ede9fe; color:#6d28d9; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:0.85rem;">
-                                {{ strtoupper(substr($c->name, 0, 1)) }}
-                            </div>
-                            <div>
-                                <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">{{ $c->name }}</div>
-                                <div style="font-size:0.7rem; color:#64748b;">Username: {{ $c->username ?? $c->email }}</div>
-                            </div>
+                    <div class="ps-cashier-row">
+                        <div class="ps-cashier-avatar">{{ strtoupper(substr($c->name, 0, 1)) }}</div>
+                        <div class="ps-cashier-info">
+                            <div class="ps-cashier-name">{{ $c->name }}</div>
+                            <div class="ps-cashier-sub">{{ $c->username ?? $c->email }}</div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <button type="button" onclick="deleteCashier({{ $c->id }})" style="border:none; background:none; color:#ef4444; font-size:0.72rem; cursor:pointer;">
-                                Hapus
-                            </button>
-                        </div>
+                        <button type="button" onclick="deleteCashier({{ $c->id }})" style="border:none; background:none; color:#ef4444; font-size:0.7rem; font-weight:600; cursor:pointer; flex-shrink:0;">Hapus</button>
                     </div>
                 @empty
-                    <div style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.75rem;">
-                        Belum ada staf kasir terdaftar.
-                    </div>
+                    <div style="text-align:center; padding:1.25rem; color:#94a3b8; font-size:0.73rem;">Belum ada staf kasir terdaftar.</div>
                 @endforelse
             </div>
         </div>
     </div>
 
-    {{-- ── TAB 6: METODE BAYAR & FEE ── --}}
-    <div id="tabPayment" class="pos-set-tab-pane" style="{{ $activeTab === 'payment' ? 'display:block;' : 'display:none;' }}">
-        <div class="pos-set-card">
-            {{-- Mode Cashless --}}
-            <div class="pos-form-group">
-                <label class="pos-form-label">Mode Pembayaran Cashless / QRIS</label>
-                <select id="setCashlessMode" class="pos-form-select" onchange="toggleQrisUploadVisibility(this.value)">
-                    <option value="snap_midtrans" {{ $posCashlessMode === 'snap_midtrans' ? 'selected' : '' }}>
-                        Midtrans Gateway (QRIS Dinamis Otomatis Cek Pembayaran)
-                    </option>
-                    <option value="static_qris" {{ $posCashlessMode === 'static_qris' ? 'selected' : '' }}>
-                        QRIS Statis Toko Pribadi (Upload Gambar QR Toko)
-                    </option>
+    {{-- ── TAB 6: METODE BAYAR ── --}}
+    <div id="pane-payment" class="ps-pane" style="{{ $activeTab === 'payment' ? '' : 'display:none;' }}">
+        <div class="ps-card">
+            <p class="ps-card-title">Metode Pembayaran & QRIS</p>
+            <p class="ps-card-sub">Mode cashless, upload QRIS, dan beban biaya</p>
+
+            <div class="ps-field">
+                <label class="ps-label">Mode Pembayaran Cashless</label>
+                <select id="setCashlessMode" class="ps-select" onchange="toggleQrisSection(this.value)">
+                    <option value="snap_midtrans" {{ $posCashlessMode === 'snap_midtrans' ? 'selected' : '' }}>Midtrans — QRIS Dinamis (Cek Otomatis)</option>
+                    <option value="static_qris" {{ $posCashlessMode === 'static_qris' ? 'selected' : '' }}>QRIS Statis Toko (Upload Gambar QR)</option>
                 </select>
             </div>
 
-            {{-- Upload QRIS Statis --}}
-            <div class="pos-form-group" id="qrisUploadSection" style="{{ $posCashlessMode === 'static_qris' ? 'display:block;' : 'display:none;' }}">
-                <label class="pos-form-label">Gambar QRIS Toko</label>
-                <div class="pos-logo-box">
-                    <div class="pos-logo-preview" id="qrisPreviewWrap">
-                        @if($posQrisUrl)
-                            <img src="{{ $posQrisUrl }}" id="posQrisImg" alt="QRIS Toko">
-                        @else
-                            <svg width="24" height="24" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-                            </svg>
-                        @endif
-                    </div>
-                    <div style="flex:1;">
-                        <input type="file" id="posQrisFileInput" accept="image/*" style="display:none;" onchange="uploadPosQris(this)">
-                        <button type="button" onclick="document.getElementById('posQrisFileInput').click()" class="pos-form-input" style="cursor:pointer; text-align:center; font-weight:600; padding:0.4rem 0.75rem; margin-bottom:5px; background:#ffffff;">
-                            Upload Gambar QRIS
-                        </button>
-                        @if($posQrisUrl)
-                            <button type="button" onclick="removePosQris()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; font-weight:600; cursor:pointer;">
-                                Hapus QRIS
-                            </button>
-                        @endif
+            <div id="qrisSection" style="{{ $posCashlessMode === 'static_qris' ? '' : 'display:none;' }}">
+                <div class="ps-field">
+                    <label class="ps-label">Gambar QRIS Toko</label>
+                    <div class="ps-logo-box">
+                        <div class="ps-logo-thumb">
+                            @if($posQrisUrl)
+                                <img src="{{ $posQrisUrl }}" alt="QRIS">
+                            @else
+                                <svg width="20" height="20" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                            @endif
+                        </div>
+                        <div style="flex:1;">
+                            <input type="file" id="posQrisInput" accept="image/*" style="display:none;" onchange="uploadPosQris(this)">
+                            <button type="button" onclick="document.getElementById('posQrisInput').click()" class="ps-input" style="cursor:pointer; text-align:center; font-weight:600; padding:0.38rem 0.6rem;">Upload QRIS</button>
+                            @if($posQrisUrl)
+                                <div style="margin-top:4px;">
+                                    <button type="button" onclick="removePosQris()" style="border:none; background:none; color:#ef4444; font-size:0.7rem; font-weight:600; cursor:pointer; padding:0;">Hapus QRIS</button>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Fee Payer --}}
-            <div class="pos-form-group">
-                <label class="pos-form-label">Beban Biaya Transaksi Digital / Platform</label>
-                <select id="setFeePayer" class="pos-form-select">
-                    <option value="seller" {{ $posFeePayer === 'seller' ? 'selected' : '' }}>
-                        Ditanggung Penjual / Toko
-                    </option>
-                    <option value="buyer" {{ $posFeePayer === 'buyer' ? 'selected' : '' }}>
-                        Dibebankan ke Pelanggan (Ditambahkan ke Struk)
-                    </option>
+            <div class="ps-field">
+                <label class="ps-label">Beban Biaya Platform Transaksi</label>
+                <select id="setFeePayer" class="ps-select">
+                    <option value="seller" {{ $posFeePayer === 'seller' ? 'selected' : '' }}>Ditanggung Penjual / Toko</option>
+                    <option value="buyer" {{ $posFeePayer === 'buyer' ? 'selected' : '' }}>Dibebankan ke Pelanggan</option>
                 </select>
-                <div style="font-size:0.7rem; color:#64748b; margin-top:4px;">
-                    Biaya platform kasir: {{ $platformFeeRate }}% + Rp {{ number_format($adminFeeRate, 0, ',', '.') }} per transaksi digital.
+                <div class="ps-mode-note">
+                    Biaya platform: {{ $platformFeeRate }}% + Rp {{ number_format($adminFeeRate, 0, ',', '.') }} per transaksi digital.
                 </div>
             </div>
 
-            <div style="margin-top: 1.25rem;">
-                <button type="button" class="pos-btn-save" id="btnSavePayment" onclick="savePaymentSettings()">
-                    Simpan Pengaturan Pembayaran
-                </button>
-            </div>
+            <button type="button" class="ps-save" id="btnSavePayment" onclick="savePaymentSettings()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Simpan Pengaturan Pembayaran
+            </button>
         </div>
     </div>
-</div>
 
-{{-- ── 4-BUTTON BOTTOM NAVIGATION BAR (Button 4: Profil/Pengaturan Aktif) ── --}}
-<div class="pos-bottom-nav-wrap" id="posBottomNavWrap">
+</div>{{-- end .ps-wrap --}}
+
+{{-- Bottom Nav --}}
+<div class="pos-bottom-nav-wrap">
     <div class="pos-bottom-nav-bar">
-        <!-- 1. Home / Kasir -->
-        <a href="{{ route('creator.pos.index') }}" class="pos-nav-item" title="Kasir Home">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
+        <a href="{{ route('creator.pos.index') }}" class="pos-nav-item" title="Home">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             <span class="pos-nav-label">Home</span>
         </a>
-
-        <!-- 2. Transactions -->
-        <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item" title="Transaksi">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <circle cx="12" cy="12" r="3"/>
-                <line x1="2" y1="9" x2="6" y2="9"/>
-                <line x1="18" y1="15" x2="22" y2="15"/>
-            </svg>
+        <a href="{{ route('creator.pos.index', ['screen'=>'transactions']) }}" class="pos-nav-item" title="Transaksi">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><line x1="2" y1="9" x2="6" y2="9"/><line x1="18" y1="15" x2="22" y2="15"/></svg>
             <span class="pos-nav-label">Transaksi</span>
         </a>
-
-        <!-- 3. Laporan -->
-        <a href="{{ route('creator.pos.reports') }}" class="pos-nav-item" title="Laporan POS">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <line x1="18" y1="20" x2="18" y2="10"/>
-                <line x1="12" y1="20" x2="12" y2="4"/>
-                <line x1="6" y1="20" x2="6" y2="14"/>
-            </svg>
+        <a href="{{ route('creator.pos.reports') }}" class="pos-nav-item" title="Laporan">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             <span class="pos-nav-label">Laporan</span>
         </a>
-
-        <!-- 4. Profile / Settings -->
-        <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item active" title="Profil Kasir & Toko">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
-            </svg>
-            <span class="pos-nav-label">Settings</span>
+        <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item active" title="Settings">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.6 9 1.65 1.65 0 003.09 7.5H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9"/></svg>
+            <span class="pos-nav-label">Pengaturan</span>
         </a>
     </div>
 </div>
 
 <script>
-    const csrfToken = '{{ csrf_token() }}';
+const CSRF = '{{ csrf_token() }}';
 
-    function switchPosTab(tab, btn) {
-        document.querySelectorAll('.pos-set-tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+function switchTab(tab, btn) {
+    document.querySelectorAll('.ps-tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.ps-pane').forEach(p => p.style.display = 'none');
+    const pane = document.getElementById('pane-' + tab);
+    if (pane) pane.style.display = '';
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', tab);
+    window.history.replaceState({}, '', url);
+}
 
-        document.querySelectorAll('.pos-set-tab-pane').forEach(p => p.style.display = 'none');
-        const activePane = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-        if (activePane) activePane.style.display = 'block';
+function toggleQrisSection(val) {
+    const s = document.getElementById('qrisSection');
+    if (s) s.style.display = val === 'static_qris' ? '' : 'none';
+}
 
-        const url = new URL(window.location.href);
-        url.searchParams.set('tab', tab);
-        window.history.replaceState({}, '', url);
-    }
-
-    function toggleQrisUploadVisibility(val) {
-        const sec = document.getElementById('qrisUploadSection');
-        if (sec) sec.style.display = val === 'static_qris' ? 'block' : 'none';
-    }
-
-    // 1. Simpan Profil & Struk
-    function saveStoreSettings() {
-        const btn = document.getElementById('btnSaveStore');
-        const name = (document.getElementById('setStoreName')?.value || '').trim();
-        const address = (document.getElementById('setStoreAddress')?.value || '').trim();
-        const phone = (document.getElementById('setStorePhone')?.value || '').trim();
-        const footer = (document.getElementById('setReceiptFooter')?.value || '').trim();
-
-        if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan...'; }
-
-        fetch('{{ route("creator.pos.update-settings") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                store_name: name,
-                pos_store_address: address,
-                pos_store_phone: phone,
-                pos_receipt_footer: footer
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (btn) { btn.disabled = false; btn.innerText = 'Simpan Pengaturan Struk'; }
-            if (data.success) {
-                alert('Pengaturan struk & profil toko berhasil disimpan!');
-            } else {
-                alert(data.message || 'Gagal menyimpan pengaturan.');
-            }
-        })
-        .catch(err => {
-            if (btn) { btn.disabled = false; btn.innerText = 'Simpan Pengaturan Struk'; }
-            alert('Kesalahan jaringan: ' + err.message);
-        });
-    }
-
-    // 2. Upload Logo
-    function uploadPosLogo(input) {
-        if (!input.files || !input.files[0]) return;
-        const formData = new FormData();
-        formData.append('logo', input.files[0]);
-
-        fetch('{{ route("creator.pos.upload-logo") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('Logo struk berhasil diunggah!');
-                window.location.reload();
-            } else {
-                alert(data.message || 'Gagal mengunggah logo.');
-            }
-        })
-        .catch(err => alert('Gagal upload logo: ' + err.message));
-    }
-
-    function removePosLogo() {
-        if (!confirm('Hapus logo struk toko?')) return;
-        fetch('{{ route("creator.pos.remove-logo") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('Logo berhasil dihapus.');
-                window.location.reload();
-            }
-        });
-    }
-
-    // 3. Simpan Biaya & Pajak
-    function addNewFeeRow() {
-        const ph = document.getElementById('emptyFeePlaceholder');
-        if (ph) ph.style.display = 'none';
-
-        const container = document.getElementById('feesListContainer');
-        const div = document.createElement('div');
-        div.className = 'pos-row-item fee-item-row';
-        div.innerHTML = `
-            <div style="flex:1; margin-right:8px;">
-                <input type="text" class="pos-form-input fee-name" placeholder="Nama Biaya (misal PB1)" style="margin-bottom:4px; font-weight:600;">
-                <div style="display:flex; gap:6px;">
-                    <select class="pos-form-select fee-type" style="width:110px;">
-                        <option value="percent">Persen (%)</option>
-                        <option value="fixed">Nominal (Rp)</option>
-                    </select>
-                    <input type="number" class="pos-form-input fee-amount" placeholder="Nilai" value="0">
-                </div>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-                <label style="font-size:0.7rem; color:#475569; display:flex; align-items:center; gap:4px; cursor:pointer;">
-                    <input type="checkbox" class="fee-enabled" checked> Aktif
-                </label>
-                <button type="button" onclick="this.closest('.fee-item-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; cursor:pointer;">Hapus</button>
-            </div>
-        `;
-        container.appendChild(div);
-    }
-
-    function saveFeesSettings() {
-        const btn = document.getElementById('btnSaveFees');
-        const fees = [];
-        document.querySelectorAll('.fee-item-row').forEach(row => {
-            const name = (row.querySelector('.fee-name')?.value || '').trim();
-            const type = row.querySelector('.fee-type')?.value || 'percent';
-            const amount = parseFloat(row.querySelector('.fee-amount')?.value || 0);
-            const is_active = row.querySelector('.fee-enabled')?.checked || false;
-            if (name) fees.push({ name, type, amount, is_active });
-        });
-
-        if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan...'; }
-
-        fetch('{{ route("creator.pos.update-settings") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ pos_fees: fees })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (btn) { btn.disabled = false; btn.innerText = 'Simpan Biaya & Pajak'; }
-            if (data.success) {
-                alert('Pengaturan biaya & pajak berhasil disimpan!');
-            } else {
-                alert(data.message || 'Gagal menyimpan.');
-            }
-        });
-    }
-
-    // 4. Simpan Diskon
-    function addNewDiscountRow() {
-        const ph = document.getElementById('emptyDiscPlaceholder');
-        if (ph) ph.style.display = 'none';
-
-        const container = document.getElementById('discountsListContainer');
-        const div = document.createElement('div');
-        div.className = 'pos-row-item discount-item-row';
-        div.innerHTML = `
-            <div style="flex:1; margin-right:8px;">
-                <input type="text" class="pos-form-input disc-name" placeholder="Nama Diskon" style="margin-bottom:4px; font-weight:600;">
-                <div style="display:flex; gap:6px;">
-                    <select class="pos-form-select disc-type" style="width:110px;">
-                        <option value="percent">Persen (%)</option>
-                        <option value="fixed">Nominal (Rp)</option>
-                    </select>
-                    <input type="number" class="pos-form-input disc-amount" placeholder="Nilai" value="0">
-                </div>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-                <label style="font-size:0.7rem; color:#475569; display:flex; align-items:center; gap:4px; cursor:pointer;">
-                    <input type="checkbox" class="disc-enabled" checked> Aktif
-                </label>
-                <button type="button" onclick="this.closest('.discount-item-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; cursor:pointer;">Hapus</button>
-            </div>
-        `;
-        container.appendChild(div);
-    }
-
-    function saveDiscountsSettings() {
-        const btn = document.getElementById('btnSaveDiscounts');
-        const discounts = [];
-        document.querySelectorAll('.discount-item-row').forEach(row => {
-            const name = (row.querySelector('.disc-name')?.value || '').trim();
-            const type = row.querySelector('.disc-type')?.value || 'percent';
-            const amount = parseFloat(row.querySelector('.disc-amount')?.value || 0);
-            const is_active = row.querySelector('.disc-enabled')?.checked || false;
-            if (name) discounts.push({ name, type, amount, is_active });
-        });
-
-        if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan...'; }
-
-        fetch('{{ route("creator.pos.update-settings") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ pos_discounts: discounts })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (btn) { btn.disabled = false; btn.innerText = 'Simpan Diskon & Promo'; }
-            if (data.success) {
-                alert('Diskon & promo berhasil disimpan!');
-            } else {
-                alert(data.message || 'Gagal menyimpan.');
-            }
-        });
-    }
-
-    // 5. Simpan Meja
-    function addNewTableRow() {
-        const ph = document.getElementById('emptyTablePlaceholder');
-        if (ph) ph.style.display = 'none';
-
-        const container = document.getElementById('tablesListContainer');
-        const div = document.createElement('div');
-        div.className = 'pos-row-item table-item-row';
-        div.innerHTML = `
-            <div style="display:flex; align-items:center; gap:8px; flex:1;">
-                <div style="width:34px; height:34px; border-radius:8px; background:#ffedd5; color:#c2410c; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">
-                    🪑
-                </div>
-                <div style="flex:1;">
-                    <input type="text" class="pos-form-input table-name" placeholder="Nomor Meja (misal Meja 01)" style="font-weight:600;">
-                </div>
-            </div>
-            <button type="button" onclick="this.closest('.table-item-row').remove()" style="border:none; background:none; color:#ef4444; font-size:0.72rem; cursor:pointer; margin-left:8px;">Hapus</button>
-        `;
-        container.appendChild(div);
-    }
-
-    function saveTablesSettings() {
-        const btn = document.getElementById('btnSaveTables');
-        const tables = [];
-        document.querySelectorAll('.table-item-row').forEach(row => {
-            const name = (row.querySelector('.table-name')?.value || '').trim();
-            if (name) tables.push({ name });
-        });
-
-        if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan...'; }
-
-        fetch('{{ route("creator.pos.update-settings") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ pos_tables: tables })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (btn) { btn.disabled = false; btn.innerText = 'Simpan Tata Letak Meja'; }
-            if (data.success) {
-                alert('Pengaturan meja dine-in berhasil disimpan!');
-            } else {
-                alert(data.message || 'Gagal menyimpan.');
-            }
-        });
-    }
-
-    // 6. Staf Kasir
-    function saveNewCashier() {
-        const name = (document.getElementById('newCashierName')?.value || '').trim();
-        const username = (document.getElementById('newCashierUsername')?.value || '').trim();
-        const password = (document.getElementById('newCashierPassword')?.value || '').trim();
-
-        if (!name || !username || !password) {
-            alert('Harap isi Nama, Username, dan PIN/Password kasir.');
-            return;
+// Helper POST JSON
+function postJSON(url, data, btn, label) {
+    if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan…'; }
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+    }).then(r => r.json()).then(d => {
+        if (btn) { btn.disabled = false; btn.innerText = label; }
+        if (d.success) {
+            showToast(d.message || 'Tersimpan!');
+        } else {
+            alert(d.message || 'Gagal menyimpan.');
         }
+        return d;
+    }).catch(e => {
+        if (btn) { btn.disabled = false; btn.innerText = label; }
+        alert('Kesalahan jaringan: ' + e.message);
+    });
+}
 
-        fetch('{{ route("creator.pos.cashiers.save") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ name, username, password })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('Akun staf kasir berhasil ditambahkan!');
-                window.location.reload();
-            } else {
-                alert(data.message || 'Gagal menambahkan kasir.');
-            }
-        })
-        .catch(err => alert('Gagal: ' + err.message));
-    }
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.innerText = msg;
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:0.55rem 1rem;border-radius:999px;font-size:0.78rem;font-weight:600;z-index:999999;box-shadow:0 4px 14px rgba(0,0,0,.2);';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+}
 
-    function deleteCashier(id) {
-        if (!confirm('Hapus akun staf kasir ini?')) return;
-        fetch('{{ url("creator/pos/cashiers") }}/' + id, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('Staf kasir berhasil dihapus.');
-                window.location.reload();
-            }
-        });
-    }
+// 1. Struk & Toko
+function saveStoreSettings() {
+    postJSON(
+        '{{ route("creator.pos.update-settings") }}',
+        { store_name: document.getElementById('setStoreName')?.value?.trim(),
+          pos_store_address: document.getElementById('setStoreAddress')?.value?.trim(),
+          pos_store_phone: document.getElementById('setStorePhone')?.value?.trim(),
+          pos_receipt_footer: document.getElementById('setReceiptFooter')?.value?.trim() },
+        document.getElementById('btnSaveStore'),
+        'Simpan Pengaturan Struk'
+    );
+}
 
-    // 7. Simpan Pengaturan Pembayaran
-    function savePaymentSettings() {
-        const btn = document.getElementById('btnSavePayment');
-        const mode = document.getElementById('setCashlessMode')?.value || 'snap_midtrans';
-        const feePayer = document.getElementById('setFeePayer')?.value || 'seller';
+// 2. Logo Upload / Remove
+function uploadPosLogo(input) {
+    if (!input.files?.[0]) return;
+    const fd = new FormData(); fd.append('logo', input.files[0]);
+    fetch('{{ route("creator.pos.upload-logo") }}', { method:'POST', headers:{'X-CSRF-TOKEN':CSRF,'Accept':'application/json'}, body:fd })
+        .then(r => r.json()).then(d => { if (d.success) { showToast('Logo berhasil diunggah!'); setTimeout(()=>location.reload(), 800); } else alert(d.message||'Gagal.'); });
+}
+function removePosLogo() {
+    if (!confirm('Hapus logo?')) return;
+    fetch('{{ route("creator.pos.remove-logo") }}', { method:'POST', headers:{'X-CSRF-TOKEN':CSRF,'Accept':'application/json'} })
+        .then(r=>r.json()).then(d=>{ if(d.success){showToast('Logo dihapus.'); setTimeout(()=>location.reload(),800);} });
+}
 
-        if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan...'; }
+// 3. Biaya
+function addFeeRow() {
+    document.getElementById('feesEmpty')?.remove();
+    const d = document.createElement('div'); d.className='ps-row fee-row';
+    d.innerHTML=`<div class="ps-row-inner">
+        <input type="text" class="ps-input fee-name" placeholder="Nama Biaya" style="margin-bottom:4px;">
+        <div style="display:flex;gap:5px;">
+            <select class="ps-select fee-type" style="width:100px;"><option value="percent">Persen (%)</option><option value="fixed">Nominal (Rp)</option></select>
+            <input type="number" class="ps-input fee-amount" placeholder="0" value="0">
+        </div></div>
+        <div class="ps-row-actions">
+            <label style="font-size:.67rem;color:#475569;display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="fee-enabled" checked> Aktif</label>
+            <button type="button" onclick="this.closest('.fee-row').remove()" style="border:none;background:none;color:#ef4444;font-size:.67rem;cursor:pointer;padding:0;">Hapus</button>
+        </div>`;
+    document.getElementById('feesContainer').appendChild(d);
+}
+function saveFeesSettings() {
+    const fees = [...document.querySelectorAll('.fee-row')].map(r => ({
+        name:(r.querySelector('.fee-name')?.value||'').trim(),
+        type:r.querySelector('.fee-type')?.value||'percent',
+        amount:parseFloat(r.querySelector('.fee-amount')?.value||0),
+        is_active:r.querySelector('.fee-enabled')?.checked||false
+    })).filter(f=>f.name);
+    postJSON('{{ route("creator.pos.update-settings") }}', {pos_fees:fees}, document.getElementById('btnSaveFees'), 'Simpan Pajak & Biaya');
+}
 
-        fetch('{{ route("creator.pos.update-settings") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                pos_cashless_mode: mode,
-                pos_fee_payer: feePayer
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (btn) { btn.disabled = false; btn.innerText = 'Simpan Pengaturan Pembayaran'; }
-            if (data.success) {
-                alert('Pengaturan pembayaran berhasil disimpan!');
-            } else {
-                alert(data.message || 'Gagal menyimpan.');
-            }
-        });
-    }
+// 4. Diskon
+function addDiscountRow() {
+    document.getElementById('discEmpty')?.remove();
+    const d = document.createElement('div'); d.className='ps-row disc-row';
+    d.innerHTML=`<div class="ps-row-inner">
+        <input type="text" class="ps-input disc-name" placeholder="Nama Diskon" style="margin-bottom:4px;">
+        <div style="display:flex;gap:5px;">
+            <select class="ps-select disc-type" style="width:100px;"><option value="percent">Persen (%)</option><option value="fixed">Nominal (Rp)</option></select>
+            <input type="number" class="ps-input disc-amount" placeholder="0" value="0">
+        </div></div>
+        <div class="ps-row-actions">
+            <label style="font-size:.67rem;color:#475569;display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="disc-enabled" checked> Aktif</label>
+            <button type="button" onclick="this.closest('.disc-row').remove()" style="border:none;background:none;color:#ef4444;font-size:.67rem;cursor:pointer;padding:0;">Hapus</button>
+        </div>`;
+    document.getElementById('discountsContainer').appendChild(d);
+}
+function saveDiscountsSettings() {
+    const discounts = [...document.querySelectorAll('.disc-row')].map(r => ({
+        name:(r.querySelector('.disc-name')?.value||'').trim(),
+        type:r.querySelector('.disc-type')?.value||'percent',
+        amount:parseFloat(r.querySelector('.disc-amount')?.value||0),
+        is_active:r.querySelector('.disc-enabled')?.checked||false
+    })).filter(d=>d.name);
+    postJSON('{{ route("creator.pos.update-settings") }}', {pos_discounts:discounts}, document.getElementById('btnSaveDisc'), 'Simpan Diskon & Promo');
+}
 
-    function uploadPosQris(input) {
-        if (!input.files || !input.files[0]) return;
-        const formData = new FormData();
-        formData.append('qris_image', input.files[0]);
+// 5. Meja
+function addTableRow() {
+    document.getElementById('tableEmpty')?.remove();
+    const d = document.createElement('div'); d.className='ps-row table-row'; d.style.alignItems='center';
+    d.innerHTML=`<div style="width:30px;height:30px;border-radius:8px;background:#ffedd5;color:#c2410c;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <input type="text" class="ps-input table-name" placeholder="Meja 01" style="flex:1;margin:0 6px;">
+        <button type="button" onclick="this.closest('.table-row').remove()" style="border:none;background:none;color:#ef4444;font-size:.67rem;cursor:pointer;padding:0;">Hapus</button>`;
+    document.getElementById('tablesContainer').appendChild(d);
+}
+function saveTablesSettings() {
+    const tables = [...document.querySelectorAll('.table-row')].map(r => ({ name:(r.querySelector('.table-name')?.value||'').trim() })).filter(t=>t.name);
+    postJSON('{{ route("creator.pos.update-settings") }}', {pos_tables:tables}, document.getElementById('btnSaveTables'), 'Simpan Data Meja');
+}
 
-        fetch('{{ route("creator.pos.upload-qris") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('QRIS toko berhasil diunggah!');
-                window.location.reload();
-            } else {
-                alert(data.message || 'Gagal upload QRIS.');
-            }
-        });
-    }
+// 6. Kasir
+function saveNewCashier() {
+    const name=(document.getElementById('newCashierName')?.value||'').trim();
+    const username=(document.getElementById('newCashierUsername')?.value||'').trim();
+    const password=(document.getElementById('newCashierPassword')?.value||'').trim();
+    if (!name||!username||!password) { alert('Isi Nama, Username, dan PIN/Password.'); return; }
+    fetch('{{ route("creator.pos.cashiers.save") }}', {
+        method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':CSRF,'Accept':'application/json'},
+        body:JSON.stringify({name,username,password})
+    }).then(r=>r.json()).then(d=>{ if(d.success){ showToast('Kasir ditambahkan!'); setTimeout(()=>location.reload(),800); } else alert(d.message||'Gagal.'); });
+}
+function deleteCashier(id) {
+    if (!confirm('Hapus staf kasir ini?')) return;
+    fetch('{{ url("creator/pos/cashiers") }}/'+id, { method:'DELETE', headers:{'X-CSRF-TOKEN':CSRF,'Accept':'application/json'} })
+        .then(r=>r.json()).then(d=>{ if(d.success){ showToast('Kasir dihapus.'); setTimeout(()=>location.reload(),800); } });
+}
 
-    function removePosQris() {
-        if (!confirm('Hapus gambar QRIS toko?')) return;
-        fetch('{{ route("creator.pos.remove-qris") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('Gambar QRIS berhasil dihapus.');
-                window.location.reload();
-            }
-        });
-    }
+// 7. Metode Bayar & QRIS
+function savePaymentSettings() {
+    postJSON('{{ route("creator.pos.update-settings") }}',
+        { pos_cashless_mode: document.getElementById('setCashlessMode')?.value, pos_fee_payer: document.getElementById('setFeePayer')?.value },
+        document.getElementById('btnSavePayment'), 'Simpan Pengaturan Pembayaran');
+}
+function uploadPosQris(input) {
+    if (!input.files?.[0]) return;
+    const fd = new FormData(); fd.append('qris_image', input.files[0]);
+    fetch('{{ route("creator.pos.upload-qris") }}', { method:'POST', headers:{'X-CSRF-TOKEN':CSRF,'Accept':'application/json'}, body:fd })
+        .then(r=>r.json()).then(d=>{ if(d.success){ showToast('QRIS berhasil diunggah!'); setTimeout(()=>location.reload(),800); } else alert(d.message||'Gagal.'); });
+}
+function removePosQris() {
+    if (!confirm('Hapus QRIS toko?')) return;
+    fetch('{{ route("creator.pos.remove-qris") }}', { method:'POST', headers:{'X-CSRF-TOKEN':CSRF,'Accept':'application/json'} })
+        .then(r=>r.json()).then(d=>{ if(d.success){ showToast('QRIS dihapus.'); setTimeout(()=>location.reload(),800); } });
+}
 </script>
 @endsection
-
