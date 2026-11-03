@@ -184,16 +184,24 @@
         .form-input {
             width: 100%;
             box-sizing: border-box;
-            height: 44px;
-            padding: 0 1rem;
+            height: 38px;
+            padding: 0 0.8rem;
             border: 1.5px solid #e7f0e7;
-            border-radius: 10px;
+            border-radius: 9px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.875rem;
+            font-size: 0.76rem;
             color: #1a1a1a;
             background: #f9fefb;
             outline: none;
             transition: all 0.2s;
+        }
+
+        .form-input::placeholder,
+        input::placeholder,
+        textarea::placeholder {
+            font-size: 0.72rem !important;
+            color: #94a3b8 !important;
+            font-weight: 400 !important;
         }
 
         .form-input:focus {
@@ -858,9 +866,9 @@
             }
 
             .form-input {
-                height: 38px;
+                height: 36px;
                 padding: 0 0.65rem;
-                font-size: 0.8rem;
+                font-size: 0.75rem;
                 border-radius: 8px;
                 width: 100%;
                 box-sizing: border-box;
@@ -1793,7 +1801,7 @@
                                 <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                                     <input type="text" id="domainSearchInput" value="{{ $cleanKeyword }}.com"
                                         placeholder="Ketik nama domain..."
-                                        style="flex:1; min-width:200px; height:46px; padding:0 1rem; border:1.5px solid #CBD5E1; border-radius:12px; font-size:0.9rem; font-family:inherit; outline:none; background:#ffffff;">
+                                        style="flex:1; min-width:200px; height:38px; padding:0 0.8rem; border:1.5px solid #CBD5E1; border-radius:9px; font-size:0.76rem; font-family:inherit; outline:none; background:#ffffff;">
                                     <button type="button" id="btnSearchDomain" onclick="executeDomainSearch()"
                                         style="height:46px; padding:0 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight: 500; font-size:0.875rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30, 179, 73, 0.3);">
                                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -7071,7 +7079,7 @@
                     <input type="text" id="searchAffiliateModalInput"
                         onkeyup="filterModalCatalog('affiliateModalItem', this.value)" class="form-input"
                         placeholder="Cari nama produk atau creator..."
-                        style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
+                        style="height:38px; padding-left:2.3rem; font-size:0.76rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
                 </div>
 
                 {{-- Grid Product List --}}
@@ -7215,7 +7223,7 @@
                     <input type="text" id="searchWhitelabelModalInput"
                         onkeyup="filterModalCatalog('whitelabelModalItem', this.value)" class="form-input"
                         placeholder="Cari nama produk white label, creator, atau lisensi..."
-                        style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
+                        style="height:38px; padding-left:2.3rem; font-size:0.76rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
                 </div>
 
                 {{-- Grid Product List --}}
@@ -8146,7 +8154,7 @@
                             Harga Jual Anda di Link Bio (Rp):</label>
                         <input type="text" id="wlModalSellingPriceInput" name="price" required
                             oninput="calculateLiveWlMargin()" class="form-input"
-                            style="height:44px; font-size:1rem; font-weight:700; color:#0F172A; width:100%; box-sizing:border-box; padding:0 0.85rem; border:1.5px solid #CBD5E1; border-radius:10px;"
+                            style="height:38px; font-size:0.82rem; font-weight:700; color:#0F172A; width:100%; box-sizing:border-box; padding:0 0.85rem; border:1.5px solid #CBD5E1; border-radius:10px;"
                             placeholder="Masukkan harga jual...">
                         <div style="font-size:0.72rem; color:#64748B; margin-top:0.35rem;">*Minimal sama dengan atau lebih
                             tinggi dari Harga Modal.</div>

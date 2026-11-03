@@ -144,17 +144,25 @@
         .form-input {
             width: 100%;
             box-sizing: border-box;
-            height: 42px;
-            padding: 0 0.9rem;
+            height: 38px;
+            padding: 0 0.8rem;
             border: 1.5px solid #e7f0e7;
-            border-radius: 10px;
+            border-radius: 9px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.76rem;
             color: #1a1a1a;
             background: #f9fefb;
             outline: none;
             transition: all 0.2s;
             display: block;
+        }
+
+        .form-input::placeholder,
+        input::placeholder,
+        textarea::placeholder {
+            font-size: 0.72rem !important;
+            color: #94a3b8 !important;
+            font-weight: 400 !important;
         }
 
         .form-input:focus {
@@ -195,8 +203,8 @@
 
         select.form-input option {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.875rem;
-            font-weight: 600;
+            font-size: 0.76rem;
+            font-weight: 500;
             color: #0f172a;
             background-color: #ffffff;
             padding: 10px 14px;

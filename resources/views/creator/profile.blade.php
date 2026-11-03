@@ -159,12 +159,12 @@
         }
 
         .form-input {
-            height: 42px;
-            padding: 0 0.9rem;
+            height: 38px;
+            padding: 0 0.8rem;
             border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 9px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.76rem;
             font-weight: 400;
             color: #1a1a1a;
             background: #f8fafc;
@@ -172,6 +172,14 @@
             transition: all 0.2s;
             width: 100%;
             box-sizing: border-box;
+        }
+
+        .form-input::placeholder,
+        input::placeholder,
+        textarea::placeholder {
+            font-size: 0.72rem !important;
+            color: #94a3b8 !important;
+            font-weight: 400 !important;
         }
 
         .form-input:focus {
@@ -224,7 +232,7 @@
             color: #94a3b8;
             background: #f1f5f9;
             border-right: 1px solid #e2e8f0;
-            height: 42px;
+            height: 38px;
             display: flex;
             align-items: center;
             white-space: nowrap;
@@ -233,7 +241,7 @@
         .social-field {
             border: none !important;
             background: transparent !important;
-            height: 42px !important;
+            height: 38px !important;
             padding: 0 0.75rem !important;
             flex: 1;
             outline: none;
@@ -265,7 +273,7 @@
             color: #94a3b8;
             background: #f1f5f9;
             border-right: 1px solid #e2e8f0;
-            height: 42px;
+            height: 38px;
             display: flex;
             align-items: center;
             white-space: nowrap;
@@ -274,7 +282,7 @@
         .slug-input {
             border: none !important;
             background: transparent !important;
-            height: 42px !important;
+            height: 38px !important;
             padding: 0 0.75rem !important;
             flex: 1;
             outline: none;

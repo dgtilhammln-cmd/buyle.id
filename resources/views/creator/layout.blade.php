@@ -769,6 +769,42 @@
     @yield('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<style>
+        /* ── Global Minimalist Form Inputs & Placeholders ── */
+        .form-input, 
+        input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="hidden"]):not(.pin-digit-box), 
+        select.form-input, 
+        textarea.form-input,
+        .slug-input,
+        .social-field {
+            font-size: 0.76rem !important;
+        }
+
+        .form-input::placeholder, 
+        input::placeholder, 
+        textarea::placeholder {
+            font-size: 0.72rem !important;
+            color: #94a3b8 !important;
+            font-weight: 400 !important;
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            .form-input, 
+            input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="hidden"]):not(.pin-digit-box), 
+            select.form-input, 
+            textarea.form-input,
+            .slug-input,
+            .social-field {
+                font-size: 0.75rem !important;
+            }
+            .form-input::placeholder, 
+            input::placeholder, 
+            textarea::placeholder {
+                font-size: 0.71rem !important;
+            }
+        }
+</style>
 </head>
 
 <body>

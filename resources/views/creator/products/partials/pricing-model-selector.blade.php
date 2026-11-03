@@ -336,7 +336,7 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
                 <input type="text" id="traktir_unit_name_field" value="{{ $pUnit }}"
                     oninput="document.getElementById('traktir_unit_name_input').value=this.value; updateTraktirPreview();"
                     class="form-input" placeholder="Contoh: Kopi, Es Teh, Buku..."
-                    style="font-family:'Montserrat',sans-serif; font-size:0.88rem;" maxlength="30">
+                    style="font-family:'Montserrat',sans-serif; font-size:0.76rem;" maxlength="30">
                 <span class="buyle-subpanel-hint">Satuan yang akan ditampilkan ke pembeli</span>
             </div>
             <div>
@@ -345,7 +345,7 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
                     value="{{ number_format((float) $pPrice, 0, ',', '.') }}"
                     oninput="syncTraktirPrice(this.value); updateTraktirPreview();"
                     class="form-input currency-input" placeholder="Contoh: 10.000"
-                    style="font-family:'Montserrat',sans-serif; font-size:0.88rem;" autocomplete="off">
+                    style="font-family:'Montserrat',sans-serif; font-size:0.76rem;" autocomplete="off">
                 <span class="buyle-subpanel-hint">Harga 1 satuan traktiran (min. Rp 1.000)</span>
             </div>
             <div style="grid-column: 1 / -1;">
@@ -367,7 +367,7 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
         <div class="buyle-subpanel-preview">
             <span
                 style="font-size:0.75rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Preview:</span>
-            <span style="font-size:0.88rem; color:#0f172a; font-weight:800;" id="traktir_preview_text">
+            <span style="font-size:0.76rem; color:#0f172a; font-weight:800;" id="traktir_preview_text">
                 ☕ 1 {{ $pUnit }} = Rp {{ number_format((float) $pPrice, 0, ',', '.') }}
             </span>
         </div>
@@ -390,7 +390,7 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
                     value="{{ $pwywMin > 0 ? number_format((float) $pwywMin, 0, ',', '.') : '' }}"
                     oninput="syncPwywMin(this.value);" class="form-input currency-input"
                     placeholder="0 = bebas tanpa minimum"
-                    style="font-family:'Montserrat',sans-serif; font-size:0.88rem;" autocomplete="off">
+                    style="font-family:'Montserrat',sans-serif; font-size:0.76rem;" autocomplete="off">
                 <span class="buyle-subpanel-hint">Biarkan kosong atau isi 0 jika bebas berapa saja</span>
             </div>
             <div>
@@ -399,7 +399,7 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
                     value="{{ $pwywSug ? number_format((float) $pwywSug, 0, ',', '.') : '' }}"
                     oninput="syncPwywSug(this.value);" class="form-input currency-input"
                     placeholder="Opsional (cth: 25.000)"
-                    style="font-family:'Montserrat',sans-serif; font-size:0.88rem;" autocomplete="off">
+                    style="font-family:'Montserrat',sans-serif; font-size:0.76rem;" autocomplete="off">
                 <span class="buyle-subpanel-hint">Akan otomatis terpilih sebagai nominal awal di
                     storefront</span>
             </div>
