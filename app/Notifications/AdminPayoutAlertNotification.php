@@ -70,3 +70,4 @@ class AdminPayoutAlertNotification extends Notification
             ]);
     }
 }
+
