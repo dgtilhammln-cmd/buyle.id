@@ -305,7 +305,7 @@ class PosController extends Controller
             ->where('seller_id', $seller->id)
             ->with(['items', 'payment'])
             ->orderBy('id', 'desc')
-            ->take(50)
+            ->take(500)
             ->get();
 
         return view('creator.pos.index', compact(

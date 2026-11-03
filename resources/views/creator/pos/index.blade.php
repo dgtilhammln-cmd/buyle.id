@@ -2209,6 +2209,55 @@
             background: #ffffff;
         }
 
+        /* Period Filter Quick Buttons (Buyle Style) */
+        .pos-period-btn {
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            color: #64748b;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 4px 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .pos-period-btn:hover {
+            color: #166534;
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+        }
+        .pos-period-btn.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            border-color: transparent !important;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.3) !important;
+        }
+        .pos-modal-preset-btn {
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            color: #334155;
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+            font-family: inherit;
+        }
+        .pos-modal-preset-btn:hover {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+            color: #166534;
+        }
+        .pos-modal-preset-btn.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            border-color: transparent !important;
+        }
+
         /* 2. Search Bar Capsule (Screen 1 Reference) */
         .pos-ref-search-wrap {
             position: relative;
@@ -3529,26 +3578,34 @@
                 <input type="text" id="posTransSearch" class="pos-pill-input" placeholder="Search transactions..." oninput="filterTransactionsList(this.value)">
             </div>
 
-            <!-- Time Filter Pill (All Time / Hari Ini) -->
-            <div style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #f1f5f9; border-radius:999px; padding:6px 14px; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="width:28px; height:28px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <!-- Interactive Period Filter Pill (Click to open Calendar, quick options 7 hr, 30 hr, 1 th) -->
+            <div class="pos-period-bar-wrap" style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; padding:6px 8px 6px 14px; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02); gap:8px;">
+                <!-- Left: Calendar Icon + Active Period Label (Clickable to open Calendar Modal) -->
+                <div onclick="openPeriodCalendarModal()" style="display:flex; align-items:center; gap:8px; cursor:pointer; flex-shrink:0;" title="Klik untuk atur tanggal kalender">
+                    <div style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#16a34a; flex-shrink:0;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                             <line x1="16" y1="2" x2="16" y2="6"/>
                             <line x1="8" y1="2" x2="8" y2="6"/>
                             <line x1="3" y1="10" x2="21" y2="10"/>
                         </svg>
                     </div>
-                    <span style="font-size:0.82rem; font-weight:700; color:#0f172a;" id="posTransFilterLabel">All Time</span>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-size:0.82rem; font-weight:800; color:#0f172a; line-height:1.2;" id="posTransFilterLabel">All Time</span>
+                        <span style="font-size:0.62rem; color:#16a34a; font-weight:700; line-height:1; display:flex; align-items:center; gap:2px;">
+                            Kalender
+                            <svg width="8" height="8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </div>
                 </div>
-                <button type="button" onclick="toggleTransTimeFilter()" style="display:inline-flex; align-items:center; gap:4px; background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.75rem; font-weight:700; border-radius:999px; padding:4px 10px; cursor:pointer;">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <polyline points="23 4 23 10 17 10"/>
-                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-                    </svg>
-                    <span>Change</span>
-                </button>
+
+                <!-- Right: Quick Options (7 hr, 30 hr, 1 th, Semua) replacing single Change button -->
+                <div class="pos-period-quick-opts" style="display:flex; align-items:center; gap:4px; overflow-x:auto; scrollbar-width:none;">
+                    <button type="button" class="pos-period-btn active" id="btnPeriodAll" data-period="all" onclick="selectPeriodPreset('all', this)">Semua</button>
+                    <button type="button" class="pos-period-btn" id="btnPeriod7d" data-period="7d" onclick="selectPeriodPreset('7d', this)">7 hr</button>
+                    <button type="button" class="pos-period-btn" id="btnPeriod30d" data-period="30d" onclick="selectPeriodPreset('30d', this)">30 hr</button>
+                    <button type="button" class="pos-period-btn" id="btnPeriod1y" data-period="1y" onclick="selectPeriodPreset('1y', this)">1 th</button>
+                </div>
             </div>
 
             <!-- Transactions List Container -->
@@ -3559,7 +3616,7 @@
                         $totalVal = (float) ($ord->total ?? $ord->total_amount ?? 0);
                         $isPaidOrd = in_array(strtolower($ord->status ?? ''), ['completed', 'paid', 'success', 'confirmed']);
                     @endphp
-                    <div class="pos-trans-card" data-search="{{ strtolower($ord->order_number ?? $ord->id) }} {{ strtolower($payMethod) }}" onclick="openPosOrderReceipt({{ $ord->id }})">
+                    <div class="pos-trans-card" data-search="{{ strtolower($ord->order_number ?? $ord->id) }} {{ strtolower($payMethod) }}" data-date="{{ \Carbon\Carbon::parse($ord->created_at)->format('Y-m-d') }}" data-timestamp="{{ \Carbon\Carbon::parse($ord->created_at)->timestamp }}" onclick="openPosOrderReceipt({{ $ord->id }})">
                         <div class="pos-trans-card-top">
                             <span class="pos-trans-sale-num">Sale #{{ $ord->order_number ? substr($ord->order_number, -6) : $ord->id }}</span>
                             <span class="pos-trans-amount">Rp {{ number_format($totalVal, 0, ',', '.') }}</span>
@@ -3579,23 +3636,7 @@
                 @endforelse
             </div>
 
-            <!-- Bottom Actions for Transactions Screen (Image 4) -->
-            <div class="pos-trans-action-bar">
-                <button type="button" class="pos-trans-btn-act" onclick="openModal('posDepositModal')">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <rect x="2" y="4" width="20" height="16" rx="2"/>
-                        <line x1="2" y1="10" x2="22" y2="10"/>
-                    </svg>
-                    <span>Payment In</span>
-                </button>
-                <button type="button" class="pos-trans-btn-act" onclick="switchPosScreen('catalog')">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-                        <line x1="7" y1="7" x2="7.01" y2="7"/>
-                    </svg>
-                    <span>New Sale</span>
-                </button>
-            </div>
+<!-- Bottom action buttons removed per user request -->
         </div>
     </div> <!-- Close #pos-real-content -->
 
@@ -4042,7 +4083,78 @@
             </div>
         </div>
     </div>
-        <div class="pos-modal-overlay" id="posReceiptModal">
+        
+    <!-- ── POP-UP MODAL: ATUR PERIODE KALENDER POS (100% STYLE BUYLE) ── -->
+    <div class="pos-modal-overlay" id="posPeriodCalendarModal" style="z-index: 100020;">
+        <div class="pos-modal-card" style="max-width: 420px; width: 92vw; border-radius: 24px; padding: 1.4rem; background: #ffffff; box-shadow: 0 20px 50px rgba(0,0,0,0.25);">
+            <!-- Modal Header -->
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 0.85rem;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:38px; height:38px; border-radius:12px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 style="margin:0; font-size:1.02rem; font-weight:800; color:#0f172a;">Atur Periode Kalender</h4>
+                        <p style="margin:0; font-size:0.72rem; color:#64748b;">Filter riwayat transaksi kasir Buyle</p>
+                    </div>
+                </div>
+                <button type="button" class="pos-modal-close" onclick="closeModal('posPeriodCalendarModal')" style="width:32px; height:32px; border-radius:50%; border:none; background:#f1f5f9; color:#64748b; font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer;">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="display:flex; flex-direction:column; gap:1.1rem;">
+                <!-- Pilihan Cepat -->
+                <div>
+                    <label style="font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.5rem; display:block;">Pilihan Cepat Periode</label>
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+                        <button type="button" class="pos-modal-preset-btn active" id="modalPresetAll" onclick="applyModalPreset('all')">Semua</button>
+                        <button type="button" class="pos-modal-preset-btn" id="modalPresetToday" onclick="applyModalPreset('today')">Hari Ini</button>
+                        <button type="button" class="pos-modal-preset-btn" id="modalPreset7d" onclick="applyModalPreset('7d')">7 Hari</button>
+                        <button type="button" class="pos-modal-preset-btn" id="modalPreset30d" onclick="applyModalPreset('30d')">30 Hari</button>
+                        <button type="button" class="pos-modal-preset-btn" id="modalPreset1y" onclick="applyModalPreset('1y')">1 Tahun</button>
+                        <button type="button" class="pos-modal-preset-btn" id="modalPresetMonth" onclick="applyModalPreset('this_month')">Bulan Ini</button>
+                    </div>
+                </div>
+
+                <!-- Rentang Tanggal Kalender (Custom Range) -->
+                <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:16px; padding:12px 14px;">
+                    <div style="font-size:0.75rem; font-weight:800; color:#0f172a; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <span>Atur Rentang Tanggal Kalender</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div>
+                            <label style="font-size:0.68rem; font-weight:700; color:#64748b; margin-bottom:4px; display:block;">Dari Tanggal</label>
+                            <input type="date" id="posCalStartDate" style="width:100%; height:40px; border-radius:12px; border:1.5px solid #e2e8f0; background:#ffffff; padding:0 10px; font-size:0.78rem; font-weight:600; color:#0f172a; outline:none; font-family:inherit;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.68rem; font-weight:700; color:#64748b; margin-bottom:4px; display:block;">Sampai Tanggal</label>
+                            <input type="date" id="posCalEndDate" style="width:100%; height:40px; border-radius:12px; border:1.5px solid #e2e8f0; background:#ffffff; padding:0 10px; font-size:0.78rem; font-weight:600; color:#0f172a; outline:none; font-family:inherit;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Foot -->
+            <div style="display:flex; gap:10px; margin-top:1.25rem; border-top:1.5px solid #f1f5f9; padding-top:1rem;">
+                <button type="button" onclick="resetCalendarFilter()" style="flex:1; height:42px; border-radius:999px; background:#f1f5f9; border:none; color:#475569; font-size:0.8rem; font-weight:700; cursor:pointer;">
+                    Reset
+                </button>
+                <button type="button" onclick="applyCustomDateFilter()" class="btn-submit-green" style="flex:1.5; height:42px; border-radius:999px !important; margin:0; font-size:0.82rem; font-weight:800; cursor:pointer;">
+                    Terapkan Periode
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pos-modal-overlay" id="posReceiptModal">
         <div class="pos-modal-card" style="max-width: 440px; border-radius: 24px; overflow: hidden; background: #f8fafc;">
             <!-- Modal Head -->
             <div class="pos-modal-head no-print" style="padding: 1rem 1.25rem; border-bottom: 1.5px solid #f1f5f9; background: #ffffff;">
@@ -5667,26 +5779,7 @@
                             </div>
                         @endforelse
 
-                        <!-- Bottom Action Pills (Screen 2 Mockup) -->
-                        <div style="display:flex; align-items:center; gap:10px; margin-top:1.25rem;">
-                            <button type="button" onclick="closeModal('posHistoryModal'); openDepositModal();"
-                                style="flex:1; padding:0.75rem 1rem; border-radius:999px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; font-size:0.82rem; font-weight:800; border:none; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(30,179,73,0.3); cursor:pointer;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <rect x="2" y="5" width="20" height="14" rx="2" />
-                                    <line x1="2" y1="10" x2="22" y2="10" />
-                                </svg>
-                                <span>Payment In</span>
-                            </button>
-                            <button type="button" onclick="closeModal('posHistoryModal')"
-                                style="flex:1; padding:0.75rem 1rem; border-radius:999px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.82rem; font-weight:800; border:none; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(30,179,73,0.35); cursor:pointer;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-                                    <line x1="7" y1="7" x2="7.01" y2="7"/>
-                                </svg>
-                                <span>New Sale</span>
-                            </button>
-                        </div>
+
                     </div>
 
                     <div class="pos-desktop-only-table">
@@ -9822,28 +9915,183 @@
 
             // Filter Transactions in Screen 2
             function filterTransactionsList(query) {
-                const q = (query || '').toLowerCase().trim();
+                applyPeriodToTransactions(currentPeriodFilter, customPeriodStart, customPeriodEnd);
+            }
+
+            // ── Interactive Period & Calendar Filter (Buyle Style) ──
+            let currentPeriodFilter = 'all';
+            let customPeriodStart = null;
+            let customPeriodEnd = null;
+
+            function openPeriodCalendarModal() {
+                const today = new Date().toISOString().split('T')[0];
+                const startInput = document.getElementById('posCalStartDate');
+                const endInput = document.getElementById('posCalEndDate');
+                if (startInput && !startInput.value) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - 30);
+                    startInput.value = d.toISOString().split('T')[0];
+                }
+                if (endInput && !endInput.value) {
+                    endInput.value = today;
+                }
+                document.querySelectorAll('.pos-modal-preset-btn').forEach(b => b.classList.remove('active'));
+                const modalPresetMap = {
+                    'all': 'modalPresetAll',
+                    'today': 'modalPresetToday',
+                    '7d': 'modalPreset7d',
+                    '30d': 'modalPreset30d',
+                    '1y': 'modalPreset1y',
+                    'this_month': 'modalPresetMonth'
+                };
+                const activeId = modalPresetMap[currentPeriodFilter];
+                if (activeId && document.getElementById(activeId)) {
+                    document.getElementById(activeId).classList.add('active');
+                }
+                openModal('posPeriodCalendarModal');
+            }
+
+            function selectPeriodPreset(preset, btnEl) {
+                currentPeriodFilter = preset;
+                customPeriodStart = null;
+                customPeriodEnd = null;
+
+                document.querySelectorAll('.pos-period-btn').forEach(b => b.classList.remove('active'));
+                if (btnEl) {
+                    btnEl.classList.add('active');
+                } else {
+                    const matchingBtn = document.querySelector(`.pos-period-btn[data-period="${preset}"]`);
+                    if (matchingBtn) matchingBtn.classList.add('active');
+                }
+
+                applyPeriodToTransactions(preset);
+            }
+
+            function applyModalPreset(preset) {
+                selectPeriodPreset(preset);
+                closeModal('posPeriodCalendarModal');
+            }
+
+            function applyCustomDateFilter() {
+                const startVal = document.getElementById('posCalStartDate')?.value;
+                const endVal = document.getElementById('posCalEndDate')?.value;
+                if (!startVal || !endVal) {
+                    if (typeof showPosAlert === 'function') {
+                        showPosAlert('Silakan pilih tanggal awal dan akhir.', 'Perhatian', 'warning');
+                    } else {
+                        alert('Silakan pilih tanggal awal dan akhir.');
+                    }
+                    return;
+                }
+                if (startVal > endVal) {
+                    if (typeof showPosAlert === 'function') {
+                        showPosAlert('Tanggal awal tidak boleh lebih besar dari tanggal akhir.', 'Perhatian', 'warning');
+                    } else {
+                        alert('Tanggal awal tidak boleh lebih besar dari tanggal akhir.');
+                    }
+                    return;
+                }
+
+                currentPeriodFilter = 'custom';
+                customPeriodStart = startVal;
+                customPeriodEnd = endVal;
+
+                document.querySelectorAll('.pos-period-btn').forEach(b => b.classList.remove('active'));
+
+                applyPeriodToTransactions('custom', startVal, endVal);
+                closeModal('posPeriodCalendarModal');
+            }
+
+            function resetCalendarFilter() {
+                selectPeriodPreset('all');
+                closeModal('posPeriodCalendarModal');
+            }
+
+            function applyPeriodToTransactions(mode, startCustom, endCustom) {
+                const label = document.getElementById('posTransFilterLabel');
+                const today = new Date();
+                today.setHours(23, 59, 59, 999);
+
+                let start = null;
+                let end = today;
+
+                if (mode === 'all') {
+                    if (label) label.innerText = 'All Time';
+                } else if (mode === 'today') {
+                    start = new Date();
+                    start.setHours(0, 0, 0, 0);
+                    if (label) label.innerText = 'Hari Ini';
+                } else if (mode === '7d') {
+                    start = new Date();
+                    start.setDate(today.getDate() - 7);
+                    start.setHours(0, 0, 0, 0);
+                    if (label) label.innerText = '7 Hari';
+                } else if (mode === '30d') {
+                    start = new Date();
+                    start.setDate(today.getDate() - 30);
+                    start.setHours(0, 0, 0, 0);
+                    if (label) label.innerText = '30 Hari';
+                } else if (mode === '1y') {
+                    start = new Date();
+                    start.setFullYear(today.getFullYear() - 1);
+                    start.setHours(0, 0, 0, 0);
+                    if (label) label.innerText = '1 Tahun';
+                } else if (mode === 'this_month') {
+                    start = new Date(today.getFullYear(), today.getMonth(), 1);
+                    if (label) label.innerText = 'Bulan Ini';
+                } else if (mode === 'custom' && startCustom && endCustom) {
+                    start = new Date(startCustom + 'T00:00:00');
+                    end = new Date(endCustom + 'T23:59:59');
+                    const sDay = String(start.getDate()).padStart(2, '0');
+                    const sMon = String(start.getMonth() + 1).padStart(2, '0');
+                    const eDay = String(end.getDate()).padStart(2, '0');
+                    const eMon = String(end.getMonth() + 1).padStart(2, '0');
+                    if (label) label.innerText = `${sDay}/${sMon} - ${eDay}/${eMon}`;
+                }
+
                 const cards = document.querySelectorAll('.pos-trans-card');
+                let visibleCount = 0;
+                const query = (document.getElementById('posTransSearch')?.value || '').toLowerCase().trim();
+
                 cards.forEach(card => {
+                    const cardDateStr = card.getAttribute('data-date');
                     const searchData = (card.getAttribute('data-search') || '').toLowerCase();
-                    if (!q || searchData.includes(q)) {
+                    const matchesQuery = !query || searchData.includes(query);
+
+                    let matchesDate = true;
+                    if (mode !== 'all' && cardDateStr && start && end) {
+                        const cardDate = new Date(cardDateStr + 'T12:00:00');
+                        matchesDate = (cardDate >= start && cardDate <= end);
+                    }
+
+                    if (matchesQuery && matchesDate) {
                         card.style.display = 'block';
+                        visibleCount++;
                     } else {
                         card.style.display = 'none';
                     }
                 });
+
+                let emptyEl = document.getElementById('posTransEmptyNotice');
+                if (!emptyEl) {
+                    emptyEl = document.createElement('div');
+                    emptyEl.id = 'posTransEmptyNotice';
+                    emptyEl.style.textAlign = 'center';
+                    emptyEl.style.padding = '3rem 1rem';
+                    emptyEl.style.color = '#94a3b8';
+                    emptyEl.style.fontSize = '0.84rem';
+                    document.getElementById('posTransactionsListContainer')?.appendChild(emptyEl);
+                }
+                if (visibleCount === 0) {
+                    emptyEl.innerText = 'Tidak ada transaksi pada periode yang dipilih.';
+                    emptyEl.style.display = 'block';
+                } else {
+                    emptyEl.style.display = 'none';
+                }
             }
 
-            // Toggle Time Filter (All Time vs Hari Ini)
             function toggleTransTimeFilter() {
-                const label = document.getElementById('posTransFilterLabel');
-                if (transFilterTimeMode === 'all') {
-                    transFilterTimeMode = 'today';
-                    if (label) label.innerText = 'Hari Ini';
-                } else {
-                    transFilterTimeMode = 'all';
-                    if (label) label.innerText = 'All Time';
-                }
+                openPeriodCalendarModal();
             }
 
             // Open Receipt from Transaction Card Click
