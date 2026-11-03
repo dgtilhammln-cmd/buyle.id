@@ -20,6 +20,10 @@
        style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'all' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
       Semua ({{ $counts['all'] }})
     </a>
+    <a href="{{ route('admin.notifications.index', ['type' => 'payout']) }}" 
+       style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'payout' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+      💸 Pencairan ({{ $counts['payout'] ?? 0 }})
+    </a>
     <a href="{{ route('admin.notifications.index', ['type' => 'user']) }}" 
        style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'user' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
       👤 Akun Baru ({{ $counts['user'] }})
@@ -45,7 +49,9 @@
         
         {{-- Icon --}}
         <div style="width:44px; height:44px; border-radius:14px; background:{{ $notif->icon_bg }}; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
-          @if($notif->type === 'user')
+          @if($notif->type === 'payout')
+            <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
+          @elseif($notif->type === 'user')
             <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           @elseif($notif->type === 'payment')
             <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>

@@ -424,14 +424,50 @@
     }
 
     /* Omset / Financial Table View */
+    .sync-payout-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+    @media (max-width: 1024px) {
+        .sync-payout-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+        .sync-payout-grid { grid-template-columns: 1fr; }
+    }
+
     .omset-summary-grid {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
         gap: 0.75rem;
         margin-bottom: 1rem;
     }
-    @media (max-width: 1200px) { .omset-summary-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 640px) { .omset-summary-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 1200px) { .sync-payout-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+    @media (max-width: 1024px) {
+        .sync-payout-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+        .sync-payout-grid { grid-template-columns: 1fr; }
+    }
+
+    .omset-summary-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px) { .sync-payout-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+    @media (max-width: 1024px) {
+        .sync-payout-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+        .sync-payout-grid { grid-template-columns: 1fr; }
+    }
+
+    .omset-summary-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .omset-sum-box {
         background: #F8FAFC;
@@ -820,6 +856,83 @@
             </div>
         </div>
 
+        {{-- Kartu Sinkronisasi Rekonsiliasi Dana Creator (Inflow vs Outflow vs Saldo Mengendap) --}}
+        <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.15rem 1.25rem; margin-bottom:1.25rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; flex-wrap:wrap; gap:0.5rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:8px; background:#DCFCE7; color:#15803D;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </span>
+                    <strong style="font-size:0.9rem; color:#0F172A;">Sinkronisasi Status Dana &amp; Rekonsiliasi Pencairan Creator</strong>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:0.72rem; color:#64748B; background:#F8FAFC; border:1px solid #E2E8F0; padding:2px 8px; border-radius:999px;">
+                        Status Saldo Real-Time
+                    </span>
+                    @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
+                        <a href="{{ route('admin.payouts.index', ['status' => 'pending']) }}" style="font-size:0.72rem; font-weight:800; background:#DC2626; color:#fff; padding:2px 10px; border-radius:999px; text-decoration:none;">
+                            ⚠️ {{ $revenueStats['payout_pending_count'] }} Menunggu Ditransfer
+                        </a>
+                    @endif
+                </div>
+            </div>
+
+            <div class="sync-payout-grid">
+                {{-- Box 1: Dana Sudah Dicairkan (Outflow) --}}
+                <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:0.85rem 1rem;">
+                    <div style="font-size:0.68rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">Dana Sudah Dicairkan</div>
+                    <div style="font-size:1.15rem; font-weight:800; color:#15803D; margin-top:0.2rem;">
+                        Rp {{ number_format($revenueStats['payout_processed'] ?? 0, 0, ',', '.') }}
+                    </div>
+                    <div style="font-size:0.68rem; color:#166534; margin-top:0.2rem;">
+                        Uang keluar yang telah sukses ditransfer ke rekening creator
+                    </div>
+                </div>
+
+                {{-- Box 2: Perlu Ditransfer (Pending Payout) --}}
+                <div style="background:{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#FEF3C7' : '#F8FAFC' }}; border:1.5px solid {{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#FDE68A' : '#E2E8F0' }}; border-radius:12px; padding:0.85rem 1rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.68rem; font-weight:700; color:{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#92400E' : '#64748B' }}; text-transform:uppercase; letter-spacing:0.04em;">Perlu Ditransfer</span>
+                        @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
+                            <span style="background:#DC2626; color:#fff; font-size:0.62rem; font-weight:800; padding:1px 6px; border-radius:999px;">{{ $revenueStats['payout_pending_count'] }} PENDING</span>
+                        @endif
+                    </div>
+                    <div style="font-size:1.15rem; font-weight:800; color:{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#B45309' : '#0F172A' }}; margin-top:0.2rem;">
+                        Rp {{ number_format($revenueStats['payout_pending'] ?? 0, 0, ',', '.') }}
+                    </div>
+                    <div style="font-size:0.68rem; margin-top:0.2rem;">
+                        @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
+                            <a href="{{ route('admin.payouts.index', ['status' => 'pending']) }}" style="color:#B45309; font-weight:700; text-decoration:underline;">Proses Transfer Sekarang &rarr;</a>
+                        @else
+                            <span style="color:#64748B;">Tidak ada antrean pencairan pending</span>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Box 3: Saldo Belum Dicairkan (Siap Tarik) --}}
+                <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem;">
+                    <div style="font-size:0.68rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.04em;">Saldo Siap Ditarik (Belum Dicairkan)</div>
+                    <div style="font-size:1.15rem; font-weight:800; color:#0F172A; margin-top:0.2rem;">
+                        Rp {{ number_format($revenueStats['outstanding'] ?? 0, 0, ',', '.') }}
+                    </div>
+                    <div style="font-size:0.68rem; color:#64748B; margin-top:0.2rem;">
+                        Hak creator yang lolos masa hold &amp; belum ditarik
+                    </div>
+                </div>
+
+                {{-- Box 4: Dana Tertahan (Hold / Escrow) --}}
+                <div style="background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:12px; padding:0.85rem 1rem;">
+                    <div style="font-size:0.68rem; font-weight:700; color:#1E40AF; text-transform:uppercase; letter-spacing:0.04em;">Dana Tertahan (Hold / Escrow)</div>
+                    <div style="font-size:1.15rem; font-weight:800; color:#1D4ED8; margin-top:0.2rem;">
+                        Rp {{ number_format($revenueStats['hold_total'] ?? 0, 0, ',', '.') }}
+                    </div>
+                    <div style="font-size:0.68rem; color:#1E40AF; margin-top:0.2rem;">
+                        Hold 3 Hari: Rp {{ number_format($revenueStats['hold_regular'] ?? 0, 0, ',', '.') }} &bull; Escrow Event: Rp {{ number_format($revenueStats['escrow_event'] ?? 0, 0, ',', '.') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Ringkasan Sumber Transaksi (Grid 3 Kolom Full-Width) --}}
         <div class="omset-breakdown-grid">
             <div class="omset-bcard">
@@ -862,7 +975,14 @@
                 </a>
                 <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'buyer', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
                    class="tx-type-pill {{ $txType === 'buyer' ? 'active' : '' }}">
-                    Pembeli Online ({{ $txTypeCounts['buyer'] ?? 0 }})
+                    Penjualan Produk ({{ $txTypeCounts['buyer'] ?? 0 }})
+                </a>
+                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'payout', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+                   class="tx-type-pill {{ $txType === 'payout' ? 'active' : '' }}" style="{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? 'border-color:#F59E0B;' : '' }}">
+                    💸 Pencairan Dana ({{ $txTypeCounts['payout'] ?? 0 }})
+                    @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
+                        <span style="background:#DC2626; color:#fff; font-size:0.6rem; font-weight:800; padding:1px 5px; border-radius:999px; margin-left:3px;">{{ $revenueStats['payout_pending_count'] }}</span>
+                    @endif
                 </a>
                 <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'creator', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
                    class="tx-type-pill {{ $txType === 'creator' ? 'active' : '' }}">
@@ -886,26 +1006,29 @@
                         <th>Tanggal &amp; Waktu</th>
                         <th>ID Referensi</th>
                         <th>Pihak / User</th>
-                        <th>Kategori</th>
+                        <th>Kategori &amp; Info</th>
                         <th>Channel</th>
-                        <th style="text-align:right;">Harga / Modal Dasar</th>
+                        <th style="text-align:right;">Harga / Modal</th>
                         <th style="text-align:right;">Admin Fee</th>
                         <th style="text-align:right;">Platform Fee</th>
                         <th style="text-align:right;">PPN (11%)</th>
                         <th style="text-align:right;">Total Transaksi</th>
                         <th style="text-align:right;">Profit Platform</th>
-                        <th style="text-align:center;">Status &amp; Aksi</th>
+                        <th style="text-align:center;">Status &amp; Clearance</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($orders as $o)
-                        <tr>
+                        <tr style="{{ ($o->source_type ?? '') === 'payout_withdrawal' && $o->status === 'pending' ? 'background:#FFFDF5;' : '' }}">
                             <td>
                                 <div style="font-weight:600;color:#0F172A;">{{ $o->created_at ? $o->created_at->format('d M Y, H:i') : '-' }} WIB</div>
                             </td>
                             <td>
                                 @if(!empty($o->url) && ($o->source_type === 'buyer_order' || $o->source_type === 'pos_order'))
                                     <a href="{{ $o->url }}" style="font-weight:700;color:#10B981;text-decoration:none;">{{ $o->ref_number }}</a>
+                                @elseif(!empty($o->url) && $o->source_type === 'payout_withdrawal')
+                                    <a href="{{ $o->url }}" style="font-weight:700;color:#D97706;text-decoration:none;">{{ $o->ref_number }}</a>
+                                    <span style="display:block;font-size:0.65rem;color:#D97706;font-weight:800;">PENCAIRAN</span>
                                 @elseif(!empty($o->url) && $o->source_type === 'domain_order')
                                     <strong style="color:#0F172A; display:block;">{{ $o->ref_number }}</strong>
                                     <a href="{{ $o->url }}" target="_blank" style="font-size:0.7rem;color:#059669;font-weight:600;text-decoration:none;">Resource Creator &rarr;</a>
@@ -918,9 +1041,14 @@
                                 <div style="font-size:0.72rem;color:#64748B;">{{ $o->party_email }}</div>
                             </td>
                             <td>
-                                <span class="badge-pill" style="background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;">{{ $o->category }}</span>
-                                @if(!empty($o->creator_name) && in_array($o->party_role, ['Pembeli', 'Pelanggan POS']))
-                                    <div style="font-size:0.7rem;color:#64748B;margin-top:2px;">Creator: {{ $o->creator_name }}</div>
+                                @if(($o->source_type ?? '') === 'payout_withdrawal')
+                                    <span class="badge-pill" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">{{ $o->category }}</span>
+                                    <div style="font-size:0.7rem;color:#475569;margin-top:2px;font-weight:600;">{{ $o->bank_info ?? '' }}</div>
+                                @else
+                                    <span class="badge-pill" style="background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;">{{ $o->category }}</span>
+                                    @if(!empty($o->creator_name) && in_array($o->party_role, ['Pembeli', 'Pelanggan POS']))
+                                        <div style="font-size:0.7rem;color:#64748B;margin-top:2px;">Creator: {{ $o->creator_name }}</div>
+                                    @endif
                                 @endif
                             </td>
                             <td>
@@ -930,7 +1058,14 @@
                             <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->admin_fee, 0, ',', '.') }}</td>
                             <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->platform_fee, 0, ',', '.') }}</td>
                             <td style="text-align:right;color:#475569;font-weight:500;">+ Rp {{ number_format($o->tax_amount ?? 0, 0, ',', '.') }}</td>
-                            <td style="text-align:right;font-weight:700;color:#0F172A;">Rp {{ number_format($o->gross, 0, ',', '.') }}</td>
+                            <td style="text-align:right;font-weight:700;">
+                                @if(($o->source_type ?? '') === 'payout_withdrawal')
+                                    <div style="color:#DC2626;font-weight:800;">- Rp {{ number_format(abs($o->gross), 0, ',', '.') }}</div>
+                                    <span style="font-size:0.62rem;font-weight:800;background:#FEE2E2;color:#DC2626;padding:1px 5px;border-radius:4px;">OUTFLOW</span>
+                                @else
+                                    <div style="color:#0F172A;font-weight:700;">Rp {{ number_format($o->gross, 0, ',', '.') }}</div>
+                                @endif
+                            </td>
                             <td style="text-align:right;font-weight:700;color:#15803D;">+ Rp {{ number_format($o->profit, 0, ',', '.') }}</td>
                             <td style="text-align:center;">
                                 @if(!empty($o->can_update) && $o->source_type === 'domain_order')
@@ -944,10 +1079,26 @@
                                             <option value="cancelled" {{ $o->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                                         </select>
                                     </form>
+                                @elseif(($o->source_type ?? '') === 'payout_withdrawal')
+                                    <span class="badge-pill" style="color:{{ $o->status_color }};background:{{ $o->status_bg }};">
+                                        {{ $o->status_label }}
+                                    </span>
+                                    @if($o->status === 'pending')
+                                        <a href="{{ $o->url }}" style="display:inline-block;margin-top:4px;background:linear-gradient(135deg,#1eb349,#10b981);color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:6px;text-decoration:none;box-shadow:0 2px 6px rgba(30,179,73,0.3);">
+                                            Transfer Sekarang &rarr;
+                                        </a>
+                                    @endif
                                 @else
                                     <span class="badge-pill" style="color:{{ $o->status_color }};background:{{ $o->status_bg }};">
                                         {{ $o->status_label }}
                                     </span>
+                                    @if(!empty($o->clearance_badge))
+                                        <div style="margin-top:3px;">
+                                            <span class="badge-pill" style="font-size:0.62rem;padding:1px 6px;color:{{ $o->clearance_badge[0] }};background:{{ $o->clearance_badge[1] }};font-weight:700;">
+                                                {{ $o->clearance_badge[2] }}
+                                            </span>
+                                        </div>
+                                    @endif
                                 @endif
                             </td>
                         </tr>

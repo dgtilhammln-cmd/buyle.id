@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Lead;
+use App\Models\PayoutRequest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -101,8 +102,36 @@ class AdminNotificationController extends Controller
                 ];
             });
 
+        // 5. Permintaan Pencairan Dana (Payout)
+        $payoutRequests = PayoutRequest::with('seller')
+            ->latest()
+            ->take(30)
+            ->get()
+            ->map(function ($p) {
+                $statusLabel = match($p->status) {
+                    'pending'   => 'Menunggu Transfer',
+                    'approved'  => 'Disetujui',
+                    'processed' => 'Sudah Cair',
+                    'rejected'  => 'Ditolak',
+                    default     => ucfirst($p->status)
+                };
+                return (object) [
+                    'id'          => 'payout_' . $p->id,
+                    'type'        => 'payout',
+                    'category'    => 'Pencairan Dana (' . $statusLabel . ')',
+                    'title'       => 'Permintaan Pencairan Rp ' . number_format($p->amount, 0, ',', '.') . ' - ' . ($p->seller->name ?? 'Creator'),
+                    'subtitle'    => 'Rekening ' . $p->bank_name . ' (' . $p->bank_account_number . ') a.n ' . $p->bank_account_name,
+                    'created_at'  => $p->created_at,
+                    'link'        => route('admin.payouts.index'),
+                    'icon_bg'     => $p->status === 'pending' ? '#fef3c7' : '#dcfce7',
+                    'icon_color'  => $p->status === 'pending' ? '#d97706' : '#16a34a',
+                    'badge_class' => $p->status === 'pending' ? 'amber' : 'green',
+                ];
+            });
+
         // Merge & Sort chronologically
         $allNotifs = collect()
+            ->concat($payoutRequests)
             ->concat($newUsers)
             ->concat($newPayments)
             ->concat($whitelabelRequests)
@@ -117,6 +146,7 @@ class AdminNotificationController extends Controller
 
         $counts = [
             'all'        => $allNotifs->count(),
+            'payout'     => $payoutRequests->count(),
             'user'       => $newUsers->count(),
             'payment'    => $newPayments->count(),
             'whitelabel' => $whitelabelRequests->count(),

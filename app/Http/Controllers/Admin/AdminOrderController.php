@@ -132,6 +132,21 @@ class AdminOrderController extends Controller
                 });
             }
 
+            // 2b. Query Semua Transaksi Pencairan Dana Creator (Bank / E-Wallet Outflow)
+            $payoutWithdrawalQuery = PayoutRequest::with('seller.creatorProfile')
+                ->where('bank_name', 'not like', '%Deposit Kasir POS%')
+                ->orderByDesc('created_at');
+            $applyDate($payoutWithdrawalQuery);
+            if ($q) {
+                $payoutWithdrawalQuery->where(function($sub) use ($q) {
+                    $sub->where('bank_name', 'like', "%{$q}%")
+                        ->orWhere('bank_account_number', 'like', "%{$q}%")
+                        ->orWhere('bank_account_name', 'like', "%{$q}%")
+                        ->orWhereHas('seller', fn($u) => $u->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%"));
+                });
+            }
+
             // 3. Query Top-up Deposit POS via QRIS / Midtrans (Creator)
             $directPosDepositQuery = PosDeposit::with('creator.user')
                 ->whereIn('status', ['paid', 'success'])
@@ -205,6 +220,49 @@ class AdminOrderController extends Controller
             $posTotalProfit = $posOrderProfit;
             $posTotalCount  = $posOrderCount + $depositCount;
 
+            // ── Kalkulasi Rekonsiliasi Pencairan & Clearance Saldo Creator ──
+            $payoutProcessedGross = (float) (clone $payoutWithdrawalQuery)->whereIn('status', ['processed', 'approved'])->sum('amount');
+            $payoutPendingGross   = (float) (clone $payoutWithdrawalQuery)->where('status', 'pending')->sum('amount');
+            $payoutPendingCount   = (clone $payoutWithdrawalQuery)->where('status', 'pending')->count();
+            $payoutTotalCount     = (clone $payoutWithdrawalQuery)->count();
+
+            // Hitung status clearance tiap pesanan (Hold 3 hari vs Escrow Event vs Cleared)
+            $nowTime = \Carbon\Carbon::now();
+            $clearedSalesTotal = 0;
+            $holdRegularTotal  = 0;
+            $escrowEventTotal  = 0;
+
+            foreach ((clone $buyerQuery)->whereNotIn('status', ['cancelled', 'refunded'])->get() as $ord) {
+                $isP = ($ord->source === 'pos') || (!empty($ord->shipping_address['is_pos']));
+                $pAt = $ord->payment?->paid_at ?? $ord->created_at;
+                $pTime = \Carbon\Carbon::parse($pAt);
+                $ordSub = (float) $ord->subtotal;
+
+                if ($isP) {
+                    $clearedSalesTotal += $ordSub;
+                } else {
+                    $hasTicket = $ord->items->contains(fn($i) => ($i->product?->product_type ?? '') === 'ticket');
+                    if ($hasTicket) {
+                        $evDate = $ord->items->first()?->product?->event_date ? \Carbon\Carbon::parse($ord->items->first()->product->event_date)->endOfDay() : null;
+                        $relDate = $evDate ? $evDate->copy()->addDays(3) : $pTime->copy()->addDays(3);
+                        if ($nowTime->lt($relDate)) {
+                            $escrowEventTotal += $ordSub;
+                        } else {
+                            $clearedSalesTotal += $ordSub;
+                        }
+                    } else {
+                        if ($pTime->diffInHours($nowTime) < 72) {
+                            $holdRegularTotal += $ordSub;
+                        } else {
+                            $clearedSalesTotal += $ordSub;
+                        }
+                    }
+                }
+            }
+
+            // Saldo Mengendap Hak Creator (Belum Dicairkan)
+            $outstandingUnwithdrawn = max(0, $clearedSalesTotal - $payoutProcessedGross - $payoutPendingGross - $depositTransferGross);
+
             $revenueStats = [
                 'gross'            => $onlineGross + $posOrderGross + $domainGross + $depositTotalGross,
                 'subtotal'         => $onlineSubtotal + $posOrderSubtotal + $domainBaseCost,
@@ -228,6 +286,16 @@ class AdminOrderController extends Controller
                 'domain_paid'      => $domainPaidCount,
                 'deposit_gross'    => $depositTotalGross,
                 'deposit_count'    => $depositCount,
+                // Rekonsiliasi Pencairan & Clearance
+                'payout_processed'     => $payoutProcessedGross,
+                'payout_pending'       => $payoutPendingGross,
+                'payout_pending_count' => $payoutPendingCount,
+                'payout_count'         => $payoutTotalCount,
+                'hold_regular'         => $holdRegularTotal,
+                'escrow_event'         => $escrowEventTotal,
+                'hold_total'           => $holdRegularTotal + $escrowEventTotal,
+                'cleared_total'        => $clearedSalesTotal,
+                'outstanding'          => $outstandingUnwithdrawn,
             ];
 
             // Update stats tab total omset card
@@ -235,12 +303,14 @@ class AdminOrderController extends Controller
 
             // Counts untuk pill filter transaksi
             $txTypeCounts = [
-                'all'     => $onlineCount + $posTotalCount + $domainCount,
+                'all'     => $onlineCount + $posTotalCount + $domainCount + $payoutTotalCount,
+                'sales'   => $onlineCount + $posOrderCount,
                 'buyer'   => $onlineCount,
+                'payout'  => $payoutTotalCount,
                 'pos'     => $posTotalCount,
                 'deposit' => $posTotalCount, // alias backwards compatibility
                 'domain'  => $domainCount,
-                'creator' => $posTotalCount + $domainCount,
+                'creator' => $posTotalCount + $domainCount + $payoutTotalCount,
             ];
 
             // ── Kumpulkan dan seragamkan baris transaksi ──
@@ -251,6 +321,7 @@ class AdminOrderController extends Controller
                 $isPos = ($o->source === 'pos') || (!empty($o->shipping_address['is_pos']));
 
                 // Filter check berdasarkan tab/pill yang dipilih
+                if ($txType === 'payout') continue;
                 if ($txType === 'buyer' && $isPos) continue;
                 if (in_array($txType, ['pos', 'deposit']) && !$isPos) continue;
                 if ($txType === 'domain') continue;
@@ -292,31 +363,57 @@ class AdminOrderController extends Controller
                     $sourceType = 'buyer_order';
                 }
 
+                // Tentukan status clearance dana creator
+                $nowT = \Carbon\Carbon::now();
+                $pAtT = $o->payment?->paid_at ?? $o->created_at;
+                $pTimeT = \Carbon\Carbon::parse($pAtT);
+                if ($isPos) {
+                    $clearanceBadge = ['#166534', '#DCFCE7', 'Cair (POS)'];
+                } else {
+                    $hasTicket = $o->items->contains(fn($i) => ($i->product?->product_type ?? '') === 'ticket');
+                    if ($hasTicket) {
+                        $evDate = $o->items->first()?->product?->event_date ? \Carbon\Carbon::parse($o->items->first()->product->event_date)->endOfDay() : null;
+                        $relDate = $evDate ? $evDate->copy()->addDays(3) : $pTimeT->copy()->addDays(3);
+                        if ($nowT->lt($relDate)) {
+                            $clearanceBadge = ['#1E40AF', '#EFF6FF', 'Escrow Event (H+3)'];
+                        } else {
+                            $clearanceBadge = ['#166534', '#DCFCE7', 'Dana Siap Cair'];
+                        }
+                    } else {
+                        if ($pTimeT->diffInHours($nowT) < 72) {
+                            $clearanceBadge = ['#D97706', '#FEF3C7', 'Hold 3x24 Jam'];
+                        } else {
+                            $clearanceBadge = ['#166534', '#DCFCE7', 'Dana Siap Cair'];
+                        }
+                    }
+                }
+
                 $rows->push((object)[
-                    'id'           => 'ORD-' . $o->id,
-                    'source_type'  => $sourceType,
-                    'created_at'   => $o->created_at,
-                    'ref_number'   => '#' . $o->order_number,
-                    'url'          => route('admin.orders.show', $o),
-                    'party_name'   => $partyName,
-                    'party_email'  => $partyEmail,
-                    'party_role'   => $partyRole,
-                    'category'     => $categoryLabel,
-                    'creator_name' => $creatorName,
-                    'channel'      => $channel,
-                    'base_amount'  => (float)$o->subtotal,
-                    'buy_cost'     => 0,
-                    'admin_fee'    => (float)($o->admin_fee ?? 0),
-                    'platform_fee' => (float)($o->platform_fee ?? 0),
-                    'tax_amount'   => 0,
-                    'gross'        => (float)$o->total,
-                    'profit'       => $profit,
-                    'status'       => $statusVal,
-                    'status_label' => $stBadge[2],
-                    'status_color' => $stBadge[0],
-                    'status_bg'    => $stBadge[1],
-                    'can_update'   => false,
-                    'raw'          => $o,
+                    'id'              => 'ORD-' . $o->id,
+                    'source_type'     => $sourceType,
+                    'created_at'      => $o->created_at,
+                    'ref_number'      => '#' . $o->order_number,
+                    'url'             => route('admin.orders.show', $o),
+                    'party_name'      => $partyName,
+                    'party_email'     => $partyEmail,
+                    'party_role'      => $partyRole,
+                    'category'        => $categoryLabel,
+                    'creator_name'    => $creatorName,
+                    'channel'         => $channel,
+                    'base_amount'     => (float)$o->subtotal,
+                    'buy_cost'        => 0,
+                    'admin_fee'       => (float)($o->admin_fee ?? 0),
+                    'platform_fee'    => (float)($o->platform_fee ?? 0),
+                    'tax_amount'      => 0,
+                    'gross'           => (float)$o->total,
+                    'profit'          => $profit,
+                    'status'          => $statusVal,
+                    'status_label'    => $stBadge[2],
+                    'status_color'    => $stBadge[0],
+                    'status_bg'       => $stBadge[1],
+                    'clearance_badge' => $clearanceBadge,
+                    'can_update'      => false,
+                    'raw'             => $o,
                 ]);
             }
 
@@ -429,6 +526,57 @@ class AdminOrderController extends Controller
                         'status_bg'    => $dp->status === 'paid' ? '#DCFCE7' : '#FEF3C7',
                         'can_update'   => false,
                         'raw'          => $dp,
+                    ]);
+                }
+            }
+
+            // 4. Transaksi Pencairan Dana Creator (Outflow Rekening Bank / E-Wallet)
+            if (in_array($txType, ['all', 'payout', 'creator'])) {
+                foreach ($payoutWithdrawalQuery->get() as $p) {
+                    $creatorName = $p->seller->name ?? 'Creator';
+                    $stBadge = match($p->status) {
+                        'pending'   => ['#D97706', '#FEF3C7', 'Menunggu Transfer'],
+                        'approved'  => ['#0284C7', '#E0F2FE', 'Disetujui'],
+                        'processed' => ['#166534', '#DCFCE7', 'Sudah Dicairkan'],
+                        'rejected'  => ['#DC2626', '#FEE2E2', 'Ditolak'],
+                        default     => ['#475569', '#F1F5F9', ucfirst($p->status)]
+                    };
+
+                    $clearanceBadge = match($p->status) {
+                        'processed' => ['#166534', '#DCFCE7', 'Dana Sudah Keluar'],
+                        'pending'   => ['#D97706', '#FEF3C7', 'Perlu Transfer'],
+                        'approved'  => ['#0284C7', '#E0F2FE', 'Disetujui'],
+                        'rejected'  => ['#DC2626', '#FEE2E2', 'Batal / Ditolak'],
+                        default     => ['#475569', '#F1F5F9', ucfirst($p->status)]
+                    };
+
+                    $rows->push((object)[
+                        'id'              => 'WD-' . $p->id,
+                        'source_type'     => 'payout_withdrawal',
+                        'created_at'      => $p->created_at,
+                        'ref_number'      => '#WD-' . str_pad($p->id, 5, '0', STR_PAD_LEFT),
+                        'url'             => route('admin.payouts.index', ['status' => $p->status]),
+                        'party_name'      => $creatorName,
+                        'party_email'     => $p->seller->email ?? '-',
+                        'party_role'      => 'Creator (Pencairan)',
+                        'category'        => 'Pencairan: ' . $p->bank_name,
+                        'creator_name'    => $creatorName,
+                        'channel'         => strtoupper($p->bank_name),
+                        'base_amount'     => (float)$p->amount,
+                        'buy_cost'        => (float)$p->amount,
+                        'admin_fee'       => 0,
+                        'platform_fee'    => 0,
+                        'tax_amount'      => 0,
+                        'gross'           => -(float)$p->amount, // Nominal negatif menandakan penarikan keluar
+                        'profit'          => 0,
+                        'status'          => $p->status,
+                        'status_label'    => $stBadge[2],
+                        'status_color'    => $stBadge[0],
+                        'status_bg'       => $stBadge[1],
+                        'clearance_badge' => $clearanceBadge,
+                        'bank_info'       => $p->bank_name . ' • ' . $p->bank_account_number . ' a.n ' . $p->bank_account_name,
+                        'can_update'      => false,
+                        'raw'             => $p,
                     ]);
                 }
             }

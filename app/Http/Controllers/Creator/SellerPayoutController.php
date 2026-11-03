@@ -146,6 +146,22 @@ class SellerPayoutController extends Controller
             \Log::warning('Gagal kirim notifikasi PayoutRequested: ' . $e->getMessage());
         }
 
+        // Kirim notifikasi alert real-time ke semua Admin
+        try {
+            $admins = \App\Models\User::whereIn('role', ['admin', 'superadmin'])->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new \App\Notifications\AdminPayoutAlertNotification(
+                    $seller,
+                    $netAmount,
+                    $bankName,
+                    $bankAccountNumber,
+                    $bankAccountName
+                ));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Gagal kirim notifikasi payout ke Admin: ' . $e->getMessage());
+        }
+
         return back()->with('success', 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan. Dana 100% utuh tanpa potongan akan dikirim dalam 1-3 hari kerja.');
     }
 

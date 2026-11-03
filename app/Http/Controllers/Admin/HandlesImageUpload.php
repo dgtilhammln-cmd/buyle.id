@@ -193,11 +193,11 @@ trait HandlesImageUpload
     /**
      * Store uploaded image as WebP sized for OG (1200x630)
      */
-    protected function storeOgWebP(UploadedFile $file, string $folder, int $quality = 85): string
+    protected function storeOgWebP(UploadedFile $file, string $folder, int $quality = 82, int $maxW = 1200, int $maxH = 630): string
     {
         try {
             $img      = $this->gdLoad($file);
-            $img      = $this->gdScaleDown($img, 1200, 630);
+            $img      = $this->gdScaleDown($img, $maxW, $maxH);
             $webp     = $this->gdEncodeWebP($img, $quality);
             $filename = $folder . '/og_' . Str::random(12) . '.webp';
             Storage::disk('public')->put($filename, $webp);

@@ -74,9 +74,9 @@ class SellerProductController extends Controller
     {
         $data = $request->validated();
 
-        // Handle thumbnail
+        // Handle thumbnail → auto WebP 800x800 @82%
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $data['image'] = $this->storeWebP($request->file('image'), 'products', 800, 800, 82);
         } elseif (!empty($request->input('scraped_image_url'))) {
             $scrapedUrl = $request->input('scraped_image_url');
             // Auto-download external image to local storage
@@ -87,18 +87,18 @@ class SellerProductController extends Controller
             }
         }
 
-        // Handle poster landscape (og_image)
+        // Handle poster landscape (og_image) → auto WebP OG 1200x630 @82%
         if ($request->hasFile('og_image') && $request->file('og_image')->isValid()) {
-            $data['og_image'] = $request->file('og_image')->store('products/posters', 'public');
+            $data['og_image'] = $this->storeOgWebP($request->file('og_image'), 'products/posters', 82);
         }
 
-        // Handle gallery (opsional, maks 6)
+        // Handle gallery (opsional, maks 6) → auto WebP 900x900 @80%
         unset($data['gallery']);
         $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
         if ($galleryFiles->isNotEmpty()) {
             $galleryPaths = [];
             foreach ($galleryFiles as $gFile) {
-                $galleryPaths[] = $gFile->store('products/gallery', 'public');
+                $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 900, 900, 80);
             }
             $data['gallery'] = $galleryPaths;
         } elseif (!empty($request->input('scraped_gallery_urls'))) {
@@ -263,20 +263,20 @@ class SellerProductController extends Controller
     {
         $data = $request->validated();
 
-        // Handle thumbnail upload (jika ada file baru)
+        // Handle thumbnail upload (jika ada file baru) → auto WebP 800x800 @82%
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $data['image'] = $this->storeWebP($request->file('image'), 'products', 800, 800, 82);
         }
 
-        // Handle poster landscape (og_image)
+        // Handle poster landscape (og_image) → auto WebP OG 1200x630 @82%
         if ($request->hasFile('og_image') && $request->file('og_image')->isValid()) {
             if ($product->og_image) {
                 Storage::disk('public')->delete($product->og_image);
             }
-            $data['og_image'] = $request->file('og_image')->store('products/posters', 'public');
+            $data['og_image'] = $this->storeOgWebP($request->file('og_image'), 'products/posters', 82);
         }
 
         // Handle gallery upload & granular existing gallery deletion
@@ -301,7 +301,8 @@ class SellerProductController extends Controller
         if ($galleryFiles->isNotEmpty()) {
             foreach ($galleryFiles as $gFile) {
                 if (count($finalGallery) < 6) {
-                    $finalGallery[] = $gFile->store('products/gallery', 'public');
+                    // Auto WebP 900x900 @80%
+                    $finalGallery[] = $this->storeWebP($gFile, 'products/gallery', 900, 900, 80);
                 }
             }
         }
@@ -505,7 +506,8 @@ class SellerProductController extends Controller
 
             $imagePath = null;
             if ($request->hasFile("variants.{$index}.image") && $request->file("variants.{$index}.image")->isValid()) {
-                $imagePath = $request->file("variants.{$index}.image")->store('products/variants', 'public');
+                // Auto WebP 600x600 @82% for variant images
+                $imagePath = $this->storeWebP($request->file("variants.{$index}.image"), 'products/variants', 600, 600, 82);
             } elseif (!empty($vData['existing_image'])) {
                 $imagePath = $vData['existing_image'];
             }

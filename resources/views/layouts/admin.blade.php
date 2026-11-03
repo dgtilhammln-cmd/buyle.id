@@ -679,7 +679,19 @@ button.btn-primary:hover, a.btn-primary:hover {
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       </a>
       @php
-        // Fetch 4 types of notifications
+        // Fetch 5 types of notifications (termasuk Pencairan Dana)
+        $nPayouts = \App\Models\PayoutRequest::where('status', 'pending')
+            ->with('seller')
+            ->latest()
+            ->take(4)
+            ->get()
+            ->map(fn($p) => (object)[
+                'title' => 'Pencairan Baru: Rp ' . number_format($p->amount, 0, ',', '.'),
+                'subtitle' => ($p->seller->name ?? 'Creator') . ' • ' . $p->bank_name . ' (' . $p->bank_account_number . ')',
+                'time' => $p->created_at,
+                'link' => route('admin.payouts.index', ['status' => 'pending']),
+                'bg' => '#fef3c7', 'color' => '#d97706', 'type' => 'payout'
+            ]);
         $nUsers = \App\Models\User::latest()->take(3)->get()->map(fn($u) => (object)[
             'title' => 'Akun Baru: '.$u->name,
             'subtitle' => $u->email,
@@ -711,8 +723,8 @@ button.btn-primary:hover, a.btn-primary:hover {
             'bg' => '#f1f5f9', 'color' => '#475569', 'type' => 'lead'
         ]);
 
-        $recentNotifs = collect()->concat($nUsers)->concat($nOrders)->concat($nWls)->concat($nLeads)->sortByDesc('time')->take(6);
-        $totalNotifCount = $nUsers->count() + $nOrders->count() + $nWls->count() + $nLeads->count();
+        $recentNotifs = collect()->concat($nPayouts)->concat($nUsers)->concat($nOrders)->concat($nWls)->concat($nLeads)->sortByDesc('time')->take(6);
+        $totalNotifCount = $nPayouts->count() + $nUsers->count() + $nOrders->count() + $nWls->count() + $nLeads->count();
       @endphp
       <div style="position:relative;" id="notif-container">
         <button id="notif-btn" title="Notifikasi ({{ $totalNotifCount }})" onclick="toggleNotif(event)" style="position:relative;width:38px;height:38px;border-radius:12px;border:1.5px solid var(--border,#E4E7F0);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04);">
@@ -740,7 +752,9 @@ button.btn-primary:hover, a.btn-primary:hover {
                 <a href="{{ $notif->link }}" style="display:flex;align-items:flex-start;gap:.875rem;padding:0.9rem 1.25rem;border-bottom:1px solid #F1F5F9;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
                   {{-- Icon badge --}}
                   <div style="width:36px;height:36px;border-radius:10px;background:{{ $notif->bg }};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
-                    @if($notif->type === 'user')
+                    @if($notif->type === 'payout')
+                      <svg width="16" height="16" fill="none" stroke="{{ $notif->color }}" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
+                    @elseif($notif->type === 'user')
                       <svg width="16" height="16" fill="none" stroke="{{ $notif->color }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     @elseif($notif->type === 'payment')
                       <svg width="16" height="16" fill="none" stroke="{{ $notif->color }}" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
