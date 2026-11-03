@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="manifest" href="{{ asset('creator-manifest.json') }}">
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,13 +26,17 @@
             padding: 0;
         }
 
-        html, body {
+        html,
+        body {
             touch-action: pan-x pan-y;
             -webkit-text-size-adjust: 100%;
         }
 
         @media (max-width: 768px) {
-            input, select, textarea {
+
+            input,
+            select,
+            textarea {
                 font-size: 16px !important;
             }
         }
@@ -671,6 +676,7 @@
             .cr-topbar-header-row {
                 display: none !important;
             }
+
             .cr-nav-link {
                 border-radius: 14px;
                 margin-right: 1.25rem;
@@ -741,7 +747,7 @@
 
             .superapp-nav-item.active {
                 color: #1eb349;
-                background: linear-gradient(135deg, rgba(30,179,73,0.12) 0%, rgba(165,207,55,0.12) 100%);
+                background: linear-gradient(135deg, rgba(30, 179, 73, 0.12) 0%, rgba(165, 207, 55, 0.12) 100%);
             }
 
             .superapp-nav-item svg {
@@ -769,19 +775,19 @@
     @yield('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-<style>
+    <style>
         /* ── Global Minimalist Form Inputs & Placeholders ── */
-        .form-input, 
-        input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="hidden"]):not(.pin-digit-box), 
-        select.form-input, 
+        .form-input,
+        input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="hidden"]):not(.pin-digit-box),
+        select.form-input,
         textarea.form-input,
         .slug-input,
         .social-field {
             font-size: 0.76rem !important;
         }
 
-        .form-input::placeholder, 
-        input::placeholder, 
+        .form-input::placeholder,
+        input::placeholder,
         textarea::placeholder {
             font-size: 0.72rem !important;
             color: #94a3b8 !important;
@@ -790,47 +796,56 @@
         }
 
         @media (max-width: 640px) {
-            .form-input, 
-            input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="hidden"]):not(.pin-digit-box), 
-            select.form-input, 
+
+            .form-input,
+            input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="hidden"]):not(.pin-digit-box),
+            select.form-input,
             textarea.form-input,
             .slug-input,
             .social-field {
                 font-size: 0.75rem !important;
             }
-            .form-input::placeholder, 
-            input::placeholder, 
+
+            .form-input::placeholder,
+            input::placeholder,
             textarea::placeholder {
                 font-size: 0.71rem !important;
             }
         }
-</style>
+    </style>
 
-        @if(request()->is('creator/products*'))
+    @if(request()->is('creator/products*'))
         <style>
-            .superapp-bottom-nav, #superappBottomNav,
-            .pos-bottom-nav-wrap, #posBottomNavWrap {
+            .superapp-bottom-nav,
+            #superappBottomNav,
+            .pos-bottom-nav-wrap,
+            #posBottomNavWrap {
                 display: none !important;
                 visibility: hidden !important;
                 pointer-events: none !important;
             }
+
             body {
                 padding-bottom: 0 !important;
             }
+
             .cr-main-canvas {
                 padding-bottom: 2rem !important;
             }
         </style>
-        @endif
-    </head>
+    @endif
+</head>
 
 <body>
-    {{-- Initial Splash Screen with Buyle Logo (HANYA Muncul Diawal Masuk Aplikasi, TIDAK Muncul Saat Berpindah Halaman) --}}
-    <div id="pwaSplashScreen" style="display:none;position:fixed;inset:0;background:#ffffff;z-index:999999;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s ease, visibility 0.35s ease;">
-        <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id" style="max-width:180px;height:auto;animation:pwaLogoPulse 1.2s ease-in-out infinite alternate;">
+    {{-- Initial Splash Screen with Buyle Logo (HANYA Muncul Diawal Masuk Aplikasi, TIDAK Muncul Saat Berpindah Halaman)
+    --}}
+    <div id="pwaSplashScreen"
+        style="display:none;position:fixed;inset:0;background:#ffffff;z-index:999999;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s ease, visibility 0.35s ease;">
+        <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id"
+            style="max-width:180px;height:auto;animation:pwaLogoPulse 1.2s ease-in-out infinite alternate;">
     </div>
     <script>
-        (function() {
+        (function () {
             if (sessionStorage.getItem('pwa_splash_shown') !== '1') {
                 var splash = document.getElementById('pwaSplashScreen');
                 if (splash) {
@@ -841,8 +856,15 @@
     </script>
     <style>
         @keyframes pwaLogoPulse {
-            0% { transform: scale(0.96); opacity: 0.9; }
-            100% { transform: scale(1.02); opacity: 1; }
+            0% {
+                transform: scale(0.96);
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: scale(1.02);
+                opacity: 1;
+            }
         }
     </style>
 
@@ -854,138 +876,157 @@
     @endphp
 
     @if($hasSecurityLock)
-    {{-- ── PWA Screen Lock Overlay (PIN & Fingerprint/Face ID) ── --}}
-    <div id="pwaAppLockScreen" style="display:none; position:fixed; inset:0; background:#ffffff; z-index:999998; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; text-align:center;">
-        <div style="max-width:340px; width:100%;">
-            <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id" style="max-width:140px; height:auto; margin-bottom:1.25rem;">
-            
-            <div style="width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-weight:700; font-size:1.3rem; box-shadow:0 4px 14px rgba(30,179,73,0.3); border:2px solid #fff;">
-                {{ strtoupper(substr($authUser->name ?? 'C', 0, 1)) }}
-            </div>
-            <h2 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem;">{{ $authUser->name }}</h2>
-            @if($hasAppPin)
-                <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Masukkan 6-digit PIN untuk membuka</p>
-            @else
-                <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Buka kunci dengan Sidik Jari / Face ID</p>
-                <div style="margin: 1.5rem 0;">
-                    <button type="button" onclick="triggerBiometricAuth()" style="width:72px; height:72px; border-radius:50%; background:#ecfdf5; border:2px solid #1eb349; color:#1eb349; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 16px rgba(30,179,73,0.25); transition:transform 0.15s ease;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                        <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.99 7.132"></path>
-                        </svg>
-                    </button>
-                    <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-top:0.75rem;">Sentuh untuk scan ulang</div>
+        {{-- ── PWA Screen Lock Overlay (PIN & Fingerprint/Face ID) ── --}}
+        <div id="pwaAppLockScreen"
+            style="display:none; position:fixed; inset:0; background:#ffffff; z-index:999998; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; text-align:center;">
+            <div style="max-width:340px; width:100%;">
+                <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id"
+                    style="max-width:140px; height:auto; margin-bottom:1.25rem;">
+
+                <div
+                    style="width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-weight:700; font-size:1.3rem; box-shadow:0 4px 14px rgba(30,179,73,0.3); border:2px solid #fff;">
+                    {{ strtoupper(substr($authUser->name ?? 'C', 0, 1)) }}
                 </div>
-            @endif
-
-            @if($hasAppPin)
-            {{-- 6 PIN Indicator Dots --}}
-            <div id="pinDotsWrap" style="display:flex; justify-content:center; gap:0.9rem; margin-bottom:1.5rem;">
-                <div class="lock-dot" id="dot0"></div>
-                <div class="lock-dot" id="dot1"></div>
-                <div class="lock-dot" id="dot2"></div>
-                <div class="lock-dot" id="dot3"></div>
-                <div class="lock-dot" id="dot4"></div>
-                <div class="lock-dot" id="dot5"></div>
-            </div>
-
-            <div id="pinErrorMessage" style="font-size:0.75rem; color:#ef4444; margin-bottom:0.75rem; min-height:18px;"></div>
-
-            {{-- Minimalist Numeric Keypad --}}
-            <div class="lock-keypad">
-                <button type="button" class="lock-key" onclick="pressLockKey('1')">1</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('2')">2</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('3')">3</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('4')">4</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('5')">5</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('6')">6</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('7')">7</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('8')">8</button>
-                <button type="button" class="lock-key" onclick="pressLockKey('9')">9</button>
-                
-                @if($hasBiometric)
-                    <button type="button" class="lock-key lock-key-action" onclick="triggerBiometricAuth()" title="Sidik Jari / Face ID">
-                        <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.99 7.132"></path>
-                        </svg>
-                    </button>
+                <h2 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem;">{{ $authUser->name }}
+                </h2>
+                @if($hasAppPin)
+                    <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Masukkan 6-digit PIN untuk membuka</p>
                 @else
-                    <div style="width:68px; height:68px;"></div>
+                    <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Buka kunci dengan Sidik Jari / Face ID</p>
+                    <div style="margin: 1.5rem 0;">
+                        <button type="button" onclick="triggerBiometricAuth()"
+                            style="width:72px; height:72px; border-radius:50%; background:#ecfdf5; border:2px solid #1eb349; color:#1eb349; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 16px rgba(30,179,73,0.25); transition:transform 0.15s ease;"
+                            onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                            <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.99 7.132">
+                                </path>
+                            </svg>
+                        </button>
+                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-top:0.75rem;">Sentuh untuk scan
+                            ulang</div>
+                    </div>
                 @endif
-                
-                <button type="button" class="lock-key" onclick="pressLockKey('0')">0</button>
-                
-                <button type="button" class="lock-key lock-key-action" onclick="deleteLockKey()" title="Hapus">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
-                        <line x1="18" y1="9" x2="12" y2="15"></line>
-                        <line x1="12" y1="9" x2="18" y2="15"></line>
-                    </svg>
-                </button>
-            </div>
 
-            <div style="margin-top:1.25rem;">
-                <form action="{{ route('logout') }}" method="POST" style="margin:0;">
-                    @csrf
-                    <button type="submit" style="background:none; border:none; color:#94a3b8; font-size:0.75rem; text-decoration:underline; cursor:pointer;">
-                        Lupa PIN? Masuk Ulang Akun
-                    </button>
-                </form>
+                @if($hasAppPin)
+                    {{-- 6 PIN Indicator Dots --}}
+                    <div id="pinDotsWrap" style="display:flex; justify-content:center; gap:0.9rem; margin-bottom:1.5rem;">
+                        <div class="lock-dot" id="dot0"></div>
+                        <div class="lock-dot" id="dot1"></div>
+                        <div class="lock-dot" id="dot2"></div>
+                        <div class="lock-dot" id="dot3"></div>
+                        <div class="lock-dot" id="dot4"></div>
+                        <div class="lock-dot" id="dot5"></div>
+                    </div>
+
+                    <div id="pinErrorMessage" style="font-size:0.75rem; color:#ef4444; margin-bottom:0.75rem; min-height:18px;">
+                    </div>
+
+                    {{-- Minimalist Numeric Keypad --}}
+                    <div class="lock-keypad">
+                        <button type="button" class="lock-key" onclick="pressLockKey('1')">1</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('2')">2</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('3')">3</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('4')">4</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('5')">5</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('6')">6</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('7')">7</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('8')">8</button>
+                        <button type="button" class="lock-key" onclick="pressLockKey('9')">9</button>
+
+                        @if($hasBiometric)
+                            <button type="button" class="lock-key lock-key-action" onclick="triggerBiometricAuth()"
+                                title="Sidik Jari / Face ID">
+                                <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.99 7.132">
+                                    </path>
+                                </svg>
+                            </button>
+                        @else
+                            <div style="width:68px; height:68px;"></div>
+                        @endif
+
+                        <button type="button" class="lock-key" onclick="pressLockKey('0')">0</button>
+
+                        <button type="button" class="lock-key lock-key-action" onclick="deleteLockKey()" title="Hapus">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                                <line x1="18" y1="9" x2="12" y2="15"></line>
+                                <line x1="12" y1="9" x2="18" y2="15"></line>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div style="margin-top:1.25rem;">
+                        <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                            @csrf
+                            <button type="submit"
+                                style="background:none; border:none; color:#94a3b8; font-size:0.75rem; text-decoration:underline; cursor:pointer;">
+                                Lupa PIN? Masuk Ulang Akun
+                            </button>
+                        </form>
+                    </div>
+                @endif
             </div>
-            @endif
         </div>
-    </div>
 
-    <style>
-        .lock-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 2px solid #cbd5e1;
-            background: #ffffff;
-            transition: all 0.15s ease;
-        }
-        .lock-dot.filled {
-            background: #1eb349;
-            border-color: #1eb349;
-            transform: scale(1.15);
-            box-shadow: 0 0 10px rgba(30,179,73,0.35);
-        }
-        .lock-keypad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.85rem;
-            max-width: 270px;
-            margin: 0 auto;
-        }
-        .lock-key {
-            width: 66px;
-            height: 66px;
-            border-radius: 50%;
-            border: 1px solid #e2e8f0;
-            background: #f8fafc;
-            color: #0f172a;
-            font-size: 1.45rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            transition: all 0.12s ease;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .lock-key:active {
-            background: #e2e8f0;
-            transform: scale(0.92);
-        }
-        .lock-key-action {
-            font-size: 1rem;
-            color: #64748b;
-            background: #ffffff;
-            border: 1px solid transparent;
-        }
-    </style>
+        <style>
+            .lock-dot {
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                border: 2px solid #cbd5e1;
+                background: #ffffff;
+                transition: all 0.15s ease;
+            }
+
+            .lock-dot.filled {
+                background: #1eb349;
+                border-color: #1eb349;
+                transform: scale(1.15);
+                box-shadow: 0 0 10px rgba(30, 179, 73, 0.35);
+            }
+
+            .lock-keypad {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.85rem;
+                max-width: 270px;
+                margin: 0 auto;
+            }
+
+            .lock-key {
+                width: 66px;
+                height: 66px;
+                border-radius: 50%;
+                border: 1px solid #e2e8f0;
+                background: #f8fafc;
+                color: #0f172a;
+                font-size: 1.45rem;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                transition: all 0.12s ease;
+                outline: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .lock-key:active {
+                background: #e2e8f0;
+                transform: scale(0.92);
+            }
+
+            .lock-key-action {
+                font-size: 1rem;
+                color: #64748b;
+                background: #ffffff;
+                border: 1px solid transparent;
+            }
+        </style>
     @endif
 
     {{-- MOBILE TOPBAR --}}
@@ -1042,42 +1083,43 @@
                 </div>
                 <div style="padding:0.25rem 0;">
                     @if(!auth()->user()->isPosCashier())
-                    <a href="{{ route('creator.profile.edit') }}"
-                        style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <circle cx="12" cy="8" r="4" />
-                            <path d="M20 21a8 8 0 1 0-16 0" />
-                        </svg>
-                        Profil &amp; Toko
-                    </a>
-                    <a href="{{ route('creator.bio.index') }}"
-                        style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                        </svg>
-                        Web Builder
-                    </a>
-                    <a href="{{ route('creator.wedding.index') }}"
-                        style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                        Undangan Digital
-                    </a>
-                    <a href="{{ route('creator.payout.settings') }}"
-                        style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <rect x="2" y="6" width="20" height="12" rx="2" />
-                            <circle cx="16" cy="12" r="2" />
-                        </svg>
-                        Saldo &amp; Pencairan
-                    </a>
-                    <div style="border-top:1px solid #F1F5F9;margin:0.2rem 0;"></div>
+                        <a href="{{ route('creator.profile.edit') }}"
+                            style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <circle cx="12" cy="8" r="4" />
+                                <path d="M20 21a8 8 0 1 0-16 0" />
+                            </svg>
+                            Profil &amp; Toko
+                        </a>
+                        <a href="{{ route('creator.bio.index') }}"
+                            style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                            </svg>
+                            Web Builder
+                        </a>
+                        <a href="{{ route('creator.wedding.index') }}"
+                            style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
+                            Undangan Digital
+                        </a>
+                        <a href="{{ route('creator.payout.settings') }}"
+                            style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <rect x="2" y="6" width="20" height="12" rx="2" />
+                                <circle cx="16" cy="12" r="2" />
+                            </svg>
+                            Saldo &amp; Pencairan
+                        </a>
+                        <div style="border-top:1px solid #F1F5F9;margin:0.2rem 0;"></div>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                         @csrf
@@ -1103,7 +1145,7 @@
     {{-- SIDEBAR --}}
     <aside class="cr-sidebar" id="crSidebar">
         @php 
-            $logo = \App\Models\Setting::get('logo');
+                        $logo = \App\Models\Setting::get('logo');
             $authUser = auth()->user();
             $isPosCashier = $authUser ? $authUser->isPosCashier() : false;
             $isBuyer = $authUser ? $authUser->role === 'buyer' : false;
@@ -1128,8 +1170,7 @@
             @if($isPosCashier)
                 {{-- Kasir Staff Dedicated Mode: Hanya menu Kasir POS yang tampil --}}
                 <a href="{{ route('creator.pos.index') }}"
-                    class="cr-nav-link {{ request()->routeIs('creator.pos*') ? 'active' : '' }}"
-                    style="font-weight:700;">
+                    class="cr-nav-link {{ request()->routeIs('creator.pos*') ? 'active' : '' }}" style="font-weight:700;">
                     <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <rect x="2" y="4" width="20" height="16" rx="2" />
                         <line x1="2" y1="10" x2="22" y2="10" />
@@ -1138,7 +1179,8 @@
                         <line x1="17" y1="15" x2="17.01" y2="15" stroke-width="3" />
                     </svg>
                     Kasir POS
-                    <span style="margin-left:auto; background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:999px; letter-spacing:0.04em;">AKTIF</span>
+                    <span
+                        style="margin-left:auto; background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:999px; letter-spacing:0.04em;">AKTIF</span>
                 </a>
             @else
                 {{-- Mode Normal Seller / Creator --}}
@@ -1165,8 +1207,7 @@
                 <div class="cr-nav-group {{ $isAnyAppActive ? 'has-active' : '' }}" id="crNavAppGroup">
                     <a href="{{ $isBuyer ? '#' : route('creator.app.index') }}"
                         onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                        class="cr-nav-link has-sub {{ $isAppActive ? 'active' : '' }}"
-                        id="crNavAppLink">
+                        class="cr-nav-link has-sub {{ $isAppActive ? 'active' : '' }}" id="crNavAppLink">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="3" y="3" width="7" height="7" rx="1.5" />
                             <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -1175,14 +1216,15 @@
                         </svg>
                         <span>Aplikasi</span>
                         @if($isBuyer)
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" style="margin-left:auto;opacity:0.7;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="margin-left:auto;opacity:0.7;">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
                         @else
                             <span class="cr-nav-chevron" onclick="toggleAppSubmenu(event)" title="Buka/Tutup Submenu">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
                                     <polyline points="6 9 12 15 18 9" />
                                 </svg>
                             </span>
@@ -1195,10 +1237,10 @@
                             {{-- 1. Buyle POS --}}
                             <a href="{{ route('creator.pos.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.pos*') ? 'active' : '' }}"
-                                style="--mod-color:#0284c7; --mod-bg:rgba(2,132,199,0.22);"
-                                title="Buyle POS (Kasir)">
+                                style="--mod-color:#0284c7; --mod-bg:rgba(2,132,199,0.22);" title="Buyle POS (Kasir)">
                                 <span class="cr-sub-icon-box">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
                                         <rect x="4" y="3" width="16" height="18" rx="2" />
                                         <line x1="8" y1="7" x2="16" y2="7" />
                                         <line x1="8" y1="11" x2="10" y2="11" />
@@ -1213,13 +1255,14 @@
                             {{-- 2. Web Builder --}}
                             <a href="{{ route('creator.bio.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.bio*') ? 'active' : '' }}"
-                                style="--mod-color:#1eb349; --mod-bg:rgba(30,179,73,0.22);"
-                                title="Web Builder">
+                                style="--mod-color:#1eb349; --mod-bg:rgba(30,179,73,0.22);" title="Web Builder">
                                 <span class="cr-sub-icon-box">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="10" />
                                         <line x1="2" y1="12" x2="22" y2="12" />
-                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                        <path
+                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                                     </svg>
                                 </span>
                                 <span class="cr-sub-text">Web Builder</span>
@@ -1228,11 +1271,12 @@
                             {{-- 3. Buyle e-Ticket --}}
                             <a href="{{ route('creator.ticket.scanner') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.ticket*') ? 'active' : '' }}"
-                                style="--mod-color:#7c3aed; --mod-bg:rgba(124,58,237,0.22);"
-                                title="Buyle e-Ticket (Scanner)">
+                                style="--mod-color:#7c3aed; --mod-bg:rgba(124,58,237,0.22);" title="Buyle e-Ticket (Scanner)">
                                 <span class="cr-sub-icon-box">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
                                         <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2" />
                                     </svg>
                                 </span>
@@ -1242,13 +1286,13 @@
                             {{-- 4. Automation Reply --}}
                             <a href="{{ route('creator.automation-reply.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.automation-reply*') ? 'active' : '' }}"
-                                style="--mod-color:#e1306c; --mod-bg:rgba(225,48,108,0.22);"
-                                title="Auto Reply IG (Bot DM)">
+                                style="--mod-color:#e1306c; --mod-bg:rgba(225,48,108,0.22);" title="Auto Reply IG (Bot DM)">
                                 <span class="cr-sub-icon-box">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                                     </svg>
                                 </span>
                                 <span class="cr-sub-text">Auto Reply DM</span>
@@ -1257,11 +1301,12 @@
                             {{-- 5. Buyle Wedding --}}
                             <a href="{{ route('creator.wedding.index') }}"
                                 class="cr-sublink {{ request()->routeIs('creator.wedding*') ? 'active' : '' }}"
-                                style="--mod-color:#e11d48; --mod-bg:rgba(225,29,72,0.22);"
-                                title="Buyle Wedding (Undangan)">
+                                style="--mod-color:#e11d48; --mod-bg:rgba(225,29,72,0.22);" title="Buyle Wedding (Undangan)">
                                 <span class="cr-sub-icon-box">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                     </svg>
                                 </span>
                                 <span class="cr-sub-text">Undangan Digital</span>
@@ -1384,7 +1429,8 @@
                         </p>
                     @endif
                 </div>
-                <div class="cr-topbar-actions-wrapper" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; flex: 1; justify-content: flex-end; min-width: 0;">
+                <div class="cr-topbar-actions-wrapper"
+                    style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; flex: 1; justify-content: flex-end; min-width: 0;">
                     @yield('topbar_actions')
 
                     @php
@@ -1426,50 +1472,51 @@
                             </div>
                             <div style="padding:0.35rem 0;">
                                 @if(!$isPosCashier)
-                                <a href="{{ route('creator.profile.edit') }}"
-                                    style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
-                                    onmouseover="this.style.background='#F8FAFC'"
-                                    onmouseout="this.style.background='transparent'">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <circle cx="12" cy="8" r="4" />
-                                        <path d="M20 21a8 8 0 1 0-16 0" />
-                                    </svg>
-                                    Profil & Toko
-                                </a>
-                                <a href="{{ route('creator.bio.index') }}"
-                                    style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
-                                    onmouseover="this.style.background='#F8FAFC'"
-                                    onmouseout="this.style.background='transparent'">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                                    </svg>
-                                    Web Builder
-                                </a>
-                                <a href="{{ route('creator.wedding.index') }}"
-                                    style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
-                                    onmouseover="this.style.background='#F8FAFC'"
-                                    onmouseout="this.style.background='transparent'">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                                    </svg>
-                                    Undangan Digital
-                                </a>
-                                <a href="{{ route('creator.payout.settings') }}"
-                                    style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
-                                    onmouseover="this.style.background='#F8FAFC'"
-                                    onmouseout="this.style.background='transparent'">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <rect x="2" y="6" width="20" height="12" rx="2" />
-                                        <circle cx="16" cy="12" r="2" />
-                                    </svg>
-                                    Saldo & Pencairan
-                                </a>
-                                <div style="border-top:1px solid #F1F5F9;margin:0.25rem 0;"></div>
+                                    <a href="{{ route('creator.profile.edit') }}"
+                                        style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
+                                        onmouseover="this.style.background='#F8FAFC'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <circle cx="12" cy="8" r="4" />
+                                            <path d="M20 21a8 8 0 1 0-16 0" />
+                                        </svg>
+                                        Profil & Toko
+                                    </a>
+                                    <a href="{{ route('creator.bio.index') }}"
+                                        style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
+                                        onmouseover="this.style.background='#F8FAFC'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                        </svg>
+                                        Web Builder
+                                    </a>
+                                    <a href="{{ route('creator.wedding.index') }}"
+                                        style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
+                                        onmouseover="this.style.background='#F8FAFC'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                        </svg>
+                                        Undangan Digital
+                                    </a>
+                                    <a href="{{ route('creator.payout.settings') }}"
+                                        style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;"
+                                        onmouseover="this.style.background='#F8FAFC'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <rect x="2" y="6" width="20" height="12" rx="2" />
+                                            <circle cx="16" cy="12" r="2" />
+                                        </svg>
+                                        Saldo & Pencairan
+                                    </a>
+                                    <div style="border-top:1px solid #F1F5F9;margin:0.25rem 0;"></div>
                                 @endif
                                 <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                     @csrf
@@ -1539,111 +1586,108 @@
 
     {{-- ── Super App Bottom Navigation (Mobile Only - 100% Sesuai Gambar 3) ── --}}
     @if(!request()->is('creator/products*'))
-    <nav class="superapp-bottom-nav" id="superappBottomNav">
-        @php
-            $bottomNavIsBuyer = auth()->user()->role === 'buyer';
-            $bottomNavIsCashier = auth()->user()->isPosCashier();
-            $navUser = auth()->user();
-            $navCp = $navUser->creatorProfile;
-            $navRawAvatar = $navCp?->avatar ?? $navUser->avatar ?? null;
-            $navAvatarUrl = null;
-            if ($navRawAvatar) {
-                $navAvatarUrl = \Illuminate\Support\Str::startsWith($navRawAvatar, ['http://', 'https://'])
-                    ? $navRawAvatar
-                    : asset('storage/' . $navRawAvatar);
-            }
-        @endphp
+        <nav class="superapp-bottom-nav" id="superappBottomNav">
+            @php
+                $bottomNavIsBuyer = auth()->user()->role === 'buyer';
+                $bottomNavIsCashier = auth()->user()->isPosCashier();
+                $navUser = auth()->user();
+                $navCp = $navUser->creatorProfile;
+                $navRawAvatar = $navCp?->avatar ?? $navUser->avatar ?? null;
+                $navAvatarUrl = null;
+                if ($navRawAvatar) {
+                    $navAvatarUrl = \Illuminate\Support\Str::startsWith($navRawAvatar, ['http://', 'https://'])
+                        ? $navRawAvatar
+                        : asset('storage/' . $navRawAvatar);
+                }
+            @endphp
 
-        @if($bottomNavIsCashier)
-            <a href="{{ route('creator.pos.index') }}"
-                class="superapp-nav-item active" title="Kasir POS">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="2" y="4" width="20" height="16" rx="2" />
-                    <line x1="2" y1="10" x2="22" y2="10" />
-                    <line x1="7" y1="15" x2="7.01" y2="15" stroke-width="3" />
-                    <line x1="12" y1="15" x2="12.01" y2="15" stroke-width="3" />
-                    <line x1="17" y1="15" x2="17.01" y2="15" stroke-width="3" />
-                </svg>
-            </a>
+            @if($bottomNavIsCashier)
+                <a href="{{ route('creator.pos.index') }}" class="superapp-nav-item active" title="Kasir POS">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                        <line x1="7" y1="15" x2="7.01" y2="15" stroke-width="3" />
+                        <line x1="12" y1="15" x2="12.01" y2="15" stroke-width="3" />
+                        <line x1="17" y1="15" x2="17.01" y2="15" stroke-width="3" />
+                    </svg>
+                </a>
 
-            <button type="button" class="superapp-nav-item"
-                onclick="document.getElementById('logout-form').submit();" title="Logout">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-                    <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-            </button>
-        @else
-            {{-- 1. Overview / Home --}}
-            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.dashboard') }}"
-                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}"
-                title="Overview">
-                <svg width="22" height="22" fill="{{ request()->routeIs('creator.dashboard') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z" />
-                </svg>
-            </a>
+                <button type="button" class="superapp-nav-item" onclick="document.getElementById('logout-form').submit();"
+                    title="Logout">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                </button>
+            @else
+                {{-- 1. Overview / Home --}}
+                <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.dashboard') }}"
+                    onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="superapp-nav-item {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}" title="Overview">
+                    <svg width="22" height="22" fill="{{ request()->routeIs('creator.dashboard') ? 'currentColor' : 'none' }}"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z" />
+                    </svg>
+                </a>
 
-            {{-- 2. Produk --}}
-            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.products.index') }}"
-                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.products*') ? 'active' : '' }}"
-                title="Produk">
-                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <rect x="2" y="7" width="20" height="14" rx="2" />
-                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                </svg>
-            </a>
+                {{-- 2. Produk --}}
+                <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.products.index') }}"
+                    onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="superapp-nav-item {{ request()->routeIs('creator.products*') ? 'active' : '' }}" title="Produk">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" rx="2" />
+                        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                    </svg>
+                </a>
 
-            {{-- 3. Laporan Penjualan --}}
-            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
-                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}"
-                title="Laporan Penjualan">
-                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                </svg>
-            </a>
+                {{-- 3. Laporan Penjualan --}}
+                <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
+                    onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}"
+                    title="Laporan Penjualan">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </a>
 
-            {{-- 4. Web Builder (Bio Link) --}}
-            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.bio.index') }}"
-                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.bio*') ? 'active' : '' }}"
-                title="Web Builder">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                </svg>
-            </a>
+                {{-- 4. Web Builder (Bio Link) --}}
+                <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.bio.index') }}"
+                    onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="superapp-nav-item {{ request()->routeIs('creator.bio*') ? 'active' : '' }}" title="Web Builder">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                </a>
 
-            {{-- 5. Saldo --}}
-            <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.payout.settings') }}"
-                onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.payout*') ? 'active' : '' }}"
-                title="Saldo">
-                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                    <circle cx="16" cy="12" r="2" />
-                    <path d="M6 12h.01" />
-                </svg>
-            </a>
+                {{-- 5. Saldo --}}
+                <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.payout.settings') }}"
+                    onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+                    class="superapp-nav-item {{ request()->routeIs('creator.payout*') ? 'active' : '' }}" title="Saldo">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="16" cy="12" r="2" />
+                        <path d="M6 12h.01" />
+                    </svg>
+                </a>
 
-            {{-- 6. Profil / Menu Hub (Dedicated Page, No Green Sidebar Drawer) --}}
-            <a href="{{ route('creator.menu') }}"
-                class="superapp-nav-item {{ request()->routeIs('creator.menu') ? 'active' : '' }}"
-                title="Menu & Profil">
-                @if($navAvatarUrl)
-                    <img src="{{ $navAvatarUrl }}" alt="{{ $navUser->name }}" class="superapp-nav-avatar">
-                @else
-                    <div class="superapp-nav-avatar" style="background:#0f172a; color:#ffffff; font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center;">
-                        {{ strtoupper(substr($navUser->name ?? 'U', 0, 1)) }}
-                    </div>
-                @endif
-            </a>
-        @endif
-    </nav>
+                {{-- 6. Profil / Menu Hub (Dedicated Page, No Green Sidebar Drawer) --}}
+                <a href="{{ route('creator.menu') }}"
+                    class="superapp-nav-item {{ request()->routeIs('creator.menu') ? 'active' : '' }}" title="Menu & Profil">
+                    @if($navAvatarUrl)
+                        <img src="{{ $navAvatarUrl }}" alt="{{ $navUser->name }}" class="superapp-nav-avatar">
+                    @else
+                        <div class="superapp-nav-avatar"
+                            style="background:#0f172a; color:#ffffff; font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center;">
+                            {{ strtoupper(substr($navUser->name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
+                </a>
+            @endif
+        </nav>
+    @endif
 
     {{-- Interactive Locked Feature Modal for Buyers --}}
     <div id="lockedFeatureModal"
@@ -1922,15 +1966,15 @@
             if (isClosed) {
                 group.classList.remove('is-closed');
                 group.classList.add('is-open');
-                try { localStorage.setItem('cr_app_submenu_closed', '0'); } catch(err){}
+                try { localStorage.setItem('cr_app_submenu_closed', '0'); } catch (err) { }
             } else {
                 group.classList.add('is-closed');
                 group.classList.remove('is-open');
-                try { localStorage.setItem('cr_app_submenu_closed', '1'); } catch(err){}
+                try { localStorage.setItem('cr_app_submenu_closed', '1'); } catch (err) { }
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             try {
                 if (localStorage.getItem('cr_app_submenu_closed') === '1') {
                     const group = document.getElementById('crNavAppGroup');
@@ -1939,30 +1983,30 @@
                         group.classList.remove('is-open');
                     }
                 }
-            } catch(err){}
+            } catch (err) { }
         });
 
         // Auto-hide bottom nav saat scroll kebawah, munculkan kembali saat scroll keatas
-        (function() {
+        (function () {
             let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
             let ticking = false;
             const nav = document.getElementById('superappBottomNav');
             if (!nav) return;
 
-            window.addEventListener('scroll', function() {
+            window.addEventListener('scroll', function () {
                 if (!ticking) {
-                    window.requestAnimationFrame(function() {
+                    window.requestAnimationFrame(function () {
                         const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
                         const scrollDelta = currentScrollY - lastScrollY;
 
                         // Jika di paling atas (<= 30px), selalu tampilkan
                         if (currentScrollY <= 30) {
                             nav.classList.remove('nav-hidden');
-                        } 
+                        }
                         // Scroll ke bawah > 8px -> sembunyikan
                         else if (scrollDelta > 8 && currentScrollY > 60) {
                             nav.classList.add('nav-hidden');
-                        } 
+                        }
                         // Scroll ke atas > 8px -> munculkan kembali
                         else if (scrollDelta < -8) {
                             nav.classList.remove('nav-hidden');
@@ -1978,7 +2022,7 @@
     </script>
     <script>
         // Dismiss Splash Screen smoothly & Catat Hanya Muncul Diawal Masuk
-        (function() {
+        (function () {
             const splash = document.getElementById('pwaSplashScreen');
             if (!splash) return;
             if (sessionStorage.getItem('pwa_splash_shown') === '1') {
@@ -1986,9 +2030,9 @@
                 return;
             }
             function hideSplash() {
-                setTimeout(function() {
+                setTimeout(function () {
                     splash.style.opacity = '0';
-                    setTimeout(function() {
+                    setTimeout(function () {
                         splash.style.visibility = 'hidden';
                         splash.style.display = 'none';
                         sessionStorage.setItem('pwa_splash_shown', '1');
@@ -2005,106 +2049,106 @@
 
         // Register PWA Service Worker for Push Notifications
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 navigator.serviceWorker.register('/sw-creator.js', { scope: '/creator/' })
-                    .catch(function(err) { console.log('SW registration note:', err); });
+                    .catch(function (err) { console.log('SW registration note:', err); });
             });
         }
 
         // Lock Zoom: Prevent iOS double-tap & pinch zoom
-        document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
-        document.addEventListener('touchmove', function(e) {
+        document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+        document.addEventListener('touchmove', function (e) {
             if (e.scale !== undefined && e.scale !== 1) {
                 e.preventDefault();
             }
         }, { passive: false });
 
         @if($hasSecurityLock)
-        let currentEnteredPin = '';
-        const lockScreen = document.getElementById('pwaAppLockScreen');
+            let currentEnteredPin = '';
+            const lockScreen = document.getElementById('pwaAppLockScreen');
 
-        if (sessionStorage.getItem('pwa_unlocked') !== '1') {
-            if (lockScreen) {
-                lockScreen.style.display = 'flex';
-                @if($hasBiometric)
-                    setTimeout(triggerBiometricAuth, 500);
-                @endif
+            if (sessionStorage.getItem('pwa_unlocked') !== '1') {
+                if (lockScreen) {
+                    lockScreen.style.display = 'flex';
+                    @if($hasBiometric)
+                        setTimeout(triggerBiometricAuth, 500);
+                    @endif
+                }
             }
-        }
 
-        function updateLockDots() {
-            for (let i = 0; i < 6; i++) {
-                const dot = document.getElementById('dot' + i);
-                if (dot) {
-                    if (i < currentEnteredPin.length) {
-                        dot.classList.add('filled');
-                    } else {
-                        dot.classList.remove('filled');
+            function updateLockDots() {
+                for (let i = 0; i < 6; i++) {
+                    const dot = document.getElementById('dot' + i);
+                    if (dot) {
+                        if (i < currentEnteredPin.length) {
+                            dot.classList.add('filled');
+                        } else {
+                            dot.classList.remove('filled');
+                        }
                     }
                 }
             }
-        }
 
-        function pressLockKey(num) {
-            if (currentEnteredPin.length < 6) {
-                currentEnteredPin += num;
-                updateLockDots();
-                const errBox = document.getElementById('pinErrorMessage');
-                if (errBox) errBox.innerText = '';
-
-                if (currentEnteredPin.length === 6) {
-                    verifyPinAjax(currentEnteredPin);
-                }
-            }
-        }
-
-        function deleteLockKey() {
-            if (currentEnteredPin.length > 0) {
-                currentEnteredPin = currentEnteredPin.slice(0, -1);
-                updateLockDots();
-            }
-        }
-
-        async function verifyPinAjax(pin, isBio = false) {
-            try {
-                const res = await fetch('{{ route("creator.pin.verify") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ pin: pin, is_biometric: isBio })
-                });
-
-                const data = await res.json();
-                if (data.success) {
-                    sessionStorage.setItem('pwa_unlocked', '1');
-                    if (lockScreen) {
-                        lockScreen.style.transition = 'opacity 0.25s ease';
-                        lockScreen.style.opacity = '0';
-                        setTimeout(() => { lockScreen.style.display = 'none'; }, 250);
-                    }
-                } else {
+            function pressLockKey(num) {
+                if (currentEnteredPin.length < 6) {
+                    currentEnteredPin += num;
+                    updateLockDots();
                     const errBox = document.getElementById('pinErrorMessage');
-                    if (errBox) errBox.innerText = data.message || 'PIN salah, coba lagi.';
+                    if (errBox) errBox.innerText = '';
+
+                    if (currentEnteredPin.length === 6) {
+                        verifyPinAjax(currentEnteredPin);
+                    }
+                }
+            }
+
+            function deleteLockKey() {
+                if (currentEnteredPin.length > 0) {
+                    currentEnteredPin = currentEnteredPin.slice(0, -1);
+                    updateLockDots();
+                }
+            }
+
+            async function verifyPinAjax(pin, isBio = false) {
+                try {
+                    const res = await fetch('{{ route("creator.pin.verify") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ pin: pin, is_biometric: isBio })
+                    });
+
+                    const data = await res.json();
+                    if (data.success) {
+                        sessionStorage.setItem('pwa_unlocked', '1');
+                        if (lockScreen) {
+                            lockScreen.style.transition = 'opacity 0.25s ease';
+                            lockScreen.style.opacity = '0';
+                            setTimeout(() => { lockScreen.style.display = 'none'; }, 250);
+                        }
+                    } else {
+                        const errBox = document.getElementById('pinErrorMessage');
+                        if (errBox) errBox.innerText = data.message || 'PIN salah, coba lagi.';
+                        currentEnteredPin = '';
+                        updateLockDots();
+                    }
+                } catch (e) {
+                    const errBox = document.getElementById('pinErrorMessage');
+                    if (errBox) errBox.innerText = 'Gagal verifikasi koneksi.';
                     currentEnteredPin = '';
                     updateLockDots();
                 }
-            } catch (e) {
-                const errBox = document.getElementById('pinErrorMessage');
-                if (errBox) errBox.innerText = 'Gagal verifikasi koneksi.';
-                currentEnteredPin = '';
-                updateLockDots();
             }
-        }
 
-        async function triggerBiometricAuth() {
-            if (window.PublicKeyCredential) {
-                try {
-                    verifyPinAjax('000000', true);
-                } catch(e) {}
+            async function triggerBiometricAuth() {
+                if (window.PublicKeyCredential) {
+                    try {
+                        verifyPinAjax('000000', true);
+                    } catch (e) { }
+                }
             }
-        }
         @endif
     </script>
     @yield('scripts')

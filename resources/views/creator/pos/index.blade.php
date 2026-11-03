@@ -2067,42 +2067,51 @@
                 /* Hide desktop topbar on mobile */
             }
 
-            /* Fullscreen Mobile Modal Experience for Screen 2 & 3 */
-            #posPaymentModal .pos-modal-card,
-            #posHistoryModal .pos-modal-card {
-                width: 100vw !important;
-                height: 100vh !important;
-                max-width: 100vw !important;
-                max-height: 100vh !important;
-                border-radius: 0 !important;
-                margin: 0 !important;
+            /* Curved, Compact, Mobile-Friendly Modal Card for Payment */
+            #posPaymentModal {
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 12px !important;
+            }
+            #posPaymentModal .pos-modal-card {
+                width: 100% !important;
+                max-width: 440px !important;
+                height: auto !important;
+                max-height: 88vh !important;
+                border-radius: 28px !important;
+                margin: auto !important;
                 display: flex !important;
                 flex-direction: column !important;
+                border: 1.5px solid #f1ece4 !important;
                 padding: 0 !important;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25) !important;
+                overflow: hidden !important;
+                background: #ffffff !important;
             }
 
-            #posPaymentModal .pos-modal-head,
-            #posHistoryModal .pos-modal-head {
-                padding: 1rem 1.25rem !important;
+            #posPaymentModal .pos-modal-head {
+                border-radius: 28px 28px 0 0 !important;
+                padding: 0.85rem 1.15rem !important;
                 border-bottom: 1.5px solid #f1f5f9 !important;
                 background: #ffffff !important;
             }
 
-            #posPaymentModal .pos-modal-body,
-            #posHistoryModal .pos-modal-body {
-                flex: 1 !important;
+            #posPaymentModal .pos-modal-body {
+                flex: 1 1 auto !important;
                 overflow-y: auto !important;
-                padding: 1.25rem !important;
-                background: #f8fafc !important;
+                max-height: calc(88vh - 125px) !important;
+                padding: 0.9rem 1.15rem !important;
+                background: #ffffff !important;
             }
 
-            #posPaymentModal .pos-modal-foot,
-            #posHistoryModal .pos-modal-foot {
-                padding: 1rem 1.25rem !important;
+            #posPaymentModal .pos-modal-foot {
+                border-radius: 0 0 28px 28px !important;
+                padding: 0.85rem 1.15rem !important;
                 background: #ffffff !important;
                 border-top: 1.5px solid #f1f5f9 !important;
-                box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.04) !important;
+                box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.03) !important;
             }
+
         }
     
         /* Hide creator superapp bottom nav specifically inside Buyle POS */
@@ -3887,16 +3896,15 @@
                         </div>
 
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                            <!-- Email E-Receipt -->
+                            <!-- WhatsApp / No. HP Pelanggan -->
                             <div>
-                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Email</label>
-                                <input type="email" id="posCartCustomerEmail" class="form-input"
+                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">WhatsApp / No. HP</label>
+                                <input type="tel" id="posCustomerPhone" class="form-input"
                                     style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0;"
-                                    placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
-                                <input type="hidden" id="posCustomerEmail" value="">
+                                    placeholder="08xxxxxxxxxx">
                             </div>
 
-                            <!-- Pilih Meja (HANYA DROPDOWN SELECT MEJA) -->
+                            <!-- Pilih Meja -->
                             <div>
                                 <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Pilih Meja</label>
                                 <select id="posTableQuickSelect" class="form-input"
@@ -3912,6 +3920,15 @@
                                 <input type="hidden" id="posTableNumber" value="">
                             </div>
                         </div>
+
+                        <!-- Email E-Receipt (Opsional) -->
+                        <div>
+                            <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Email (Opsional)</label>
+                            <input type="email" id="posCartCustomerEmail" class="form-input"
+                                style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0;"
+                                placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
+                            <input type="hidden" id="posCustomerEmail" value="">
+                        </div>
                     </div>
                 </div>
 
@@ -3925,7 +3942,9 @@
                 </div>
 
                 @php
-                    $isDepositEmpty = ($posBalance <= 0);
+                    // Jika fee sistem adalah 0%, penjual TIDAK memerlukan saldo deposit untuk memproses tunai
+                    $systemFeeRate = (float) ($platformFeeRate ?? 0) + (float) ($adminFeeRate ?? 0);
+                    $isDepositEmpty = ($posFeePayer === 'seller' && $systemFeeRate > 0 && $posBalance <= 0);
                 @endphp
 
                 <!-- 4. Metode Pembayaran -->
@@ -6692,7 +6711,7 @@
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
                 const totalFeeRequired = (subtotal * (platformFeeRate + adminFeeRate)) / 100;
 
-                if (method === 'cash' && (currentPosBalance <= 0 || currentPosBalance < totalFeeRequired)) {
+                if (method === 'cash' && posFeePayer === 'seller' && totalFeeRequired > 0 && currentPosBalance < totalFeeRequired) {
                     showPosAlert('Saldo deposit tidak mencukupi untuk memproses transaksi tunai ini. Silakan pilih Non-Tunai atau isi saldo deposit.', 'Saldo Deposit Kurang', 'warning');
                     return;
                 }
@@ -9811,8 +9830,12 @@
 
                 const msg = `ðŸ§¾ *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*\nPelanggan: ${custName}${tableInfo}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*TOTAL: Rp ${totalFormatted}*\nMetode: ${order.payment_method ? order.payment_method.toUpperCase() : 'LUNAS'}\nStatus: *LUNAS (BERHASIL)* âœ…\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
 
+                let phone = (document.getElementById('posCustomerPhone')?.value || order.customer_phone || (order.shipping_address && order.shipping_address.phone) || '').replace(/[^0-9]/g, '');
+                if (phone.startsWith('0')) {
+                    phone = '62' + phone.substring(1);
+                }
                 const encodedMsg = encodeURIComponent(msg);
-                const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+                const waUrl = phone ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}` : `https://api.whatsapp.com/send?text=${encodedMsg}`;
                 window.open(waUrl, '_blank');
             }
 
