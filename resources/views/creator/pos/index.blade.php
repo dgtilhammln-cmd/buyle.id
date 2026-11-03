@@ -2919,6 +2919,23 @@
             display: none !important;
         }
 
+    
+        /* Compact Minimalist Popups (Never stretched or fullscreen) */
+        #posAddOptionsModal .pos-modal-card,
+        #posQuickProductModal .pos-modal-card,
+        #posQuickCategoryModal .pos-modal-card {
+            height: auto !important;
+            max-height: fit-content !important;
+            min-height: unset !important;
+            margin: auto !important;
+            align-self: center !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important;
+        }
+        #posAddOptionsModal {
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
     </style>
 @endsection
 
@@ -3087,120 +3104,11 @@
         <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
     @endif
 
-    <!-- SKELETON LOADING PLACEHOLDER (Smooth & Lightweight) -->
-    <div id="pos-skeleton" class="pos-wrapper" style="position: absolute; top: 0; left: 0; right: 0; z-index: 10; background: #fbf8f4; min-height: 100vh; margin-bottom: 0;">
-        <!-- LEFT COLUMN: SKELETON KATALOG -->
-        <div>
-            <div class="prof-card">
-                <div class="prof-card-head">
-                    <div style="display:flex; align-items:center; gap:0.5rem;">
-                        <div class="pos-skel-bone" style="width:16px; height:16px; border-radius:4px;"></div>
-                        <div class="pos-skel-bone" style="width:140px; height:16px;"></div>
-                    </div>
-                    <div class="pos-skel-bone" style="width:110px; height:24px; border-radius:20px;"></div>
-                </div>
-
-                <div class="prof-card-body">
-                    <!-- Search Bar Skeleton -->
-                    <div style="height:44px; margin-bottom:1rem; border-radius:12px;" class="pos-skel-bone"></div>
-
-                    <!-- Category Pills Skeleton -->
-                    <div class="pos-category-pills-wrap" style="margin-bottom:1.25rem;">
-                        <div class="pos-skel-bone" style="width:125px; height:34px; border-radius:999px;"></div>
-                        <div class="pos-skel-bone" style="width:165px; height:34px; border-radius:999px;"></div>
-                        <div class="pos-skel-bone" style="width:160px; height:34px; border-radius:999px;"></div>
-                    </div>
-
-                    <!-- Product Grid Skeleton (8 items - Smooth 2-Column Mobile Shimmer) -->
-                    <div class="product-grid">
-                        @for($i = 0; $i < 6; $i++)
-                            <div
-                                style="background:#ffffff; border:1.5px solid #f1f5f9; border-radius:20px; padding:0.75rem; box-shadow:0 4px 14px rgba(0,0,0,0.02);">
-                                <div class="pos-skel-bone"
-                                    style="width:100%; height:116px; border-radius:14px; margin-bottom:0.65rem;"></div>
-                                <div class="pos-skel-bone" style="width:85%; height:14px; margin-bottom:0.4rem;"></div>
-                                <div class="pos-skel-bone" style="width:55%; height:12px; margin-bottom:0.65rem;"></div>
-                                <div
-                                    style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:0.35rem;">
-                                    <div class="pos-skel-bone" style="width:60px; height:16px; border-radius:6px;"></div>
-                                    <div class="pos-skel-bone" style="width:32px; height:32px; border-radius:50%;"></div>
-                                </div>
-                            </div>
-                        @endfor
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- RIGHT COLUMN: SKELETON CART -->
-        <div>
-            <div class="prof-card">
-                <div class="prof-card-head">
-                    <div style="display:flex; align-items:center; gap:0.5rem;">
-                        <div class="pos-skel-bone" style="width:16px; height:16px; border-radius:4px;"></div>
-                        <div class="pos-skel-bone" style="width:160px; height:16px;"></div>
-                    </div>
-                    <div class="pos-skel-bone" style="width:70px; height:16px;"></div>
-                </div>
-
-                <div class="prof-card-body">
-                    <!-- Form Customer Fields Skeleton -->
-                    <div style="margin-bottom:0.85rem;">
-                        <div class="pos-skel-bone" style="width:130px; height:12px; margin-bottom:0.4rem;"></div>
-                        <div class="pos-skel-bone" style="width:100%; height:42px; border-radius:12px;"></div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.85rem;">
-                        <div>
-                            <div class="pos-skel-bone" style="width:100px; height:12px; margin-bottom:0.4rem;"></div>
-                            <div class="pos-skel-bone" style="width:100%; height:42px; border-radius:12px;"></div>
-                        </div>
-                        <div>
-                            <div class="pos-skel-bone" style="width:110px; height:12px; margin-bottom:0.4rem;"></div>
-                            <div class="pos-skel-bone" style="width:100%; height:42px; border-radius:12px;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Cart Item Rows Skeleton (3 items) -->
-                    <div style="margin: 1.25rem 0; display:flex; flex-direction:column; gap:0.75rem;">
-                        @for($i = 0; $i < 3; $i++)
-                            <div
-                                style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem; border-radius:12px; background:#f8fafc; border:1px solid #f1f5f9;">
-                                <div style="display:flex; flex-direction:column; gap:4px; flex:1;">
-                                    <div class="pos-skel-bone" style="width:65%; height:13px;"></div>
-                                    <div class="pos-skel-bone" style="width:40%; height:11px;"></div>
-                                </div>
-                                <div class="pos-skel-bone" style="width:80px; height:30px; border-radius:999px;"></div>
-                            </div>
-                        @endfor
-                    </div>
-
-                    <!-- Summary Box Skeleton -->
-                    <div
-                        style="background:#f8fafc; border-radius:16px; padding:1rem; border:1.5px solid #e2e8f0; margin-bottom:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
-                        <div style="display:flex; justify-content:space-between;">
-                            <div class="pos-skel-bone" style="width:70px; height:12px;"></div>
-                            <div class="pos-skel-bone" style="width:90px; height:12px;"></div>
-                        </div>
-                        <div style="display:flex; justify-content:space-between;">
-                            <div class="pos-skel-bone" style="width:80px; height:12px;"></div>
-                            <div class="pos-skel-bone" style="width:60px; height:12px;"></div>
-                        </div>
-                        <div
-                            style="border-top:1px dashed #cbd5e1; padding-top:0.6rem; margin-top:0.2rem; display:flex; justify-content:space-between; align-items:center;">
-                            <div class="pos-skel-bone" style="width:90px; height:16px;"></div>
-                            <div class="pos-skel-bone" style="width:120px; height:20px;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Payment Button Skeleton -->
-                    <div class="pos-skel-bone" style="width:100%; height:48px; border-radius:999px;"></div>
-                </div>
-            </div>
-        </div>
+    
     </div>
 
     <!-- POS Real Content Wrapper -->
-    <div id="pos-real-content" style="opacity:0; transition:opacity 0.3s ease; position:relative; z-index:1;">
+    <div id="pos-real-content" style="opacity: 1; position: relative; z-index: 1;">
         <!-- SCREEN 1: Kasir & Katalog Produk -->
         <div id="posScreenCatalog">
             <!-- POS Main Grid Wrapper -->
@@ -3234,7 +3142,7 @@
                                 </svg>
                             </button>
                             <h1 class="pos-ref-title">Buyle POS</h1>
-                            <button type="button" class="pos-ref-add-btn" onclick="openModal('posAddOptionsModal')" title="Tambah Produk atau Kelompok" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:400; border:1.5px solid #f1ece4; background:#fff; cursor:pointer;">
+                            <button type="button" class="pos-ref-add-btn" id="posBtnHeaderAdd" onclick="openPosAddOptionsModal(event)" title="Tambah Produk atau Kelompok" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:400; border:1.5px solid #f1ece4; background:#fff; cursor:pointer;">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </button>
                         </div>
@@ -3323,7 +3231,7 @@
                                     }
                                 @endphp
                                 <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
-                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}" data-category-id="{{ $prod->category_id ?? '' }}"
+                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}" data-category-id="{{ $prod->creator_group_id ?? '' }}"
                                     data-image="{{ $imgUrl ?? '' }}"
                                     onclick="handleProductClick({{ $prod->id }})">
 
@@ -9465,6 +9373,35 @@
                 window.addEventListener('load', revealPos);
             })();
 
+            
+            // ── EXPLICIT CONSOLE DEBUGGING & ERROR TRACKING ──
+            window.onerror = function(message, source, lineno, colno, error) {
+                console.error("%c[POS RUNTIME ERROR]", "background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold;", message);
+                console.error("File:", source, "Line:", lineno, "Column:", colno);
+                if (error && error.stack) console.error("Stack trace:", error.stack);
+                return false;
+            };
+            window.onunhandledrejection = function(event) {
+                console.error("%c[POS UNHANDLED PROMISE REJECTION]", "background: #f97316; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold;", event.reason);
+            };
+            console.log("%c[Buyle POS Ready] Debug console active. Any error will be logged in full detail.", "color: #16a34a; font-weight: bold;");
+
+            // Open + Add Options Modal Handler
+            function openPosAddOptionsModal(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                console.log("[Buyle POS] Header (+) button clicked -> opening posAddOptionsModal");
+                var m = document.getElementById('posAddOptionsModal');
+                if (m) {
+                    m.classList.add('show');
+                    m.style.display = 'flex';
+                } else {
+                    console.error("[Buyle POS] Element #posAddOptionsModal not found in DOM!");
+                }
+            }
+
             // Move bottom navbar to <body> to escape overflow:hidden stacking context
             (function moveNavbarToBody() {
                 function doMove() {
@@ -9475,6 +9412,18 @@
                     }
                     if (floatBar && floatBar.parentNode !== document.body) {
                         document.body.appendChild(floatBar);
+                    }
+                    var addModal = document.getElementById('posAddOptionsModal');
+                    if (addModal && addModal.parentNode !== document.body) {
+                        document.body.appendChild(addModal);
+                    }
+                    var prodModal = document.getElementById('posQuickProductModal');
+                    if (prodModal && prodModal.parentNode !== document.body) {
+                        document.body.appendChild(prodModal);
+                    }
+                    var catModal = document.getElementById('posQuickCategoryModal');
+                    if (catModal && catModal.parentNode !== document.body) {
+                        document.body.appendChild(catModal);
                     }
                 }
                 if (document.readyState !== 'loading') {
@@ -9927,7 +9876,7 @@
             </button>
 
             <!-- 4. Kelompok / Produk -->
-            <button type="button" class="pos-nav-item" id="posNavBtnProducts" onclick="openModal('posAddOptionsModal')" title="Katalog & Kelompok Produk">
+            <button type="button" class="pos-nav-item" id="posNavBtnProducts" onclick="switchPosScreen('catalog'); document.getElementById('productGridContainer')?.scrollIntoView({behavior:'smooth'});" title="Katalog & Kelompok Produk">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <polyline points="21 8 21 21 3 21 3 8"/>
                     <rect x="1" y="3" width="22" height="5"/>
@@ -9949,7 +9898,7 @@
 
     <!-- â”€â”€ POP-UP MODAL: PILIHAN TAMBAH (+ Add Item) â”€â”€ -->
     <div class="pos-modal-overlay" id="posAddOptionsModal" style="z-index: 100025;">
-        <div class="pos-modal-card" style="max-width: 420px; width: 92vw; border-radius: 24px; padding: 1.4rem;">
+        <div class="pos-modal-card" style="max-width: 380px !important; width: 90vw !important; height: auto !important; max-height: fit-content !important; min-height: unset !important; border-radius: 24px !important; padding: 1.25rem !important; margin: auto !important; align-self: center !important; box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important; background: #ffffff !important;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem;">
                 <div style="display:flex; align-items:center; gap:8px;">
                     <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">

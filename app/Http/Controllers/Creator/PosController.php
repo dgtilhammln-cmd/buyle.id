@@ -291,7 +291,7 @@ class PosController extends Controller
         $posQrisUrl      = $profile?->pos_qris_image ? asset('storage/' . $profile->pos_qris_image) : null;
         $posFeePayer     = $profile?->pos_fee_payer ?? 'seller';
 
-        $categories = \App\Models\ProductCategory::where('is_active', true)->orderBy('name')->get();
+        $categories = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)->where('is_active', true)->orderBy('name')->get();
         $recentPosOrders = \App\Models\Order::where('source', 'pos')
             ->where('seller_id', $seller->id)
             ->with(['items', 'payment'])
@@ -1474,13 +1474,19 @@ class PosController extends Controller
             'name' => 'required|string|max:100',
         ]);
 
-        $baseSlug = \Illuminate\Support\Str::slug($request->name) ?: 'kategori';
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $baseSlug = \Illuminate\Support\Str::slug($request->name) ?: 'kelompok';
         $slug = $baseSlug;
-        while (\App\Models\ProductCategory::where('slug', $slug)->exists()) {
+        while (\App\Models\CreatorProductGroup::where('slug', $slug)->exists()) {
             $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
         }
 
-        $cat = \App\Models\ProductCategory::create([
+        $cat = \App\Models\CreatorProductGroup::create([
+            'seller_id' => $seller->id,
             'name'      => $request->name,
             'slug'      => $slug,
             'is_active' => true,
