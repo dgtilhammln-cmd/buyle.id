@@ -2329,6 +2329,10 @@
             border-color: #1eb349 !important;
             box-shadow: 0 6px 20px rgba(30,179,73,0.15) !important;
         }
+        /* Search filter hides - overrides in-cart display */
+        .product-card.pos-filtered-hidden {
+            display: none !important;
+        }
 
         .product-card .product-img-wrapper {
             width: 100% !important;
@@ -2529,65 +2533,7 @@
             transform: scale(0.95);
         }
 
-        /* 6. Buyle POS Bottom Nav (Screen 1 Reference) */
-        .pos-bottom-nav-wrap {
-            display: none;
-            position: fixed !important;
-            bottom: 12px !important;
-            left: 16px !important;
-            right: 16px !important;
-            max-width: 440px !important;
-            margin: 0 auto !important;
-            z-index: 9990 !important;
-            justify-content: center !important;
-        }
-        @media (max-width: 991px) {
-            .pos-bottom-nav-wrap {
-                display: flex !important;
-            }
-        }
-        .pos-bottom-nav-bar {
-            width: 100% !important;
-            height: 60px !important;
-            background: #ffffff !important;
-            border-radius: 999px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            padding: 0.35rem 0.65rem !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
-            border: 1.5px solid #f1ece4 !important;
-        }
-        .pos-nav-item {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            border: none !important;
-            background: transparent !important;
-            cursor: pointer !important;
-            transition: all 0.2s ease !important;
-        }
-        .pos-nav-item.active {
-            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
-            color: #ffffff !important;
-            padding: 0.5rem 1.1rem !important;
-            border-radius: 999px !important;
-            box-shadow: 0 4px 12px rgba(30,179,73,0.35) !important;
-            gap: 6px !important;
-        }
-        .pos-nav-item.active .pos-nav-label {
-            display: inline-block !important;
-            font-size: 0.8rem !important;
-            font-weight: 700 !important;
-            color: #ffffff !important;
-        }
-        .pos-nav-item:not(.active) {
-            width: 40px !important;
-            height: 40px !important;
-            border-radius: 50% !important;
-            background: #fdf5ec !important;
-            color: #8c7e72 !important;
-        }
+        /* 6. Buyle POS Bottom Nav CSS moved below */
 
         .pos-bottom-nav-wrap {
             display: none;
@@ -2595,10 +2541,11 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 0.6rem 1rem 0.85rem;
-            z-index: 9990;
-            pointer-events: none;
+            padding: 0.5rem 1rem env(safe-area-inset-bottom, 0.75rem);
+            z-index: 10000;
+            pointer-events: auto;
             justify-content: center;
+            background: transparent;
         }
         @media (max-width: 991px) {
             .pos-bottom-nav-wrap {
@@ -2665,11 +2612,11 @@
         /* Adjust Floating Cart Bar to sit neatly above Buyle POS Bottom Nav */
         @media (max-width: 991px) {
             .pos-mobile-floating-bar {
-                bottom: 80px !important;
-                z-index: 9980 !important;
+                bottom: 86px !important;
+                z-index: 9990 !important;
             }
             .product-grid {
-                padding-bottom: 170px !important;
+                padding-bottom: 190px !important;
             }
         }
 
@@ -6091,8 +6038,15 @@
                     const catMatch = (activePosCategory === 'all') || (cat === activePosCategory);
                     const matches = textMatch && catMatch;
 
-                    card.style.display = matches ? '' : 'none';
-                    if (matches) visibleCount++;
+                    // Use both style and class to ensure hiding works even with in-cart styles
+                    if (matches) {
+                        card.style.display = '';
+                        card.classList.remove('pos-filtered-hidden');
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.add('pos-filtered-hidden');
+                    }
                 });
 
                 // Update badge hitungan pill kategori
