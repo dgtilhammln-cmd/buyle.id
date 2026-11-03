@@ -2110,7 +2110,485 @@
             display: none !important;
         }
 
-        /* ── BUYLE POS BOTTOM NAVIGATION (100% Sesuai Mockup Image 3 & 4) ── */
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           PIXEL-PERFECT BUYLE POS (100% MATCHING REFERENCE MOCKUP SCREENSHOT)
+           ═══════════════════════════════════════════════════════════════════════ */
+        
+        /* Background & Container */
+        @media (max-width: 991px) {
+            body {
+                background: #fbf8f4 !important;
+            }
+            .cr-main-wrapper {
+                background: #fbf8f4 !important;
+                padding: 0 !important;
+            }
+            .pos-wrapper {
+                display: block !important;
+                padding: 0.75rem 1rem 180px 1rem !important;
+                max-width: 480px !important;
+                margin: 0 auto !important;
+            }
+            .prof-card {
+                border: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .prof-card-head {
+                display: none !important;
+            }
+            .prof-card-body {
+                padding: 0 !important;
+            }
+        }
+
+        /* 1. Header (Screen 1 Reference) */
+        .pos-ref-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+        .pos-ref-menu-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #f1ece4;
+            color: #2d2013;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+        .pos-ref-menu-btn:active {
+            transform: scale(0.92);
+            background: #f8fafc;
+        }
+        .pos-ref-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #2d2013;
+            margin: 0;
+            text-align: center;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+        .pos-ref-add-btn {
+            background: #ffffff;
+            border: 1.5px solid #f1ece4;
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #2d2013;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .pos-ref-add-btn:active {
+            transform: scale(0.94);
+            background: #fdf5ec;
+        }
+
+        /* 2. Search Bar Capsule (Screen 1 Reference) */
+        .pos-ref-search-wrap {
+            position: relative;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+        .pos-ref-search-input {
+            width: 100%;
+            height: 52px !important;
+            padding-left: 48px !important;
+            padding-right: 52px !important;
+            border-radius: 999px !important;
+            border: 1.5px solid #f1ece4 !important;
+            background: #ffffff !important;
+            font-size: 0.85rem !important;
+            color: #2d2013 !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important;
+            outline: none !important;
+            transition: all 0.2s ease !important;
+        }
+        .pos-ref-search-input:focus {
+            border-color: #1eb349 !important;
+            box-shadow: 0 0 0 3px rgba(30,179,73,0.12) !important;
+        }
+        .pos-ref-search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #b5a89b;
+            pointer-events: none;
+        }
+        .pos-ref-barcode-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fdf5ec;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1eb349;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .pos-ref-barcode-btn:active {
+            transform: translateY(-50%) scale(0.92);
+        }
+
+        /* 3. Category Filter Horizontal Pills (Screen 1 Reference) */
+        .pos-ref-cat-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 12px;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+        .pos-ref-cat-bar::-webkit-scrollbar {
+            display: none;
+        }
+        .pos-ref-cat-pill {
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #8c7e72;
+            padding: 8px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .pos-ref-cat-pill.active {
+            background: #fdf5ec !important;
+            color: #166534 !important;
+            font-weight: 800 !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            border: 1.5px solid #bbf7d0 !important;
+        }
+
+        /* 4. Product Card & 2-Col Grid (Screen 1 Reference) */
+        .product-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        @media (min-width: 640px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+        }
+        @media (min-width: 992px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+        }
+
+        .product-card {
+            background: #ffffff !important;
+            border-radius: 20px !important;
+            padding: 10px !important;
+            border: 1.5px solid #f1ece4 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            position: relative !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            user-select: none !important;
+            overflow: visible !important;
+            box-sizing: border-box !important;
+        }
+        .product-card:active {
+            transform: scale(0.97);
+        }
+        .product-card.in-cart {
+            border-color: #1eb349 !important;
+            box-shadow: 0 6px 20px rgba(30,179,73,0.15) !important;
+        }
+
+        .product-card .product-img-wrapper {
+            width: 100% !important;
+            height: 115px !important;
+            border-radius: 14px !important;
+            overflow: hidden !important;
+            background: #f8fafc !important;
+            position: relative !important;
+            margin-bottom: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .product-card .product-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 14px !important;
+            display: block !important;
+        }
+
+        /* Checkmark Badge on Top Right of Image */
+        .product-card .product-check-badge {
+            position: absolute !important;
+            top: 6px !important;
+            right: 6px !important;
+            width: 22px !important;
+            height: 22px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 10 !important;
+            box-shadow: 0 2px 6px rgba(30,179,73,0.35) !important;
+        }
+
+        .product-card .product-name {
+            font-size: 0.82rem !important;
+            font-weight: 700 !important;
+            color: #1e293b !important;
+            margin: 0 0 4px 0 !important;
+            line-height: 1.3 !important;
+            min-height: 2.6em !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+        }
+
+        .product-card .product-card-bottom {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-top: auto !important;
+            padding-top: 2px !important;
+        }
+
+        .product-card .product-price {
+            font-size: 0.85rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            letter-spacing: -0.01em !important;
+        }
+
+        /* Round + Button on Product Card */
+        .product-card .card-btn-add {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            color: #ffffff !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            box-shadow: 0 3px 8px rgba(30,179,73,0.3) !important;
+            transition: all 0.15s ease !important;
+            font-size: 16px !important;
+            line-height: 1 !important;
+        }
+        .product-card .card-btn-add:active {
+            transform: scale(0.9);
+        }
+
+        /* Stepper in Card (- qty +) */
+        .product-card .card-stepper {
+            display: flex !important;
+            align-items: center !important;
+            gap: 3px !important;
+            background: #fdf5ec !important;
+            border-radius: 999px !important;
+            padding: 2px 4px !important;
+        }
+        .product-card .card-stepper-btn {
+            width: 22px !important;
+            height: 22px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            font-weight: 800 !important;
+            font-size: 13px !important;
+            line-height: 1 !important;
+        }
+        .product-card .card-stepper-btn.minus {
+            background: #ffffff !important;
+            color: #166534 !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+        }
+        .product-card .card-stepper-btn.plus {
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(30,179,73,0.3) !important;
+        }
+        .product-card .card-stepper-num {
+            font-size: 0.76rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            min-width: 16px !important;
+            text-align: center !important;
+        }
+
+        /* 5. Floating Cart Bar (Screen 1 Reference) */
+        .pos-mobile-floating-bar {
+            display: none;
+            position: fixed !important;
+            bottom: 84px !important;
+            left: 16px !important;
+            right: 16px !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            height: 62px !important;
+            background: #ffffff !important;
+            border-radius: 999px !important;
+            padding: 6px 8px 6px 14px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+            border: 1.5px solid #f1ece4 !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            z-index: 9980 !important;
+        }
+        @media (max-width: 991px) {
+            .pos-mobile-floating-bar {
+                display: flex !important;
+            }
+        }
+        .pos-mf-left {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            cursor: pointer !important;
+        }
+        .pos-mf-chevron {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            background: #fdf5ec !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #1eb349 !important;
+        }
+        .pos-mf-info {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .pos-mf-count {
+            font-size: 0.7rem !important;
+            color: #64748b !important;
+            font-weight: 600 !important;
+        }
+        .pos-mf-total {
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            line-height: 1.1 !important;
+        }
+        .pos-mf-btn-next {
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            color: #ffffff !important;
+            border-radius: 999px !important;
+            padding: 10px 24px !important;
+            font-size: 0.84rem !important;
+            font-weight: 700 !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(30,179,73,0.35) !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            transition: all 0.15s ease !important;
+        }
+        .pos-mf-btn-next:active {
+            transform: scale(0.95);
+        }
+
+        /* 6. Buyle POS Bottom Nav (Screen 1 Reference) */
+        .pos-bottom-nav-wrap {
+            display: none;
+            position: fixed !important;
+            bottom: 12px !important;
+            left: 16px !important;
+            right: 16px !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            z-index: 9990 !important;
+            justify-content: center !important;
+        }
+        @media (max-width: 991px) {
+            .pos-bottom-nav-wrap {
+                display: flex !important;
+            }
+        }
+        .pos-bottom-nav-bar {
+            width: 100% !important;
+            height: 60px !important;
+            background: #ffffff !important;
+            border-radius: 999px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0.35rem 0.65rem !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+            border: 1.5px solid #f1ece4 !important;
+        }
+        .pos-nav-item {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border: none !important;
+            background: transparent !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+        .pos-nav-item.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            padding: 0.5rem 1.1rem !important;
+            border-radius: 999px !important;
+            box-shadow: 0 4px 12px rgba(30,179,73,0.35) !important;
+            gap: 6px !important;
+        }
+        .pos-nav-item.active .pos-nav-label {
+            display: inline-block !important;
+            font-size: 0.8rem !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
+        }
+        .pos-nav-item:not(.active) {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+            background: #fdf5ec !important;
+            color: #8c7e72 !important;
+        }
+
         .pos-bottom-nav-wrap {
             display: none;
             position: fixed;
@@ -2706,76 +3184,57 @@
                     </div>
 
                     <div class="prof-card-body">
-                        <!-- Mobile Top Header (Buyle POS - Sesuai Permintaan) -->
-                        <div class="pos-mobile-top-header" style="display:flex; align-items:center; justify-content:space-between; padding:0.4rem 0.2rem 0.85rem;">
-                            <button type="button" class="pos-header-icon-btn" onclick="openModal('posSettingsModal')" title="Pengaturan POS">
+                        <!-- 1. Header (Screen 1 Reference 100% Match) -->
+                        <div class="pos-ref-header">
+                            <button type="button" class="pos-ref-menu-btn" onclick="openModal('posSettingsModal')" title="Pengaturan POS">
                                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="3"/>
-                                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                                    <line x1="4" y1="7" x2="20" y2="7" />
+                                    <line x1="4" y1="12" x2="16" y2="12" />
+                                    <line x1="4" y1="17" x2="18" y2="17" />
                                 </svg>
                             </button>
-                            <div style="text-align:center;">
-                                <h1 class="pos-header-brand-title" style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0; line-height:1.2;">Buyle POS</h1>
-                                <div style="font-size:0.68rem; color:#64748b; font-weight:600; margin-top:1px;">{{ $storeName }}</div>
-                            </div>
-                            <button type="button" class="pos-header-add-btn" onclick="openModal('posAddOptionsModal')" title="Tambah Item / Kelompok">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
-                                    <line x1="12" y1="5" x2="12" y2="19"/>
-                                    <line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                                <span>Add Item</span>
+                            <h1 class="pos-ref-title">Buyle POS</h1>
+                            <button type="button" class="pos-ref-add-btn" onclick="openModal('posAddOptionsModal')" title="Tambah Item">
+                                Add Item
                             </button>
                         </div>
 
-                        <!-- Pill Search Bar with Barcode Scanner Icon (Screen 1 Mockup) -->
-                        <div class="pos-pill-search">
-                            <svg width="17" height="17" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24"
-                                class="search-ico">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        <!-- 2. Search Bar Capsule (Screen 1 Reference 100% Match) -->
+                        <div class="pos-ref-search-wrap">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" class="pos-ref-search-icon">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                             </svg>
-                            <input type="text" id="posProductSearch" class="pos-pill-input"
-                                placeholder="Cari menu atau nama produk..." oninput="filterProducts()">
-                            <button type="button" class="pos-search-barcode-btn"
-                                onclick="document.getElementById('posProductSearch').focus();" title="Scan Barcode">
-                                <svg width="18" height="18" fill="none" stroke="#64748b" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M3 7V5a2 2 0 0 1 2-2h2" />
-                                    <path d="M17 3h2a2 2 0 0 1 2 2v2" />
-                                    <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
-                                    <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-                                    <line x1="7" y1="8" x2="7" y2="16" stroke-width="2.5" />
-                                    <line x1="12" y1="8" x2="12" y2="16" stroke-width="2" />
-                                    <line x1="17" y1="8" x2="17" y2="16" stroke-width="2.5" />
+                            <input type="text" id="posProductSearch" class="pos-ref-search-input"
+                                placeholder="Search dishes by name..." oninput="filterProducts()">
+                            <button type="button" class="pos-ref-barcode-btn" onclick="document.getElementById('posProductSearch').focus();" title="Scan Barcode">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                                    <line x1="7" y1="8" x2="7" y2="16" stroke-width="2.5"/><line x1="12" y1="8" x2="12" y2="16" stroke-width="2"/><line x1="17" y1="8" x2="17" y2="16" stroke-width="2.5"/>
                                 </svg>
                             </button>
                         </div>
 
-                        <!-- Filter Kelompok Produk (No Emoticon, Clean Pill Horizontal Bar) -->
-                        <div class="pos-category-pills-wrap" id="posCategoryPillsContainer" style="display:flex; align-items:center; gap:8px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
-                            <button type="button" class="pos-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
-                                Semua
-                                <span class="pos-cat-count" id="catCountAll">0</span>
+                        <!-- 3. Category Filter Horizontal Bar (Screen 1 Reference 100% Match) -->
+                        <div class="pos-ref-cat-bar" id="posCategoryPillsContainer">
+                            <button type="button" class="pos-ref-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
+                                All
                             </button>
-                            <button type="button" class="pos-cat-pill" data-cat="fnb" onclick="setPosCategoryFilter('fnb', this)">
+                            <button type="button" class="pos-ref-cat-pill" data-cat="fnb" onclick="setPosCategoryFilter('fnb', this)">
                                 Makanan
-                                <span class="pos-cat-count" id="catCountFnb">0</span>
                             </button>
-                            <button type="button" class="pos-cat-pill" data-cat="drink" onclick="setPosCategoryFilter('drink', this)">
+                            <button type="button" class="pos-ref-cat-pill" data-cat="drink" onclick="setPosCategoryFilter('drink', this)">
                                 Minuman
-                                <span class="pos-cat-count" id="catCountDrink">0</span>
                             </button>
-                            <button type="button" class="pos-cat-pill" data-cat="snack" onclick="setPosCategoryFilter('snack', this)">
-                                Snack
-                                <span class="pos-cat-count" id="catCountSnack">0</span>
+                            <button type="button" class="pos-ref-cat-pill" data-cat="snack" onclick="setPosCategoryFilter('snack', this)">
+                                Snacks
                             </button>
-                            <button type="button" class="pos-cat-pill" data-cat="physical" onclick="setPosCategoryFilter('physical', this)">
-                                Produk Fisik
-                                <span class="pos-cat-count" id="catCountPhysical">0</span>
+                            <button type="button" class="pos-ref-cat-pill" data-cat="physical" onclick="setPosCategoryFilter('physical', this)">
+                                Barang Fisik
                             </button>
                             @if(isset($categories) && count($categories) > 0)
                                 @foreach($categories as $cItem)
-                                    <button type="button" class="pos-cat-pill" data-cat="cat-{{ $cItem->id }}" onclick="setPosCategoryFilter('cat-{{ $cItem->id }}', this)">
+                                    <button type="button" class="pos-ref-cat-pill" data-cat="cat-{{ $cItem->id }}" onclick="setPosCategoryFilter('cat-{{ $cItem->id }}', this)">
                                         {{ $cItem->name }}
                                     </button>
                                 @endforeach
@@ -2840,48 +3299,38 @@
                                     data-image="{{ $imgUrl ?? '' }}"
                                     onclick="handleProductClick({{ $prod->id }})">
 
-                                    {{-- Square Product Image --}}
+                                    {{-- Product Image 100% Matching Reference --}}
                                     <div class="product-img-wrapper">
                                         @if($imgUrl)
                                             <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
                                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:#f1f5f9;">
-                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:#fdf5ec;">
+                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                             </div>
                                         @else
-                                            <div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#f1f5f9;">
-                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                            <div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#fdf5ec;">
+                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                             </div>
                                         @endif
-                                        {{-- Qty badge top-left --}}
-                                        <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}" style="display:none;position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;font-size:0.65rem;font-weight:700;min-width:20px;height:20px;border-radius:10px;align-items:center;justify-content:center;padding:0 5px;z-index:5;box-shadow:0 2px 6px rgba(30,179,73,0.4);">0</div>
-                                        {{-- Check badge top-right --}}
-                                        <div class="product-check-badge" id="card-check-{{ $prod->id }}" style="display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1eb349,#a5cf37);align-items:center;justify-content:center;z-index:5;box-shadow:0 2px 6px rgba(30,179,73,0.35);">
+                                        <div class="product-check-badge" id="card-check-{{ $prod->id }}" style="display:none;">
                                             <svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                                         </div>
                                     </div>
 
-                                    {{-- Info area --}}
-                                    <div style="padding:0.5rem 0.6rem 0.45rem;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
-                                        <div class="product-name">{{ $prod->name }}</div>
-                                        <div class="product-card-bottom">
-                                            <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
-                                            <button type="button" class="card-btn-add" id="card-add-btn-{{ $prod->id }}"
-                                                onclick="event.stopPropagation(); handleProductClick({{ $prod->id }});"
-                                                aria-label="Tambah">
-                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                            </button>
-                                            <div class="card-stepper" id="card-stepper-{{ $prod->id }}" style="display:none;">
-                                                <button type="button" class="card-stepper-btn minus"
-                                                    onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, -1);">
-                                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                                </button>
-                                                <span class="card-stepper-num" id="card-qty-num-{{ $prod->id }}">1</span>
-                                                <button type="button" class="card-stepper-btn plus"
-                                                    onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, 1);">
-                                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                                </button>
-                                            </div>
+                                    <div class="product-name">{{ $prod->name }}</div>
+                                    <div class="product-card-bottom">
+                                        <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
+                                        <button type="button" class="card-btn-add" id="card-add-btn-{{ $prod->id }}"
+                                            onclick="event.stopPropagation(); handleProductClick({{ $prod->id }});"
+                                            aria-label="Tambah">
+                                            +
+                                        </button>
+                                        <div class="card-stepper" id="card-stepper-{{ $prod->id }}" style="display:none;">
+                                            <button type="button" class="card-stepper-btn minus"
+                                                onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, -1);">&minus;</button>
+                                            <span class="card-stepper-num" id="card-qty-num-{{ $prod->id }}">1</span>
+                                            <button type="button" class="card-stepper-btn plus"
+                                                onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, 1);">&plus;</button>
                                         </div>
                                     </div>
                                 </div>
@@ -7029,8 +7478,7 @@
                                                     font-weight: 800;
                                                 }
                                             </style>
-                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</head>
+                                            </head>
                                         <body>
                                             ${content}
                                         </body>
@@ -8933,8 +9381,7 @@
                                                 .no-print { display: none !important; }
                                                 img { display: none !important; }
                                             </style>
-                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</head>
+                                            </head>
                                         <body>
                                             ${content}
                                         </body>
