@@ -49,7 +49,6 @@
                 <div style="display:flex; align-items:center; gap:0.45rem;">
                     <span style="font-size:0.82rem; font-weight:800; color:#14532d; text-transform:uppercase; letter-spacing:0.5px;">1. Akun Sosial Media (Follow)</span>
                 </div>
-                <span style="font-size:0.7rem; color:#15803d; font-weight:600; background:#dcfce7; padding:2px 8px; border-radius:6px;">Pilih yang Anda miliki</span>
             </div>
 
             <div class="form-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
