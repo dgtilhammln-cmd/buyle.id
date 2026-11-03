@@ -21,19 +21,28 @@ class SellerController extends Controller
         $totalProducts  = Product::where('seller_id', $seller->id)->count();
         $activeProducts = Product::where('seller_id', $seller->id)->where('is_active', true)->count();
 
-        // ── Statistik Penjualan ───────────────────────────────────────────────
-        // Ambil semua order paid yang mengandung produk seller ini
-        try {
-            $sellerOrders = Order::whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
-                ->whereHas('payment', fn($q) => $q->where('status', \App\Enums\PaymentStatus::Success))
-                ->with(['items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $seller->id))])
-                ->get();
+        // ── Saldo & GMV Terintegrasi (Single Source of Truth via SellerBalanceService) ──
+        $balanceData         = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $gmv                 = $balanceData['gmv'];
+        $clearedGmv          = $balanceData['cleared_gmv'];
+        $holdBalance         = $balanceData['total_hold_balance'];
+        $standardHoldBalance = $balanceData['standard_hold_balance'];
+        $ticketEscrowBalance = $balanceData['ticket_escrow_balance'];
+        $totalPayout         = $balanceData['total_payout'];
+        $availableBalance    = $balanceData['available_balance'];
 
-            $gmv = $sellerOrders->sum(fn($order) => $order->items->sum('subtotal'));
-            $totalTransactions = $sellerOrders->count();
+        try {
+            $totalTransactions = Order::where(function ($q) use ($seller) {
+                    $q->whereHas('items.product', fn($p) => $p->where('seller_id', $seller->id))
+                      ->orWhereHas('items', fn($i) => $i->where('seller_id', $seller->id))
+                      ->orWhereHas('items', fn($i) => $i->where('reseller_id', $seller->id));
+                })
+                ->where(function ($pq) {
+                    $pq->whereHas('payment', fn($p) => $p->where('status', \App\Enums\PaymentStatus::Success))
+                       ->orWhere('source', 'pos');
+                })
+                ->count();
         } catch (\Exception $e) {
-            $sellerOrders = collect();
-            $gmv = 0;
             $totalTransactions = 0;
         }
 
@@ -55,17 +64,9 @@ class SellerController extends Controller
             ];
         }
 
-        // ── Platform Fee & Saldo ──────────────────────────────────────────────
-        // Model A: fee ditanggung buyer → seller menerima full GMV
+        // ── Platform Fee ──────────────────────────────────────────────────────
         $platformFeeRate = 5.0; // 5% (hanya untuk display)
         $platformFee     = 0;   // tidak dipotong dari saldo seller
-
-        $totalPayout = PayoutRequest::where('seller_id', $seller->id)
-            ->whereIn('status', ['approved', 'processed'])
-            ->sum('amount');
-
-        // Saldo = GMV penuh dikurangi total yang sudah dicairkan
-        $availableBalance = max(0, $gmv - $totalPayout);
 
         // ── Penjualan Terbaru (30 hari) ───────────────────────────────────────
         try {
@@ -89,7 +90,7 @@ class SellerController extends Controller
 
         return view('creator.dashboard', compact(
             'seller', 'gmv', 'platformFee', 'platformFeeRate',
-            'totalPayout', 'availableBalance',
+            'totalPayout', 'availableBalance', 'holdBalance', 'ticketEscrowBalance',
             'totalProducts', 'activeProducts',
             'totalTransactions', 'recentSales', 'recentProducts',
             'tierInfo'

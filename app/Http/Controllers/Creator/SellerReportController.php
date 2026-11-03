@@ -217,9 +217,11 @@ class SellerReportController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        // ── 8. Saldo Siap Ditarik (Withdrawal Balance dengan proteksi Escrow Tiket) ─
+        // ── 8. Saldo Siap Ditarik & Total GMV Kumulatif (Single Source of Truth) ─
         $balanceData      = \App\Services\SellerBalanceService::calculateBalance($seller);
         $availableBalance = $balanceData['available_balance'];
+        $allTimeGmv       = $balanceData['gmv'];
+        $holdBalance      = $balanceData['total_hold_balance'];
 
         // ── 9. Transaksi Kasir Digital (POS) - Terpisah Mandiri ───────────────
         $posPaymentMethod = $request->query('pos_method', 'all');
@@ -292,7 +294,7 @@ class SellerReportController extends Controller
 
         return view('creator.reports.index', compact(
             'filter', 'startDate', 'endDate',
-            'totalSales', 'totalOrders', 'totalVisitors', 'uniqueVisitors', 'availableBalance',
+            'totalSales', 'totalOrders', 'totalVisitors', 'uniqueVisitors', 'availableBalance', 'allTimeGmv', 'holdBalance',
             'topProducts', 'utmSources', 'buyers', 'visitorsByDate', 'salesByDate',
             'totalBioClicks', 'topBioLinks', 'bioUtmSources', 'leads',
             'posOrders', 'posTotalSales', 'posCashTotal', 'posDigitalTotal', 'posFeesTotal',

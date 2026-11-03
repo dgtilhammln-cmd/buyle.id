@@ -1148,8 +1148,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {{-- TAB 2: MEDIA --}}
+                {{-- TAB 2: MEDIA --}}
                     <div class="tab-pane" id="tab-media">
                         <div class="prof-card">
                             <div class="prof-card-head">

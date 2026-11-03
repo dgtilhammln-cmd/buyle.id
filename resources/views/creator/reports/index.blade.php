@@ -1951,7 +1951,7 @@
 @section('content')
 
     @php
-        $salesVal = (float) ($totalSales ?? 0);
+        $salesVal = (float) ($allTimeGmv ?? $totalSales ?? 0);
         $sellerStoreName = $config['name'] ?? $profile->store_name ?? auth()->user()->name ?? 'CREATOR';
 
         // Sync tier definitions with CreatorProfile::getTierInfo()
