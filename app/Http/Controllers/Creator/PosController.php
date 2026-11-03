@@ -185,8 +185,14 @@ class PosController extends Controller
             $posProducts->push($cp);
         }
 
-        $result = $posProducts->unique('id')->values();
-        $result->loadMissing(['variantOptions.values']);
+        // Re-fetch all unique product IDs with eager-loaded variants
+        $uniqueIds = $posProducts->pluck('id')->unique()->filter()->values()->toArray();
+        if (empty($uniqueIds)) {
+            return collect();
+        }
+        $result = Product::whereIn('id', $uniqueIds)
+            ->with(['variantOptions.values'])
+            ->get();
         return $result;
     }
 
