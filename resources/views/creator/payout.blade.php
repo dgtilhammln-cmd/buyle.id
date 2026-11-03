@@ -27,6 +27,16 @@
             min-width: 0;
         }
 
+        @media (max-width: 1024px) {
+            .bio-content .prof-card {
+                margin-bottom: 0.75rem;
+            }
+
+            .bio-content .form-body {
+                padding: 0.85rem 1rem;
+            }
+        }
+
         /* ── Bank Super App Balance Card (Buyle Light Theme) ── */
         .bank-balance-card {
             background: #ffffff;
@@ -778,37 +788,63 @@
         @media (max-width: 1024px) {
             .bio-layout {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.75rem;
             }
 
             .bio-sidebar {
                 width: 100%;
                 position: static;
-                border-radius: 14px;
-                padding: 0.75rem;
+                border-radius: 0;
+                padding: 0;
+                background: transparent;
+                box-shadow: none;
+                border: none;
+                margin-bottom: 0.25rem;
             }
 
-            .sidebar-balance-hide {
+            .sidebar-balance-hide,
+            .sidebar-nav-label,
+            .sidebar-info-card {
                 display: none !important;
             }
 
             .bio-tabs-list {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 3px;
-                background: #f8fafc;
-                padding: 3px;
-                border-radius: 12px;
+                display: flex !important;
+                gap: 6px;
+                background: #f1f5f9;
+                padding: 4px;
+                border-radius: 999px;
+                border: 1px solid #e2e8f0;
             }
 
             .tab-btn {
-                flex-direction: column;
+                flex: 1;
+                display: inline-flex !important;
+                flex-direction: row !important;
                 justify-content: center;
                 align-items: center;
-                padding: 0.5rem 0.25rem;
-                gap: 3px;
-                border-radius: 8px;
+                padding: 0.55rem 0.5rem !important;
+                gap: 6px;
+                border-radius: 999px !important;
                 margin-bottom: 0;
+                background: transparent;
+                color: #64748b;
+                font-size: 0.78rem;
+                font-weight: 700;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+            }
+
+            .tab-btn svg {
+                width: 15px;
+                height: 15px;
+                flex-shrink: 0;
+            }
+
+            .tab-btn.active {
+                background: linear-gradient(135deg, #1eb349, #10b981) !important;
+                color: #ffffff !important;
+                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.25) !important;
             }
 
             .tab-text-full {
@@ -816,10 +852,53 @@
             }
 
             .tab-text-mob {
-                display: block !important;
-                font-size: 0.65rem;
-                font-weight: 600;
-                text-align: center;
+                display: inline !important;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            .mobile-saldo-bar {
+                margin-bottom: 0.75rem !important;
+            }
+
+            .bank-balance-card {
+                border-radius: 16px;
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .bank-balance-card .bank-amount {
+                font-size: 1.7rem;
+            }
+
+            .bank-balance-card .bank-note {
+                margin-bottom: 0.65rem;
+                font-size: 0.68rem;
+            }
+
+            .bank-balance-card .bank-sub-box {
+                padding: 0.65rem 0.75rem;
+                gap: 0.5rem;
+            }
+
+            .prof-card {
+                border-radius: 16px;
+                margin-bottom: 0.75rem;
+            }
+
+            .prof-card-head {
+                padding: 0.75rem 1rem;
+                font-size: 0.82rem;
+            }
+
+            .form-body {
+                padding: 0.85rem 1rem;
+            }
+
+            .breakdown-box {
+                padding: 0.75rem 0.85rem;
+                margin-bottom: 0.75rem;
+                border-radius: 12px;
             }
 
             .saldo-grid {
@@ -827,7 +906,22 @@
             }
 
             .quick-amounts {
-                grid-template-columns: repeat(2, 1fr);
+                display: flex !important;
+                gap: 6px;
+                margin-bottom: 0.75rem;
+            }
+
+            .btn-quick {
+                flex: 1;
+                padding: 0.45rem 0.25rem;
+                font-size: 0.72rem;
+                border-radius: 8px;
+            }
+
+            .btn-submit-payout {
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+                border-radius: 999px;
             }
         }
 
@@ -872,8 +966,8 @@
                 @include('creator.partials.bank_balance_card')
             </div>
 
+            <div class="sidebar-nav-label">Menu Navigasi</div>
             <div class="bio-tabs-list">
-                <div class="sidebar-nav-label">Menu Navigasi</div>
                 <button type="button" class="tab-btn active" onclick="switchPayoutTab('tab-withdraw', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="2" y="6" width="20" height="12" rx="2" />
@@ -928,43 +1022,6 @@
                     @include('creator.partials.bank_balance_card')
                 </div>
 
-                {{-- BANNER: SALDO DEPOSIT KASIR POS & PINDAH SALDO CEPAT --}}
-                <div class="prof-card" style="border: 1.5px solid #a7f3d0; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); margin-bottom:1.25rem;">
-                    <div style="padding:1.15rem 1.35rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-                        <div style="display:flex; align-items:center; gap:0.9rem;">
-                            <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(16,185,129,0.25);">
-                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                                    <circle cx="16" cy="12" r="2" />
-                                    <path d="M6 12h.01" />
-                                </svg>
-                            </div>
-                            <div>
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <span style="font-size:0.9rem; font-weight:800; color:#064e3b;">Saldo Deposit Kasir Digital (POS)</span>
-                                    <span style="font-size:0.65rem; font-weight:800; background:#d1fae5; color:#047857; padding:2px 8px; border-radius:999px;">Operasional Toko</span>
-                                </div>
-                                <div style="font-size:0.75rem; color:#059669; margin-top:2px;">
-                                    Saldo aktif kasir: <strong style="font-size:0.9rem; color:#064e3b;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</strong>
-                                    &bull; Digunakan auto-debit fee saat melayani transaksi tunai di kasir
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <button type="button" onclick="openTransferPosModal()"
-                                style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; border-radius:999px; padding:0.6rem 1.25rem; font-size:0.8rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(16,185,129,0.3); transition:all 0.15s ease;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <polyline points="17 1 21 5 17 9" />
-                                    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-                                    <polyline points="7 23 3 19 7 15" />
-                                    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-                                </svg>
-                                Pindah Saldo Toko ke Deposit POS
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="prof-card">
                     <div class="prof-card-head">
                         <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
@@ -975,40 +1032,31 @@
                         Ajukan Penarikan Dana
                     </div>
                     <div class="form-body">
-                        {{-- Syarat --}}
-                        <div class="alert-notice">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px">
-                                <circle cx="12" cy="12" r="10" />
-                                <line x1="12" y1="16" x2="12" y2="12" />
-                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                        {{-- Syarat Ringkas --}}
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="15" height="15" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                             </svg>
-                            <div>
-                                Dana produk reguler dapat ditarik setelah <strong>3x24 jam</strong> sejak pembayaran
-                                diterima. Khusus <strong>tiket event</strong>, dana di-hold hingga <strong>H+3 pasca
-                                    event</strong> untuk keamanan bersama. Pencairan diproses <strong>1-3 hari
-                                    kerja</strong> tanpa potongan biaya (100% utuh), minimal penarikan <strong>Rp
-                                    50.000</strong>.
+                            <div style="font-size:0.75rem; color:#166534; line-height:1.35;">
+                                Min. penarikan <strong>Rp 50.000</strong> &bull; 100% utuh tanpa potongan biaya &bull; Proses 1-3 hari kerja
                             </div>
                         </div>
 
                         @if(($ticketEscrowBalance ?? 0) > 0)
-                            {{-- Escrow Security Protection Alert --}}
-                            <div
-                                style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:1rem 1.15rem;margin-bottom:1.25rem;">
-                                <div
-                                    style="display:flex;align-items:center;gap:0.5rem;font-weight:800;color:#1e40af;font-size:0.82rem;margin-bottom:0.35rem;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                    </svg>
-                                    Escrow Protection
+                            {{-- Escrow Security Protection Alert Ringkas --}}
+                            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:0.65rem 0.85rem; margin-bottom:0.85rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.25rem;">
+                                    <div style="display:flex; align-items:center; gap:0.4rem; font-weight:700; color:#1e40af; font-size:0.76rem;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                        </svg>
+                                        Escrow Tiket Event
+                                    </div>
+                                    <span style="font-size:0.65rem; font-weight:700; background:#dbeafe; color:#1e40af; padding:1px 6px; border-radius:4px;">Cair H+3 Acara</span>
                                 </div>
-                                <p style="font-size:0.75rem;color:#1e3a8a;line-height:1.5;margin:0 0 0.75rem 0;">
-                                    Untuk melindungi pembeli tiket serta menjamin acara terlaksana dengan aman, seluruh hasil
-                                    penjualan tiket event dikunci di sistem Escrow dan <strong>baru dapat ditarik H+3 setelah
-                                        tanggal pelaksanaan acara</strong>.
-                                </p>
+                                <div style="font-size:0.7rem; color:#1e3a8a; line-height:1.35; margin-bottom:0.4rem;">
+                                    Dana tiket dikunci sementara dan otomatis cair H+3 setelah tanggal pelaksanaan acara.
+                                </div>
                                 @if(!empty($upcomingEvents) && count($upcomingEvents) > 0)
                                     <div
                                         style="background:#fff;border-radius:10px;border:1px solid #dbeafe;padding:0.6rem 0.85rem;">
@@ -1042,40 +1090,19 @@
                             </div>
                         @endif
 
-                        {{-- Saldo Breakdown --}}
-                        <div class="breakdown-box">
+                        {{-- Saldo Breakdown Ringkas --}}
+                        <div class="breakdown-box" style="margin-bottom:0.85rem; padding:0.75rem 0.9rem; border-radius:12px;">
                             <div class="breakdown-row">
                                 <span class="breakdown-key">Total Penjualan (GMV)</span>
                                 <span class="breakdown-val">Rp {{ number_format($gmv, 0, ',', '.') }}</span>
                             </div>
-                            @if(($standardHoldBalance ?? 0) > 0)
-                                <div class="breakdown-row">
-                                    <span class="breakdown-key">Hold Reguler (3x24 jam)</span>
-                                    <span class="breakdown-val muted">Rp
-                                        {{ number_format($standardHoldBalance, 0, ',', '.') }}</span>
-                                </div>
-                            @endif
-                            @if(($ticketEscrowBalance ?? 0) > 0)
-                                <div class="breakdown-row">
-                                    <span class="breakdown-key" style="color:#1e40af;font-weight:700;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24" style="display:inline;vertical-align:-1px;margin-right:2px">
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                        </svg>
-                                        Escrow Tiket Event (H+3 Acara)
-                                    </span>
-                                    <span class="breakdown-val" style="color:#1e40af;font-weight:700;">Rp
-                                        {{ number_format($ticketEscrowBalance, 0, ',', '.') }}</span>
-                                </div>
-                            @endif
                             <div class="breakdown-row">
                                 <span class="breakdown-key">Sudah Dicairkan</span>
                                 <span class="breakdown-val muted">Rp {{ number_format($totalPayout, 0, ',', '.') }}</span>
                             </div>
-                            <div class="breakdown-row" style="font-size:0.95rem;">
-                                <span class="breakdown-key" style="font-weight:800;color:#0f172a;">Saldo Siap Ditarik</span>
-                                <span class="breakdown-val green">Rp
-                                    {{ number_format($availableBalance, 0, ',', '.') }}</span>
+                            <div class="breakdown-row" style="font-size:0.88rem; padding-top:0.4rem; border-top:1px dashed #e2e8f0; margin-top:0.35rem;">
+                                <span class="breakdown-key" style="font-weight:800; color:#0f172a;">Saldo Siap Ditarik</span>
+                                <span class="breakdown-val green" style="font-weight:800; color:#16a34a;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</span>
                             </div>
                         </div>
 
@@ -1100,8 +1127,7 @@
                                                 <div style="display:flex;align-items:center;gap:0.4rem;">
                                                     <span class="rekening-bank">{{ $savedBank }}</span>
                                                     <span
-                                                        style="background:#dcfce7;color:#15803d;font-size:0.6rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:4px;">REKENING
-                                                        TERDAFTAR</span>
+                                                        style="background:#dcfce7;color:#15803d;font-size:0.6rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:4px;">TERDAFTAR</span>
                                                 </div>
                                                 <div class="rekening-num" style="color:#0f172a;font-weight:700;font-size:0.85rem;">
                                                     {{ $savedNum }}</div>
@@ -1115,23 +1141,14 @@
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                                             </svg>
-                                            Gunakan Rekening Lain
+                                            Ganti Rekening
                                         </button>
                                     </div>
                                 </div>
                             @else
-                                <div class="alert-notice"
-                                    style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;margin-bottom:1.25rem;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24" style="flex-shrink:0">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="16" x2="12" y2="12" />
-                                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                                    </svg>
-                                    <div>
-                                        Kamu belum mendaftarkan rekening. Silakan isi rekening tujuan di bawah ini. Rekening akan
-                                        <strong>otomatis tersimpan</strong> agar penarikan berikutnya tidak perlu input ulang.
-                                    </div>
+                                                                    <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:0.5rem 0.75rem; font-size:0.74rem; font-weight:600; color:#92400e; margin-bottom:1rem; display:flex; align-items:center; gap:0.45rem;">
+                                    <span>⚠️</span>
+                                    <span>Belum ada rekening. Isi di bawah — otomatis tersimpan.</span>
                                 </div>
                             @endif
 
@@ -1144,12 +1161,10 @@
                                         style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;padding:1.1rem;margin-bottom:1.25rem;">
                                         <div
                                             style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                                            <span style="font-size:0.78rem;font-weight:700;color:#0f172a;">Input Rekening
-                                                Penarikan</span>
+                                            <span style="font-size:0.78rem;font-weight:700;color:#0f172a;">Rekening Penarikan</span>
                                             @if($hasSaved)
                                                 <button type="button" onclick="batalGantiRekening()"
-                                                    style="border:none;background:transparent;color:#dc2626;font-size:0.72rem;font-weight:700;cursor:pointer;">Batal
-                                                    (Gunakan Rekening Terdaftar)</button>
+                                                    style="border:none;background:transparent;color:#dc2626;font-size:0.72rem;font-weight:700;cursor:pointer;">← Pakai Rekening Tersimpan</button>
                                             @endif
                                         </div>
                                         <div class="form-group">
@@ -1262,21 +1277,22 @@
                             </form>
 
                         @else
-                            <div style="text-align:center; padding:2.5rem 1rem; color:#94A3B8;">
-                                <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"
-                                    viewBox="0 0 24 24" style="margin-bottom:1rem;opacity:0.35">
-                                    <rect x="1" y="4" width="22" height="16" rx="2" />
-                                    <line x1="1" y1="10" x2="23" y2="10" />
-                                </svg>
-                                <h4 style="font-size:0.95rem;font-weight:700;color:#374151;margin-bottom:0.4rem;">Saldo Belum
-                                    Cukup</h4>
-                                <p style="font-size:0.8rem;margin:0;">Minimum penarikan Rp 50.000. Saldo siap ditarik kamu saat
-                                    ini Rp {{ number_format($availableBalance, 0, ',', '.') }}.</p>
+                            <div style="text-align:center; padding:1.5rem 1rem; color:#94a3b8;">
+                                <div style="width:44px; height:44px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; margin:0 auto 0.65rem; color:#94a3b8;">
+                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                                        <circle cx="16" cy="12" r="2" />
+                                        <path d="M6 12h.01" />
+                                    </svg>
+                                </div>
+                                <h4 style="font-size:0.9rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">Saldo Belum Mencapai Batas Minimal</h4>
+                                <p style="font-size:0.76rem; color:#64748b; margin:0 0 0.5rem 0;">
+                                    Minimal penarikan dana Rp 50.000. Saldo Anda: <strong style="color:#0f172a;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</strong>
+                                </p>
                                 @if($holdBalance > 0)
-                                    <div
-                                        style="margin-top:0.875rem;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:0.75rem 1rem;font-size:0.78rem;color:#92400e;display:inline-block;">
-                                        Rp {{ number_format($holdBalance, 0, ',', '.') }} sedang dalam masa tunggu 3x24 jam dan akan
-                                        segera tersedia.
+                                    <div style="display:inline-flex; align-items:center; gap:5px; background:#fffbeb; border:1px solid #fde68a; border-radius:999px; padding:0.25rem 0.75rem; font-size:0.72rem; font-weight:600; color:#92400e; margin-top:0.25rem;">
+                                        <span>⏳</span>
+                                        <span>Rp {{ number_format($holdBalance, 0, ',', '.') }} sedang proses hold 3x24 jam</span>
                                     </div>
                                 @endif
                             </div>
@@ -1297,14 +1313,9 @@
                     </div>
                     <div class="form-body">
                         @if($hasSaved)
-                            <div class="alert-notice"
-                                style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;margin-bottom:1.25rem;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24" style="flex-shrink:0">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                </svg>
-                                <span>Rekening tersimpan dan akan otomatis digunakan sebagai tujuan penarikan dana.</span>
+                            <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; border-radius:10px; padding:0.5rem 0.75rem; font-size:0.74rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.45rem;">
+                                <span style="font-weight:800; color:#15803d;">✓</span>
+                                <span>Rekening terdaftar aktif untuk tujuan pencairan dana.</span>
                             </div>
                         @endif
 

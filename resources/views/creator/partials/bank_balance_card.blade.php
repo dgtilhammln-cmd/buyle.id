@@ -50,6 +50,7 @@
         </div>
         @endif
 
+        @if(($posBalance ?? 0) > 0)
         <div class="bank-sub-row">
             <div class="bank-sub-left">
                 <span>Deposit POS</span>
@@ -61,5 +62,6 @@
                 <button type="button" class="bank-btn-transfer" onclick="openTransferPosModal()" title="Pindah ke saldo utama">+ Pindah</button>
             </div>
         </div>
+        @endif
     </div>
 </div>
