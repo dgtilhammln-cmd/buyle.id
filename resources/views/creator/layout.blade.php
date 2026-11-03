@@ -1687,6 +1687,39 @@
                 </a>
             @endif
         </nav>
+    @else
+    {{-- Jika user masuk dari page POS, tampilkan bottom navbar POS (Home, Transaksi, Laporan) --}}
+    <div class="pos-bottom-nav-wrap" id="posBottomNavWrap" style="display: flex !important; position: fixed !important; bottom: 16px !important; left: 14px !important; right: 14px !important; max-width: 320px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
+        <div class="pos-bottom-nav-bar" style="width: 100% !important; height: 60px !important; background: #ffffff !important; border-radius: 999px !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 0.35rem 0.55rem !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04) !important; border: 1.5px solid #f1ece4 !important; gap: 8px !important;">
+            <!-- 1. Home / Kasir (active / klik balik ke kasir POS) -->
+            <a href="{{ route('creator.pos.index') }}" class="pos-nav-item active" id="posNavBtnHome" title="Kasir Home" style="text-decoration:none; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span class="pos-nav-label" style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Home</span>
+            </a>
+
+            <!-- 2. Transactions -->
+            <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item" id="posNavBtnTrans" title="Transaksi" style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <line x1="2" y1="9" x2="6" y2="9"/>
+                    <line x1="18" y1="15" x2="22" y2="15"/>
+                </svg>
+            </a>
+
+            <!-- 3. Laporan / Analytics -->
+            <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item" id="posNavBtnReports" title="Transaksi & Rekap Shift" style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+            </a>
+        </div>
+    </div>
     @endif
 
     {{-- Interactive Locked Feature Modal for Buyers --}}

@@ -2127,10 +2127,10 @@
         /* Background & Container */
         @media (max-width: 991px) {
             body {
-                background: #fbf8f4 !important;
+                background: #ffffff !important;
             }
             .cr-main-wrapper {
-                background: #fbf8f4 !important;
+                background: #ffffff !important;
                 padding: 0 !important;
             }
             .pos-wrapper {
@@ -2954,12 +2954,12 @@
             .cr-main-canvas {
                 padding: 0.5rem 0.75rem 150px 0.75rem !important;
                 min-height: auto !important;
-                background: #fbf8f4 !important;
+                background: #ffffff !important;
                 display: block !important;
             }
             .cr-main-wrapper {
                 min-height: auto !important;
-                background: #fbf8f4 !important;
+                background: #ffffff !important;
             }
             #pos-real-content {
                 margin-top: 0 !important;
@@ -3183,7 +3183,7 @@
                                 </svg>
                             </button>
                             <h1 class="pos-ref-title">Buyle POS</h1>
-                            <a href="{{ route('creator.products.index') }}" class="pos-ref-add-btn" id="posBtnHeaderAdd" title="Kelola Produk di Buyle" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #f1ece4; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                            <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-ref-add-btn" id="posBtnHeaderAdd" title="Kelola Produk di Buyle" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #f1ece4; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </a>
                         </div>
@@ -3211,9 +3211,11 @@
                             </button>
                             @if(isset($categories) && count($categories) > 0)
                                 @foreach($categories as $cItem)
-                                    <button type="button" class="pos-ref-cat-pill" data-cat="cat-{{ $cItem->id }}" onclick="setPosCategoryFilter('cat-{{ $cItem->id }}', this)">
-                                        {{ $cItem->name }}
-                                    </button>
+                                    @if(trim(strtolower($cItem->name)) !== 'kategori 1')
+                                        <button type="button" class="pos-ref-cat-pill" data-cat="cat-{{ $cItem->id }}" onclick="setPosCategoryFilter('cat-{{ $cItem->id }}', this)">
+                                            {{ $cItem->name }}
+                                        </button>
+                                    @endif
                                 @endforeach
                             @endif
                         </div>
@@ -3545,7 +3547,7 @@
                     </svg>
                     <span>Payment In</span>
                 </button>
-                <a href="{{ route('creator.products.index') }}" class="pos-trans-btn-plus" title="Kelola Produk" style="text-decoration:none;">
+                <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-trans-btn-plus" title="Kelola Produk" style="text-decoration:none;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
@@ -9444,7 +9446,7 @@
             // Direct redirect to Products page
             function openPosAddOptionsModal(e) {
                 if (e) { e.preventDefault(); e.stopPropagation(); }
-                window.location.href = "{{ route('creator.products.index') }}";
+                window.location.href = "{{ route('creator.products.index', ['from' => 'pos']) }}";
             }
 
             // Move bottom navbar to <body> to escape overflow:hidden stacking context
@@ -9501,6 +9503,18 @@
         
             // â”€â”€ BUYLE POS SCREEN SWITCHER (Screen 1: Catalog vs Screen 2: Transactions) â”€â”€
             let currentPosActiveScreen = 'catalog';
+            // Check if opened with ?screen=transactions
+            (function() {
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    if (params.get('screen') === 'transactions') {
+                        document.addEventListener('DOMContentLoaded', function() {
+                            switchPosScreen('transactions');
+                        });
+                    }
+                } catch(e) {}
+            })();
+
             let transFilterTimeMode = 'all';
 
             function switchPosScreen(screen) {

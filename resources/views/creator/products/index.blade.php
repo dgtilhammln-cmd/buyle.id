@@ -1,22 +1,4 @@
 
-@push('styles')
-<style>
-  .superapp-bottom-nav,
-  #superappBottomNav,
-  .pos-bottom-nav-wrap,
-  #posBottomNavWrap {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-  body {
-    padding-bottom: 0 !important;
-  }
-  .cr-main-canvas {
-    padding-bottom: 2rem !important;
-  }
-</style>
-@endpush
 @extends('creator.layout')
 @section('title', 'Produk Saya')
 @section('page_title', 'Produk Saya')
@@ -1212,6 +1194,86 @@
 @endsection
 
 @section('content')
+
+  {{-- Mobile Top Header (Sesuai Image 3) --}}
+  <div class="prod-mobile-header">
+    <button type="button" class="prod-mobile-btn" onclick="handleProductMobileBack()" title="Kembali">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <h2 class="prod-mobile-title">Menu & Profil</h2>
+    <button type="button" class="prod-mobile-btn" onclick="toggleMobileNotif()" title="Notifikasi">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+    </button>
+  </div>
+
+  <style>
+    .prod-mobile-header {
+      display: none;
+    }
+    @media (max-width: 991px) {
+      .prod-mobile-header {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.65rem 0 1rem;
+        margin-bottom: 0.25rem;
+      }
+      .prod-mobile-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1.5px solid #f1ece4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+      .prod-mobile-btn:active {
+        transform: scale(0.92);
+      }
+      .prod-mobile-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.01em;
+      }
+    }
+  </style>
+
+  <script>
+    function handleProductMobileBack() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('from') === 'pos' || document.referrer.includes('/pos')) {
+          window.location.href = "{{ route('creator.pos.index') }}";
+          return;
+        }
+      } catch(e) {}
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "{{ route('creator.app.index') }}";
+      }
+    }
+
+    function toggleMobileNotif() {
+      // Direct to dashboard or notifications
+      window.location.href = "{{ route('creator.app.index') }}";
+    }
+  </script>
+
 
   {{-- SKELETON LOADING PLACEHOLDER (Smooth & Lightweight) --}}
   <div id="products-skeleton" style="margin-bottom: 2rem;">

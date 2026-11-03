@@ -291,7 +291,16 @@ class PosController extends Controller
         $posQrisUrl      = $profile?->pos_qris_image ? asset('storage/' . $profile->pos_qris_image) : null;
         $posFeePayer     = $profile?->pos_fee_payer ?? 'seller';
 
-        $categories = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)->where('is_active', true)->orderBy('name')->get();
+        // Hapus kelompok produk 'Kategori 1' sesuai instruksi user
+        try {
+            \App\Models\CreatorProductGroup::where('name', 'Kategori 1')->delete();
+        } catch (\Exception $e) {}
+
+        $categories = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)
+            ->where('is_active', true)
+            ->where('name', '!=', 'Kategori 1')
+            ->orderBy('name')
+            ->get();
         $recentPosOrders = \App\Models\Order::where('source', 'pos')
             ->where('seller_id', $seller->id)
             ->with(['items', 'payment'])
