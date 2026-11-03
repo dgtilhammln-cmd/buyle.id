@@ -185,7 +185,9 @@ class PosController extends Controller
             $posProducts->push($cp);
         }
 
-        return $posProducts->unique('id')->values();
+        $result = $posProducts->unique('id')->values();
+        $result->load(['variantOptions.values']);
+        return $result;
     }
 
     /**
@@ -278,7 +280,15 @@ class PosController extends Controller
         // 14. Daftar Meja Toko
         $posTables = $profile ? $profile->getPosTables() : [];
 
+        // 15. Pengaturan QRIS Statis & Fee Payer
+        $posCashlessMode = $profile?->pos_cashless_mode ?? 'snap_midtrans';
+        $posQrisUrl      = $profile?->pos_qris_image ? asset('storage/' . $profile->pos_qris_image) : null;
+        $posFeePayer     = $profile?->pos_fee_payer ?? 'seller';
+
         return view('creator.pos.index', compact(
+            'posCashlessMode',
+            'posQrisUrl',
+            'posFeePayer',
             'products',
             'todayOrders',
             'profile',
@@ -366,17 +376,22 @@ class PosController extends Controller
                     ->where('seller_id', $seller->id)
                     ->firstOrFail();
 
-                $price    = (float) ($product->sale_price ?: $product->price);
+                $price    = isset($itemData['price']) && (float)$itemData['price'] > 0
+                    ? (float)$itemData['price']
+                    : (float) ($product->sale_price ?: $product->price);
                 $qty      = (int) $itemData['qty'];
                 $itemSub  = $price * $qty;
                 $subtotal += $itemSub;
 
                 $orderItemsData[] = [
-                    'product_id'   => $product->id,
-                    'product_name' => $product->name,
-                    'price'        => $price,
-                    'qty'          => $qty,
-                    'subtotal'     => $itemSub,
+                    'product_id'       => $product->id,
+                    'product_name'     => $product->name,
+                    'variant_value_id' => $itemData['variant_value_id'] ?? null,
+                    'variant_name'     => $itemData['variant_name'] ?? null,
+                    'notes'            => $itemData['notes'] ?? null,
+                    'price'            => $price,
+                    'qty'              => $qty,
+                    'subtotal'         => $itemSub,
                 ];
             }
 
@@ -414,27 +429,37 @@ class PosController extends Controller
             $adminFee    = $feeCalc['admin_fee'];
             $totalFee    = $platformFee + $adminFee;
 
-            $total = max(0, $subtotal - $discountAmount + $serviceFee + $platformFee + $adminFee);
+            $posFeePayer = $profile?->pos_fee_payer ?? 'seller';
+            if ($posFeePayer === 'buyer') {
+                // Fee ditanggung pembeli: ditambahkan ke total belanja
+                $total = max(0, $subtotal - $discountAmount + $serviceFee + $totalFee);
+            } else {
+                // Fee ditanggung penjual: pembeli hanya membayar harga produk (+ pajak/layanan toko)
+                $total = max(0, $subtotal - $discountAmount + $serviceFee);
 
-            $paymentMethod = $request->payment_method;
-            $isPaid = in_array($paymentMethod, ['cash', 'transfer']);
-            $customerName = trim($request->customer_name ?? '') ?: 'Pelanggan Umum';
-
-            // Validasi Saldo Deposit Kasir POS jika metode pembayaran CASH
-            if ($paymentMethod === 'cash' && $totalFee > 0) {
-                $currentBalance = (float) ($profile->pos_balance ?? 0);
-                if ($currentBalance < $totalFee) {
-                    DB::rollBack();
-                    return response()->json([
-                        'success'              => false,
-                        'insufficient_deposit' => true,
-                        'required_fee'         => $totalFee,
-                        'current_balance'      => $currentBalance,
-                        'shortage'             => $totalFee - $currentBalance,
-                        'message'              => 'Saldo deposit POS Anda tidak mencukupi untuk biaya transaksi (Dibutuhkan: Rp ' . number_format($totalFee, 0, ',', '.') . ', Saldo Anda: Rp ' . number_format($currentBalance, 0, ',', '.') . '). Silakan isi saldo deposit terlebih dahulu.',
-                    ], 422);
+                // Validasi Saldo Deposit Kasir POS jika ditanggung penjual & totalFee > 0
+                // (Kecuali jika disetting 0 di admin, maka totalFee == 0 sehingga transaksi tetap lancar)
+                if ($totalFee > 0) {
+                    $currentBalance = (float) ($profile->pos_balance ?? 0);
+                    if ($currentBalance < $totalFee) {
+                        DB::rollBack();
+                        return response()->json([
+                            'success'              => false,
+                            'insufficient_deposit' => true,
+                            'required_fee'         => $totalFee,
+                            'current_balance'      => $currentBalance,
+                            'shortage'             => $totalFee - $currentBalance,
+                            'message'              => 'Saldo deposit POS Anda tidak mencukupi untuk biaya transaksi (Dibutuhkan: Rp ' . number_format($totalFee, 0, ',', '.') . ', Saldo Anda: Rp ' . number_format($currentBalance, 0, ',', '.') . '). Silakan isi saldo deposit terlebih dahulu.',
+                        ], 422);
+                    }
                 }
             }
+
+            $posCashlessMode = $profile?->pos_cashless_mode ?? 'snap_midtrans';
+            $paymentMethod = $request->payment_method;
+            $isStaticQris = ($paymentMethod === 'qris' && $posCashlessMode === 'qris_static');
+            $isPaid = in_array($paymentMethod, ['cash', 'transfer']) || $isStaticQris;
+            $customerName = trim($request->customer_name ?? '') ?: 'Pelanggan Umum';
 
             // Create Order
             $order = Order::create([
@@ -463,6 +488,18 @@ class PosController extends Controller
                     'service_fee'      => $serviceFee,
                     'fees_breakdown'   => $feesBreakdown,
                     'discount_details' => $discountDetails,
+                    'items_meta'       => array_map(function($it) {
+                        return [
+                            'product_id'       => $it['product_id'],
+                            'product_name'     => $it['product_name'],
+                            'variant_value_id' => $it['variant_value_id'] ?? null,
+                            'variant_name'     => $it['variant_name'] ?? null,
+                            'notes'            => $it['notes'] ?? null,
+                            'price'            => $it['price'],
+                            'qty'              => $it['qty'],
+                            'subtotal'         => $it['subtotal'],
+                        ];
+                    }, $orderItemsData),
                     'cashier_id'       => $cashierId,
                     'cashier_name'     => $cashierName,
                     'cashier_shift'    => $cashierShift,
@@ -473,12 +510,14 @@ class PosController extends Controller
             foreach ($orderItemsData as $itemRow) {
                 $itemRow['order_id'] = $order->id;
                 OrderItem::create([
-                    'order_id'     => $order->id,
-                    'product_id'   => $itemRow['product_id'],
-                    'product_name' => $itemRow['product_name'],
-                    'price'        => $itemRow['price'],
-                    'qty'          => $itemRow['qty'],
-                    'subtotal'     => $itemRow['subtotal'],
+                    'order_id'         => $order->id,
+                    'product_id'       => $itemRow['product_id'],
+                    'variant_value_id' => $itemRow['variant_value_id'] ?? null,
+                    'variant_name'     => $itemRow['variant_name'] ?? null,
+                    'product_name'     => $itemRow['product_name'],
+                    'price'            => $itemRow['price'],
+                    'qty'              => $itemRow['qty'],
+                    'subtotal'         => $itemRow['subtotal'],
                 ]);
 
                 // Kurangi stok jika produk memiliki stok terhitung
@@ -494,14 +533,14 @@ class PosController extends Controller
                 'payment_number' => Payment::generatePaymentNumber(),
                 'order_id'       => $order->id,
                 'method'         => $paymentMethod,
-                'gateway'        => $paymentMethod === 'qris' ? 'midtrans' : 'direct',
+                'gateway'        => $isStaticQris ? 'qris_static' : ($paymentMethod === 'qris' ? 'midtrans' : 'direct'),
                 'amount'         => $total,
                 'status'         => $isPaid ? PaymentStatus::Success : PaymentStatus::Pending,
                 'paid_at'        => $isPaid ? now() : null,
             ]);
 
-            // Potong Saldo Deposit Kasir POS jika pembayaran CASH & catat mutasi ledger
-            if ($paymentMethod === 'cash' && $totalFee > 0 && $profile) {
+            // Potong Saldo Deposit Kasir POS jika ditanggung penjual & metode cash/transfer/qris
+            if ($posFeePayer === 'seller' && $totalFee > 0 && $profile && in_array($paymentMethod, ['cash', 'transfer', 'qris'])) {
                 $balanceBefore = (float) $profile->pos_balance;
                 $balanceAfter  = max(0, $balanceBefore - $totalFee);
                 $profile->update(['pos_balance' => $balanceAfter]);
@@ -514,15 +553,15 @@ class PosController extends Controller
                     'balance_after'    => $balanceAfter,
                     'order_id'         => $order->id,
                     'reference_number' => $order->order_number,
-                    'notes'            => 'Potongan Fee Kasir Transaksi Tunai ' . $order->order_number,
+                    'notes'            => 'Potongan Fee Kasir POS (' . strtoupper($paymentMethod) . ') ' . $order->order_number,
                 ]);
             }
 
             DB::commit();
 
-            // Handle Midtrans Snap Token for QRIS
+            // Handle Midtrans Snap Token for QRIS (HANYA jika mode snap_midtrans)
             $snapToken = null;
-            if ($paymentMethod === 'qris') {
+            if ($paymentMethod === 'qris' && !$isStaticQris) {
                 try {
                     $midtransService = app(MidtransService::class);
                     $snapToken = $midtransService->createSnapToken($order);
@@ -540,11 +579,13 @@ class PosController extends Controller
             $order->load(['items', 'payment']);
 
             return response()->json([
-                'success'     => true,
-                'message'     => 'Transaksi POS berhasil diproses',
-                'order'       => $order,
-                'snap_token'  => $snapToken,
-                'pos_balance' => $profile ? (float) $profile->fresh()->pos_balance : 0,
+                'success'        => true,
+                'message'        => 'Transaksi POS berhasil diproses',
+                'order'          => $order,
+                'snap_token'     => $snapToken,
+                'is_static_qris' => $isStaticQris,
+                'qris_image_url' => $isStaticQris && $profile->pos_qris_image ? asset('storage/' . $profile->pos_qris_image) : null,
+                'pos_balance'    => $profile ? (float) $profile->fresh()->pos_balance : 0,
             ]);
 
         } catch (Exception $e) {
@@ -1038,6 +1079,65 @@ class PosController extends Controller
     }
 
     /**
+     * Upload Gambar QRIS Statis Toko (Auto-convert ke WebP).
+     */
+    public function uploadQris(Request $request)
+    {
+        $request->validate([
+            'qris_image' => 'required|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+        ]);
+
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+
+        if ($request->hasFile('qris_image')) {
+            if ($profile->pos_qris_image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_qris_image);
+            }
+
+            // Gunakan ImageOptimizer untuk otomatis konversi ke WebP dan kompresi optimal
+            $path = app(\App\Services\ImageOptimizer::class)->store($request->file('qris_image'), 'pos_qris', 'product');
+            $profile->update(['pos_qris_image' => $path]);
+
+            return response()->json([
+                'success'  => true,
+                'message'  => 'Gambar QRIS Statis berhasil disimpan (otomatis format WebP)!',
+                'qris_url' => asset('storage/' . $path),
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'File gambar tidak valid.',
+        ], 422);
+    }
+
+    /**
+     * Hapus Gambar QRIS Statis Toko.
+     */
+    public function removeQris()
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+
+        if ($profile->pos_qris_image) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_qris_image);
+            $profile->update(['pos_qris_image' => null]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Gambar QRIS Statis berhasil dihapus.',
+        ]);
+    }
+
+    /**
      * Simpan Pengaturan Profil Toko untuk Struk POS (Alamat, No Telp, Nama Toko).
      */
     public function updateSettings(Request $request)
@@ -1055,6 +1155,8 @@ class PosController extends Controller
             'pos_fees'          => 'nullable',
             'pos_discounts'     => 'nullable',
             'pos_tables'        => 'nullable',
+            'pos_cashless_mode' => 'nullable|string|in:snap_midtrans,qris_static',
+            'pos_fee_payer'     => 'nullable|string|in:seller,buyer',
         ]);
 
         $updateData = [
@@ -1098,6 +1200,18 @@ class PosController extends Controller
             $updateData['bio_config'] = $bioConfig;
         }
 
+        if ($request->has('pos_cashless_mode')) {
+            $updateData['pos_cashless_mode'] = in_array($request->pos_cashless_mode, ['snap_midtrans', 'qris_static'])
+                ? $request->pos_cashless_mode
+                : 'snap_midtrans';
+        }
+
+        if ($request->has('pos_fee_payer')) {
+            $updateData['pos_fee_payer'] = in_array($request->pos_fee_payer, ['seller', 'buyer'])
+                ? $request->pos_fee_payer
+                : 'seller';
+        }
+
         $profile->update($updateData);
 
         return response()->json([
@@ -1110,6 +1224,9 @@ class PosController extends Controller
                 'pos_fees'          => $profile->getPosFees(),
                 'pos_discounts'     => $profile->getPosDiscounts(),
                 'pos_tables'        => $profile->getPosTables(),
+                'pos_cashless_mode' => $profile->pos_cashless_mode ?? 'snap_midtrans',
+                'pos_fee_payer'     => $profile->pos_fee_payer ?? 'seller',
+                'pos_qris_url'      => $profile->pos_qris_image ? asset('storage/' . $profile->pos_qris_image) : null,
             ]
         ]);
     }

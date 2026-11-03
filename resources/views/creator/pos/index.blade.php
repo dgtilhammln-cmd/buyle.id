@@ -1338,8 +1338,7 @@
             position: relative;
             z-index: 1;
         }
-    </style>
-
+    
         /* ═══════════════════════════════════════════════════════════════
            MOBILE-FIRST POS OVERHAUL (100% Sesuai Mockup Gambar 3-Layar)
            Pure Light Theme - Zero Dark Blocks - Shimmer Skeleton Effect
@@ -2014,7 +2013,7 @@
                 box-shadow: 0 -4px 14px rgba(0,0,0,0.04) !important;
             }
         }
-
+    </style>
 @endsection
 
 @section('topbar_actions')
@@ -2459,7 +2458,7 @@
                                 <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
                                     data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}"
                                     data-image="{{ $imgUrl ?? '' }}"
-                                    onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }}, '{{ $imgUrl ? addslashes($imgUrl) : '' }}')">
+                                    onclick="handleProductClick({{ $prod->id }})">
                                     <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}">0</div>
                                     {{-- Circular Checkmark Badge on Image (Screen 1 UI) --}}
                                     <div class="product-check-badge" id="card-check-{{ $prod->id }}" style="display:none;">
@@ -2575,7 +2574,7 @@
                                         
                                         {{-- Round + Add Button (When item not in cart) --}}
                                         <button type="button" class="card-btn-add" id="card-add-btn-{{ $prod->id }}"
-                                            onclick="event.stopPropagation(); addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }}, '{{ $imgUrl ? addslashes($imgUrl) : '' }}');"
+                                            onclick="event.stopPropagation(); handleProductClick({{ $prod->id }});"
                                             title="Tambah ke Keranjang">
                                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -2586,7 +2585,7 @@
                                         {{-- Stepper Pill (When item is in cart: — qty +) --}}
                                         <div class="card-stepper" id="card-stepper-{{ $prod->id }}" style="display:none;">
                                             <button type="button" class="card-stepper-btn minus"
-                                                onclick="event.stopPropagation(); updateQty({{ $prod->id }}, -1);"
+                                                onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, -1);"
                                                 title="Kurang 1">
                                                 <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                     <line x1="5" y1="12" x2="19" y2="12" />
@@ -2594,7 +2593,7 @@
                                             </button>
                                             <span class="card-stepper-num" id="card-qty-num-{{ $prod->id }}">1</span>
                                             <button type="button" class="card-stepper-btn plus"
-                                                onclick="event.stopPropagation(); updateQty({{ $prod->id }}, 1);"
+                                                onclick="event.stopPropagation(); handleCardStepper({{ $prod->id }}, 1);"
                                                 title="Tambah 1">
                                                 <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                     <line x1="12" y1="5" x2="12" y2="19" />
@@ -3639,6 +3638,13 @@
                         </svg>
                         Kelola Meja (<span id="settingTablesBadgeCount">{{ count($posTables ?? []) }}</span>)
                     </button>
+                    <button type="button" class="history-tab-btn" id="tabBtnSettingPayment" onclick="switchSettingTab('payment')">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <line x1="2" y1="10" x2="22" y2="10" />
+                        </svg>
+                        Pembayaran &amp; Fee
+                    </button>
                 </div>
 
                 <!-- Modal Body with Scroll -->
@@ -4452,6 +4458,163 @@
                             </div>
                         </div>
 
+                        <!-- ══ TAB 6: PEMBAYARAN CASHLESS & BEBAN FEE POS ══ -->
+                        <div id="paneSettingPayment" style="display:none;">
+                            <!-- Info Alert -->
+                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:12px 14px; margin-bottom:1.1rem; display:flex; gap:10px; align-items:flex-start;">
+                                <svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+                                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                                    <line x1="2" y1="10" x2="22" y2="10" />
+                                </svg>
+                                <div style="font-size:0.77rem; color:#166534; line-height:1.45;">
+                                    <strong>Konfigurasi Cashless & Penanggung Fee Platform/Admin</strong><br>
+                                    Atur metode cashless (Midtrans Snap dinamis otomatis atau QRIS Statis upload toko sendiri) dan tentukan beban biaya fee ditanggung penjual (potong saldo deposit) atau pembeli (ditambahkan ke total tagihan).
+                                </div>
+                            </div>
+
+                            <!-- Opsi 1: Mode Cashless (QRIS) -->
+                            <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.2rem; margin-bottom:1.2rem;">
+                                <div style="font-weight:800; font-size:0.86rem; color:#0f172a; margin-bottom:0.25rem;">
+                                    1. Metode Cashless POS (QRIS)
+                                </div>
+                                <div style="font-size:0.74rem; color:#64748b; margin-bottom:1rem;">
+                                    Pilih alur penerimaan non-tunai saat kasir memilih pembayaran QRIS / Cashless.
+                                </div>
+
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-bottom:1rem;">
+                                    <!-- Midtrans Snap -->
+                                    <label style="border:1.5px solid {{ $posCashlessMode === 'snap_midtrans' ? '#16a34a' : '#e2e8f0' }}; background: {{ $posCashlessMode === 'snap_midtrans' ? '#f0fdf4' : '#ffffff' }}; border-radius:12px; padding:1rem; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:all 0.15s ease;" class="cashless-mode-card" id="cardModeSnap">
+                                        <input type="radio" name="set_pos_cashless_mode" value="snap_midtrans" {{ $posCashlessMode === 'snap_midtrans' ? 'checked' : '' }} onchange="onCashlessModeChange('snap_midtrans')" style="accent-color:#16a34a; margin-top:3px;">
+                                        <div>
+                                            <div style="font-weight:700; font-size:0.82rem; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                                Midtrans Snap
+                                                <span style="font-size:0.65rem; background:#dcfce7; color:#15803d; padding:2px 6px; border-radius:999px; font-weight:700;">Dinamis</span>
+                                            </div>
+                                            <div style="font-size:0.72rem; color:#64748b; margin-top:4px; line-height:1.4;">
+                                                QRIS terbit otomatis &amp; nominal unik per transaksi. Pembayaran terverifikasi otomatis via sistem gateway.
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- QRIS Statis Toko -->
+                                    <label style="border:1.5px solid {{ $posCashlessMode === 'qris_static' ? '#16a34a' : '#e2e8f0' }}; background: {{ $posCashlessMode === 'qris_static' ? '#f0fdf4' : '#ffffff' }}; border-radius:12px; padding:1rem; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:all 0.15s ease;" class="cashless-mode-card" id="cardModeStatic">
+                                        <input type="radio" name="set_pos_cashless_mode" value="qris_static" {{ $posCashlessMode === 'qris_static' ? 'checked' : '' }} onchange="onCashlessModeChange('qris_static')" style="accent-color:#16a34a; margin-top:3px;">
+                                        <div>
+                                            <div style="font-weight:700; font-size:0.82rem; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                                QRIS Statis Toko
+                                                <span style="font-size:0.65rem; background:#fef3c7; color:#b45309; padding:2px 6px; border-radius:999px; font-weight:700;">Upload Gambar</span>
+                                            </div>
+                                            <div style="font-size:0.72rem; color:#64748b; margin-top:4px; line-height:1.4;">
+                                                Menampilkan gambar QRIS toko Anda langsung di layar kasir/pelanggan. Uang langsung masuk rekening Anda.
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Panel Upload QRIS Statis -->
+                                <div id="staticQrisUploadPanel" style="display: {{ $posCashlessMode === 'qris_static' ? 'block' : 'none' }}; border-top:1px dashed #e2e8f0; padding-top:1rem; margin-top:0.5rem;">
+                                    <div style="font-weight:700; font-size:0.78rem; color:#334155; margin-bottom:0.6rem;">
+                                        File Gambar QRIS Statis Toko (Auto WebP)
+                                    </div>
+
+                                    <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
+                                        <!-- Preview Box -->
+                                        <div id="qrisPreviewContainer" style="width:130px; height:130px; border:2px dashed #cbd5e1; border-radius:12px; display:flex; align-items:center; justify-content:center; background:#f8fafc; overflow:hidden; flex-shrink:0;">
+                                            @if($posQrisUrl)
+                                                <img src="{{ $posQrisUrl }}" id="qrisPreviewImg" style="width:100%; height:100%; object-fit:contain; background:#ffffff;">
+                                            @else
+                                                <div id="qrisPreviewPlaceholder" style="text-align:center; padding:8px; color:#94a3b8; font-size:0.68rem;">
+                                                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 4px auto; display:block;">
+                                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                                    </svg>
+                                                    Belum ada QRIS
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <div style="flex:1; min-width:200px;">
+                                            <input type="file" id="posQrisFileInput" accept="image/*" style="display:none;" onchange="handleQrisFileSelect(event)">
+                                            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+                                                <button type="button" class="btn-submit-green" onclick="document.getElementById('posQrisFileInput').click()" style="width:auto; padding:0.45rem 1rem; font-size:0.75rem; border-radius:8px;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                        <polyline points="17 8 12 3 7 8"/>
+                                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                                    </svg>
+                                                    Unggah Gambar QRIS
+                                                </button>
+                                                <button type="button" class="btn-outline-bio" id="btnRemoveQris" onclick="removeQrisImage()" style="padding:0.45rem 0.9rem; font-size:0.75rem; border-radius:8px; color:#ef4444; border-color:#fca5a5; display: {{ $posQrisUrl ? 'inline-flex' : 'none' }};">
+                                                    Hapus QRIS
+                                                </button>
+                                            </div>
+                                            <div style="font-size:0.7rem; color:#64748b; line-height:1.45;">
+                                                Format didukung: JPG, PNG, WEBP (Maks 5MB). File yang diunggah <strong>otomatis dikonversi ke WebP</strong> dan dikompresi agar ringan, jernih, dan cepat tampil saat scan.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Opsi 2: Penanggung Biaya Admin & Platform Fee -->
+                            <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.2rem; margin-bottom:1.2rem;">
+                                <div style="font-weight:800; font-size:0.86rem; color:#0f172a; margin-bottom:0.25rem;">
+                                    2. Penanggung Biaya Platform &amp; Admin POS
+                                </div>
+                                <div style="font-size:0.74rem; color:#64748b; margin-bottom:1rem;">
+                                    Tarif saat ini: Platform Fee {{ $platformFeeRate }}% &amp; Admin Fee {{ $adminFeeRate }}%. Tentukan pihak yang membayar biaya transaksi ini.
+                                </div>
+
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-bottom:0.5rem;">
+                                    <!-- Ditanggung Penjual -->
+                                    <label style="border:1.5px solid {{ $posFeePayer === 'seller' ? '#16a34a' : '#e2e8f0' }}; background: {{ $posFeePayer === 'seller' ? '#f0fdf4' : '#ffffff' }}; border-radius:12px; padding:1rem; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:all 0.15s ease;" class="fee-payer-card" id="cardFeePayerSeller">
+                                        <input type="radio" name="set_pos_fee_payer" value="seller" {{ $posFeePayer === 'seller' ? 'checked' : '' }} onchange="onFeePayerChange('seller')" style="accent-color:#16a34a; margin-top:3px;">
+                                        <div>
+                                            <div style="font-weight:700; font-size:0.82rem; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                                Ditanggung Penjual
+                                                <span style="font-size:0.65rem; background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:999px; font-weight:700;">Potong Saldo Deposit</span>
+                                            </div>
+                                            <div style="font-size:0.72rem; color:#64748b; margin-top:4px; line-height:1.4;">
+                                                Pembeli hanya membayar murni total belanja (+ pajak/layanan toko). Fee platform dipotong otomatis dari <strong>Saldo Deposit POS</strong> penjual.
+                                            </div>
+                                            <div style="font-size:0.68rem; color:#b45309; margin-top:6px; background:#fffbeb; padding:4px 8px; border-radius:6px; border:1px solid #fef3c7; line-height:1.35;">
+                                                ⚠️ Jika deposit tidak mencukupi, transaksi POS tidak dapat diproses (kecuali jika setting fee di admin 0% platform &amp; 0% admin).
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- Ditanggung Pembeli -->
+                                    <label style="border:1.5px solid {{ $posFeePayer === 'buyer' ? '#16a34a' : '#e2e8f0' }}; background: {{ $posFeePayer === 'buyer' ? '#f0fdf4' : '#ffffff' }}; border-radius:12px; padding:1rem; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:all 0.15s ease;" class="fee-payer-card" id="cardFeePayerBuyer">
+                                        <input type="radio" name="set_pos_fee_payer" value="buyer" {{ $posFeePayer === 'buyer' ? 'checked' : '' }} onchange="onFeePayerChange('buyer')" style="accent-color:#16a34a; margin-top:3px;">
+                                        <div>
+                                            <div style="font-weight:700; font-size:0.82rem; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                                Ditanggung Pembeli
+                                                <span style="font-size:0.65rem; background:#dcfce7; color:#15803d; padding:2px 6px; border-radius:999px; font-weight:700;">Tambah ke Tagihan</span>
+                                            </div>
+                                            <div style="font-size:0.72rem; color:#64748b; margin-top:4px; line-height:1.4;">
+                                                Sistem kasir secara otomatis menambahkan nominal fee platform &amp; admin ke total tagihan yang dibayarkan oleh pembeli. Saldo deposit penjual tidak dipotong.
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Save Action -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding-top:0.5rem;">
+                                <div style="font-size:0.72rem; color:#64748b;">
+                                    Pengaturan akan langsung aktif di layar kasir POS.
+                                </div>
+                                <button type="button" class="btn-submit-green" id="btnSavePaymentSettings" onclick="savePaymentSettings()" style="width:auto; padding:0.48rem 1.4rem; font-size:0.78rem; border-radius:999px;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Simpan Pengaturan Pembayaran
+                                </button>
+                            </div>
+                        </div>
+
                     </div> <!-- end posSettingsRealContent -->
 
                 </div>
@@ -4471,6 +4634,106 @@
         </div>
 
         <!-- CUSTOM OVERLAY MODAL 3: History & Shift Closing Modal -->
+        <!-- CUSTOM OVERLAY MODAL: Product Variant & Notes Modal -->
+        <div class="pos-modal-overlay" id="posVariantModal" style="z-index: 100010;">
+            <div class="pos-modal-card" style="max-width: 480px; width: 95vw; border-radius: 20px; overflow: hidden; background: #ffffff; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+                <div class="pos-modal-head" style="padding: 1.1rem 1.25rem; border-bottom: 1.5px solid #f1f5f9; background: #ffffff;">
+                    <div style="display: flex; align-items: center; gap: 12px; width: calc(100% - 32px);">
+                        <div id="variantModalImgWrap" style="width: 48px; height: 48px; border-radius: 12px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                            <img id="variantModalImg" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <svg id="variantModalImgFallback" width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                        </div>
+                        <div style="min-width: 0;">
+                            <div id="variantModalTitle" style="font-weight: 800; font-size: 0.95rem; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                            <div id="variantModalBasePrice" style="font-size: 0.78rem; color: #16a34a; font-weight: 700;"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="pos-modal-close" onclick="closeModal('posVariantModal')">&times;</button>
+                </div>
+
+                <div class="pos-modal-body" style="padding: 1.25rem; max-height: 60vh; overflow-y: auto;">
+                    <div id="variantModalOptionsList" style="display: flex; flex-direction: column; gap: 1.1rem;"></div>
+
+                    <div style="margin-top: 1.2rem; border-top: 1px dashed #e2e8f0; padding-top: 1rem;">
+                        <label style="font-weight: 700; font-size: 0.78rem; color: #334155; display: flex; align-items: center; gap: 6px; margin-bottom: 0.4rem;">
+                            <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                            </svg>
+                            Catatan Khusus Produk
+                            <span style="font-weight: 400; color: #94a3b8; font-size: 0.7rem;">(Opsional)</span>
+                        </label>
+                        <textarea id="variantModalNotes" rows="2" placeholder="Cth: es sedikit, pisah sambal, tidak pedas, kuah banyak..." style="width: 100%; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; font-size: 0.78rem; outline: none; transition: border-color 0.15s; resize: none; background: #f8fafc; color: #0f172a; box-sizing: border-box;"></textarea>
+                    </div>
+
+                    <div style="margin-top: 1.1rem; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px 14px;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #334155;">Jumlah</div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="button" onclick="adjustVariantModalQty(-1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; font-size: 1rem; font-weight: 800; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: center;">-</button>
+                            <span id="variantModalQty" style="font-weight: 800; font-size: 0.92rem; color: #0f172a; min-width: 24px; text-align: center;">1</span>
+                            <button type="button" onclick="adjustVariantModalQty(1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; font-size: 1rem; font-weight: 800; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pos-modal-foot" style="padding: 1rem 1.25rem; border-top: 1.5px solid #f1f5f9; background: #ffffff; display: flex; gap: 10px;">
+                    <button type="button" class="btn-outline-bio" onclick="closeModal('posVariantModal')" style="flex: 1; padding: 0.65rem; border-radius: 999px; font-size: 0.8rem;">Batal</button>
+                    <button type="button" class="btn-submit-green" id="btnVariantModalAdd" onclick="confirmVariantModalAdd()" style="flex: 2; padding: 0.65rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;">Tambah ke Pesanan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOM OVERLAY MODAL: Static QRIS Display Modal -->
+        <div class="pos-modal-overlay" id="posStaticQrisModal" style="z-index: 100020;">
+            <div class="pos-modal-card" style="max-width: 440px; width: 95vw; border-radius: 20px; overflow: hidden; background: #ffffff; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+                <div class="pos-modal-head" style="padding: 1.1rem 1.4rem; border-bottom: 1.5px solid #f1f5f9; background: #ffffff; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-weight: 800; font-size: 0.95rem; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Scan QRIS Toko
+                    </div>
+                    <button type="button" class="pos-modal-close" onclick="closeModal('posStaticQrisModal')">&times;</button>
+                </div>
+
+                <div class="pos-modal-body" style="padding: 1.5rem 1.25rem; background: #f8fafc;">
+                    <div style="font-size: 0.78rem; color: #64748b; font-weight: 600;">Total Tagihan Pembeli</div>
+                    <div id="staticQrisAmountText" style="font-size: 1.7rem; font-weight: 900; color: #0f172a; letter-spacing: -0.02em; margin: 4px 0 1rem 0;">Rp 0</div>
+
+                    <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 16px; padding: 14px; max-width: 280px; margin: 0 auto 1.2rem auto; box-shadow: 0 4px 14px rgba(0,0,0,0.05);">
+                        <img id="staticQrisDisplayImg" src="" alt="QRIS Toko" style="width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto;">
+                        <div id="staticQrisNoImageWarning" style="display: none; padding: 2rem 1rem; color: #ef4444; font-size: 0.8rem; font-weight: 700;">
+                            Gambar QRIS Toko belum diunggah.<br><span style="font-weight: 400; color: #64748b; font-size: 0.72rem;">Silakan upload gambar QRIS toko di Pengaturan POS.</span>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 0.72rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.05em;" id="staticQrisStoreName"></div>
+                    </div>
+
+                    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 10px 12px; font-size: 0.72rem; color: #1e40af; line-height: 1.4; text-align: left; display: flex; gap: 8px; align-items: flex-start;">
+                        <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="16" x2="12" y2="12" />
+                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                        </svg>
+                        <div>Minta pelanggan memindai QRIS di atas dengan BCA, OVO, GoPay, ShopeePay, Dana, dll. Pastikan dana sudah masuk sebelum menekan tombol selesai.</div>
+                    </div>
+                </div>
+
+                <div class="pos-modal-foot" style="padding: 1rem 1.25rem; border-top: 1.5px solid #f1f5f9; background: #ffffff; display: flex; gap: 10px;">
+                    <button type="button" class="btn-outline-bio" onclick="closeModal('posStaticQrisModal')" style="flex: 1; padding: 0.65rem; border-radius: 999px; font-size: 0.78rem;">Tutup</button>
+                    <button type="button" class="btn-submit-green" id="btnStaticQrisConfirmDone" onclick="confirmStaticQrisDone()" style="flex: 2; padding: 0.65rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
+                        ✓ Pembayaran Diterima (Selesai)
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="pos-modal-overlay" id="posHistoryModal">
             <div class="pos-modal-card" style="max-width: 860px; width: 95vw;">
                 <div class="pos-modal-head">
@@ -4961,15 +5224,52 @@
             const posBioBaseUrl = {!! json_encode(!empty($profile?->custom_domain) ? ('https://' . rtrim($profile?->custom_domain, '/')) : url('/' . ($profile?->store_slug ?: ($seller->username ?? '')))) !!};
             const posStoreDisplayName = {!! json_encode($profile?->store_name ?? $storeName ?? 'Toko') !!};
 
-            // All products list for discount product-picker
-            window.posAllProducts = [
+            // Konfigurasi Cashless, Fee Payer, & Saldo Deposit POS
+            let posCashlessMode = {!! json_encode($posCashlessMode ?? 'snap_midtrans') !!};
+            let posQrisUrl = {!! json_encode($posQrisUrl ?? null) !!};
+            let posFeePayer = {!! json_encode($posFeePayer ?? 'seller') !!};
+            let posBalance = {{ (float)($posBalance ?? 0) }};
+
+            // Master Katalog Produk Lengkap dengan Variasi
+            window.posCatalog = {
                 @foreach($products as $prod)
-                                {
+                    @php
+                        $pPrice = (float)($prod->sale_price ?: $prod->price);
+                        $pImg = $prod->image ? (str_starts_with($prod->image, 'http') ? $prod->image : asset('storage/' . $prod->image)) : '';
+                        $pHasVariants = $prod->variantOptions && $prod->variantOptions->count() > 0;
+                        $pVariants = [];
+                        if ($pHasVariants) {
+                            foreach ($prod->variantOptions as $opt) {
+                                $vals = [];
+                                foreach ($opt->values as $val) {
+                                    $vals[] = [
+                                        'id' => $val->id,
+                                        'value' => $val->value,
+                                        'price_adjustment' => (float)($val->price_adjustment ?? 0),
+                                        'final_price' => (float)$val->finalPrice(),
+                                        'stock' => $val->stock,
+                                    ];
+                                }
+                                $pVariants[] = [
+                                    'id' => $opt->id,
+                                    'name' => $opt->name,
+                                    'values' => $vals,
+                                ];
+                            }
+                        }
+                    @endphp
+                    {{ $prod->id }}: {
                         id: {{ $prod->id }},
                         name: {!! json_encode($prod->name) !!},
+                        price: {{ $pPrice }},
+                        image: {!! json_encode($pImg) !!},
+                        hasVariants: {{ $pHasVariants ? 'true' : 'false' }},
+                        variants: {!! json_encode($pVariants) !!}
                     },
                 @endforeach
-                    ];
+            };
+
+            window.posAllProducts = Object.values(window.posCatalog);
 
             // Custom Modal Helpers (Vanilla JS - Independent from Bootstrap)
             function openModal(modalId) {
@@ -5144,8 +5444,38 @@
                 if (typeof updateDiscountsBadgeCount === 'function') updateDiscountsBadgeCount();
             });
 
-            // Add product to cart
-            function addToCart(id, name, price, image = '') {
+            // Product Click Handler (Cek apakah memiliki variasi)
+            function handleProductClick(id) {
+                const p = window.posCatalog ? window.posCatalog[id] : null;
+                if (!p) return;
+
+                if (p.hasVariants && p.variants && p.variants.length > 0) {
+                    openVariantModal(id);
+                } else {
+                    addToCart(p.id, p.name, p.price, p.image);
+                }
+            }
+
+            // Stepper di Kartu Produk
+            function handleCardStepper(id, delta) {
+                const p = window.posCatalog ? window.posCatalog[id] : null;
+                if (!p) return;
+
+                if (delta > 0 && p.hasVariants && p.variants && p.variants.length > 0) {
+                    openVariantModal(id);
+                    return;
+                }
+
+                // Cari item terakhir di cart dengan id ini
+                const matching = cart.filter(i => i.id == id);
+                if (matching.length === 0) return;
+
+                const lastItem = matching[matching.length - 1];
+                updateQty(lastItem.cartKey || lastItem.id, delta);
+            }
+
+            // Add product to cart (Mendukung Varian & Catatan)
+            function addToCart(id, name, price, image = '', variantValueId = null, variantName = '', notes = '') {
                 if (!image) {
                     const card = document.querySelector(`.product-card[data-id="${id}"]`);
                     if (card) {
@@ -5157,32 +5487,46 @@
                     }
                 }
 
-                const existing = cart.find(item => item.id === id);
+                const cleanNotes = (notes || '').trim();
+                const cleanVariant = (variantName || '').trim();
+                const cartKey = `${id}__${variantValueId || 'std'}__${cleanVariant}__${cleanNotes}`;
+
+                const existing = cart.find(item => item.cartKey === cartKey);
                 if (existing) {
                     existing.qty += 1;
                     if (!existing.image && image) existing.image = image;
                 } else {
-                    cart.push({ id, name, price, image, qty: 1 });
+                    cart.push({
+                        cartKey: cartKey,
+                        id: id,
+                        name: name,
+                        price: parseFloat(price) || 0,
+                        image: image,
+                        qty: 1,
+                        variant_value_id: variantValueId,
+                        variant_name: cleanVariant,
+                        notes: cleanNotes
+                    });
                 }
                 renderCart();
                 showPosToast(`+ ${name} ditambahkan`, 'success');
             }
 
-            // Update Item Qty
-            function updateQty(id, delta) {
-                const item = cart.find(i => i.id === id);
+            // Update Item Qty by cartKey or id
+            function updateQty(keyOrId, delta) {
+                const item = cart.find(i => i.cartKey === keyOrId || i.id === keyOrId);
                 if (!item) return;
 
                 item.qty += delta;
                 if (item.qty <= 0) {
-                    cart = cart.filter(i => i.id !== id);
+                    cart = cart.filter(i => (i.cartKey ? i.cartKey !== item.cartKey : i.id !== item.id));
                 }
                 renderCart();
             }
 
             // Remove Item
-            function removeItem(id) {
-                cart = cart.filter(i => i.id !== id);
+            function removeItem(keyOrId) {
+                cart = cart.filter(i => (i.cartKey ? i.cartKey !== keyOrId : i.id !== keyOrId));
                 renderCart();
             }
 
@@ -5192,7 +5536,140 @@
                 renderCart();
             }
 
-            // Render Cart HTML & Badges
+            // ══ Variant & Notes Modal Logic ══
+            let currentVariantProduct = null;
+            let currentVariantSelections = {};
+            let currentVariantModalQty = 1;
+
+            function openVariantModal(productId) {
+                const p = window.posCatalog ? window.posCatalog[productId] : null;
+                if (!p) return;
+                currentVariantProduct = p;
+                currentVariantModalQty = 1;
+                currentVariantSelections = {};
+
+                document.getElementById('variantModalTitle').innerText = p.name;
+                document.getElementById('variantModalBasePrice').innerText = 'Harga Dasar: Rp ' + formatRupiah(p.price);
+
+                const imgEl = document.getElementById('variantModalImg');
+                const fallbackEl = document.getElementById('variantModalImgFallback');
+                if (p.image) {
+                    imgEl.src = p.image;
+                    imgEl.style.display = 'block';
+                    fallbackEl.style.display = 'none';
+                } else {
+                    imgEl.style.display = 'none';
+                    fallbackEl.style.display = 'block';
+                }
+
+                document.getElementById('variantModalNotes').value = '';
+                document.getElementById('variantModalQty').innerText = '1';
+
+                const container = document.getElementById('variantModalOptionsList');
+                container.innerHTML = '';
+
+                (p.variants || []).forEach(opt => {
+                    const optWrap = document.createElement('div');
+                    optWrap.innerHTML = `
+                        <div style="font-weight:700; font-size:0.78rem; color:#334155; margin-bottom:0.45rem; display:flex; justify-content:space-between;">
+                            <span>${escapeHtml(opt.name)}</span>
+                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:400;">Pilih salah satu</span>
+                        </div>
+                        <div class="variant-pill-grid" style="display:flex; flex-wrap:wrap; gap:8px;" id="opt-pills-${opt.id}">
+                        </div>
+                    `;
+                    container.appendChild(optWrap);
+
+                    const pillsWrap = optWrap.querySelector(`#opt-pills-${opt.id}`);
+                    const firstVal = opt.values && opt.values.length > 0 ? opt.values[0] : null;
+                    if (firstVal) {
+                        currentVariantSelections[opt.id] = firstVal;
+                    }
+
+                    (opt.values || []).forEach(val => {
+                        const pill = document.createElement('button');
+                        pill.type = 'button';
+                        pill.className = 'variant-pill-btn';
+                        const isSelected = firstVal && firstVal.id === val.id;
+                        const adjText = val.price_adjustment > 0 ? ` (+Rp ${formatRupiah(val.price_adjustment)})` : (val.price_adjustment < 0 ? ` (-Rp ${formatRupiah(Math.abs(val.price_adjustment))})` : '');
+
+                        pill.innerHTML = `<span>${escapeHtml(val.value)}</span><span style="font-size:0.7rem; font-weight:700; color:#16a34a;">${adjText}</span>`;
+                        pill.style.cssText = `padding:6px 13px; border-radius:999px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:all 0.15s ease; border:1.5px solid ${isSelected ? '#16a34a' : '#e2e8f0'}; background:${isSelected ? '#f0fdf4' : '#ffffff'}; color:${isSelected ? '#15803d' : '#334155'}; display:inline-flex; align-items:center; gap:5px;`;
+
+                        pill.onclick = () => {
+                            currentVariantSelections[opt.id] = val;
+                            pillsWrap.querySelectorAll('button').forEach(b => {
+                                b.style.border = '1.5px solid #e2e8f0';
+                                b.style.background = '#ffffff';
+                                b.style.color = '#334155';
+                            });
+                            pill.style.border = '1.5px solid #16a34a';
+                            pill.style.background = '#f0fdf4';
+                            pill.style.color = '#15803d';
+                            updateVariantModalTotal();
+                        };
+
+                        pillsWrap.appendChild(pill);
+                    });
+                });
+
+                updateVariantModalTotal();
+                openModal('posVariantModal');
+            }
+
+            function adjustVariantModalQty(delta) {
+                currentVariantModalQty = Math.max(1, currentVariantModalQty + delta);
+                document.getElementById('variantModalQty').innerText = currentVariantModalQty;
+                updateVariantModalTotal();
+            }
+
+            function updateVariantModalTotal() {
+                if (!currentVariantProduct) return;
+                let unitPrice = currentVariantProduct.price;
+                Object.values(currentVariantSelections).forEach(v => {
+                    if (v && v.price_adjustment) {
+                        unitPrice += v.price_adjustment;
+                    }
+                });
+                unitPrice = Math.max(0, unitPrice);
+                const totalPrice = unitPrice * currentVariantModalQty;
+                document.getElementById('btnVariantModalAdd').innerText = `Tambah ke Pesanan — Rp ${formatRupiah(totalPrice)}`;
+            }
+
+            function confirmVariantModalAdd() {
+                if (!currentVariantProduct) return;
+                let unitPrice = currentVariantProduct.price;
+                const variantNames = [];
+                let primaryVariantValueId = null;
+
+                Object.entries(currentVariantSelections).forEach(([optId, val]) => {
+                    if (val) {
+                        if (!primaryVariantValueId) primaryVariantValueId = val.id;
+                        unitPrice += (val.price_adjustment || 0);
+                        variantNames.push(val.value);
+                    }
+                });
+
+                unitPrice = Math.max(0, unitPrice);
+                const notes = document.getElementById('variantModalNotes').value.trim();
+                const variantNameStr = variantNames.join(', ');
+
+                for (let i = 0; i < currentVariantModalQty; i++) {
+                    addToCart(
+                        currentVariantProduct.id,
+                        currentVariantProduct.name,
+                        unitPrice,
+                        currentVariantProduct.image,
+                        primaryVariantValueId,
+                        variantNameStr,
+                        notes
+                    );
+                }
+
+                closeModal('posVariantModal');
+            }
+
+            // Render Cart HTML & Badges (Mendukung Tampilan Varian & Catatan)
             function renderCart() {
                 const container = document.getElementById('cartItemsContainer');
 
@@ -5203,10 +5680,10 @@
 
                 if (cart.length === 0) {
                     container.innerHTML = `
-                                                <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                                                    Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
-                                                </div>
-                                            `;
+                        <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
+                            Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
+                        </div>
+                    `;
                     document.getElementById('btnCheckout').disabled = true;
                     calculateTotals();
                     return;
@@ -5217,92 +5694,104 @@
 
                 cart.forEach(item => {
                     const itemSub = item.price * item.qty;
-
-                    const badge = document.getElementById(`badge-qty-${item.id}`);
-                    if (badge) {
-                        if (item.qty > 0) {
-                            badge.innerText = `x${item.qty}`;
-                            badge.classList.add('has-qty');
-                        } else {
-                            badge.innerText = '0';
-                            badge.classList.remove('has-qty');
-                        }
-                    }
+                    const escapedKey = escapeHtml(item.cartKey || String(item.id));
 
                     html += `
-                                                <div class="cart-item-row">
-                                                    <div class="cart-item-thumb">
-                                                        ${item.image ? `
-                                                            <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="this.parentElement.innerHTML='<div class=\\'cart-item-img-fallback\\'><svg width=\\'16\\' height=\\'16\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>';">
-                                                        ` : `
-                                                            <div class="cart-item-img-fallback">
-                                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                                                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                                                                    <polyline points="21 15 16 10 5 21"/>
-                                                                </svg>
-                                                            </div>
-                                                        `}
-                                                    </div>
-                                                    <div class="cart-item-info">
-                                                        <div class="cart-item-title">${escapeHtml(item.name)}</div>
-                                                        <div class="cart-item-unit-price">Rp ${formatRupiah(itemSub)}</div>
-                                                    </div>
-                                                    <div class="cart-qty-ctrl">
-                                                        <button type="button" class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
-                                                        <span class="qty-num">${item.qty}</span>
-                                                        <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty(${item.id}, 1)">+</button>
-                                                        <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem(${item.id})" style="border:none; background:none;">
-                                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            `;
+                        <div class="cart-item-row" style="padding: 10px 0; border-bottom: 1px dashed #f1f5f9;">
+                            <div class="cart-item-thumb">
+                                ${item.image ? `
+                                    <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="this.parentElement.innerHTML='<div class=\'cart-item-img-fallback\'><svg width=\'16\' height=\'16\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>';">
+                                ` : `
+                                    <div class="cart-item-img-fallback">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                                            <polyline points="21 15 16 10 5 21"/>
+                                        </svg>
+                                    </div>
+                                `}
+                            </div>
+                            <div class="cart-item-info">
+                                <div class="cart-item-title">${escapeHtml(item.name)}</div>
+                                ${item.variant_name ? `
+                                    <div style="font-size:0.71rem; color:#15803d; font-weight:700; margin-top:2px; display:inline-flex; align-items:center; gap:3px; background:#f0fdf4; padding:1px 6px; border-radius:4px;">
+                                        ✦ ${escapeHtml(item.variant_name)}
+                                    </div>
+                                ` : ''}
+                                ${item.notes ? `
+                                    <div style="font-size:0.71rem; color:#64748b; font-style:italic; margin-top:2px;">
+                                        📝 "${escapeHtml(item.notes)}"
+                                    </div>
+                                ` : ''}
+                                <div class="cart-item-unit-price" style="margin-top:2px;">Rp ${formatRupiah(itemSub)}</div>
+                            </div>
+                            <div class="cart-qty-ctrl">
+                                <button type="button" class="btn-qty" onclick="updateQty('${escapedKey}', -1)">-</button>
+                                <span class="qty-num">${item.qty}</span>
+                                <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty('${escapedKey}', 1)">+</button>
+                                <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem('${escapedKey}')" style="border:none; background:none; cursor:pointer;" title="Hapus">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
                 });
 
                 container.innerHTML = html;
 
-                // Sync Drawer Cart on Mobile
+                // Sync Drawer Cart on Mobile & Confirm Sale Modal (Screen 3)
                 const drawerContainer = document.getElementById('drawerCartItemsContainer');
-                // Sync Confirm Sale Modal Billing Items (Screen 3)
                 const confirmContainer = document.getElementById('confirmBillingItemsContainer');
-                if (confirmContainer) {
-                    confirmContainer.innerHTML = html;
-                }
+                if (confirmContainer) confirmContainer.innerHTML = html;
+                if (drawerContainer) drawerContainer.innerHTML = html;
+
                 const confirmBillingCount = document.getElementById('confirmBillingCount');
                 if (confirmBillingCount) {
                     const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
                     confirmBillingCount.innerText = `Billing Items (${totalItems})`;
                 }
 
-                if (drawerContainer) {
-                    drawerContainer.innerHTML = html;
-                }
-
-                // Update Card State (Checkmark badge, Stepper vs Round + Add button)
+                // Update Card State & Badges
                 document.querySelectorAll('.product-card').forEach(card => {
                     const id = card.getAttribute('data-id');
                     card.classList.remove('in-cart');
                     const checkBadge = document.getElementById(`card-check-${id}`);
                     const stepper = document.getElementById(`card-stepper-${id}`);
                     const addBtn = document.getElementById(`card-add-btn-${id}`);
+                    const badgeQty = document.getElementById(`badge-qty-${id}`);
                     if (checkBadge) checkBadge.style.display = 'none';
                     if (stepper) stepper.style.display = 'none';
                     if (addBtn) addBtn.style.display = 'flex';
+                    if (badgeQty) {
+                        badgeQty.innerText = '0';
+                        badgeQty.classList.remove('has-qty');
+                    }
                 });
 
+                // Hitung total qty per product id
+                const productTotals = {};
                 cart.forEach(item => {
-                    const card = document.querySelector(`.product-card[data-id="${item.id}"]`);
-                    if (card) {
+                    productTotals[item.id] = (productTotals[item.id] || 0) + item.qty;
+                });
+
+                Object.entries(productTotals).forEach(([pId, totalQty]) => {
+                    const card = document.querySelector(`.product-card[data-id="${pId}"]`);
+                    const checkBadge = document.getElementById(`card-check-${pId}`);
+                    const stepper = document.getElementById(`card-stepper-${pId}`);
+                    const addBtn = document.getElementById(`card-add-btn-${pId}`);
+                    const qtyNum = document.getElementById(`card-qty-num-${pId}`);
+                    const badgeQty = document.getElementById(`badge-qty-${pId}`);
+
+                    if (card && totalQty > 0) {
                         card.classList.add('in-cart');
-                        const checkBadge = document.getElementById(`card-check-${item.id}`);
-                        const stepper = document.getElementById(`card-stepper-${item.id}`);
-                        const addBtn = document.getElementById(`card-add-btn-${item.id}`);
-                        const qtyNum = document.getElementById(`card-qty-num-${item.id}`);
                         if (checkBadge) checkBadge.style.display = 'flex';
                         if (stepper) stepper.style.display = 'flex';
                         if (addBtn) addBtn.style.display = 'none';
-                        if (qtyNum) qtyNum.innerText = item.qty;
+                        if (qtyNum) qtyNum.innerText = totalQty;
+                        if (badgeQty) {
+                            badgeQty.innerText = 'x' + totalQty;
+                            badgeQty.classList.add('has-qty');
+                        }
                     }
                 });
 
@@ -5387,14 +5876,20 @@
                 const adminFee = (subtotal * adminFeeRate) / 100;
                 const systemFees = platformFee + adminFee;
 
-                const grandTotal = Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
+                let grandTotal = 0;
+                if (posFeePayer === 'buyer') {
+                    grandTotal = Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
+                    document.getElementById('displaySystemFees').innerText = 'Rp ' + formatRupiah(systemFees);
+                } else {
+                    grandTotal = Math.max(0, subtotal - discountAmount + customFeesTotal);
+                    document.getElementById('displaySystemFees').innerHTML = '<span style="color:#16a34a; font-weight:700;">Rp 0</span> <span style="font-size:0.7rem; color:#64748b;">(Ditanggung Penjual)</span>';
+                }
 
                 document.getElementById('displaySubtotal').innerText = 'Rp ' + formatRupiah(subtotal);
                 const dispDisc = document.getElementById('displayDiscountAmount');
                 if (dispDisc) {
                     dispDisc.innerText = discountAmount > 0 ? ('- Rp ' + formatRupiah(discountAmount)) : '- Rp 0';
                 }
-                document.getElementById('displaySystemFees').innerText = 'Rp ' + formatRupiah(systemFees);
                 document.getElementById('displayGrandTotal').innerText = 'Rp ' + formatRupiah(grandTotal);
 
                 renderCartFees();
@@ -5444,7 +5939,7 @@
                 const cashWarningText = document.getElementById('cashDepositWarningText');
                 const cashBadge = document.getElementById('cashDepositBadge');
 
-                const isDepositInsufficient = (currentPosBalance <= 0 || currentPosBalance < totalFeeRequired);
+                const isDepositInsufficient = (posFeePayer === 'seller' && totalFeeRequired > 0 && currentPosBalance < totalFeeRequired);
 
                 if (optCash) {
                     if (isDepositInsufficient) {
@@ -5514,7 +6009,10 @@
                     customFeesTotal += fee.type === 'percent' ? (subtotal * (parseFloat(fee.value) || 0)) / 100 : (parseFloat(fee.value) || 0);
                 });
                 const systemFees = (subtotal * (platformFeeRate + adminFeeRate)) / 100;
-                return Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
+                if (posFeePayer === 'buyer') {
+                    return Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
+                }
+                return Math.max(0, subtotal - discountAmount + customFeesTotal);
             }
 
             // Select Payment Method (cash | cashless)
@@ -5632,7 +6130,14 @@
                     table_number: tableNum,
                     customer_phone: custPhone,
                     customer_email: custEmail,
-                    items: cart.map(i => ({ id: i.id, qty: i.qty })),
+                    items: cart.map(i => ({
+                        id: i.id,
+                        qty: i.qty,
+                        price: i.price,
+                        variant_value_id: i.variant_value_id || null,
+                        variant_name: i.variant_name || null,
+                        notes: i.notes || null
+                    })),
                     discount_type: discountType,
                     discount_val: discountVal,
                     discount_amount: discountAmount,
@@ -5666,7 +6171,33 @@
                         if (data.success) {
                             closeModal('posPaymentModal');
 
+                            if (data.pos_balance !== undefined) {
+                                currentPosBalance = parseFloat(data.pos_balance);
+                                posBalance = currentPosBalance;
+                                const balDisplay = document.getElementById('topbarPosBalanceDisplay');
+                                if (balDisplay) balDisplay.innerText = 'Rp ' + formatRupiah(posBalance);
+                            }
+
                             if (payMethodRaw === 'cashless') {
+                                if (data.is_static_qris) {
+                                    window.currentStaticQrisOrder = data.order;
+                                    document.getElementById('staticQrisAmountText').innerText = 'Rp ' + formatRupiah(data.order.total);
+                                    document.getElementById('staticQrisStoreName').innerText = posStoreDisplayName || 'Toko';
+
+                                    const qrisImg = document.getElementById('staticQrisDisplayImg');
+                                    const noImgWarn = document.getElementById('staticQrisNoImageWarning');
+                                    if (data.qris_image_url) {
+                                        qrisImg.src = data.qris_image_url;
+                                        qrisImg.style.display = 'block';
+                                        noImgWarn.style.display = 'none';
+                                    } else {
+                                        qrisImg.style.display = 'none';
+                                        noImgWarn.style.display = 'block';
+                                    }
+
+                                    openModal('posStaticQrisModal');
+                                    return;
+                                }
                                 if (data.snap_token && typeof window.snap !== 'undefined') {
                                     document.getElementById('midtransBlurOverlay').classList.add('active');
                                     try {
@@ -5885,7 +6416,9 @@
                                     <div style="margin-bottom: 7px; line-height: 1.35;">
                                         <div style="font-weight: 700; font-size: 11.5px; color: #000;">
                                             ${idx + 1}. ${escapeHtml(item.product_name)}
+                                            ${item.variant_name ? `<span style="font-weight: normal; font-size: 10px; color: #16a34a;"> (${escapeHtml(item.variant_name)})</span>` : ''}
                                         </div>
+                                        ${item.notes ? `<div style="font-size: 9.5px; color: #555; font-style: italic; margin-left: 12px;">* ${escapeHtml(item.notes)}</div>` : ''}
                                         <div style="display: flex; justify-content: space-between; font-size: 11px; color: #222; margin-top: 1px;">
                                             <span style="letter-spacing: 0.2px;">${itemQty} x ${formatRupiah(itemPrice)}</span>
                                             <span style="font-weight: 700; color: #000;">Rp ${formatRupiah(itemSubtotal)}</span>
@@ -6308,14 +6841,173 @@
             }
 
             // Tab Switching Pengaturan (5 Tab: Struk, Fees, Discounts, Staff, Tables)
+            // Konfirmasi Pembayaran QRIS Statis Selesai
+            function confirmStaticQrisDone() {
+                closeModal('posStaticQrisModal');
+                if (window.currentStaticQrisOrder) {
+                    showPosToast('Pembayaran QRIS berhasil diterima!', 'success');
+                    showReceiptModal(window.currentStaticQrisOrder);
+                    window.currentStaticQrisOrder = null;
+                }
+                clearCart();
+            }
+
+            // Handler Pengaturan Mode Cashless & Beban Fee
+            function onCashlessModeChange(mode) {
+                posCashlessMode = mode;
+                const cardSnap = document.getElementById('cardModeSnap');
+                const cardStatic = document.getElementById('cardModeStatic');
+                const uploadPanel = document.getElementById('staticQrisUploadPanel');
+
+                if (cardSnap && cardStatic) {
+                    cardSnap.style.borderColor = mode === 'snap_midtrans' ? '#16a34a' : '#e2e8f0';
+                    cardSnap.style.background = mode === 'snap_midtrans' ? '#f0fdf4' : '#ffffff';
+                    cardStatic.style.borderColor = mode === 'qris_static' ? '#16a34a' : '#e2e8f0';
+                    cardStatic.style.background = mode === 'qris_static' ? '#f0fdf4' : '#ffffff';
+                }
+                if (uploadPanel) {
+                    uploadPanel.style.display = mode === 'qris_static' ? 'block' : 'none';
+                }
+            }
+
+            function onFeePayerChange(payer) {
+                posFeePayer = payer;
+                const cardSeller = document.getElementById('cardFeePayerSeller');
+                const cardBuyer = document.getElementById('cardFeePayerBuyer');
+                if (cardSeller && cardBuyer) {
+                    cardSeller.style.borderColor = payer === 'seller' ? '#16a34a' : '#e2e8f0';
+                    cardSeller.style.background = payer === 'seller' ? '#f0fdf4' : '#ffffff';
+                    cardBuyer.style.borderColor = payer === 'buyer' ? '#16a34a' : '#e2e8f0';
+                    cardBuyer.style.background = payer === 'buyer' ? '#f0fdf4' : '#ffffff';
+                }
+                calculateTotals();
+            }
+
+            function handleQrisFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append('qris_image', file);
+                formData.append('_token', '{{ csrf_token() }}');
+
+                showPosToast('Mengunggah & mengonversi QRIS ke WebP...', 'info');
+
+                fetch('{{ route("creator.pos.upload-qris") }}', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        posQrisUrl = data.qris_url;
+                        const prevWrap = document.getElementById('qrisPreviewContainer');
+                        if (prevWrap) {
+                            prevWrap.innerHTML = `<img src="${data.qris_url}" id="qrisPreviewImg" style="width:100%; height:100%; object-fit:contain; background:#ffffff;">`;
+                        }
+                        const btnRemove = document.getElementById('btnRemoveQris');
+                        if (btnRemove) btnRemove.style.display = 'inline-flex';
+                        showPosToast(data.message, 'success');
+                    } else {
+                        showPosAlert(data.message || 'Gagal mengunggah QRIS.', 'Error', 'error');
+                    }
+                })
+                .catch(() => showPosAlert('Terjadi kesalahan jaringan saat mengunggah.', 'Error', 'error'));
+            }
+
+            function removeQrisImage() {
+                if (!confirm('Apakah Anda yakin ingin menghapus gambar QRIS toko?')) return;
+
+                fetch('{{ route("creator.pos.remove-qris") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        posQrisUrl = null;
+                        const prevWrap = document.getElementById('qrisPreviewContainer');
+                        if (prevWrap) {
+                            prevWrap.innerHTML = `
+                                <div id="qrisPreviewPlaceholder" style="text-align:center; padding:8px; color:#94a3b8; font-size:0.68rem;">
+                                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 4px auto; display:block;">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                    Belum ada QRIS
+                                </div>
+                            `;
+                        }
+                        const btnRemove = document.getElementById('btnRemoveQris');
+                        if (btnRemove) btnRemove.style.display = 'none';
+                        showPosToast(data.message, 'success');
+                    } else {
+                        showPosAlert(data.message || 'Gagal menghapus QRIS.', 'Error', 'error');
+                    }
+                })
+                .catch(() => showPosAlert('Terjadi kesalahan jaringan saat menghapus.', 'Error', 'error'));
+            }
+
+            function savePaymentSettings() {
+                const btn = document.getElementById('btnSavePaymentSettings');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = 'Menyimpan...';
+                }
+
+                const payload = {
+                    pos_cashless_mode: posCashlessMode,
+                    pos_fee_payer: posFeePayer,
+                };
+
+                fetch('{{ route("creator.pos.update-settings") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg> Simpan Pengaturan Pembayaran`;
+                    }
+                    if (data.success) {
+                        showPosToast('Pengaturan Pembayaran & Fee berhasil disimpan!', 'success');
+                        calculateTotals();
+                        closeModal('posSettingsModal');
+                    } else {
+                        showPosAlert(data.message || 'Gagal menyimpan pengaturan.', 'Error', 'error');
+                    }
+                })
+                .catch(() => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg> Simpan Pengaturan Pembayaran`;
+                    }
+                    showPosAlert('Terjadi kesalahan jaringan.', 'Error', 'error');
+                });
+            }
+
             function switchSettingTab(tabId) {
-                const tabs = ['struk', 'fees', 'discounts', 'staff', 'tables'];
+                const tabs = ['struk', 'fees', 'discounts', 'staff', 'tables', 'payment'];
                 const btnMap = {
                     struk: 'tabBtnSettingStruk',
                     fees: 'tabBtnSettingFees',
                     discounts: 'tabBtnSettingDiscounts',
                     staff: 'tabBtnSettingStaff',
                     tables: 'tabBtnSettingTables',
+                    payment: 'tabBtnSettingPayment',
                 };
                 const paneMap = {
                     struk: 'paneSettingStruk',
@@ -6323,6 +7015,7 @@
                     discounts: 'paneSettingDiscounts',
                     staff: 'paneSettingStaff',
                     tables: 'paneSettingTables',
+                    payment: 'paneSettingPayment',
                 };
                 tabs.forEach(t => {
                     const btn = document.getElementById(btnMap[t]);

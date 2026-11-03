@@ -683,6 +683,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::get('/pos/order-status/{id}', [\App\Http\Controllers\Creator\PosController::class, 'orderStatus'])->name('pos.order-status');
     Route::post('/pos/upload-logo', [\App\Http\Controllers\Creator\PosController::class, 'uploadLogo'])->name('pos.upload-logo');
     Route::post('/pos/remove-logo', [\App\Http\Controllers\Creator\PosController::class, 'removeLogo'])->name('pos.remove-logo');
+    Route::post('/pos/upload-qris', [\App\Http\Controllers\Creator\PosController::class, 'uploadQris'])->name('pos.upload-qris');
+    Route::post('/pos/remove-qris', [\App\Http\Controllers\Creator\PosController::class, 'removeQris'])->name('pos.remove-qris');
     Route::post('/pos/update-settings', [\App\Http\Controllers\Creator\PosController::class, 'updateSettings'])->name('pos.update-settings');
     Route::get('/pos/cashiers', [\App\Http\Controllers\Creator\PosController::class, 'getCashiers'])->name('pos.cashiers');
     Route::post('/pos/cashiers', [\App\Http\Controllers\Creator\PosController::class, 'saveCashier'])->name('pos.cashiers.save');

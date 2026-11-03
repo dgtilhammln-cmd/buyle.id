@@ -612,14 +612,7 @@
 
 
 
-    @if(session('success'))
-        <div class="alert-success">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <polyline points="20 6 9 17 4 12" />
-            </svg>
-            {{ session('success') }}
-        </div>
-    @endif
+
 
     <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
         @csrf
