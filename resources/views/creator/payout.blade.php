@@ -1055,7 +1055,7 @@
                                     <span style="font-size:0.65rem; font-weight:700; background:#dbeafe; color:#1e40af; padding:1px 6px; border-radius:4px;">Cair H+3 Acara</span>
                                 </div>
                                 <div style="font-size:0.7rem; color:#1e3a8a; line-height:1.35; margin-bottom:0.4rem;">
-                                    Dana tiket dikunci sementara dan otomatis cair H+3 setelah tanggal pelaksanaan acara.
+                                    Dana tiket dikunci sementara.
                                 </div>
                                 @if(!empty($upcomingEvents) && count($upcomingEvents) > 0)
                                     <div
@@ -1287,13 +1287,9 @@
                                 </div>
                                 <h4 style="font-size:0.9rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">Saldo Belum Mencapai Batas Minimal</h4>
                                 <p style="font-size:0.76rem; color:#64748b; margin:0 0 0.5rem 0;">
-                                    Minimal penarikan dana Rp 50.000. Saldo Anda: <strong style="color:#0f172a;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</strong>
+                                    Minimal penarikan dana Rp 50.000.
                                 </p>
                                 @if($holdBalance > 0)
-                                    <div style="display:inline-flex; align-items:center; gap:5px; background:#fffbeb; border:1px solid #fde68a; border-radius:999px; padding:0.25rem 0.75rem; font-size:0.72rem; font-weight:600; color:#92400e; margin-top:0.25rem;">
-                                        <span>⏳</span>
-                                        <span>Rp {{ number_format($holdBalance, 0, ',', '.') }} sedang proses hold 3x24 jam</span>
-                                    </div>
                                 @endif
                             </div>
                         @endif
