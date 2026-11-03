@@ -114,6 +114,28 @@
             transform: scale(1.05);
         }
 
+        /* Badge Tier Pill (Real Synchronized Tier) */
+        .nina-tier-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #ffffff;
+            padding: 3px 12px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #1e293b;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
+            margin: 0 auto 0.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .nina-tier-pill i {
+            color: #1eb349;
+            font-size: 0.85rem;
+        }
+
         /* Badge Currency Pill */
         .nina-currency-badge {
             display: inline-flex;
@@ -474,6 +496,14 @@
     }
 
     $bioUrl = url('/' . $seller->username);
+
+    $tierInfo = $creatorProfile ? $creatorProfile->getTierInfo($gmv ?? null) : [
+        'name'     => 'PERINTIS',
+        'badge'    => 'Perintis',
+        'level'    => 1,
+        'subtitle' => 'Matte Silver / Brushed Steel'
+    ];
+    $tierBadge = $tierInfo['badge'] ?? $tierInfo['name'] ?? 'Perintis';
 @endphp
 
 @section('content')
@@ -506,6 +536,10 @@
 
                     {{-- Saldo Utama (Minimalist Clean Typography) --}}
                     <div class="nina-balance-center">
+                        <div class="nina-tier-pill">
+                            <i class="ph-bold ph-shield-check"></i>
+                            <span>Tier: {{ $tierBadge }}</span>
+                        </div>
                         <div class="nina-balance-amount">
                             Rp {{ number_format($availableBalance, 0, ',', '.') }}
                         </div>

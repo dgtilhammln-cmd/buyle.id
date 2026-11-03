@@ -352,40 +352,64 @@
                 /* Tabs jadi horizontal scroll */
             }
 
-            /* Tabs horizontal scroll on mobile */
+            /* Clean Capsule Tab Bar on mobile */
+            .sidebar-settings-box,
+            .sidebar-action-btns {
+                display: none !important;
+            }
+
             .prof-sidebar {
-                display: flex;
-                flex-direction: row;
-                overflow-x: auto;
-                gap: 0.5rem;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                overflow-x: auto !important;
+                gap: 0.45rem !important;
+                border-radius: 999px !important;
+                padding: 0.35rem 0.5rem !important;
+                background: #f1f5f9 !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: none !important;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
-                border-radius: 16px;
-                padding: 0.75rem;
-                background: #fff;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
 
             .prof-sidebar::-webkit-scrollbar {
                 display: none;
             }
 
-            /* Hide "Pengaturan Form" section on mobile - move toggle inside form */
-            .prof-sidebar>div:last-child {
-                display: none;
-            }
-
-            .sidebar-action-btns {
-                display: none !important;
-            }
-
             .tab-btn {
-                flex-shrink: 0;
-                width: auto;
-                white-space: nowrap;
-                padding: 0.6rem 1rem;
-                font-size: 0.8rem;
-                border-radius: 999px;
-                margin-bottom: 0;
+                flex: 1 1 0 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 0.4rem !important;
+                white-space: nowrap !important;
+                padding: 0.45rem 0.85rem !important;
+                font-size: 0.8rem !important;
+                font-weight: 700 !important;
+                border-radius: 999px !important;
+                margin-bottom: 0 !important;
+                border: none !important;
+                height: 38px !important;
+                max-height: 38px !important;
+                color: #64748b !important;
+                background: transparent !important;
+                box-sizing: border-box !important;
+                box-shadow: none !important;
+            }
+
+            .tab-btn.active {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+                font-weight: 800 !important;
+            }
+
+            .tab-btn svg {
+                width: 15px !important;
+                height: 15px !important;
             }
 
             .prof-content {
@@ -479,7 +503,7 @@
                 SEO & FAQ
             </button>
 
-            <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
+            <div class="sidebar-settings-box" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
                 <div
                     style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">
                     Pengaturan Form</div>
@@ -557,21 +581,15 @@
                                     <label class="form-label">Tipe Produk <span>*</span></label>
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="handleProductTypeSelectChange(this)" required>
-                                        <option value="external_link" {{ old('product_type', 'external_link') == 'external_link' ? 'selected' : '' }}>Produk Digital / Link
-                                            Access (Marketplace & Store)</option>
-                                        <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>Tiket
-                                            Event / Wisata / Webinar (Marketplace & Store)</option>
-                                        <option value="service" {{ old('product_type') == 'service' ? 'selected' : '' }}>Jasa
-                                            / Layanan / Service (Khusus Storefront Creator)</option>
+                                        <option value="external_link" {{ old('product_type', 'external_link') == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
+                                        <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>Tiket Event / Webinar</option>
+                                        <option value="service" {{ old('product_type') == 'service' ? 'selected' : '' }}>Jasa / Layanan</option>
                                         <option value="physical" {{ old('product_type') == 'physical' ? 'selected' : '' }}>
-                                            Produk Fisik / Barang / UMKM (Khusus Storefront Creator)</option>
+                                            Produk Fisik / Barang</option>
                                         <option value="makanan" {{ old('product_type') == 'makanan' ? 'selected' : '' }}>
-                                            Makanan / Minuman / Kuliner (Khusus POS / Storefront Creator)</option>
+                                            Makanan & Minuman (POS)</option>
                                     </select>
-                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">*
-                                        Catatan: Marketplace buyle.id HANYA menampilkan 2 Tipe Produk yaitu: 1) Produk
-                                        Digital / Link Access dan 2) Tiket Event / Wisata / Webinar. Tipe produk lainnya
-                                        hanya tampil di Bio Link / Storefront pribadi Anda.</span>
+                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">* Produk Digital & Tiket tampil di Marketplace, tipe lainnya di Bio Link.</span>
                                 </div>
 
                                 <div class="form-group full" id="buyleCheckoutToggleWrap"
