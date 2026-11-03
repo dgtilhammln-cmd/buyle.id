@@ -713,35 +713,77 @@
                 box-sizing: border-box;
             }
 
+            .bio-sidebar-column {
+                width: 100% !important;
+                position: sticky !important;
+                top: 60px !important;
+                z-index: 90 !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            .bio-sidebar-card {
+                background: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 16px !important;
+                padding: 0.35rem !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.03) !important;
+            }
+
             .bio-tabs-list {
-                display: grid !important;
-                grid-template-columns: repeat(6, 1fr) !important;
-                gap: 3px !important;
-                background: #f8fafc;
-                padding: 3px;
-                border-radius: 12px;
-                width: 100%;
-                box-sizing: border-box;
+                display: flex !important;
+                flex-direction: row !important;
+                overflow-x: auto !important;
+                scrollbar-width: none !important;
+                -webkit-overflow-scrolling: touch !important;
+                gap: 0.35rem !important;
+                background: #f8fafc !important;
+                padding: 0.3rem !important;
+                border-radius: 12px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .bio-tabs-list::-webkit-scrollbar {
+                display: none !important;
             }
 
             .tab-btn {
-                width: 100% !important;
+                flex: 0 0 auto !important;
+                width: auto !important;
                 min-width: 0 !important;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding: 0.45rem 2px !important;
-                gap: 2px;
-                border-radius: 8px;
-                margin-bottom: 0;
-                border: none;
-                box-sizing: border-box;
+                display: inline-flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 0.45rem 0.8rem !important;
+                gap: 0.38rem !important;
+                border-radius: 9px !important;
+                margin-bottom: 0 !important;
+                border: none !important;
+                white-space: nowrap !important;
+                background: transparent !important;
+                color: #64748b !important;
+                box-sizing: border-box !important;
+                cursor: pointer !important;
+                transition: all 0.15s ease !important;
+            }
+
+            .tab-btn:hover {
+                background: #f1f5f9 !important;
+                color: #0f172a !important;
+            }
+
+            .tab-btn.active {
+                background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%) !important;
+                color: #ffffff !important;
+                box-shadow: 0 2px 8px rgba(30,179,73,0.3) !important;
             }
 
             .tab-btn svg,
             .tab-btn i {
-                width: 16px !important;
-                height: 16px !important;
+                width: 14px !important;
+                height: 14px !important;
+                flex-shrink: 0 !important;
             }
 
             .tab-text-full {
@@ -749,15 +791,30 @@
             }
 
             .tab-text-mob {
-                display: block !important;
-                font-size: 0.6rem !important;
-                font-weight: 600;
-                line-height: 1.1;
-                text-align: center;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
+                display: inline-block !important;
+                font-size: 0.74rem !important;
+                font-weight: 600 !important;
+                line-height: 1 !important;
+                color: inherit !important;
+            }
+
+            /* Compact Urutan Section on Mobile */
+            #sidebarSecReorderCard {
+                padding: 0.65rem 0.8rem !important;
+                border-radius: 14px !important;
+                margin-top: 0.65rem !important;
+            }
+
+            .sec-reorder-item-compact {
+                padding: 0.35rem 0.55rem !important;
+                font-size: 0.75rem !important;
+                border-radius: 7px !important;
+            }
+
+            .sec-reorder-item-compact button {
+                width: 24px !important;
+                height: 24px !important;
+                font-size: 0.7rem !important;
             }
 
             .sidebar-extra-info,
@@ -1370,36 +1427,6 @@
         $bioUrl = $profile->store_slug ? url('/' . $profile->store_slug) : null;
     @endphp
 
-    {{-- Web Builder In-Page Header Banner (Bukan di Navbar Creator) --}}
-    <div class="wb-page-banner">
-        <div class="wb-page-banner-info">
-            <div class="wb-page-banner-title">
-                <h2>Web Builder</h2>
-                <span class="wb-page-banner-badge">Editor Visual</span>
-            </div>
-            <p class="wb-page-banner-desc">Kustomisasi halaman web profil Anda secara instan dan tampilkan portofolio serta
-                tautan produk.</p>
-        </div>
-        <div class="wb-page-banner-actions">
-            <button type="button" class="wb-btn-tutorial" onclick="openWebBuilderIntroModal(true)">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                <span>Lihat Panduan Video</span>
-            </button>
-            @if($bioUrl)
-                <a href="{{ $bioUrl }}" target="_blank" class="wb-btn-preview-link" title="Buka Halaman Web Builder Anda">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                    </svg>
-                    <span>Pratinjau Web</span>
-                </a>
-            @endif
-        </div>
-    </div>
-
     <div class="bio-layout">
 
         {{-- Sidebar Nav Column --}}
@@ -1518,25 +1545,28 @@
             @endphp
 
             <div id="sidebarSecReorderCard" class="bio-sidebar-card" style="display: none;">
-                {{-- Card Header --}}
-                <div
-                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f1f5f9;">
+                {{-- Card Header with Accordion toggle on mobile --}}
+                <div onclick="toggleSecReorderCollapse()"
+                    style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.4rem; border-bottom: 1px solid #f1f5f9; cursor: pointer;">
                     <div
-                        style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700; color: #0f172a;">
-                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                        style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 700; color: #0f172a;">
+                        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                         </svg>
                         <span>Urutan Section Homepage</span>
                     </div>
-                    <span
-                        style="font-size: 0.65rem; background: #f0fdf4; color: #15803d; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 6px; border: 1px solid #bbf7d0;">
-                        Tema 5
-                    </span>
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                        <span
+                            style="font-size: 0.65rem; background: #f0fdf4; color: #15803d; font-weight: 700; padding: 0.12rem 0.4rem; border-radius: 6px; border: 1px solid #bbf7d0;">
+                            Tema 5
+                        </span>
+                        <span id="reorderChevron" style="font-size: 0.75rem; color: #94a3b8; transition: transform 0.2s;">▼</span>
+                    </div>
                 </div>
 
-                <p style="font-size: 0.72rem; color: #64748b; margin-bottom: 0.65rem; line-height: 1.35;">
-                    Geser kartu atau tekan tombol panah untuk ubah urutan section. Wajib klik <strong>"Simpan
-                        Perubahan"</strong>.
+                <div id="reorderCollapseBody">
+                <p style="font-size: 0.7rem; color: #64748b; margin: 0.35rem 0 0.55rem; line-height: 1.3;">
+                    Urutkan section dengan panah [↑] [↓], lalu klik <strong>"Simpan"</strong>.
                 </p>
 
                 <style>
@@ -8183,6 +8213,23 @@
                                     localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
                                 } else {
                                     localStorage.removeItem(WB_INTRO_STORAGE_KEY);
+                                }
+                            });
+                        }
+                    });
+
+                    function toggleSecReorderCollapse() {
+                        const body = document.getElementById('reorderCollapseBody');
+                        const chev = document.getElementById('reorderChevron');
+                        if (!body) return;
+                        if (body.style.display === 'none') {
+                            body.style.display = 'block';
+                            if (chev) chev.style.transform = 'rotate(0deg)';
+                        } else {
+                            body.style.display = 'none';
+                            if (chev) chev.style.transform = 'rotate(-90deg)';
+                        }
+                    }
                                 }
                             });
                         }

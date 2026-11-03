@@ -465,7 +465,8 @@
 
             /* Input & select touch-friendly */
             .form-input {
-                font-size: 16px; /* Prevent iOS zoom */
+                font-size: 16px;
+                /* Prevent iOS zoom */
                 min-height: 44px;
                 height: 44px;
                 padding: 0 0.85rem;
@@ -623,15 +624,19 @@
                                     <label class="form-label">Tipe Produk <span>*</span></label>
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="handleProductTypeSelectChange(this)" required>
-                                        <option value="external_link" {{ old('product_type', 'external_link') == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
-                                        <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>Tiket Event / Webinar</option>
-                                        <option value="service" {{ old('product_type') == 'service' ? 'selected' : '' }}>Jasa / Layanan</option>
+                                        <option value="external_link" {{ old('product_type', 'external_link') == 'external_link' ? 'selected' : '' }}>Produk Digital / Link
+                                            Access</option>
+                                        <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>Tiket
+                                            Event / Webinar</option>
+                                        <option value="service" {{ old('product_type') == 'service' ? 'selected' : '' }}>Jasa
+                                            / Layanan</option>
                                         <option value="physical" {{ old('product_type') == 'physical' ? 'selected' : '' }}>
                                             Produk Fisik / Barang</option>
                                         <option value="makanan" {{ old('product_type') == 'makanan' ? 'selected' : '' }}>
                                             Makanan & Minuman (POS)</option>
                                     </select>
-                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">* Produk Digital & Tiket tampil di Marketplace, tipe lainnya di Bio Link.</span>
+                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">*
+                                        Produk Digital & Tiket tampil di Marketplace, tipe lainnya di Bio Link.</span>
                                 </div>
 
                                 <div class="form-group full" id="buyleCheckoutToggleWrap"
@@ -1125,7 +1130,7 @@
                                                             <path
                                                                 d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
                                                         </svg>
-                                                        TikTok (Hingga 3 Video)
+                                                        TikTok
                                                     </button>
                                                 </div>
                                                 <input type="hidden" name="video_platform" id="videoPlatformInput"
@@ -1193,298 +1198,290 @@
                 </div>
 
                 {{-- TAB 2: MEDIA --}}
-                    <div class="tab-pane" id="tab-media">
-                        <div class="prof-card">
-                            <div class="prof-card-head">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                </svg>
-                                Upload Visual Produk
-                            </div>
-                            <div class="form-body">
-                                {{-- THUMBNAIL UTAMA: PROPORSIONAL 1:1 SQUARE --}}
-                                <div class="form-group">
-                                    <label class="form-label">Upload Thumbnail Utama <span>*</span></label>
-                                    <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
-                                        <div id="thumbDropzone" onclick="document.getElementById('thumb-input').click()"
-                                            style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
-                                            onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
-                                            onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                            <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8"
-                                                viewBox="0 0 24 24">
-                                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                                <polyline points="21 15 16 10 5 21" />
-                                            </svg>
-                                            <div
-                                                style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">
-                                                Pilih Foto</div>
-                                            <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
-                                        </div>
-
-                                        <div id="thumbPreviewWrap" style="display:none;">
-                                            <div
-                                                style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
-                                                <img id="thumbPreviewImg" src=""
-                                                    style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                <div
-                                                    style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
-                                                    <button type="button"
-                                                        onclick="document.getElementById('thumb-input').click()"
-                                                        style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                        title="Ganti Foto">✎</button>
-                                                    <button type="button" onclick="removeThumbnail()"
-                                                        style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                        title="Hapus Foto">✕</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="file" name="image" id="thumb-input" accept="image/*"
-                                        onchange="previewSingleThumb(event)" style="display:none;">
-                                    <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan:
-                                        Persegi (1:1), minimal 600x600 px.</span>
-                                </div>
-
-                                {{-- POSTER EVENT (KHUSUS TIKET) --}}
-                                <div class="form-group" id="posterUploadWrap"
-                                    style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
-                                    <label class="form-label"
-                                        style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
-                                        <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2"
+                <div class="tab-pane" id="tab-media">
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                            </svg>
+                            Upload Visual Produk
+                        </div>
+                        <div class="form-body">
+                            {{-- THUMBNAIL UTAMA: PROPORSIONAL 1:1 SQUARE --}}
+                            <div class="form-group">
+                                <label class="form-label">Upload Thumbnail Utama <span>*</span></label>
+                                <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                                    <div id="thumbDropzone" onclick="document.getElementById('thumb-input').click()"
+                                        style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
+                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8"
                                             viewBox="0 0 24 24">
-                                            <rect x="2" y="4" width="20" height="16" rx="2" />
-                                            <polygon points="10,9 15,12 10,15" />
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
                                         </svg>
-                                        Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
-                                    </label>
-                                    <span class="form-hint"
-                                        style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe produk
-                                        Tiket Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
-                                    <div class="img-upload-area" id="posterDropzone"
-                                        onclick="document.getElementById('poster-input').click()"
-                                        style="margin-bottom:0.75rem; background:#fff; max-width:320px;">
-                                        <div>
-                                            <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
-                                                viewBox="0 0 24 24">
-                                                <rect x="2" y="4" width="20" height="16" rx="2" />
-                                                <circle cx="8" cy="10" r="2" />
-                                                <path d="M22 15l-5-5-8 8" />
-                                            </svg>
-                                            <p
-                                                style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
-                                                Pilih Poster Event (16:9)</p>
-                                        </div>
+                                        <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">
+                                            Pilih Foto</div>
+                                        <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
                                     </div>
-                                    <div id="posterPreviewWrap" style="display:none; margin-bottom:0.5rem;">
+
+                                    <div id="thumbPreviewWrap" style="display:none;">
                                         <div
-                                            style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
-                                            <img id="posterPreviewImg" src=""
-                                                style="width:240px; height:135px; object-fit:cover; display:block;">
+                                            style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
+                                            <img id="thumbPreviewImg" src=""
+                                                style="width:100%; height:100%; object-fit:cover; display:block;">
                                             <div
                                                 style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
                                                 <button type="button"
-                                                    onclick="document.getElementById('poster-input').click()"
+                                                    onclick="document.getElementById('thumb-input').click()"
                                                     style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                    title="Ganti Poster">✎</button>
-                                                <button type="button" onclick="removePoster()"
+                                                    title="Ganti Foto">✎</button>
+                                                <button type="button" onclick="removeThumbnail()"
                                                     style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                    title="Hapus Poster">✕</button>
+                                                    title="Hapus Foto">✕</button>
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="file" name="og_image" id="poster-input" accept="image/*"
-                                        onchange="previewPosterThumb(event)" style="display:none;">
                                 </div>
+                                <input type="file" name="image" id="thumb-input" accept="image/*"
+                                    onchange="previewSingleThumb(event)" style="display:none;">
+                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan:
+                                    Persegi (1:1), minimal 600x600 px.</span>
+                            </div>
 
-                                {{-- FOTO GALERI: GRID PROPORSIONAL 1:1 SQUARE DENGAN TOMBOL TAMBAH TERINTEGRASI --}}
-                                <div class="form-group">
-                                    <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
-                                    <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
-                                        <div id="galleryPreview"
-                                            style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;"></div>
-
-                                        <div id="galleryDropzone" onclick="document.getElementById('gallery-input').click()"
-                                            style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
-                                            onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
-                                            onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                            <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2"
-                                                viewBox="0 0 24 24">
-                                                <line x1="12" y1="5" x2="12" y2="19" />
-                                                <line x1="5" y1="12" x2="19" y2="12" />
-                                            </svg>
-                                            <div
-                                                style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">
-                                                + Foto</div>
-                                            <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">(0/6)
-                                            </div>
-                                        </div>
+                            {{-- POSTER EVENT (KHUSUS TIKET) --}}
+                            <div class="form-group" id="posterUploadWrap"
+                                style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
+                                <label class="form-label"
+                                    style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                                        <polygon points="10,9 15,12 10,15" />
+                                    </svg>
+                                    Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
+                                </label>
+                                <span class="form-hint"
+                                    style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe produk
+                                    Tiket Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
+                                <div class="img-upload-area" id="posterDropzone"
+                                    onclick="document.getElementById('poster-input').click()"
+                                    style="margin-bottom:0.75rem; background:#fff; max-width:320px;">
+                                    <div>
+                                        <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
+                                            viewBox="0 0 24 24">
+                                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                                            <circle cx="8" cy="10" r="2" />
+                                            <path d="M22 15l-5-5-8 8" />
+                                        </svg>
+                                        <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
+                                            Pilih Poster Event (16:9)</p>
                                     </div>
-                                    <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
-                                        onchange="previewGalleryList(event)" style="display:none;">
-                                    <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
-                                        galeri pendukung (proporsional 1:1).</span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="prof-card" id="digitalAccessCard">
-                            <div class="prof-card-head">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                    <polyline points="7 10 12 15 17 10" />
-                                    <line x1="12" y1="15" x2="12" y2="3" />
-                                </svg>
-                                Akses File Digital <span>*</span>
-                            </div>
-                            <div class="form-body">
-                                <div class="form-group">
-                                    <label class="form-label">Tautan Eksternal (Google Drive / Dropbox / Mediafire /
-                                        dll)</label>
-                                    <input type="url" name="digital_resource" id="externalLink"
-                                        value="{{ old('digital_resource') }}" class="form-input" placeholder="https://..."
-                                        required>
-                                    <span id="linkStatus"
-                                        style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- WHITE LABEL CARD --}}
-                        <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;"
-                            id="whitelabelCard">
-                            <div class="prof-card-head"
-                                style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                                </svg>
-                                <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali
-                                    (Lisensi
-                                    Resell & Re-Brand)</span>
-                            </div>
-                            <div class="form-body">
-                                <div
-                                    style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
-                                    <label
-                                        style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#15803D; font-size:0.88rem;">
-                                        <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel') ? 'checked' : '' }}
-                                            onchange="toggleWhitelabelFields(this.checked)"
-                                            style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;">
-                                        <span>Tawarkan Produk Ini Sebagai White Label (Dapat Dijual Kembali Oleh Reseller /
-                                            Creator Lain)</span>
-                                    </label>
-                                </div>
-
-                                <div id="whitelabelOptionsWrap" style="display:none;">
+                                <div id="posterPreviewWrap" style="display:none; margin-bottom:0.5rem;">
                                     <div
-                                        style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
-                                        <strong
-                                            style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
-                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="12" y1="16" x2="12" y2="12" />
-                                                <line x1="12" y1="8" x2="12.01" y2="8" />
-                                            </svg>
-                                            Ketentuan & Panduan White Label:
-                                        </strong>
-                                        <ul
-                                            style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
-                                            <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u>
-                                                mengandung
-                                                watermark, logo personal, atau nomor kontak yang mengikat.</li>
-                                            <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link
-                                                produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai
-                                                keinginan.
-                                            </li>
-                                            <li><strong>Harga Dasar:</strong> Menggunakan harga produk utama yang diinput
-                                                pada
-                                                Informasi Utama Produk.</li>
-                                            <li><strong>Approval Tim Buyle:</strong> Setelah produk disimpan, statusnya akan
-                                                <code>Menunggu Approval Tim Buyle (Pending)</code>. Admin akan memverifikasi
-                                                file Anda sebelum muncul di katalog White Label Marketplace.
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="form-grid">
-                                        <div class="form-group full">
-                                            <label class="form-label">Ketentuan Lisensi / Catatan Reseller
-                                                (Opsional)</label>
-                                            <textarea name="whitelabel_terms" class="form-input" rows="2"
-                                                placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah harga normal...">{{ old('whitelabel_terms') }}</textarea>
+                                        style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
+                                        <img id="posterPreviewImg" src=""
+                                            style="width:240px; height:135px; object-fit:cover; display:block;">
+                                        <div
+                                            style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                            <button type="button" onclick="document.getElementById('poster-input').click()"
+                                                style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                title="Ganti Poster">✎</button>
+                                            <button type="button" onclick="removePoster()"
+                                                style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                title="Hapus Poster">✕</button>
                                         </div>
+                                    </div>
+                                </div>
+                                <input type="file" name="og_image" id="poster-input" accept="image/*"
+                                    onchange="previewPosterThumb(event)" style="display:none;">
+                            </div>
+
+                            {{-- FOTO GALERI: GRID PROPORSIONAL 1:1 SQUARE DENGAN TOMBOL TAMBAH TERINTEGRASI --}}
+                            <div class="form-group">
+                                <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
+                                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                                    <div id="galleryPreview"
+                                        style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;"></div>
+
+                                    <div id="galleryDropzone" onclick="document.getElementById('gallery-input').click()"
+                                        style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
+                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                        <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">
+                                            + Foto</div>
+                                        <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">(0/6)
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
+                                    onchange="previewGalleryList(event)" style="display:none;">
+                                <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
+                                    galeri pendukung (proporsional 1:1).</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prof-card" id="digitalAccessCard">
+                        <div class="prof-card-head">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Akses File Digital <span>*</span>
+                        </div>
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="form-label">Tautan Eksternal (Google Drive / Dropbox / Mediafire /
+                                    dll)</label>
+                                <input type="url" name="digital_resource" id="externalLink"
+                                    value="{{ old('digital_resource') }}" class="form-input" placeholder="https://..."
+                                    required>
+                                <span id="linkStatus"
+                                    style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- WHITE LABEL CARD --}}
+                    <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;"
+                        id="whitelabelCard">
+                        <div class="prof-card-head"
+                            style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg>
+                            <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali</span>
+                        </div>
+                        <div class="form-body">
+                            <div
+                                style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                                <label
+                                    style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#15803D; font-size:0.88rem;">
+                                    <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel') ? 'checked' : '' }}
+                                        onchange="toggleWhitelabelFields(this.checked)"
+                                        style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;">
+                                    <span>Ya Diperbolehkan</span>
+                                </label>
+                            </div>
+
+                            <div id="whitelabelOptionsWrap" style="display:none;">
+                                <div
+                                    style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
+                                    <strong
+                                        style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="16" x2="12" y2="12" />
+                                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                                        </svg>
+                                        Ketentuan & Panduan White Label:
+                                    </strong>
+                                    <ul
+                                        style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
+                                        <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u>
+                                            mengandung
+                                            watermark, logo personal, atau nomor kontak yang mengikat.</li>
+                                        <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link
+                                            produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai
+                                            keinginan.
+                                        </li>
+                                        <li><strong>Harga Dasar:</strong> Menggunakan harga produk utama yang diinput
+                                            pada
+                                            Informasi Utama Produk.</li>
+                                        <li><strong>Approval Tim Buyle:</strong> Setelah produk disimpan, statusnya akan
+                                            <code>Menunggu Approval Tim Buyle (Pending)</code>. Admin akan memverifikasi
+                                            file Anda sebelum muncul di katalog White Label Marketplace.
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="form-grid">
+                                    <div class="form-group full">
+                                        <label class="form-label">Ketentuan Lisensi / Catatan Reseller
+                                            (Opsional)</label>
+                                        <textarea name="whitelabel_terms" class="form-input" rows="2"
+                                            placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah harga normal...">{{ old('whitelabel_terms') }}</textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {{-- TAB 3: SEO & FAQ --}}
-                    <div class="tab-pane" id="tab-seo">
-                        <div class="prof-card">
-                            <div class="prof-card-head">
-                                Meta Data Custom
+                {{-- TAB 3: SEO & FAQ --}}
+                <div class="tab-pane" id="tab-seo">
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            Meta Data Custom
+                        </div>
+                        <div class="form-body">
+                            <div class="form-hint" style="margin-bottom:1.25rem;">Jika dikosongkan, sistem akan otomatis
+                                menggunakan Informasi Utama Produk untuk SEO.</div>
+                            <div class="form-group">
+                                <label class="form-label">Meta Title SEO</label>
+                                <input type="text" name="meta_title" value="{{ old('meta_title') }}" class="form-input">
                             </div>
-                            <div class="form-body">
-                                <div class="form-hint" style="margin-bottom:1.25rem;">Jika dikosongkan, sistem akan otomatis
-                                    menggunakan Informasi Utama Produk untuk SEO.</div>
-                                <div class="form-group">
-                                    <label class="form-label">Meta Title SEO</label>
-                                    <input type="text" name="meta_title" value="{{ old('meta_title') }}" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Meta Description SEO</label>
-                                    <textarea name="meta_description" class="form-input"
-                                        rows="2">{{ old('meta_description') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Meta Keywords</label>
-                                    <input type="text" name="meta_keywords" value="{{ old('meta_keywords') }}"
-                                        class="form-input">
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label">Meta Description SEO</label>
+                                <textarea name="meta_description" class="form-input"
+                                    rows="2">{{ old('meta_description') }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Meta Keywords</label>
+                                <input type="text" name="meta_keywords" value="{{ old('meta_keywords') }}"
+                                    class="form-input">
                             </div>
                         </div>
+                    </div>
 
-                        <div class="prof-card">
-                            <div class="prof-card-head" style="justify-content:space-between;">
-                                FAQ Schema
-                                <button type="button" onclick="addFaqRow()"
-                                    style="background:#f0fdf4; color:#1eb349; border:none; padding:0.4rem 0.8rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">+
-                                    Tambah FAQ</button>
-                            </div>
-                            <div class="form-body" id="faqContainer">
-                                @php $oldFaqs = old('faqs', [['question' => '', 'answer' => '']]); @endphp
-                                @foreach($oldFaqs as $idx => $faq)
-                                    <div class="faq-row"
-                                        style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                        <div class="form-group">
-                                            <label class="form-label">Pertanyaan</label>
-                                            <input type="text" name="faqs[{{$idx}}][question]"
-                                                value="{{ $faq['question'] ?? '' }}" class="form-input">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Jawaban</label>
-                                            <textarea name="faqs[{{$idx}}][answer]" class="form-input"
-                                                rows="2">{{ $faq['answer'] ?? '' }}</textarea>
-                                        </div>
-                                        @if($idx > 0)
-                                            <button type="button" onclick="this.closest('.faq-row').remove()"
-                                                style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                        @endif
+                    <div class="prof-card">
+                        <div class="prof-card-head" style="justify-content:space-between;">
+                            FAQ Schema
+                            <button type="button" onclick="addFaqRow()"
+                                style="background:#f0fdf4; color:#1eb349; border:none; padding:0.4rem 0.8rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">+
+                                Tambah FAQ</button>
+                        </div>
+                        <div class="form-body" id="faqContainer">
+                            @php $oldFaqs = old('faqs', [['question' => '', 'answer' => '']]); @endphp
+                            @foreach($oldFaqs as $idx => $faq)
+                                <div class="faq-row"
+                                    style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                    <div class="form-group">
+                                        <label class="form-label">Pertanyaan</label>
+                                        <input type="text" name="faqs[{{$idx}}][question]" value="{{ $faq['question'] ?? '' }}"
+                                            class="form-input">
                                     </div>
-                                @endforeach
-                            </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Jawaban</label>
+                                        <textarea name="faqs[{{$idx}}][answer]" class="form-input"
+                                            rows="2">{{ $faq['answer'] ?? '' }}</textarea>
+                                    </div>
+                                    @if($idx > 0)
+                                        <button type="button" onclick="this.closest('.faq-row').remove()"
+                                            style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-footer">
-                        <a href="{{ route('creator.products.index') }}" class="btn-cancel">Batal</a>
-                        <button type="submit" class="btn-submit">Simpan</button>
-                    </div>
+                <div class="form-footer">
+                    <a href="{{ route('creator.products.index') }}" class="btn-cancel">Batal</a>
+                    <button type="submit" class="btn-submit">Simpan</button>
+                </div>
             </form>
         </div>
     </div>
@@ -1545,17 +1542,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                    <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                        <div class="form-group">
-                                            <label class="form-label">Pertanyaan</label>
-                                            <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Jawaban</label>
-                                            <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                        </div>
-                                        <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                    </div>`;
+                                                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Pertanyaan</label>
+                                                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Jawaban</label>
+                                                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                                </div>
+                                                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                            </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -1871,13 +1868,13 @@
 
                 // Banner alert
                 const alertHtml = `
-                                            <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-                                                <div style="display:flex; align-items:center; gap:0.6rem;">
-                                                    <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                                    <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
-                                                </div>
-                                            </div>
-                                        `;
+                                                                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+                                                                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                                                                            <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                                                            <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                                                        </div>
+                                                                    </div>
+                                                                `;
                 const formBody = document.getElementById('productForm');
                 if (formBody) {
                     formBody.insertAdjacentHTML('afterbegin', alertHtml);
@@ -2010,9 +2007,9 @@
                             const imgBox = document.createElement('div');
                             imgBox.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06);';
                             imgBox.innerHTML = `
-                                                        <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                        <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
-                                                    `;
+                                                                                <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                                <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
+                                                                            `;
                             galleryContainer.appendChild(imgBox);
                         });
                     }
@@ -2167,18 +2164,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                    <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                        style="width:100%; height:100%; border:none; display:block;"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen loading="lazy"></iframe>
-                                </div>`;
+                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                style="width:100%; height:100%; border:none; display:block;"
+                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                allowfullscreen loading="lazy"></iframe>
+                                                        </div>`;
                 } else {
                     html += `
-                                <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                    <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                    <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                </div>`;
+                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                        </div>`;
                 }
             });
             html += '</div>';
@@ -2216,11 +2213,11 @@
                     itemDiv.id = 'newGalItem_' + fileIndex;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
-                                    style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                            `;
+                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                        <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
+                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                    `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };
@@ -2248,11 +2245,11 @@
                     itemDiv.id = 'newGalItem_' + idx;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
-                                    style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                            `;
+                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                        <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
+                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                    `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };

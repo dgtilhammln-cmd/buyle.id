@@ -477,6 +477,71 @@
             margin-top: 2px;
         }
     </style>
+    {{-- Interactive Share Modal (Tanpa Alert Browser) --}}
+    <div id="shareStoreModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;">
+        <div style="background:#ffffff; border-radius:26px; max-width:400px; width:100%; padding:1.75rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; animation:modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+            <div style="width:48px; height:48px; border-radius:50%; background:#ecfdf5; color:#1eb349; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.4rem;">
+                <i class="ph-bold ph-share-network"></i>
+            </div>
+            <h3 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.35rem;">Bagikan Halaman Toko</h3>
+            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem; line-height:1.4;">
+                Salin tautan atau bagikan langsung ke media sosial untuk menjangkau calon pembeli.
+            </p>
+
+            {{-- Link Box --}}
+            <div style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; margin-bottom:1.25rem; gap:0.5rem;">
+                <input type="text" id="shareStoreUrlInput" value="{{ $bioUrl }}" readonly style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.78rem; color:#334155; outline:none; text-overflow:ellipsis;">
+                <button type="button" id="copyShareBtn" onclick="copyStoreUrl()" style="padding:0.5rem 0.9rem; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
+                    <i class="ph-bold ph-copy" id="copyIcon"></i>
+                    <span id="copyBtnText">Salin</span>
+                </button>
+            </div>
+
+            {{-- Social Share Buttons --}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:1.25rem;">
+                <a href="https://api.whatsapp.com/send?text={{ urlencode('Halo! Kunjungi katalog dan toko resmi saya di: ' . $bioUrl) }}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#25d366; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none; box-shadow:0 3px 10px rgba(37,211,102,0.25);">
+                    <i class="ph-bold ph-whatsapp-logo" style="font-size:1.1rem;"></i>
+                    WhatsApp
+                </a>
+                <a href="{{ $bioUrl }}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#0f172a; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none;">
+                    <i class="ph-bold ph-arrow-square-out" style="font-size:1.1rem;"></i>
+                    Buka Toko
+                </a>
+            </div>
+
+            <button type="button" onclick="closeShareStoreModal()" style="width:100%; padding:0.7rem; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:600; font-size:0.8rem; cursor:pointer;">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function openShareStoreModal() {
+            const m = document.getElementById('shareStoreModal');
+            if (m) m.style.display = 'flex';
+        }
+        function closeShareStoreModal() {
+            const m = document.getElementById('shareStoreModal');
+            if (m) m.style.display = 'none';
+        }
+        function copyStoreUrl() {
+            const input = document.getElementById('shareStoreUrlInput');
+            if (input) {
+                navigator.clipboard.writeText(input.value);
+                const btn = document.getElementById('copyShareBtn');
+                const text = document.getElementById('copyBtnText');
+                const icon = document.getElementById('copyIcon');
+                if (text) text.innerText = 'Tersalin!';
+                if (icon) icon.className = 'ph-bold ph-check';
+                if (btn) btn.style.background = '#059669';
+                setTimeout(() => {
+                    if (text) text.innerText = 'Salin';
+                    if (icon) icon.className = 'ph-bold ph-copy';
+                    if (btn) btn.style.background = 'linear-gradient(135deg,#1eb349,#16a34a)';
+                }, 2000);
+            }
+        }
+    </script>
 @endsection
 
 @php
@@ -565,8 +630,7 @@
                             <i class="ph-bold ph-arrow-up-right" style="font-size: 0.85rem;"></i>
                         </a>
 
-                        <button type="button" class="nina-action-btn"
-                            onclick="navigator.clipboard.writeText('{{ $bioUrl }}'); alert('Link toko berhasil disalin ke clipboard!');">
+                        <button type="button" class="nina-action-btn" onclick="openShareStoreModal()">
                             <i class="ph-bold ph-share-network" style="font-size: 0.85rem;"></i>
                             <span>Bagikan</span>
                         </button>

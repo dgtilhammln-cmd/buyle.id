@@ -503,63 +503,6 @@
             </div>
         </a>
 
-        {{-- Kelola Produk Saya --}}
-        <a href="{{ route('creator.products.index') }}" class="menu-group-item">
-            <div class="menu-item-left">
-                <div class="menu-item-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="2" y="7" width="20" height="14" rx="2" />
-                        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                    </svg>
-                </div>
-                <span class="menu-item-title">Kelola Produk Saya</span>
-            </div>
-            <div class="menu-item-right">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </div>
-        </a>
-
-        {{-- Kelompok Produk --}}
-        <a href="{{ route('creator.groups.index') }}" class="menu-group-item">
-            <div class="menu-item-left">
-                <div class="menu-item-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M4 6h16M4 12h16M4 18h7" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </div>
-                <span class="menu-item-title">Kelompok Produk</span>
-            </div>
-            <div class="menu-item-right">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </div>
-        </a>
-
-        {{-- Saldo & Pencairan Dana --}}
-        <a href="{{ route('creator.payout.settings') }}" class="menu-group-item">
-            <div class="menu-item-left">
-                <div class="menu-item-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="2" y="6" width="20" height="12" rx="2" />
-                        <circle cx="16" cy="12" r="2" />
-                        <path d="M6 12h.01" />
-                    </svg>
-                </div>
-                <span class="menu-item-title">Saldo & Rekening Pencairan</span>
-            </div>
-            <div class="menu-item-right">
-                <span class="menu-item-badge" style="color:#16a34a; background:#dcfce7;">
-                    Rp {{ number_format($availableBalance ?? 0, 0, ',', '.') }}
-                </span>
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </div>
-        </a>
-
         {{-- PIN Keamanan Layar PWA --}}
         <div class="menu-group-item" onclick="openPinModal()" style="cursor: pointer;">
             <div class="menu-item-left">
@@ -770,56 +713,7 @@
             </div>
         </a>
 
-        {{-- Laporan Penjualan & Order --}}
-        <a href="{{ route('creator.sales.report') }}" class="menu-group-item">
-            <div class="menu-item-left">
-                <div class="menu-item-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                    </svg>
-                </div>
-                <span class="menu-item-title">Statistik & Data Order</span>
-            </div>
-            <div class="menu-item-right">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </div>
-        </a>
 
-        {{-- Bantuan WhatsApp CS --}}
-        <a href="https://wa.me/6281222223803" target="_blank" class="menu-group-item">
-            <div class="menu-item-left">
-                <div class="menu-item-icon" style="color: #15803d; background: #dcfce7;">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                    </svg>
-                </div>
-                <span class="menu-item-title">Bantuan CS Buyle (WhatsApp)</span>
-            </div>
-            <div class="menu-item-right">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </div>
-        </a>
-
-        {{-- Kebijakan Privasi --}}
-        <a href="{{ route('legal.privacy') }}" target="_blank" class="menu-group-item">
-            <div class="menu-item-left">
-                <div class="menu-item-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg>
-                </div>
-                <span class="menu-item-title">Kebijakan Privasi</span>
-            </div>
-            <div class="menu-item-right">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </div>
-        </a>
     </div>
 
     {{-- 7. Group 4: Logout --}}

@@ -772,7 +772,12 @@
 </head>
 
 <body>
-    {{-- Initial Splash Screen with Buyle Logo (White Background) --}}
+    {{-- Initial Splash Screen with Buyle Logo (HANYA Muncul Diawal Masuk Aplikasi, TIDAK Muncul Saat Berpindah Halaman) --}}
+    <script>
+        if (sessionStorage.getItem('pwa_splash_shown') === '1') {
+            document.write('<style>#pwaSplashScreen { display: none !important; }</style>');
+        }
+    </script>
     <div id="pwaSplashScreen" style="position:fixed;inset:0;background:#ffffff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s ease, visibility 0.35s ease;">
         <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id" style="max-width:180px;height:auto;animation:pwaLogoPulse 1.2s ease-in-out infinite alternate;">
     </div>
@@ -1898,17 +1903,20 @@
         })();
     </script>
     <script>
-        // Dismiss Splash Screen smoothly
+        // Dismiss Splash Screen smoothly & Catat Hanya Muncul Diawal Masuk
         window.addEventListener('load', function() {
             const splash = document.getElementById('pwaSplashScreen');
-            if (splash) {
+            if (splash && sessionStorage.getItem('pwa_splash_shown') !== '1') {
                 setTimeout(function() {
                     splash.style.opacity = '0';
                     setTimeout(function() {
                         splash.style.visibility = 'hidden';
                         splash.style.display = 'none';
+                        sessionStorage.setItem('pwa_splash_shown', '1');
                     }, 350);
-                }, 250);
+                }, 300);
+            } else if (splash) {
+                splash.style.display = 'none';
             }
         });
 

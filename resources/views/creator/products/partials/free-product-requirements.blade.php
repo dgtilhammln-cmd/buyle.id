@@ -9,7 +9,7 @@
             <span class="toggle-slider-s"></span>
         </div>
         <div style="flex:1;">
-            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Syarat Klaim Produk Gratis (Lead Magnet)</div>
+            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Syarat Klaim Produk Gratis</div>
             <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Kumpulkan followers & anggota komunitas Anda sebelum pembeli mengunduh produk gratis ini.</div>
         </div>
     </label>
@@ -23,7 +23,7 @@
                 <line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
             <div style="font-size:0.77rem; color:#92400e; line-height:1.5;">
-                <strong>Cukup isi minimal salah 1 platform</strong> (tidak perlu semua). Calon pembeli hanya akan diwajibkan menyelesaikan syarat pada platform yang Anda cantumkan di bawah ini.
+                <strong>Isi minimal salah 1 platform</strong>. Calon pembeli hanya akan diwajibkan menyelesaikan syarat yang Anda cantumkan di bawah ini.
             </div>
         </div>
 
