@@ -192,13 +192,6 @@ class SellerController extends Controller
     public function toggleBiometric(Request $request)
     {
         $user = auth()->user();
-        if (empty($user->security_pin)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Silakan atur PIN keamanan terlebih dahulu.'
-            ], 422);
-        }
-
         $user->biometric_enabled = $request->boolean('enabled');
         $user->save();
 

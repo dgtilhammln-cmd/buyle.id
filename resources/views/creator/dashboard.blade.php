@@ -4,6 +4,33 @@
 @section('page_title', 'Overview')
 @section('page_subtitle', 'Ringkasan performa toko, saldo real-time, dan transaksi terbaru.')
 
+@php
+    $storeName = $seller->name;
+    $creatorProfile = $seller->creatorProfile;
+    if ($creatorProfile && !empty($creatorProfile->store_name)) {
+        $storeName = $creatorProfile->store_name;
+    }
+
+    // Pendapatan bulan ini
+    $thisMonthSales = $recentSales->filter(function ($order) {
+        return \Carbon\Carbon::parse($order->created_at)->isCurrentMonth();
+    });
+    $incomeThisMonth = $thisMonthSales->sum(fn($o) => $o->items->sum('subtotal'));
+    if ($incomeThisMonth <= 0 && $gmv > 0) {
+        $incomeThisMonth = $gmv;
+    }
+
+    $bioUrl = url('/' . $seller->username);
+
+    $tierInfo = $creatorProfile ? $creatorProfile->getTierInfo($gmv ?? null) : [
+        'name'     => 'PERINTIS',
+        'badge'    => 'Perintis',
+        'level'    => 1,
+        'subtitle' => 'Matte Silver / Brushed Steel'
+    ];
+    $tierBadge = $tierInfo['badge'] ?? $tierInfo['name'] ?? 'Perintis';
+@endphp
+
 @section('styles')
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -543,33 +570,6 @@
         }
     </script>
 @endsection
-
-@php
-    $storeName = $seller->name;
-    $creatorProfile = $seller->creatorProfile;
-    if ($creatorProfile && !empty($creatorProfile->store_name)) {
-        $storeName = $creatorProfile->store_name;
-    }
-
-    // Pendapatan bulan ini
-    $thisMonthSales = $recentSales->filter(function ($order) {
-        return \Carbon\Carbon::parse($order->created_at)->isCurrentMonth();
-    });
-    $incomeThisMonth = $thisMonthSales->sum(fn($o) => $o->items->sum('subtotal'));
-    if ($incomeThisMonth <= 0 && $gmv > 0) {
-        $incomeThisMonth = $gmv;
-    }
-
-    $bioUrl = url('/' . $seller->username);
-
-    $tierInfo = $creatorProfile ? $creatorProfile->getTierInfo($gmv ?? null) : [
-        'name'     => 'PERINTIS',
-        'badge'    => 'Perintis',
-        'level'    => 1,
-        'subtitle' => 'Matte Silver / Brushed Steel'
-    ];
-    $tierBadge = $tierInfo['badge'] ?? $tierInfo['name'] ?? 'Perintis';
-@endphp
 
 @section('content')
     <div class="nina-dash-root">

@@ -743,9 +743,6 @@
                                             style="font-size: 0.88rem; font-weight: 500; color: #0f172a; margin-bottom: 0.15rem;">
                                             Aktifkan Online Store di Marketplace Buyle.id
                                         </div>
-                                        <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
-                                            Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
-                                        </div>
                                     </div>
                                     <label class="switch-box">
                                         <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
@@ -760,7 +757,7 @@
                                         viewBox="0 0 24 24">
                                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                     </svg>
-                                    <span>Toko & katalog produk akan tampil di pencarian marketplace Buyle.id.</span>
+                                    <span>Store & katalog anda akan tampil di pencarian marketplace Buyle.id.</span>
                                 </div>
                             </div>
                             @error('creator_type')<span class="form-error">{{ $message }}</span>@enderror
@@ -774,7 +771,7 @@
                                 required>{{ old('store_description', $profile->store_description) }}</textarea>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
                                 <span class="form-hint" style="margin:0;">Minimal <strong>40</strong> karakter, maksimal
-                                    <strong>300</strong> karakter. Ditampilkan di halaman produk Anda.</span>
+                                    <strong>300</strong> </span>
                                 <span id="storeDescCount"
                                     style="font-size:0.75rem; color:#94a3b8; white-space:nowrap; margin-left:0.5rem;">0/300</span>
                             </div>

@@ -792,9 +792,10 @@
         $authUser = auth()->user();
         $hasAppPin = $authUser && !empty($authUser->security_pin);
         $hasBiometric = $authUser && (bool) $authUser->biometric_enabled;
+        $hasSecurityLock = $hasAppPin || $hasBiometric;
     @endphp
 
-    @if($hasAppPin)
+    @if($hasSecurityLock)
     {{-- ── PWA Screen Lock Overlay (PIN & Fingerprint/Face ID) ── --}}
     <div id="pwaAppLockScreen" style="display:none; position:fixed; inset:0; background:#ffffff; z-index:999998; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; text-align:center;">
         <div style="max-width:340px; width:100%;">
@@ -804,8 +805,21 @@
                 {{ strtoupper(substr($authUser->name ?? 'C', 0, 1)) }}
             </div>
             <h2 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem;">{{ $authUser->name }}</h2>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Masukkan 6-digit PIN untuk membuka</p>
+            @if($hasAppPin)
+                <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Masukkan 6-digit PIN untuk membuka</p>
+            @else
+                <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Buka kunci dengan Sidik Jari / Face ID</p>
+                <div style="margin: 1.5rem 0;">
+                    <button type="button" onclick="triggerBiometricAuth()" style="width:72px; height:72px; border-radius:50%; background:#ecfdf5; border:2px solid #1eb349; color:#1eb349; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 16px rgba(30,179,73,0.25); transition:transform 0.15s ease;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                        <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.99 7.132"></path>
+                        </svg>
+                    </button>
+                    <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-top:0.75rem;">Sentuh untuk scan ulang</div>
+                </div>
+            @endif
 
+            @if($hasAppPin)
             {{-- 6 PIN Indicator Dots --}}
             <div id="pinDotsWrap" style="display:flex; justify-content:center; gap:0.9rem; margin-bottom:1.5rem;">
                 <div class="lock-dot" id="dot0"></div>
@@ -1604,6 +1618,7 @@
                     Isi Data Sekarang
                 </button>
             </div>
+            @endif
         </div>
     </div>
     <style>
@@ -1936,7 +1951,7 @@
             }
         }, { passive: false });
 
-        @if($hasAppPin)
+        @if($hasSecurityLock)
         let currentEnteredPin = '';
         const lockScreen = document.getElementById('pwaAppLockScreen');
 
