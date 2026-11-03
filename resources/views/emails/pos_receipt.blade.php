@@ -8,16 +8,35 @@
         'cashless', 'transfer', 'qris' => 'Non-Tunai (QRIS / Transfer)',
         default => 'Tunai'
     };
+    $custName = $addr['name'] ?? 'Pelanggan';
+    $resolvedCashierName = $cashierName ?? ($addr['cashier_name'] ?? 'Kasir');
+    $resolvedLogoUrl = $posLogoUrl ?? null;
+    $resolvedAddress = $posStoreAddress ?? ($profile?->address ?? '');
+    $resolvedPhone   = $posStorePhone ?? '';
 @endphp
 
 <div style="text-align: center; margin-bottom: 24px;">
+    {{-- Logo Toko --}}
+    @if(!empty($resolvedLogoUrl))
+    <div style="margin-bottom: 12px;">
+        <img src="{{ $resolvedLogoUrl }}" alt="{{ $storeName }}"
+            style="max-height: 60px; max-width: 180px; object-fit: contain; margin: 0 auto; display: block; border-radius: 6px;">
+    </div>
+    @endif
+
     <div style="display: inline-block; padding: 8px 16px; background-color: #ecfdf5; border-radius: 9999px; font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 12px;">
-        Pembayaran Berhasil
+        Pembayaran Berhasil ✅
     </div>
     <h2 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: #0f172a;">
         {{ $storeName }}
     </h2>
-    <p style="margin: 0; font-size: 13px; color: #64748b;">
+    @if($resolvedAddress)
+    <p style="margin: 0; font-size: 12px; color: #64748b;">{{ $resolvedAddress }}</p>
+    @endif
+    @if($resolvedPhone)
+    <p style="margin: 0; font-size: 12px; color: #64748b;">{{ $resolvedPhone }}</p>
+    @endif
+    <p style="margin: 8px 0 0 0; font-size: 13px; color: #64748b;">
         {{ $order->order_number }} &bull; {{ $order->created_at->format('d M Y H:i') }} WIB
     </p>
 </div>
@@ -26,7 +45,7 @@
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size: 13px; color: #475569;">
         <tr>
             <td style="padding: 4px 0; color: #64748b;">Pelanggan:</td>
-            <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">{{ $addr['name'] ?? 'Pelanggan' }}</td>
+            <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">{{ $custName }}</td>
         </tr>
         @if(!empty($order->notes))
         <tr>
@@ -34,6 +53,10 @@
             <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">{{ $order->notes }}</td>
         </tr>
         @endif
+        <tr>
+            <td style="padding: 4px 0; color: #64748b;">Kasir:</td>
+            <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">{{ $resolvedCashierName }}</td>
+        </tr>
         <tr>
             <td style="padding: 4px 0; color: #64748b;">Metode Bayar:</td>
             <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">{{ $paymentMethodLabel }}</td>
@@ -58,6 +81,9 @@
             <tr style="border-bottom: 1px dashed #f1f5f9;">
                 <td style="padding: 10px 0; font-weight: 600; color: #0f172a;">
                     {{ $item->product_name }}
+                    @if(!empty($item->variant_name))
+                    <span style="font-size: 11px; color: #16a34a; font-weight: normal;"> ({{ $item->variant_name }})</span>
+                    @endif
                     <div style="font-size: 11px; color: #64748b; font-weight: normal;">
                         @ Rp {{ number_format($item->price, 0, ',', '.') }}
                     </div>

@@ -4062,27 +4062,41 @@
             <div class="pos-modal-body" id="posReceiptModalContent" style="padding: 1.1rem 1.25rem;">
                 <!-- ── MODERN TICKET BILL CARD (Sesuai Mockup Image 4) ── -->
                 <div id="printablePosReceiptArea" style="background:#ffffff; border-radius:20px; border:1.5px solid #e2e8f0; padding:1.25rem 1.25rem 1rem; position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
-                    <!-- Header Bill -->
+                    <!-- Header Bill: Logo + Nama Brand + Alamat + No Telepon + Nomor Invoice -->
                     <div style="text-align:center; padding-bottom:10px; border-bottom:1.5px dashed #e2e8f0;">
+                        <!-- Logo Toko (jika ada) -->
+                        <div id="recBillLogoWrap" style="margin-bottom:6px; {{ empty($posLogoUrl) ? 'display:none;' : '' }}">
+                            <img id="recBillLogoImg" src="{{ $posLogoUrl ?? '' }}" alt="Logo Toko"
+                                style="max-height:56px; max-width:160px; object-fit:contain; margin:0 auto; display:block; border-radius:6px;">
+                        </div>
                         <div style="font-size:1.1rem; font-weight:800; color:#0f172a; letter-spacing:-0.01em;">
                             {{ $storeName }}
                         </div>
-                        <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">
-                            {{ $posStoreAddress ?: ($profile?->address ?? 'Kasir Digital Buyle POS') }}
+                        @if($posStoreAddress ?: ($profile?->address ?? ''))
+                        <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
+                            {{ $posStoreAddress ?: ($profile?->address ?? '') }}
                         </div>
+                        @endif
+                        @if($posStorePhone ?? '')
+                        <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">
+                            {{ $posStorePhone }}
+                        </div>
+                        @endif
                         <div style="display:inline-flex; align-items:center; gap:6px; background:#f0fdf4; border:1px solid #bbf7d0; padding:2px 10px; border-radius:999px; margin-top:6px;">
                             <span style="width:6px; height:6px; border-radius:50%; background:#16a34a;"></span>
                             <span style="font-size:0.68rem; font-weight:800; color:#15803d;" id="recOrderCode">#INV-POS</span>
                         </div>
                     </div>
 
-                    <!-- Meta info (Tanggal & Kasir) -->
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:#64748b; padding:8px 0; border-bottom:1.5px dashed #e2e8f0;">
+                    <!-- Meta info (Tanggal, Kasir & Customer) -->
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; font-size:0.72rem; color:#64748b; padding:8px 0; border-bottom:1.5px dashed #e2e8f0;">
                         <div>
-                            <span id="recDateOnly">{{ now()->translatedFormat('d M Y') }}</span> &middot; <span id="recTimeOnly">{{ now()->format('H:i') }}</span>
+                            <div><span id="recDateOnly">{{ now()->translatedFormat('d M Y') }}</span> &middot; <span id="recTimeOnly">{{ now()->format('H:i') }}</span></div>
+                            <div style="margin-top:2px; color:#0f172a; font-weight:700;" id="recCustomerInfoBill">Pelanggan Umum</div>
                         </div>
-                        <div style="font-weight:700; color:#0f172a;" id="recCustomerInfoBill">
-                            Pelanggan Umum
+                        <div style="text-align:right;">
+                            <div style="font-weight:700; color:#0f172a;" id="recCashierNameBill">{{ $currentCashier ? $currentCashier->name : auth()->user()->name }}</div>
+                            <div style="color:#94a3b8; font-size:0.65rem;">Kasir</div>
                         </div>
                     </div>
 
@@ -7108,15 +7122,29 @@
                     elQueueTag.innerText = `No. 0-${qNum}`;
                 }
 
-                // Cashier Name
+                // Cashier Name (both legacy & new bill)
+                const cashierDisplayName = order.cashier_name || (typeof currentCashierStaffName !== 'undefined' && currentCashierStaffName ? currentCashierStaffName : '{{ $currentCashier ? $currentCashier->name : auth()->user()->name }}');
                 const elCashierName = document.getElementById('recCashierName');
-                if (elCashierName) {
-                    elCashierName.innerText = order.cashier_name || (typeof currentCashierStaffName !== 'undefined' && currentCashierStaffName ? currentCashierStaffName : '{{ $currentCashier ? $currentCashier->name : auth()->user()->name }}');
-                }
+                if (elCashierName) elCashierName.innerText = cashierDisplayName;
+                const elCashierNameBill = document.getElementById('recCashierNameBill');
+                if (elCashierNameBill) elCashierNameBill.innerText = cashierDisplayName;
 
-                // Customer Name & Notes (Legacy fallback)
-                const elCustomerName = document.getElementById('recCustomerName');
-                if (elCustomerName) elCustomerName.innerText = addr.name || 'Pelanggan Umum';
+                // Customer Name on bill
+                const customerDisplayName = addr.name || order.customer_name || 'Pelanggan Umum';
+                const elCustomerInfoBill = document.getElementById('recCustomerInfoBill');
+                if (elCustomerInfoBill) elCustomerInfoBill.innerText = customerDisplayName;
+
+                // Logo on bill card (show/hide based on if logo exists)
+                const billLogoWrap = document.getElementById('recBillLogoWrap');
+                const billLogoImg = document.getElementById('recBillLogoImg');
+                if (billLogoWrap && billLogoImg) {
+                    if (currentPosLogoUrl) {
+                        billLogoImg.src = currentPosLogoUrl;
+                        billLogoWrap.style.display = 'block';
+                    } else {
+                        billLogoWrap.style.display = 'none';
+                    }
+                }
 
                 const elNotes = document.getElementById('recNotes');
                 const elNotesRow = document.getElementById('recNotesRow');
@@ -9859,13 +9887,14 @@
                 if (itemsCountEl) itemsCountEl.innerText = `${totalQty} Items`;
             }
 
-            // ── Share Bill to WhatsApp (Direct WA) ──
+            // ── Share Bill to WhatsApp (Greeting + Auto Image) ──
             function shareBillToWhatsApp() {
                 if (!currentCompletedOrder) {
                     showPosAlert('Data transaksi tidak ditemukan.', 'Perhatian', 'warning');
                     return;
                 }
                 const order = currentCompletedOrder;
+                const addr = order.shipping_address || {};
                 const storeTitle = '{{ $storeName }}';
                 const invNum = order.order_number || ('INV-' + order.id);
                 const totalFormatted = formatRupiah(order.total || order.subtotal || 0);
@@ -9878,18 +9907,88 @@
                     itemsText += `${idx + 1}. *${item.product_name}*${item.variant_name ? ' (' + item.variant_name + ')' : ''}\n    ${itemQty} x Rp ${itemPrice} = Rp ${itemSub}\n`;
                 });
 
-                const custName = (order.customer_name || document.getElementById('posCustomerName')?.value || 'Pelanggan').trim();
-                const tableInfo = document.getElementById('posTableQuickSelect')?.value ? `\nMeja: ${document.getElementById('posTableQuickSelect').value}` : '';
+                const custName = (addr.name || order.customer_name || document.getElementById('posCustomerName')?.value || '').trim();
+                const tableVal = addr.table || document.getElementById('posTableQuickSelect')?.value || '';
+                const tableInfo = tableVal ? `\nMeja: ${tableVal}` : '';
+                const cashierName = document.getElementById('recCashierNameBill')?.innerText || '{{ $currentCashier ? $currentCashier->name : auth()->user()->name }}';
 
-                const msg = `🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*\nPelanggan: ${custName}${tableInfo}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*TOTAL: Rp ${totalFormatted}*\nMetode: ${order.payment_method ? order.payment_method.toUpperCase() : 'LUNAS'}\nStatus: *LUNAS (BERHASIL)* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
+                // Greeting — pakai nama jika ada
+                const greeting = custName ? `Halo *${custName}*, terima kasih sudah berbelanja! 😊` : `Halo, terima kasih sudah berbelanja! 😊`;
 
-                let phone = (document.getElementById('posCustomerPhone')?.value || order.customer_phone || (order.shipping_address && order.shipping_address.phone) || '').replace(/[^0-9]/g, '');
+                const payMethod = addr.payment_method === 'cash' ? 'Tunai (Cash)' : (addr.payment_method === 'cashless' || addr.payment_method === 'qris' ? 'Non-Tunai / QRIS' : (order.payment_method ? order.payment_method.toUpperCase() : 'LUNAS'));
+
+                const msg = `${greeting}\n\n🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*${custName ? '\nPelanggan: ' + custName : ''}${tableInfo}\nKasir: ${cashierName}\nTanggal: ${new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'})}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*TOTAL: Rp ${totalFormatted}*\nMetode: ${payMethod}\nStatus: *LUNAS (BERHASIL)* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
+
+                let phone = (document.getElementById('posCustomerPhone')?.value || addr.phone || order.customer_phone || '').replace(/[^0-9]/g, '');
                 if (phone.startsWith('0')) {
                     phone = '62' + phone.substring(1);
                 }
                 const encodedMsg = encodeURIComponent(msg);
                 const waUrl = phone ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}` : `https://api.whatsapp.com/send?text=${encodedMsg}`;
-                window.open(waUrl, '_blank');
+
+                // Coba auto-share gambar bill via Web Share API, fallback ke teks WA link
+                const billArea = document.getElementById('printablePosReceiptArea');
+                if (billArea && typeof html2canvas !== 'undefined' && navigator.canShare) {
+                    _shareBillImageToWA(billArea, waUrl, msg, phone);
+                } else if (billArea && typeof html2canvas !== 'undefined') {
+                    // Fallback: generate gambar dulu lalu buka WA
+                    _generateAndOpenWA(billArea, waUrl);
+                } else if (billArea && typeof html2canvas === 'undefined') {
+                    // Load html2canvas dulu
+                    const s = document.createElement('script');
+                    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    s.onload = () => {
+                        if (navigator.canShare) {
+                            _shareBillImageToWA(billArea, waUrl, msg, phone);
+                        } else {
+                            _generateAndOpenWA(billArea, waUrl);
+                        }
+                    };
+                    s.onerror = () => window.open(waUrl, '_blank');
+                    document.head.appendChild(s);
+                } else {
+                    window.open(waUrl, '_blank');
+                }
+            }
+
+            // Helper: generate gambar & share via Web Share API (mobile-friendly)
+            function _shareBillImageToWA(billArea, waUrl, msg, phone) {
+                html2canvas(billArea, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' })
+                    .then(async canvas => {
+                        const invCode = document.getElementById('recOrderCode')?.innerText || 'POS-RECEIPT';
+                        const filename = `Struk-${invCode.replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
+                        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+                        const file = new File([blob], filename, { type: 'image/png' });
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            navigator.share({
+                                files: [file],
+                                text: msg,
+                                title: 'Struk Belanja'
+                            }).catch(() => window.open(waUrl, '_blank'));
+                        } else {
+                            // Download gambar + buka WA link
+                            const link = document.createElement('a');
+                            link.download = filename;
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            setTimeout(() => window.open(waUrl, '_blank'), 800);
+                        }
+                    })
+                    .catch(() => window.open(waUrl, '_blank'));
+            }
+
+            // Helper: generate gambar, download, lalu buka WA
+            function _generateAndOpenWA(billArea, waUrl) {
+                html2canvas(billArea, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' })
+                    .then(canvas => {
+                        const invCode = document.getElementById('recOrderCode')?.innerText || 'POS-RECEIPT';
+                        const link = document.createElement('a');
+                        link.download = `Struk-${invCode.replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        setTimeout(() => window.open(waUrl, '_blank'), 800);
+                    })
+                    .catch(() => window.open(waUrl, '_blank'));
             }
 
             // ── Auto Generate Bill Image via html2canvas ──

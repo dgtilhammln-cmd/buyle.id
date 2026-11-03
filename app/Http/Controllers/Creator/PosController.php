@@ -740,12 +740,27 @@ class PosController extends Controller
             $order->loadMissing(['items', 'payment']);
             $profile = CreatorProfile::where('user_id', $order->user_id)->first();
             $storeName = $profile->store_name ?? $order->user->name ?? 'buyle.id Store';
+            $posLogoUrl = $profile?->pos_logo ? asset('storage/' . $profile->pos_logo) : null;
+            $posStoreAddress = $profile?->pos_store_address ?? $profile?->address ?? '';
+            $posStorePhone   = $profile?->pos_store_phone ?? '';
+
+            // Resolve cashier name from shipping_address
+            $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+            $cashierName = $addr['cashier_name'] ?? null;
+            if (!$cashierName && $order->user_id) {
+                $cashierUser = \App\Models\User::find($order->user_id);
+                $cashierName = $cashierUser?->name ?? $storeName;
+            }
 
             Mail::send('emails.pos_receipt', [
-                'order'     => $order,
-                'profile'   => $profile,
-                'storeName' => $storeName,
-                'subject'   => 'Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')',
+                'order'           => $order,
+                'profile'         => $profile,
+                'storeName'       => $storeName,
+                'posLogoUrl'      => $posLogoUrl,
+                'posStoreAddress' => $posStoreAddress,
+                'posStorePhone'   => $posStorePhone,
+                'cashierName'     => $cashierName,
+                'subject'         => 'Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')',
             ], function ($message) use ($email, $order, $storeName) {
                 $message->to($email)
                     ->subject('Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')');
