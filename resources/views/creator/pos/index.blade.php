@@ -3434,542 +3434,265 @@
     </div>
 
     <!-- CUSTOM OVERLAY MODAL 1: Payment Method Selection -->
-    <div class="pos-modal-overlay" id="posPaymentModal">
-        <div class="pos-modal-card">
-            <div class="pos-modal-head">
-                <div style="display:flex; align-items:center; gap:10px;">
+        <div class="pos-modal-overlay" id="posPaymentModal">
+        <div class="pos-modal-card" style="max-width: 440px; border-radius: 20px; overflow: hidden;">
+            <!-- Modal Header -->
+            <div class="pos-modal-head" style="padding: 0.9rem 1.25rem; border-bottom: 1.5px solid #f1f5f9;">
+                <div style="display:flex; align-items:center; gap:8px;">
                     <button type="button" class="pos-modal-close"
-                        style="width:32px; height:32px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a; cursor:pointer;"
+                        style="width:30px; height:30px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a; cursor:pointer;"
                         onclick="closeModal('posPaymentModal')" title="Kembali">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <polyline points="15 18 9 12 15 6" />
                         </svg>
                     </button>
-                    <h5 style="margin:0; font-size:1.15rem; font-weight:800; color:#0f172a;">Confirm Sale</h5>
+                    <h5 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a;">Konfirmasi Pembayaran</h5>
                 </div>
                 <button type="button" class="pos-modal-close" onclick="closeModal('posPaymentModal')">&times;</button>
             </div>
-            <div class="pos-modal-body">
-                <!-- Screen 3 Header Cards: Invoice Number & Date Side by Side -->
-                <div class="confirm-sale-grid-2">
-                    <div class="confirm-info-box">
-                        <div class="confirm-info-label">Invoice Number</div>
-                        <div class="confirm-info-value">
-                            <span>#{{ count($todayOrders) + 1 }}</span>
-                            <span style="font-size:0.65rem; color:#94a3b8; font-weight:700;">(Auto)</span>
-                        </div>
+
+            <div class="pos-modal-body" style="padding: 1rem 1.25rem;">
+                <!-- 1. Detail Order Ringkas (Minimalis) -->
+                <div style="background:#f8fafc; border:1.5px solid #f1f5f9; border-radius:14px; padding:0.75rem 0.9rem; margin-bottom:0.85rem;">
+                    <div style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">
+                        Detail Pesanan
                     </div>
-                    <div class="confirm-info-box">
-                        <div class="confirm-info-label">Invoice Date</div>
-                        <div class="confirm-info-value">
-                            <span>{{ now()->translatedFormat('d M Y') }}</span>
-                            <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"
-                                style="margin-left:auto;">
-                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                        </div>
+                    <div id="paymentModalOrderItems" style="max-height: 140px; overflow-y: auto; padding-right: 4px; font-size: 0.78rem;">
+                        <!-- Rendered via JS -->
                     </div>
                 </div>
 
-                <!-- Customer Mode Box with Change button (Screen 3) -->
-                <div class="confirm-cust-box">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div
-                            style="width:36px; height:36px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534; flex-shrink:0;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <circle cx="12" cy="7" r="4" />
-                                <path d="M5.5 21a8.38 8.38 0 0 1 13 0" />
-                            </svg>
-                        </div>
+                <!-- 2. Info Pelanggan (Cukup Nama, Email, dan Pilih Meja) -->
+                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.85rem; margin-bottom:0.85rem;">
+                    <div style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+                        Info Pelanggan
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <!-- Nama Pelanggan -->
                         <div>
-                            <div style="font-size:0.86rem; font-weight:800; color:#0f172a;" id="displayCustName">Cash Sale
-                            </div>
-                            <div style="font-size:0.72rem; color:#64748b;" id="displayCustSub">Pelanggan Langsung (Umum)
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" onclick="toggleCustEditForm()"
-                        style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:999px; padding:5px 14px; font-size:0.75rem; font-weight:700; color:#0f172a; cursor:pointer;">
-                        Change
-                    </button>
-                </div>
-
-                <!-- Add Items Button (Screen 3 Mockup) -->
-                <button type="button" onclick="closeModal('posPaymentModal')"
-                    style="width:100%; padding:0.65rem 1rem; border-radius:16px; background:#fff7ed; border:1.5px solid #fed7aa; color:#c2410c; font-size:0.82rem; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; margin-bottom:0.85rem; box-shadow:0 2px 8px rgba(234,88,12,0.06);">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    <span>Add Items</span>
-                </button>
-
-                <!-- Billing Items Accordion Box (Screen 3 Mockup) -->
-                <div
-                    style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:0.75rem 1rem; margin-bottom:0.85rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-                    <div style="display:flex; align-items:center; justify-content:space-between; cursor:pointer;"
-                        onclick="toggleBillingItemsCollapse()">
-                        <div style="font-size:0.85rem; font-weight:800; color:#0f172a;" id="confirmBillingCount">
-                            Billing Items
-                        </div>
-                        <div style="width:24px; height:24px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#64748b; font-weight:800; font-size:0.9rem;"
-                            id="billingItemsToggleIcon">
-                            +
-                        </div>
-                    </div>
-                    <div id="billingItemsCollapse"
-                        style="display:none; margin-top:0.75rem; border-top:1px dashed #e2e8f0; padding-top:0.75rem;">
-                        <div id="confirmBillingItemsContainer"></div>
-                    </div>
-                </div>
-
-                <!-- Action Pills Row: + Add Discount, + Add TAX, + Add Additional Charges (Screen 3) -->
-                <div class="confirm-pill-row">
-                    <button type="button" class="confirm-action-pill" onclick="openPosSettingsModal('discounts')">
-                        <span>+ Add Discount</span>
-                    </button>
-                    <button type="button" class="confirm-action-pill" onclick="openPosSettingsModal('fees')">
-                        <span>+ Add TAX</span>
-                    </button>
-                    <button type="button" class="confirm-action-pill" onclick="openPosSettingsModal('tables')">
-                        <span>+ Add Additional Charges</span>
-                    </button>
-                </div>
-
-                <!-- Total Banner Hero -->
-                <div
-                    style="background: linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1.25rem; box-shadow:0 4px 14px rgba(30,179,73,0.35);">
-                    <div
-                        style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9;">
-                        Total Tagihan</div>
-                    <div style="font-size:1.75rem; font-weight:900; line-height:1.1; margin-top:3px; letter-spacing:-0.02em;"
-                        id="modalPayTotal">Rp 0</div>
-                </div>
-
-                <!-- Informasi Pelanggan -->
-                <div
-                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1rem;">
-                    <div
-                        style="font-size:0.7rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
-                        Info Pelanggan (Opsional)</div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                        <div>
-                            <label
-                                style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Nama</label>
+                            <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Nama</label>
                             <input type="text" id="posCustomerName" class="form-input"
-                                style="height:34px; font-size:0.78rem;" placeholder="Pelanggan Umum">
+                                style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0;"
+                                placeholder="Pelanggan Umum">
                         </div>
-                        <div>
-                            <div
-                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                                <label style="font-size:0.7rem; font-weight:700; color:#475569; margin:0;">
-                                    Meja / Ref
-                                </label>
-                                <a href="javascript:void(0)" onclick="openPosSettingsModal('tables')"
-                                    style="font-size:0.67rem; color:#1eb349; text-decoration:none; font-weight:700;">
-                                    + Kelola Meja
-                                </a>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                            <!-- Email E-Receipt -->
+                            <div>
+                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Email</label>
+                                <input type="email" id="posCartCustomerEmail" class="form-input"
+                                    style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0;"
+                                    placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
+                                <input type="hidden" id="posCustomerEmail" value="">
                             </div>
-                            <div style="display:flex; gap:4px;">
+
+                            <!-- Pilih Meja (HANYA DROPDOWN SELECT MEJA) -->
+                            <div>
+                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Pilih Meja</label>
                                 <select id="posTableQuickSelect" class="form-input"
-                                    style="height:34px; font-size:0.75rem; flex:1; padding:0 6px;"
+                                    style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0; padding:0 8px;"
                                     onchange="onTableQuickSelectChanged(this.value)">
-                                    <option value="">Pilih Meja...</option>
+                                    <option value="">Tanpa Meja (Takeaway)</option>
+                                    @if(isset($posTables))
+                                        @foreach($posTables as $tbl)
+                                            <option value="{{ $tbl['name'] ?? $tbl }}">{{ $tbl['name'] ?? $tbl }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
-                                <input type="text" id="posTableNumber" class="form-input"
-                                    style="height:34px; font-size:0.75rem; flex:1; padding:0 8px;"
-                                    placeholder="No. Meja / Ref">
+                                <input type="hidden" id="posTableNumber" value="">
                             </div>
-                        </div>
-                        <div>
-                            <label
-                                style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No.
-                                HP / WA</label>
-                            <input type="text" id="posCustomerPhone" class="form-input"
-                                style="height:34px; font-size:0.78rem;" placeholder="08xxx">
-                        </div>
-                        <div>
-                            <label
-                                style="font-size:0.7rem; font-weight:700; color:#166534; display:block; margin-bottom:3px;">Email
-                                (E-Receipt)</label>
-                            <input type="email" id="posCartCustomerEmail" class="form-input"
-                                style="height:34px; font-size:0.78rem;" placeholder="contoh@gmail.com"
-                                oninput="syncCustomerEmail(this.value)">
                         </div>
                     </div>
+                </div>
+
+                <!-- 3. Total Tagihan Minimalis (Bukan Banner Norak Tebal) -->
+                <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem;">
+                    <div>
+                        <div style="font-size:0.7rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">Total Pembayaran</div>
+                        <div style="font-size:1.35rem; font-weight:900; color:#15803d; line-height:1.2; margin-top:1px;" id="modalPayTotal">Rp 0</div>
+                    </div>
+                    <div style="font-size:0.72rem; color:#64748b; font-weight:600;" id="modalPayItemsCount">0 Items</div>
                 </div>
 
                 @php
                     $isDepositEmpty = ($posBalance <= 0);
                 @endphp
 
-                <!-- Opsi 1: Tunai (Cash) -->
-                <div class="pay-option-card {{ $isDepositEmpty ? 'disabled-cash' : 'selected' }}" id="optCash"
-                    onclick="{{ $isDepositEmpty ? '' : 'selectPaymentMethod(\'cash\')' }}"
-                    style="{{ $isDepositEmpty ? 'background:#f8fafc; border-color:#cbd5e1; opacity:0.6; cursor:not-allowed; pointer-events:none;' : '' }}">
-                    <input type="radio" name="pay_method" value="cash" {{ $isDepositEmpty ? 'disabled' : 'checked' }}
-                        style="accent-color:#1eb349;">
-                    <div
-                        style="width:38px; height:38px; border-radius:50%; background:{{ $isDepositEmpty ? '#f1f5f9' : '#f0fdf4' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="{{ $isDepositEmpty ? '#94a3b8' : '#1eb349' }}"
-                            stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="2" y="6" width="20" height="12" rx="2" />
-                            <circle cx="12" cy="12" r="2" />
-                        </svg>
-                    </div>
-                    <div style="flex:1;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                            <div
-                                style="font-size:0.88rem; font-weight:700; color:{{ $isDepositEmpty ? '#64748b' : '#0f172a' }};">
-                                Tunai (Cash)</div>
-                            <span id="cashDepositBadge"
-                                style="display:{{ $isDepositEmpty ? 'inline-block' : 'none' }}; font-size:0.68rem; font-weight:800; background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:2px 8px; border-radius:999px;">
-                                Saldo Deposit Kurang
-                            </span>
+                <!-- 4. Metode Pembayaran -->
+                <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:0.85rem;">
+                    <!-- Opsi Tunai -->
+                    <div class="pay-option-card {{ $isDepositEmpty ? 'disabled-cash' : 'selected' }}" id="optCash"
+                        onclick="{{ $isDepositEmpty ? '' : 'selectPaymentMethod(\'cash\')' }}"
+                        style="{{ $isDepositEmpty ? 'background:#f8fafc; border-color:#cbd5e1; opacity:0.6; cursor:not-allowed;' : 'padding:0.65rem 0.85rem; border-radius:12px;' }}">
+                        <input type="radio" name="pay_method" value="cash" {{ $isDepositEmpty ? 'disabled' : 'checked' }} style="accent-color:#1eb349;">
+                        <div style="flex:1; margin-left:6px;">
+                            <div style="font-size:0.84rem; font-weight:700; color:#0f172a;">Tunai (Cash)</div>
+                            <div style="font-size:0.7rem; color:#64748b;">Bayar tunai & hitung kembalian</div>
                         </div>
-                        <div
-                            style="font-size:0.72rem; color:{{ $isDepositEmpty ? '#ef4444' : '#64748b' }}; margin-top:1px;">
-                            {{ $isDepositEmpty ? 'Silahkan Top up saldo deposit anda.' : 'Bayar & hitung kembalian langsung' }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cash Calculator Panel -->
-                <div id="cashCalcPanel"
-                    style="display:{{ $isDepositEmpty ? 'none' : 'block' }}; background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.75rem;">
-                    <label
-                        style="font-size:0.75rem; font-weight:700; color:#166534; display:block; margin-bottom:6px;">Nominal
-                        Uang Diterima</label>
-                    <div style="position:relative; margin-bottom:0.5rem;">
-                        <span
-                            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#334155;">Rp.</span>
-                        <input type="text" id="cashPaidDisplayInput" class="form-input"
-                            style="padding-left:40px; height:44px; font-size:1.05rem; font-weight:800; color:#0f172a; border-radius:10px;"
-                            placeholder="0" oninput="handleCashInput(this)">
-                        <input type="hidden" id="cashPaidInput" value="0">
-                    </div>
-                    <div class="d-flex flex-wrap gap-1 mb-2">
-                        <button type="button" class="btn-quick-cash" onclick="setQuickCash('exact')">Uang Pas</button>
-                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(20000)">Rp. 20.000</button>
-                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">Rp. 50.000</button>
-                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">Rp. 100.000</button>
-                    </div>
-                    <div
-                        style="background:#ffffff; border:1px dashed #bbf7d0; border-radius:8px; padding:7px 12px; display:flex; align-items:center; justify-content:space-between;">
-                        <span style="font-size:0.78rem; font-weight:700; color:#475569;">Kembalian Kasir:</span>
-                        <strong style="font-size:1.05rem; font-weight:900; color:#1eb349;" id="cashChangeDisplay">Rp.
-                            0</strong>
                     </div>
 
-                    <!-- Saldo Deposit POS Status Box -->
-                    <div id="cashDepositStatusBox"
-                        style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:10px; padding:9px 12px; margin-top:8px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
-                            <span style="color:#64748b; font-weight:600;">Potongan Fee Tunai (Platform + Admin):</span>
-                            <strong style="color:#0f172a;" id="cashFeeRequiredDisplay">Rp 0</strong>
-                        </div>
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-top:4px;">
-                            <span style="color:#64748b; font-weight:600;">Saldo Deposit Kasir Anda:</span>
-                            <strong style="color:{{ $posBalance < 10000 ? '#dc2626' : '#166534' }};"
-                                id="cashUserBalanceDisplay">Rp {{ number_format($posBalance, 0, ',', '.') }}</strong>
-                        </div>
-
-                        <!-- Warning Alert when Deposit is Insufficient -->
-                        <div id="cashDepositWarning"
-                            style="display:none; margin-top:8px; background:#fef2f2; border:1.5px solid #fecaca; border-radius:8px; padding:8px 10px; color:#991b1b; font-size:0.74rem; line-height:1.45;">
-                            <div style="display:flex; align-items:flex-start; gap:6px;">
-                                <svg width="15" height="15" fill="none" stroke="#dc2626" stroke-width="2.2"
-                                    viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="8" x2="12" y2="12" />
-                                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                                </svg>
-                                <div>
-                                    <strong style="display:block; margin-bottom:2px;">Saldo Deposit POS Tidak
-                                        Mencukupi!</strong>
-                                    <span id="cashDepositWarningText">Biaya transaksi tunai melebihi saldo deposit. Lakukan
-                                        top up agar dapat menerima pembayaran cash.</span>
-                                    <div style="margin-top:6px;">
-                                        <button type="button" onclick="closeModal('posPaymentModal'); openDepositModal();"
-                                            style="background:#dc2626; color:#ffffff; border:none; border-radius:999px; font-size:0.72rem; font-weight:800; padding:4px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(220,38,38,0.3);">
-                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <line x1="12" y1="5" x2="12" y2="19" />
-                                                <line x1="5" y1="12" x2="19" y2="12" />
-                                            </svg>
-                                            Isi Saldo Deposit Sekarang
-                                        </button>
-                                    </div>
-                                </div>
+                    <!-- Cash Calculator Panel -->
+                    <div id="cashCalcPanel" style="display:{{ $isDepositEmpty ? 'none' : 'block' }}; background:#f8fafc; border-radius:12px; border:1.5px solid #e2e8f0; padding:0.75rem; margin-top:2px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label style="font-size:0.72rem; font-weight:700; color:#475569; margin:0;">Uang Diterima:</label>
+                            <div class="d-flex gap-1">
+                                <button type="button" class="btn-quick-cash" onclick="setQuickCash('exact')" style="font-size:0.68rem; padding:2px 8px;">Uang Pas</button>
+                                <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)" style="font-size:0.68rem; padding:2px 8px;">50rb</button>
+                                <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)" style="font-size:0.68rem; padding:2px 8px;">100rb</button>
                             </div>
                         </div>
+                        <input type="text" id="cashPaidDisplayInput" class="form-input"
+                            style="height:38px; font-size:0.95rem; font-weight:800; color:#0f172a; border-radius:10px; width:100%; margin-bottom:6px;"
+                            placeholder="0" oninput="handleCashInput(this)">
+                        <input type="hidden" id="cashPaidInput" value="0">
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.78rem;">
+                            <span style="color:#64748b; font-weight:600;">Kembalian:</span>
+                            <strong style="color:#1eb349; font-size:0.92rem;" id="cashChangeDisplay">Rp 0</strong>
+                        </div>
+                    </div>
+
+                    <!-- Opsi Non-Tunai / Cashless -->
+                    <div class="pay-option-card {{ $isDepositEmpty ? 'selected' : '' }}" id="optCashless"
+                        onclick="selectPaymentMethod('cashless')" style="padding:0.65rem 0.85rem; border-radius:12px;">
+                        <input type="radio" name="pay_method" value="cashless" {{ $isDepositEmpty ? 'checked' : '' }} style="accent-color:#1eb349;">
+                        <div style="flex:1; margin-left:6px;">
+                            <div style="font-size:0.84rem; font-weight:700; color:#0f172a;">Non-Tunai / QRIS</div>
+                            <div style="font-size:0.7rem; color:#64748b;">QRIS & Pembayaran Digital</div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Opsi 2: Non-Tunai / Cashless -->
-                <div class="pay-option-card {{ $isDepositEmpty ? 'selected' : '' }}" id="optCashless"
-                    onclick="selectPaymentMethod('cashless')">
-                    <input type="radio" name="pay_method" value="cashless" {{ $isDepositEmpty ? 'checked' : '' }}
-                        style="accent-color:#7c3aed;">
-                    <div
-                        style="width:38px; height:38px; border-radius:50%; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="3" y="3" width="7" height="7" />
-                            <rect x="14" y="3" width="7" height="7" />
-                            <rect x="14" y="14" width="7" height="7" />
-                            <rect x="3" y="14" width="7" height="7" />
-                        </svg>
-                    </div>
-                    <div style="flex:1;">
-                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Non-Tunai / Cashless</div>
-                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">QRIS, Transfer Bank, E-Wallet (GoPay,
-                            ShopeePay)</div>
-                    </div>
-                </div>
-
-                <input type="hidden" id="posCustomerEmail" value="">
             </div>
 
-            <div class="pos-modal-foot">
+            <!-- Modal Footer -->
+            <div class="pos-modal-foot" style="padding: 0.85rem 1.25rem;">
                 <button type="button" class="btn-outline-bio"
-                    style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; flex-shrink:0; border-radius:999px !important;"
+                    style="border-color:#e2e8f0; color:#64748b; padding:0.55rem 1rem; font-size:0.78rem; border-radius:999px !important;"
                     onclick="closeModal('posPaymentModal')">Batal</button>
                 <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()"
-                    style="flex:1; margin:0; padding:0.6rem 1rem; font-size:0.82rem; white-space:nowrap; border-radius:999px !important;">
+                    style="flex:1; margin:0; padding:0.6rem 1rem; font-size:0.82rem; border-radius:999px !important;">
                     Konfirmasi &amp; Bayar
                 </button>
             </div>
         </div>
     </div>
-
-    <!-- CUSTOM OVERLAY MODAL 2: Receipt Preview & Modern Thermal Print -->
-    <div class="pos-modal-overlay" id="posReceiptModal">
-        <div class="pos-modal-card" style="max-width: 440px;">
-            <div class="pos-modal-head no-print">
+        <div class="pos-modal-overlay" id="posReceiptModal">
+        <div class="pos-modal-card" style="max-width: 440px; border-radius: 24px; overflow: hidden; background: #f8fafc;">
+            <!-- Modal Head -->
+            <div class="pos-modal-head no-print" style="padding: 1rem 1.25rem; border-bottom: 1.5px solid #f1f5f9; background: #ffffff;">
                 <div style="display:flex; align-items:center; gap:8px;">
-                    <div
-                        style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
+                    <div style="width:28px; height:28px; border-radius:50%; background:#f0fdf4; border:1.5px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12"/>
                         </svg>
                     </div>
-                    <h5 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Struk Transaksi POS</h5>
+                    <div>
+                        <h5 style="margin:0; font-size:1rem; font-weight:800; color:#0f172a;">Transaksi Berhasil</h5>
+                        <div style="font-size:0.68rem; color:#64748b;">Tagihan telah lunas dan tercatat</div>
+                    </div>
                 </div>
-                <button type="button" class="pos-modal-close"
-                    onclick="closeModal('posReceiptModal'); resetPOS();">&times;</button>
+                <button type="button" class="pos-modal-close" onclick="closeModal('posReceiptModal'); resetPOS();">&times;</button>
             </div>
 
-            <div class="pos-modal-body" id="posReceiptModalContent" style="padding: 1.25rem;">
-                <!-- Thermal Struk Printer Container with Slot & Ejection Animation -->
-                <div class="receipt-printer-box">
-                    <div class="receipt-printer-slot"></div>
-                    <div style="padding: 1rem; background: #ffffff;">
-                        <div style="font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11.5px; color: #000000; line-height: 1.35; position: relative; overflow: hidden; background: #ffffff; padding: 4px;"
-                            id="printablePosReceiptArea">
+            <div class="pos-modal-body" id="posReceiptModalContent" style="padding: 1.1rem 1.25rem;">
+                <!-- ── MODERN TICKET BILL CARD (Sesuai Mockup Image 4) ── -->
+                <div id="printablePosReceiptArea" style="background:#ffffff; border-radius:20px; border:1.5px solid #e2e8f0; padding:1.25rem 1.25rem 1rem; position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
+                    <!-- Header Bill -->
+                    <div style="text-align:center; padding-bottom:10px; border-bottom:1.5px dashed #e2e8f0;">
+                        <div style="font-size:1.1rem; font-weight:800; color:#0f172a; letter-spacing:-0.01em;">
+                            {{ $storeName }}
+                        </div>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">
+                            {{ $posStoreAddress ?: ($profile?->address ?? 'Kasir Digital Buyle POS') }}
+                        </div>
+                        <div style="display:inline-flex; align-items:center; gap:6px; background:#f0fdf4; border:1px solid #bbf7d0; padding:2px 10px; border-radius:999px; margin-top:6px;">
+                            <span style="width:6px; height:6px; border-radius:50%; background:#16a34a;"></span>
+                            <span style="font-size:0.68rem; font-weight:800; color:#15803d;" id="recOrderCode">#INV-POS</span>
+                        </div>
+                    </div>
 
-                            <!-- Watermark Logo buyle.id di Tengah Struk (Transparansi Minim tapi Tetap Kelihatan) -->
-                            <div class="pos-receipt-watermark"
-                                style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); opacity: 0.055; pointer-events: none; z-index: 0; width: 190px; text-align: center;">
-                                @if(!empty($siteLogoUrl))
-                                    <img src="{{ $siteLogoUrl }}" alt="buyle watermark"
-                                        style="max-width: 140px; max-height: 55px; object-fit: contain; filter: grayscale(100%); margin:0 auto; display:block;">
-                                @endif
-                                <div style="font-size: 24px; font-weight: 900; color: #000; letter-spacing: 2px;">buyle.id
-                                </div>
-                                <div style="font-size: 8.5px; font-weight: 800; color: #000; letter-spacing: 1px;">DIGITAL
-                                    CREATOR CENTER</div>
+                    <!-- Meta info (Tanggal & Kasir) -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:#64748b; padding:8px 0; border-bottom:1.5px dashed #e2e8f0;">
+                        <div>
+                            <span id="recDateOnly">{{ now()->translatedFormat('d M Y') }}</span> &middot; <span id="recTimeOnly">{{ now()->format('H:i') }}</span>
+                        </div>
+                        <div style="font-weight:700; color:#0f172a;" id="recCustomerInfoBill">
+                            Pelanggan Umum
+                        </div>
+                    </div>
+
+                    <!-- Items List -->
+                    <div id="recNumberedItemsWrap" style="padding:10px 0 6px; font-size:0.78rem;">
+                        <!-- Dynamic items -->
+                    </div>
+
+                    <!-- Summary & Total -->
+                    <div style="border-top:1.5px dashed #e2e8f0; padding-top:8px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b; margin-bottom:4px;">
+                            <span>Subtotal (<span id="recTotalQty">0</span> item)</span>
+                            <span id="recSubtotal" style="font-weight:700; color:#0f172a;">Rp 0</span>
+                        </div>
+                        <div id="recDiscountRow" style="display:none; justify-content:space-between; font-size:0.75rem; color:#dc2626; margin-bottom:4px;">
+                            <span>Diskon</span>
+                            <span id="recDiscount">-Rp 0</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; padding-top:6px; border-top:1px solid #f1f5f9;">
+                            <div>
+                                <div style="font-size:0.68rem; font-weight:700; color:#64748b; text-transform:uppercase;">Total Tagihan</div>
+                                <div style="font-size:1.25rem; font-weight:900; color:#15803d;" id="recTotal">Rp 0</div>
                             </div>
-
-                            <!-- Konten Struk Transaksi Modern (Z-Index 1) -->
-                            <div style="position: relative; z-index: 1;">
-                                <!-- 1. Header (Logo/Icon Toko, Nama Toko, Alamat, No Telp, No Struk) -->
-                                <div style="text-align: center; margin-bottom: 6px;">
-                                    <div id="recHeaderLogoWrap" style="margin-bottom: 4px;">
-                                        @if(!empty($posLogoUrl))
-                                            <img src="{{ $posLogoUrl }}" alt="Logo Toko" id="recHeaderLogoImg"
-                                                style="max-height: 48px; max-width: 140px; object-fit: contain; margin: 0 auto 3px auto; display: block;">
-                                        @else
-                                            <svg id="recHeaderLogoFallbackSvg" width="38" height="38" viewBox="0 0 24 24"
-                                                fill="currentColor"
-                                                style="display:inline-block; margin:0 auto 2px auto; color:#000000;">
-                                                <path
-                                                    d="M4 4h16a1 1 0 0 1 1 1v2a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1-3 3 3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm0 8v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9h-2v7H6v-7H4zm5 1h6v6H9v-6z" />
-                                            </svg>
-                                        @endif
-                                    </div>
-                                    <div id="recHeaderStoreName"
-                                        style="font-weight: 800; font-size: 15px; color: #000; letter-spacing: -0.2px;">
-                                        {{ $storeName }}
-                                    </div>
-                                    <div id="recHeaderStoreAddress"
-                                        style="font-size: 11px; color: #111; line-height: 1.35; max-width: 250px; margin: 2px auto 0 auto;">
-                                        {{ $posStoreAddress ?: ($profile?->address ?? '') }}
-                                    </div>
-                                    <div id="recHeaderStorePhone" style="font-size: 11px; color: #111; margin-top: 1px;">
-                                        {{ $posStorePhone ? ('No. Telp ' . $posStorePhone) : '' }}
-                                    </div>
-                                    <div id="recOrderCode"
-                                        style="font-size: 11.5px; font-weight: 600; color: #000; margin-top: 2px; letter-spacing: 0.3px;">
-                                        -</div>
-                                </div>
-
-                                <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
-
-                                <!-- 2. Meta Transaksi (Date, Time, Queue Tag di Kiri; Alias, Kasir, Cabang di Kanan) -->
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: flex-start; font-size: 11.5px; color: #000; line-height: 1.35;">
-                                    <div>
-                                        <div id="recDateOnly">-</div>
-                                        <div id="recTimeOnly">-</div>
-                                        <div style="margin-top: 5px;">
-                                            <span id="recQueueTag"
-                                                style="border: 1.5px solid #16a34a; color: #16a34a; font-weight: 800; font-size: 11px; padding: 2px 7px; border-radius: 4px; display: inline-block;">No.
-                                                0-1</span>
-                                        </div>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <div id="recStoreShortSlug" style="font-weight: 600;">
-                                            {{ $profile?->store_slug ?? 'toko' }}
-                                        </div>
-                                        <div id="recCashierName" style="font-weight: 700;">
-                                            {{ $currentCashier ? $currentCashier->name : auth()->user()->name }}
-                                        </div>
-                                        <div id="recStoreCity" style="font-size: 10.5px; color: #222;">
-                                            {{ $profile?->city_name ?? ($profile?->address ? Str::limit($profile?->address, 20) : 'Indonesia') }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
-
-                                <!-- 3. Daftar Item Bernomor -->
-                                <div id="recNumberedItemsWrap" style="font-size: 11.5px; color: #000;">
-                                    <!-- Dynamic items list -->
-                                </div>
-
-                                <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
-
-                                <!-- 4. Rincian & Total Pembayaran -->
-                                <div style="font-size: 11.5px; color: #000; line-height: 1.45;">
-                                    <div
-                                        style="display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: 700;">
-                                        <span>Total QTY : <span id="recTotalQty">0</span></span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                                        <span>Sub Total</span>
-                                        <span id="recSubtotal" style="font-weight: 600;">Rp 0</span>
-                                    </div>
-                                    <div id="recDiscountRow"
-                                        style="display: none; justify-content: space-between; color: #dc2626; margin-bottom: 3px;">
-                                        <span id="recDiscountLabel">Diskon</span>
-                                        <span id="recDiscount">-Rp 0</span>
-                                    </div>
-                                    <!-- Dynamic Custom Fees from POS Settings -->
-                                    <div id="recCustomFeesWrap" style="display:none;">
-                                        <!-- Rendered dynamically -->
-                                    </div>
-                                    <div
-                                        style="display: flex; justify-content: space-between; font-weight: 900; font-size: 14.5px; margin: 6px 0 6px 0; border-top: 1px dashed #ccc; padding-top: 5px;">
-                                        <span>Total</span>
-                                        <span id="recTotal">Rp 0</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                                        <span id="recPayMethodLabel">Bayar (Cash)</span>
-                                        <span id="recCashPaidVal" style="font-weight: 600;">Rp 0</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                                        <span>Kembali</span>
-                                        <span id="recCashChangeVal" style="font-weight: 600;">Rp 0</span>
-                                    </div>
-                                </div>
-
-                                <div style="border-bottom: 1px dashed #000; margin: 10px 0 8px 0;"></div>
-
-                                <!-- 5. Ucapan & Link Kritik Saran -->
-                                <div style="text-align: center; font-size: 11px; color: #111; line-height: 1.4;">
-                                    <div style="font-weight: 600; margin-bottom: 3px;">Terimakasih Telah Berbelanja</div>
-                                    <div style="font-size: 10px; color: #555;">Link Kritik dan Saran:</div>
-                                    <div id="recLinkKritik"
-                                        style="font-size: 9.5px; color: #222; word-break: break-all; margin-top: 1px; font-weight: 500;">
-                                        {{ url('/c/' . ($profile?->store_slug ?? 'shop')) }}
-                                    </div>
-                                </div>
-
-                                <!-- 6. Powered by buyle.id di paling bawah -->
-                                <div
-                                    style="text-align: center; border-top: 1px dashed #ccc; margin-top: 10px; padding-top: 6px; font-size: 9.5px; font-weight: 700; color: #555; letter-spacing: 0.4px;">
-                                    powered buyle.id | digital creator center
-                                </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:0.7rem; font-weight:800; background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; padding:3px 10px; border-radius:999px;">
+                                    LUNAS
+                                </span>
+                                <div style="font-size:0.68rem; color:#64748b; margin-top:2px;" id="recPayMethodLabel">Tunai</div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Footer Note -->
+                    <div style="text-align:center; margin-top:12px; padding-top:8px; border-top:1px dashed #e2e8f0; font-size:0.68rem; color:#94a3b8;">
+                        Terima kasih atas kunjungan Anda &middot; Powered by <strong>buyle.id</strong>
+                    </div>
                 </div>
 
-                <!-- E-Receipt auto-sent notice & manual resend input -->
-                <div class="no-print mt-3 pt-3" style="border-top:1.5px dashed #cbd5e1;">
-                    <div id="receiptEmailAutoNotice"
-                        style="display:none; align-items:center; gap:8px; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:9px 12px; margin-bottom:8px;">
-                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"
-                            style="flex-shrink:0;">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                            <polyline points="22 4 12 14.01 9 11.01" />
+                <!-- ── SHARE & ACTIONS (Direct WA + Auto Generate Gambar Bill) ── -->
+                <div class="no-print" style="margin-top: 1rem; display:flex; flex-direction:column; gap:8px;">
+                    <!-- 1. Tombol Kirim Struk ke WhatsApp (Direct WA) -->
+                    <button type="button" onclick="shareBillToWhatsApp()"
+                        style="width:100%; height:46px; border-radius:999px; background:#25D366; color:#ffffff; border:none; font-size:0.84rem; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(37,211,102,0.3); cursor:pointer;">
+                        <svg width="19" height="19" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.164.576 4.195 1.583 5.952l-1.683 6.147 6.304-1.654c1.716.945 3.69 1.485 5.796 1.485 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
                         </svg>
-                        <div style="font-size:0.75rem; color:#166534; font-weight:600; line-height:1.4;">
-                            E-Receipt terkirim otomatis ke <span id="receiptAutoEmail" style="font-weight:800;"></span>
-                        </div>
-                    </div>
-                    <div id="receiptEmailNoneNotice"
-                        style="display:none; font-size:0.72rem; color:#94a3b8; text-align:center; margin-bottom:8px;">
-                        Tidak ada email pelanggan saat transaksi.
-                    </div>
-                    <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 12px;">
-                        <div
-                            style="font-size:0.72rem; font-weight:700; color:#475569; margin-bottom:6px; display:flex; align-items:center; gap:4px;">
-                            <svg width="13" height="13" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                <polyline points="22,6 12,13 2,6" />
-                            </svg>
-                            Kirim / Kirim Ulang E-Receipt ke Email
-                        </div>
-                        <div style="display:flex; gap:6px;">
-                            <input type="email" id="recSendEmailInput" class="form-input"
-                                style="height:34px; font-size:0.78rem; flex:1;" placeholder="Email pelanggan...">
-                            <button type="button" class="btn-submit-green" id="btnSendRecEmail"
-                                onclick="sendEReceiptEmail()"
-                                style="width:auto; height:34px; padding:0 14px; font-size:0.75rem; flex-shrink:0;">Kirim</button>
-                        </div>
+                        <span>Share Bill to WhatsApp</span>
+                    </button>
+
+                    <!-- 2. Tombol Download Gambar Struk (Auto Generate Image via html2canvas) -->
+                    <button type="button" id="btnDownloadBillImg" onclick="generateBillImage()"
+                        style="width:100%; height:42px; border-radius:999px; background:#ffffff; border:1.5px solid #e2e8f0; color:#0f172a; font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        <span>Download Gambar Bill</span>
+                    </button>
+
+                    <div style="display:flex; gap:8px; margin-top:2px;">
+                        <!-- Cetak Thermal -->
+                        <button type="button" class="btn-outline-bio" onclick="printPosReceipt()"
+                            style="flex:1; height:40px; border-radius:999px !important; font-size:0.78rem;">
+                            Cetak Struk
+                        </button>
+                        <!-- Transaksi Baru -->
+                        <button type="button" class="btn-submit-green" onclick="closeModal('posReceiptModal'); resetPOS();"
+                            style="flex:1; height:40px; border-radius:999px !important; font-size:0.78rem; margin:0;">
+                            Transaksi Baru
+                        </button>
                     </div>
                 </div>
-            </div>
-
-            <div class="pos-modal-foot no-print" style="gap:0.5rem; padding: 0.85rem 1.25rem;">
-                <button type="button" class="btn-outline-bio"
-                    style="flex-shrink:0; padding:0.55rem 0.9rem; font-size:0.75rem; border-radius:999px !important; white-space:nowrap;"
-                    onclick="printPosReceipt()">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <polyline points="6 9 6 2 18 2 18 9" />
-                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                        <rect x="6" y="14" width="12" height="8" />
-                    </svg>
-                    Cetak Struk
-                </button>
-                <button type="button" class="btn-submit-green"
-                    style="flex:1; margin:0; padding:0.55rem 0.9rem; font-size:0.78rem; border-radius:999px !important; white-space:nowrap;"
-                    onclick="closeModal('posReceiptModal'); resetPOS();">
-                    Selesai &amp; Baru
-                </button>
             </div>
         </div>
     </div>
-
     <!-- CUSTOM OVERLAY MODAL: Pengaturan Modul POS (Logo, Alamat, No Telp, Staf Kasir) -->
     <div class="pos-modal-overlay" id="posSettingsModal" data-static-backdrop="true">
         <div class="pos-modal-card" style="max-width: 780px; width: 95vw; max-height: 92vh;">
@@ -6426,6 +6149,7 @@
 
             // Open Payment Modal
             function openPaymentModal() {
+                renderPaymentModalOrderItems();
                 if (cart.length === 0) {
                     showPosAlert('Keranjang POS Anda masih kosong. Silakan pilih produk terlebih dahulu.', 'Keranjang Kosong', 'warning');
                     return;
@@ -7305,7 +7029,8 @@
                                                     font-weight: 800;
                                                 }
                                             </style>
-                                        </head>
+                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
                                         <body>
                                             ${content}
                                         </body>
@@ -9208,7 +8933,8 @@
                                                 .no-print { display: none !important; }
                                                 img { display: none !important; }
                                             </style>
-                                        </head>
+                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
                                         <body>
                                             ${content}
                                         </body>
@@ -9544,6 +9270,115 @@
                 } else {
                     switchSettingTab('orders');
                     openModal('posHistoryModal');
+                }
+            }
+
+
+            // ── Render Payment Modal Order Items (Minimalis) ──
+            function renderPaymentModalOrderItems() {
+                const container = document.getElementById('paymentModalOrderItems');
+                const itemsCountEl = document.getElementById('modalPayItemsCount');
+                if (!container) return;
+
+                let totalQty = 0;
+                let html = '';
+                cart.forEach(item => {
+                    totalQty += item.qty;
+                    const sub = item.price * item.qty;
+                    html += `
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:5px 0; border-bottom:1px dashed #e2e8f0;">
+                            <div style="flex:1; padding-right:8px;">
+                                <div style="font-weight:700; color:#0f172a;">${escapeHtml(item.name)}</div>
+                                ${item.variantName ? `<span style="font-size:0.68rem; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; display:inline-block; margin-top:2px;">${escapeHtml(item.variantName)}</span>` : ''}
+                                ${item.notes ? `<div style="font-size:0.68rem; color:#64748b; font-style:italic;">* ${escapeHtml(item.notes)}</div>` : ''}
+                                <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">${item.qty} x Rp ${formatRupiah(item.price)}</div>
+                            </div>
+                            <div style="font-weight:800; color:#0f172a; white-space:nowrap;">Rp ${formatRupiah(sub)}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html || '<div style="color:#94a3b8; text-align:center; padding:8px;">(Keranjang Kosong)</div>';
+                if (itemsCountEl) itemsCountEl.innerText = `${totalQty} Items`;
+            }
+
+            // ── Share Bill to WhatsApp (Direct WA) ──
+            function shareBillToWhatsApp() {
+                if (!currentCompletedOrder) {
+                    showPosAlert('Data transaksi tidak ditemukan.', 'Perhatian', 'warning');
+                    return;
+                }
+                const order = currentCompletedOrder;
+                const storeTitle = '{{ $storeName }}';
+                const invNum = order.order_number || ('INV-' + order.id);
+                const totalFormatted = formatRupiah(order.total || order.subtotal || 0);
+
+                let itemsText = '';
+                (order.items || []).forEach((item, idx) => {
+                    const itemQty = item.qty || item.quantity || 1;
+                    const itemPrice = formatRupiah(item.price || 0);
+                    const itemSub = formatRupiah((item.price || 0) * itemQty);
+                    itemsText += `${idx + 1}. *${item.product_name}*${item.variant_name ? ' (' + item.variant_name + ')' : ''}\n    ${itemQty} x Rp ${itemPrice} = Rp ${itemSub}\n`;
+                });
+
+                const custName = (order.customer_name || document.getElementById('posCustomerName')?.value || 'Pelanggan').trim();
+                const tableInfo = document.getElementById('posTableQuickSelect')?.value ? `\nMeja: ${document.getElementById('posTableQuickSelect').value}` : '';
+
+                const msg = `🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*\nPelanggan: ${custName}${tableInfo}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*TOTAL: Rp ${totalFormatted}*\nMetode: ${order.payment_method ? order.payment_method.toUpperCase() : 'LUNAS'}\nStatus: *LUNAS (BERHASIL)* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
+
+                const encodedMsg = encodeURIComponent(msg);
+                const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+                window.open(waUrl, '_blank');
+            }
+
+            // ── Auto Generate Bill Image via html2canvas ──
+            function generateBillImage() {
+                const billArea = document.getElementById('printablePosReceiptArea');
+                const btn = document.getElementById('btnDownloadBillImg');
+                if (!billArea) return;
+
+                const origHtml = btn ? btn.innerHTML : '';
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menggenerate Gambar...';
+                }
+
+                if (typeof html2canvas === 'undefined') {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    script.onload = () => doCapture();
+                    document.head.appendChild(script);
+                } else {
+                    doCapture();
+                }
+
+                function doCapture() {
+                    html2canvas(billArea, {
+                        scale: 2.5,
+                        useCORS: true,
+                        backgroundColor: '#ffffff'
+                    }).then(canvas => {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = origHtml;
+                        }
+                        const imgData = canvas.toDataURL('image/png');
+                        const link = document.createElement('a');
+                        const orderCode = document.getElementById('recOrderCode')?.innerText || 'POS-RECEIPT';
+                        link.download = `Struk-${orderCode.replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
+                        link.href = imgData;
+                        link.click();
+
+                        if (typeof showPosAlert === 'function') {
+                            showPosAlert('Gambar bill struk berhasil diunduh dan siap dikirim ke WhatsApp!', 'Gambar Siap', 'success');
+                        }
+                    }).catch(err => {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = origHtml;
+                        }
+                        console.error('html2canvas error:', err);
+                        alert('Gagal membuat gambar struk: ' + err.message);
+                    });
                 }
             }
 
