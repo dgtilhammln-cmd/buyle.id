@@ -291,7 +291,17 @@ class PosController extends Controller
         $posQrisUrl      = $profile?->pos_qris_image ? asset('storage/' . $profile->pos_qris_image) : null;
         $posFeePayer     = $profile?->pos_fee_payer ?? 'seller';
 
+        $categories = \App\Models\ProductCategory::where('is_active', true)->orderBy('name')->get();
+        $recentPosOrders = \App\Models\Order::where('source', 'pos')
+            ->where('seller_id', $seller->id)
+            ->with(['items', 'payment'])
+            ->orderBy('id', 'desc')
+            ->take(50)
+            ->get();
+
         return view('creator.pos.index', compact(
+            'categories',
+            'recentPosOrders',
             'posCashlessMode',
             'posQrisUrl',
             'posFeePayer',
@@ -1387,6 +1397,103 @@ class PosController extends Controller
             'is_active' => $cashier->is_active,
             'message'   => 'Status akun kasir ' . $cashier->name . ' diubah menjadi ' . ($cashier->is_active ? 'AKTIF' : 'NONAKTIF') . '.',
             'cashiers'  => $allCashiers
+        ]);
+    }
+
+    /**
+     * Tambah produk cepat dari modal kasir POS (+ Add Item).
+     */
+    public function quickProduct(Request $request)
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
+        $request->validate([
+            'name'                => 'required|string|max:255',
+            'price'               => 'required|numeric|min:0',
+            'product_category_id' => 'nullable',
+            'stock'               => 'nullable|numeric|min:0',
+            'description'         => 'nullable|string',
+        ]);
+
+        $baseSlug = \Illuminate\Support\Str::slug($request->name) ?: 'produk';
+        $slug = $baseSlug;
+        while (\App\Models\Product::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
+        }
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            try {
+                $imagePath = app(\App\Services\ImageOptimizer::class)->store($request->file('image'), 'products', 'product');
+            } catch (\Exception $e) {
+                $imagePath = $request->file('image')->store('products', 'public');
+            }
+        }
+
+        $product = \App\Models\Product::create([
+            'seller_id'           => $seller->id,
+            'name'                => $request->name,
+            'slug'                => $slug,
+            'price'               => (float) $request->price,
+            'stock'               => $request->filled('stock') ? (int) $request->stock : null,
+            'product_category_id' => $request->product_category_id ?: null,
+            'description'         => $request->description ?? '',
+            'image'               => $imagePath,
+            'is_active'           => true,
+            'product_type'        => 'physical',
+        ]);
+
+        $product->loadMissing(['variantOptions.values', 'category']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk ' . $product->name . ' berhasil ditambahkan ke kasir!',
+            'product' => [
+                'id'           => $product->id,
+                'name'         => $product->name,
+                'price'        => (float) $product->price,
+                'image_url'    => $product->image ? asset('storage/' . $product->image) : null,
+                'category'     => $product->category ? $product->category->name : 'Umum',
+                'category_id'  => $product->product_category_id,
+                'stock'        => $product->stock,
+                'hasVariants'  => false,
+                'variants'     => []
+            ]
+        ]);
+    }
+
+    /**
+     * Tambah kelompok/kategori produk cepat dari modal kasir POS (+ Add Item).
+     */
+    public function quickCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+        ]);
+
+        $baseSlug = \Illuminate\Support\Str::slug($request->name) ?: 'kategori';
+        $slug = $baseSlug;
+        while (\App\Models\ProductCategory::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
+        }
+
+        $cat = \App\Models\ProductCategory::create([
+            'name'      => $request->name,
+            'slug'      => $slug,
+            'is_active' => true,
+        ]);
+
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Kelompok produk "' . $cat->name . '" berhasil dibuat!',
+            'category' => [
+                'id'   => $cat->id,
+                'name' => $cat->name,
+                'slug' => $cat->slug
+            ]
         ]);
     }
 }

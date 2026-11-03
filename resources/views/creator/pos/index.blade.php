@@ -2104,7 +2104,303 @@
                 box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.04) !important;
             }
         }
-    </style>
+    
+        /* Hide creator superapp bottom nav specifically inside Buyle POS */
+        .superapp-bottom-nav {
+            display: none !important;
+        }
+
+        /* ── BUYLE POS BOTTOM NAVIGATION (100% Sesuai Mockup Image 3 & 4) ── */
+        .pos-bottom-nav-wrap {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.6rem 1rem 0.85rem;
+            z-index: 9990;
+            pointer-events: none;
+            justify-content: center;
+        }
+        @media (max-width: 991px) {
+            .pos-bottom-nav-wrap {
+                display: flex !important;
+            }
+        }
+        .pos-bottom-nav-bar {
+            pointer-events: auto;
+            width: 100%;
+            max-width: 480px;
+            height: 64px;
+            background: #ffffff;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.35rem 0.65rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1.5px solid #f1f5f9;
+        }
+        .pos-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #64748b;
+            padding: 0;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .pos-nav-item.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff !important;
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+            gap: 6px;
+        }
+        .pos-nav-item.active .pos-nav-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+        .pos-nav-item:not(.active) {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #f8fafc;
+            color: #64748b;
+        }
+        .pos-nav-item:not(.active):active {
+            transform: scale(0.92);
+            background: #f1f5f9;
+        }
+        .pos-nav-label {
+            display: none;
+        }
+
+        /* Adjust Floating Cart Bar to sit neatly above Buyle POS Bottom Nav */
+        @media (max-width: 991px) {
+            .pos-mobile-floating-bar {
+                bottom: 80px !important;
+                z-index: 9980 !important;
+            }
+            .product-grid {
+                padding-bottom: 170px !important;
+            }
+        }
+
+        /* ── BUYLE POS TOP HEADER (Buyle POS + Settings + Add Item) ── */
+        .pos-header-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.4rem 0 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+        .pos-header-brand-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pos-header-brand-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            padding: 2px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
+        .pos-header-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #f1f5f9;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: all 0.15s ease;
+        }
+        .pos-header-icon-btn:active {
+            transform: scale(0.92);
+            background: #f8fafc;
+        }
+        .pos-header-add-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 999px;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(30, 179, 73, 0.3);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .pos-header-add-btn:active {
+            transform: scale(0.94);
+        }
+
+        /* ── POPUP OPTIONS MODAL (+ Add Item) ── */
+        .pos-add-option-card {
+            background: #ffffff;
+            border: 1.5px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            width: 100%;
+        }
+        .pos-add-option-card:hover, .pos-add-option-card:active {
+            border-color: #1eb349;
+            background: #f0fdf4;
+            transform: translateY(-2px);
+        }
+        .pos-add-option-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SCREEN 2: TRANSACTIONS VIEW (Mockup Image 4) ── */
+        #posScreenTransactions {
+            display: none;
+            padding-bottom: 160px;
+        }
+        .pos-trans-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0 0.85rem;
+        }
+        .pos-trans-card {
+            background: #ffffff;
+            border: 1.5px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.65rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: all 0.18s ease;
+        }
+        .pos-trans-card:active {
+            transform: scale(0.99);
+            border-color: #bbf7d0;
+        }
+        .pos-trans-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.35rem;
+        }
+        .pos-trans-sale-num {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #1eb349;
+        }
+        .pos-trans-amount {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .pos-trans-card-mid {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+        .pos-trans-type {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .pos-trans-badge-paid {
+            font-size: 0.68rem;
+            font-weight: 700;
+            background: #dcfce7;
+            color: #15803d;
+            padding: 3px 10px;
+            border-radius: 999px;
+            border: 1px solid #bbf7d0;
+        }
+        .pos-trans-time {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .pos-trans-action-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .pos-trans-btn-act {
+            flex: 1;
+            height: 46px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            border: none;
+            font-size: 0.84rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);
+            cursor: pointer;
+        }
+        .pos-trans-btn-act:active {
+            transform: scale(0.96);
+        }
+        .pos-trans-btn-plus {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            color: #1eb349;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            flex-shrink: 0;
+        }
+        .pos-trans-btn-plus:active {
+            transform: scale(0.92);
+        }
+</style>
 @endsection
 
 @section('topbar_actions')
@@ -2386,8 +2682,10 @@
 
     <!-- POS Real Content Wrapper -->
     <div id="pos-real-content" style="opacity:0; transition:opacity 0.25s ease;">
-        <!-- POS Main Grid Wrapper -->
-        <div class="pos-wrapper">
+        <!-- SCREEN 1: Kasir & Katalog Produk -->
+        <div id="posScreenCatalog">
+            <!-- POS Main Grid Wrapper -->
+            <div class="pos-wrapper">
             <!-- LEFT COLUMN: Product Search & Food Menu Grid -->
             <div>
                 <div class="prof-card">
@@ -2408,34 +2706,25 @@
                     </div>
 
                     <div class="prof-card-body">
-                        <!-- Mobile Top Header (100% Sesuai Screen 1 Mockup) -->
-                        <div class="pos-mobile-top-header">
-                            <div style="display:flex; align-items:center; gap:0.65rem;">
-                                <button type="button" class="pos-mobile-menu-btn" onclick="openModal('posHistoryModal')"
-                                    title="Riwayat & Rekap">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
-                                        viewBox="0 0 24 24">
-                                        <line x1="4" y1="7" x2="20" y2="7" />
-                                        <line x1="4" y1="12" x2="15" y2="12" />
-                                        <line x1="4" y1="17" x2="18" y2="17" />
-                                    </svg>
-                                </button>
-                                <div>
-                                    <h1 class="pos-mobile-title">{{ $storeName }}</h1>
-                                    <div class="pos-mobile-subtitle">Kasir Digital POS</div>
-                                </div>
+                        <!-- Mobile Top Header (Buyle POS - Sesuai Permintaan) -->
+                        <div class="pos-mobile-top-header" style="display:flex; align-items:center; justify-content:space-between; padding:0.4rem 0.2rem 0.85rem;">
+                            <button type="button" class="pos-header-icon-btn" onclick="openModal('posSettingsModal')" title="Pengaturan POS">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                                </svg>
+                            </button>
+                            <div style="text-align:center;">
+                                <h1 class="pos-header-brand-title" style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0; line-height:1.2;">Buyle POS</h1>
+                                <div style="font-size:0.68rem; color:#64748b; font-weight:600; margin-top:1px;">{{ $storeName }}</div>
                             </div>
-                            <div style="display:flex; align-items:center; gap:0.5rem;">
-                                <button type="button" class="pos-mobile-action-btn"
-                                    onclick="openPosSettingsModal('discounts')" title="Tambah Diskon/Menu">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
-                                        viewBox="0 0 24 24">
-                                        <line x1="12" y1="5" x2="12" y2="19" />
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                    </svg>
-                                    <span>Add Item</span>
-                                </button>
-                            </div>
+                            <button type="button" class="pos-header-add-btn" onclick="openModal('posAddOptionsModal')" title="Tambah Item / Kelompok">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                <span>Add Item</span>
+                            </button>
                         </div>
 
                         <!-- Pill Search Bar with Barcode Scanner Icon (Screen 1 Mockup) -->
@@ -2462,45 +2751,35 @@
                             </button>
                         </div>
 
-                        <!-- Filter Kategori Premium (Instant 0ms Client-Side Filtering) -->
-                        <div class="pos-category-pills-wrap">
-                            <button type="button" class="pos-cat-pill active" data-cat="all"
-                                onclick="setPosCategoryFilter('all', this)">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="7" height="7" />
-                                    <rect x="14" y="3" width="7" height="7" />
-                                    <rect x="14" y="14" width="7" height="7" />
-                                    <rect x="3" y="14" width="7" height="7" />
-                                </svg>
-                                Semua Produk
+                        <!-- Filter Kelompok Produk (No Emoticon, Clean Pill Horizontal Bar) -->
+                        <div class="pos-category-pills-wrap" id="posCategoryPillsContainer" style="display:flex; align-items:center; gap:8px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+                            <button type="button" class="pos-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
+                                Semua
                                 <span class="pos-cat-count" id="catCountAll">0</span>
                             </button>
-                            <button type="button" class="pos-cat-pill" data-cat="physical"
-                                onclick="setPosCategoryFilter('physical', this)">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                                    <line x1="12" y1="22.08" x2="12" y2="12" />
-                                </svg>
-                                Produk Fisik / Barang
-                                <span class="pos-cat-count" id="catCountPhysical">0</span>
-                            </button>
-                            <button type="button" class="pos-cat-pill" data-cat="fnb"
-                                onclick="setPosCategoryFilter('fnb', this)">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-                                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-                                    <line x1="6" y1="1" x2="6" y2="4" />
-                                    <line x1="10" y1="1" x2="10" y2="4" />
-                                    <line x1="14" y1="1" x2="14" y2="4" />
-                                </svg>
-                                Makanan &amp; Minuman
+                            <button type="button" class="pos-cat-pill" data-cat="fnb" onclick="setPosCategoryFilter('fnb', this)">
+                                Makanan
                                 <span class="pos-cat-count" id="catCountFnb">0</span>
                             </button>
+                            <button type="button" class="pos-cat-pill" data-cat="drink" onclick="setPosCategoryFilter('drink', this)">
+                                Minuman
+                                <span class="pos-cat-count" id="catCountDrink">0</span>
+                            </button>
+                            <button type="button" class="pos-cat-pill" data-cat="snack" onclick="setPosCategoryFilter('snack', this)">
+                                Snack
+                                <span class="pos-cat-count" id="catCountSnack">0</span>
+                            </button>
+                            <button type="button" class="pos-cat-pill" data-cat="physical" onclick="setPosCategoryFilter('physical', this)">
+                                Produk Fisik
+                                <span class="pos-cat-count" id="catCountPhysical">0</span>
+                            </button>
+                            @if(isset($categories) && count($categories) > 0)
+                                @foreach($categories as $cItem)
+                                    <button type="button" class="pos-cat-pill" data-cat="cat-{{ $cItem->id }}" onclick="setPosCategoryFilter('cat-{{ $cItem->id }}', this)">
+                                        {{ $cItem->name }}
+                                    </button>
+                                @endforeach
+                            @endif
                         </div>
 
                         <!-- Products Grid -->
@@ -2755,6 +3034,110 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+        </div> <!-- Close #posScreenCatalog -->
+
+        <!-- SCREEN 2: TRANSACTIONS VIEW (100% Sesuai Mockup Image 4) -->
+        <div id="posScreenTransactions">
+            <div class="pos-trans-header">
+                <button type="button" class="pos-header-icon-btn" onclick="switchPosScreen('catalog')" title="Kembali ke Kasir">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="19" y1="12" x2="5" y2="12"/>
+                        <polyline points="12 19 5 12 12 5"/>
+                    </svg>
+                </button>
+                <h2 style="font-size:1.15rem; font-weight:800; color:#0f172a; margin:0;">Transactions</h2>
+                <button type="button" class="pos-header-icon-btn" onclick="document.getElementById('posTransSearch').focus();" title="Scan">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                        <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                        <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                        <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Search in Transactions -->
+            <div class="pos-pill-search" style="margin-bottom:0.75rem;">
+                <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24" class="search-ico">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="posTransSearch" class="pos-pill-input" placeholder="Search transactions..." oninput="filterTransactionsList(this.value)">
+            </div>
+
+            <!-- Time Filter Pill (All Time / Hari Ini) -->
+            <div style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #f1f5f9; border-radius:999px; padding:6px 14px; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </div>
+                    <span style="font-size:0.82rem; font-weight:700; color:#0f172a;" id="posTransFilterLabel">All Time</span>
+                </div>
+                <button type="button" onclick="toggleTransTimeFilter()" style="display:inline-flex; align-items:center; gap:4px; background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.75rem; font-weight:700; border-radius:999px; padding:4px 10px; cursor:pointer;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                    <span>Change</span>
+                </button>
+            </div>
+
+            <!-- Transactions List Container -->
+            <div id="posTransactionsListContainer">
+                @forelse($recentPosOrders ?? $todayOrders as $ord)
+                    @php
+                        $payMethod = strtoupper($ord->payment_method ?? ($ord->payment?->payment_type ?? 'CASH'));
+                        $totalVal = (float) ($ord->total ?? $ord->total_amount ?? 0);
+                        $isPaidOrd = in_array(strtolower($ord->status ?? ''), ['completed', 'paid', 'success', 'confirmed']);
+                    @endphp
+                    <div class="pos-trans-card" data-search="{{ strtolower($ord->order_number ?? $ord->id) }} {{ strtolower($payMethod) }}" onclick="openPosOrderReceipt({{ $ord->id }})">
+                        <div class="pos-trans-card-top">
+                            <span class="pos-trans-sale-num">Sale #{{ $ord->order_number ? substr($ord->order_number, -6) : $ord->id }}</span>
+                            <span class="pos-trans-amount">Rp {{ number_format($totalVal, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="pos-trans-card-mid">
+                            <span class="pos-trans-type">{{ $payMethod }} Sale</span>
+                            <span class="pos-trans-badge-paid">{{ $isPaidOrd ? 'Paid' : 'Pending' }}</span>
+                        </div>
+                        <div class="pos-trans-time">
+                            {{ \Carbon\Carbon::parse($ord->created_at)->translatedFormat('d M Y · H:i') }}
+                        </div>
+                    </div>
+                @empty
+                    <div style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.84rem;">
+                        Belum ada riwayat transaksi kasir
+                    </div>
+                @endforelse
+            </div>
+
+            <!-- Bottom Actions for Transactions Screen (Image 4) -->
+            <div class="pos-trans-action-bar">
+                <button type="button" class="pos-trans-btn-act" onclick="openModal('posDepositModal')">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <line x1="2" y1="10" x2="22" y2="10"/>
+                    </svg>
+                    <span>Payment In</span>
+                </button>
+                <button type="button" class="pos-trans-btn-plus" onclick="openModal('posAddOptionsModal')" title="Tambah Cepat">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
+                <button type="button" class="pos-trans-btn-act" onclick="switchPosScreen('catalog')">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                    <span>New Sale</span>
+                </button>
             </div>
         </div>
     </div> <!-- Close #pos-real-content -->
@@ -8886,5 +9269,490 @@
                 }
             }
 
-        </script>
+        
+            // ── BUYLE POS SCREEN SWITCHER (Screen 1: Catalog vs Screen 2: Transactions) ──
+            let currentPosActiveScreen = 'catalog';
+            let transFilterTimeMode = 'all';
+
+            function switchPosScreen(screen) {
+                currentPosActiveScreen = screen;
+                const screenCat = document.getElementById('posScreenCatalog');
+                const screenTrans = document.getElementById('posScreenTransactions');
+                const navHome = document.getElementById('posNavBtnHome');
+                const navTrans = document.getElementById('posNavBtnTrans');
+                const floatingBar = document.getElementById('posMobileFloatingBar');
+
+                if (navHome) navHome.classList.remove('active');
+                if (navTrans) navTrans.classList.remove('active');
+
+                if (screen === 'transactions') {
+                    if (navTrans) navTrans.classList.add('active');
+                    if (screenCat) screenCat.style.display = 'none';
+                    if (floatingBar) floatingBar.style.display = 'none';
+
+                    if (screenTrans) {
+                        screenTrans.style.display = 'block';
+                        screenTrans.style.opacity = '0';
+                        screenTrans.style.transform = 'translateY(10px)';
+                        screenTrans.style.transition = 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)';
+                        setTimeout(() => {
+                            screenTrans.style.opacity = '1';
+                            screenTrans.style.transform = 'translateY(0)';
+                        }, 20);
+                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    if (navHome) navHome.classList.add('active');
+                    if (screenTrans) screenTrans.style.display = 'none';
+
+                    if (screenCat) {
+                        screenCat.style.display = 'block';
+                        screenCat.style.opacity = '0';
+                        screenCat.style.transform = 'translateY(10px)';
+                        screenCat.style.transition = 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)';
+                        setTimeout(() => {
+                            screenCat.style.opacity = '1';
+                            screenCat.style.transform = 'translateY(0)';
+                        }, 20);
+                    }
+                    // Restore floating bar on mobile if items in cart
+                    if (floatingBar && window.innerWidth <= 991) {
+                        floatingBar.style.display = 'flex';
+                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            // Quick Product & Category Modal Handlers
+            function openQuickProductModal() {
+                closeModal('posAddOptionsModal');
+                openModal('posQuickProductModal');
+            }
+
+            function openQuickCategoryModal() {
+                closeModal('posAddOptionsModal');
+                openModal('posQuickCategoryModal');
+            }
+
+            // Submit Quick Product via AJAX
+            function submitQuickProduct(e) {
+                e.preventDefault();
+                const btn = document.getElementById('btnSubmitQuickProduct');
+                const origText = btn ? btn.innerHTML : 'Simpan';
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
+                }
+
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('name', document.getElementById('qpName').value.trim());
+                formData.append('price', document.getElementById('qpPrice').value.trim());
+                const stockVal = document.getElementById('qpStock').value.trim();
+                if (stockVal) formData.append('stock', stockVal);
+                const catVal = document.getElementById('qpCategory').value;
+                if (catVal) formData.append('product_category_id', catVal);
+                const imgInput = document.getElementById('qpImage');
+                if (imgInput && imgInput.files[0]) {
+                    formData.append('image', imgInput.files[0]);
+                }
+
+                fetch('{{ route("creator.pos.quick-product") }}', {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = origText;
+                    }
+                    if (res.success && res.product) {
+                        const p = res.product;
+                        // Add to window.posCatalog
+                        if (!window.posCatalog) window.posCatalog = {};
+                        window.posCatalog[p.id] = {
+                            id: p.id,
+                            name: p.name,
+                            price: p.price,
+                            image: p.image_url || '',
+                            hasVariants: false,
+                            variants: []
+                        };
+                        window.posAllProducts = Object.values(window.posCatalog);
+
+                        // Append HTML card to product grid
+                        const grid = document.getElementById('productGridContainer');
+                        if (grid) {
+                            const formattedPrice = new Intl.NumberFormat('id-ID').format(p.price);
+                            const imgHtml = p.image_url
+                                ? `<img src="${p.image_url}" alt="${p.name}" class="product-img" loading="lazy">`
+                                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f8fafc;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
+
+                            const cardHtml = `
+                                <div class="product-card" data-id="${p.id}" data-name="${p.name.toLowerCase()}"
+                                    data-price="${p.price}" data-category="all" data-image="${p.image_url || ''}"
+                                    onclick="handleProductClick(${p.id})">
+                                    <div class="product-img-wrapper">
+                                        ${imgHtml}
+                                        <div class="product-qty-badge" id="badge-qty-${p.id}" style="display:none;position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;font-size:0.65rem;font-weight:700;min-width:20px;height:20px;border-radius:10px;align-items:center;justify-content:center;padding:0 5px;z-index:5;">0</div>
+                                        <div class="product-check-badge" id="card-check-${p.id}" style="display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1eb349,#a5cf37);align-items:center;justify-content:center;z-index:5;">
+                                            <svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </div>
+                                    </div>
+                                    <div style="padding:0.5rem 0.6rem 0.45rem;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+                                        <div class="product-name">${p.name}</div>
+                                        <div class="product-card-bottom">
+                                            <div class="product-price">Rp ${formattedPrice}</div>
+                                            <button type="button" class="card-btn-add" id="card-add-btn-${p.id}" onclick="event.stopPropagation(); handleProductClick(${p.id});">
+                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                            </button>
+                                            <div class="card-stepper" id="card-stepper-${p.id}" style="display:none;">
+                                                <button type="button" class="card-stepper-btn minus" onclick="event.stopPropagation(); handleCardStepper(${p.id}, -1);"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                                                <span class="card-stepper-num" id="card-qty-num-${p.id}">1</span>
+                                                <button type="button" class="card-stepper-btn plus" onclick="event.stopPropagation(); handleCardStepper(${p.id}, 1);"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            grid.insertAdjacentHTML('afterbegin', cardHtml);
+                        }
+
+                        // Reset form & close modal
+                        document.getElementById('formQuickProduct').reset();
+                        closeModal('posQuickProductModal');
+                        if (typeof showPosAlert === 'function') {
+                            showPosAlert('Berhasil', res.message || 'Produk berhasil ditambahkan!', 'success');
+                        } else {
+                            alert(res.message);
+                        }
+                    } else {
+                        alert(res.message || 'Gagal menambahkan produk');
+                    }
+                })
+                .catch(err => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = origText;
+                    }
+                    console.error(err);
+                    alert('Terjadi kesalahan saat menyimpan produk.');
+                });
+            }
+
+            // Submit Quick Category via AJAX
+            function submitQuickCategory(e) {
+                e.preventDefault();
+                const btn = document.getElementById('btnSubmitQuickCategory');
+                const origText = btn ? btn.innerHTML : 'Simpan';
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
+                }
+
+                const catName = document.getElementById('qcName').value.trim();
+                fetch('{{ route("creator.pos.quick-category") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ name: catName })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = origText;
+                    }
+                    if (res.success && res.category) {
+                        const cat = res.category;
+                        // Add to pills container
+                        const pillsContainer = document.getElementById('posCategoryPillsContainer');
+                        if (pillsContainer) {
+                            const newPill = document.createElement('button');
+                            newPill.type = 'button';
+                            newPill.className = 'pos-cat-pill';
+                            newPill.setAttribute('data-cat', 'cat-' + cat.id);
+                            newPill.innerText = cat.name;
+                            newPill.onclick = function() { setPosCategoryFilter('cat-' + cat.id, this); };
+                            pillsContainer.appendChild(newPill);
+                        }
+                        // Add to select in product modal
+                        const qpSelect = document.getElementById('qpCategory');
+                        if (qpSelect) {
+                            const opt = document.createElement('option');
+                            opt.value = cat.id;
+                            opt.innerText = cat.name;
+                            qpSelect.appendChild(opt);
+                        }
+
+                        document.getElementById('formQuickCategory').reset();
+                        closeModal('posQuickCategoryModal');
+                        if (typeof showPosAlert === 'function') {
+                            showPosAlert('Berhasil', res.message, 'success');
+                        } else {
+                            alert(res.message);
+                        }
+                    } else {
+                        alert(res.message || 'Gagal menambahkan kelompok produk');
+                    }
+                })
+                .catch(err => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = origText;
+                    }
+                    console.error(err);
+                    alert('Terjadi kesalahan saat menyimpan kategori.');
+                });
+            }
+
+            // Filter Transactions in Screen 2
+            function filterTransactionsList(query) {
+                const q = (query || '').toLowerCase().trim();
+                const cards = document.querySelectorAll('.pos-trans-card');
+                cards.forEach(card => {
+                    const searchData = (card.getAttribute('data-search') || '').toLowerCase();
+                    if (!q || searchData.includes(q)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            // Toggle Time Filter (All Time vs Hari Ini)
+            function toggleTransTimeFilter() {
+                const label = document.getElementById('posTransFilterLabel');
+                if (transFilterTimeMode === 'all') {
+                    transFilterTimeMode = 'today';
+                    if (label) label.innerText = 'Hari Ini';
+                } else {
+                    transFilterTimeMode = 'all';
+                    if (label) label.innerText = 'All Time';
+                }
+            }
+
+            // Open Receipt from Transaction Card Click
+            function openPosOrderReceipt(orderId) {
+                if (typeof openReceiptModal === 'function') {
+                    openReceiptModal(orderId);
+                } else {
+                    switchSettingTab('orders');
+                    openModal('posHistoryModal');
+                }
+            }
+
+</script>
+
+    <!-- ── BUYLE POS BOTTOM NAVIGATION BAR (100% Sesuai Mockup Image 3 & 4) ── -->
+    <div class="pos-bottom-nav-wrap" id="posBottomNavWrap">
+        <div class="pos-bottom-nav-bar">
+            <!-- 1. Home / Kasir -->
+            <button type="button" class="pos-nav-item active" id="posNavBtnHome" onclick="switchPosScreen('catalog')" title="Kasir Home">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span class="pos-nav-label">Home</span>
+            </button>
+
+            <!-- 2. Transactions (Image 4) -->
+            <button type="button" class="pos-nav-item" id="posNavBtnTrans" onclick="switchPosScreen('transactions')" title="Transaksi">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <line x1="2" y1="9" x2="6" y2="9"/>
+                    <line x1="18" y1="15" x2="22" y2="15"/>
+                </svg>
+                <span class="pos-nav-label">Transaksi</span>
+            </button>
+
+            <!-- 3. Laporan / Analytics -->
+            <button type="button" class="pos-nav-item" id="posNavBtnReports" onclick="openModal('posHistoryModal')" title="Laporan & Rekap Shift">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <span class="pos-nav-label">Laporan</span>
+            </button>
+
+            <!-- 4. Kelompok / Produk -->
+            <button type="button" class="pos-nav-item" id="posNavBtnProducts" onclick="openModal('posAddOptionsModal')" title="Katalog & Kelompok Produk">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <polyline points="21 8 21 21 3 21 3 8"/>
+                    <rect x="1" y="3" width="22" height="5"/>
+                    <line x1="10" y1="12" x2="14" y2="12"/>
+                </svg>
+                <span class="pos-nav-label">Item</span>
+            </button>
+
+            <!-- 5. Kasir / Profil Staf -->
+            <button type="button" class="pos-nav-item" id="posNavBtnAccount" onclick="openPosSettingsModal('staff')" title="Staf Kasir & Akun">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="pos-nav-label">Kasir</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── POP-UP MODAL: PILIHAN TAMBAH (+ Add Item) ── -->
+    <div class="pos-modal-overlay" id="posAddOptionsModal" style="z-index: 100025;">
+        <div class="pos-modal-card" style="max-width: 420px; width: 92vw; border-radius: 24px; padding: 1.4rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a;">Tambah Baru</h4>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Pilih jenis item yang ingin ditambahkan</div>
+                    </div>
+                </div>
+                <button type="button" class="pos-modal-close" onclick="closeModal('posAddOptionsModal')">&times;</button>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <!-- Opsi 1: Tambah Produk Baru -->
+                <button type="button" class="pos-add-option-card" onclick="openQuickProductModal()">
+                    <div class="pos-add-option-icon">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Tambah Produk Baru</div>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Input nama, harga, dan masukkan langsung ke kasir</div>
+                    </div>
+                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+
+                <!-- Opsi 2: Tambah Kelompok Produk -->
+                <button type="button" class="pos-add-option-card" onclick="openQuickCategoryModal()">
+                    <div class="pos-add-option-icon" style="background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8;">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Tambah Kelompok Produk</div>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Buat kategori baru untuk mengelompokkan menu</div>
+                    </div>
+                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── POP-UP MODAL: FORM TAMBAH PRODUK CEPAT ── -->
+    <div class="pos-modal-overlay" id="posQuickProductModal" style="z-index: 100030;">
+        <div class="pos-modal-card" style="max-width: 460px; width: 94vw; border-radius: 24px; padding: 1.4rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a;">Produk Baru</h4>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Simpan langsung ke kasir POS</div>
+                    </div>
+                </div>
+                <button type="button" class="pos-modal-close" onclick="closeModal('posQuickProductModal')">&times;</button>
+            </div>
+
+            <form id="formQuickProduct" onsubmit="submitQuickProduct(event)">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div>
+                        <label style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">Nama Produk <span style="color:#ef4444;">*</span></label>
+                        <input type="text" id="qpName" class="form-control" placeholder="Contoh: Es Teh Manis" required style="border-radius:12px; height:44px; font-size:0.85rem;">
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div>
+                            <label style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">Harga (Rp) <span style="color:#ef4444;">*</span></label>
+                            <input type="number" id="qpPrice" class="form-control" placeholder="0" min="0" required style="border-radius:12px; height:44px; font-size:0.85rem;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">Stok (Opsional)</label>
+                            <input type="number" id="qpStock" class="form-control" placeholder="Unlimited" min="0" style="border-radius:12px; height:44px; font-size:0.85rem;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">Kelompok Produk</label>
+                        <select id="qpCategory" class="form-control" style="border-radius:12px; height:44px; font-size:0.85rem;">
+                            <option value="">Umum</option>
+                            @if(isset($categories))
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">Foto Produk (Opsional)</label>
+                        <input type="file" id="qpImage" accept="image/*" class="form-control" style="border-radius:12px; font-size:0.8rem; padding:8px;">
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                        <button type="button" class="btn-outline-bio" onclick="closeModal('posQuickProductModal')" style="flex:1; height:44px; border-radius:999px;">Batal</button>
+                        <button type="submit" class="btn-submit-green" id="btnSubmitQuickProduct" style="flex:1; height:44px; border-radius:999px; margin-top:0;">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── POP-UP MODAL: FORM TAMBAH KELOMPOK PRODUK CEPAT ── -->
+    <div class="pos-modal-overlay" id="posQuickCategoryModal" style="z-index: 100030;">
+        <div class="pos-modal-card" style="max-width: 400px; width: 92vw; border-radius: 24px; padding: 1.4rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.2rem;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:34px; height:34px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe; display:flex; align-items:center; justify-content:center; color:#1d4ed8;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a;">Kelompok Produk</h4>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Kategori baru untuk menu kasir</div>
+                    </div>
+                </div>
+                <button type="button" class="pos-modal-close" onclick="closeModal('posQuickCategoryModal')">&times;</button>
+            </div>
+
+            <form id="formQuickCategory" onsubmit="submitQuickCategory(event)">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div>
+                        <label style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">Nama Kelompok <span style="color:#ef4444;">*</span></label>
+                        <input type="text" id="qcName" class="form-control" placeholder="Contoh: Cemilan, Kopi, Paket Hemat" required style="border-radius:12px; height:44px; font-size:0.85rem;">
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                        <button type="button" class="btn-outline-bio" onclick="closeModal('posQuickCategoryModal')" style="flex:1; height:44px; border-radius:999px;">Batal</button>
+                        <button type="submit" class="btn-submit-green" id="btnSubmitQuickCategory" style="flex:1; height:44px; border-radius:999px; margin-top:0;">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection

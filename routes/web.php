@@ -690,6 +690,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/pos/cashiers', [\App\Http\Controllers\Creator\PosController::class, 'saveCashier'])->name('pos.cashiers.save');
     Route::delete('/pos/cashiers/{id}', [\App\Http\Controllers\Creator\PosController::class, 'deleteCashier'])->name('pos.cashiers.delete');
     Route::post('/pos/cashiers/{id}/toggle', [\App\Http\Controllers\Creator\PosController::class, 'toggleCashier'])->name('pos.cashiers.toggle');
+    Route::post('/pos/quick-product', [\App\Http\Controllers\Creator\PosController::class, 'quickProduct'])->name('pos.quick-product');
+    Route::post('/pos/quick-category', [\App\Http\Controllers\Creator\PosController::class, 'quickCategory'])->name('pos.quick-category');
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');
