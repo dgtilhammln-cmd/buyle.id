@@ -343,6 +343,12 @@
         border: 1px solid #e2e8f0;
       }
 
+      .prod-fab-group {
+        background: #f0fdf4;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+      }
+
       .prod-fab-add {
         background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
         color: #ffffff;
@@ -2036,7 +2042,7 @@
 
   </div>
 </div>
-  {{-- FLOATING ACTION BUTTONS (MOBILE ONLY: 2 MINIMALIST BUTTONS) --}}
+  {{-- FLOATING ACTION BUTTONS (MOBILE ONLY: 3 MINIMALIST BUTTONS) --}}
   <div class="prod-mobile-fab-group">
     {{-- 1. Smart Import FAB --}}
     <button type="button" onclick="openSmartImport()" class="prod-fab-btn prod-fab-import" title="Smart Import Produk">
@@ -2048,7 +2054,15 @@
       <span>Smart Import</span>
     </button>
 
-    {{-- 2. Tambah Produk FAB --}}
+    {{-- 2. Kelompok Produk FAB --}}
+    <a href="{{ route('creator.groups.index') }}" class="prod-fab-btn prod-fab-group" title="Kelompok Produk">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span>Kelompok</span>
+    </a>
+
+    {{-- 3. Tambah Produk FAB --}}
     <a href="{{ route('creator.products.create') }}" class="prod-fab-btn prod-fab-add" title="Tambah Produk">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19" />

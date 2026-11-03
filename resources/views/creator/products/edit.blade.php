@@ -84,26 +84,26 @@
 
         .prof-card {
             background: #fff;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+            margin-bottom: 1.15rem;
             overflow: hidden;
         }
 
         .prof-card-head {
-            padding: 1.25rem 1.75rem;
+            padding: 1rem 1.5rem;
             border-bottom: 1px solid #f8fafc;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            font-size: 0.95rem;
-            font-weight: 800;
+            gap: 0.5rem;
+            font-size: 0.88rem;
+            font-weight: 700;
             color: #0b120c;
         }
 
         .form-body {
-            padding: 1.5rem 1.75rem;
+            padding: 1.25rem 1.5rem;
         }
 
         .form-grid {
@@ -130,10 +130,11 @@
         }
 
         .form-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #374151;
             display: block;
+            margin-bottom: 0.2rem;
         }
 
         .form-label span {
@@ -143,12 +144,12 @@
         .form-input {
             width: 100%;
             box-sizing: border-box;
-            height: 44px;
-            padding: 0 1rem;
+            height: 42px;
+            padding: 0 0.9rem;
             border: 1.5px solid #e7f0e7;
             border-radius: 10px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.875rem;
+            font-size: 0.82rem;
             color: #1a1a1a;
             background: #f9fefb;
             outline: none;
@@ -419,8 +420,8 @@
             }
 
             .prof-card-head {
-                padding: 1rem;
-                font-size: 0.875rem;
+                padding: 0.75rem 0.9rem;
+                font-size: 0.8rem;
             }
 
             /* Footer buttons: full width sticky at bottom */
@@ -454,13 +455,56 @@
                 font-weight: 700;
             }
 
+            /* Input & select touch-friendly */
             .form-input {
-                font-size: 16px;
+                font-size: 16px; /* Prevent iOS zoom */
                 min-height: 44px;
+                height: 44px;
+                padding: 0 0.85rem;
+            }
+
+            textarea.form-input {
+                font-size: 16px;
+                height: auto;
+                min-height: 80px;
             }
 
             select.form-input {
                 min-height: 44px;
+                font-size: 16px;
+            }
+
+            /* Compact card headers */
+            .prof-card-head {
+                padding: 0.7rem 0.9rem !important;
+                font-size: 0.8rem !important;
+                font-weight: 700;
+            }
+
+            /* Compact card body */
+            .form-body {
+                padding: 0.85rem 0.9rem !important;
+            }
+
+            /* Compact form labels */
+            .form-label {
+                font-size: 0.76rem;
+            }
+
+            /* Compact form hints */
+            .form-hint {
+                font-size: 0.68rem;
+            }
+
+            /* Compact form group margin */
+            .form-group {
+                margin-bottom: 0.9rem;
+            }
+
+            /* Compact prof-card margin */
+            .prof-card {
+                margin-bottom: 0.85rem;
+                border-radius: 14px;
             }
         }
     </style>
