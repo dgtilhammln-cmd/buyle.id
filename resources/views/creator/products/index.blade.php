@@ -1203,7 +1203,7 @@
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
     </button>
-    <h2 class="prod-mobile-title">Menu & Profil</h2>
+    <h2 class="prod-mobile-title">Kelola Produk</h2>
     <button type="button" class="prod-mobile-btn" onclick="toggleMobileNotif()" title="Notifikasi">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -1660,12 +1660,7 @@
                   onchange="this.form.submit()" title="Kosongkan untuk Unlimited (Stok tidak terbatas)"
                   style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:{{ is_null($s->stock) ? '#3B82F6' : ($s->stock > 0 ? '#10B981' : '#EF4444') }};outline:none;background:#F8FAFC;">
               </form>
-              <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">URT:</span>
-              <form action="{{ route('creator.products.order', $s->id) }}" method="POST" style="margin:0;">
-                @csrf @method('PATCH')
-                <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()"
-                  style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:#334155;outline:none;background:#F8FAFC;">
-              </form>
+              
             </div>
             <div style="display:flex;gap:.25rem;">
               <a href="{{ route('creator.products.edit', $s) }}" title="Edit"
