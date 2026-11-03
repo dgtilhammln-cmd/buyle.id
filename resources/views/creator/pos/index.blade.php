@@ -9381,6 +9381,25 @@
                 window.addEventListener('load', revealPos);
             })();
 
+            // Move bottom navbar to <body> to escape overflow:hidden stacking context
+            (function moveNavbarToBody() {
+                function doMove() {
+                    var nav = document.getElementById('posBottomNavWrap');
+                    var floatBar = document.getElementById('posMobileFloatingBar');
+                    if (nav && nav.parentNode !== document.body) {
+                        document.body.appendChild(nav);
+                    }
+                    if (floatBar && floatBar.parentNode !== document.body) {
+                        document.body.appendChild(floatBar);
+                    }
+                }
+                if (document.readyState !== 'loading') {
+                    doMove();
+                } else {
+                    document.addEventListener('DOMContentLoaded', doMove);
+                }
+            })();
+
 
             // Screen 3 Helper: Toggle Billing Items Collapse
             function toggleBillingItemsCollapse() {
