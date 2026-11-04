@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 
 @section('title', 'Menu & Profil Kasir – Creator Studio')
 @section('page_title', 'Menu & Profil')
@@ -364,6 +364,7 @@
     }
 
     /* POS Bottom Navigation Bar */
+    /* POS Standard Bottom Navigation Bar (100% Identical Across All Screens) */
     .pos-bottom-nav-wrap {
         display: flex !important;
         position: fixed !important;
@@ -374,9 +375,10 @@
         margin: 0 auto !important;
         z-index: 10000 !important;
         justify-content: center !important;
+        pointer-events: none !important;
     }
-
     .pos-bottom-nav-bar {
+        pointer-events: auto !important;
         width: 100% !important;
         height: 62px !important;
         background: #ffffff !important;
@@ -387,8 +389,8 @@
         padding: 0.35rem 0.65rem !important;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
         border: 1.5px solid #f1f5f9 !important;
+        box-sizing: border-box !important;
     }
-
     .pos-nav-item {
         display: flex;
         align-items: center;
@@ -399,15 +401,15 @@
         transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         color: #64748b;
         padding: 0;
-        text-decoration: none;
+        outline: none;
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        outline: none;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
     }
-
     .pos-nav-item.active {
-        background: var(--pos-gradient) !important;
+        background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
         color: #ffffff !important;
         padding: 0.5rem 1.1rem !important;
         border-radius: 999px !important;
@@ -415,16 +417,15 @@
         gap: 6px !important;
         width: auto !important;
     }
-
     .pos-nav-label {
         display: none;
     }
-
     .pos-nav-item.active .pos-nav-label {
         display: inline-block;
         font-size: 0.8rem;
         font-weight: 700;
-        color: #ffffff;
+        color: #ffffff !important;
+        letter-spacing: -0.01em;
     }
 </style>
 @endsection
@@ -768,5 +769,35 @@
         </a>
     </div>
 </div>
+
+<script>
+/* ── POS Smooth Slide Transition (direction-aware) ── */
+(function(){
+    var navItems = document.querySelectorAll('.pos-nav-item');
+    var activeIdx = Array.from(navItems).findIndex(function(el){ return el.classList.contains('active'); });
+    navItems.forEach(function(item, idx){
+        item.addEventListener('click', function(){
+            if(this.classList.contains('active')) return;
+            sessionStorage.setItem('posNavDir', idx > activeIdx ? 'right' : 'left');
+        });
+    });
+    var dir = sessionStorage.getItem('posNavDir');
+    sessionStorage.removeItem('posNavDir');
+    var wrap = document.querySelector('.menu-hub-container');
+    if(wrap && dir){
+        var from = dir === 'right' ? '28px' : '-28px';
+        wrap.style.opacity = '0';
+        wrap.style.transform = 'translateX('+from+')';
+        wrap.style.transition = 'none';
+        requestAnimationFrame(function(){
+            requestAnimationFrame(function(){
+                wrap.style.opacity = '1';
+                wrap.style.transform = 'translateX(0)';
+                wrap.style.transition = 'opacity 0.28s cubic-bezier(0.16,1,0.3,1),transform 0.28s cubic-bezier(0.16,1,0.3,1)';
+            });
+        });
+    }
+})();
+</script>
 @endsection
 

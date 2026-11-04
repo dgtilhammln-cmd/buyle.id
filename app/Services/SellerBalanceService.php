@@ -51,12 +51,28 @@ class SellerBalanceService
         $clearedGmv = 0;
         $standardHoldBalance = 0;
         $ticketEscrowBalance = 0;
+        $directPosSales = 0;
         $upcomingEventsInEscrow = [];
 
         foreach ($sellerOrders as $order) {
             $paidAt = $order->payment?->paid_at ?? $order->created_at;
             $orderPaidTime = Carbon::parse($paidAt);
             $isPos = ($order->source === 'pos');
+
+            // Proteksi Finansial Platform:
+            // Pembayaran Tunai (Cash), Transfer Langsung ke Toko, atau QRIS Statis Toko:
+            // Uang diterima LANGSUNG secara fisik oleh merchant / masuk ke rekening toko sendiri.
+            // Buyle Platform TIDAK memegang dana ini, sehingga DILARANG masuk ke Saldo Penarikan Buyle!
+            $isPosDirect = false;
+            if ($isPos) {
+                $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+                $posMethod = strtolower($addr['payment_method'] ?? ($order->payment?->method ?? 'cash'));
+                $posGateway = strtolower($order->payment?->gateway ?? '');
+
+                if (in_array($posMethod, ['cash', 'transfer']) || in_array($posGateway, ['qris_static', 'direct']) || ($posMethod === 'qris' && $posGateway !== 'midtrans')) {
+                    $isPosDirect = true;
+                }
+            }
 
             foreach ($order->items as $item) {
                 // A. PENDAPATAN SELLER (Pemilik Asli Produk)
@@ -106,9 +122,11 @@ class SellerBalanceService
                             $upcomingEventsInEscrow[$pId]['escrow_amount'] += $sellerEarnings;
                         }
                     } else {
-                        // KASIR POS: Cair instan tanpa holding 72 jam
-                        // PRODUK FISIK / DIGITAL / JASA: Holding standar 72 jam (3 hari)
-                        if ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
+                        if ($isPosDirect) {
+                            // Tunai & QRIS Statis POS: Uang sudah dipegang fisik oleh seller, tidak masuk saldo penarikan Buyle
+                            $directPosSales += $sellerEarnings;
+                        } elseif ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
+                            // Midtrans PG POS / Online cleared: masuk saldo penarikan
                             $clearedGmv += $sellerEarnings;
                         } else {
                             $standardHoldBalance += $sellerEarnings;
@@ -119,7 +137,9 @@ class SellerBalanceService
                 // B. PENDAPATAN RESELLER (Margin White Label)
                 if ((int)$item->reseller_id === (int)$seller->id) {
                     $resellerEarnings = (float) ($item->reseller_margin > 0 ? $item->reseller_margin : $item->subtotal);
-                    if ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
+                    if ($isPosDirect) {
+                        $directPosSales += $resellerEarnings;
+                    } elseif ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
                         $clearedGmv += $resellerEarnings;
                     } else {
                         $standardHoldBalance += $resellerEarnings;
@@ -129,7 +149,9 @@ class SellerBalanceService
                 // C. PENDAPATAN AFFILIATOR (Komisi Rekomendasi Toko Bio)
                 if ((int)$item->affiliate_id === (int)$seller->id && (float)($item->affiliate_commission_amount ?? 0) > 0) {
                     $affiliateCommission = (float) $item->affiliate_commission_amount;
-                    if ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
+                    if ($isPosDirect) {
+                        $directPosSales += $affiliateCommission;
+                    } elseif ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
                         $clearedGmv += $affiliateCommission;
                     } else {
                         $standardHoldBalance += $affiliateCommission;
@@ -144,12 +166,13 @@ class SellerBalanceService
 
         $availableBalance = max(0, $clearedGmv - $totalPayout);
         $totalHoldBalance = $standardHoldBalance + $ticketEscrowBalance;
-        $totalGmv = $clearedGmv + $totalHoldBalance;
+        $totalGmv = $clearedGmv + $totalHoldBalance + $directPosSales;
 
         return [
             'gmv'                    => $totalGmv,
             'cleared_gmv'            => $clearedGmv,
             'available_balance'      => $availableBalance,
+            'direct_pos_sales'       => $directPosSales,
             'standard_hold_balance'  => $standardHoldBalance,
             'ticket_escrow_balance'  => $ticketEscrowBalance,
             'total_hold_balance'     => $totalHoldBalance,

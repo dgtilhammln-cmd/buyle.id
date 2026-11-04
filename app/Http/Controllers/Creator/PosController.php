@@ -1709,9 +1709,14 @@ class PosController extends Controller
         $adminFeeRate    = (float) Setting::get('pos_admin_fee_fixed', 500);
         $posBalance      = (float) ($profile->pos_balance ?? 0);
 
+        $storeName = $profile->store_name ?: ($seller->name ?: 'Kasir POS');
+        $products = Product::where('seller_id', $seller->id)->where('is_active', true)->orderBy('name')->get();
+        $activeTab = $request->query('tab', 'struk');
+
         return view('creator.pos.settings', compact(
             'seller',
             'profile',
+            'storeName',
             'posLogoUrl',
             'posStoreAddress',
             'posStorePhone',
@@ -1724,7 +1729,9 @@ class PosController extends Controller
             'cashiers',
             'platformFeeRate',
             'adminFeeRate',
-            'posBalance'
+            'posBalance',
+            'products',
+            'activeTab'
         ));
     }
 }

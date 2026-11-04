@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 
 @section('title', 'Kasir Digital (POS)')
 @section('page_title', 'Kasir Digital (POS)')
@@ -2597,15 +2597,17 @@
 
         .pos-bottom-nav-wrap {
             display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 0.5rem 1rem env(safe-area-inset-bottom, 0.75rem);
-            z-index: 10000;
-            pointer-events: auto;
-            justify-content: center;
-            background: transparent;
+            position: fixed !important;
+            bottom: 16px !important;
+            left: 14px !important;
+            right: 14px !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            z-index: 10000 !important;
+            pointer-events: none !important;
+            justify-content: center !important;
+            background: transparent !important;
+            padding: 0 !important;
         }
         @media (max-width: 991px) {
             .pos-bottom-nav-wrap {
@@ -2613,18 +2615,18 @@
             }
         }
         .pos-bottom-nav-bar {
-            pointer-events: auto;
-            width: 100%;
-            max-width: 480px;
-            height: 64px;
-            background: #ffffff;
-            border-radius: 999px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.35rem 0.65rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1.5px solid #f1f5f9;
+            pointer-events: auto !important;
+            width: 100% !important;
+            height: 62px !important;
+            background: #ffffff !important;
+            border-radius: 999px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0.35rem 0.65rem !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            border: 1.5px solid #f1f5f9 !important;
+            box-sizing: border-box !important;
         }
         .pos-nav-item {
             display: flex;
@@ -2637,15 +2639,20 @@
             color: #64748b;
             padding: 0;
             outline: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            text-decoration: none;
             -webkit-tap-highlight-color: transparent;
         }
         .pos-nav-item.active {
-            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             color: #ffffff !important;
-            padding: 0.5rem 1.1rem;
-            border-radius: 999px;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
-            gap: 6px;
+            padding: 0.5rem 1.1rem !important;
+            border-radius: 999px !important;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
+            gap: 6px !important;
+            width: auto !important;
         }
         .pos-nav-item.active .pos-nav-label {
             display: inline-block;
@@ -2658,7 +2665,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #f8fafc;
+            background: transparent;
             color: #64748b;
         }
         .pos-nav-item:not(.active):active {
@@ -2887,37 +2894,7 @@
         }
 
         /* -- ELEVATED FLOATING BOTTOM BARS (No Collision, Clean Margin) -- */
-        .pos-bottom-nav-wrap {
-            display: none;
-            position: fixed !important;
-            bottom: 16px !important;
-            left: 14px !important;
-            right: 14px !important;
-            max-width: 320px !important;
-            margin: 0 auto !important;
-            z-index: 10000 !important;
-            pointer-events: auto !important;
-            justify-content: center !important;
-            background: transparent !important;
-            padding: 0 !important;
-        }
-        @media (max-width: 991px) {
-            .pos-bottom-nav-wrap {
-                display: flex !important;
-            }
-        }
-        .pos-bottom-nav-bar {
-            width: 100% !important;
-            height: 62px !important;
-            background: #ffffff !important;
-            border-radius: 999px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            padding: 0.35rem 0.65rem !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
-            border: 1.5px solid #e2e8f0 !important;
-        }
+        /* NOTE: .pos-bottom-nav-wrap & .pos-bottom-nav-bar are defined above (standardized) */
 
         .pos-mobile-floating-bar {
             display: none;
