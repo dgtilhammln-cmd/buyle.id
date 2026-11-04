@@ -288,6 +288,18 @@ Route::get('/screenshots/{file}', function ($file) {
     ]);
 });
 
+// App Downloads — Android & iOS packages
+Route::get('/downloads/{file}', function ($file) {
+    if (!preg_match('/^[a-zA-Z0-9_\-]+\.(zip|apk|ipa|aab)$/i', $file)) abort(404);
+    $path = public_path('downloads/' . $file);
+    if (!file_exists($path)) abort(404);
+    return response()->download($path, $file, [
+        'Content-Type'        => 'application/zip',
+        'Cache-Control'       => 'no-cache',
+        'Content-Disposition' => 'attachment; filename="' . $file . '"',
+    ]);
+});
+
 Route::get('/creator-manifest.json', function () {
     $file = public_path('creator-manifest.json');
     if (!file_exists($file)) abort(404);

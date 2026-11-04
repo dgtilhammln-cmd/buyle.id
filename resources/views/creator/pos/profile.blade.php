@@ -1,4 +1,4 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 
 @section('title', 'Menu & Profil Kasir – Creator Studio')
 @section('page_title', 'Menu & Profil')
@@ -161,6 +161,86 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        margin-top: 2px;
+    }
+
+    /* ── Download App Section ── */
+    .download-app-section {
+        margin-bottom: 1rem;
+    }
+    .download-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.6rem;
+        padding-left: 2px;
+    }
+    .download-cards-row {
+        display: flex;
+        gap: 0.65rem;
+    }
+    .download-app-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.95rem 0.75rem;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.72rem;
+        text-align: center;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        cursor: pointer;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+    .download-app-card:active {
+        transform: scale(0.96);
+    }
+    .download-app-card.android {
+        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(26,115,232,0.28);
+    }
+    .download-app-card.ios {
+        background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+    }
+    .download-app-card .dl-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+    .download-app-card.android .dl-icon { background: rgba(255,255,255,0.15); }
+    .download-app-card.ios .dl-icon { background: rgba(255,255,255,0.1); }
+    .download-app-card .dl-label {
+        font-size: 0.6rem;
+        font-weight: 500;
+        opacity: 0.8;
+        margin-top: -4px;
+    }
+    .download-app-card .dl-name {
+        font-size: 0.75rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+    .download-app-card .dl-badge {
+        font-size: 0.55rem;
+        font-weight: 700;
+        background: rgba(255,255,255,0.18);
+        border-radius: 20px;
+        padding: 2px 8px;
         margin-top: 2px;
     }
 
@@ -503,7 +583,43 @@
         </a>
     </div>
 
-    {{-- 4. Group 1: Kasir Digital & Pengaturan Utama (Pusat Pengaturan POS) --}}
+
+    {{-- 3b. Download App Section --}}
+    <div class="download-app-section">
+        <div class="download-section-title">&#128242; Unduh Aplikasi Kasir</div>
+        <div class="download-cards-row">
+            {{-- Android --}}
+            <a href="/downloads/buyle-kasir-android.zip" download="Buyle-Kasir-Android.zip" class="download-app-card android">
+                <div class="dl-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6.18 15.64a2.18 2.18 0 002.18 2.18c1.2 0 2.18-.98 2.18-2.18V10.6H6.18v5.04zM15.64 2l-1.46 2.52H9.82L8.36 2H6.18L4 5.78C3.37 6.86 3 8.14 3 9.46v.14A3.4 3.4 0 006.4 13h11.2A3.4 3.4 0 0021 9.6v-.14c0-1.32-.37-2.6-1-3.68L17.82 2h-2.18zm0 13.64a2.18 2.18 0 004.36 0V10.6h-4.36v5.04z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="dl-label">Unduh untuk</div>
+                    <div class="dl-name">Android</div>
+                    <div class="dl-label">Google Play Package</div>
+                </div>
+                <div class="dl-badge">&#128230; 2.4 MB</div>
+            </a>
+            {{-- iOS --}}
+            <a href="/downloads/buyle-kasir-ios.zip" download="Buyle-Kasir-iOS.zip" class="download-app-card ios">
+                <div class="dl-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="dl-label">Unduh untuk</div>
+                    <div class="dl-name">iOS / iPhone</div>
+                    <div class="dl-label">App Package</div>
+                </div>
+                <div class="dl-badge">&#128230; 1.6 MB</div>
+            </a>
+        </div>
+    </div>
+
+    {{-- 4b. Group 1: Kasir Digital & Pengaturan Utama (Pusat Pengaturan POS) --}}
     <div class="menu-group-card">
         {{-- Pengaturan POS Baru --}}
         <a href="{{ route('creator.pos.settings') }}" class="menu-group-item">
