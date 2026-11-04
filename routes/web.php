@@ -173,6 +173,49 @@ Route::post('/request-order', [LeadController::class, 'store'])->name('lead.stor
 Route::get('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'showLogin'])->name('pos.login');
 Route::post('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'login'])->name('pos.login.submit');
 
+// PWA Manifest & Service Worker Routes (Explicit delivery for PWABuilder & Server Cache)
+Route::get('/pos-manifest.json', function () {
+    $file = public_path('pos-manifest.json');
+    if (!file_exists($file)) abort(404);
+    return response(file_get_contents($file), 200, [
+        'Content-Type' => 'application/manifest+json; charset=utf-8',
+        'Cache-Control' => 'no-cache, public, max-age=3600',
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+});
+
+Route::get('/sw-pos.js', function () {
+    $file = public_path('sw-pos.js');
+    if (!file_exists($file)) abort(404);
+    return response(file_get_contents($file), 200, [
+        'Content-Type' => 'application/javascript; charset=utf-8',
+        'Cache-Control' => 'no-cache, public, max-age=3600',
+        'Service-Worker-Allowed' => '/',
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+});
+
+Route::get('/creator-manifest.json', function () {
+    $file = public_path('creator-manifest.json');
+    if (!file_exists($file)) abort(404);
+    return response(file_get_contents($file), 200, [
+        'Content-Type' => 'application/manifest+json; charset=utf-8',
+        'Cache-Control' => 'no-cache, public, max-age=3600',
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+});
+
+Route::get('/sw-creator.js', function () {
+    $file = public_path('sw-creator.js');
+    if (!file_exists($file)) abort(404);
+    return response(file_get_contents($file), 200, [
+        'Content-Type' => 'application/javascript; charset=utf-8',
+        'Cache-Control' => 'no-cache, public, max-age=3600',
+        'Service-Worker-Allowed' => '/',
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+});
+
 Route::middleware(['guest'])->group(function () {
     Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login',   [AuthController::class, 'login'])->name('login.submit')->middleware('throttle:login-limit');

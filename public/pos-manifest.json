@@ -9,6 +9,8 @@
   "orientation": "portrait",
   "background_color": "#FFFFFF",
   "theme_color": "#1eb349",
+  "lang": "id",
+  "dir": "ltr",
   "categories": ["business", "finance", "productivity"],
   "icons": [
     {
@@ -34,6 +36,21 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/buyle-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Buyle POS Mobile Kasir"
+    },
+    {
+      "src": "/buyle-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Buyle POS Tablet & Desktop Kasir"
+    }
   ]
 }
-
