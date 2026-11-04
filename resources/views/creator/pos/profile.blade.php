@@ -916,22 +916,30 @@
                 </div>
             </a>
 
-            {{-- Pengaturan Akun Umum --}}
-            <a href="{{ route('creator.profile.edit') }}" class="menu-group-item">
+            {{-- Pengaturan Akun Umum / PIN POS --}}
+            <div class="menu-group-item" style="cursor: pointer;" onclick="openPosPinModal()">
                 <div class="menu-item-left">
                     <div class="menu-item-icon">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                     </div>
-                    <span class="menu-item-title">Keamanan & Password</span>
+                    <div>
+                        <span class="menu-item-title">Keamanan & Password</span>
+                        <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">Atur PIN Masuk POS & Keamanan</div>
+                    </div>
                 </div>
                 <div class="menu-item-right">
+                    @if(!empty(auth()->user()->security_pin))
+                        <span class="menu-item-badge badge-green">PIN Aktif</span>
+                    @else
+                        <span class="menu-item-badge" style="background: #fee2e2; color: #dc2626;">Atur PIN</span>
+                    @endif
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                 </div>
-            </a>
+            </div>
 
             {{-- Logout --}}
             <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
@@ -1230,31 +1238,59 @@
             }
         }
 
+        function playPosNotificationChime() {
+            try {
+                var ctx = new (window.AudioContext || window.webkitAudioContext)();
+                var osc = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.35, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.46);
+            } catch (e) { }
+        }
+
         function showLocalNativeNotification(title, body) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+            playPosNotificationChime();
+
+            var options = {
+                body: body,
+                icon: "/pos-icon-192.png",
+                badge: "/pos-icon-192.png",
+                vibrate: [200, 100, 200, 100, 200],
+                requireInteraction: true,
+                data: { url: "/creator/pos" }
+            };
+
+            // Priority 1: ServiceWorker registration showNotification (always works reliably in PWAs and modern browsers)
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.ready.then(function (reg) {
+                    if (reg && reg.showNotification) {
+                        reg.showNotification(title, options);
+                    }
+                }).catch(function () {
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        try { new Notification(title, options); } catch(err) { }
+                    }
+                });
+            } else if ("Notification" in window && Notification.permission === "granted") {
+                try { new Notification(title, options); } catch(err) { }
+            }
+
+            // Also post message to active controller SW if available
+            if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+                try {
                     navigator.serviceWorker.controller.postMessage({
                         type: "SHOW_NOTIFICATION",
                         title: title,
-                        options: {
-                            body: body,
-                            icon: "/buyle-logo.png",
-                            badge: "/buyle-logo.png",
-                            vibrate: [200, 100, 200]
-                        }
+                        options: options
                     });
-                } else {
-                    try {
-                        new Notification(title, {
-                            body: body,
-                            icon: "/buyle-logo.png"
-                        });
-                    } catch (e) {
-                        navigator.serviceWorker.ready.then(function (reg) {
-                            reg.showNotification(title, { body: body, icon: "/buyle-logo.png" });
-                        });
-                    }
-                }
+                } catch(e) { }
             }
         }
 
