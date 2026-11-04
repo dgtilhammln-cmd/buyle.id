@@ -864,6 +864,23 @@
         $hasAppPin = $authUser && !empty($authUser->security_pin);
         $hasBiometric = $authUser && (bool) $authUser->biometric_enabled;
         $hasSecurityLock = $hasAppPin || $hasBiometric;
+
+        // Fallback Avatar: 1. Pos Receipt Logo -> 2. Creator Profile Avatar -> 3. User Avatar
+        $authSeller = ($authUser && $authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $authCp = $authSeller ? \App\Models\CreatorProfile::where('user_id', $authSeller->id)->first() : null;
+
+        $lockAvatarUrl = null;
+        if (!empty($authCp?->pos_logo)) {
+            $lockAvatarUrl = asset('storage/' . $authCp->pos_logo);
+        } elseif (!empty($authCp?->avatar)) {
+            $rawAv = $authCp->avatar;
+            $lockAvatarUrl = \Illuminate\Support\Str::startsWith($rawAv, ['http://', 'https://']) ? $rawAv : asset('storage/' . $rawAv);
+        } elseif (!empty($authUser?->avatar)) {
+            $rawAv = $authUser->avatar;
+            $lockAvatarUrl = \Illuminate\Support\Str::startsWith($rawAv, ['http://', 'https://']) ? $rawAv : asset('storage/' . $rawAv);
+        }
     @endphp
 
     @if($hasSecurityLock)
@@ -874,9 +891,14 @@
                 <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id"
                     style="max-width:140px; height:auto; margin-bottom:1.25rem;">
 
-                <div
-                    style="width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-weight:700; font-size:1.3rem; box-shadow:0 4px 14px rgba(30,179,73,0.3); border:2px solid #fff;">
-                    {{ strtoupper(substr($authUser->name ?? 'C', 0, 1)) }}
+                <div style="width:68px; height:68px; border-radius:50%; margin:0 auto 0.75rem; box-shadow:0 4px 16px rgba(0,0,0,0.1); border:2.5px solid #ffffff; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f8fafc;">
+                    @if($lockAvatarUrl)
+                        <img src="{{ $lockAvatarUrl }}" alt="{{ $authUser->name ?? 'Kasir' }}" style="width:100%; height:100%; object-fit:cover;">
+                    @else
+                        <div style="width:100%; height:100%; background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.35rem;">
+                            {{ strtoupper(substr($authUser->name ?? 'C', 0, 1)) }}
+                        </div>
+                    @endif
                 </div>
                 <h2 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem;">{{ $authUser->name }}
                 </h2>
@@ -949,12 +971,16 @@
                         </button>
                     </div>
 
-                    <div style="margin-top:1.25rem;">
-                        <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                    <div style="margin-top:1.35rem; display:flex; align-items:center; justify-content:center; gap:1.25rem;">
+                        <button type="button" onclick="openForgotPinModal()"
+                            style="background:none; border:none; color:#16a34a; font-size:0.78rem; font-weight:700; cursor:pointer; padding:4px 8px; border-radius:6px; transition:background 0.15s ease;">
+                            Lupa PIN?
+                        </button>
+                        <form action="{{ route('logout') }}" method="POST" style="margin:0; display:inline;">
                             @csrf
                             <button type="submit"
                                 style="background:none; border:none; color:#94a3b8; font-size:0.75rem; text-decoration:underline; cursor:pointer;">
-                                Lupa PIN? Masuk Ulang Akun
+                                Masuk Ulang Akun
                             </button>
                         </form>
                     </div>
@@ -2194,6 +2220,215 @@
         @endif
     </script>
     @yield('scripts')
+
+    <!-- ── POPUP LUPA PIN POS (VERIFIKASI EMAIL & OTP) ── -->
+    <div id="forgotPinModal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.25rem;">
+        <div style="background:#ffffff; border-radius:24px; max-width:380px; width:100%; padding:1.5rem; box-shadow:0 24px 48px rgba(15,23,42,0.25); position:relative; text-align:left; animation:slideUpPos 0.25s ease;">
+            <button type="button" onclick="closeForgotPinModal()" style="position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:#f1f5f9; border:none; color:#64748b; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+
+            <!-- STEP 1: Input Email -->
+            <div id="forgotStep1">
+                <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Lupa PIN Masuk POS</div>
+                <div style="font-size:0.75rem; color:#64748b; line-height:1.4; margin-bottom:1.2rem;">Masukkan email akun yang terdaftar untuk menerima kode verifikasi OTP.</div>
+
+                <div id="forgotAlert1" style="display:none; padding:8px 12px; border-radius:10px; font-size:0.75rem; margin-bottom:1rem;"></div>
+
+                <div style="margin-bottom:1.2rem;">
+                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Email Terdaftar</label>
+                    <input type="email" id="forgotInputEmail" value="{{ $authUser->email ?? '' }}" placeholder="email@domain.com"
+                        style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:0.85rem; color:#0f172a; outline:none; font-family:inherit;">
+                </div>
+
+                <button type="button" id="btnSendForgotOtp" onclick="submitSendForgotOtp()"
+                    style="width:100%; height:44px; border-radius:12px; background:#0f172a; color:#ffffff; font-weight:700; font-size:0.85rem; border:none; cursor:pointer; transition:opacity 0.15s ease;">
+                    Kirim Kode OTP
+                </button>
+            </div>
+
+            <!-- STEP 2: Input OTP & PIN Baru -->
+            <div id="forgotStep2" style="display:none;">
+                <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Verifikasi & Buat PIN Baru</div>
+                <div style="font-size:0.75rem; color:#64748b; line-height:1.4; margin-bottom:1.2rem;">Masukkan kode 6-digit OTP dari email dan tentukan 6-digit PIN baru Anda.</div>
+
+                <div id="forgotAlert2" style="display:none; padding:8px 12px; border-radius:10px; font-size:0.75rem; margin-bottom:1rem;"></div>
+
+                <div style="margin-bottom:0.9rem;">
+                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Kode OTP (6 Digit)</label>
+                    <input type="text" id="forgotInputOtp" maxlength="6" placeholder="Contoh: 123456"
+                        style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:1.1rem; letter-spacing:0.25em; text-align:center; font-weight:800; color:#0f172a; outline:none;">
+                </div>
+
+                <div style="margin-bottom:0.9rem;">
+                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">PIN Baru (6 Digit Angka)</label>
+                    <input type="password" id="forgotNewPin" maxlength="6" inputmode="numeric" placeholder="••••••"
+                        style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:1.1rem; letter-spacing:0.25em; text-align:center; font-weight:800; color:#0f172a; outline:none;">
+                </div>
+
+                <div style="margin-bottom:1.2rem;">
+                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Konfirmasi PIN Baru</label>
+                    <input type="password" id="forgotConfirmPin" maxlength="6" inputmode="numeric" placeholder="••••••"
+                        style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:1.1rem; letter-spacing:0.25em; text-align:center; font-weight:800; color:#0f172a; outline:none;">
+                </div>
+
+                <button type="button" id="btnSubmitResetPin" onclick="submitResetPinForm()"
+                    style="width:100%; height:44px; border-radius:12px; background:#16a34a; color:#ffffff; font-weight:700; font-size:0.85rem; border:none; cursor:pointer; margin-bottom:0.6rem;">
+                    Simpan PIN & Buka Kasir
+                </button>
+
+                <div style="text-align:center;">
+                    <button type="button" onclick="backToForgotStep1()" style="background:none; border:none; color:#64748b; font-size:0.72rem; cursor:pointer;">
+                        Kirim ulang kode OTP
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openForgotPinModal() {
+            document.getElementById('forgotPinModal').style.display = 'flex';
+            document.getElementById('forgotStep1').style.display = 'block';
+            document.getElementById('forgotStep2').style.display = 'none';
+            var a1 = document.getElementById('forgotAlert1');
+            if (a1) a1.style.display = 'none';
+            var a2 = document.getElementById('forgotAlert2');
+            if (a2) a2.style.display = 'none';
+        }
+
+        function closeForgotPinModal() {
+            document.getElementById('forgotPinModal').style.display = 'none';
+        }
+
+        function backToForgotStep1() {
+            document.getElementById('forgotStep1').style.display = 'block';
+            document.getElementById('forgotStep2').style.display = 'none';
+        }
+
+        async function submitSendForgotOtp() {
+            var email = document.getElementById('forgotInputEmail').value.trim();
+            var alertBox = document.getElementById('forgotAlert1');
+            var btn = document.getElementById('btnSendForgotOtp');
+
+            if (!email) {
+                alertBox.innerText = 'Silakan masukkan alamat email Anda.';
+                alertBox.style.background = '#fee2e2';
+                alertBox.style.color = '#dc2626';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = 'Mengirim kode OTP...';
+
+            try {
+                var csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                var res = await fetch('{{ route("creator.pos.forgot-pin.send-otp") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+                    body: JSON.stringify({ email: email })
+                });
+                var data = await res.json();
+
+                if (data.success) {
+                    document.getElementById('forgotStep1').style.display = 'none';
+                    document.getElementById('forgotStep2').style.display = 'block';
+                    var a2 = document.getElementById('forgotAlert2');
+                    a2.innerText = data.message;
+                    a2.style.background = '#f0fdf4';
+                    a2.style.color = '#16a34a';
+                    a2.style.display = 'block';
+                } else {
+                    alertBox.innerText = data.message || 'Gagal mengirim kode OTP.';
+                    alertBox.style.background = '#fee2e2';
+                    alertBox.style.color = '#dc2626';
+                    alertBox.style.display = 'block';
+                }
+            } catch (err) {
+                alertBox.innerText = 'Terjadi kesalahan koneksi.';
+                alertBox.style.background = '#fee2e2';
+                alertBox.style.color = '#dc2626';
+                alertBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Kirim Kode OTP';
+            }
+        }
+
+        async function submitResetPinForm() {
+            var email = document.getElementById('forgotInputEmail').value.trim();
+            var otp = document.getElementById('forgotInputOtp').value.trim();
+            var pin = document.getElementById('forgotNewPin').value.trim();
+            var pinConf = document.getElementById('forgotConfirmPin').value.trim();
+            var alertBox = document.getElementById('forgotAlert2');
+            var btn = document.getElementById('btnSubmitResetPin');
+
+            if (otp.length < 4) {
+                alertBox.innerText = 'Masukkan kode OTP yang valid.';
+                alertBox.style.background = '#fee2e2';
+                alertBox.style.color = '#dc2626';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            if (pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+                alertBox.innerText = 'PIN baru harus tepat 6 digit angka.';
+                alertBox.style.background = '#fee2e2';
+                alertBox.style.color = '#dc2626';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            if (pin !== pinConf) {
+                alertBox.innerText = 'Konfirmasi PIN baru tidak cocok.';
+                alertBox.style.background = '#fee2e2';
+                alertBox.style.color = '#dc2626';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan PIN...';
+
+            try {
+                var csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                var res = await fetch('{{ route("creator.pos.forgot-pin.reset") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+                    body: JSON.stringify({
+                        email: email,
+                        otp: otp,
+                        new_pin: pin,
+                        new_pin_confirmation: pinConf
+                    })
+                });
+                var data = await res.json();
+
+                if (data.success) {
+                    sessionStorage.setItem('pwa_unlocked', '1');
+                    closeForgotPinModal();
+                    var lockScreen = document.getElementById('pwaAppLockScreen');
+                    if (lockScreen) {
+                        lockScreen.style.transition = 'opacity 0.25s ease';
+                        lockScreen.style.opacity = '0';
+                        setTimeout(() => { lockScreen.style.display = 'none'; }, 250);
+                    }
+                } else {
+                    alertBox.innerText = data.message || 'Gagal reset PIN.';
+                    alertBox.style.background = '#fee2e2';
+                    alertBox.style.color = '#dc2626';
+                    alertBox.style.display = 'block';
+                }
+            } catch (err) {
+                alertBox.innerText = 'Terjadi kesalahan koneksi.';
+                alertBox.style.background = '#fee2e2';
+                alertBox.style.color = '#dc2626';
+                alertBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Simpan PIN & Buka Kasir';
+            }
+        }
+    </script>
 </body>
 
 </html>

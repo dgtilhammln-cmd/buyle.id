@@ -875,6 +875,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/pos/quick-category', [\App\Http\Controllers\Creator\PosController::class, 'quickCategory'])->name('pos.quick-category');
     Route::post('/pos/verify-pin', [\App\Http\Controllers\Creator\PosController::class, 'verifyPin'])->name('pos.verify-pin');
     Route::post('/pos/set-pin', [\App\Http\Controllers\Creator\PosController::class, 'setPin'])->name('pos.set-pin');
+    Route::post('/pos/forgot-pin/send-otp', [\App\Http\Controllers\Creator\PosController::class, 'sendForgotPinOtp'])->name('pos.forgot-pin.send-otp');
+    Route::post('/pos/forgot-pin/reset', [\App\Http\Controllers\Creator\PosController::class, 'resetPinWithOtp'])->name('pos.forgot-pin.reset');
     Route::post('/pos/push/subscribe', [\App\Http\Controllers\Creator\PosController::class, 'savePushSubscription'])->name('pos.push.subscribe');
     Route::post('/pos/push/test', [\App\Http\Controllers\Creator\PosController::class, 'testPushNotification'])->name('pos.push.test');
     Route::get('/pos/notifications/check', [\App\Http\Controllers\Creator\PosController::class, 'checkNewNotifications'])->name('pos.notifications.check');

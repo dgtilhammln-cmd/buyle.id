@@ -1820,6 +1820,95 @@ class PosController extends Controller
     }
 
     /**
+     * Kirim OTP ke email terdaftar untuk reset PIN POS yang lupa.
+     */
+    public function sendForgotPinOtp(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = auth()->user();
+
+        if (strtolower(trim($user->email)) !== strtolower(trim($request->email))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email tidak sesuai dengan akun yang sedang aktif.'
+            ], 422);
+        }
+
+        $otpCode = (string) rand(100000, 999999);
+        $expiresAt = time() + (5 * 60); // 5 menit
+
+        session([
+            'pos_pin_reset_otp'        => $otpCode,
+            'pos_pin_reset_email'      => $user->email,
+            'pos_pin_reset_expires_at' => $expiresAt,
+        ]);
+
+        try {
+            $user->notify(new \App\Notifications\OtpVerificationNotification($otpCode, $user->name));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal kirim email OTP Reset PIN: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kode OTP verifikasi telah dikirim ke ' . $user->email . '. Periksa kotak masuk atau spam.'
+        ]);
+    }
+
+    /**
+     * Konfirmasi OTP dan set PIN baru untuk POS.
+     */
+    public function resetPinWithOtp(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'email'                 => 'required|email',
+            'otp'                   => 'required|string',
+            'new_pin'               => 'required|digits_between:4,6',
+            'new_pin_confirmation'  => 'required|same:new_pin',
+        ]);
+
+        $user = auth()->user();
+
+        if (strtolower(trim($user->email)) !== strtolower(trim($request->email))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email tidak sesuai dengan akun kasir.'
+            ], 422);
+        }
+
+        $sessionOtp = session('pos_pin_reset_otp');
+        $sessionExpires = session('pos_pin_reset_expires_at');
+
+        if (!$sessionOtp || time() > $sessionExpires) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP telah kadaluarsa. Silakan kirim ulang OTP.'
+            ], 422);
+        }
+
+        if (trim($request->otp) !== trim($sessionOtp)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP tidak cocok. Periksa kembali email Anda.'
+            ], 422);
+        }
+
+        $user->security_pin = \Illuminate\Support\Facades\Hash::make($request->new_pin);
+        $user->save();
+
+        session()->forget(['pos_pin_reset_otp', 'pos_pin_reset_email', 'pos_pin_reset_expires_at']);
+        session(['pos_unlocked' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'PIN POS baru berhasil disimpan dan kasir telah dibuka!'
+        ]);
+    }
+
+    /**
      * Simpan langganan Web Push Notification browser.
      */
     public function savePushSubscription(\Illuminate\Http\Request $request)

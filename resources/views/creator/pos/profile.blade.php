@@ -864,33 +864,7 @@
                 </div>
             </div>
 
-            {{-- PIN Masuk POS --}}
-            <div class="menu-group-item" style="cursor: pointer;" onclick="openPosPinModal()">
-                <div class="menu-item-left">
-                    <div class="menu-item-icon" style="background: #fef3c7; color: #d97706;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="menu-item-title" style="font-weight: 600;">PIN Masuk POS (Lock Screen)</span>
-                        <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">Kunci 6-digit saat buka aplikasi PWA
-                        </div>
-                    </div>
-                </div>
-                <div class="menu-item-right">
-                    @if(!empty(auth()->user()->security_pin))
-                        <span class="menu-item-badge badge-green">Aktif</span>
-                    @else
-                        <span class="menu-item-badge" style="background: #fee2e2; color: #dc2626;">Belum Diatur</span>
-                    @endif
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </div>
-            </div>
+
         </div>
 
         {{-- 6. Group 3: Akun, Penarikan & Logout --}}
