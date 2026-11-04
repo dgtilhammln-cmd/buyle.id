@@ -164,86 +164,90 @@
         margin-top: 2px;
     }
 
-    /* ── Download App Section ── */
+        /* ── Download App Section ── */
     .download-app-section {
-        margin-bottom: 1rem;
+        margin-bottom: 1.15rem;
     }
     .download-section-title {
         font-size: 0.72rem;
         font-weight: 700;
-        color: #64748b;
+        color: #475569;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.65rem;
         padding-left: 2px;
     }
     .download-cards-row {
-        display: flex;
-        gap: 0.65rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
     }
     .download-app-card {
-        flex: 1;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.95rem 0.75rem;
-        border-radius: 16px;
+        gap: 0.75rem;
+        padding: 0.85rem 0.95rem;
+        border-radius: 14px;
         text-decoration: none;
-        font-weight: 700;
-        font-size: 0.72rem;
-        text-align: center;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        color: #0f172a;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
         cursor: pointer;
-        border: none;
-        position: relative;
-        overflow: hidden;
     }
     .download-app-card:active {
-        transform: scale(0.96);
+        transform: scale(0.97);
     }
-    .download-app-card.android {
-        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-        color: #ffffff;
-        box-shadow: 0 4px 16px rgba(26,115,232,0.28);
+    .download-app-card.android:hover {
+        border-color: #22c55e;
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.12);
     }
-    .download-app-card.ios {
-        background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
-        color: #ffffff;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+    .download-app-card.ios:hover {
+        border-color: #0f172a;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
     }
-    .download-app-card .dl-icon {
-        width: 36px;
-        height: 36px;
+    .download-app-card .dl-icon-wrapper {
+        width: 38px;
+        height: 38px;
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.3rem;
+        flex-shrink: 0;
     }
-    .download-app-card.android .dl-icon { background: rgba(255,255,255,0.15); }
-    .download-app-card.ios .dl-icon { background: rgba(255,255,255,0.1); }
-    .download-app-card .dl-label {
-        font-size: 0.6rem;
-        font-weight: 500;
-        opacity: 0.8;
-        margin-top: -4px;
+    .download-app-card.android .dl-icon-wrapper {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+    .download-app-card.ios .dl-icon-wrapper {
+        background: #f8fafc;
+        color: #0f172a;
+        border: 1px solid #e2e8f0;
+    }
+    .download-app-card .dl-text-col {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
     }
     .download-app-card .dl-name {
-        font-size: 0.75rem;
-        font-weight: 800;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #0f172a;
         line-height: 1.2;
     }
-    .download-app-card .dl-badge {
-        font-size: 0.55rem;
-        font-weight: 700;
-        background: rgba(255,255,255,0.18);
-        border-radius: 20px;
-        padding: 2px 8px;
+    .download-app-card .dl-sub {
+        font-size: 0.65rem;
+        color: #64748b;
+        font-weight: 500;
         margin-top: 2px;
     }
-
+    .download-app-card .dl-action-icon {
+        margin-left: auto;
+        color: #94a3b8;
+        flex-shrink: 0;
+    }
     /* ── CARD 2: Dark Modern Tier Banner ── */
     .tier-modern-banner {
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -584,37 +588,48 @@
     </div>
 
 
-    {{-- 3b. Download App Section --}}
+        {{-- 3b. Download App Section --}}
     <div class="download-app-section">
-        <div class="download-section-title">&#128242; Unduh Aplikasi Kasir</div>
+        <div class="download-section-title">Unduh Aplikasi Kasir</div>
         <div class="download-cards-row">
-            {{-- Android --}}
-            <a href="/downloads/buyle-kasir-android.zip" download="Buyle-Kasir-Android.zip" class="download-app-card android">
-                <div class="dl-icon">
+            {{-- Android APK Langsung --}}
+            <a href="/downloads/buyle-pos.apk" download="Buyle-POS.apk" class="download-app-card android">
+                <div class="dl-icon-wrapper">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6.18 15.64a2.18 2.18 0 002.18 2.18c1.2 0 2.18-.98 2.18-2.18V10.6H6.18v5.04zM15.64 2l-1.46 2.52H9.82L8.36 2H6.18L4 5.78C3.37 6.86 3 8.14 3 9.46v.14A3.4 3.4 0 006.4 13h11.2A3.4 3.4 0 0021 9.6v-.14c0-1.32-.37-2.6-1-3.68L17.82 2h-2.18zm0 13.64a2.18 2.18 0 004.36 0V10.6h-4.36v5.04z"/>
+                        <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.996-3.456c.106-.183.044-.417-.139-.523-.184-.106-.417-.044-.523.139l-2.028 3.512C15.587 8.358 13.856 8 12 8s-3.587.358-5.186.993L4.786 5.481c-.106-.183-.339-.245-.523-.139-.183.106-.245.34-.139.523l1.996 3.456C2.69 11.002.32 14.288 0 18.25h24c-.32-3.962-2.69-7.248-6.1185-8.9286"/>
                     </svg>
                 </div>
-                <div>
-                    <div class="dl-label">Unduh untuk</div>
+                <div class="dl-text-col">
                     <div class="dl-name">Android</div>
-                    <div class="dl-label">Google Play Package</div>
+                    <div class="dl-sub">Download APK (1.4 MB)</div>
                 </div>
-                <div class="dl-badge">&#128230; 2.4 MB</div>
-            </a>
-            {{-- iOS --}}
-            <a href="/downloads/buyle-kasir-ios.zip" download="Buyle-Kasir-iOS.zip" class="download-app-card ios">
-                <div class="dl-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                <div class="dl-action-icon">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
                 </div>
-                <div>
-                    <div class="dl-label">Unduh untuk</div>
-                    <div class="dl-name">iOS / iPhone</div>
-                    <div class="dl-label">App Package</div>
+            </a>
+
+            {{-- iOS / iPhone --}}
+            <a href="/downloads/buyle-kasir-ios.zip" download="Buyle-POS-iOS.zip" class="download-app-card ios">
+                <div class="dl-icon-wrapper">
+                    <svg width="20" height="20" viewBox="0 0 170 170" fill="currentColor">
+                        <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.58-7.7-11.64-13.98-5.87-9.01-10.45-19.12-13.75-30.34-3.3-11.21-4.96-21.75-4.96-31.62 0-14.78 3.78-26.65 11.34-35.61 7.56-8.96 17.07-13.54 28.53-13.75 4.8 0 10.4 1.25 16.8 3.75 6.4 2.5 10.47 3.8 12.2 3.9 1.48 0 5.68-1.3 12.6-3.9 6.92-2.6 12.7-3.8 17.34-3.6 13.06.6 23.33 5.43 30.8 14.5-11.44 6.93-17.05 16.48-16.82 28.65.23 9.77 3.99 17.77 11.28 24 7.29 6.23 15.7 9.63 25.22 10.2-2.18 6.42-4.91 12.98-8.19 19.68zM119.22 31.84c0-7.39 2.66-14.28 7.98-20.67 5.32-6.39 11.83-10.42 19.53-12.09 1.09 7.61-.95 14.75-6.12 21.42-5.17 6.67-11.96 10.74-20.37 12.21-.33-.29-.67-.58-1.02-.87z"/>
+                    </svg>
                 </div>
-                <div class="dl-badge">&#128230; 1.6 MB</div>
+                <div class="dl-text-col">
+                    <div class="dl-name">iOS / iPhone</div>
+                    <div class="dl-sub">Xcode Package (1.6 MB)</div>
+                </div>
+                <div class="dl-action-icon">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </div>
             </a>
         </div>
     </div>
