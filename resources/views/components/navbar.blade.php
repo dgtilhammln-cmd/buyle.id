@@ -174,7 +174,19 @@
         display: inline-block;
     }
 
-    #shortcut-menu-wrap:hover #shortcutDropdown,
+    @media (hover: hover) and (pointer: fine) {
+        #shortcut-menu-wrap:hover #shortcutDropdown {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+            pointer-events: auto !important;
+        }
+
+        #shortcut-menu-wrap:hover .nav-shortcut-btn {
+            color: #1eb349;
+        }
+    }
+
     #shortcut-menu-wrap.open #shortcutDropdown,
     #shortcutDropdown.open {
         opacity: 1 !important;
@@ -183,7 +195,6 @@
         pointer-events: auto !important;
     }
 
-    #shortcut-menu-wrap:hover .nav-shortcut-btn,
     #shortcut-menu-wrap.open .nav-shortcut-btn {
         color: #1eb349;
     }
@@ -317,7 +328,19 @@
         position: relative;
     }
 
-    #user-menu-wrap:hover #userDropdown,
+    @media (hover: hover) and (pointer: fine) {
+        #user-menu-wrap:hover #userDropdown {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+            pointer-events: auto !important;
+        }
+
+        #user-menu-wrap:hover .user-chevron {
+            transform: rotate(180deg);
+        }
+    }
+
     #user-menu-wrap.open #userDropdown,
     #userDropdown.open {
         opacity: 1 !important;
@@ -326,7 +349,6 @@
         pointer-events: auto !important;
     }
 
-    #user-menu-wrap:hover .user-chevron,
     #user-menu-wrap.open .user-chevron,
     #userDropdown.open~button .user-chevron {
         transform: rotate(180deg);
@@ -379,21 +401,45 @@
         transition: background 0.15s, color 0.15s;
     }
 
-    .creator-submenu-wrap:hover .creator-menu-trigger,
-    .creator-submenu-wrap.open .creator-menu-trigger {
-        background: #F0FDF4;
-        color: #16a34a;
-    }
-
     .creator-submenu-arrow {
         color: #94A3B8;
         transition: transform 0.2s ease, color 0.2s ease;
     }
 
-    .creator-submenu-wrap:hover .creator-submenu-arrow,
+    @media (hover: hover) and (pointer: fine) {
+        .creator-submenu-wrap:hover .creator-menu-trigger {
+            background: #F0FDF4;
+            color: #16a34a;
+        }
+
+        .creator-submenu-wrap:hover .creator-submenu-arrow {
+            color: #16a34a;
+            transform: translateX(-3px);
+        }
+
+        .creator-submenu-wrap:hover .creator-flyout-menu {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateX(0) !important;
+            pointer-events: auto !important;
+        }
+    }
+
+    .creator-submenu-wrap.open .creator-menu-trigger {
+        background: #F0FDF4;
+        color: #16a34a;
+    }
+
     .creator-submenu-wrap.open .creator-submenu-arrow {
         color: #16a34a;
         transform: translateX(-3px);
+    }
+
+    .creator-submenu-wrap.open .creator-flyout-menu {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+        pointer-events: auto !important;
     }
 
     /* Flyout to the LEFT on Desktop */
@@ -438,14 +484,6 @@
         transform: rotate(45deg);
     }
 
-    .creator-submenu-wrap:hover .creator-flyout-menu,
-    .creator-submenu-wrap.open .creator-flyout-menu {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateX(0) !important;
-        pointer-events: auto !important;
-    }
-
     .creator-sub-item {
         display: flex;
         align-items: center;
@@ -477,29 +515,40 @@
     }
 
     /* ── Mobile Friendly Adaptation ── */
-    @media (max-width: 640px) {
+    @media (max-width: 991px) {
         .creator-submenu-arrow {
-            transform: rotate(-90deg);
+            transform: rotate(-90deg) !important;
+            transition: transform 0.2s ease !important;
         }
 
         .creator-submenu-wrap.open .creator-submenu-arrow {
-            transform: rotate(90deg);
+            transform: rotate(90deg) !important;
         }
 
+        /* By default on mobile, creator flyout menu is completely HIDDEN */
         .creator-flyout-menu {
+            display: none !important;
             position: static !important;
             box-shadow: none !important;
             border: none !important;
             border-left: 2px solid #86efac !important;
             border-radius: 0 12px 12px 0 !important;
-            margin: 0.25rem 0 0.4rem 1.25rem !important;
+            margin: 0.25rem 0 0.4rem 1rem !important;
             background: #F8FAFC !important;
             padding: 0.35rem !important;
             transform: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            min-width: 0 !important;
+        }
+
+        /* ONLY display and show when creator-submenu-wrap has .open */
+        .creator-submenu-wrap.open .creator-flyout-menu {
+            display: block !important;
             opacity: 1 !important;
             visibility: visible !important;
             pointer-events: auto !important;
-            min-width: 0 !important;
         }
 
         .creator-flyout-caret,
@@ -1448,21 +1497,28 @@
                             </a>
                         @else
                             <div class="creator-submenu-wrap">
-                                <a href="{{ route('creator.dashboard') }}" class="creator-menu-trigger">
-                                    <div style="display:flex;align-items:center;gap:0.6rem;">
-                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                            <line x1="3" y1="9" x2="21" y2="9" />
-                                            <line x1="9" y1="21" x2="9" y2="9" />
+                                <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                                    <a href="{{ route('creator.dashboard') }}" class="creator-menu-trigger" style="flex:1;">
+                                        <div style="display:flex;align-items:center;gap:0.6rem;">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                                <line x1="3" y1="9" x2="21" y2="9" />
+                                                <line x1="9" y1="21" x2="9" y2="9" />
+                                            </svg>
+                                            <span>Dashboard Creator</span>
+                                        </div>
+                                    </a>
+                                    <button type="button" class="creator-submenu-toggle-btn"
+                                        onclick="event.preventDefault(); event.stopPropagation(); this.closest('.creator-submenu-wrap').classList.toggle('open');"
+                                        title="Buka Menu Kreator"
+                                        style="background:none;border:none;padding:0.65rem 0.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#94A3B8;border-radius:8px;">
+                                        <svg class="creator-submenu-arrow" width="12" height="12" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="15 18 9 12 15 6" />
                                         </svg>
-                                        <span>Dashboard Creator</span>
-                                    </div>
-                                    <svg class="creator-submenu-arrow" width="12" height="12" fill="none" stroke="currentColor"
-                                        stroke-width="2.5" viewBox="0 0 24 24">
-                                        <polyline points="15 18 9 12 15 6" />
-                                    </svg>
-                                </a>
+                                    </button>
+                                </div>
 
                                 {{-- Sub Menu Flyout (Muncul di Kiri pada Desktop, Indented pada Mobile) --}}
                                 <div class="creator-flyout-menu">
@@ -1652,16 +1708,40 @@
 
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Scroll effect
         const navbar = document.querySelector('.pill-navbar-inner');
-        if (navbar) {
-            window.addEventListener('scroll', function () {
-                navbar.classList.toggle('navbar-scrolled', window.scrollY > 50);
-            });
-        }
 
-        // Shortcut dropdown outside click listener
+        // Scroll listener: handle navbar style and auto-close dropdowns
+        window.addEventListener('scroll', function () {
+            if (navbar) {
+                navbar.classList.toggle('navbar-scrolled', window.scrollY > 50);
+            }
+            // Auto close user dropdown and creator submenus on scroll
+            const uWrap = document.getElementById('user-menu-wrap');
+            if (uWrap && (uWrap.classList.contains('open') || document.getElementById('userDropdown')?.classList.contains('open'))) {
+                uWrap.classList.remove('open');
+                document.getElementById('userDropdown')?.classList.remove('open');
+                document.querySelectorAll('.creator-submenu-wrap').forEach(function (w) {
+                    w.classList.remove('open');
+                });
+            }
+            // Auto close shortcut dropdown on scroll
+            const sWrap = document.getElementById('shortcut-menu-wrap');
+            if (sWrap && (sWrap.classList.contains('open') || document.getElementById('shortcutDropdown')?.classList.contains('open'))) {
+                sWrap.classList.remove('open');
+                document.getElementById('shortcutDropdown')?.classList.remove('open');
+            }
+        }, { passive: true });
+
+        // Outside click listener for both user and shortcut menus
         document.addEventListener('click', function (e) {
+            const uWrap = document.getElementById('user-menu-wrap');
+            if (uWrap && !uWrap.contains(e.target)) {
+                uWrap.classList.remove('open');
+                document.getElementById('userDropdown')?.classList.remove('open');
+                document.querySelectorAll('.creator-submenu-wrap').forEach(function (w) {
+                    w.classList.remove('open');
+                });
+            }
             const sWrap = document.getElementById('shortcut-menu-wrap');
             if (sWrap && !sWrap.contains(e.target)) {
                 sWrap.classList.remove('open');
