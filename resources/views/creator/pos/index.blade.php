@@ -3611,7 +3611,8 @@
             <div id="posTransactionsListContainer">
                 @forelse($recentPosOrders ?? $todayOrders as $ord)
                     @php
-                        $payMethod = strtolower($ord->payment_method ?? ($ord->payment?->payment_type ?? 'cash'));
+                        $payMethodRaw = $ord->payment_method ?? ($ord->payment?->payment_type ?? 'cash');
+                        $payMethod = strtolower(is_object($payMethodRaw) ? ($payMethodRaw->value ?? $payMethodRaw->name ?? 'cash') : ($payMethodRaw ?? 'cash'));
                         $totalVal = (float) ($ord->total ?? $ord->total_amount ?? 0);
                         $statusStr = is_string($ord->status) ? $ord->status : ($ord->status?->value ?? $ord->status?->name ?? '');
                         $isPaidOrd = in_array(strtolower($statusStr), ['completed', 'paid', 'success', 'confirmed']);
@@ -5772,7 +5773,8 @@
                         @forelse($todayOrders as $idx => $tOrd)
                             @php
                                 $tAddr = is_array($tOrd->shipping_address) ? $tOrd->shipping_address : (json_decode($tOrd->shipping_address ?? '', true) ?? []);
-                                $tPayMethod = $tAddr['payment_method'] ?? ($tOrd->payment?->method ?? 'cash');
+                                $tPayMethodRaw = $tAddr['payment_method'] ?? ($tOrd->payment?->method ?? ($tOrd->payment_method ?? 'cash'));
+                                $tPayMethod = is_object($tPayMethodRaw) ? ($tPayMethodRaw->value ?? $tPayMethodRaw->name ?? 'cash') : ($tPayMethodRaw ?? 'cash');
                                 $isCash = strtolower($tPayMethod) === 'cash';
                             @endphp
                             <div class="pos-trx-card" onclick="reprintPastReceipt({{ $tOrd->id }})">

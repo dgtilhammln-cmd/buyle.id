@@ -138,3 +138,51 @@ self.addEventListener('notificationclick', (event) => {
     );
 });
 
+// Background Sync: Sync pending POS notifications when connectivity restored
+self.addEventListener('sync', (event) => {
+    if (event.tag === 'pos-sync' || event.tag === 'sync-pos-transactions') {
+        event.waitUntil(
+            fetch('/creator/pos/notifications/check', { credentials: 'same-origin' })
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    if (data && data.success && data.notifications && data.notifications.length > 0) {
+                        return Promise.all(data.notifications.map(n =>
+                            self.registration.showNotification(n.title || 'Buyle POS', {
+                                body: n.body || 'Ada transaksi baru.',
+                                icon: '/pos-icon-192.png',
+                                badge: '/pos-icon-192.png',
+                                vibrate: [200, 100, 200],
+                                data: { url: n.url || '/creator/pos' },
+                                requireInteraction: true
+                            })
+                        ));
+                    }
+                })
+                .catch(() => { /* silently fail when offline */ })
+        );
+    }
+});
+
+// Periodic Background Sync: Check POS notifications periodically
+self.addEventListener('periodicsync', (event) => {
+    if (event.tag === 'pos-periodic-sync') {
+        event.waitUntil(
+            fetch('/creator/pos/notifications/check', { credentials: 'same-origin' })
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    if (data && data.success && data.notifications && data.notifications.length > 0) {
+                        return Promise.all(data.notifications.map(n =>
+                            self.registration.showNotification(n.title || 'Buyle POS', {
+                                body: n.body || 'Ada aktivitas baru.',
+                                icon: '/pos-icon-192.png',
+                                badge: '/pos-icon-192.png',
+                                data: { url: n.url || '/creator/pos' }
+                            })
+                        ));
+                    }
+                })
+                .catch(() => {})
+        );
+    }
+});
+

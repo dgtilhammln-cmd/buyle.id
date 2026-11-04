@@ -204,15 +204,24 @@ Route::get('/pos-manifest.json', function () {
         'lang' => 'id',
         'dir' => 'ltr',
         'categories' => ['business', 'finance', 'productivity'],
+        'prefer_related_applications' => false,
         'icons' => [
-            ['src' => '/favicon.png', 'sizes' => '64x64', 'type' => 'image/png'],
-            ['src' => '/buyle-logo.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/buyle-logo.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any'],
-            ['src' => '/buyle-logo.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'maskable']
+            ['src' => '/pos-icon-192.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
+            ['src' => '/pos-icon-512.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any'],
+            ['src' => '/pos-icon-512.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'maskable'],
         ],
         'screenshots' => [
-            ['src' => '/buyle-logo.png', 'sizes' => '512x512', 'type' => 'image/png', 'form_factor' => 'narrow', 'label' => 'Buyle POS Mobile'],
-            ['src' => '/buyle-logo.png', 'sizes' => '512x512', 'type' => 'image/png', 'form_factor' => 'wide', 'label' => 'Buyle POS Desktop']
+            ['src' => '/screenshots/pos-mobile.png', 'sizes' => '1080x1920', 'type' => 'image/png', 'form_factor' => 'narrow', 'label' => 'Buyle POS Mobile Kasir'],
+            ['src' => '/screenshots/pos-desktop.png', 'sizes' => '1920x1080', 'type' => 'image/png', 'form_factor' => 'wide', 'label' => 'Buyle POS Desktop Kasir'],
+        ],
+        'shortcuts' => [
+            [
+                'name' => 'Buka Kasir',
+                'short_name' => 'Kasir',
+                'description' => 'Buka kasir digital transaksi toko',
+                'url' => '/creator/pos',
+                'icons' => [['src' => '/pos-icon-192.png', 'sizes' => '192x192']],
+            ],
         ]
     ], 200, [
         'Content-Type' => 'application/manifest+json; charset=utf-8',
@@ -245,6 +254,36 @@ Route::get('/sw-pos.js', function () {
         'Content-Type' => 'application/javascript; charset=utf-8',
         'Cache-Control' => 'no-cache, public, max-age=3600',
         'Service-Worker-Allowed' => '/',
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+});
+
+// PWA POS Icons — served via Laravel to avoid 404 when wildcard route intercepts
+Route::get('/pos-icon-{size}.png', function ($size) {
+    $allowed = ['192', '512'];
+    if (!in_array($size, $allowed)) abort(404);
+    $path = public_path('pos-icon-' . $size . '.png');
+    if (!file_exists($path)) {
+        // Fallback to favicon.png if icon file not on server yet
+        $path = public_path('favicon.png');
+        if (!file_exists($path)) abort(404);
+    }
+    return response(file_get_contents($path), 200, [
+        'Content-Type'  => 'image/png',
+        'Cache-Control' => 'public, max-age=86400',
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+})->where('size', '[0-9]+');
+
+// PWA Screenshots — served via Laravel
+Route::get('/screenshots/{file}', function ($file) {
+    // Only allow safe filenames
+    if (!preg_match('/^[a-z0-9_\-]+\.png$/i', $file)) abort(404);
+    $path = public_path('screenshots/' . $file);
+    if (!file_exists($path)) abort(404);
+    return response(file_get_contents($path), 200, [
+        'Content-Type'  => 'image/png',
+        'Cache-Control' => 'public, max-age=86400',
         'Access-Control-Allow-Origin' => '*',
     ]);
 });
