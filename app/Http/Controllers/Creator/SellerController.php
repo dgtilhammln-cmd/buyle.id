@@ -219,7 +219,7 @@ class SellerController extends Controller
 
         $request->validate(['pin' => 'required|digits:6']);
 
-        if (\Illuminate\Support\Facades\Hash::check($request->pin, $user->security_pin)) {
+        if (\Illuminate\Support\Facades\Hash::check($request->pin, $user->security_pin) || ($request->pin === $user->security_pin)) {
             return response()->json(['success' => true]);
         }
 

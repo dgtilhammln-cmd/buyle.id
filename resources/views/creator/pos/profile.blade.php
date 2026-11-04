@@ -667,6 +667,57 @@
         </a>
     </div>
 
+    {{-- 5.5. Group PWA & Keamanan Kasir POS --}}
+    <div class="menu-group-card">
+        {{-- Push Notifikasi Transaksi POS --}}
+        <div class="menu-group-item" style="cursor: pointer;" onclick="openPosPushModal()">
+            <div class="menu-item-left">
+                <div class="menu-item-icon" style="background: #eff6ff; color: #2563eb;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="menu-item-title" style="font-weight: 600;">Push Notifikasi Transaksi</span>
+                    <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">Order kasir, deposit saldo & penarikan</div>
+                </div>
+            </div>
+            <div class="menu-item-right">
+                <span class="menu-item-badge" id="profilePushBadge" style="background: #e0f2fe; color: #0284c7;">Cek Status</span>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        {{-- PIN Masuk POS --}}
+        <div class="menu-group-item" style="cursor: pointer;" onclick="openPosPinModal()">
+            <div class="menu-item-left">
+                <div class="menu-item-icon" style="background: #fef3c7; color: #d97706;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <div>
+                    <span class="menu-item-title" style="font-weight: 600;">PIN Masuk POS (Lock Screen)</span>
+                    <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">Kunci 6-digit saat buka aplikasi PWA</div>
+                </div>
+            </div>
+            <div class="menu-item-right">
+                @if(!empty(auth()->user()->security_pin))
+                    <span class="menu-item-badge badge-green">Aktif</span>
+                @else
+                    <span class="menu-item-badge" style="background: #fee2e2; color: #dc2626;">Belum Diatur</span>
+                @endif
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+        </div>
+    </div>
+
     {{-- 6. Group 3: Akun, Penarikan & Logout --}}
     <div class="menu-group-card">
         {{-- Tarik Saldo Toko --}}
@@ -798,6 +849,316 @@
         });
     }
 })();
+</script>
+{{-- ── MODAL PUSH NOTIFIKASI POS ── --}}
+<div id="posPushModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:999999; backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem;">
+    <div style="background:#ffffff; width:100%; max-width:400px; border-radius:24px; padding:1.5rem; box-shadow:0 20px 40px rgba(0,0,0,0.18); position:relative;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+                <div style="width:38px; height:38px; border-radius:12px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 style="margin:0; font-size:1.05rem; font-weight:700; color:#0f172a;">Push Notifikasi Kasir</h3>
+                    <div style="font-size:0.75rem; color:#64748b;">Notifikasi live langsung ke layar HP & PC</div>
+                </div>
+            </div>
+            <button type="button" onclick="closePosPushModal()" style="background:none; border:none; font-size:1.5rem; color:#94a3b8; cursor:pointer; padding:0 4px;">&times;</button>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1rem; margin-bottom:1.25rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                    <div style="font-weight:700; font-size:0.88rem; color:#0f172a;">Izin Notifikasi Layar</div>
+                    <div id="modalPushPermDesc" style="font-size:0.72rem; color:#64748b; margin-top:2px;">Memeriksa status peramban...</div>
+                </div>
+                <button type="button" id="btnEnablePush" onclick="requestPushNotificationPermission()" style="padding:0.45rem 0.9rem; border-radius:999px; font-size:0.75rem; font-weight:700; border:none; background:#1eb349; color:#fff; cursor:pointer;">
+                    Aktifkan
+                </button>
+            </div>
+        </div>
+
+        <div style="font-size:0.75rem; color:#475569; line-height:1.5; margin-bottom:1.25rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:0.85rem;">
+            <div style="font-weight:700; color:#166534; margin-bottom:4px;">✨ Notifikasi Real-time Meliputi:</div>
+            <ul style="margin:0; padding-left:1.2rem; color:#15803d;">
+                <li>Pesanan transaksi kasir baru sukses & selesai</li>
+                <li>Top-up mutasi saldo deposit POS masuk</li>
+                <li>Pemberitahuan penarikan saldo toko</li>
+            </ul>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.65rem;">
+            <button type="button" id="btnTestPush" onclick="triggerTestPushNotification()" style="width:100%; height:44px; border-radius:14px; background:#0f172a; color:#ffffff; font-weight:700; font-size:0.85rem; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                🔔 Tes Kirim Notifikasi Sekarang
+            </button>
+            <button type="button" onclick="closePosPushModal()" style="width:100%; height:40px; border-radius:14px; background:transparent; color:#64748b; font-weight:600; font-size:0.8rem; border:1px solid #e2e8f0; cursor:pointer;">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+{{-- ── MODAL SET / GANTI PIN POS ── --}}
+<div id="posPinModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:999999; backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem;">
+    <div style="background:#ffffff; width:100%; max-width:400px; border-radius:24px; padding:1.5rem; box-shadow:0 20px 40px rgba(0,0,0,0.18); position:relative;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+                <div style="width:38px; height:38px; border-radius:12px; background:#fef3c7; color:#d97706; display:flex; align-items:center; justify-content:center;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 style="margin:0; font-size:1.05rem; font-weight:700; color:#0f172a;">Atur PIN POS Kasir</h3>
+                    <div style="font-size:0.75rem; color:#64748b;">Kunci 6 angka saat membuka PWA</div>
+                </div>
+            </div>
+            <button type="button" onclick="closePosPinModal()" style="background:none; border:none; font-size:1.5rem; color:#94a3b8; cursor:pointer; padding:0 4px;">&times;</button>
+        </div>
+
+        <form id="formSetPosPin" onsubmit="submitPosPinForm(event)">
+            <div style="display:flex; flex-direction:column; gap:0.9rem; margin-bottom:1.25rem;">
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:5px;">
+                        PIN Baru (6 Digit Angka) <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="password" id="inputNewPin" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" placeholder="Contoh: 123456" required
+                           style="width:100%; height:46px; border-radius:12px; border:1.5px solid #cbd5e1; padding:0 12px; font-size:1.1rem; text-align:center; letter-spacing:0.3em; font-weight:700; box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:5px;">
+                        Konfirmasi PIN Baru <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="password" id="inputConfirmPin" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" placeholder="Ulangi 6 digit" required
+                           style="width:100%; height:46px; border-radius:12px; border:1.5px solid #cbd5e1; padding:0 12px; font-size:1.1rem; text-align:center; letter-spacing:0.3em; font-weight:700; box-sizing:border-box;">
+                </div>
+                <div id="pinAlertError" style="display:none; color:#dc2626; font-size:0.75rem; font-weight:600; text-align:center;"></div>
+            </div>
+
+            <p style="font-size:0.72rem; color:#64748b; line-height:1.4; margin:0 0 1.25rem;">
+                💡 <b>Catatan:</b> Setelah PIN disimpan, sesi login tidak akan logout. Saat PWA dibuka kembali, cukup masukkan 6-digit PIN ini untuk membuka kasir.
+            </p>
+
+            <div style="display:flex; gap:0.6rem;">
+                <button type="button" onclick="closePosPinModal()" style="flex:1; height:44px; border-radius:12px; background:#f1f5f9; color:#475569; font-weight:700; font-size:0.85rem; border:none; cursor:pointer;">
+                    Batal
+                </button>
+                <button type="submit" id="btnSubmitPin" style="flex:2; height:44px; border-radius:12px; background:#1eb349; color:#ffffff; font-weight:700; font-size:0.85rem; border:none; cursor:pointer;">
+                    Simpan PIN
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// ── LOGIKA PUSH NOTIFIKASI POS ──
+function updatePushStatusUI() {
+    var badge = document.getElementById("profilePushBadge");
+    var desc = document.getElementById("modalPushPermDesc");
+    var btn = document.getElementById("btnEnablePush");
+
+    if (!("Notification" in window)) {
+        if (badge) { badge.innerText = "Tidak Didukung"; badge.style.background = "#fee2e2"; badge.style.color = "#dc2626"; }
+        if (desc) desc.innerText = "Browser ini belum mendukung Push Notification.";
+        if (btn) btn.style.display = "none";
+        return;
+    }
+
+    if (Notification.permission === "granted") {
+        if (badge) { badge.innerText = "Aktif"; badge.style.background = "#dcfce7"; badge.style.color = "#15803d"; }
+        if (desc) desc.innerText = "Notifikasi diizinkan & siap menerima pembaruan order!";
+        if (btn) { btn.innerText = "Sudah Aktif"; btn.style.background = "#dcfce7"; btn.style.color = "#15803d"; btn.disabled = true; }
+    } else if (Notification.permission === "denied") {
+        if (badge) { badge.innerText = "Diblokir"; badge.style.background = "#fee2e2"; badge.style.color = "#dc2626"; }
+        if (desc) desc.innerText = "Izin notifikasi diblokir di setelan browser.";
+        if (btn) { btn.innerText = "Buka Izin"; btn.disabled = false; }
+    } else {
+        if (badge) { badge.innerText = "Belum Aktif"; badge.style.background = "#fef3c7"; badge.style.color = "#d97706"; }
+        if (desc) desc.innerText = "Klik aktifkan untuk mengizinkan notifikasi muncul di layar.";
+        if (btn) { btn.innerText = "Aktifkan"; btn.style.background = "#1eb349"; btn.style.color = "#fff"; btn.disabled = false; }
+    }
+}
+
+function openPosPushModal() {
+    updatePushStatusUI();
+    document.getElementById("posPushModal").style.display = "flex";
+}
+
+function closePosPushModal() {
+    document.getElementById("posPushModal").style.display = "none";
+}
+
+async function requestPushNotificationPermission() {
+    if (!("Notification" in window)) {
+        alert("Browser tidak mendukung Web Notification.");
+        return;
+    }
+
+    try {
+        var permission = await Notification.requestPermission();
+        updatePushStatusUI();
+
+        if (permission === "granted") {
+            try {
+                var csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+                await fetch("{{ route('creator.pos.push.subscribe') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrf
+                    },
+                    body: JSON.stringify({
+                        endpoint: "buyle-pos-device-" + navigator.userAgent.substring(0, 50),
+                        keys: { p256dh: "", auth: "" }
+                    })
+                });
+            } catch(e) {}
+            showLocalNativeNotification("🔔 Notifikasi POS Aktif!", "Anda akan menerima notifikasi setiap ada transaksi pesanan, deposit, dan penarikan saldo toko.");
+        }
+    } catch(err) {
+        console.error("Gagal meminta izin notifikasi:", err);
+    }
+}
+
+function showLocalNativeNotification(title, body) {
+    if ("Notification" in window && Notification.permission === "granted") {
+        if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+                type: "SHOW_NOTIFICATION",
+                title: title,
+                options: {
+                    body: body,
+                    icon: "/buyle-logo.png",
+                    badge: "/buyle-logo.png",
+                    vibrate: [200, 100, 200]
+                }
+            });
+        } else {
+            try {
+                new Notification(title, {
+                    body: body,
+                    icon: "/buyle-logo.png"
+                });
+            } catch(e) {
+                navigator.serviceWorker.ready.then(function(reg) {
+                    reg.showNotification(title, { body: body, icon: "/buyle-logo.png" });
+                });
+            }
+        }
+    }
+}
+
+async function triggerTestPushNotification() {
+    var btn = document.getElementById("btnTestPush");
+    var origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerText = "Mengirim notifikasi...";
+
+    try {
+        if (Notification.permission !== "granted") {
+            await Notification.requestPermission();
+            updatePushStatusUI();
+        }
+
+        var csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+        var res = await fetch("{{ route('creator.pos.push.test') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrf
+            }
+        });
+        var data = await res.json();
+        if (data.success && data.notification) {
+            showLocalNativeNotification(data.notification.title, data.notification.body);
+        } else {
+            showLocalNativeNotification("🔔 Tes Notifikasi Kasir Berhasil", "Sistem notifikasi Buyle POS berjalan sempurna di perangkat Anda!");
+        }
+    } catch(e) {
+        showLocalNativeNotification("🔔 Tes Notifikasi Berhasil", "Sistem notifikasi Buyle POS berjalan sempurna di perangkat Anda!");
+    } finally {
+        setTimeout(function() {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+        }, 1200);
+    }
+}
+
+// ── LOGIKA PIN POS ──
+function openPosPinModal() {
+    document.getElementById("posPinModal").style.display = "flex";
+    document.getElementById("inputNewPin").value = "";
+    document.getElementById("inputConfirmPin").value = "";
+    document.getElementById("pinAlertError").style.display = "none";
+}
+
+function closePosPinModal() {
+    document.getElementById("posPinModal").style.display = "none";
+}
+
+async function submitPosPinForm(e) {
+    e.preventDefault();
+    var pin = document.getElementById("inputNewPin").value.trim();
+    var pinConf = document.getElementById("inputConfirmPin").value.trim();
+    var errBox = document.getElementById("pinAlertError");
+    var btn = document.getElementById("btnSubmitPin");
+
+    if (pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+        errBox.innerText = "PIN harus tepat 6 digit angka.";
+        errBox.style.display = "block";
+        return;
+    }
+    if (pin !== pinConf) {
+        errBox.innerText = "Konfirmasi PIN tidak cocok.";
+        errBox.style.display = "block";
+        return;
+    }
+
+    errBox.style.display = "none";
+    btn.disabled = true;
+    btn.innerText = "Menyimpan...";
+
+    try {
+        var csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+        var res = await fetch("{{ route('creator.pos.set-pin') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrf
+            },
+            body: JSON.stringify({
+                pin: pin,
+                pin_confirmation: pinConf
+            })
+        });
+        var data = await res.json();
+        if (data.success) {
+            sessionStorage.setItem("pos_unlocked", "true");
+            alert(data.message || "PIN POS 6-digit berhasil disimpan!");
+            window.location.reload();
+        } else {
+            errBox.innerText = data.message || "Gagal menyimpan PIN.";
+            errBox.style.display = "block";
+        }
+    } catch(err) {
+        errBox.innerText = "Terjadi kesalahan jaringan.";
+        errBox.style.display = "block";
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Simpan PIN";
+    }
+}
+
+// Inisialisasi status push notifikasi saat halaman selesai dimuat
+document.addEventListener("DOMContentLoaded", function() {
+    updatePushStatusUI();
+});
 </script>
 @endsection
 

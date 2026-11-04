@@ -10486,7 +10486,7 @@
                 <div style="display:flex; align-items:center; gap:8px;">
                     <div style="width:34px; height:34px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe; display:flex; align-items:center; justify-content:center; color:#1d4ed8;">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                         </svg>
                     </div>
                     <div>
@@ -10512,6 +10512,145 @@
             </form>
         </div>
     </div>
+
+    <!-- ── POP-UP MINIMALIS: INSTALL PWA BUYLE POS ── -->
+    <div id="posInstallBanner" style="display:none; position:fixed; bottom:88px; left:16px; right:16px; max-width:440px; margin:0 auto; background:#ffffff; border-radius:20px; padding:0.85rem 1.1rem; box-shadow:0 12px 36px rgba(15,23,42,0.18), 0 2px 8px rgba(0,0,0,0.06); border:1.5px solid #e2e8f0; z-index:100050; align-items:center; justify-content:space-between; gap:0.75rem; animation: slideUpPos 0.3s cubic-bezier(0.16,1,0.3,1);">
+        <div style="display:flex; align-items:center; gap:0.75rem; min-width:0;">
+            <div style="width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 10px rgba(30,179,73,0.3);">
+                <img src="/buyle-logo.png" alt="Buyle POS" style="width:26px; height:26px; object-fit:contain; filter:brightness(0) invert(1);">
+            </div>
+            <div style="min-width:0;">
+                <div style="font-size:0.85rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Install Aplikasi Kasir</div>
+                <div style="font-size:0.7rem; color:#64748b; line-height:1.2; margin-top:2px;">Akses super cepat & layar penuh</div>
+            </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+            <button type="button" onclick="triggerPwaInstall()" style="background:linear-gradient(135deg, #1eb349 0%, #16933b 100%); color:#ffffff; font-size:0.75rem; font-weight:700; padding:0.5rem 1rem; border-radius:999px; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.35);">
+                Install
+            </button>
+            <button type="button" onclick="dismissPosInstallBanner()" style="background:none; border:none; color:#94a3b8; font-size:1.25rem; line-height:1; cursor:pointer; padding:4px 6px;">
+                &times;
+            </button>
+        </div>
+    </div>
+    <style>
+        @keyframes slideUpPos {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+
+    <script>
+    /* ── PWA INSTALL BANNER CONTROLLER (PWABUILDER COMPLIANT) ── */
+    var deferredPosPrompt = null;
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPosPrompt = e;
+        var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        var dismissed = sessionStorage.getItem('pos_install_dismissed') === '1';
+        if (!isStandalone && !dismissed) {
+            var banner = document.getElementById('posInstallBanner');
+            if (banner) banner.style.display = 'flex';
+        }
+    });
+
+    function dismissPosInstallBanner() {
+        var banner = document.getElementById('posInstallBanner');
+        if (banner) banner.style.display = 'none';
+        sessionStorage.setItem('pos_install_dismissed', '1');
+    }
+
+    function triggerPwaInstall() {
+        if (deferredPosPrompt) {
+            deferredPosPrompt.prompt();
+            deferredPosPrompt.userChoice.then(function(choiceResult) {
+                if (choiceResult.outcome === 'accepted') {
+                    dismissPosInstallBanner();
+                }
+                deferredPosPrompt = null;
+            });
+        } else {
+            var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isIOS) {
+                alert('Untuk memasang Buyle POS di iPhone/iPad:\n1. Tap tombol Bagikan (Share) ⎋ di bawah browser Safari\n2. Pilih "Tambah ke Layar Utama" (Add to Home Screen)');
+            } else {
+                alert('Untuk memasang Buyle POS:\n1. Klik ikon titik tiga di kanan atas browser\n2. Pilih "Install Buyle POS" atau "Tambahkan ke Layar Utama"');
+            }
+        }
+    }
+
+    // Auto-detect jika belum standalone di perangkat mobile
+    document.addEventListener('DOMContentLoaded', function() {
+        var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        var dismissed = sessionStorage.getItem('pos_install_dismissed') === '1';
+        if (!isStandalone && !dismissed) {
+            setTimeout(function() {
+                var banner = document.getElementById('posInstallBanner');
+                if (banner && banner.style.display !== 'flex') {
+                    banner.style.display = 'flex';
+                }
+            }, 2500);
+        }
+    });
+
+    /* ── REAL-TIME PUSH NOTIFICATION & SOUND EFFECT CONTROLLER ── */
+    function playPosNotificationChime() {
+        try {
+            var ctx = new (window.AudioContext || window.webkitAudioContext)();
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+            osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.5);
+        } catch(e) {}
+    }
+
+    // Polling background notifikasi pesanan & deposit baru setiap 25 detik
+    (function() {
+        var lastNotifId = 0;
+        function checkPosLiveUpdates() {
+            fetch("{{ route('creator.pos.notifications.check') }}")
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data && data.success && data.notifications && data.notifications.length > 0) {
+                        data.notifications.forEach(function(item) {
+                            if (item.id > lastNotifId) {
+                                lastNotifId = item.id;
+                                playPosNotificationChime();
+
+                                // Tampilkan notifikasi sistem browser/OS
+                                if ("Notification" in window && Notification.permission === "granted") {
+                                    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+                                        navigator.serviceWorker.controller.postMessage({
+                                            type: "SHOW_NOTIFICATION",
+                                            title: item.title,
+                                            options: {
+                                                body: item.body,
+                                                icon: "/buyle-logo.png",
+                                                badge: "/buyle-logo.png"
+                                            }
+                                        });
+                                    } else {
+                                        try {
+                                            new Notification(item.title, { body: item.body, icon: "/buyle-logo.png" });
+                                        } catch(e) {}
+                                    }
+                                }
+                            }
+                        });
+                    }
+                })
+                .catch(function(e) {});
+        }
+        setInterval(checkPosLiveUpdates, 25000);
+    })();
+    </script>
 @endsection
 
 

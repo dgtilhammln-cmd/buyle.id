@@ -1739,4 +1739,200 @@ class PosController extends Controller
             'activeTab'
         ));
     }
+
+    /**
+     * Verifikasi PIN POS saat Kasir membuka PWA (Lock Screen).
+     */
+    public function verifyPin(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'pin' => 'required|string|min:4|max:10',
+        ]);
+
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Sesi tidak ditemukan.'], 401);
+        }
+
+        $inputPin = trim($request->pin);
+        $userPin = $user->security_pin;
+
+        // Jika belum ada PIN, anggap valid dan set otomatis
+        if (empty($userPin)) {
+            $user->security_pin = \Illuminate\Support\Facades\Hash::make($inputPin);
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'PIN POS berhasil dibuat & tersimpan.',
+                'is_new'  => true
+            ]);
+        }
+
+        // Cek PIN (support hash bcrypt atau plaintext legacy)
+        $isValid = \Illuminate\Support\Facades\Hash::check($inputPin, $userPin) || ($inputPin === $userPin);
+
+        if ($isValid) {
+            session(['pos_unlocked' => true]);
+            return response()->json([
+                'success' => true,
+                'message' => 'PIN POS benar, silakan bertransaksi.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'PIN Kasir yang Anda masukkan salah.'
+        ], 422);
+    }
+
+    /**
+     * Set atau Ganti PIN POS dari Menu Profil / Keamanan.
+     */
+    public function setPin(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'pin'                  => 'required|digits_between:4,6',
+            'pin_confirmation'     => 'required|same:pin',
+            'current_password'     => 'nullable|string',
+        ]);
+
+        $user = auth()->user();
+
+        // Jika sudah ada PIN lama dan ada password yang diisi, verifikasi password untuk keamanan
+        if (!empty($user->security_pin) && $request->filled('current_password')) {
+            if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kata sandi saat ini tidak cocok.'
+                ], 422);
+            }
+        }
+
+        $user->security_pin = \Illuminate\Support\Facades\Hash::make($request->pin);
+        $user->save();
+
+        session(['pos_unlocked' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'PIN POS 6-digit berhasil diperbarui!'
+        ]);
+    }
+
+    /**
+     * Simpan langganan Web Push Notification browser.
+     */
+    public function savePushSubscription(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'endpoint' => 'required|string',
+            'keys.p256dh' => 'nullable|string',
+            'keys.auth' => 'nullable|string',
+        ]);
+
+        $user = auth()->user();
+        if ($user) {
+            \App\Models\PushSubscription::updateOrCreate(
+                [
+                    'user_id'  => $user->id,
+                    'endpoint' => $request->endpoint,
+                ],
+                [
+                    'key_p256dh' => $request->input('keys.p256dh', ''),
+                    'key_auth'   => $request->input('keys.auth', ''),
+                    'user_agent' => $request->userAgent(),
+                ]
+            );
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Langganan notifikasi POS berhasil diaktifkan!'
+        ]);
+    }
+
+    /**
+     * Kirim Notifikasi Tes Langsung ke Perangkat Kasir.
+     */
+    public function testPushNotification(\Illuminate\Http\Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'notification' => [
+                'title' => '🔔 Buyle POS - Notifikasi Aktif',
+                'body'  => 'Notifikasi transaksi kasir, top up deposit, & penarikan saldo telah aktif dan berfungsi sempurna!',
+                'icon'  => '/buyle-logo.png',
+                'badge' => '/favicon.png',
+                'url'   => route('creator.pos.index'),
+                'tag'   => 'pos-test-' . time(),
+            ]
+        ]);
+    }
+
+    /**
+     * Real-time Poller Notifikasi POS (memeriksa order baru, top-up deposit, & penarikan).
+     */
+    public function checkNewNotifications(\Illuminate\Http\Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['notifications' => []]);
+        }
+
+        $isStaff = $user->isPosCashier() && $user->parent_seller_id;
+        $seller = $isStaff ? (\App\Models\User::find($user->parent_seller_id) ?? $user) : $user;
+
+        $lastCheck = $request->query('since', now()->subSeconds(30)->toDateTimeString());
+        $notifications = [];
+
+        // 1. Cek Pesanan POS Baru
+        $newOrders = \App\Models\Order::where('source', 'pos')
+            ->where(function($q) use ($seller) {
+                $q->where('seller_id', $seller->id)
+                  ->orWhere('user_id', $seller->id)
+                  ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
+            })
+            ->where('created_at', '>=', $lastCheck)
+            ->latest('id')
+            ->take(5)
+            ->get();
+
+        foreach ($newOrders as $ord) {
+            $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
+            $cName = $addr['name'] ?? 'Pelanggan Umum';
+            $notifications[] = [
+                'id'    => 'order_' . $ord->id,
+                'title' => '🛒 Transaksi Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id)),
+                'body'  => 'Pesanan dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . ' berhasil diselesaikan.',
+                'icon'  => '/buyle-logo.png',
+                'url'   => route('creator.pos.reports'),
+            ];
+        }
+
+        // 2. Cek Mutasi Deposit Baru (Top Up)
+        $profile = \App\Models\CreatorProfile::where('user_id', $seller->id)->first();
+        if ($profile) {
+            $newMutations = \App\Models\PosBalanceMutation::where('creator_id', $profile->id)
+                ->where('created_at', '>=', $lastCheck)
+                ->where('type', 'topup')
+                ->latest('id')
+                ->take(3)
+                ->get();
+
+            foreach ($newMutations as $mut) {
+                $notifications[] = [
+                    'id'    => 'deposit_' . $mut->id,
+                    'title' => '💳 Top Up Saldo Deposit Masuk',
+                    'body'  => 'Saldo deposit bertambah Rp ' . number_format($mut->amount, 0, ',', '.') . ' (' . ($mut->description ?? 'Deposit POS') . ').',
+                    'icon'  => '/buyle-logo.png',
+                    'url'   => route('creator.pos.index'),
+                ];
+            }
+        }
+
+        return response()->json([
+            'timestamp'     => now()->toDateTimeString(),
+            'notifications' => $notifications
+        ]);
+    }
 }

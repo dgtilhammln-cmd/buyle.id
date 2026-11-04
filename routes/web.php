@@ -169,6 +169,10 @@ Route::post('/request-order', [LeadController::class, 'store'])->name('lead.stor
 | Buyer Authentication Routes
 |--------------------------------------------------------------------------
 */
+// Dedicated PWA Kasir Digital (Buyle POS) Login
+Route::get('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'showLogin'])->name('pos.login');
+Route::post('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'login'])->name('pos.login.submit');
+
 Route::middleware(['guest'])->group(function () {
     Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login',   [AuthController::class, 'login'])->name('login.submit')->middleware('throttle:login-limit');
@@ -696,6 +700,11 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/pos/cashiers/{id}/toggle', [\App\Http\Controllers\Creator\PosController::class, 'toggleCashier'])->name('pos.cashiers.toggle');
     Route::post('/pos/quick-product', [\App\Http\Controllers\Creator\PosController::class, 'quickProduct'])->name('pos.quick-product');
     Route::post('/pos/quick-category', [\App\Http\Controllers\Creator\PosController::class, 'quickCategory'])->name('pos.quick-category');
+    Route::post('/pos/verify-pin', [\App\Http\Controllers\Creator\PosController::class, 'verifyPin'])->name('pos.verify-pin');
+    Route::post('/pos/set-pin', [\App\Http\Controllers\Creator\PosController::class, 'setPin'])->name('pos.set-pin');
+    Route::post('/pos/push/subscribe', [\App\Http\Controllers\Creator\PosController::class, 'savePushSubscription'])->name('pos.push.subscribe');
+    Route::post('/pos/push/test', [\App\Http\Controllers\Creator\PosController::class, 'testPushNotification'])->name('pos.push.test');
+    Route::get('/pos/notifications/check', [\App\Http\Controllers\Creator\PosController::class, 'checkNewNotifications'])->name('pos.notifications.check');
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');
