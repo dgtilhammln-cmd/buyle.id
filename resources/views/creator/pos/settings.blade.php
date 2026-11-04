@@ -2491,6 +2491,19 @@ function closeModal(modalId) {
                     return;
                 }
 
+                // Render non-empty tables list
+                container.innerHTML = posTablesData.map(function(table, idx) {
+                    var name = table.name || ('Meja ' + (idx+1));
+                    var cap = table.capacity || '-';
+                    return '<div style="background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">' +
+                        '<div style="min-width:0;flex:1;"><div style="font-size:0.82rem;font-weight:800;color:#0f172a;">Meja ' + name + '</div>' +
+                        '<div style="font-size:0.7rem;color:#64748b;">Kapasitas: ' + cap + ' orang</div></div>' +
+                        '<button type="button" onclick="deleteTable(' + idx + ')" style="width:30px;height:30px;border-radius:8px;border:1px solid #fecaca;background:#fff5f5;color:#ef4444;cursor:pointer;">' +
+                        '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>' +
+                        '</button></div>';
+                }).join('');
+                updateTablesBadgeCount();
+            }
 
 // Initial tab activation on load
 document.addEventListener('DOMContentLoaded', function() {

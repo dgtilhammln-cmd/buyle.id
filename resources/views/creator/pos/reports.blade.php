@@ -141,8 +141,9 @@
             font-weight: 600;
             text-decoration: none;
             box-shadow: 0 1px 3px rgba(0, 0, 0, .02);
+        }
 
-            .rp-back:hover {
+        .rp-back:hover {
                 transform: scale(1.05);
             }
 
