@@ -18,10 +18,10 @@ class User extends Authenticatable
         'role', 'parent_seller_id', 'shift_hours', 'cashier_role_title',
         'menu_permissions', 'is_active', 'last_seen_at', 
         'bank_name', 'bank_account_number', 'bank_account_name',
-        'security_pin', 'biometric_enabled', 'biometric_credential_id'
+        'security_pin', 'biometric_enabled', 'biometric_credential_id',
+        'pos_pin'
     ];
-    protected $hidden = ['password', 'remember_token', 'security_pin'];
-    /** @use HasFactory<UserFactory> */
+    protected $hidden = ['password', 'remember_token', 'security_pin', 'pos_pin'];
     use HasFactory, Notifiable;
 
     public function isPosCashier(): bool

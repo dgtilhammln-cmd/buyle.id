@@ -112,6 +112,9 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         * { scrollbar-width: auto; scrollbar-color: #cbd5e1 #f8fafc; }
 
+        /* Fix: prevent horizontal overflow / mobile shift */
+        html { overflow-x: hidden !important; max-width: 100vw !important; }
+
         :root {
             --font-jakarta: 'Montserrat', sans-serif;
             --font-main: 'Montserrat', sans-serif;

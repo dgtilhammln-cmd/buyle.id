@@ -3437,6 +3437,27 @@
             gap: 1.1rem;
         }
 
+        /* Reset fixed widths from carousel styles when inside grid */
+        .grid-2-rows-responsive > a,
+        .grid-2-rows-responsive > .sp-card {
+            flex: unset !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            scroll-snap-align: unset !important;
+            display: flex !important;
+            flex-direction: column !important;
+            text-decoration: none !important;
+            color: inherit !important;
+            box-sizing: border-box !important;
+        }
+
+        .grid-2-rows-responsive .article-card-box,
+        .grid-2-rows-responsive .sp-card-inner {
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
         @media (max-width: 1024px) {
             .grid-2-rows-responsive {
                 grid-template-columns: repeat(3, 1fr) !important;

@@ -1673,7 +1673,7 @@ class PosController extends Controller
         $tierInfo = $cp->getTierInfo($gmv);
         $storeSlug = $cp->slug ?? $seller->username ?? null;
         $hasPushSub = \App\Models\PushSubscription::where('user_id', $seller->id)->exists();
-        $hasPin = !empty($seller->security_pin);
+        $hasPin = !empty($seller->pos_pin);
         $biometricEnabled = (bool) $seller->biometric_enabled;
 
         return view('creator.pos.profile', compact(
@@ -1755,11 +1755,11 @@ class PosController extends Controller
         }
 
         $inputPin = trim($request->pin);
-        $userPin = $user->security_pin;
+        $userPin = $user->pos_pin;
 
         // Jika belum ada PIN, anggap valid dan set otomatis
         if (empty($userPin)) {
-            $user->security_pin = \Illuminate\Support\Facades\Hash::make($inputPin);
+            $user->pos_pin = \Illuminate\Support\Facades\Hash::make($inputPin);
             $user->save();
             return response()->json([
                 'success' => true,
@@ -1799,7 +1799,7 @@ class PosController extends Controller
         $user = auth()->user();
 
         // Jika sudah ada PIN lama dan ada password yang diisi, verifikasi password untuk keamanan
-        if (!empty($user->security_pin) && $request->filled('current_password')) {
+        if (!empty($user->pos_pin) && $request->filled('current_password')) {
             if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password)) {
                 return response()->json([
                     'success' => false,
@@ -1808,7 +1808,7 @@ class PosController extends Controller
             }
         }
 
-        $user->security_pin = \Illuminate\Support\Facades\Hash::make($request->pin);
+        $user->pos_pin = \Illuminate\Support\Facades\Hash::make($request->pin);
         $user->save();
 
         session(['pos_unlocked' => true]);
@@ -1896,7 +1896,7 @@ class PosController extends Controller
             ], 422);
         }
 
-        $user->security_pin = \Illuminate\Support\Facades\Hash::make($request->new_pin);
+        $user->pos_pin = \Illuminate\Support\Facades\Hash::make($request->new_pin);
         $user->save();
 
         session()->forget(['pos_pin_reset_otp', 'pos_pin_reset_email', 'pos_pin_reset_expires_at']);

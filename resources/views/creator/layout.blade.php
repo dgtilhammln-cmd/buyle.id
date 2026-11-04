@@ -861,7 +861,10 @@
 
     @php
         $authUser = auth()->user();
-        $hasAppPin = $authUser && !empty($authUser->security_pin);
+        // POS routes use pos_pin; Creator/Dashboard routes use security_pin
+        $isPosRoute = request()->is('creator/pos*') || request()->is('login-pos*') || request()->routeIs('creator.pos.*') || request()->routeIs('pos.*');
+        $hasAppPin = $authUser && !empty($isPosRoute ? $authUser->pos_pin : $authUser->security_pin);
+        $pwaUnlockedKey = $isPosRoute ? 'pos_pwa_unlocked' : 'creator_pwa_unlocked';
         $hasBiometric = $authUser && (bool) $authUser->biometric_enabled;
         $hasSecurityLock = $hasAppPin || $hasBiometric;
 
@@ -2135,7 +2138,7 @@
             let currentEnteredPin = '';
             const lockScreen = document.getElementById('pwaAppLockScreen');
 
-            if (sessionStorage.getItem('pwa_unlocked') !== '1') {
+            if (sessionStorage.getItem('{{ $pwaUnlockedKey }}') !== '1') {
                 if (lockScreen) {
                     lockScreen.style.display = 'flex';
                     @if($hasBiometric)
@@ -2190,7 +2193,7 @@
 
                     const data = await res.json();
                     if (data.success) {
-                        sessionStorage.setItem('pwa_unlocked', '1');
+                        sessionStorage.setItem('{{ $pwaUnlockedKey }}', '1');
                         if (lockScreen) {
                             lockScreen.style.transition = 'opacity 0.25s ease';
                             lockScreen.style.opacity = '0';
@@ -2404,7 +2407,7 @@
                 var data = await res.json();
 
                 if (data.success) {
-                    sessionStorage.setItem('pwa_unlocked', '1');
+                    sessionStorage.setItem('{{ $pwaUnlockedKey }}', '1');
                     closeForgotPinModal();
                     var lockScreen = document.getElementById('pwaAppLockScreen');
                     if (lockScreen) {

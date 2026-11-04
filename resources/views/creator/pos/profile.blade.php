@@ -902,7 +902,7 @@
                     </div>
                 </div>
                 <div class="menu-item-right">
-                    @if(!empty(auth()->user()->security_pin))
+                    @if(!empty(auth()->user()->pos_pin))
                         <span class="menu-item-badge badge-green">PIN Aktif</span>
                     @else
                         <span class="menu-item-badge" style="background: #fee2e2; color: #dc2626;">Atur PIN</span>

@@ -13,7 +13,7 @@
         @endphp
         <a href="{{ route_locale('products.show', $sv->slug) }}"
             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-            class="sp-card article-card-swipe-item cv-card-enter">
+            class="sp-card cv-card-enter">
             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
                 class="article-card-box sp-card-inner">
 
