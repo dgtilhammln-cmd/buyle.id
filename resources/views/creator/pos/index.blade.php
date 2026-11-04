@@ -2978,39 +2978,61 @@
         }
 
 
-        /* Mobile Layout Optimizations: Zero Top Space & Screen 2 Focus */
-        @media (max-width: 991px) {
-            .cr-topbar-header-row {
-                display: none !important;
-            }
-            .cr-main-canvas {
-                padding: 0.5rem 0.75rem 150px 0.75rem !important;
-                min-height: auto !important;
-                background: #ffffff !important;
-                display: block !important;
-            }
-            .cr-main-wrapper {
-                min-height: auto !important;
-                background: #ffffff !important;
-            }
-            #pos-real-content {
-                margin-top: 0 !important;
-                padding-top: 0 !important;
-            }
-            .pos-wrapper {
-                padding-top: 0 !important;
-            }
-            /* Eliminate Image 1 Modal completely on mobile */
-            #posHistoryModal {
-                display: none !important;
-                pointer-events: none !important;
-            }
-            /* Screen 2 Transactions full width wrapper on mobile */
-            #posScreenTransactions {
-                max-width: 480px;
-                margin: 0 auto;
-                padding: 0 0 160px 0;
-            }
+        /* Unified Mobile-First Super App Layout (HP, Tab, iPad, Desktop 100% Identical) */
+        .cr-topbar-header-row {
+            display: none !important;
+        }
+        .cr-main-canvas {
+            padding: 0.5rem 0.75rem 150px 0.75rem !important;
+            min-height: auto !important;
+            background: #ffffff !important;
+            display: block !important;
+            max-width: 480px !important;
+            margin: 0 auto !important;
+        }
+        .cr-main-wrapper {
+            min-height: 100vh !important;
+            background: #f8fafc !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        #pos-real-content {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            max-width: 480px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        .pos-wrapper {
+            display: block !important;
+            padding-top: 0 !important;
+            max-width: 480px !important;
+            margin: 0 auto !important;
+            grid-template-columns: 1fr !important;
+        }
+        #cartPanel {
+            display: none !important;
+        }
+        .pos-mobile-floating-bar {
+            display: flex !important;
+        }
+        .pos-bottom-nav-wrap {
+            display: flex !important;
+        }
+        .product-grid {
+            padding-bottom: 210px !important;
+        }
+        /* Eliminate Image 1 Modal completely */
+        #posHistoryModal {
+            display: none !important;
+            pointer-events: none !important;
+        }
+        /* Screen 2 Transactions full width wrapper */
+        #posScreenTransactions {
+            max-width: 480px !important;
+            margin: 0 auto !important;
+            padding: 0 0 160px 0 !important;
         }
     </style>
 @endsection
