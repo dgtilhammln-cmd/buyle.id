@@ -142,7 +142,7 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('sync', (event) => {
     if (event.tag === 'pos-sync' || event.tag === 'sync-pos-transactions') {
         event.waitUntil(
-            fetch('/creator/pos/notifications/check', { credentials: 'same-origin' })
+            fetch('/creator/pos/notifications/check', { credentials: 'same-origin', headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
                 .then(r => r.ok ? r.json() : null)
                 .then(data => {
                     if (data && data.success && data.notifications && data.notifications.length > 0) {
@@ -167,7 +167,7 @@ self.addEventListener('sync', (event) => {
 self.addEventListener('periodicsync', (event) => {
     if (event.tag === 'pos-periodic-sync') {
         event.waitUntil(
-            fetch('/creator/pos/notifications/check', { credentials: 'same-origin' })
+            fetch('/creator/pos/notifications/check', { credentials: 'same-origin', headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
                 .then(r => r.ok ? r.json() : null)
                 .then(data => {
                     if (data && data.success && data.notifications && data.notifications.length > 0) {

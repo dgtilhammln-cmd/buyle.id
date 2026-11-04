@@ -792,7 +792,7 @@
                             <line x1="12" y1="5" x2="12" y2="19" />
                             <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
-                        + Tambah Staf Kasir
+                        + Tambah
                     </button>
                 </div>
 
@@ -1403,18 +1403,18 @@
 
         window.posCatalog = {
             @foreach($products as $prod)
-                @php
-                    $pPrice = (float) ($prod->sale_price ?: $prod->price);
-                    $pImg = $prod->image ? (str_starts_with($prod->image, 'http') ? $prod->image : asset('storage/' . $prod->image)) : '';
-                @endphp
-                '{{ $prod->id }}': {
-                        id: '{{ $prod->id }}',
-                        name: {!! json_encode($prod->name) !!},
-                        price: {{ $pPrice }},
-                        image: {!! json_encode($pImg) !!}
-                    },
+                        @php
+                            $pPrice = (float) ($prod->sale_price ?: $prod->price);
+                            $pImg = $prod->image ? (str_starts_with($prod->image, 'http') ? $prod->image : asset('storage/' . $prod->image)) : '';
+                        @endphp
+                        '{{ $prod->id }}': {
+                    id: '{{ $prod->id }}',
+                    name: {!! json_encode($prod->name) !!},
+                    price: {{ $pPrice }},
+                    image: {!! json_encode($pImg) !!}
+                },
             @endforeach
-    };
+        };
 
         function showPosToast(msg, type = 'success') {
             let toast = document.getElementById('posToast');
@@ -1492,45 +1492,45 @@
 
             if (!posFeesData || posFeesData.length === 0) {
                 container.innerHTML = `
-                                                <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
-                                                    Belum ada biaya / pajak ditambahkan.<br>Klik <strong>+ Tambah Biaya / Pajak</strong> untuk menambah.
-                                                </div>`;
+                                                    <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
+                                                        Belum ada biaya / pajak ditambahkan.<br>Klik <strong>+ Tambah Biaya / Pajak</strong> untuk menambah.
+                                                    </div>`;
                 renderFeeSimulation();
                 updateFeesBadgeCount();
                 return;
             }
 
             container.innerHTML = posFeesData.map((fee, idx) => `
-                                            <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
-                                                <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
-                                                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
-                                                        <input type="checkbox" ${fee.is_active ? 'checked' : ''}
-                                                            onchange="toggleFeeActive(${idx}, this.checked)"
-                                                            style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
-                                                    </label>
-                                                    <div style="min-width:0;">
-                                                        <div style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                                            ${escapeHtml(fee.name)}
-                                                        </div>
-                                                        <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">
-                                                            ${fee.type === 'percent' ? fee.value + '%' : 'Rp ' + formatRupiah(fee.value)} (${fee.type === 'percent' ? 'Persentase' : 'Nominal Tetap'})
+                                                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
+                                                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                                                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
+                                                            <input type="checkbox" ${fee.is_active ? 'checked' : ''}
+                                                                onchange="toggleFeeActive(${idx}, this.checked)"
+                                                                style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
+                                                        </label>
+                                                        <div style="min-width:0;">
+                                                            <div style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                                ${escapeHtml(fee.name)}
+                                                            </div>
+                                                            <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">
+                                                                ${fee.type === 'percent' ? fee.value + '%' : 'Rp ' + formatRupiah(fee.value)} (${fee.type === 'percent' ? 'Persentase' : 'Nominal Tetap'})
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                        <input type="number" value="${fee.value}" min="0" step="any"
+                                                            style="width:70px; height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 6px; font-size:0.78rem; font-weight:600; text-align:right;"
+                                                            onchange="updateFeeValue(${idx}, this.value)">
+                                                        <select onchange="updateFeeType(${idx}, this.value)"
+                                                            style="height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 4px; font-size:0.72rem; font-weight:600; color:#334155;">
+                                                            <option value="percent" ${fee.type === 'percent' ? 'selected' : ''}>%</option>
+                                                            <option value="nominal" ${fee.type === 'nominal' ? 'selected' : ''}>Rp</option>
+                                                        </select>
+                                                        <button onclick="removeFeeRow(${idx})"
+                                                            style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                                                    </div>
                                                 </div>
-                                                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                    <input type="number" value="${fee.value}" min="0" step="any"
-                                                        style="width:70px; height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 6px; font-size:0.78rem; font-weight:600; text-align:right;"
-                                                        onchange="updateFeeValue(${idx}, this.value)">
-                                                    <select onchange="updateFeeType(${idx}, this.value)"
-                                                        style="height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 4px; font-size:0.72rem; font-weight:600; color:#334155;">
-                                                        <option value="percent" ${fee.type === 'percent' ? 'selected' : ''}>%</option>
-                                                        <option value="nominal" ${fee.type === 'nominal' ? 'selected' : ''}>Rp</option>
-                                                    </select>
-                                                    <button onclick="removeFeeRow(${idx})"
-                                                        style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
-                                                </div>
-                                            </div>
-                                        `).join('');
+                                            `).join('');
 
             renderFeeSimulation();
             updateFeesBadgeCount();
@@ -1622,12 +1622,12 @@
                 simEl.innerHTML = `<span style="color:#94a3b8;">Tidak ada biaya tambahan aktif.</span>`;
             } else {
                 simEl.innerHTML = `
-                                                <div>Subtotal: Rp ${formatRupiah(exampleSubtotal)}</div>
-                                                ${lines.map(l => `<div style="color:#0369a1;">+ ${l}</div>`).join('')}
-                                                <div style="color:#64748b; font-size:0.72rem;">+ Platform/Admin Fee: Rp ${formatRupiah(systemFee)}</div>
-                                                <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #cbd5e1; font-weight:900; color:#1eb349;">
-                                                    Grand Total: Rp ${formatRupiah(grandTotal)}
-                                                </div>`;
+                                                    <div>Subtotal: Rp ${formatRupiah(exampleSubtotal)}</div>
+                                                    ${lines.map(l => `<div style="color:#0369a1;">+ ${l}</div>`).join('')}
+                                                    <div style="color:#64748b; font-size:0.72rem;">+ Platform/Admin Fee: Rp ${formatRupiah(systemFee)}</div>
+                                                    <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #cbd5e1; font-weight:900; color:#1eb349;">
+                                                        Grand Total: Rp ${formatRupiah(grandTotal)}
+                                                    </div>`;
             }
         }
 
@@ -1685,9 +1685,9 @@
                     ? (subtotal * (parseFloat(fee.value) || 0)) / 100
                     : (parseFloat(fee.value) || 0);
                 return `<div class="summary-row" style="font-size:0.78rem; color:#475569;">
-                                                <span>${escapeHtml(fee.name)}${fee.type === 'percent' ? ' (' + fee.value + '%)' : ''}</span>
-                                                <span style="font-weight:600;">+Rp ${formatRupiah(amount)}</span>
-                                            </div>`;
+                                                    <span>${escapeHtml(fee.name)}${fee.type === 'percent' ? ' (' + fee.value + '%)' : ''}</span>
+                                                    <span style="font-weight:600;">+Rp ${formatRupiah(amount)}</span>
+                                                </div>`;
             }).join('');
         }
 
@@ -1701,9 +1701,9 @@
 
             if (!posDiscountsData || posDiscountsData.length === 0) {
                 container.innerHTML = `
-                                                <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
-                                                    Belum ada promo / diskon dibuat.<br>Klik <strong>+ Buat Diskon Baru</strong> untuk membuat promo pertama.
-                                                </div>`;
+                                                    <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
+                                                        Belum ada promo / diskon dibuat.<br>Klik <strong>+ Buat Diskon Baru</strong> untuk membuat promo pertama.
+                                                    </div>`;
                 updateDiscountsBadgeCount();
                 return;
             }
@@ -1716,30 +1716,30 @@
                     ? disc.value + '%'
                     : 'Rp ' + formatRupiah(disc.value);
                 return `
-                                            <div id="discountCard-${idx}" style="background:#ffffff; border:1.5px solid ${disc.is_active ? '#bbf7d0' : '#e2e8f0'}; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
-                                                <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
-                                                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
-                                                        <input type="checkbox" ${disc.is_active ? 'checked' : ''}
-                                                            onchange="toggleDiscountActive(${idx}, this.checked)"
-                                                            style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
-                                                    </label>
-                                                    <div style="min-width:0;">
-                                                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                                                            <span style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(disc.name)}</span>
-                                                            <span style="font-size:0.68rem; background:${disc.is_active ? '#dcfce7' : '#f1f5f9'}; color:${disc.is_active ? '#15803d' : '#64748b'}; font-weight:700; padding:1px 7px; border-radius:999px; flex-shrink:0;">${disc.is_active ? 'Aktif' : 'Nonaktif'}</span>
-                                                        </div>
-                                                        <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
-                                                            Potongan <strong>${valueLabel}</strong> &nbsp;·&nbsp; ${scopeLabel}
+                                                <div id="discountCard-${idx}" style="background:#ffffff; border:1.5px solid ${disc.is_active ? '#bbf7d0' : '#e2e8f0'}; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
+                                                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                                                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
+                                                            <input type="checkbox" ${disc.is_active ? 'checked' : ''}
+                                                                onchange="toggleDiscountActive(${idx}, this.checked)"
+                                                                style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
+                                                        </label>
+                                                        <div style="min-width:0;">
+                                                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                                                <span style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(disc.name)}</span>
+                                                                <span style="font-size:0.68rem; background:${disc.is_active ? '#dcfce7' : '#f1f5f9'}; color:${disc.is_active ? '#15803d' : '#64748b'}; font-weight:700; padding:1px 7px; border-radius:999px; flex-shrink:0;">${disc.is_active ? 'Aktif' : 'Nonaktif'}</span>
+                                                            </div>
+                                                            <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
+                                                                Potongan <strong>${valueLabel}</strong> &nbsp;·&nbsp; ${scopeLabel}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                    <button onclick="openEditDiscountDrawer(${idx})"
-                                                        style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; border-radius:6px; padding:4px 9px; font-size:0.7rem; font-weight:700; cursor:pointer;">Edit</button>
-                                                    <button onclick="removeDiscount(${idx})"
-                                                        style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
-                                                </div>
-                                            </div>`;
+                                                    <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                        <button onclick="openEditDiscountDrawer(${idx})"
+                                                            style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; border-radius:6px; padding:4px 9px; font-size:0.7rem; font-weight:700; cursor:pointer;">Edit</button>
+                                                        <button onclick="removeDiscount(${idx})"
+                                                            style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                                                    </div>
+                                                </div>`;
             }).join('');
             updateDiscountsBadgeCount();
             // Also update the cart preset dropdown
@@ -1883,13 +1883,13 @@
                 return;
             }
             list.innerHTML = products.map(p => `
-                                            <label style="display:flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:600; color:#1e293b; cursor:pointer; padding:5px 4px; border-radius:6px; transition:background 0.15s;">
-                                                <input type="checkbox" value="${p.id}"
-                                                    style="width:15px; height:15px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;"
-                                                    onchange="updateDiscountSelectedCount()">
-                                                <span>${escapeHtml(p.name)}</span>
-                                            </label>
-                                        `).join('');
+                                                <label style="display:flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:600; color:#1e293b; cursor:pointer; padding:5px 4px; border-radius:6px; transition:background 0.15s;">
+                                                    <input type="checkbox" value="${p.id}"
+                                                        style="width:15px; height:15px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;"
+                                                        onchange="updateDiscountSelectedCount()">
+                                                    <span>${escapeHtml(p.name)}</span>
+                                                </label>
+                                            `).join('');
         }
 
         function filterDiscountProductPicker() {
@@ -2361,14 +2361,14 @@
 
             if (cashiers.length === 0) {
                 wrap.innerHTML = `
-                                                <div id="cashierEmptyNotice" style="text-align:center; padding:2rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
-                                                    <div style="width:40px; height:40px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; color:#94a3b8;">
-                                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                                    <div id="cashierEmptyNotice" style="text-align:center; padding:2rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
+                                                        <div style="width:40px; height:40px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; color:#94a3b8;">
+                                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                                        </div>
+                                                        <div style="font-size:0.85rem; font-weight:700; color:#334155;">Belum Ada Akun Staf Kasir</div>
+                                                        <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Klik tombol "+ Tambah Staf Kasir" di atas untuk menambahkan staf yang bertugas.</div>
                                                     </div>
-                                                    <div style="font-size:0.85rem; font-weight:700; color:#334155;">Belum Ada Akun Staf Kasir</div>
-                                                    <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Klik tombol "+ Tambah Staf Kasir" di atas untuk menambahkan staf yang bertugas.</div>
-                                                </div>
-                                            `;
+                                                `;
                 return;
             }
 
@@ -2388,43 +2388,43 @@
                 const cJson = JSON.stringify(c).replace(/"/g, '&quot;');
 
                 html += `
-                                                <div class="cashier-card-item" id="cashierRow-${c.id}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
-                                                    <div style="display:flex; align-items:center; gap:12px; min-width:0;">
-                                                        <div style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:800; color:#334155; flex-shrink:0;">
-                                                            ${initials}
-                                                        </div>
-                                                        <div style="min-width:0;">
-                                                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                                                <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(c.name)}</span>
-                                                                <span style="font-size:0.7rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
-                                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                                                    ${escapeHtml(c.email || c.username || '')}
-                                                                </span>
-                                                                ${statusBadge}
+                                                    <div class="cashier-card-item" id="cashierRow-${c.id}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
+                                                        <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                                                            <div style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:800; color:#334155; flex-shrink:0;">
+                                                                ${initials}
                                                             </div>
-                                                            <div style="display:flex; align-items:center; gap:12px; font-size:0.72rem; color:#64748b; margin-top:3px; flex-wrap:wrap;">
-                                                                <span style="display:inline-flex; align-items:center; gap:4px; color:#475569; font-weight:600;">
-                                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                                                    ${escapeHtml(roleTitle)}
-                                                                </span>
-                                                                ${shiftHtml}
+                                                            <div style="min-width:0;">
+                                                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                                    <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(c.name)}</span>
+                                                                    <span style="font-size:0.7rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+                                                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                                                        ${escapeHtml(c.email || c.username || '')}
+                                                                    </span>
+                                                                    ${statusBadge}
+                                                                </div>
+                                                                <div style="display:flex; align-items:center; gap:12px; font-size:0.72rem; color:#64748b; margin-top:3px; flex-wrap:wrap;">
+                                                                    <span style="display:inline-flex; align-items:center; gap:4px; color:#475569; font-weight:600;">
+                                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                                                        ${escapeHtml(roleTitle)}
+                                                                    </span>
+                                                                    ${shiftHtml}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                        <button type="button" class="btn-outline-bio" style="padding:4px 9px; font-size:0.72rem; border-radius:6px;" onclick="editCashierData(${cJson})" title="Edit Kasir">
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; cursor:pointer; font-weight:600;" onclick="toggleCashierActive(${c.id})" title="Aktifkan / Nonaktifkan">
-                                                            ${toggleLabel}
-                                                        </button>
-                                                        <button type="button" style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;" onclick="deleteCashier(${c.id}, '${escapeHtml(c.name)}')" title="Hapus Staf">
-                                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                                        </button>
+                                                        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                            <button type="button" class="btn-outline-bio" style="padding:4px 9px; font-size:0.72rem; border-radius:6px;" onclick="editCashierData(${cJson})" title="Edit Kasir">
+                                                                Edit
+                                                            </button>
+                                                            <button type="button" style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; cursor:pointer; font-weight:600;" onclick="toggleCashierActive(${c.id})" title="Aktifkan / Nonaktifkan">
+                                                                ${toggleLabel}
+                                                            </button>
+                                                            <button type="button" style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;" onclick="deleteCashier(${c.id}, '${escapeHtml(c.name)}')" title="Hapus Staf">
+                                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            `;
+                                                `;
             });
             wrap.innerHTML = html;
         }
@@ -2520,19 +2520,19 @@
 
             if (!posTablesData || posTablesData.length === 0) {
                 container.innerHTML = `
-                                                <div style="text-align:center; padding:2.5rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
-                                                    <div style="width:44px; height:44px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto; color:#94a3b8;">
-                                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                            <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                            <path d="M3 9h18M9 21V9" />
-                                                        </svg>
+                                                    <div style="text-align:center; padding:2.5rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
+                                                        <div style="width:44px; height:44px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto; color:#94a3b8;">
+                                                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                                <path d="M3 9h18M9 21V9" />
+                                                            </svg>
+                                                        </div>
+                                                        <div style="font-size:0.88rem; font-weight:700; color:#334155;">Belum Ada Meja Ditambahkan</div>
+                                                        <div style="font-size:0.75rem; color:#64748b; margin-top:3px; max-width:380px; margin-left:auto; margin-right:auto;">
+                                                            Klik tombol <strong>+ Tambah Meja</strong> di atas untuk membuat meja dan men-download barcode QR tiap meja.
+                                                        </div>
                                                     </div>
-                                                    <div style="font-size:0.88rem; font-weight:700; color:#334155;">Belum Ada Meja Ditambahkan</div>
-                                                    <div style="font-size:0.75rem; color:#64748b; margin-top:3px; max-width:380px; margin-left:auto; margin-right:auto;">
-                                                        Klik tombol <strong>+ Tambah Meja</strong> di atas untuk membuat meja dan men-download barcode QR tiap meja.
-                                                    </div>
-                                                </div>
-                                            `;
+                                                `;
                 updateTablesBadgeCount();
                 return;
             }

@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         $prev = url()->previous();
         if ($prev && !session()->has('url.intended')) {
-            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar'])) {
+            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar', 'notification', 'check', 'push', 'api', 'ajax'])) {
                 session()->put('url.intended', $prev);
             }
         }
@@ -85,6 +85,12 @@ class AuthController extends Controller
                 $redirectRoute = route('creator.dashboard');
             }
             
+            $intended = session('url.intended');
+            if ($intended && Str::contains($intended, ['notification', 'check', 'push', 'ajax', 'json', 'api', 'upload', 'test', 'pos/notifications'])) {
+                session()->forget('url.intended');
+                return redirect($redirectRoute)->with('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
+            }
+
             return redirect()->intended($redirectRoute)
                 ->with('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
         }
@@ -106,7 +112,7 @@ class AuthController extends Controller
 
         $prev = url()->previous();
         if ($prev && !session()->has('url.intended')) {
-            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar'])) {
+            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar', 'notification', 'check', 'push', 'api', 'ajax'])) {
                 session()->put('url.intended', $prev);
             }
         }
@@ -126,7 +132,7 @@ class AuthController extends Controller
 
         $prev = url()->previous();
         if ($prev && !session()->has('url.intended')) {
-            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar'])) {
+            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar', 'notification', 'check', 'push', 'api', 'ajax'])) {
                 session()->put('url.intended', $prev);
             }
         }

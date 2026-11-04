@@ -4250,9 +4250,12 @@
                             <span id="recSubtotal" style="font-weight:700; color:#0f172a;">Rp 0</span>
                         </div>
                         <div id="recDiscountRow" style="display:none; justify-content:space-between; font-size:0.75rem; color:#dc2626; margin-bottom:4px;">
-                            <span>Diskon</span>
-                            <span id="recDiscount">-Rp 0</span>
+                            <span id="recDiscountLabel">Diskon</span>
+                            <span id="recDiscount" style="font-weight:700;">-Rp 0</span>
                         </div>
+                        <!-- Rincian Biaya Tambahan & Pajak POS -->
+                        <div id="recCustomFeesWrap" style="display:none; margin-bottom:4px; font-size:0.75rem;"></div>
+
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; padding-top:6px; border-top:1px solid #f1f5f9;">
                             <div>
                                 <div style="font-size:0.68rem; font-weight:700; color:#64748b; text-transform:uppercase;">Total Tagihan</div>
@@ -4263,6 +4266,18 @@
                                     LUNAS
                                 </span>
                                 <div style="font-size:0.68rem; color:#64748b; margin-top:2px;" id="recPayMethodLabel">Tunai</div>
+                            </div>
+                        </div>
+
+                        <!-- Rincian Tunai Dibayar & Kembalian -->
+                        <div id="recPaymentCashDetails" style="display:none; margin-top:6px; padding-top:6px; border-top:1px dashed #f1f5f9; font-size:0.75rem; color:#64748b;">
+                            <div id="recCashPaidRow" style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                                <span>Tunai Dibayar</span>
+                                <span id="recCashPaidVal" style="font-weight:700; color:#0f172a;">Rp 0</span>
+                            </div>
+                            <div id="recCashChangeRow" style="display:flex; justify-content:space-between;">
+                                <span>Kembalian</span>
+                                <span id="recCashChangeVal" style="font-weight:700; color:#15803d;">Rp 0</span>
                             </div>
                         </div>
                     </div>
@@ -6053,6 +6068,7 @@
             let adminFeeRate = {{ $adminFeeRate }};
             let currentPosBalance = {{ (float) $posBalance }};
             let currentCompletedOrder = null;
+            window._posTodayOrdersData = {!! json_encode($todayOrders) !!};
 
             // Fees, Discounts & Tables Data (from POS Settings)
             let posFeesData = {!! json_encode($profile ? $profile?->getPosFees() : []) !!};
@@ -7404,6 +7420,15 @@
                 const elCashChangeVal = document.getElementById('recCashChangeVal');
                 if (elCashChangeVal) elCashChangeVal.innerText = 'Rp ' + formatRupiah(cashChangeVal);
 
+                const elPaymentCashDetails = document.getElementById('recPaymentCashDetails');
+                if (elPaymentCashDetails) {
+                    if (isCash && cashPaidVal > 0) {
+                        elPaymentCashDetails.style.display = 'block';
+                    } else {
+                        elPaymentCashDetails.style.display = 'none';
+                    }
+                }
+
                 // Legacy rows fallback
                 const elCashPaid = document.getElementById('recCashPaid');
                 const elCashChange = document.getElementById('recCashChange');
@@ -7509,6 +7534,10 @@
 
             // Reprint Past Order Receipt
             function reprintPastReceipt(order) {
+                if (typeof order === 'number' || typeof order === 'string') {
+                    const found = (window._posTodayOrdersData || []).find(o => o.id == order);
+                    if (found) order = found;
+                }
                 closeModal('posHistoryModal');
                 showReceiptModal(order);
             }
@@ -10190,7 +10219,31 @@
 
                 const payMethod = addr.payment_method === 'cash' ? 'Tunai (Cash)' : (addr.payment_method === 'cashless' || addr.payment_method === 'qris' ? 'Non-Tunai / QRIS' : (order.payment_method ? order.payment_method.toUpperCase() : 'LUNAS'));
 
-                const msg = `${greeting}\n\n🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*${custName ? '\nPelanggan: ' + custName : ''}${tableInfo}\nKasir: ${cashierName}\nTanggal: ${new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'})}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*TOTAL: Rp ${totalFormatted}*\nMetode: ${payMethod}\nStatus: *LUNAS (BERHASIL)* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
+                let subtotalText = `Subtotal: Rp ${formatRupiah(order.subtotal || 0)}\n`;
+                let discText = '';
+                if (order.discount && parseFloat(order.discount) > 0) {
+                    const discName = addr.discount_details?.name ? ` (${addr.discount_details.name})` : '';
+                    discText = `Diskon${discName}: -Rp ${formatRupiah(order.discount)}\n`;
+                }
+                let feeText = '';
+                const breakdown = Array.isArray(addr.fees_breakdown) ? addr.fees_breakdown : [];
+                if (breakdown.length > 0) {
+                    breakdown.forEach(f => {
+                        const amt = parseFloat(f.amount) || 0;
+                        if (amt > 0) {
+                            const rateSuffix = f.type === 'percent' ? ` (${f.value}%)` : '';
+                            feeText += `${f.name}${rateSuffix}: Rp ${formatRupiah(amt)}\n`;
+                        }
+                    });
+                } else if (addr.service_fee && parseFloat(addr.service_fee) > 0) {
+                    feeText += `Biaya Layanan & Pajak: Rp ${formatRupiah(addr.service_fee)}\n`;
+                }
+                let cashDetailsText = '';
+                if (addr.payment_method === 'cash' && addr.cash_paid) {
+                    cashDetailsText = `\nTunai Dibayar: Rp ${formatRupiah(addr.cash_paid)}\nKembalian: Rp ${formatRupiah(addr.cash_change || 0)}`;
+                }
+
+                const msg = `${greeting}\n\n🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*${custName ? '\nPelanggan: ' + custName : ''}${tableInfo}\nKasir: ${cashierName}\nTanggal: ${new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'})}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*RINGKASAN:* \n${subtotalText}${discText}${feeText}*TOTAL: Rp ${totalFormatted}*\nMetode: ${payMethod}${cashDetailsText}\nStatus: *LUNAS (BERHASIL)* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
 
                 let phone = (document.getElementById('posCustomerPhone')?.value || addr.phone || order.customer_phone || '').replace(/[^0-9]/g, '');
                 if (phone.startsWith('0')) {
@@ -10617,7 +10670,7 @@
     (function() {
         var lastNotifId = 0;
         function checkPosLiveUpdates() {
-            fetch("{{ route('creator.pos.notifications.check') }}")
+            fetch("{{ route('creator.pos.notifications.check') }}", { headers: { "Accept": "application/json", "X-Requested-With": "XMLHttpRequest" } })
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data && data.success && data.notifications && data.notifications.length > 0) {

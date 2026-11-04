@@ -6,21 +6,21 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     @if(request()->is('creator/pos*') || request()->is('login-pos*'))
-    <link rel="manifest" href="{{ asset('pos-manifest.json') }}">
-    <meta name="theme-color" content="#1eb349">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Buyle POS">
-    <link rel="apple-touch-icon" href="{{ asset('pos-icon-192.png') }}">
-    <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('pos-icon-192.png') }}">
-    <link rel="apple-touch-icon" sizes="512x512" href="{{ asset('pos-icon-512.png') }}">
+        <link rel="manifest" href="{{ asset('pos-manifest.json') }}">
+        <meta name="theme-color" content="#1eb349">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="Buyle POS">
+        <link rel="apple-touch-icon" href="{{ asset('pos-icon-192.png') }}">
+        <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('pos-icon-192.png') }}">
+        <link rel="apple-touch-icon" sizes="512x512" href="{{ asset('pos-icon-512.png') }}">
     @else
-    <link rel="manifest" href="{{ asset('creator-manifest.json') }}">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Buyle Creator">
-    <link rel="apple-touch-icon" href="{{ asset('buyle-logo.png') }}">
+        <link rel="manifest" href="{{ asset('creator-manifest.json') }}">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="Buyle Creator">
+        <link rel="apple-touch-icon" href="{{ asset('buyle-logo.png') }}">
     @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Creator Studio') – buyle.id</title>
@@ -825,7 +825,7 @@
         }
     </style>
 
-    </head>
+</head>
 
 <body>
     {{-- Initial Splash Screen with Buyle Logo (HANYA Muncul Diawal Masuk Aplikasi, TIDAK Muncul Saat Berpindah Halaman)
@@ -894,11 +894,14 @@
                 <img src="{{ asset('buyle-logo.png') }}" alt="Buyle.id"
                     style="max-width:140px; height:auto; margin-bottom:1.25rem;">
 
-                <div style="width:68px; height:68px; border-radius:50%; margin:0 auto 0.75rem; box-shadow:0 4px 16px rgba(0,0,0,0.1); border:2.5px solid #ffffff; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f8fafc;">
+                <div
+                    style="width:68px; height:68px; border-radius:50%; margin:0 auto 0.75rem; box-shadow:0 4px 16px rgba(0,0,0,0.1); border:2.5px solid #ffffff; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f8fafc;">
                     @if($lockAvatarUrl)
-                        <img src="{{ $lockAvatarUrl }}" alt="{{ $authUser->name ?? 'Kasir' }}" style="width:100%; height:100%; object-fit:cover;">
+                        <img src="{{ $lockAvatarUrl }}" alt="{{ $authUser->name ?? 'Kasir' }}"
+                            style="width:100%; height:100%; object-fit:cover;">
                     @else
-                        <div style="width:100%; height:100%; background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.35rem;">
+                        <div
+                            style="width:100%; height:100%; background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.35rem;">
                             {{ strtoupper(substr($authUser->name ?? 'C', 0, 1)) }}
                         </div>
                     @endif
@@ -979,13 +982,6 @@
                             style="background:none; border:none; color:#16a34a; font-size:0.78rem; font-weight:700; cursor:pointer; padding:4px 8px; border-radius:6px; transition:background 0.15s ease;">
                             Lupa PIN?
                         </button>
-                        <form action="{{ route('logout') }}" method="POST" style="margin:0; display:inline;">
-                            @csrf
-                            <button type="submit"
-                                style="background:none; border:none; color:#94a3b8; font-size:0.75rem; text-decoration:underline; cursor:pointer;">
-                                Masuk Ulang Akun
-                            </button>
-                        </form>
                     </div>
                 @endif
             </div>
@@ -1165,7 +1161,7 @@
     {{-- SIDEBAR --}}
     <aside class="cr-sidebar" id="crSidebar">
         @php 
-                        $logo = \App\Models\Setting::get('logo');
+                                    $logo = \App\Models\Setting::get('logo');
             $authUser = auth()->user();
             $isPosCashier = $authUser ? $authUser->isPosCashier() : false;
             $isBuyer = $authUser ? $authUser->role === 'buyer' : false;
@@ -1610,49 +1606,59 @@
     @endphp
 
     @if(request()->is('creator/products*') && $navIsFromPos)
-    {{-- Jika masuk ke halaman produk dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi, Laporan, Profil) --}}
-    <div class="pos-bottom-nav-wrap" id="posBottomNavWrap" style="display: flex !important; position: fixed !important; bottom: 16px !important; left: 14px !important; right: 14px !important; max-width: 440px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
-        <div class="pos-bottom-nav-bar" style="width: 100% !important; height: 62px !important; background: #ffffff !important; border-radius: 999px !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 0.35rem 0.65rem !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important; border: 1.5px solid #f1f5f9 !important; gap: 6px !important;">
-            <!-- 1. Home / Kasir (active / klik balik ke kasir POS) -->
-            <a href="{{ route('creator.pos.index') }}" class="pos-nav-item active" id="posNavBtnHome" title="Kasir Home" style="text-decoration:none; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-                <span class="pos-nav-label" style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Home</span>
-            </a>
+        {{-- Jika masuk ke halaman produk dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi, Laporan,
+        Profil) --}}
+        <div class="pos-bottom-nav-wrap" id="posBottomNavWrap"
+            style="display: flex !important; position: fixed !important; bottom: 16px !important; left: 14px !important; right: 14px !important; max-width: 440px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
+            <div class="pos-bottom-nav-bar"
+                style="width: 100% !important; height: 62px !important; background: #ffffff !important; border-radius: 999px !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 0.35rem 0.65rem !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important; border: 1.5px solid #f1f5f9 !important; gap: 6px !important;">
+                <!-- 1. Home / Kasir (active / klik balik ke kasir POS) -->
+                <a href="{{ route('creator.pos.index') }}" class="pos-nav-item active" id="posNavBtnHome" title="Kasir Home"
+                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    <span class="pos-nav-label"
+                        style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Home</span>
+                </a>
 
-            <!-- 2. Transactions -->
-            <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item" id="posNavBtnTrans" title="Transaksi" style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                    <circle cx="12" cy="12" r="3"/>
-                    <line x1="2" y1="9" x2="6" y2="9"/>
-                    <line x1="18" y1="15" x2="22" y2="15"/>
-                </svg>
-            </a>
+                <!-- 2. Transactions -->
+                <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item"
+                    id="posNavBtnTrans" title="Transaksi"
+                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <circle cx="12" cy="12" r="3" />
+                        <line x1="2" y1="9" x2="6" y2="9" />
+                        <line x1="18" y1="15" x2="22" y2="15" />
+                    </svg>
+                </a>
 
-            <!-- 3. Laporan -->
-            <a href="{{ route('creator.pos.reports') }}" class="pos-nav-item" id="posNavBtnReports" title="Laporan POS" style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <line x1="18" y1="20" x2="18" y2="10"/>
-                    <line x1="12" y1="20" x2="12" y2="4"/>
-                    <line x1="6" y1="20" x2="6" y2="14"/>
-                </svg>
-            </a>
+                <!-- 3. Laporan -->
+                <a href="{{ route('creator.pos.reports') }}" class="pos-nav-item" id="posNavBtnReports" title="Laporan POS"
+                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                </a>
 
-            <!-- 4. Profile -->
-            <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item" id="posNavBtnProfile" title="Profil Kasir & Toko" style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
-            </a>
+                <!-- 4. Profile -->
+                <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item" id="posNavBtnProfile"
+                    title="Profil Kasir & Toko"
+                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                </a>
+            </div>
         </div>
-    </div>
     @elseif(!request()->is('creator/pos*'))
-    {{-- Jika bukan POS, tampilkan navbar reguler Super App --}}
-    <nav class="superapp-bottom-nav" id="superappBottomNav">
+        {{-- Jika bukan POS, tampilkan navbar reguler Super App --}}
+        <nav class="superapp-bottom-nav" id="superappBottomNav">
             @php
                 $bottomNavIsBuyer = auth()->user()->role === 'buyer';
                 $bottomNavIsCashier = auth()->user()->isPosCashier();
@@ -2144,7 +2150,7 @@
                     @if($hasBiometric)
                         setTimeout(triggerBiometricAuth, 500);
                     @endif
-                }
+                    }
             }
 
             function updateLockDots() {
@@ -2225,20 +2231,30 @@
     @yield('scripts')
 
     <!-- ── POPUP LUPA PIN POS (VERIFIKASI EMAIL & OTP) ── -->
-    <div id="forgotPinModal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.25rem;">
-        <div style="background:#ffffff; border-radius:24px; max-width:380px; width:100%; padding:1.5rem; box-shadow:0 24px 48px rgba(15,23,42,0.25); position:relative; text-align:left; animation:slideUpPos 0.25s ease;">
-            <button type="button" onclick="closeForgotPinModal()" style="position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:#f1f5f9; border:none; color:#64748b; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+    <div id="forgotPinModal"
+        style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.25rem;">
+        <div
+            style="background:#ffffff; border-radius:24px; max-width:380px; width:100%; padding:1.5rem; box-shadow:0 24px 48px rgba(15,23,42,0.25); position:relative; text-align:left; animation:slideUpPos 0.25s ease;">
+            <button type="button" onclick="closeForgotPinModal()"
+                style="position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:#f1f5f9; border:none; color:#64748b; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
 
             <!-- STEP 1: Input Email -->
             <div id="forgotStep1">
-                <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Lupa PIN Masuk POS</div>
-                <div style="font-size:0.75rem; color:#64748b; line-height:1.4; margin-bottom:1.2rem;">Masukkan email akun yang terdaftar untuk menerima kode verifikasi OTP.</div>
+                <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Lupa PIN Masuk POS
+                </div>
+                <div style="font-size:0.75rem; color:#64748b; line-height:1.4; margin-bottom:1.2rem;">Masukkan email
+                    akun yang terdaftar untuk menerima kode verifikasi OTP.</div>
 
-                <div id="forgotAlert1" style="display:none; padding:8px 12px; border-radius:10px; font-size:0.75rem; margin-bottom:1rem;"></div>
+                <div id="forgotAlert1"
+                    style="display:none; padding:8px 12px; border-radius:10px; font-size:0.75rem; margin-bottom:1rem;">
+                </div>
 
                 <div style="margin-bottom:1.2rem;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Email Terdaftar</label>
-                    <input type="email" id="forgotInputEmail" value="{{ $authUser->email ?? '' }}" placeholder="email@domain.com"
+                    <label
+                        style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Email
+                        Terdaftar</label>
+                    <input type="email" id="forgotInputEmail" value="{{ $authUser->email ?? '' }}"
+                        placeholder="email@domain.com"
                         style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:0.85rem; color:#0f172a; outline:none; font-family:inherit;">
                 </div>
 
@@ -2250,25 +2266,35 @@
 
             <!-- STEP 2: Input OTP & PIN Baru -->
             <div id="forgotStep2" style="display:none;">
-                <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Verifikasi & Buat PIN Baru</div>
-                <div style="font-size:0.75rem; color:#64748b; line-height:1.4; margin-bottom:1.2rem;">Masukkan kode 6-digit OTP dari email dan tentukan 6-digit PIN baru Anda.</div>
+                <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Verifikasi & Buat PIN
+                    Baru</div>
+                <div style="font-size:0.75rem; color:#64748b; line-height:1.4; margin-bottom:1.2rem;">Masukkan kode
+                    6-digit OTP dari email dan tentukan 6-digit PIN baru Anda.</div>
 
-                <div id="forgotAlert2" style="display:none; padding:8px 12px; border-radius:10px; font-size:0.75rem; margin-bottom:1rem;"></div>
+                <div id="forgotAlert2"
+                    style="display:none; padding:8px 12px; border-radius:10px; font-size:0.75rem; margin-bottom:1rem;">
+                </div>
 
                 <div style="margin-bottom:0.9rem;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Kode OTP (6 Digit)</label>
+                    <label
+                        style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Kode
+                        OTP (6 Digit)</label>
                     <input type="text" id="forgotInputOtp" maxlength="6" placeholder="Contoh: 123456"
                         style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:1.1rem; letter-spacing:0.25em; text-align:center; font-weight:800; color:#0f172a; outline:none;">
                 </div>
 
                 <div style="margin-bottom:0.9rem;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">PIN Baru (6 Digit Angka)</label>
+                    <label
+                        style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">PIN
+                        Baru (6 Digit Angka)</label>
                     <input type="password" id="forgotNewPin" maxlength="6" inputmode="numeric" placeholder="••••••"
                         style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:1.1rem; letter-spacing:0.25em; text-align:center; font-weight:800; color:#0f172a; outline:none;">
                 </div>
 
                 <div style="margin-bottom:1.2rem;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Konfirmasi PIN Baru</label>
+                    <label
+                        style="display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">Konfirmasi
+                        PIN Baru</label>
                     <input type="password" id="forgotConfirmPin" maxlength="6" inputmode="numeric" placeholder="••••••"
                         style="width:100%; height:44px; border-radius:12px; border:1px solid #cbd5e1; padding:0 12px; font-size:1.1rem; letter-spacing:0.25em; text-align:center; font-weight:800; color:#0f172a; outline:none;">
                 </div>
@@ -2279,7 +2305,8 @@
                 </button>
 
                 <div style="text-align:center;">
-                    <button type="button" onclick="backToForgotStep1()" style="background:none; border:none; color:#64748b; font-size:0.72rem; cursor:pointer;">
+                    <button type="button" onclick="backToForgotStep1()"
+                        style="background:none; border:none; color:#64748b; font-size:0.72rem; cursor:pointer;">
                         Kirim ulang kode OTP
                     </button>
                 </div>
@@ -2288,15 +2315,15 @@
     </div>
 
     <script>
-        function openForgotPinModal() {
-            document.getElementById('forgotPinModal').style.display = 'flex';
-            document.getElementById('forgotStep1').style.display = 'block';
-            document.getElementById('forgotStep2').style.display = 'none';
-            var a1 = document.getElementById('forgotAlert1');
-            if (a1) a1.style.display = 'none';
-            var a2 = document.getElementById('forgotAlert2');
-            if (a2) a2.style.display = 'none';
-        }
+            function openForgotPinModal() {
+                document.getElementById('forgotPinModal').style.display = 'flex';
+                document.getElementById('forgotStep1').style.display = 'block';
+                document.getElementById('forgotStep2').style.display = 'none';
+                var a1 = document.getElementById('forgotAlert1');
+                if (a1) a1.style.display = 'none';
+                var a2 = document.getElementById('forgotAlert2');
+                if (a2) a2.style.display = 'none';
+            }
 
         function closeForgotPinModal() {
             document.getElementById('forgotPinModal').style.display = 'none';
