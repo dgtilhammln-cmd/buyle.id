@@ -1965,7 +1965,7 @@ class PosController extends Controller
     {
         $user = auth()->user();
         if (!$user) {
-            return response()->json(['notifications' => []]);
+            return response()->json(['success' => true, 'notifications' => []]);
         }
 
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;

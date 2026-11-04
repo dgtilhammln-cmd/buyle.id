@@ -879,7 +879,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/pos/forgot-pin/reset', [\App\Http\Controllers\Creator\PosController::class, 'resetPinWithOtp'])->name('pos.forgot-pin.reset');
     Route::post('/pos/push/subscribe', [\App\Http\Controllers\Creator\PosController::class, 'savePushSubscription'])->name('pos.push.subscribe');
     Route::post('/pos/push/test', [\App\Http\Controllers\Creator\PosController::class, 'testPushNotification'])->name('pos.push.test');
-    Route::get('/pos/notifications/check', [\App\Http\Controllers\Creator\PosController::class, 'checkNewNotifications'])->name('pos.notifications.check');
+    Route::get('/pos/notifications/check', [\App\Http\Controllers\Creator\PosController::class, 'checkNewNotifications'])->withoutMiddleware(['auth', 'role:seller,pos_cashier'])->name('pos.notifications.check');
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');

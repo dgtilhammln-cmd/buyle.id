@@ -1298,7 +1298,7 @@
                         $method = strtolower($addr['payment_method'] ?? ($order->payment->method ?? 'cash'));
                         $tableNo = $addr['table_number'] ?? ($addr['table'] ?? null);
                     @endphp
-                    <div class="rp-order-card" data-search="{{ strtolower($order->order_number . ' ' . $cName) }}">
+                    <div class="rp-order-card" style="cursor:pointer;" onclick="openReceiptModal({{ json_encode($order) }})" data-search="{{ strtolower($order->order_number . ' ' . $cName) }}">
                         <div class="rp-order-top">
                             <span class="rp-order-no">#{{ $order->order_number }}</span>
                             <span class="rp-order-time">{{ $order->created_at->format('d M y H:i') }}</span>
@@ -1691,5 +1691,172 @@
                 });
             }
         })();
-    </script>
+            let currentSelectedReportOrder = null;
+
+        function openReceiptModal(order) {
+            currentSelectedReportOrder = order;
+            const addr = typeof order.shipping_address === 'string' ? JSON.parse(order.shipping_address || '{}') : (order.shipping_address || {});
+            
+            document.getElementById('mRecOrderNo').innerText = '#' + (order.order_number || ('BYL-' + order.id));
+            document.getElementById('mRecDateTime').innerText = new Date(order.created_at).toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+            
+            const cName = addr.name || order.customer_name || 'Pelanggan Umum';
+            const tableVal = addr.table_number || addr.table || '';
+            document.getElementById('mRecCustomer').innerText = cName + (tableVal ? ' (Meja ' + tableVal + ')' : '');
+            
+            document.getElementById('mRecCashier').innerText = addr.cashier_name || order.cashier_name || 'Kasir';
+            
+            // Items
+            let itemsHtml = '';
+            let totalQty = 0;
+            (order.items || []).forEach((item, idx) => {
+                const qty = item.qty || item.quantity || 1;
+                totalQty += qty;
+                const price = Number(item.price || 0);
+                const sub = Number(item.subtotal || (price * qty));
+                itemsHtml += `
+                    <div style="margin-bottom:6px; line-height:1.35;">
+                        <div style="font-weight:700; color:#0f172a;">${idx + 1}. ${escapeHtml(item.product_name)} ${item.variant_name ? '<span style="font-weight:normal; color:#16a34a;">(' + escapeHtml(item.variant_name) + ')</span>' : ''}</div>
+                        ${item.notes ? '<div style="font-size:9.5px; color:#64748b; font-style:italic; margin-left:10px;">* ' + escapeHtml(item.notes) + '</div>' : ''}
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:#475569; margin-top:1px;">
+                            <span>${qty} x Rp ${price.toLocaleString('id-ID')}</span>
+                            <span style="font-weight:700; color:#0f172a;">Rp ${sub.toLocaleString('id-ID')}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('mRecItemsWrap').innerHTML = itemsHtml || '<div style="color:#94a3b8; text-align:center;">(Tidak ada item)</div>';
+            document.getElementById('mRecTotalQty').innerText = totalQty;
+            document.getElementById('mRecSubtotal').innerText = 'Rp ' + Number(order.subtotal || 0).toLocaleString('id-ID');
+            
+            // Discount
+            const disc = Number(order.discount || 0);
+            const discRow = document.getElementById('mRecDiscountRow');
+            if (disc > 0) {
+                discRow.style.display = 'flex';
+                const discName = addr.discount_details?.name;
+                document.getElementById('mRecDiscountLabel').innerText = discName ? 'Diskon (' + discName + ')' : 'Diskon';
+                document.getElementById('mRecDiscount').innerText = '-Rp ' + disc.toLocaleString('id-ID');
+            } else {
+                discRow.style.display = 'none';
+            }
+            
+            // Custom fees
+            const feesWrap = document.getElementById('mRecFeesWrap');
+            const breakdown = Array.isArray(addr.fees_breakdown) ? addr.fees_breakdown : [];
+            if (breakdown.length > 0) {
+                let fHtml = '';
+                breakdown.forEach(f => {
+                    const amt = Number(f.amount || 0);
+                    if (amt > 0) {
+                        const sfx = f.type === 'percent' ? ` (${f.value}%)` : '';
+                        fHtml += `
+                            <div style="display:flex; justify-content:space-between; margin-bottom:3px; color:#475569;">
+                                <span>${escapeHtml(f.name)}${sfx}</span>
+                                <span style="font-weight:700; color:#0f172a;">Rp ${amt.toLocaleString('id-ID')}</span>
+                            </div>
+                        `;
+                    }
+                });
+                feesWrap.innerHTML = fHtml;
+                feesWrap.style.display = fHtml ? 'block' : 'none';
+            } else if (addr.service_fee && Number(addr.service_fee) > 0) {
+                feesWrap.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:3px; color:#475569;">
+                        <span>Biaya Layanan & Pajak</span>
+                        <span style="font-weight:700; color:#0f172a;">Rp ${Number(addr.service_fee).toLocaleString('id-ID')}</span>
+                    </div>
+                `;
+                feesWrap.style.display = 'block';
+            } else {
+                feesWrap.innerHTML = '';
+                feesWrap.style.display = 'none';
+            }
+            
+            document.getElementById('mRecTotal').innerText = 'Rp ' + Number(order.total || 0).toLocaleString('id-ID');
+            const pMethod = addr.payment_method === 'cash' ? 'Tunai' : (addr.payment_method === 'qris' ? 'QRIS' : (addr.payment_method ? addr.payment_method.toUpperCase() : 'Non-Tunai'));
+            document.getElementById('mRecPayMethod').innerText = pMethod;
+            
+            // Cash details
+            const cashDetails = document.getElementById('mRecCashDetails');
+            if (addr.payment_method === 'cash' && addr.cash_paid) {
+                cashDetails.style.display = 'block';
+                document.getElementById('mRecCashPaid').innerText = 'Rp ' + Number(addr.cash_paid).toLocaleString('id-ID');
+                document.getElementById('mRecCashChange').innerText = 'Rp ' + Number(addr.cash_change || 0).toLocaleString('id-ID');
+            } else {
+                cashDetails.style.display = 'none';
+            }
+            
+            document.getElementById('receiptDetailModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptDetailModal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function escapeHtml(s) {
+            return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function printReportReceipt() {
+            const area = document.getElementById('printableReportReceiptArea');
+            if (!area) return;
+            const w = window.open('', '_blank', 'width=400,height=600');
+            w.document.write(`<html><head><title>Struk</title><style>body{font-family:'Courier New',monospace;padding:10px;font-size:12px;}</style></head><body>${area.innerHTML}</body></html>`);
+            w.document.close();
+            w.focus();
+            setTimeout(() => { w.print(); w.close(); }, 300);
+        }
+
+        function shareReportReceiptToWA() {
+            if (!currentSelectedReportOrder) return;
+            const order = currentSelectedReportOrder;
+            const addr = typeof order.shipping_address === 'string' ? JSON.parse(order.shipping_address || '{}') : (order.shipping_address || {});
+            const storeTitle = document.getElementById('mRecStoreName')?.innerText || 'Buyle POS';
+            const invNum = order.order_number || ('BYL-' + order.id);
+            const totalFmt = Number(order.total || 0).toLocaleString('id-ID');
+            
+            let itemsText = '';
+            (order.items || []).forEach((it, idx) => {
+                const qty = it.qty || it.quantity || 1;
+                const p = Number(it.price || 0).toLocaleString('id-ID');
+                const s = Number(it.subtotal || (it.price * qty)).toLocaleString('id-ID');
+                itemsText += `${idx+1}. *${it.product_name}*${it.variant_name ? ' ('+it.variant_name+')' : ''}\n   ${qty} x Rp ${p} = Rp ${s}\n`;
+            });
+            
+            const custName = addr.name || order.customer_name || '';
+            let discText = '';
+            if (order.discount && Number(order.discount) > 0) {
+                const dn = addr.discount_details?.name ? ` (${addr.discount_details.name})` : '';
+                discText = `Diskon${dn}: -Rp ${Number(order.discount).toLocaleString('id-ID')}\n`;
+            }
+            let feeText = '';
+            const breakdown = Array.isArray(addr.fees_breakdown) ? addr.fees_breakdown : [];
+            if (breakdown.length > 0) {
+                breakdown.forEach(f => {
+                    if (Number(f.amount || 0) > 0) {
+                        const sfx = f.type === 'percent' ? ` (${f.value}%)` : '';
+                        feeText += `${f.name}${sfx}: Rp ${Number(f.amount).toLocaleString('id-ID')}\n`;
+                    }
+                });
+            } else if (addr.service_fee && Number(addr.service_fee) > 0) {
+                feeText += `Biaya Layanan & Pajak: Rp ${Number(addr.service_fee).toLocaleString('id-ID')}\n`;
+            }
+            let cashText = '';
+            if (addr.payment_method === 'cash' && addr.cash_paid) {
+                cashText = `\nTunai Dibayar: Rp ${Number(addr.cash_paid).toLocaleString('id-ID')}\nKembalian: Rp ${Number(addr.cash_change || 0).toLocaleString('id-ID')}`;
+            }
+            const pMethod = addr.payment_method === 'cash' ? 'Tunai (Cash)' : 'Non-Tunai';
+            
+            const msg = `🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*${custName ? '\nPelanggan: ' + custName : ''}\nTanggal: ${new Date(order.created_at).toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*RINGKASAN:*\nSubtotal: Rp ${Number(order.subtotal||0).toLocaleString('id-ID')}\n${discText}${feeText}*TOTAL: Rp ${totalFmt}*\nMetode: ${pMethod}${cashText}\nStatus: *LUNAS* ✅\n--------------------------------\n_Terima kasih telah berbelanja!_`;
+            
+            let phone = (addr.phone || order.customer_phone || '').replace(/[^0-9]/g, '');
+            if (phone.startsWith('0')) phone = '62' + phone.substring(1);
+            const enc = encodeURIComponent(msg);
+            const waUrl = phone ? `https://api.whatsapp.com/send?phone=${phone}&text=${enc}` : `https://api.whatsapp.com/send?text=${enc}`;
+            window.open(waUrl, '_blank');
+        }
+</script>
 @endsection
