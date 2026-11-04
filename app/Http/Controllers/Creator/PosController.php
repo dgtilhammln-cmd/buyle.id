@@ -302,6 +302,7 @@ class PosController extends Controller
             ->orderBy('name')
             ->get();
         $recentPosOrders = \App\Models\Order::where('source', 'pos')
+            ->where('seller_id', $seller->id)
             ->where(function($q) use ($seller) {
                 $q->where('seller_id', $seller->id)
                   ->orWhere('user_id', $seller->id)
