@@ -1,4 +1,4 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 
 @section('title', 'Kasir Digital (POS)')
 @section('page_title', 'Kasir Digital (POS)')
@@ -3589,25 +3589,49 @@
             <div id="posTransactionsListContainer">
                 @forelse($recentPosOrders ?? $todayOrders as $ord)
                     @php
-                        $payMethod = strtoupper($ord->payment_method ?? ($ord->payment?->payment_type ?? 'CASH'));
+                        $payMethod = strtolower($ord->payment_method ?? ($ord->payment?->payment_type ?? 'cash'));
                         $totalVal = (float) ($ord->total ?? $ord->total_amount ?? 0);
                         $isPaidOrd = in_array(strtolower($ord->status ?? ''), ['completed', 'paid', 'success', 'confirmed']);
+                        $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
+                        $custName = $addr['name'] ?? $ord->user?->name ?? 'Pelanggan Umum';
+                        $tableNo = $addr['table_number'] ?? ($addr['table'] ?? null);
+                        $itemCount = $ord->items ? $ord->items->sum('qty') : 0;
+                        $itemsSummary = [];
+                        if (!empty($addr['items_meta']) && is_array($addr['items_meta'])) {
+                            foreach($addr['items_meta'] as $im) {
+                                $itemsSummary[] = ($im['qty'] ?? 1) . 'x ' . ($im['product_name'] ?? 'Item');
+                            }
+                        } elseif ($ord->items && $ord->items->count() > 0) {
+                            foreach($ord->items as $it) {
+                                $pName = $it->product ? $it->product->name : ($it->product_name ?? 'Item');
+                                $itemsSummary[] = $it->qty . 'x ' . $pName;
+                            }
+                        }
+                        $itemsText = !empty($itemsSummary) ? implode(', ', array_slice($itemsSummary, 0, 3)) . (count($itemsSummary) > 3 ? ' +' . (count($itemsSummary) - 3) . ' lainnya' : '') : ($itemCount . ' item');
+                        $pm = strtolower($payMethod);
+                        $badgeColor = $pm === 'cash' ? '#059669' : ($pm === 'qris' ? '#2563eb' : '#7c3aed');
+                        $badgeLabel = $pm === 'cash' ? 'Tunai' : ($pm === 'qris' ? 'QRIS' : strtoupper($payMethod));
                     @endphp
-                    <div class="pos-trans-card" data-search="{{ strtolower($ord->order_number ?? $ord->id) }} {{ strtolower($payMethod) }}" data-date="{{ \Carbon\Carbon::parse($ord->created_at)->format('Y-m-d') }}" data-timestamp="{{ \Carbon\Carbon::parse($ord->created_at)->timestamp }}" onclick="openPosOrderReceipt({{ $ord->id }})">
+                    <div class="pos-trans-card" data-search="{{ strtolower($ord->order_number ?? $ord->id) }} {{ strtolower($custName) }}" data-date="{{ \Carbon\Carbon::parse($ord->created_at)->format('Y-m-d') }}" data-timestamp="{{ \Carbon\Carbon::parse($ord->created_at)->timestamp }}" onclick="openPosOrderReceipt({{ $ord->id }})">
                         <div class="pos-trans-card-top">
-                            <span class="pos-trans-sale-num">Sale #{{ $ord->order_number ? substr($ord->order_number, -6) : $ord->id }}</span>
+                            <span class="pos-trans-sale-num">#{{ $ord->order_number ?? ('BYL-' . $ord->id) }}</span>
                             <span class="pos-trans-amount">Rp {{ number_format($totalVal, 0, ',', '.') }}</span>
                         </div>
                         <div class="pos-trans-card-mid">
-                            <span class="pos-trans-type">{{ $payMethod }} Sale</span>
-                            <span class="pos-trans-badge-paid">{{ $isPaidOrd ? 'Paid' : 'Pending' }}</span>
+                            <span style="font-size:0.75rem;color:#334155;font-weight:600;">{{ $custName }}{{ $tableNo ? ' · Meja ' . $tableNo : '' }}</span>
+                            <span style="font-size:0.7rem;color:#64748b;">{{ $itemCount }} item</span>
                         </div>
-                        <div class="pos-trans-time">
-                            {{ \Carbon\Carbon::parse($ord->created_at)->translatedFormat('d M Y · H:i') }}
+                        <div style="font-size:0.75rem;color:#475569;margin:4px 0 6px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            {{ $itemsText }}
+                        </div>
+                        <div class="pos-trans-time" style="display:flex;align-items:center;justify-content:space-between;">
+                            <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.65rem;font-weight:700;color:#fff;background:{{ $badgeColor }};">{{ $badgeLabel }}</span>
+                            <span>{{ \Carbon\Carbon::parse($ord->created_at)->format('d M Y, H:i') }}</span>
                         </div>
                     </div>
                 @empty
                     <div style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.84rem;">
+                        <svg width="40" height="40" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24" style="display:block;margin:0 auto 10px;"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
                         Belum ada riwayat transaksi kasir
                     </div>
                 @endforelse

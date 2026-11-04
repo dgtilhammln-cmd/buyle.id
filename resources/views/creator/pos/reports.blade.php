@@ -1,4 +1,4 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 
 @section('title', 'Laporan Kasir POS – Creator Studio')
 
@@ -1169,7 +1169,7 @@
         {{-- Header --}}
         <div class="rp-hdr">
             <div class="rp-hdr-left">
-                <a href="{{ route('creator.pos.index') }}" class="rp-back" title="Kembali">
+
                     <a href="{{ route('creator.pos.index') }}" class="rp-back" title="Kembali ke POS">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3"
                             viewBox="0 0 24 24">
@@ -1179,21 +1179,16 @@
                     <div>
                         <h1 class="rp-hdr-title">Laporan POS</h1>
                         <p class="rp-hdr-sub">Rekap penjualan kasir digital</p>
-                        <p class="rp-hdr-sub">Rekap omset & penjualan kasir</p>
+
                     </div>
             </div>
-            <a href="{{ route('creator.sales.report.export_pos', array_merge(request()->query(), ['pos_method' => $posPaymentMethod])) }}"
-                class="rp-export" title="Ekspor CSV">
-                <button type="button" class="rp-export-btn" onclick="openExportModal()" title="Ekspor PDF / CSV">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <button type="button" class="rp-export-btn" onclick="openExportModal()" title="Ekspor Laporan" style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0;border:1.5px solid #bbf7d0;background:#fff;color:#166534;cursor:pointer;box-shadow:0 2px 8px rgba(30,179,73,.12);">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                         <polyline points="7 10 12 15 17 10" />
                         <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
-                    Ekspor
-            </a>
-            <span>Ekspor</span>
-            </button>
+                </button>
         </div>
 
         {{-- Period Filter 3×2 Grid --}}
@@ -1291,7 +1286,7 @@
                 </svg>
                 <input type="text" id="orderSearch" placeholder="Cari no. struk atau nama pelanggan…"
                     oninput="filterOrders()">
-                <input type="text" id="orderSearch" placeholder="Cari no. struk atau pelanggan…" oninput="filterOrders()">
+
             </div>
 
             <div id="ordersContainer">
