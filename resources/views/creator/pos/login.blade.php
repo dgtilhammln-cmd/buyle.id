@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Login Kasir Digital - Buyle POS</title>
 
     <!-- PWA Settings (Dedicated Buyle POS PWA) -->
@@ -17,7 +19,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -109,12 +112,21 @@
         }
 
         @keyframes pulseLogo {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* ── Container Kartu Login PWA POS (Super App Mobile-First) ── */
@@ -362,6 +374,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- ── 1. Splash Screen Putih + Logo Header di Awal Buka PWA ── -->
@@ -386,7 +399,11 @@
 
         @if ($errors->any())
             <div class="alert-error">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
                 <span>{{ $errors->first() }}</span>
             </div>
         @endif
@@ -399,9 +416,15 @@
                 <label class="form-label" for="posEmail">Email atau Username</label>
                 <div class="input-wrap">
                     <div class="input-icon">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
                     </div>
-                    <input type="text" name="email" id="posEmail" class="form-input" placeholder="contoh@toko.com / kasir1" value="{{ old('email') }}" required autofocus autocomplete="username">
+                    <input type="text" name="email" id="posEmail" class="form-input"
+                        placeholder="contoh@toko.com / kasir1" value="{{ old('email') }}" required autofocus
+                        autocomplete="username">
                 </div>
             </div>
 
@@ -410,11 +433,21 @@
                 <label class="form-label" for="posPassword">Kata Sandi / PIN</label>
                 <div class="input-wrap">
                     <div class="input-icon">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
                     </div>
-                    <input type="password" name="password" id="posPassword" class="form-input" placeholder="Masukkan kata sandi" required autocomplete="current-password">
-                    <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility()" title="Lihat Kata Sandi">
-                        <svg id="eyeIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <input type="password" name="password" id="posPassword" class="form-input"
+                        placeholder="Masukkan kata sandi" required autocomplete="current-password">
+                    <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility()"
+                        title="Lihat Kata Sandi">
+                        <svg id="eyeIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -425,13 +458,17 @@
                     <input type="checkbox" name="remember" value="1" checked>
                     <span>Ingat saya di perangkat ini</span>
                 </label>
-                <a href="{{ route('password.request') }}" style="color:#64748b; text-decoration:none; font-weight:600;">Lupa sandi?</a>
+                <a href="{{ route('password.request') }}"
+                    style="color:#64748b; text-decoration:none; font-weight:600;">Lupa sandi?</a>
             </div>
 
             <!-- Submit -->
             <button type="submit" class="btn-submit">
                 <span>Buka Aplikasi Kasir</span>
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
             </button>
         </form>
 
@@ -442,24 +479,27 @@
 
         <a href="{{ route('auth.google', ['redirect' => route('creator.pos.index')]) }}" class="btn-google-pos">
             <svg width="20" height="20" viewBox="0 0 48 48">
-                <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-                <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-                <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
-                <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                <path fill="#FFC107"
+                    d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+                <path fill="#FF3D00"
+                    d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+                <path fill="#4CAF50"
+                    d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+                <path fill="#1976D2"
+                    d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
             </svg>
             <span>Masuk dengan Google</span>
         </a>
 
         <div class="footer-note">
             Aplikasi Kasir Digital Terintegrasi Toko Buyle.<br>
-            Bukan kasir toko ini? <a href="{{ route('home') }}">Kembali ke Beranda</a>
         </div>
     </div>
 
     <script>
         // Auto Dismiss Splash Screen smoothly after initial load
-        window.addEventListener('load', function() {
-            setTimeout(function() {
+        window.addEventListener('load', function () {
+            setTimeout(function () {
                 const splash = document.getElementById('posSplash');
                 if (splash) {
                     splash.classList.add('hide');
@@ -483,7 +523,7 @@
 
         // Register Dedicated POS Service Worker for PWA Builder
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 navigator.serviceWorker.register('/sw-pos.js', { scope: '/' })
                     .then(reg => console.log('Buyle POS SW registered:', reg.scope))
                     .catch(err => console.warn('Buyle POS SW failed:', err));
@@ -491,5 +531,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>
