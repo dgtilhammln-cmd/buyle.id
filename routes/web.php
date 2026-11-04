@@ -291,11 +291,36 @@ Route::get('/screenshots/{file}', function ($file) {
 // App Downloads — Android & iOS packages
 Route::get('/downloads/{file}', function ($file) {
     if (!preg_match('/^[a-zA-Z0-9_\-]+\.(zip|apk|ipa|aab)$/i', $file)) abort(404);
-    $path = public_path('downloads/' . $file);
-    if (!file_exists($path)) abort(404);
+    
+    // Check multiple possible public directories on shared hosting / local
+    $candidates = [
+        public_path('downloads/' . $file),
+        base_path('public/downloads/' . $file),
+        base_path('public_html/downloads/' . $file),
+        base_path('downloads/' . $file),
+    ];
+
+    $path = null;
+    foreach ($candidates as $cand) {
+        if (file_exists($cand)) {
+            $path = $cand;
+            break;
+        }
+    }
+
+    if (!$path) abort(404);
+
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $mimeType = match ($ext) {
+        'apk'   => 'application/vnd.android.package-archive',
+        'aab'   => 'application/octet-stream',
+        'ipa'   => 'application/octet-stream',
+        default => 'application/zip',
+    };
+
     return response()->download($path, $file, [
-        'Content-Type'        => 'application/zip',
-        'Cache-Control'       => 'no-cache',
+        'Content-Type'        => $mimeType,
+        'Cache-Control'       => 'public, max-age=86400',
         'Content-Disposition' => 'attachment; filename="' . $file . '"',
     ]);
 });
