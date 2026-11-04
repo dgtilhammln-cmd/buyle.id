@@ -608,12 +608,12 @@
         </div>
 
 
-        {{-- 3b. Download App Section --}}
+        {{-- 3b. Install PWA Section --}}
         <div class="download-app-section">
-            <div class="download-section-title">Unduh Aplikasi Kasir</div>
+            <div class="download-section-title">Pasang Aplikasi Kasir</div>
             <div class="download-cards-row">
-                {{-- Android APK Langsung --}}
-                <a href="/downloads/buyle-pos.apk" download="Buyle-POS.apk" class="download-app-card android">
+                {{-- Android --}}
+                <div onclick="openInstallModal('android')" class="download-app-card android">
                     <div class="dl-icon-wrapper">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -622,20 +622,19 @@
                     </div>
                     <div class="dl-text-col">
                         <div class="dl-name">Android</div>
-                        <div class="dl-sub">1.4 MB</div>
+                        <div class="dl-sub">Pasang ke Layar Utama</div>
                     </div>
                     <div class="dl-action-icon">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
                     </div>
-                </a>
+                </div>
 
                 {{-- iOS / iPhone --}}
-                <a href="/downloads/buyle-kasir-ios.zip" download="Buyle-POS-iOS.zip" class="download-app-card ios">
+                <div onclick="openInstallModal('ios')" class="download-app-card ios">
                     <div class="dl-icon-wrapper">
                         <svg width="20" height="20" viewBox="0 0 170 170" fill="currentColor">
                             <path
@@ -644,17 +643,16 @@
                     </div>
                     <div class="dl-text-col">
                         <div class="dl-name">iOS / iPhone</div>
-                        <div class="dl-sub">1.6 MB</div>
+                        <div class="dl-sub">Pasang ke Layar Utama</div>
                     </div>
                     <div class="dl-action-icon">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
 
@@ -1399,5 +1397,109 @@
         document.addEventListener("DOMContentLoaded", function () {
             updatePushStatusUI();
         });
+    
+        // ── POPUP INSTALL PWA (ANDROID & IOS) ──
+        var deferredPosPrompt = null;
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPosPrompt = e;
+        });
+
+        var currentInstallPlatform = 'android';
+
+        function openInstallModal(platform) {
+            currentInstallPlatform = platform;
+            var modal = document.getElementById("pwaInstallModal");
+            var steps = document.getElementById("modalSteps");
+            var title = document.getElementById("modalTitle");
+            var btnAction = document.getElementById("btnActionInstall");
+            var linkApk = document.getElementById("linkDownloadApk");
+
+            if (platform === 'ios') {
+                title.innerText = "Pasang di iPhone / iPad";
+                btnAction.style.display = "none";
+                linkApk.style.display = "none";
+                steps.innerHTML = `
+                    <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+                        <span style="width:22px; height:22px; border-radius:50%; background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;">1</span>
+                        <div>Buka link ini di browser <strong>Safari</strong> iPhone Anda.</div>
+                    </div>
+                    <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+                        <span style="width:22px; height:22px; border-radius:50%; background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;">2</span>
+                        <div>Tap ikon <strong>Bagikan (Share)</strong> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; display:inline;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> di bilah bawah Safari.</div>
+                    </div>
+                    <div style="display:flex; align-items:flex-start; gap:10px;">
+                        <span style="width:22px; height:22px; border-radius:50%; background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;">3</span>
+                        <div>Geser ke bawah dan pilih <strong>"Tambah ke Layar Utama" (Add to Home Screen)</strong>.</div>
+                    </div>
+                `;
+            } else {
+                title.innerText = "Pasang di Android";
+                linkApk.style.display = "inline-block";
+                if (deferredPosPrompt) {
+                    btnAction.style.display = "flex";
+                    btnAction.innerText = "Pasang Otomatis";
+                    steps.innerHTML = `
+                        <div style="color:#16a34a; font-weight:700; margin-bottom:4px;">Siap Dipasang Otomatis!</div>
+                        <div>Klik tombol di bawah ini untuk memasang Buyle POS langsung ke layar utama Android Anda dengan tampilan full-screen tanpa address bar.</div>
+                    `;
+                } else {
+                    btnAction.style.display = "none";
+                    steps.innerHTML = `
+                        <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;">
+                            <span style="width:22px; height:22px; border-radius:50%; background:#16a34a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;">1</span>
+                            <div>Buka menu Chrome (ikon titik tiga <strong>⋮</strong> di pojok kanan atas).</div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:10px;">
+                            <span style="width:22px; height:22px; border-radius:50%; background:#16a34a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;">2</span>
+                            <div>Pilih <strong>"Pasang aplikasi" (Install App)</strong> atau <strong>"Tambahkan ke Layar Utama"</strong>.</div>
+                        </div>
+                    `;
+                }
+            }
+
+            modal.style.display = "flex";
+        }
+
+        function closeInstallModal() {
+            document.getElementById("pwaInstallModal").style.display = "none";
+        }
+
+        function runInstallAction() {
+            if (deferredPosPrompt) {
+                deferredPosPrompt.prompt();
+                deferredPosPrompt.userChoice.then(function(choiceResult) {
+                    closeInstallModal();
+                    deferredPosPrompt = null;
+                });
+            }
+        }
     </script>
+
+    <!-- ── POPUP TAMBAH KE LAYAR UTAMA (INSTALL PWA) ── -->
+    <div id="pwaInstallModal" style="display:none; position:fixed; inset:0; z-index:100060; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.25rem;">
+        <div style="background:#ffffff; border-radius:24px; max-width:400px; width:100%; padding:1.4rem; box-shadow:0 24px 48px rgba(15,23,42,0.25); text-align:center; position:relative; animation:slideUpPos 0.25s ease;">
+            <button type="button" onclick="closeInstallModal()" style="position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:#f1f5f9; border:none; color:#64748b; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+            
+            <div style="width:64px; height:64px; margin:0 auto 1rem; border-radius:18px; overflow:hidden; box-shadow:0 8px 20px rgba(30,179,73,0.25); background:#ffffff;">
+                <img src="/pos-icon-192.png" alt="Buyle POS" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+
+            <div id="modalTitle" style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Pasang Buyle POS</div>
+            <div id="modalSub" style="font-size:0.75rem; color:#64748b; margin-bottom:1.2rem; line-height:1.4;">Aplikasi kasir layar penuh tanpa bilah browser.</div>
+
+            <!-- Steps Box -->
+            <div id="modalSteps" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1rem; text-align:left; font-size:0.8rem; color:#334155; line-height:1.5; margin-bottom:1.25rem;">
+                <!-- Filled dynamically via JS -->
+            </div>
+
+            <button type="button" id="btnActionInstall" onclick="runInstallAction()" style="width:100%; height:46px; border-radius:14px; background:#16a34a; color:#ffffff; font-weight:700; font-size:0.9rem; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 18px rgba(22,163,74,0.3);">
+                Pasang Sekarang
+            </button>
+            <div style="margin-top:0.65rem;">
+                <a href="/downloads/buyle-pos.apk" id="linkDownloadApk" download="Buyle-POS.apk" style="font-size:0.72rem; color:#0284c7; text-decoration:none; font-weight:600;">Atau download file APK mentah (1.4 MB)</a>
+            </div>
+        </div>
+    </div>
+
 @endsection

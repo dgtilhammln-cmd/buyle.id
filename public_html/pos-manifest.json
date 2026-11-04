@@ -1,0 +1,78 @@
+{
+  "id": "/login-pos",
+  "name": "Buyle POS - Kasir Digital",
+  "short_name": "Buyle POS",
+  "description": "Aplikasi Kasir Digital Super App Buyle.id untuk Penjualan Toko & Outlet",
+  "start_url": "/login-pos",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1eb349",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["business", "finance", "productivity"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/pos-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pos-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pos-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/pos-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Buyle POS Mobile Kasir"
+    },
+    {
+      "src": "/screenshots/pos-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Buyle POS Desktop Kasir"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buka Kasir",
+      "short_name": "Kasir",
+      "description": "Buka kasir digital transaksi toko",
+      "url": "/creator/pos",
+      "icons": [
+        {
+          "src": "/pos-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Riwayat Transaksi",
+      "short_name": "Transaksi",
+      "description": "Lihat struk dan riwayat transaksi kasir",
+      "url": "/creator/pos?screen=transactions",
+      "icons": [
+        {
+          "src": "/pos-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

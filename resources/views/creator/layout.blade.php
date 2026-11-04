@@ -7,14 +7,21 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     @if(request()->is('creator/pos*') || request()->is('login-pos*'))
     <link rel="manifest" href="{{ asset('pos-manifest.json') }}">
+    <meta name="theme-color" content="#1eb349">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Buyle POS">
+    <link rel="apple-touch-icon" href="{{ asset('pos-icon-192.png') }}">
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('pos-icon-192.png') }}">
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ asset('pos-icon-512.png') }}">
     @else
     <link rel="manifest" href="{{ asset('creator-manifest.json') }}">
-    @endif
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Buyle Creator">
     <link rel="apple-touch-icon" href="{{ asset('buyle-logo.png') }}">
+    @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Creator Studio') – buyle.id</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -13,7 +13,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Buyle POS">
-    <link rel="apple-touch-icon" href="/buyle-logo.png">
+    <link rel="apple-touch-icon" href="/pos-icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/pos-icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/pos-icon-512.png">
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <!-- Fonts -->
