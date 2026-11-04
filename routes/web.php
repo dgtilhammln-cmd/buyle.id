@@ -674,6 +674,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Simple POS (Kasir Digital)
     Route::get('/pos', [\App\Http\Controllers\Creator\PosController::class, 'index'])->name('pos.index');
     Route::get('/pos/reports', [\App\Http\Controllers\Creator\PosController::class, 'reports'])->name('pos.reports');
+    Route::get('/pos/export', [\App\Http\Controllers\Creator\SellerReportController::class, 'exportPos'])->name('pos.export');
     Route::get('/pos/profile', [\App\Http\Controllers\Creator\PosController::class, 'profileMenu'])->name('pos.profile');
     Route::get('/pos/settings', [\App\Http\Controllers\Creator\PosController::class, 'settings'])->name('pos.settings');
     Route::get('/pos/products', [\App\Http\Controllers\Creator\PosController::class, 'products'])->name('pos.products');

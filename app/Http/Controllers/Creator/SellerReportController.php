@@ -26,16 +26,27 @@ class SellerReportController extends Controller
         $endDate = Carbon::now()->endOfDay();
 
         $startDate = match ($filter) {
-            '7'      => Carbon::now()->subDays(7)->startOfDay(),
-            '90'     => Carbon::now()->subDays(90)->startOfDay(),
-            'custom' => $request->filled('start_date')
+            'today'      => Carbon::now()->startOfDay(),
+            'yesterday'  => Carbon::yesterday()->startOfDay(),
+            '7'          => Carbon::now()->subDays(7)->startOfDay(),
+            '30'         => Carbon::now()->subDays(30)->startOfDay(),
+            '90'         => Carbon::now()->subDays(90)->startOfDay(),
+            'this_month' => Carbon::now()->startOfMonth(),
+            'last_month' => Carbon::now()->subMonth()->startOfMonth(),
+            'this_year'  => Carbon::now()->startOfYear(),
+            'all'        => Carbon::create(2020, 1, 1)->startOfDay(),
+            'custom'     => $request->filled('start_date')
                             ? Carbon::parse($request->query('start_date'))->startOfDay()
                             : Carbon::now()->subDays(30)->startOfDay(),
-            default  => Carbon::now()->subDays(30)->startOfDay(),
+            default      => Carbon::now()->subDays(30)->startOfDay(),
         };
 
         if ($filter === 'custom' && $request->filled('end_date')) {
             $endDate = Carbon::parse($request->query('end_date'))->endOfDay();
+        } elseif ($filter === 'yesterday') {
+            $endDate = Carbon::yesterday()->endOfDay();
+        } elseif ($filter === 'last_month') {
+            $endDate = Carbon::now()->subMonth()->endOfMonth();
         }
 
         return [$filter, $startDate, $endDate];
@@ -638,14 +649,23 @@ class SellerReportController extends Controller
      */
     public function exportPos(Request $request)
     {
-        $seller = auth()->user();
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+
         [$filter, $startDate, $endDate] = $this->getDateRange($request);
         $posPaymentMethod = $request->query('pos_method', 'all');
+        $format           = strtolower($request->query('format', 'csv'));
 
-        $storeName = $seller->creatorProfile?->store_name ?? ('seller-' . $seller->id);
+        $profile   = $seller->creatorProfile;
+        $storeName = $profile?->store_name ?? ('Toko ' . $seller->name);
 
         $posQuery = Order::where('source', 'pos')
-            ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+            ->where(function($q) use ($seller) {
+                $q->where('seller_id', $seller->id)
+                  ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
+            })
             ->whereBetween('created_at', [$startDate, $endDate]);
 
         if ($posPaymentMethod && $posPaymentMethod !== 'all') {
@@ -671,22 +691,48 @@ class SellerReportController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $filename = 'Laporan_POS_' . str_replace(' ', '_', $storeName) . '_' . date('Ymd_His');
-
-        $csvData  = "\xEF\xBB\xBF"; // UTF-8 BOM
-        $csvData .= "Tanggal & Waktu,No Invoice POS,Pelanggan,Catatan / Meja,Metode Pembayaran,Item Produk,Subtotal (Rp),Diskon (Rp),Platform Fee (Rp),Admin Fee (Rp),Total Bayar (Rp),Status Pembayaran\n";
-
         $totalOmset   = 0;
         $totalCash    = 0;
         $totalDigital = 0;
         $totalFees    = 0;
 
         foreach ($orders as $order) {
+            $addr   = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+            $method = strtolower($addr['payment_method'] ?? ($order->payment->method ?? 'cash'));
+            $platformFee = (float) ($order->platform_fee ?? 0);
+            $adminFee    = (float) ($order->admin_fee ?? 0);
+            $total       = (float) $order->total;
+
+            $totalOmset += $total;
+            if ($method === 'cash') {
+                $totalCash += $total;
+                $totalFees += ($platformFee + $adminFee);
+            } else {
+                $totalDigital += $total;
+            }
+        }
+
+        $cleanStore = preg_replace('/[^A-Za-z0-9_\-]/', '', str_replace(' ', '_', $storeName)) ?: 'POS';
+        $filename   = 'Laporan_POS_' . $cleanStore . '_' . date('Ymd_His');
+
+        if ($format === 'pdf') {
+            $pdfHtml = $this->generatePosPdfHtml($orders, $storeName, $startDate, $endDate, $posPaymentMethod, $totalOmset, $totalCash, $totalDigital, $totalFees, $profile);
+            $pdf = Pdf::loadHTML($pdfHtml)->setPaper('a4', 'portrait');
+            return $pdf->download($filename . '.pdf');
+        }
+
+        // CSV export (UTF-8 BOM)
+        $csvData  = "\xEF\xBB\xBF";
+        $csvData .= "Tanggal & Waktu,No Invoice POS,Pelanggan,Meja / Catatan,Kasir,Metode Pembayaran,Item Produk,Subtotal (Rp),Diskon (Rp),Platform Fee (Rp),Admin Fee (Rp),Total Bayar (Rp),Status Pembayaran\n";
+
+        foreach ($orders as $order) {
             $date     = $order->created_at->format('Y-m-d H:i');
             $invoice  = $order->order_number;
-            $customer = str_replace([",", "\n", "\r"], ' ', $order->shipping_address['name'] ?? 'Pelanggan Umum');
-            $notes    = str_replace([",", "\n", "\r"], ' ', $order->notes ?? '-');
-            $method   = strtoupper($order->shipping_address['payment_method'] ?? ($order->payment->method ?? 'CASH'));
+            $addr     = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+            $customer = str_replace([",", "\n", "\r"], ' ', $addr['name'] ?? $order->user?->name ?? 'Pelanggan Umum');
+            $table    = str_replace([",", "\n", "\r"], ' ', $addr['table_number'] ?? $addr['table'] ?? ($order->notes ?? '-'));
+            $cashier  = str_replace([",", "\n", "\r"], ' ', $addr['cashier_name'] ?? '-');
+            $method   = strtoupper($addr['payment_method'] ?? ($order->payment->method ?? 'CASH'));
 
             $itemNames = $order->items->map(function($i) {
                 return $i->product_name . ' (' . $i->qty . 'x)';
@@ -700,15 +746,7 @@ class SellerReportController extends Controller
             $total       = (float) $order->total;
             $status      = ($order->payment && $order->payment->status->value === 'success') ? 'LUNAS' : 'PENDING';
 
-            $totalOmset += $total;
-            if (strtolower($method) === 'cash') {
-                $totalCash += $total;
-                $totalFees += ($platformFee + $adminFee);
-            } else {
-                $totalDigital += $total;
-            }
-
-            $csvData .= "{$date},{$invoice},{$customer},{$notes},{$method},{$itemNames},{$subtotal},{$discount},{$platformFee},{$adminFee},{$total},{$status}\n";
+            $csvData .= "{$date},{$invoice},{$customer},{$table},{$cashier},{$method},{$itemNames},{$subtotal},{$discount},{$platformFee},{$adminFee},{$total},{$status}\n";
         }
 
         $csvData .= "\n";
@@ -722,5 +760,141 @@ class SellerReportController extends Controller
         return response($csvData)
             ->header('Content-Type', 'text/csv; charset=utf-8')
             ->header('Content-Disposition', "attachment; filename=\"{$filename}.csv\"");
+    }
+
+    private function generatePosPdfHtml($orders, string $storeName, Carbon $startDate, Carbon $endDate, string $posMethod, float $totalOmset, float $totalCash, float $totalDigital, float $totalFees, $profile): string
+    {
+        $orderCount = $orders->count();
+        $methodLabel = match($posMethod) {
+            'cash'     => 'Tunai (Cash)',
+            'qris'     => 'QRIS / Digital',
+            'transfer' => 'Transfer Bank',
+            default    => 'Semua Metode'
+        };
+
+        $periodLabel = $startDate->format('d/m/Y') . ' s/d ' . $endDate->format('d/m/Y');
+        $printedAt   = Carbon::now()->format('d/m/Y H:i');
+
+        $html = "<!DOCTYPE html><html><head><meta charset='utf-8'>";
+        $html .= "<style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0f172a; font-size: 10px; margin: 0; padding: 15px; }
+            .header-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; border-bottom: 2px solid #16a34a; padding-bottom: 10px; }
+            .header-title { font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 4px; text-transform: uppercase; letter-spacing: -0.3px; }
+            .header-sub { font-size: 10.5px; color: #64748b; margin: 0; }
+            .header-meta { text-align: right; font-size: 9.5px; color: #475569; }
+            
+            /* KPI Grid in PDF */
+            .kpi-table { width: 100%; border-collapse: separate; border-spacing: 6px; margin-bottom: 16px; }
+            .kpi-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; text-align: left; }
+            .kpi-label { font-size: 8.5px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.3px; }
+            .kpi-val { font-size: 14px; font-weight: 800; color: #0f172a; }
+            .kpi-sub { font-size: 8px; color: #94a3b8; margin-top: 2px; }
+
+            /* Table */
+            table.rep-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+            table.rep-table th { background: #f1f5f9; color: #334155; font-weight: 700; text-align: left; padding: 7px 8px; border: 1px solid #cbd5e1; font-size: 9px; text-transform: uppercase; letter-spacing: 0.3px; }
+            table.rep-table td { padding: 6px 8px; border: 1px solid #e2e8f0; font-size: 9px; vertical-align: middle; }
+            table.rep-table tr:nth-child(even) { background-color: #fbfcfd; }
+            
+            .badge-cash { background: #ecfdf5; color: #059669; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 8.5px; }
+            .badge-qris { background: #eff6ff; color: #2563eb; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 8.5px; }
+            .badge-tf   { background: #f5f3ff; color: #7c3aed; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 8.5px; }
+
+            .tfoot-row td { background: #f1f5f9 !important; font-weight: 800; font-size: 10px; }
+            .footer-note { text-align: center; margin-top: 25px; font-size: 8.5px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 10px; }
+        </style></head><body>";
+
+        $html .= "<table class='header-table'><tr>";
+        $html .= "<td style='vertical-align:top;'>";
+        $html .= "<div class='header-title'>" . htmlspecialchars($storeName) . "</div>";
+        $html .= "<div class='header-sub'>Laporan Rekap Penjualan Kasir POS</div>";
+        $html .= "</td>";
+        $html .= "<td class='header-meta' style='vertical-align:top;'>";
+        $html .= "<div><strong>Periode:</strong> " . $periodLabel . "</div>";
+        $html .= "<div><strong>Metode Bayar:</strong> " . $methodLabel . "</div>";
+        $html .= "<div><strong>Waktu Cetak:</strong> " . $printedAt . " WIB</div>";
+        $html .= "</td>";
+        $html .= "</tr></table>";
+
+        // KPI Table
+        $html .= "<table class='kpi-table'><tr>";
+        $html .= "<td class='kpi-card' style='background:#0f172a; border-color:#334155;'>
+            <div class='kpi-label' style='color:#94a3b8;'>Total Omset Kotor</div>
+            <div class='kpi-val' style='color:#ffffff;'>Rp " . number_format($totalOmset, 0, ',', '.') . "</div>
+            <div class='kpi-sub' style='color:#64748b;'>" . number_format($orderCount) . " Struk Selesai</div>
+        </td>";
+        $html .= "<td class='kpi-card'>
+            <div class='kpi-label' style='color:#059669;'>Tunai di Laci (Cash)</div>
+            <div class='kpi-val' style='color:#059669;'>Rp " . number_format($totalCash, 0, ',', '.') . "</div>
+            <div class='kpi-sub'>Fisik uang kasir</div>
+        </td>";
+        $html .= "<td class='kpi-card'>
+            <div class='kpi-label' style='color:#2563eb;'>QRIS & Digital</div>
+            <div class='kpi-val' style='color:#2563eb;'>Rp " . number_format($totalDigital, 0, ',', '.') . "</div>
+            <div class='kpi-sub'>Non-tunai / Cashless</div>
+        </td>";
+        $html .= "<td class='kpi-card'>
+            <div class='kpi-label' style='color:#d97706;'>Fee Terpotong</div>
+            <div class='kpi-val' style='color:#d97706;'>Rp " . number_format($totalFees, 0, ',', '.') . "</div>
+            <div class='kpi-sub'>Biaya deposit & admin</div>
+        </td>";
+        $html .= "</tr></table>";
+
+        // Table Data
+        $html .= "<table class='rep-table'>";
+        $html .= "<thead><tr>
+            <th style='width: 14%;'>No Struk</th>
+            <th style='width: 13%;'>Waktu</th>
+            <th style='width: 17%;'>Pelanggan / Meja</th>
+            <th style='width: 12%;'>Metode</th>
+            <th style='width: 29%;'>Item Pesanan</th>
+            <th style='width: 15%; text-align: right;'>Total Bayar</th>
+        </tr></thead><tbody>";
+
+        if ($orders->isEmpty()) {
+            $html .= "<tr><td colspan='6' style='text-align:center; padding: 25px; color:#94a3b8;'>Tidak ada transaksi POS pada rentang waktu ini.</td></tr>";
+        } else {
+            foreach ($orders as $order) {
+                $addr     = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+                $invoice  = htmlspecialchars($order->order_number);
+                $time     = $order->created_at->format('d/m/y H:i');
+                $customer = htmlspecialchars($addr['name'] ?? $order->user?->name ?? 'Pelanggan Umum');
+                $table    = !empty($addr['table_number']) ? ' (M#' . htmlspecialchars($addr['table_number']) . ')' : '';
+                $method   = strtolower($addr['payment_method'] ?? ($order->payment->method ?? 'cash'));
+                
+                $badge = match($method) {
+                    'cash'     => "<span class='badge-cash'>Tunai</span>",
+                    'qris'     => "<span class='badge-qris'>QRIS</span>",
+                    'transfer' => "<span class='badge-tf'>Transfer</span>",
+                    default    => "<span class='badge-tf'>" . strtoupper(htmlspecialchars($method)) . "</span>",
+                };
+
+                $items = htmlspecialchars($order->items->map(fn($i) => $i->product_name . ' (' . $i->qty . 'x)')->implode(', '));
+                $totalFormatted = 'Rp ' . number_format($order->total, 0, ',', '.');
+
+                $html .= "<tr>
+                    <td style='font-family: monospace; font-weight: bold;'>{$invoice}</td>
+                    <td>{$time}</td>
+                    <td>{$customer}{$table}</td>
+                    <td>{$badge}</td>
+                    <td>{$items}</td>
+                    <td style='text-align: right; font-weight: 700;'>{$totalFormatted}</td>
+                </tr>";
+            }
+        }
+
+        $html .= "</tbody>";
+        $html .= "<tfoot><tr class='tfoot-row'>
+            <td colspan='5' style='text-align: right; font-weight: 800;'>TOTAL OMSET KOTOR (" . number_format($orderCount) . " Transaksi):</td>
+            <td style='text-align: right; font-weight: 800; color: #16a34a; font-size: 11px;'>Rp " . number_format($totalOmset, 0, ',', '.') . "</td>
+        </tr></tfoot>";
+        $html .= "</table>";
+
+        $html .= "<div class='footer-note'>
+            Dokumen ini di-generate otomatis oleh Sistem Kasir Digital buyle.id &copy; " . date('Y') . " " . htmlspecialchars($storeName) . ".
+        </div>";
+
+        $html .= "</body></html>";
+        return $html;
     }
 }

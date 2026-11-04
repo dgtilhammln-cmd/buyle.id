@@ -16,10 +16,44 @@
         background-color: #f8fafc !important;
     }
 
+        /* Reset Global Layout Wrapper (Full Centered, Anti-Mepet, No Overflow) */
+    body {
+        background: #f8fafc !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .cr-main-wrapper {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        background: #f8fafc !important;
+    }
+
+    .cr-main-canvas {
+        margin: 0 auto !important;
+        padding: 0.85rem 1rem 120px 1rem !important;
+        width: 100% !important;
+        max-width: 460px !important;
+        box-sizing: border-box !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
+    .cr-topbar-header-row {
+        display: none !important;
+    }
+
     .menu-hub-container {
-        max-width: 540px;
-        margin: 0 auto;
-        padding: 0.75rem 0.85rem 6.5rem 0.85rem;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
     }
 
     /* Top Navigation Bar Header */
