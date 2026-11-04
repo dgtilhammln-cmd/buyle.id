@@ -3613,7 +3613,8 @@
                     @php
                         $payMethod = strtolower($ord->payment_method ?? ($ord->payment?->payment_type ?? 'cash'));
                         $totalVal = (float) ($ord->total ?? $ord->total_amount ?? 0);
-                        $isPaidOrd = in_array(strtolower($ord->status ?? ''), ['completed', 'paid', 'success', 'confirmed']);
+                        $statusStr = is_string($ord->status) ? $ord->status : ($ord->status?->value ?? $ord->status?->name ?? '');
+                        $isPaidOrd = in_array(strtolower($statusStr), ['completed', 'paid', 'success', 'confirmed']);
                         $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
                         $custName = $addr['name'] ?? $ord->user?->name ?? 'Pelanggan Umum';
                         $tableNo = $addr['table_number'] ?? ($addr['table'] ?? null);
