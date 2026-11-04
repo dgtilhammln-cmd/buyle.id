@@ -780,7 +780,7 @@
         <!-- ③ CONTENT LAYER - fullscreen looping video -->
         <div id="contentLayer">
             <div class="video-wrapper">
-                <video id="weddingVideo" src="{{ asset('videos/Undangan_Findi_Nazil_v8.mp4') }}" class="wedding-video"
+                <video id="weddingVideo" src="{{ asset('videos/Undangan_Findi_Nazil_v9.mp4') }}" class="wedding-video"
                     playsinline loop preload="auto"></video>
             </div>
         </div>
