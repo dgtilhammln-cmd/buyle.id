@@ -88,11 +88,11 @@ class StorefrontController extends Controller
         // Products & Categories
         $products = Product::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->with(['category', 'variantValues'])
+            ->with(['category', 'variantOptions.values'])
             ->orderBy('name')
             ->get();
 
-        $categories = \App\Models\Category::whereHas('products', function ($pq) use ($seller) {
+        $categories = \App\Models\ProductCategory::whereHas('products', function ($pq) use ($seller) {
             $pq->where('seller_id', $seller->id)->where('is_active', true);
         })->get();
 

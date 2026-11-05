@@ -668,7 +668,7 @@
 
             .cr-main-canvas {
                 border-radius: 0;
-                padding: max(1rem, calc(env(safe-area-inset-top, 0px) + 0.65rem)) 0.9rem 100px;
+                padding: 1rem 0.9rem 100px;
                 margin: 0;
                 min-height: 100vh;
                 width: 100%;

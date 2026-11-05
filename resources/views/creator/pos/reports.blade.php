@@ -36,9 +36,10 @@
 
         .cr-main-canvas {
             margin: 0 auto !important;
-            padding: 0.85rem 1rem 120px 1rem !important;
+            padding: 0.5rem 0.75rem 120px 0.75rem !important;
+            padding-top: max(0.5rem, calc(0.5rem + env(safe-area-inset-top, 0px))) !important;
             width: 100% !important;
-            max-width: 460px !important;
+            max-width: 480px !important;
             /* Super App width, perfectly centered */
             box-sizing: border-box !important;
             background: transparent !important;
@@ -70,7 +71,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.85rem;
+            margin-bottom: 1rem;
+            padding-top: 0 !important;
             gap: 0.5rem;
         }
 
