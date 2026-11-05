@@ -2014,6 +2014,63 @@
             display: inline-block;
         }
 
+        /* ── 3 Tombol Aksi Bulat di Kartu Transaksi ── */
+        .pos-trans-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .pos-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.14s, box-shadow 0.14s;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .pos-action-btn:active { transform: scale(0.9); }
+        .pos-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Icon uang – cash pending */
+        .pos-action-btn.btn-cash-pending {
+            background: #fff7ed;
+            color: #ea580c;
+            border: 1.5px solid #fed7aa;
+        }
+
+        /* Icon ceklis 1 – sudah lunas */
+        .pos-action-btn.btn-paid {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1.5px solid #bbf7d0;
+        }
+
+        /* Icon centang 2 – selesai */
+        .pos-action-btn.btn-complete {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1.5px solid #bfdbfe;
+        }
+
+        /* Kartu transaksi baru – highlight animasi */
+        .pos-trans-card.new-order-flash {
+            animation: newOrderPulse 2.5s ease;
+        }
+
+        @keyframes newOrderPulse {
+            0%   { background: #f0fdf4; border-color: #22c55e; }
+            40%  { background: #dcfce7; border-color: #16a34a; box-shadow: 0 0 0 4px rgba(34,197,94,0.15); }
+            100% { background: #ffffff; border-color: #f1f5f9; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        }
+
         /* ── Responsive Mobile Overrides (< 991px) ── */
         @media (max-width: 991px) {
             .pos-mobile-top-header {
@@ -3611,14 +3668,18 @@
             <div id="posTransactionsListContainer">
                 @forelse($recentPosOrders ?? $todayOrders as $ord)
                     @php
-                        $payMethodRaw = $ord->payment_method ?? ($ord->payment?->payment_type ?? 'cash');
+                        $payMethodRaw = $ord->payment_method ?? ($ord->payment?->method ?? ($ord->payment?->gateway ?? 'cash'));
                         $payMethod = strtolower(is_object($payMethodRaw) ? ($payMethodRaw->value ?? $payMethodRaw->name ?? 'cash') : ($payMethodRaw ?? 'cash'));
                         $totalVal = (float) ($ord->total ?? $ord->total_amount ?? 0);
                         $statusStr = is_string($ord->status) ? $ord->status : ($ord->status?->value ?? $ord->status?->name ?? '');
-                        $isPaidOrd = in_array(strtolower($statusStr), ['completed', 'paid', 'success', 'confirmed']);
+                        $payStat = strtolower($ord->payment?->status?->value ?? $ord->payment?->status?->name ?? (string)($ord->payment?->status ?? ''));
+                        $isPaidOrd = in_array(strtolower($statusStr), ['confirmed', 'delivered', 'processing', 'shipped', 'paid', 'completed'])
+                                     || in_array($payStat, ['success', 'paid']);
+                        $isCompletedOrd = in_array(strtolower($statusStr), ['delivered', 'completed']);
                         $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
                         $custName = $addr['name'] ?? $ord->user?->name ?? 'Pelanggan Umum';
                         $tableNo = $addr['table_number'] ?? ($addr['table'] ?? null);
+                        $isSelfOrd = ($ord->source === 'storefront') || !empty($addr['is_self_order']);
                         $itemCount = $ord->items ? $ord->items->sum('qty') : 0;
                         $itemsSummary = [];
                         if (!empty($addr['items_meta']) && is_array($addr['items_meta'])) {
@@ -3636,25 +3697,87 @@
                         $badgeColor = $pm === 'cash' ? '#059669' : ($pm === 'qris' ? '#2563eb' : '#7c3aed');
                         $badgeLabel = $pm === 'cash' ? 'Tunai' : ($pm === 'qris' ? 'QRIS' : strtoupper($payMethod));
                     @endphp
-                    <div class="pos-trans-card" data-search="{{ strtolower($ord->order_number ?? $ord->id) }} {{ strtolower($custName) }}" data-date="{{ \Carbon\Carbon::parse($ord->created_at)->format('Y-m-d') }}" data-timestamp="{{ \Carbon\Carbon::parse($ord->created_at)->timestamp }}" onclick="openPosOrderReceipt({{ $ord->id }})">
-                        <div class="pos-trans-card-top">
-                            <span class="pos-trans-sale-num">#{{ $ord->order_number ?? ('BYL-' . $ord->id) }}</span>
-                            <span class="pos-trans-amount">Rp {{ number_format($totalVal, 0, ',', '.') }}</span>
+                    <div class="pos-trans-card" id="pos-trans-card-{{ $ord->id }}"
+                        data-id="{{ $ord->id }}"
+                        data-paid="{{ $isPaidOrd ? '1' : '0' }}"
+                        data-completed="{{ $isCompletedOrd ? '1' : '0' }}"
+                        data-pay-method="{{ $pm }}"
+                        data-search="{{ strtolower($ord->order_number ?? $ord->id) }} {{ strtolower($custName) }}"
+                        data-date="{{ \Carbon\Carbon::parse($ord->created_at)->format('Y-m-d') }}"
+                        data-timestamp="{{ \Carbon\Carbon::parse($ord->created_at)->timestamp }}">
+                        <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="openPosOrderReceipt({{ $ord->id }})">
+                            <div class="pos-trans-card-top" style="flex:1;">
+                                <span class="pos-trans-sale-num">
+                                    @if($isSelfOrd)
+                                        <span style="font-size:0.6rem;background:#fef3c7;color:#d97706;border:1px solid #fde68a;padding:1px 6px;border-radius:999px;font-weight:800;margin-right:4px;">Self-Order</span>
+                                    @endif
+                                    #{{ $ord->order_number ?? ('BYL-' . $ord->id) }}
+                                    @if($tableNo)<span style="font-size:0.68rem;color:#64748b;font-weight:600;margin-left:4px;">· Meja {{ $tableNo }}</span>@endif
+                                </span>
+                                <span class="pos-trans-amount">Rp {{ number_format($totalVal, 0, ',', '.') }}</span>
+                            </div>
                         </div>
-                        <div class="pos-trans-card-mid">
-                            <span style="font-size:0.75rem;color:#334155;font-weight:600;">{{ $custName }}{{ $tableNo ? ' · Meja ' . $tableNo : '' }}</span>
+                        <div class="pos-trans-card-mid" style="cursor:pointer;" onclick="openPosOrderReceipt({{ $ord->id }})">
+                            <span style="font-size:0.75rem;color:#334155;font-weight:600;">{{ $custName }}</span>
                             <span style="font-size:0.7rem;color:#64748b;">{{ $itemCount }} item</span>
                         </div>
-                        <div style="font-size:0.75rem;color:#475569;margin:4px 0 6px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        <div style="font-size:0.75rem;color:#475569;margin:3px 0 5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;" onclick="openPosOrderReceipt({{ $ord->id }})">
                             {{ $itemsText }}
                         </div>
-                        <div class="pos-trans-time" style="display:flex;align-items:center;justify-content:space-between;">
-                            <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.65rem;font-weight:700;color:#fff;background:{{ $badgeColor }};">{{ $badgeLabel }}</span>
-                            <span>{{ \Carbon\Carbon::parse($ord->created_at)->format('d M Y, H:i') }}</span>
+                        {{-- Row bawah: badge + waktu + tombol aksi --}}
+                        <div class="pos-trans-time" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                            <div style="display:flex;align-items:center;gap:5px;flex:1;min-width:0;cursor:pointer;" onclick="openPosOrderReceipt({{ $ord->id }})">
+                                <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.65rem;font-weight:700;color:#fff;background:{{ $badgeColor }};white-space:nowrap;">{{ $badgeLabel }}</span>
+                                <span style="font-size:0.68rem;color:#94a3b8;white-space:nowrap;">{{ \Carbon\Carbon::parse($ord->created_at)->format('d M, H:i') }}</span>
+                            </div>
+                            {{-- 3 Tombol Bulat Aksi --}}
+                            <div class="pos-trans-actions" style="margin-top:0;">
+                                @if(!$isPaidOrd && $pm === 'cash')
+                                    {{-- Tombol 1: Cash – tunggu bayar (icon uang) --}}
+                                    <button type="button"
+                                        class="pos-action-btn btn-cash-pending"
+                                        onclick="event.stopPropagation(); posMarkPaid({{ $ord->id }}, this)"
+                                        title="Tandai Pembayaran Diterima (Cash)">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <rect x="2" y="6" width="20" height="14" rx="2"/>
+                                            <path d="M12 10v4m-2-2h4"/>
+                                            <path d="M6 10h.01M18 10h.01"/>
+                                        </svg>
+                                    </button>
+                                @elseif($isPaidOrd && !$isCompletedOrd)
+                                    {{-- Tombol 2: Lunas – ceklis 1 (non-aktif, tampil info status) --}}
+                                    <button type="button" class="pos-action-btn btn-paid" disabled title="Sudah Lunas">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                        </svg>
+                                    </button>
+                                @elseif($isCompletedOrd)
+                                    {{-- Sudah Selesai – centang 2 (double check, non-aktif) --}}
+                                    <button type="button" class="pos-action-btn btn-complete" disabled title="Pesanan Selesai">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                            <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                                        </svg>
+                                    </button>
+                                @endif
+
+                                @if($isPaidOrd && !$isCompletedOrd)
+                                    {{-- Tombol 3: Tandai Selesai (double check) --}}
+                                    <button type="button"
+                                        class="pos-action-btn btn-complete"
+                                        onclick="event.stopPropagation(); posMarkCompleted({{ $ord->id }}, this)"
+                                        title="Tandai Pesanan Selesai / Sudah Disajikan">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                            <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                                        </svg>
+                                    </button>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.84rem;">
+                    <div id="posTransEmptyState" style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.84rem;">
                         <svg width="40" height="40" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24" style="display:block;margin:0 auto 10px;"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
                         Belum ada riwayat transaksi kasir
                     </div>
@@ -10160,6 +10283,245 @@
                     openModal('posHistoryModal');
                 }
             }
+
+            // ── REALTIME ORDER ACTIONS ──
+
+            function posMarkPaid(orderId, btn) {
+                if (btn) { btn.disabled = true; }
+                fetch('/creator/pos/order/' + orderId + '/mark-paid', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') || {}).content || ''
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update kartu langsung tanpa reload
+                        const card = document.getElementById('pos-trans-card-' + orderId);
+                        if (card) {
+                            card.setAttribute('data-paid', '1');
+                            const actionsDiv = card.querySelector('.pos-trans-actions');
+                            if (actionsDiv) {
+                                actionsDiv.innerHTML = `
+                                    <button type="button" class="pos-action-btn btn-paid" disabled title="Sudah Lunas">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                    </button>
+                                    <button type="button" class="pos-action-btn btn-complete" onclick="event.stopPropagation(); posMarkCompleted(${orderId}, this)" title="Tandai Pesanan Selesai / Sudah Disajikan">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                            <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                                        </svg>
+                                    </button>`;
+                            }
+                            card.classList.add('new-order-flash');
+                        }
+                    } else {
+                        if (btn) btn.disabled = false;
+                        alert(data.message || 'Gagal menandai pembayaran.');
+                    }
+                })
+                .catch(() => {
+                    if (btn) btn.disabled = false;
+                    alert('Koneksi error. Coba lagi.');
+                });
+            }
+
+            function posMarkCompleted(orderId, btn) {
+                if (btn) { btn.disabled = true; }
+                fetch('/creator/pos/order/' + orderId + '/mark-completed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') || {}).content || ''
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const card = document.getElementById('pos-trans-card-' + orderId);
+                        if (card) {
+                            card.setAttribute('data-completed', '1');
+                            const actionsDiv = card.querySelector('.pos-trans-actions');
+                            if (actionsDiv) {
+                                actionsDiv.innerHTML = `
+                                    <button type="button" class="pos-action-btn btn-complete" disabled title="Pesanan Selesai">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                            <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                                        </svg>
+                                    </button>`;
+                            }
+                            card.style.opacity = '0.65';
+                        }
+                    } else {
+                        if (btn) btn.disabled = false;
+                        alert(data.message || 'Gagal menandai pesanan selesai.');
+                    }
+                })
+                .catch(() => {
+                    if (btn) btn.disabled = false;
+                    alert('Koneksi error. Coba lagi.');
+                });
+            }
+
+            // ── REALTIME LIVE POLLING (3 detik, zero refresh) ──
+
+            let liveOrderLatestId = {{ ($recentPosOrders ?? $todayOrders)?->max('id') ?? 0 }};
+            let liveOrderPollerActive = false;
+
+            // Audio chime untuk notifikasi pesanan baru (inlined base64 Web Audio)
+            function playOrderChime() {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(880, ctx.currentTime);
+                    o.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+                    o.frequency.setValueAtTime(1320, ctx.currentTime + 0.2);
+                    g.gain.setValueAtTime(0.5, ctx.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
+                    o.start(ctx.currentTime);
+                    o.stop(ctx.currentTime + 0.6);
+                } catch(e) {}
+            }
+
+            function buildTransactionCardHtml(ord) {
+                const isCash    = (ord.payment_method || '').includes('cash');
+                const isSelf    = ord.is_self_order;
+                const isPaid    = ord.is_paid;
+                const isComp    = ord.is_completed;
+                const total     = 'Rp ' + Number(ord.total).toLocaleString('id-ID');
+                const badge     = isCash ? '#059669' : '#7c3aed';
+                const badgeLbl  = isCash ? 'Tunai' : 'Digital';
+                const tableStr  = ord.table_number ? ' · Meja ' + ord.table_number : '';
+                const selfBadge = isSelf ? `<span style="font-size:0.6rem;background:#fef3c7;color:#d97706;border:1px solid #fde68a;padding:1px 6px;border-radius:999px;font-weight:800;margin-right:4px;">Self-Order</span>` : '';
+
+                // Tombol Aksi
+                let actionsBtns = '';
+                if (!isPaid && isCash) {
+                    actionsBtns = `<button type="button" class="pos-action-btn btn-cash-pending" onclick="event.stopPropagation(); posMarkPaid(${ord.id}, this)" title="Tandai Pembayaran Diterima">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M12 10v4m-2-2h4"/><path d="M6 10h.01M18 10h.01"/></svg>
+                    </button>`;
+                } else if (isPaid && !isComp) {
+                    actionsBtns = `
+                        <button type="button" class="pos-action-btn btn-paid" disabled title="Sudah Lunas">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        </button>
+                        <button type="button" class="pos-action-btn btn-complete" onclick="event.stopPropagation(); posMarkCompleted(${ord.id}, this)" title="Tandai Selesai">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"/>
+                                <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                            </svg>
+                        </button>`;
+                } else if (isComp) {
+                    actionsBtns = `<button type="button" class="pos-action-btn btn-complete" disabled title="Selesai">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12"/>
+                            <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                        </svg>
+                    </button>`;
+                }
+
+                return `<div class="pos-trans-card new-order-flash" id="pos-trans-card-${ord.id}"
+                            data-id="${ord.id}" data-paid="${isPaid?'1':'0'}" data-completed="${isComp?'1':'0'}"
+                            data-pay-method="${ord.payment_method||'cash'}"
+                            data-search="${(ord.order_number||ord.id)} ${ord.customer_name||''}"
+                            data-date="${ord.created_date}" data-timestamp="${ord.timestamp}">
+                    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
+                        <div class="pos-trans-card-top" style="flex:1;">
+                            <span class="pos-trans-sale-num">
+                                ${selfBadge}#${ord.order_number}
+                                ${ord.table_number ? `<span style="font-size:0.68rem;color:#64748b;font-weight:600;margin-left:4px;">· Meja ${ord.table_number}</span>` : ''}
+                            </span>
+                            <span class="pos-trans-amount">${total}</span>
+                        </div>
+                    </div>
+                    <div class="pos-trans-card-mid" style="cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
+                        <span style="font-size:0.75rem;color:#334155;font-weight:600;">${ord.customer_name||'Pelanggan Umum'}${tableStr}</span>
+                        <span style="font-size:0.7rem;color:#64748b;">${ord.items_count} item</span>
+                    </div>
+                    <div style="font-size:0.75rem;color:#475569;margin:3px 0 5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">${ord.items_text}</div>
+                    <div class="pos-trans-time" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                        <div style="display:flex;align-items:center;gap:5px;flex:1;min-width:0;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
+                            <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.65rem;font-weight:700;color:#fff;background:${badge};white-space:nowrap;">${badgeLbl}</span>
+                            <span style="font-size:0.68rem;color:#94a3b8;white-space:nowrap;">${ord.created_at}</span>
+                        </div>
+                        <div class="pos-trans-actions" style="margin-top:0;">${actionsBtns}</div>
+                    </div>
+                </div>`;
+            }
+
+            async function pollLiveOrders() {
+                if (!liveOrderPollerActive) return;
+                try {
+                    const r = await fetch('/creator/pos/live-orders?last_id=' + liveOrderLatestId, {
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (!r.ok) return;
+                    const data = await r.json();
+                    if (data.success && data.orders && data.orders.length > 0) {
+                        const container = document.getElementById('posTransactionsListContainer');
+                        const emptyState = document.getElementById('posTransEmptyState') || document.getElementById('posTransEmptyNotice');
+
+                        let newCount = 0;
+                        data.orders.forEach(ord => {
+                            const existing = document.getElementById('pos-trans-card-' + ord.id);
+                            if (!existing) {
+                                // Kartu baru – inject paling atas
+                                if (emptyState) emptyState.style.display = 'none';
+                                container.insertAdjacentHTML('afterbegin', buildTransactionCardHtml(ord));
+                                newCount++;
+                                liveOrderLatestId = Math.max(liveOrderLatestId, ord.id);
+                            }
+                        });
+
+                        if (newCount > 0) {
+                            playOrderChime();
+                            // Update badge navigasi jika ada
+                            const badge = document.getElementById('posNewOrderBadge');
+                            if (badge) {
+                                badge.style.display = 'inline-flex';
+                                badge.innerText = (parseInt(badge.innerText) || 0) + newCount;
+                            }
+                        }
+                    }
+                } catch(e) { /* silent – jaringan buruk, coba lagi 3 detik */ }
+            }
+
+            function startLiveOrderPoller() {
+                if (liveOrderPollerActive) return;
+                liveOrderPollerActive = true;
+                (function loop() {
+                    pollLiveOrders().finally(() => {
+                        if (liveOrderPollerActive) setTimeout(loop, 3000);
+                    });
+                })();
+            }
+
+            function stopLiveOrderPoller() {
+                liveOrderPollerActive = false;
+            }
+
+            // Mulai poller ketika Screen Transactions aktif, berhenti saat kembali ke Catalog
+            document.addEventListener('DOMContentLoaded', function() {
+                const origSwitch = window.switchPosScreen;
+                window.switchPosScreen = function(screen) {
+                    if (screen === 'transactions') startLiveOrderPoller();
+                    else stopLiveOrderPoller();
+                    if (typeof origSwitch === 'function') origSwitch(screen);
+                };
+                // Jika halaman dimuat langsung di screen transactions
+                const tranScreen = document.getElementById('posScreenTransactions');
+                if (tranScreen && tranScreen.style.display !== 'none' && tranScreen.offsetParent !== null) {
+                    startLiveOrderPoller();
+                }
+            });
 
 
             // ── Render Payment Modal Order Items (Minimalis) ──

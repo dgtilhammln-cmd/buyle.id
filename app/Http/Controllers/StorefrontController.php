@@ -85,16 +85,24 @@ class StorefrontController extends Controller
         $posStorePhone = $profile->pos_store_phone ?? $seller->phone ?? '';
         $posMapsLink = $profile->pos_maps_link;
 
-        // Products & Categories
+        // Products & Kelompok Produk (HANYA tipe makanan/minuman dan kelompok produk kreator)
         $products = Product::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->with(['category', 'variantOptions.values'])
+            ->whereIn('product_type', ['makanan', 'food', 'beverage', 'minuman'])
+            ->with(['creatorGroup', 'variantOptions.values'])
             ->orderBy('name')
             ->get();
 
-        $categories = \App\Models\ProductCategory::whereHas('products', function ($pq) use ($seller) {
-            $pq->where('seller_id', $seller->id)->where('is_active', true);
-        })->get();
+        $groups = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)
+            ->where('is_active', true)
+            ->whereHas('products', function ($pq) use ($seller) {
+                $pq->where('seller_id', $seller->id)
+                    ->where('is_active', true)
+                    ->whereIn('product_type', ['makanan', 'food', 'beverage', 'minuman']);
+            })
+            ->orderBy('order')
+            ->orderBy('name')
+            ->get();
 
         $posTables = $profile->getPosTables();
         $posFees = $profile->getPosFees();
@@ -117,7 +125,7 @@ class StorefrontController extends Controller
             'storeClose',
             'isOpen',
             'products',
-            'categories',
+            'groups',
             'posTables',
             'posFees',
             'posDiscounts',
@@ -153,10 +161,15 @@ class StorefrontController extends Controller
             'items.*.id'       => 'required|exists:products,id',
             'items.*.qty'      => 'required|integer|min:1',
             'table_number'     => 'required|string|max:50',
-            'customer_name'    => 'nullable|string|max:100',
-            'customer_phone'   => 'nullable|string|max:30',
+            'customer_name'    => 'required|string|min:2|max:100',
+            'customer_phone'   => 'required|string|min:8|max:30',
             'payment_method'   => 'required|in:cash,midtrans',
             'notes'            => 'nullable|string|max:300',
+        ], [
+            'customer_name.required'  => 'Nama pemesan wajib diisi.',
+            'customer_phone.required' => 'Nomor WhatsApp wajib diisi.',
+            'table_number.required'   => 'Nomor meja wajib dipilih.',
+            'items.required'          => 'Keranjang pesanan masih kosong.',
         ]);
 
         DB::beginTransaction();
@@ -167,6 +180,7 @@ class StorefrontController extends Controller
             foreach ($request->items as $itemData) {
                 $product = Product::where('id', $itemData['id'])
                     ->where('seller_id', $seller->id)
+                    ->whereIn('product_type', ['makanan', 'food', 'beverage', 'minuman'])
                     ->firstOrFail();
 
                 $price = (float) ($product->sale_price ?: $product->price);

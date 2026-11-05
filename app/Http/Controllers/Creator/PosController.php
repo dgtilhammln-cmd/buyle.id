@@ -2149,4 +2149,174 @@ class PosController extends Controller
             'notifications' => $notifications
         ]);
     }
+
+    /**
+     * Tandai pembayaran tunai (cash) pesanan sudah diterima kasir.
+     */
+    public function markOrderPaid(Request $request, $id)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $isStaff = $user->isPosCashier() && $user->parent_seller_id;
+        $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
+
+        $order = Order::where('id', $id)
+            ->where(function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId)
+                  ->orWhere('user_id', $sellerId);
+            })
+            ->firstOrFail();
+
+        $order->status = OrderStatus::Confirmed;
+        $order->save();
+
+        if ($order->payment) {
+            $order->payment->status = PaymentStatus::Success;
+            $order->payment->paid_at = now();
+            $order->payment->save();
+        } else {
+            Payment::create([
+                'payment_number' => Payment::generatePaymentNumber(),
+                'order_id'       => $order->id,
+                'method'         => 'cash',
+                'gateway'        => 'cashier',
+                'amount'         => $order->total,
+                'status'         => PaymentStatus::Success,
+                'paid_at'        => now(),
+            ]);
+        }
+
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Pembayaran pesanan #' . ($order->order_number ?? $order->id) . ' berhasil ditandai LUNAS.',
+            'order_id' => $order->id,
+            'status'   => 'paid'
+        ]);
+    }
+
+    /**
+     * Tandai pesanan sudah selesai / disajikan ke meja (Completed).
+     */
+    public function markOrderCompleted(Request $request, $id)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $isStaff = $user->isPosCashier() && $user->parent_seller_id;
+        $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
+
+        $order = Order::where('id', $id)
+            ->where(function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId)
+                  ->orWhere('user_id', $sellerId);
+            })
+            ->firstOrFail();
+
+        $order->status = OrderStatus::Delivered;
+        $order->save();
+
+        if ($order->payment && $order->payment->status !== PaymentStatus::Success) {
+            $order->payment->status = PaymentStatus::Success;
+            $order->payment->paid_at = now();
+            $order->payment->save();
+        }
+
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Pesanan #' . ($order->order_number ?? $order->id) . ' berhasil ditandai SELESAI.',
+            'order_id' => $order->id,
+            'status'   => 'completed'
+        ]);
+    }
+
+    /**
+     * Endpoint polling real-time untuk sinkronisasi daftar transaksi kasir secara live tanpa delay.
+     */
+    public function getLiveOrders(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'orders' => []]);
+        }
+
+        $isStaff = $user->isPosCashier() && $user->parent_seller_id;
+        $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
+
+        $lastId = (int) $request->query('last_id', 0);
+
+        $query = Order::where(function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId)
+                  ->orWhere('user_id', $sellerId);
+            })
+            ->whereIn('source', ['pos', 'storefront'])
+            ->with(['items.product', 'payment']);
+
+        if ($lastId > 0) {
+            $orders = $query->where('id', '>', $lastId)
+                ->orderBy('id', 'desc')
+                ->take(15)
+                ->get();
+        } else {
+            $orders = $query->latest('id')->take(20)->get();
+        }
+
+        $formatted = $orders->map(function ($ord) {
+            $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
+            $custName = $addr['name'] ?? 'Pelanggan Umum';
+            $tableNo = $addr['table_number'] ?? null;
+            $isSelfOrder = ($ord->source === 'storefront') || !empty($addr['is_self_order']);
+
+            $payMethodRaw = $ord->payment_method ?? ($ord->payment?->method ?? ($ord->payment?->gateway ?? 'cash'));
+            $payMethod = strtolower(is_object($payMethodRaw) ? ($payMethodRaw->value ?? $payMethodRaw->name ?? 'cash') : ($payMethodRaw ?? 'cash'));
+
+            $isPaid = false;
+            $payStat = strtolower($ord->payment?->status?->value ?? $ord->payment?->status?->name ?? (string)($ord->payment?->status ?? ''));
+            $ordStat = strtolower($ord->status?->value ?? $ord->status?->name ?? (string)($ord->status ?? ''));
+            if (in_array($payStat, ['success', 'paid']) || in_array($ordStat, ['confirmed', 'delivered', 'processing', 'completed', 'paid'])) {
+                $isPaid = true;
+            }
+
+            $isCompleted = ($ordStat === 'delivered' || $ordStat === 'completed');
+
+            $itemsSummary = [];
+            if (!empty($addr['items_meta']) && is_array($addr['items_meta'])) {
+                foreach ($addr['items_meta'] as $im) {
+                    $itemsSummary[] = ($im['qty'] ?? 1) . 'x ' . ($im['product_name'] ?? 'Item');
+                }
+            } elseif ($ord->items) {
+                foreach ($ord->items as $it) {
+                    $itemsSummary[] = $it->qty . 'x ' . ($it->product ? $it->product->name : ($it->product_name ?? 'Item'));
+                }
+            }
+            $itemsText = !empty($itemsSummary) ? implode(', ', array_slice($itemsSummary, 0, 3)) . (count($itemsSummary) > 3 ? ' +' . (count($itemsSummary) - 3) . ' lainnya' : '') : ($ord->items ? $ord->items->sum('qty') : 1) . ' item';
+
+            return [
+                'id'            => $ord->id,
+                'order_number'  => $ord->order_number ?? ('BYL-' . $ord->id),
+                'total'         => (float) $ord->total,
+                'customer_name' => $custName,
+                'table_number'  => $tableNo,
+                'is_self_order' => $isSelfOrder,
+                'payment_method'=> $payMethod,
+                'is_paid'       => $isPaid,
+                'is_completed'  => $isCompleted,
+                'items_count'   => $ord->items ? $ord->items->sum('qty') : count($itemsSummary),
+                'items_text'    => $itemsText,
+                'created_at'    => $ord->created_at->format('d M Y, H:i'),
+                'created_date'  => $ord->created_at->format('Y-m-d'),
+                'timestamp'     => $ord->created_at->timestamp,
+            ];
+        });
+
+        return response()->json([
+            'success'   => true,
+            'orders'    => $formatted,
+            'latest_id' => $orders->max('id') ?? $lastId,
+        ]);
+    }
 }

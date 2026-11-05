@@ -887,6 +887,9 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/pos/push/subscribe', [\App\Http\Controllers\Creator\PosController::class, 'savePushSubscription'])->name('pos.push.subscribe');
     Route::post('/pos/push/test', [\App\Http\Controllers\Creator\PosController::class, 'testPushNotification'])->name('pos.push.test');
     Route::get('/pos/notifications/check', [\App\Http\Controllers\Creator\PosController::class, 'checkNewNotifications'])->withoutMiddleware(['auth', 'role:seller,pos_cashier'])->name('pos.notifications.check');
+    Route::post('/pos/order/{id}/mark-paid', [\App\Http\Controllers\Creator\PosController::class, 'markOrderPaid'])->name('pos.order.mark-paid');
+    Route::post('/pos/order/{id}/mark-completed', [\App\Http\Controllers\Creator\PosController::class, 'markOrderCompleted'])->name('pos.order.mark-completed');
+    Route::get('/pos/live-orders', [\App\Http\Controllers\Creator\PosController::class, 'getLiveOrders'])->name('pos.live-orders');
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');

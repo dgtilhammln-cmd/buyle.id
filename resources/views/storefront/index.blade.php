@@ -530,20 +530,20 @@
             @endif
         </div>
 
-        {{-- Category Bar --}}
+        {{-- Kelompok Produk Bar (Khusus Kelompok Produk Kreator & Makanan/Minuman) --}}
         <div class="category-scroll-bar">
-            <button type="button" class="cat-pill-btn active" onclick="filterCategory('all', this)">Semua Menu</button>
-            @foreach($categories as $cat)
-                <button type="button" class="cat-pill-btn" onclick="filterCategory('{{ $cat->id }}', this)">{{ $cat->name }}</button>
+            <button type="button" class="cat-pill-btn active" onclick="filterGroup('all', this)">Semua Menu</button>
+            @foreach($groups as $grp)
+                <button type="button" class="cat-pill-btn" onclick="filterGroup('{{ $grp->id }}', this)">{{ $grp->name }}</button>
             @endforeach
         </div>
 
-        {{-- Products List --}}
+        {{-- Products List (Khusus Makanan & Minuman) --}}
         <div class="products-grid">
             @forelse($products as $prod)
-                <div class="product-card-row" data-category="{{ $prod->category_id ?? 'all' }}">
+                <div class="product-card-row" data-group="{{ $prod->creator_group_id ?? 'none' }}">
                     <div class="product-info-col">
-                        <div class="prod-cat-sub">{{ $prod->category->name ?? 'Menu' }}</div>
+                        <div class="prod-cat-sub">{{ $prod->creatorGroup->name ?? 'Menu' }}</div>
                         <div class="prod-title">{{ $prod->name }}</div>
                         <div class="prod-price">Rp {{ number_format($prod->sale_price ?: $prod->price, 0, ',', '.') }}</div>
                         <button type="button" class="btn-add-cart" onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prod->sale_price ?: $prod->price }})">
@@ -565,7 +565,7 @@
                 </div>
             @empty
                 <div style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">
-                    Belum ada produk aktif yang tersedia.
+                    Belum ada menu makanan / minuman yang tersedia.
                 </div>
             @endforelse
         </div>
@@ -610,8 +610,8 @@
                         <input type="text" id="checkoutTableInput" class="form-control-input" value="{{ $selectedTable }}" placeholder="Masukkan Nomor / Nama Meja (e.g. Meja 01)">
                     @endif
 
-                    <input type="text" id="checkoutCustName" class="form-control-input" placeholder="Nama Pemesan (Opsional)">
-                    <input type="tel" id="checkoutCustPhone" class="form-control-input" placeholder="No. WhatsApp / HP (Opsional)">
+                    <input type="text" id="checkoutCustName" class="form-control-input" placeholder="Nama Pemesan (Wajib) *" required>
+                    <input type="tel" id="checkoutCustPhone" class="form-control-input" placeholder="No. WhatsApp / HP (Wajib) *" required>
                 </div>
 
                 {{-- Cart Items List --}}
@@ -676,12 +676,12 @@
         let cartItems = {};
         let selectedPayment = 'cash';
 
-        function filterCategory(catId, btn) {
+        function filterGroup(grpId, btn) {
             document.querySelectorAll('.cat-pill-btn').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
 
             document.querySelectorAll('.product-card-row').forEach(card => {
-                if (catId === 'all' || card.getAttribute('data-category') === catId) {
+                if (grpId === 'all' || card.getAttribute('data-group') === String(grpId)) {
                     card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
@@ -828,6 +828,18 @@
 
             const custName = document.getElementById('checkoutCustName')?.value.trim() || '';
             const custPhone = document.getElementById('checkoutCustPhone')?.value.trim() || '';
+
+            if (!custName) {
+                alert('Silakan masukkan Nama Pemesan Anda.');
+                document.getElementById('checkoutCustName')?.focus();
+                return;
+            }
+
+            if (!custPhone) {
+                alert('Silakan masukkan Nomor WhatsApp / HP Anda.');
+                document.getElementById('checkoutCustPhone')?.focus();
+                return;
+            }
 
             const btn = document.getElementById('btnSubmitOrder');
             btn.disabled = true;
