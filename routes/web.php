@@ -84,6 +84,11 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/',               [HomeController::class,    'index'])->name('home');
     Route::get('/c/{slug}/{groupSlug?}', [\App\Http\Controllers\CreatorStoreController::class, 'show'])->name('store.show');
     Route::get('/toko/{slug}', fn($slug) => redirect()->route('store.show', $slug, 301))->name('store.show.legacy');
+
+    // POS Public Storefront (Self-Order)
+    Route::get('/s/{slug}', [\App\Http\Controllers\StorefrontController::class, 'show'])->name('storefront.show');
+    Route::post('/s/{slug}/order', [\App\Http\Controllers\StorefrontController::class, 'placeOrder'])->name('storefront.order');
+    Route::get('/s/{slug}/status/{id}', [\App\Http\Controllers\StorefrontController::class, 'status'])->name('storefront.status');
     Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
     Route::get('/tools/convert-file', [\App\Http\Controllers\ToolController::class, 'convertFile'])->name('tools.convert_file');
     Route::get('/tools/social-downloader', [\App\Http\Controllers\SocialDownloaderController::class, 'index'])->name('tools.social_downloader');
@@ -866,6 +871,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/pos/remove-logo', [\App\Http\Controllers\Creator\PosController::class, 'removeLogo'])->name('pos.remove-logo');
     Route::post('/pos/upload-qris', [\App\Http\Controllers\Creator\PosController::class, 'uploadQris'])->name('pos.upload-qris');
     Route::post('/pos/remove-qris', [\App\Http\Controllers\Creator\PosController::class, 'removeQris'])->name('pos.remove-qris');
+    Route::post('/pos/upload-banner', [\App\Http\Controllers\Creator\PosController::class, 'uploadBanner'])->name('pos.upload-banner');
+    Route::post('/pos/remove-banner', [\App\Http\Controllers\Creator\PosController::class, 'removeBanner'])->name('pos.remove-banner');
     Route::post('/pos/update-settings', [\App\Http\Controllers\Creator\PosController::class, 'updateSettings'])->name('pos.update-settings');
     Route::get('/pos/cashiers', [\App\Http\Controllers\Creator\PosController::class, 'getCashiers'])->name('pos.cashiers');
     Route::post('/pos/cashiers', [\App\Http\Controllers\Creator\PosController::class, 'saveCashier'])->name('pos.cashiers.save');

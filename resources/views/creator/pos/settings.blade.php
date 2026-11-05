@@ -30,7 +30,7 @@
 
         .cr-main-canvas {
             margin: 0 auto !important;
-            padding: 0.85rem 1rem 120px 1rem !important;
+            padding: max(0.85rem, calc(env(safe-area-inset-top, 0px) + 0.65rem)) 1rem 120px 1rem !important;
             width: 100% !important;
             max-width: 460px !important;
             box-sizing: border-box !important;
@@ -51,12 +51,13 @@
             box-sizing: border-box !important;
         }
 
-        /* Top Header Bar */
+        /* Top Header Bar (Safe Area Protected for iOS Dynamic Island & Notch) */
         .menu-header-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.1rem;
+            padding-top: max(0px, env(safe-area-inset-top, 0px));
         }
 
         .menu-header-left {
@@ -485,6 +486,10 @@
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 Staf Kasir
             </button>
+            <button type="button" class="tab-pill-btn" onclick="switchSettingTab('frontstore', this)">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Front Store
+            </button>
         </div>
 
         {{-- ── TAB 1: STRUK & IDENTITAS TOKO ── --}}
@@ -637,15 +642,18 @@
 
                 <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px dashed #e2e8f0;">
                     <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Tambah Preset Diskon Baru</div>
-                    <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 0.35rem; margin-bottom: 0.5rem;">
-                        <input type="text" id="newDiscName" class="form-control-clean" placeholder="Nama Diskon">
+                    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.45rem; margin-bottom: 0.45rem;">
+                        <input type="text" id="newDiscName" class="form-control-clean" placeholder="Nama Diskon (e.g. Diskon Member)">
                         <select id="newDiscType" class="form-control-clean">
                             <option value="percent">Persen (%)</option>
                             <option value="nominal">Nominal (Rp)</option>
                         </select>
-                        <input type="number" id="newDiscValue" class="form-control-clean" placeholder="Nilai">
                     </div>
-                    <button type="button" class="btn-white-pill" style="width: 100%;" onclick="addNewDiscountItem()">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin-bottom: 0.5rem;">
+                        <input type="number" id="newDiscValue" class="form-control-clean" placeholder="Nilai Diskon (e.g. 10)">
+                        <input type="number" id="newDiscMinQty" class="form-control-clean" placeholder="Min. Pembelian Qty" value="1" min="1">
+                    </div>
+                    <button type="button" class="btn-green-pill" style="width: 100%; justify-content: center;" onclick="addNewDiscountItem()">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Tambahkan Preset Diskon
                     </button>
@@ -750,6 +758,153 @@
                 </div>
             </div>
         </div>
+
+        {{-- â”€â”€ TAB 7: FRONT STORE (SELF-ORDER STOREFRONT) â”€â”€ --}}
+        <div id="tab-pane-frontstore" class="setting-pane" style="display: none;">
+            <div class="settings-card">
+                <div class="card-sec-head">
+                    <h3 class="card-sec-title">Storefront &amp; Self-Order</h3>
+                    <span class="card-sec-badge" id="frontStoreBadgeStatus">{{ $profile->pos_storefront_enabled ? 'Aktif' : 'Nonaktif' }}</span>
+                </div>
+
+                {{-- Link Storefront Publik --}}
+                <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 14px; padding: 0.85rem; margin-bottom: 1.1rem;">
+                    <div style="font-size: 0.74rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem;">
+                        Link Storefront Publik
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; background: #ffffff; border: 1px solid #86efac; border-radius: 10px; padding: 0.45rem 0.65rem;">
+                        <input type="text" id="frontStoreUrlInput" value="{{ $storefrontUrl ?? url('/s/' . ($profile->store_slug ?: ($seller->username ?: 'toko-' . $seller->id))) }}" readonly
+                            style="flex: 1; border: none; outline: none; font-size: 0.8rem; font-weight: 600; color: #15803d; background: transparent; font-family: 'Montserrat', sans-serif;">
+                        <button type="button" onclick="copyFrontStoreUrl()" class="btn-green-pill" style="padding: 0.35rem 0.75rem; font-size: 0.72rem;">
+                            Salin
+                        </button>
+                        <a href="{{ $storefrontUrl ?? url('/s/' . ($profile->store_slug ?: ($seller->username ?: 'toko-' . $seller->id))) }}" target="_blank" class="btn-white-pill" style="padding: 0.35rem 0.65rem; font-size: 0.72rem; text-decoration: none;">
+                            Buka
+                        </a>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #15803d; margin-top: 0.4rem;">
+                        Pelanggan dapat membuka link ini langsung atau scan QR meja untuk melihat menu dan pesan sendiri (self-order).
+                    </div>
+                </div>
+
+                {{-- Status Aktif Switch --}}
+                <div class="setting-row-switch" style="margin-bottom: 1.1rem;">
+                    <div class="switch-info">
+                        <div class="switch-title">Aktifkan Storefront Self-Order</div>
+                        <div class="switch-sub">Izinkan publik mengakses menu dan memesan mandiri</div>
+                    </div>
+                    <label class="switch-toggle">
+                        <input type="checkbox" id="settingFrontStoreEnabled" {{ $profile->pos_storefront_enabled ? 'checked' : '' }}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                {{-- Banner Toko (19:6 Landscape WebP) --}}
+                <div class="form-group-clean">
+                    <label class="form-label-clean">Banner Toko (19:6 Landscape)</label>
+                    <div id="bannerPreviewWrap" style="width: 100%; aspect-ratio: 19/6; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; margin-bottom: 0.5rem;">
+                        @if($posBannerUrl ?? ($profile->pos_banner ? asset('storage/' . $profile->pos_banner) : null))
+                            <img src="{{ $posBannerUrl ?? asset('storage/' . $profile->pos_banner) }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <div style="text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 1rem;">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin: 0 auto 4px auto; display: block;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                Rekomendasi rasio 19:6 landscape (Otomatis convert ke WebP)
+                            </div>
+                        @endif
+                    </div>
+                    <div style="display: flex; gap: 0.45rem;">
+                        <label class="btn-white-pill" style="flex: 1; cursor: pointer; text-align: center; justify-content: center; display: inline-flex; align-items: center;">
+                            <input type="file" id="bannerFileInput" accept="image/png,image/jpeg,image/webp" style="display: none;" onchange="uploadBannerAjax(this)">
+                            Unggah Banner
+                        </label>
+                        <button type="button" id="btnDeleteBanner" class="btn-white-pill" style="color: #dc2626; border-color: #fecaca; display: {{ !empty($posBannerUrl ?? $profile->pos_banner) ? 'inline-flex' : 'none' }};" onclick="deleteBannerAjax()">
+                            Hapus
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Jam Buka & Tutup Toko --}}
+                <div class="form-group-clean">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                        <label class="form-label-clean" style="margin-bottom: 0;">Jam Operasional Toko</label>
+                        @if(!empty($staffEarlyStart) && !empty($staffLateEnd))
+                            <button type="button" onclick="applyStaffHours()" style="background: none; border: none; color: #16a34a; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-decoration: underline;">
+                                Pakai Jam Shift Staf ({{ $staffEarlyStart }} - {{ $staffLateEnd }})
+                            </button>
+                        @endif
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <div>
+                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 600; display: block; margin-bottom: 3px;">Jam Buka</span>
+                            <input type="time" id="frontStoreOpen" class="form-control-clean" value="{{ $storeOpen ?? ($profile->pos_store_open ?: ($staffEarlyStart ?: '08:00')) }}">
+                        </div>
+                        <div>
+                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 600; display: block; margin-bottom: 3px;">Jam Tutup</span>
+                            <input type="time" id="frontStoreClose" class="form-control-clean" value="{{ $storeClose ?? ($profile->pos_store_close ?: ($staffLateEnd ?: '22:00')) }}">
+                        </div>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.35rem;">
+                        Jika sudah ada staf kasir terdaftar, jam operasional dapat membaca jam shift staf paling awal dan paling akhir secara otomatis sebagai fallback.
+                    </div>
+                </div>
+
+                {{-- Lokasi Google Maps --}}
+                <div class="form-group-clean">
+                    <label class="form-label-clean">Lokasi Google Maps</label>
+                    <input type="url" id="frontStoreMaps" class="form-control-clean" value="{{ $profile->pos_maps_link }}" placeholder="https://maps.google.com/?q=...">
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.35rem;">
+                        Masukkan link Google Maps toko Anda agar pelanggan dapat membuka rute lokasi dengan mudah.
+                    </div>
+                </div>
+
+                {{-- Warna Aksen --}}
+                <div class="form-group-clean">
+                    <label class="form-label-clean">Warna Aksen / Tema Storefront</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="text" id="frontStoreAccent" class="form-control-clean" value="{{ $profile->pos_accent_color ?: 'linear-gradient(135deg, #1db349 0%, #a5cf36 100%)' }}" placeholder="#1db349">
+                        <button type="button" class="btn-white-pill" style="flex-shrink: 0;" onclick="resetAccentDefault()">
+                            Default
+                        </button>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.35rem;">
+                        Default gradasi buyle: <code>linear-gradient(135deg, #1db349 0%, #a5cf36 100%)</code>
+                    </div>
+                </div>
+
+                {{-- Metode Pembayaran Self-Order (Wajib Beda dengan Kasir Fisik) --}}
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 0.85rem; margin-top: 1rem;">
+                    <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.4rem;">
+                        Metode Pembayaran Self-Order (Front Store)
+                    </div>
+                    <div style="font-size: 0.72rem; color: #475569; line-height: 1.5; margin-bottom: 0.65rem;">
+                        Pembayaran self-order di Front Store secara khusus terpisah dari pengaturan kasir fisik internal:
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+                        <div style="display: flex; align-items: flex-start; gap: 0.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.55rem 0.75rem;">
+                            <div style="width: 24px; height: 24px; border-radius: 6px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;">1</div>
+                            <div style="font-size: 0.74rem;">
+                                <div style="font-weight: 700; color: #0f172a;">Bayar di Kasir (Cash)</div>
+                                <div style="color: #64748b;">Pelanggan memesan dari meja, pesanan masuk ke kasir dengan status menunggu pembayaran tunai.</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 0.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.55rem 0.75rem;">
+                            <div style="width: 24px; height: 24px; border-radius: 6px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;">2</div>
+                            <div style="font-size: 0.74rem;">
+                                <div style="font-weight: 700; color: #0f172a;">Pembayaran Digital (Snap Midtrans)</div>
+                                <div style="color: #64748b;">Pelanggan bayar langsung via QRIS, GoPay, OVO, transfer bank secara online otomatis.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tombol Simpan --}}
+                <div style="margin-top: 1.25rem;">
+                    <button type="button" class="btn-green-pill" onclick="saveFrontStoreSettingsAjax()">
+                        Simpan Pengaturan Front Store
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- Bottom Navigation (100% Sesuai Profile) --}}
@@ -790,11 +945,16 @@
 @endsection
 
 @section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         const csrfToken = '{{ csrf_token() }}';
         let posFeesData = {!! json_encode($posFees ?? []) !!};
         let posDiscountsData = {!! json_encode($posDiscounts ?? []) !!};
         let posTablesData = {!! json_encode($posTables ?? []) !!};
+        const storefrontBaseUrl = {!! json_encode($storefrontUrl ?? url('/s/' . ($profile->store_slug ?: ($seller->username ?: ('toko-' . $seller->id))))) !!};
+        const storeDisplayName = {!! json_encode($storeName) !!};
+        const staffShiftEarly = {!! json_encode($staffEarlyStart ?? '') !!};
+        const staffShiftLate = {!! json_encode($staffLateEnd ?? '') !!};
 
         function showToast(msg) {
             const t = document.getElementById('settingsToast');
@@ -993,39 +1153,81 @@
             if (!c) return;
             if (!posDiscountsData || posDiscountsData.length === 0) {
                 c.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:0.75rem; padding:0.75rem 0;">Belum ada preset diskon.</div>`;
+                document.getElementById('discountsBadgeCount').innerText = '0 Preset';
                 return;
             }
-            c.innerHTML = posDiscountsData.map((d, i) => `
-                <div class="list-row-item">
-                    <div class="list-row-left">
-                        <div>
-                            <div class="list-row-name">${escapeHtml(d.name)}</div>
-                            <div class="list-row-sub">${d.type === 'percent' ? d.value + '%' : 'Rp ' + Number(d.value).toLocaleString('id-ID')} &middot; ${d.scope === 'specific' ? 'Produk Tertentu' : 'Semua Produk'}</div>
+            c.innerHTML = posDiscountsData.map((d, i) => {
+                const isActive = d.is_active !== false;
+                const minQty = d.min_qty || 1;
+                return `
+                    <div class="list-row-item" style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem;">
+                        <div class="list-row-left" style="flex:1; min-width:0;">
+                            <div>
+                                <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(d.name)}</div>
+                                <div class="list-row-sub" style="font-size:0.72rem; color:#64748b;">
+                                    ${d.type === 'percent' ? d.value + '%' : 'Rp ' + Number(d.value).toLocaleString('id-ID')} &middot; Min. ${minQty} Qty &middot; ${d.scope === 'specific' ? 'Produk Tertentu' : 'Semua Produk'}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
+                            <label class="switch-toggle" style="margin:0;">
+                                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleDiscountActiveItem(${i}, this.checked)">
+                                <span class="slider round"></span>
+                            </label>
+                            <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeDiscountItem(${i})">&times;</button>
                         </div>
                     </div>
-                    <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeDiscountItem(${i})">&times;</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             document.getElementById('discountsBadgeCount').innerText = posDiscountsData.length + ' Preset';
+        }
+
+        function toggleDiscountActiveItem(i, checked) {
+            if (posDiscountsData[i]) {
+                posDiscountsData[i].is_active = checked;
+                saveDiscountsAjax(true);
+            }
         }
 
         function removeDiscountItem(i) {
             posDiscountsData.splice(i, 1);
             renderDiscounts();
+            saveDiscountsAjax(true);
         }
 
         function addNewDiscountItem() {
-            const name = document.getElementById('newDiscName').value.trim();
-            const type = document.getElementById('newDiscType').value;
-            const val = parseFloat(document.getElementById('newDiscValue').value) || 0;
+            const nameInput = document.getElementById('newDiscName');
+            const typeInput = document.getElementById('newDiscType');
+            const valInput = document.getElementById('newDiscValue');
+            const minQtyInput = document.getElementById('newDiscMinQty');
+
+            const name = nameInput.value.trim();
+            const type = typeInput.value;
+            const val = parseFloat(valInput.value) || 0;
+            const minQty = parseInt(minQtyInput.value) || 1;
+
             if (!name) return alert('Masukkan nama diskon.');
-            posDiscountsData.push({ name: name, type: type, value: val, scope: 'all', product_ids: [] });
-            document.getElementById('newDiscName').value = '';
-            document.getElementById('newDiscValue').value = '';
+            if (val <= 0) return alert('Masukkan nilai diskon yang valid.');
+
+            posDiscountsData.push({
+                name: name,
+                type: type,
+                value: val,
+                min_qty: minQty,
+                is_active: true,
+                scope: 'all',
+                product_ids: []
+            });
+
+            nameInput.value = '';
+            valInput.value = '';
+            minQtyInput.value = '1';
+
             renderDiscounts();
+            saveDiscountsAjax();
         }
 
-        function saveDiscountsAjax() {
+        function saveDiscountsAjax(silent) {
             fetch('{{ route("creator.pos.update-settings") }}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
@@ -1033,41 +1235,174 @@
             })
             .then(r => r.json())
             .then(data => {
-                if (data.success) showToast('Preset diskon berhasil disimpan!');
+                if (data.success && !silent) showToast('Preset diskon berhasil disimpan!');
             });
         }
 
-        // ── 5. Meja ──
+        // ── 5. Meja & Barcode QR ──
         function renderTables() {
             const c = document.getElementById('posTablesListContainer');
             if (!c) return;
             if (!posTablesData || posTablesData.length === 0) {
-                c.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:0.75rem; padding:0.75rem 0;">Belum ada meja.</div>`;
+                c.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:0.75rem; padding:0.75rem 0;">Belum ada meja. Tambahkan nomor / nama meja di bawah.</div>`;
+                document.getElementById('tablesBadgeCount').innerText = '0 Meja';
                 return;
             }
-            c.innerHTML = posTablesData.map((t, i) => `
-                <div class="list-row-item">
-                    <div class="list-row-name">${escapeHtml(t)}</div>
-                    <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeTableItem(${i})">&times;</button>
-                </div>
-            `).join('');
+
+            c.innerHTML = posTablesData.map((t, i) => {
+                const name = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i+1))) : String(t);
+                const tableUrl = storefrontBaseUrl + '?meja=' + encodeURIComponent(name);
+                return `
+                    <div class="list-row-item" style="display:flex; align-items:center; padding:0.65rem 0.85rem; gap:0.75rem;">
+                        <div id="tableQrThumb_${i}" style="width:44px; height:44px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
+                        <div class="list-row-left" style="flex:1; min-width:0;">
+                            <div>
+                                <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(name)}</div>
+                                <div class="list-row-sub" style="font-size:0.72rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    ${escapeHtml(tableUrl.replace('https://', ''))}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
+                            <button type="button" class="btn-white-pill" style="font-size:0.72rem; padding:0.35rem 0.65rem; height:32px; display:flex; align-items:center; gap:4px;" onclick="downloadTableQr(${i})" title="Download Barcode / QR Meja">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                <span>Download QR</span>
+                            </button>
+                            <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.55rem; height:32px;" onclick="removeTableItem(${i})" title="Hapus Meja">&times;</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
             document.getElementById('tablesBadgeCount').innerText = posTablesData.length + ' Meja';
+
+            // Generate thumbnails with QRCode
+            setTimeout(() => {
+                posTablesData.forEach((t, i) => {
+                    const el = document.getElementById('tableQrThumb_' + i);
+                    if (el && typeof QRCode !== 'undefined') {
+                        el.innerHTML = '';
+                        const name = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i+1))) : String(t);
+                        const tableUrl = storefrontBaseUrl + '?meja=' + encodeURIComponent(name);
+                        new QRCode(el, {
+                            text: tableUrl,
+                            width: 40,
+                            height: 40,
+                            colorDark: "#0f172a",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.M
+                        });
+                    }
+                });
+            }, 60);
+        }
+
+        function downloadTableQr(i) {
+            if (!posTablesData || !posTablesData[i]) return;
+            const t = posTablesData[i];
+            const tableName = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i+1))) : String(t);
+            const tableUrl = storefrontBaseUrl + '?meja=' + encodeURIComponent(tableName);
+
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            document.body.appendChild(tempDiv);
+
+            new QRCode(tempDiv, {
+                text: tableUrl,
+                width: 320,
+                height: 320,
+                colorDark: '#0f172a',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            setTimeout(() => {
+                const qrImg = tempDiv.querySelector('img') || tempDiv.querySelector('canvas');
+                if (!qrImg) {
+                    alert('Gagal membuat QR Code.');
+                    document.body.removeChild(tempDiv);
+                    return;
+                }
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 600;
+                canvas.height = 760;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#1eb349';
+                ctx.fillRect(0, 0, canvas.width, 16);
+
+                ctx.fillStyle = '#0f172a';
+                ctx.font = 'bold 28px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(storeDisplayName.toUpperCase(), 300, 75);
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '600 15px Montserrat, sans-serif';
+                ctx.fillText('SCAN DI SINI UNTUK PESAN & MENU', 300, 110);
+
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(100, 140, 400, 400);
+
+                ctx.drawImage(qrImg, 140, 180, 320, 320);
+
+                ctx.fillStyle = '#1eb349';
+                ctx.beginPath();
+                ctx.roundRect(150, 560, 300, 56, 28);
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 22px Montserrat, sans-serif';
+                ctx.fillText(tableName.toUpperCase(), 300, 596);
+
+                ctx.fillStyle = '#475569';
+                ctx.font = '500 14px Montserrat, sans-serif';
+                ctx.fillText('Buka kamera HP Anda & arahkan ke kode QR di atas', 300, 650);
+
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '600 12px Montserrat, sans-serif';
+                ctx.fillText(tableUrl.replace('https://', ''), 300, 680);
+
+                ctx.fillStyle = '#cbd5e1';
+                ctx.font = '11px Montserrat, sans-serif';
+                ctx.fillText('Powered by buyle.id', 300, 730);
+
+                const a = document.createElement('a');
+                a.download = 'QR-' + tableName.replace(/\s+/g, '-').toUpperCase() + '.png';
+                a.href = canvas.toDataURL('image/png');
+                a.click();
+
+                document.body.removeChild(tempDiv);
+                showToast('Barcode QR ' + tableName + ' berhasil didownload!');
+            }, 300);
         }
 
         function removeTableItem(i) {
             posTablesData.splice(i, 1);
             renderTables();
+            saveTablesAjax(true);
         }
 
         function addNewTableItem() {
-            const val = document.getElementById('newTableName').value.trim();
+            const input = document.getElementById('newTableName');
+            const val = input.value.trim();
             if (!val) return alert('Masukkan nomor atau nama meja.');
-            posTablesData.push(val);
-            document.getElementById('newTableName').value = '';
+
+            posTablesData.push({
+                id: 'table_' + Date.now(),
+                name: val
+            });
+            input.value = '';
             renderTables();
+            saveTablesAjax();
         }
 
-        function saveTablesAjax() {
+        function saveTablesAjax(silent) {
             fetch('{{ route("creator.pos.update-settings") }}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
@@ -1075,8 +1410,104 @@
             })
             .then(r => r.json())
             .then(data => {
-                if (data.success) showToast('Daftar meja berhasil disimpan!');
+                if (data.success && !silent) showToast('Daftar meja berhasil disimpan!');
             });
+        }
+
+        // ── 7. Front Store & Self-Order Functions ──
+        function copyFrontStoreUrl() {
+            const inp = document.getElementById('frontStoreUrlInput');
+            if (!inp) return;
+            navigator.clipboard.writeText(inp.value).then(() => {
+                showToast('Link storefront berhasil disalin!');
+            }).catch(() => {
+                inp.select();
+                document.execCommand('copy');
+                showToast('Link storefront berhasil disalin!');
+            });
+        }
+
+        function applyStaffHours() {
+            if (staffShiftEarly) document.getElementById('frontStoreOpen').value = staffShiftEarly;
+            if (staffShiftLate) document.getElementById('frontStoreClose').value = staffShiftLate;
+            showToast('Jam operasional disesuaikan dengan shift staf (' + staffShiftEarly + ' - ' + staffShiftLate + ')');
+        }
+
+        function resetAccentDefault() {
+            document.getElementById('frontStoreAccent').value = 'linear-gradient(135deg, #1db349 0%, #a5cf36 100%)';
+        }
+
+        function uploadBannerAjax(input) {
+            if (!input.files || !input.files[0]) return;
+            const fd = new FormData();
+            fd.append('banner', input.files[0]);
+            fd.append('_token', csrfToken);
+
+            showToast('Mengunggah & mengonversi banner ke WebP...');
+            fetch('{{ route("creator.pos.upload-banner") }}', {
+                method: 'POST',
+                body: fd
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success && data.banner_url) {
+                    const wrap = document.getElementById('bannerPreviewWrap');
+                    wrap.innerHTML = `<img src="${data.banner_url}" alt="Banner" style="width:100%;height:100%;object-fit:cover;">`;
+                    document.getElementById('btnDeleteBanner').style.display = 'inline-flex';
+                    showToast('Banner storefront berhasil dipasang!');
+                } else {
+                    alert(data.message || 'Gagal unggah banner.');
+                }
+            })
+            .catch(() => alert('Terjadi kesalahan saat unggah banner.'));
+        }
+
+        function deleteBannerAjax() {
+            if (!confirm('Hapus banner storefront?')) return;
+            fetch('{{ route("creator.pos.remove-banner") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const wrap = document.getElementById('bannerPreviewWrap');
+                    wrap.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:0.75rem; padding:1rem;"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 4px auto; display:block;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Rekomendasi rasio 19:6 landscape (Otomatis convert ke WebP)</div>`;
+                    document.getElementById('btnDeleteBanner').style.display = 'none';
+                    showToast('Banner storefront berhasil dihapus.');
+                }
+            });
+        }
+
+        function saveFrontStoreSettingsAjax() {
+            const enabled = document.getElementById('settingFrontStoreEnabled').checked ? 1 : 0;
+            const openHour = document.getElementById('frontStoreOpen').value;
+            const closeHour = document.getElementById('frontStoreClose').value;
+            const maps = document.getElementById('frontStoreMaps').value.trim();
+            const accent = document.getElementById('frontStoreAccent').value.trim();
+
+            fetch('{{ route("creator.pos.update-settings") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                body: JSON.stringify({
+                    pos_storefront_enabled: enabled,
+                    pos_store_open: openHour,
+                    pos_store_close: closeHour,
+                    pos_maps_link: maps,
+                    pos_accent_color: accent
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const badge = document.getElementById('frontStoreBadgeStatus');
+                    if (badge) badge.innerText = enabled ? 'Aktif' : 'Nonaktif';
+                    showToast('Pengaturan Front Store berhasil disimpan!');
+                } else {
+                    alert(data.message || 'Gagal menyimpan pengaturan.');
+                }
+            })
+            .catch(() => alert('Terjadi kesalahan jaringan.'));
         }
 
         // ── 6. Staf Kasir ──

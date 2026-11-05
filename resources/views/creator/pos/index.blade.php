@@ -2135,7 +2135,7 @@
             }
             .pos-wrapper {
                 display: block !important;
-                padding: 0.75rem 1rem 180px 1rem !important;
+                padding: max(0.75rem, calc(env(safe-area-inset-top, 0px) + 0.65rem)) 1rem 180px 1rem !important;
                 max-width: 480px !important;
                 margin: 0 auto !important;
             }
@@ -2999,7 +2999,7 @@
         }
         #pos-real-content {
             margin-top: 0 !important;
-            padding-top: 0 !important;
+            padding-top: max(0px, env(safe-area-inset-top, 0px)) !important;
             max-width: 480px !important;
             margin-left: auto !important;
             margin-right: auto !important;

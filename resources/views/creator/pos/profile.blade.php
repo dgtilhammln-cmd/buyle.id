@@ -35,7 +35,7 @@
 
         .cr-main-canvas {
             margin: 0 auto !important;
-            padding: 0.85rem 1rem 120px 1rem !important;
+            padding: max(0.85rem, calc(env(safe-area-inset-top, 0px) + 0.65rem)) 1rem 120px 1rem !important;
             width: 100% !important;
             max-width: 460px !important;
             box-sizing: border-box !important;
@@ -56,12 +56,13 @@
             box-sizing: border-box !important;
         }
 
-        /* Top Navigation Bar Header */
+        /* Top Navigation Bar Header (Safe Area Protected for iOS Dynamic Island & Notch) */
         .menu-header-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.1rem;
+            padding-top: max(0px, env(safe-area-inset-top, 0px));
         }
 
         .menu-header-title {

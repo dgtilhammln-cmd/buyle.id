@@ -67,6 +67,13 @@ class CreatorProfile extends Model
         'custom_ticket_admin_fee_type',
         'custom_ticket_admin_fee_value',
         'custom_fee_notes',
+        // Front Store
+        'pos_store_open',
+        'pos_store_close',
+        'pos_maps_link',
+        'pos_accent_color',
+        'pos_banner',
+        'pos_storefront_enabled',
     ];
 
     protected $casts = [
@@ -85,6 +92,7 @@ class CreatorProfile extends Model
         'custom_pos_admin_fee_value' => 'float',
         'custom_ticket_platform_fee_value' => 'float',
         'custom_ticket_admin_fee_value' => 'float',
+        'pos_storefront_enabled' => 'boolean',
     ];
 
     /**

@@ -1200,8 +1200,13 @@ class PosController extends Controller
             'pos_fees'          => 'nullable',
             'pos_discounts'     => 'nullable',
             'pos_tables'        => 'nullable',
-            'pos_cashless_mode' => 'nullable|string|in:snap_midtrans,qris_static',
-            'pos_fee_payer'     => 'nullable|string|in:seller,buyer',
+            'pos_cashless_mode'       => 'nullable|string|in:snap_midtrans,qris_static',
+            'pos_fee_payer'          => 'nullable|string|in:seller,buyer',
+            'pos_store_open'         => 'nullable|string|max:10',
+            'pos_store_close'        => 'nullable|string|max:10',
+            'pos_maps_link'          => 'nullable|string|max:1000',
+            'pos_accent_color'       => 'nullable|string|max:50',
+            'pos_storefront_enabled' => 'nullable',
         ]);
 
         $updateData = [
@@ -1255,6 +1260,18 @@ class PosController extends Controller
             $updateData['pos_fee_payer'] = in_array($request->pos_fee_payer, ['seller', 'buyer'])
                 ? $request->pos_fee_payer
                 : 'seller';
+        }
+
+        // Front Store fields
+        if ($request->has('pos_store_open'))  $updateData['pos_store_open']  = $request->pos_store_open;
+        if ($request->has('pos_store_close')) $updateData['pos_store_close'] = $request->pos_store_close;
+        if ($request->has('pos_maps_link'))   $updateData['pos_maps_link']   = $request->pos_maps_link;
+        if ($request->has('pos_accent_color')) {
+            $color = preg_replace('/[^#a-fA-F0-9,% ]/', '', $request->pos_accent_color ?? '');
+            $updateData['pos_accent_color'] = $color ?: null;
+        }
+        if ($request->has('pos_storefront_enabled')) {
+            $updateData['pos_storefront_enabled'] = (bool) $request->pos_storefront_enabled;
         }
 
         $profile->update($updateData);
@@ -1683,6 +1700,79 @@ class PosController extends Controller
     }
 
     /**
+     * Upload banner storefront POS (auto-convert ke WebP 19:6 landscape).
+     */
+    public function uploadBanner(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'banner' => 'required|image|mimes:png,jpg,jpeg,webp|max:5120',
+        ]);
+
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $profile = \App\Models\CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
+
+        if ($request->hasFile('banner')) {
+            $file = $request->file('banner');
+
+            if ($profile->pos_banner && \Illuminate\Support\Facades\Storage::disk('public')->exists($profile->pos_banner)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_banner);
+            }
+
+            $filename = 'pos_banners/' . uniqid('pos_banner_') . '.webp';
+            $fullDir = storage_path('app/public/pos_banners');
+            if (!file_exists($fullDir)) {
+                @mkdir($fullDir, 0755, true);
+            }
+            $targetPath = storage_path('app/public/' . $filename);
+
+            $imgData = @file_get_contents($file->getRealPath());
+            $image = $imgData ? @imagecreatefromstring($imgData) : null;
+            if ($image && function_exists('imagewebp')) {
+                imagepalettetotruecolor($image);
+                imagealphablending($image, true);
+                imagesavealpha($image, true);
+                imagewebp($image, $targetPath, 85);
+                imagedestroy($image);
+            } else {
+                $path = $file->store('pos_banners', 'public');
+                $filename = $path;
+            }
+
+            $profile->update(['pos_banner' => $filename]);
+
+            return response()->json([
+                'success'    => true,
+                'message'    => 'Banner storefront berhasil diunggah & dikonversi ke WebP!',
+                'banner_url' => asset('storage/' . $filename),
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'File banner tidak valid.'], 422);
+    }
+
+    /**
+     * Hapus banner storefront POS.
+     */
+    public function removeBanner()
+    {
+        $authUser = auth()->user();
+        $seller = ($authUser->isPosCashier() && $authUser->parent_seller_id)
+            ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser)
+            : $authUser;
+        $profile = \App\Models\CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
+
+        if ($profile->pos_banner && \Illuminate\Support\Facades\Storage::disk('public')->exists($profile->pos_banner)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->pos_banner);
+        }
+        $profile->update(['pos_banner' => null]);
+
+        return response()->json(['success' => true, 'message' => 'Banner storefront berhasil dihapus.']);
+    }
+
+    /**
      * Halaman Pengaturan POS Baru (Dedicated Page, Sinkron Lengkap).
      */
     public function settings(Request $request)
@@ -1718,11 +1808,37 @@ class PosController extends Controller
         $products = Product::where('seller_id', $seller->id)->where('is_active', true)->orderBy('name')->get();
         $activeTab = $request->query('tab', 'struk');
 
+        $posBannerUrl = $profile->pos_banner ? asset('storage/' . $profile->pos_banner) : null;
+        $staffEarlyStart = null;
+        $staffLateEnd = null;
+        if ($cashiers->isNotEmpty()) {
+            $times = [];
+            foreach ($cashiers as $c) {
+                if (!empty($c->shift_hours) && preg_match_all('/\b(\d{1,2}[:.]\d{2})\b/', $c->shift_hours, $matches)) {
+                    foreach ($matches[1] as $t) {
+                        $norm = str_replace('.', ':', $t);
+                        if (strlen($norm) === 4) $norm = '0' . $norm;
+                        $times[] = $norm;
+                    }
+                }
+            }
+            if (!empty($times)) {
+                sort($times);
+                $staffEarlyStart = $times[0];
+                $staffLateEnd = end($times);
+            }
+        }
+        $storeOpen = $profile->pos_store_open ?: ($staffEarlyStart ?: '08:00');
+        $storeClose = $profile->pos_store_close ?: ($staffLateEnd ?: '22:00');
+        $storeSlug = $profile->store_slug ?: ($seller->username ?: ('toko-' . $seller->id));
+        $storefrontUrl = url('/s/' . $storeSlug);
+
         return view('creator.pos.settings', compact(
             'seller',
             'profile',
             'storeName',
             'posLogoUrl',
+            'posBannerUrl',
             'posStoreAddress',
             'posStorePhone',
             'posCashlessMode',
@@ -1736,7 +1852,13 @@ class PosController extends Controller
             'adminFeeRate',
             'posBalance',
             'products',
-            'activeTab'
+            'activeTab',
+            'staffEarlyStart',
+            'staffLateEnd',
+            'storeOpen',
+            'storeClose',
+            'storeSlug',
+            'storefrontUrl'
         ));
     }
 
@@ -1974,8 +2096,8 @@ class PosController extends Controller
         $lastCheck = $request->query('since', now()->subSeconds(30)->toDateTimeString());
         $notifications = [];
 
-        // 1. Cek Pesanan POS Baru
-        $newOrders = \App\Models\Order::where('source', 'pos')
+        // 1. Cek Pesanan POS & Self-Order Storefront Baru
+        $newOrders = \App\Models\Order::whereIn('source', ['pos', 'storefront'])
             ->where(function($q) use ($seller) {
                 $q->where('seller_id', $seller->id)
                   ->orWhere('user_id', $seller->id)
@@ -1989,10 +2111,13 @@ class PosController extends Controller
         foreach ($newOrders as $ord) {
             $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
             $cName = $addr['name'] ?? 'Pelanggan Umum';
+            $isSelfOrder = ($ord->source === 'storefront') || !empty($addr['is_self_order']);
+            $tableStr = !empty($addr['table_number']) ? (' (Meja ' . $addr['table_number'] . ')') : '';
+
             $notifications[] = [
                 'id'    => 'order_' . $ord->id,
-                'title' => '🛒 Transaksi Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id)),
-                'body'  => 'Pesanan dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . ' berhasil diselesaikan.',
+                'title' => $isSelfOrder ? ('Pesanan Self-Order Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id)) . $tableStr) : ('Transaksi Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id))),
+                'body'  => $isSelfOrder ? ('Pesanan masuk dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . '.') : ('Pesanan dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . ' berhasil diselesaikan.'),
                 'icon'  => '/buyle-logo.png',
                 'url'   => route('creator.pos.reports'),
             ];
@@ -2011,7 +2136,7 @@ class PosController extends Controller
             foreach ($newMutations as $mut) {
                 $notifications[] = [
                     'id'    => 'deposit_' . $mut->id,
-                    'title' => '💳 Top Up Saldo Deposit Masuk',
+                    'title' => 'Top Up Saldo Deposit Masuk',
                     'body'  => 'Saldo deposit bertambah Rp ' . number_format($mut->amount, 0, ',', '.') . ' (' . ($mut->description ?? 'Deposit POS') . ').',
                     'icon'  => '/buyle-logo.png',
                     'url'   => route('creator.pos.index'),
