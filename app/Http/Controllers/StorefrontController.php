@@ -156,11 +156,15 @@ class StorefrontController extends Controller
 
         $seller = $profile->user;
 
+        $orderType = $request->input('order_type', 'dine_in'); // 'dine_in' or 'takeaway'
+        $tableNumber = ($orderType === 'takeaway') ? 'Takeaway' : trim($request->input('table_number', ''));
+
         $request->validate([
             'items'            => 'required|array|min:1',
             'items.*.id'       => 'required|exists:products,id',
             'items.*.qty'      => 'required|integer|min:1',
-            'table_number'     => 'required|string|max:50',
+            'order_type'       => 'nullable|in:dine_in,takeaway',
+            'table_number'     => $orderType === 'takeaway' ? 'nullable|string|max:50' : 'required|string|max:50',
             'customer_name'    => 'required|string|min:2|max:100',
             'customer_phone'   => 'required|string|min:8|max:30',
             'payment_method'   => 'required|in:cash,midtrans',
@@ -168,7 +172,7 @@ class StorefrontController extends Controller
         ], [
             'customer_name.required'  => 'Nama pemesan wajib diisi.',
             'customer_phone.required' => 'Nomor WhatsApp wajib diisi.',
-            'table_number.required'   => 'Nomor meja wajib dipilih.',
+            'table_number.required'   => 'Nomor meja wajib dipilih untuk Dine In.',
             'items.required'          => 'Keranjang pesanan masih kosong.',
         ]);
 
@@ -254,8 +258,9 @@ class StorefrontController extends Controller
                 $total = max(0, $subtotal - $discountAmount + $serviceFee);
             }
 
-            $customerName = trim($request->customer_name ?? '') ?: 'Pelanggan Meja ' . $request->table_number;
+            $customerName = trim($request->customer_name ?? '') ?: ($orderType === 'takeaway' ? 'Pelanggan Takeaway' : ('Pelanggan ' . $tableNumber));
             $paymentMethod = $request->payment_method; // 'cash' or 'midtrans'
+            $orderLabel = ($orderType === 'takeaway') ? 'Takeaway (Bawa Pulang)' : ('Meja: ' . $tableNumber);
 
             // Create Order
             $order = Order::create([
@@ -268,7 +273,7 @@ class StorefrontController extends Controller
                 'admin_fee'       => $adminFee,
                 'discount'        => $discountAmount,
                 'total'           => $total,
-                'notes'           => 'Self-Order Meja: ' . $request->table_number . ($request->filled('notes') ? ' - ' . $request->notes : ''),
+                'notes'           => 'Self-Order ' . $orderLabel . ($request->filled('notes') ? ' - ' . $request->notes : ''),
                 'source'          => 'storefront',
                 'shipping_address' => [
                     'name'             => $customerName,
@@ -276,7 +281,8 @@ class StorefrontController extends Controller
                     'phone'            => $request->customer_phone,
                     'is_pos'           => true,
                     'is_self_order'    => true,
-                    'table_number'     => $request->table_number,
+                    'order_type'       => $orderType,
+                    'table_number'     => $tableNumber,
                     'payment_method'   => $paymentMethod === 'cash' ? 'cash' : 'midtrans',
                     'service_fee'      => $serviceFee,
                     'fees_breakdown'   => $feesBreakdown,
@@ -387,7 +393,100 @@ class StorefrontController extends Controller
         $posLogoUrl = $profile->pos_logo ? asset('storage/' . $profile->pos_logo) : null;
         $posAccentColor = $profile->pos_accent_color ?: 'linear-gradient(135deg, #1db349 0%, #a5cf36 100%)';
 
-        return view('storefront.status', compact('order', 'profile', 'seller', 'storeName', 'posLogoUrl', 'posAccentColor', 'slug'));
+        $isProduction = config('midtrans.is_production', false);
+        $snapUrl = $isProduction ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+        $midtransClientKey = config('midtrans.client_key');
+
+        return view('storefront.status', compact('order', 'profile', 'seller', 'storeName', 'posLogoUrl', 'posAccentColor', 'slug', 'snapUrl', 'midtransClientKey'));
+    }
+
+    /**
+     * API Realtime status checking dari halaman status pelanggan.
+     */
+    public function checkOrderStatus(Request $request, $slug, $id)
+    {
+        $order = Order::where('id', $id)
+            ->where('source', 'storefront')
+            ->with(['payment'])
+            ->first();
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan.'], 404);
+        }
+
+        $statusStr = is_string($order->status) ? $order->status : ($order->status?->value ?? $order->status?->name ?? 'pending');
+        $statusStr = strtolower($statusStr);
+
+        $payStat = strtolower($order->payment?->status?->value ?? $order->payment?->status?->name ?? (string)($order->payment?->status ?? ''));
+        $isPaid = in_array($statusStr, ['confirmed', 'delivered', 'processing', 'completed', 'paid']) || in_array($payStat, ['success', 'paid']);
+        $isCompleted = in_array($statusStr, ['delivered', 'completed']);
+
+        $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+        $payMethod = $addr['payment_method'] ?? ($order->payment?->method ?? 'cash');
+
+        return response()->json([
+            'success'        => true,
+            'status'         => $statusStr,
+            'is_paid'        => $isPaid,
+            'is_completed'   => $isCompleted,
+            'payment_method' => $payMethod,
+            'total'          => (float) $order->total,
+        ]);
+    }
+
+    /**
+     * Ganti metode pembayaran dari halaman status (Cash <-> Midtrans Snap).
+     */
+    public function switchPaymentMethod(Request $request, $slug, $id)
+    {
+        $order = Order::where('id', $id)
+            ->where('source', 'storefront')
+            ->with(['payment'])
+            ->first();
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan.'], 404);
+        }
+
+        $statusStr = strtolower(is_string($order->status) ? $order->status : ($order->status?->value ?? 'pending'));
+        if (in_array($statusStr, ['confirmed', 'delivered', 'completed', 'paid'])) {
+            return response()->json(['success' => false, 'message' => 'Pesanan sudah lunas, tidak dapat mengubah metode pembayaran.'], 400);
+        }
+
+        $target = $request->input('target_method'); // 'cash' or 'midtrans'
+        if (!in_array($target, ['cash', 'midtrans'])) {
+            return response()->json(['success' => false, 'message' => 'Metode pembayaran tidak valid.'], 422);
+        }
+
+        $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+        $addr['payment_method'] = $target;
+        $order->shipping_address = $addr;
+        $order->save();
+
+        if ($order->payment) {
+            $order->payment->method = ($target === 'cash') ? 'cash' : 'snap_midtrans';
+            $order->payment->gateway = ($target === 'cash') ? 'cashier' : 'midtrans';
+            $order->payment->save();
+        }
+
+        $snapToken = null;
+        if ($target === 'midtrans') {
+            try {
+                $midtransService = app(MidtransService::class);
+                $snapToken = $midtransService->createSnapToken($order);
+            } catch (Exception $e) {
+                Log::error('Switch Payment Snap Token Error: ' . $e->getMessage());
+            }
+        }
+
+        return response()->json([
+            'success'        => true,
+            'target_method'  => $target,
+            'snap_token'     => $snapToken,
+            'message'        => ($target === 'cash')
+                ? 'Metode pembayaran berhasil diubah ke Bayar di Kasir (Cash).'
+                : 'Metode pembayaran berhasil diubah ke Pembayaran Digital (Snap Midtrans).'
+        ]);
     }
 }
 

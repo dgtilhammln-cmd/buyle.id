@@ -89,6 +89,8 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/s/{slug}', [\App\Http\Controllers\StorefrontController::class, 'show'])->name('storefront.show');
     Route::post('/s/{slug}/order', [\App\Http\Controllers\StorefrontController::class, 'placeOrder'])->name('storefront.order');
     Route::get('/s/{slug}/status/{id}', [\App\Http\Controllers\StorefrontController::class, 'status'])->name('storefront.status');
+    Route::get('/s/{slug}/order/{id}/check-status', [\App\Http\Controllers\StorefrontController::class, 'checkOrderStatus'])->name('storefront.check-status');
+    Route::post('/s/{slug}/order/{id}/switch-payment', [\App\Http\Controllers\StorefrontController::class, 'switchPaymentMethod'])->name('storefront.switch-payment');
     Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
     Route::get('/tools/convert-file', [\App\Http\Controllers\ToolController::class, 'convertFile'])->name('tools.convert_file');
     Route::get('/tools/social-downloader', [\App\Http\Controllers\SocialDownloaderController::class, 'index'])->name('tools.social_downloader');

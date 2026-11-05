@@ -10355,7 +10355,19 @@
                                         </svg>
                                     </button>`;
                             }
-                            card.style.opacity = '0.65';
+                            // Animasi halus & otomatis turun ke urutan paling bawah
+                            card.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease';
+                            card.style.transform = 'translateY(18px) scale(0.96)';
+                            card.style.opacity = '0.4';
+                            setTimeout(() => {
+                                const container = document.getElementById('posTransactionsListContainer');
+                                if (container) {
+                                    container.appendChild(card);
+                                }
+                                card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+                                card.style.transform = 'translateY(0) scale(1)';
+                                card.style.opacity = '0.65';
+                            }, 450);
                         }
                     } else {
                         if (btn) btn.disabled = false;

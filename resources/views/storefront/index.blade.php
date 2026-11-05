@@ -433,6 +433,38 @@
             text-align: center;
         }
 
+        /* Order Type Selector (Dine In vs Takeaway) */
+        .order-type-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .order-type-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .order-type-btn.active {
+            border-color: #16a34a;
+            background: #f0fdf4;
+            color: #15803d;
+            box-shadow: 0 2px 6px rgba(22, 163, 74, 0.1);
+        }
+
         /* Payment Selector Cards */
         .pay-option-card {
             border: 2px solid #e2e8f0;
@@ -590,25 +622,41 @@
                     <button type="button" class="btn-close-modal" onclick="closeCheckoutDrawer()">&times;</button>
                 </div>
 
-                {{-- Table & Customer Details --}}
+                {{-- Order Type (Dine In vs Takeaway) & Customer Details --}}
                 <div style="margin-bottom:1rem;">
-                    <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:4px;">Nomor / Nama Meja</label>
-                    @if(!empty($posTables) && count($posTables) > 0)
-                        <select id="checkoutTableSelect" class="form-control-input">
-                            <option value="">Pilih Nomor Meja...</option>
-                            @foreach($posTables as $t)
-                                @php $tName = is_array($t) ? ($t['name'] ?? $t['table_no'] ?? 'Meja') : $t; @endphp
-                                <option value="{{ $tName }}" {{ strtolower($selectedTable) === strtolower($tName) ? 'selected' : '' }}>
-                                    {{ $tName }}
-                                </option>
-                            @endforeach
-                            @if($selectedTable && !in_array($selectedTable, array_map(fn($t) => is_array($t) ? ($t['name'] ?? '') : $t, $posTables)))
-                                <option value="{{ $selectedTable }}" selected>{{ $selectedTable }}</option>
-                            @endif
-                        </select>
-                    @else
-                        <input type="text" id="checkoutTableInput" class="form-control-input" value="{{ $selectedTable }}" placeholder="Masukkan Nomor / Nama Meja (e.g. Meja 01)">
-                    @endif
+                    <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Tipe Pesanan</label>
+                    <div class="order-type-grid">
+                        <button type="button" id="btnTypeDineIn" class="order-type-btn active" onclick="setOrderType('dine_in')">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                            <span>Dine In (Makan di Tempat)</span>
+                        </button>
+                        <button type="button" id="btnTypeTakeaway" class="order-type-btn" onclick="setOrderType('takeaway')">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            <span>Takeaway (Bawa Pulang)</span>
+                        </button>
+                    </div>
+
+                    <div id="tableSectionWrapper">
+                        <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                            Nomor / Nama Meja <span style="color:#16a34a; font-weight:600;">(Dine In)</span>
+                        </label>
+                        @if(!empty($posTables) && count($posTables) > 0)
+                            <select id="checkoutTableSelect" class="form-control-input">
+                                <option value="">Pilih Nomor Meja...</option>
+                                @foreach($posTables as $t)
+                                    @php $tName = is_array($t) ? ($t['name'] ?? $t['table_no'] ?? 'Meja') : $t; @endphp
+                                    <option value="{{ $tName }}" {{ strtolower($selectedTable) === strtolower($tName) ? 'selected' : '' }}>
+                                        {{ $tName }}
+                                    </option>
+                                @endforeach
+                                @if($selectedTable && !in_array($selectedTable, array_map(fn($t) => is_array($t) ? ($t['name'] ?? '') : $t, $posTables)))
+                                    <option value="{{ $selectedTable }}" selected>{{ $selectedTable }}</option>
+                                @endif
+                            </select>
+                        @else
+                            <input type="text" id="checkoutTableInput" class="form-control-input" value="{{ $selectedTable }}" placeholder="Masukkan Nomor / Nama Meja (e.g. Meja 01)">
+                        @endif
+                    </div>
 
                     <input type="text" id="checkoutCustName" class="form-control-input" placeholder="Nama Pemesan (Wajib) *" required>
                     <input type="tel" id="checkoutCustPhone" class="form-control-input" placeholder="No. WhatsApp / HP (Wajib) *" required>
@@ -675,6 +723,24 @@
 
         let cartItems = {};
         let selectedPayment = 'cash';
+        let currentOrderType = 'dine_in';
+
+        function setOrderType(type) {
+            currentOrderType = type;
+            const btnDine = document.getElementById('btnTypeDineIn');
+            const btnTake = document.getElementById('btnTypeTakeaway');
+            const tableWrap = document.getElementById('tableSectionWrapper');
+
+            if (type === 'dine_in') {
+                btnDine?.classList.add('active');
+                btnTake?.classList.remove('active');
+                if (tableWrap) tableWrap.style.display = 'block';
+            } else {
+                btnTake?.classList.add('active');
+                btnDine?.classList.remove('active');
+                if (tableWrap) tableWrap.style.display = 'none';
+            }
+        }
 
         function filterGroup(grpId, btn) {
             document.querySelectorAll('.cat-pill-btn').forEach(b => b.classList.remove('active'));
@@ -818,12 +884,17 @@
             const items = Object.values(cartItems);
             if (items.length === 0) return alert('Keranjang belanja kosong.');
 
-            const tableSelect = document.getElementById('checkoutTableSelect');
-            const tableInput = document.getElementById('checkoutTableInput');
-            const tableNo = (tableSelect ? tableSelect.value : (tableInput ? tableInput.value : '')).trim();
+            let tableNo = '';
+            if (currentOrderType === 'dine_in') {
+                const tableSelect = document.getElementById('checkoutTableSelect');
+                const tableInput = document.getElementById('checkoutTableInput');
+                tableNo = (tableSelect ? tableSelect.value : (tableInput ? tableInput.value : '')).trim();
 
-            if (!tableNo) {
-                return alert('Silakan pilih atau masukkan nomor meja Anda.');
+                if (!tableNo) {
+                    return alert('Silakan pilih atau masukkan nomor meja Anda untuk Dine In.');
+                }
+            } else {
+                tableNo = 'Takeaway';
             }
 
             const custName = document.getElementById('checkoutCustName')?.value.trim() || '';
@@ -854,6 +925,7 @@
                 },
                 body: JSON.stringify({
                     items: items.map(it => ({ id: it.id, qty: it.qty })),
+                    order_type: currentOrderType,
                     table_number: tableNo,
                     customer_name: custName,
                     customer_phone: custPhone,
