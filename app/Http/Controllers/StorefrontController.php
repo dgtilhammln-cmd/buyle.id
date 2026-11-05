@@ -376,3 +376,4 @@ class StorefrontController extends Controller
         return view('storefront.status', compact('order', 'profile', 'seller', 'storeName', 'posLogoUrl', 'posAccentColor', 'slug'));
     }
 }
+
