@@ -317,6 +317,13 @@ class PosController extends Controller
             ->take(500)
             ->get();
 
+        // Urutkan transaksi: yang aktif (belum selesai) selalu di atas, pesanan selesai di bawah
+        $recentPosOrders = $recentPosOrders->sortBy(function($ord) {
+            $st = strtolower(is_string($ord->status) ? $ord->status : ($ord->status?->value ?? $ord->status?->name ?? ''));
+            $isComp = in_array($st, ['completed', 'delivered']);
+            return $isComp ? 1 : 0;
+        })->values();
+
         return view('creator.pos.index', compact(
             'categories',
             'recentPosOrders',

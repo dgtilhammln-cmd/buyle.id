@@ -285,6 +285,20 @@
             color: #475569;
             border: 1.5px solid #cbd5e1;
         }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9) translateY(12px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-14deg); }
+            40% { transform: rotate(14deg); }
+            60% { transform: rotate(-8deg); }
+            80% { transform: rotate(8deg); }
+            100% { transform: rotate(0deg); }
+        }
     </style>
 </head>
 <body>
@@ -527,6 +541,13 @@
                 Pesan Menu Lainnya
             </a>
 
+            @if($isCompleted)
+                <button type="button" onclick="start30sAlarmAndVibration()" class="btn-action-pill btn-outline" style="border-color:#bbf7d0; background:#f0fdf4; color:#166534; font-weight:700;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <span>Bunyikan Alarm &amp; Getar (30d)</span>
+                </button>
+            @endif
+
             <button type="button" onclick="location.reload()" class="btn-action-pill btn-outline">
                 Perbarui Status
             </button>
@@ -557,33 +578,60 @@
             switchPayment('midtrans');
         }
 
-        // Audio chime generator (Web Audio API)
-        function playChime(isDone = false) {
+        // Audio & Vibration Alarm Manager (Melodic Chime & Looping Haptic)
+        let alarmInterval = null;
+        let alarmTimeout = null;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) audioCtx = new AudioCtx();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // Pre-unlock audio on user gesture
+        ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => {
+            window.addEventListener(evt, () => { getAudioContext(); }, { once: true, passive: true });
+        });
+
+        function playBeepChime(isDone = false) {
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.type = 'sine';
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const now = ctx.currentTime;
 
                 if (isDone) {
-                    // Nada perayaan pesanan selesai
-                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
-                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.15); // E5
-                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.3); // G5
-                    osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.45); // C6
-                    gain.gain.setValueAtTime(0.35, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.1);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 1.1);
+                    // Melodic chime ring (C5 - E5 - G5 - C6)
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                        gain.gain.setValueAtTime(0.4, now + idx * 0.12);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.12);
+                        osc.stop(now + idx * 0.12 + 0.38);
+                    });
                 } else {
-                    osc.frequency.setValueAtTime(880, ctx.currentTime);
-                    osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.12);
-                    gain.gain.setValueAtTime(0.25, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 0.5);
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, now);
+                    osc.frequency.setValueAtTime(1100, now + 0.12);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
                 }
             } catch(e) {}
         }
@@ -592,9 +640,49 @@
         function triggerPhoneVibration() {
             if ('vibrate' in navigator) {
                 try {
-                    navigator.vibrate([300, 150, 300, 150, 600]);
+                    navigator.vibrate([400, 200, 400, 200, 600]);
                 } catch(e) {}
             }
+        }
+
+        // Alarm 30 Detik (Audio Chime + Getar Berulang)
+        function start30sAlarmAndVibration() {
+            stop30sAlarm();
+
+            const modal = document.getElementById('orderReadyModal');
+            if (modal) modal.style.display = 'flex';
+
+            playBeepChime(true);
+            triggerPhoneVibration();
+
+            // Ulangi nada & getaran setiap 2.5 detik selama 30 detik
+            alarmInterval = setInterval(() => {
+                playBeepChime(true);
+                triggerPhoneVibration();
+            }, 2500);
+
+            // Berhenti otomatis setelah 30 detik
+            alarmTimeout = setTimeout(() => {
+                stop30sAlarm();
+            }, 30000);
+        }
+
+        function stop30sAlarm() {
+            if (alarmInterval) {
+                clearInterval(alarmInterval);
+                alarmInterval = null;
+            }
+            if (alarmTimeout) {
+                clearTimeout(alarmTimeout);
+                alarmTimeout = null;
+            }
+            if ('vibrate' in navigator) {
+                try { navigator.vibrate(0); } catch(e) {}
+            }
+            const modal = document.getElementById('orderReadyModal');
+            if (modal) modal.style.display = 'none';
+
+            localStorage.setItem('order_ready_alarm_done_' + orderId, '1');
         }
 
         // Realtime Status Poller
@@ -609,7 +697,7 @@
                 // 1. Cek jika baru saja Lunas
                 if (data.is_paid && !isPaidState) {
                     isPaidState = true;
-                    playChime(false);
+                    playBeepChime(false);
                     document.getElementById('cashierWarningBox')?.remove();
                     document.getElementById('switchPayWrap')?.remove();
                     const badge = document.getElementById('statusBadgeCircle');
@@ -630,8 +718,7 @@
                 if (data.is_completed && !isCompletedState) {
                     isCompletedState = true;
                     isPaidState = true;
-                    triggerPhoneVibration();
-                    playChime(true);
+                    start30sAlarmAndVibration();
 
                     const badge = document.getElementById('statusBadgeCircle');
                     if (badge) {
@@ -656,6 +743,12 @@
         }
 
         setTimeout(pollCustomerOrderStatus, 2800);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (isCompletedState && !localStorage.getItem('order_ready_alarm_done_' + orderId)) {
+                setTimeout(start30sAlarmAndVibration, 600);
+            }
+        });
 
         // Ganti Metode Pembayaran (Cash <-> Midtrans Snap)
         function switchPayment(targetMethod) {
@@ -861,5 +954,23 @@
             link.click();
         }
     </script>
+    <!-- ── POP-UP NOTIFIKASI PESANAN SELESAI / ALARM ── -->
+    <div id="orderReadyModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.75); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem; box-sizing:border-box;">
+        <div style="background:#ffffff; border-radius:28px; padding:1.75rem 1.5rem; max-width:380px; width:100%; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.35); position:relative; animation:scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
+            <div style="width:72px; height:72px; border-radius:50%; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem; position:relative; box-shadow:0 0 0 10px rgba(34,197,94,0.15);">
+                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24" style="animation:shake 1s infinite alternate;">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+            </div>
+            <h3 style="font-size:1.3rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem; line-height:1.2;">Pesanan Anda Sudah Selesai!</h3>
+            <p style="font-size:0.85rem; color:#475569; margin:0 0 1.4rem; line-height:1.45;">
+                Makanan &amp; minuman pesanan Anda telah selesai dipersiapkan kasir/dapur dan siap dinikmati!
+            </p>
+            <button type="button" onclick="stop30sAlarm()" style="width:100%; padding:0.9rem; border-radius:999px; background:linear-gradient(135deg,#1db349,#a5cf36); color:#ffffff; font-size:0.92rem; font-weight:800; border:none; cursor:pointer; font-family:inherit; box-shadow:0 6px 20px rgba(29,179,73,0.35);">
+                Saya Mengerti (Matikan Alarm)
+            </button>
+        </div>
+    </div>
 </body>
 </html>

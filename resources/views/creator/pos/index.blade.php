@@ -3634,33 +3634,54 @@
                 <input type="text" id="posTransSearch" class="pos-pill-input" placeholder="Search transactions..." oninput="filterTransactionsList(this.value)">
             </div>
 
-            <!-- Interactive Period Filter Pill (Click to open Calendar, quick options 7 hr, 30 hr, 1 th) -->
-            <div class="pos-period-bar-wrap" style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; padding:6px 8px 6px 14px; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02); gap:8px;">
-                <!-- Left: Calendar Icon + Active Period Label (Clickable to open Calendar Modal) -->
-                <div onclick="openPeriodCalendarModal()" style="display:flex; align-items:center; gap:8px; cursor:pointer; flex-shrink:0;" title="Klik untuk atur tanggal kalender">
-                    <div style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#16a34a; flex-shrink:0;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <!-- 2 Summary Cards: Belum Bayar & Sedang Diproses -->
+            <div class="pos-trans-summary-cards" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:0.85rem;">
+                <!-- Card Kiri: Belum Bayar -->
+                <div class="pos-summary-card" id="cardSummaryUnpaid" onclick="filterTransactionsByTab('unpaid')" style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:16px; padding:10px 14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(245,158,11,0.06);">
+                    <div>
+                        <div style="font-size:0.68rem; font-weight:800; color:#b45309; text-transform:uppercase; letter-spacing:0.5px;">Belum Bayar</div>
+                        <div style="font-size:1.35rem; font-weight:800; color:#92400e; line-height:1.2; margin-top:2px;" id="countSummaryUnpaid">0</div>
+                    </div>
+                    <div style="width:34px; height:34px; border-radius:10px; background:#fef3c7; display:flex; align-items:center; justify-content:center; color:#d97706;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                </div>
+                <!-- Card Kanan: Sedang Diproses -->
+                <div class="pos-summary-card" id="cardSummaryProcessing" onclick="filterTransactionsByTab('processing')" style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:16px; padding:10px 14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(34,197,94,0.06);">
+                    <div>
+                        <div style="font-size:0.68rem; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:0.5px;">Sedang Diproses</div>
+                        <div style="font-size:1.35rem; font-weight:800; color:#166534; line-height:1.2; margin-top:2px;" id="countSummaryProcessing">0</div>
+                    </div>
+                    <div style="width:34px; height:34px; border-radius:10px; background:#dcfce7; display:flex; align-items:center; justify-content:center; color:#16a34a;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simplified Period Filter: Hari Ini & Kemarin -->
+            <div class="pos-period-bar-wrap" style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; padding:5px 8px 5px 14px; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02); gap:8px;">
+                <!-- Left: Calendar Icon + Label -->
+                <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                    <div style="width:28px; height:28px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#16a34a; flex-shrink:0;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                             <line x1="16" y1="2" x2="16" y2="6"/>
                             <line x1="8" y1="2" x2="8" y2="6"/>
                             <line x1="3" y1="10" x2="21" y2="10"/>
                         </svg>
                     </div>
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:0.82rem; font-weight:800; color:#0f172a; line-height:1.2;" id="posTransFilterLabel">All Time</span>
-                        <span style="font-size:0.62rem; color:#16a34a; font-weight:700; line-height:1; display:flex; align-items:center; gap:2px;">
-                            Kalender
-                            <svg width="8" height="8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-                        </span>
-                    </div>
+                    <span style="font-size:0.82rem; font-weight:800; color:#0f172a; line-height:1.2;" id="posTransFilterLabel">Hari Ini</span>
                 </div>
 
-                <!-- Right: Quick Options (7 hr, 30 hr, 1 th, Semua) replacing single Change button -->
-                <div class="pos-period-quick-opts" style="display:flex; align-items:center; gap:4px; overflow-x:auto; scrollbar-width:none;">
-                    <button type="button" class="pos-period-btn active" id="btnPeriodAll" data-period="all" onclick="selectPeriodPreset('all', this)">Semua</button>
-                    <button type="button" class="pos-period-btn" id="btnPeriod7d" data-period="7d" onclick="selectPeriodPreset('7d', this)">7 hr</button>
-                    <button type="button" class="pos-period-btn" id="btnPeriod30d" data-period="30d" onclick="selectPeriodPreset('30d', this)">30 hr</button>
-                    <button type="button" class="pos-period-btn" id="btnPeriod1y" data-period="1y" onclick="selectPeriodPreset('1y', this)">1 th</button>
+                <!-- Right: Quick Options (Hari Ini & Kemarin Saja) -->
+                <div class="pos-period-quick-opts" style="display:flex; align-items:center; gap:4px;">
+                    <button type="button" class="pos-period-btn active" id="btnPeriodToday" data-period="today" onclick="selectPeriodPreset('today', this)">Hari Ini</button>
+                    <button type="button" class="pos-period-btn" id="btnPeriodYesterday" data-period="yesterday" onclick="selectPeriodPreset('yesterday', this)">Kemarin</button>
                 </div>
             </div>
 
@@ -10193,6 +10214,59 @@
                 closeModal('posPeriodCalendarModal');
             }
 
+            let activeSummaryFilter = null;
+            window.filterTransactionsByTab = function(tab) {
+                const unpaidCard = document.getElementById('cardSummaryUnpaid');
+                const procCard = document.getElementById('cardSummaryProcessing');
+
+                if (activeSummaryFilter === tab) {
+                    activeSummaryFilter = null;
+                    if (unpaidCard) unpaidCard.style.outline = 'none';
+                    if (procCard) procCard.style.outline = 'none';
+                } else {
+                    activeSummaryFilter = tab;
+                    if (unpaidCard) unpaidCard.style.outline = (tab === 'unpaid') ? '2.5px solid #d97706' : 'none';
+                    if (procCard) procCard.style.outline = (tab === 'processing') ? '2.5px solid #16a34a' : 'none';
+                }
+                applyPeriodToTransactions(currentPeriodFilter);
+            };
+
+            window.updatePosTransactionsMetrics = function() {
+                const allCards = document.querySelectorAll('.pos-trans-card');
+                let unpaidCount = 0;
+                let processingCount = 0;
+
+                allCards.forEach(c => {
+                    const isPaid = c.getAttribute('data-paid') === '1';
+                    const isComp = c.getAttribute('data-completed') === '1';
+                    if (!isComp) {
+                        if (!isPaid) {
+                            unpaidCount++;
+                        } else {
+                            processingCount++;
+                        }
+                    }
+                });
+
+                const unpaidEl = document.getElementById('countSummaryUnpaid');
+                if (unpaidEl) unpaidEl.innerText = unpaidCount;
+
+                const procEl = document.getElementById('countSummaryProcessing');
+                if (procEl) procEl.innerText = processingCount;
+
+                // Update bottom nav badge on Transaksi
+                const activeTotal = unpaidCount + processingCount;
+                const navBadge = document.getElementById('posTransNavBadge');
+                if (navBadge) {
+                    if (activeTotal > 0) {
+                        navBadge.innerText = activeTotal;
+                        navBadge.style.display = 'inline-flex';
+                    } else {
+                        navBadge.style.display = 'none';
+                    }
+                }
+            };
+
             function applyPeriodToTransactions(mode, startCustom, endCustom) {
                 const label = document.getElementById('posTransFilterLabel');
                 const today = new Date();
@@ -10201,38 +10275,19 @@
                 let start = null;
                 let end = today;
 
-                if (mode === 'all') {
-                    if (label) label.innerText = 'All Time';
-                } else if (mode === 'today') {
+                if (mode === 'yesterday') {
+                    start = new Date();
+                    start.setDate(start.getDate() - 1);
+                    start.setHours(0, 0, 0, 0);
+                    end = new Date();
+                    end.setDate(end.getDate() - 1);
+                    end.setHours(23, 59, 59, 999);
+                    if (label) label.innerText = 'Kemarin';
+                } else {
+                    // Default: Hari Ini (today)
                     start = new Date();
                     start.setHours(0, 0, 0, 0);
                     if (label) label.innerText = 'Hari Ini';
-                } else if (mode === '7d') {
-                    start = new Date();
-                    start.setDate(today.getDate() - 7);
-                    start.setHours(0, 0, 0, 0);
-                    if (label) label.innerText = '7 Hari';
-                } else if (mode === '30d') {
-                    start = new Date();
-                    start.setDate(today.getDate() - 30);
-                    start.setHours(0, 0, 0, 0);
-                    if (label) label.innerText = '30 Hari';
-                } else if (mode === '1y') {
-                    start = new Date();
-                    start.setFullYear(today.getFullYear() - 1);
-                    start.setHours(0, 0, 0, 0);
-                    if (label) label.innerText = '1 Tahun';
-                } else if (mode === 'this_month') {
-                    start = new Date(today.getFullYear(), today.getMonth(), 1);
-                    if (label) label.innerText = 'Bulan Ini';
-                } else if (mode === 'custom' && startCustom && endCustom) {
-                    start = new Date(startCustom + 'T00:00:00');
-                    end = new Date(endCustom + 'T23:59:59');
-                    const sDay = String(start.getDate()).padStart(2, '0');
-                    const sMon = String(start.getMonth() + 1).padStart(2, '0');
-                    const eDay = String(end.getDate()).padStart(2, '0');
-                    const eMon = String(end.getMonth() + 1).padStart(2, '0');
-                    if (label) label.innerText = `${sDay}/${sMon} - ${eDay}/${eMon}`;
                 }
 
                 const cards = document.querySelectorAll('.pos-trans-card');
@@ -10245,12 +10300,21 @@
                     const matchesQuery = !query || searchData.includes(query);
 
                     let matchesDate = true;
-                    if (mode !== 'all' && cardDateStr && start && end) {
+                    if (cardDateStr && start && end) {
                         const cardDate = new Date(cardDateStr + 'T12:00:00');
                         matchesDate = (cardDate >= start && cardDate <= end);
                     }
 
-                    if (matchesQuery && matchesDate) {
+                    let matchesSummary = true;
+                    const isPaid = card.getAttribute('data-paid') === '1';
+                    const isComp = card.getAttribute('data-completed') === '1';
+                    if (activeSummaryFilter === 'unpaid') {
+                        matchesSummary = (!isPaid && !isComp);
+                    } else if (activeSummaryFilter === 'processing') {
+                        matchesSummary = (isPaid && !isComp);
+                    }
+
+                    if (matchesQuery && matchesDate && matchesSummary) {
                         card.style.display = 'block';
                         visibleCount++;
                     } else {
@@ -10347,6 +10411,7 @@
                                     </button>`;
                             }
                             card.classList.add('new-order-flash');
+                            updatePosTransactionsMetrics();
                         }
                     } else {
                         if (btn) btn.disabled = false;
@@ -10385,18 +10450,26 @@
                                         </svg>
                                     </button>`;
                             }
-                            // Animasi halus & otomatis turun ke urutan paling bawah
+                            // Animasi halus & otomatis meluncur ke posisi teratas dari kelompok pesanan selesai
                             card.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease';
                             card.style.transform = 'translateY(18px) scale(0.96)';
                             card.style.opacity = '0.4';
                             setTimeout(() => {
                                 const container = document.getElementById('posTransactionsListContainer');
                                 if (container) {
-                                    container.appendChild(card);
+                                    // Cari pesanan selesai yang sudah ada sebelumnya
+                                    const firstCompleted = Array.from(container.querySelectorAll('.pos-trans-card[data-completed="1"]'))
+                                        .find(c => c.id !== ('pos-trans-card-' + orderId));
+                                    if (firstCompleted) {
+                                        container.insertBefore(card, firstCompleted);
+                                    } else {
+                                        container.appendChild(card);
+                                    }
                                 }
                                 card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
                                 card.style.transform = 'translateY(0) scale(1)';
                                 card.style.opacity = '0.65';
+                                updatePosTransactionsMetrics();
                             }, 450);
                         }
                     } else {
@@ -10525,12 +10598,8 @@
 
                         if (newCount > 0) {
                             playOrderChime();
-                            // Update badge navigasi jika ada
-                            const badge = document.getElementById('posNewOrderBadge');
-                            if (badge) {
-                                badge.style.display = 'inline-flex';
-                                badge.innerText = (parseInt(badge.innerText) || 0) + newCount;
-                            }
+                            updatePosTransactionsMetrics();
+                            applyPeriodToTransactions(currentPeriodFilter);
                         }
                     }
                 } catch(e) { /* silent – jaringan buruk, coba lagi 3 detik */ }
@@ -10550,19 +10619,12 @@
                 liveOrderPollerActive = false;
             }
 
-            // Mulai poller ketika Screen Transactions aktif, berhenti saat kembali ke Catalog
+            // Mulai poller secara global agar badge notifikasi navbar selalu live terupdate
             document.addEventListener('DOMContentLoaded', function() {
-                const origSwitch = window.switchPosScreen;
-                window.switchPosScreen = function(screen) {
-                    if (screen === 'transactions') startLiveOrderPoller();
-                    else stopLiveOrderPoller();
-                    if (typeof origSwitch === 'function') origSwitch(screen);
-                };
-                // Jika halaman dimuat langsung di screen transactions
-                const tranScreen = document.getElementById('posScreenTransactions');
-                if (tranScreen && tranScreen.style.display !== 'none' && tranScreen.offsetParent !== null) {
-                    startLiveOrderPoller();
-                }
+                // Hitung metrics awal & set periode default Hari Ini
+                updatePosTransactionsMetrics();
+                selectPeriodPreset('today');
+                startLiveOrderPoller();
             });
 
 
@@ -10788,7 +10850,7 @@
             </button>
 
             <!-- 2. Transactions -->
-            <button type="button" class="pos-nav-item" id="posNavBtnTrans" onclick="switchPosScreen('transactions')" title="Transaksi">
+            <button type="button" class="pos-nav-item" id="posNavBtnTrans" onclick="switchPosScreen('transactions')" title="Transaksi" style="position:relative;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <rect x="2" y="4" width="20" height="16" rx="2"/>
                     <circle cx="12" cy="12" r="3"/>
@@ -10796,6 +10858,7 @@
                     <line x1="18" y1="15" x2="22" y2="15"/>
                 </svg>
                 <span class="pos-nav-label">Transaksi</span>
+                <span id="posTransNavBadge" style="display:none; position:absolute; top:4px; right:calc(50% - 20px); background:#ef4444; color:#ffffff; font-size:10px; font-weight:800; border-radius:999px; min-width:18px; height:18px; padding:0 5px; align-items:center; justify-content:center; border:2px solid #ffffff; box-shadow:0 2px 6px rgba(239,68,68,0.45); line-height:1; z-index:5;">0</span>
             </button>
 
             <!-- 3. Laporan (Halaman Baru /pos/reports) -->
