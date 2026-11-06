@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\PosDeposit;
 use App\Models\PosBalanceMutation;
+use App\Models\PayoutRequest;
 use App\Models\Setting;
 use App\Services\MidtransService;
 use Carbon\Carbon;
@@ -1671,7 +1672,7 @@ class PosController extends Controller
         $posTotalTransactions = $posOrders->count();
         $posAov = $posTotalTransactions > 0 ? round($posTotalSales / $posTotalTransactions) : 0;
 
-        // Saldo Deposit POS & Mutasi Ledger
+        // Saldo Deposit POS & Mutasi Ledger (Top-up, Potongan, & Pencairan / Withdrawal)
         $creatorProfile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
         $storeName = $creatorProfile->store_name ?: ($seller->name ?: 'Buyle POS');
         $posBalance = (float) ($creatorProfile->pos_balance ?? 0);
@@ -1681,7 +1682,55 @@ class PosController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        $payoutRequests = PayoutRequest::where('seller_id', $seller->id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Gabungkan mutasi saldo deposit & pencairan dana (withdrawal)
+        $unifiedMutations = collect();
+
+        foreach ($posMutations as $pm) {
+            $unifiedMutations->push((object)[
+                'id'          => 'mut-' . $pm->id,
+                'source'      => 'pos_mutation',
+                'category'    => $pm->type === 'topup' ? 'topup' : 'fee_deduction',
+                'type_label'  => $pm->type === 'topup' ? '+ Top Up Deposit' : '- Potongan Biaya POS',
+                'amount'      => (float) $pm->amount,
+                'is_positive' => $pm->type === 'topup',
+                'status'      => 'success',
+                'status_label'=> 'Berhasil',
+                'description' => $pm->notes ?: ($pm->type === 'topup' ? 'Top-up Saldo Deposit Kasir' : 'Biaya Transaksi Kasir POS'),
+                'ref_number'  => $pm->reference_number ?: ('REF-' . $pm->id),
+                'created_at'  => $pm->created_at,
+            ]);
+        }
+
+        foreach ($payoutRequests as $pr) {
+            $unifiedMutations->push((object)[
+                'id'          => 'payout-' . $pr->id,
+                'source'      => 'payout',
+                'category'    => 'withdrawal',
+                'type_label'  => '- Pencairan Dana (Withdrawal)',
+                'amount'      => (float) $pr->amount,
+                'net_amount'  => (float) ($pr->net_amount ?: $pr->amount),
+                'is_positive' => false,
+                'status'      => strtolower($pr->status ?? 'pending'),
+                'status_label'=> match(strtolower($pr->status ?? '')) {
+                    'approved', 'completed', 'paid' => 'Berhasil Ditransfer',
+                    'rejected', 'cancelled'         => 'Ditolak',
+                    default                         => 'Sedang Diproses'
+                },
+                'description' => 'Transfer ke ' . ($pr->bank_name ?? 'Bank') . ' - ' . ($pr->bank_account_number ?? '-') . ' a/n ' . ($pr->bank_account_name ?? $seller->name),
+                'ref_number'  => 'WD-' . $pr->id,
+                'created_at'  => $pr->created_at,
+            ]);
+        }
+
+        $posMutationsList = $unifiedMutations->sortByDesc('created_at')->values();
+
         $posTotalTopup = (float) $posMutations->where('type', 'topup')->sum('amount');
+        $posTotalWithdrawal = (float) $payoutRequests->whereIn('status', ['approved', 'completed', 'paid'])->sum('amount');
         $posTotalFeeMutations = (float) abs($posMutations->where('type', 'fee_deduction')->sum('amount'));
 
         // Top Menu / Produk Terlaris Periode Ini
@@ -1697,7 +1746,8 @@ class PosController extends Controller
             'seller', 'creatorProfile', 'storeName',
             'filter', 'startDate', 'endDate',
             'posOrders', 'posTotalSales', 'posCashTotal', 'posDigitalTotal', 'posFeesTotal',
-            'posTotalTransactions', 'posAov', 'posBalance', 'posMutations', 'posTotalTopup', 'posTotalFeeMutations',
+            'posTotalTransactions', 'posAov', 'posBalance', 'posMutations', 'posMutationsList',
+            'posTotalTopup', 'posTotalWithdrawal', 'posTotalFeeMutations',
             'posPaymentMethod', 'topProducts'
         ));
     }

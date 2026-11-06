@@ -371,7 +371,8 @@
                 @endif
                 <div
                     style="font-size:0.88rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    {{ $storeName }}</div>
+                    {{ $storeName }}
+                </div>
             </div>
             <div
                 style="font-size:0.65rem; color:#94a3b8; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; gap:4px;">
@@ -431,9 +432,9 @@
             @elseif($isPaid)
                 Pembayaran telah diterima. Dapur sedang menyiapkan pesanan makanan &amp; minuman Anda.
             @elseif($paymentMethod !== 'cash')
-                Pesanan sudah tercatat. Silakan selesaikan pembayaran QRIS / E-Wallet / VA untuk mulai diproses.
+                Pesanan sudah tercatat. Silakan selesaikan pembayaran QRIS Digital agar Pesanan mulai diproses.
             @else
-                Pesanan masuk ke kasir. Silakan bayar tunai di meja kasir sekarang agar segera dimasak.
+                Pesanan masuk ke kasir. Silahkan segera ke meja kasir dan bayar tunai pesanan anda agar segera dimasak.
             @endif
         </p>
 
@@ -464,7 +465,7 @@
                 <div>
                     <div class="cw-title">Wajib Sekarang ke Kasir</div>
                     <div class="cw-desc">
-                        Silakan segera ke kasir dan sebutkan <strong>#{{ $order->order_number }}</strong>
+                        Silakan segera ke kasir dan sebutkan atas nama <strong>{{ $addr['name'] ?? 'Pelanggan' }}</strong>
                         @if($orderType !== 'takeaway') ({{ $tableNo }})@endif.
                         Pesanan baru akan diproses setelah pembayaran diterima kasir.
                     </div>
@@ -481,7 +482,7 @@
                             <rect x="3" y="5" width="18" height="14" rx="2" />
                             <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
-                        <span>Ganti ke Pembayaran Digital (QRIS / GoPay / VA)</span>
+                        <span>Ganti ke Pembayaran QRIS Digital</span>
                     </button>
                 @else
                     <button type="button" class="btn-switch-pay btn-switch-to-cash" onclick="switchPayment('cash')">
@@ -513,7 +514,7 @@
                 </div>
             @endif
             <div class="order-card-row">
-                <span class="order-label">Pemesan</span>
+                <span class="order-label">Atas Nama</span>
                 <span class="order-val">{{ $addr['name'] ?? 'Pelanggan' }}</span>
             </div>
             <div class="order-card-row">
@@ -530,7 +531,7 @@
                     @elseif($isPaid)
                         Lunas / Sedang Diproses
                     @else
-                        Menunggu Pembayaran Kasir
+                        Menunggu Pembayaran di Kasir
                     @endif
                 </span>
             </div>

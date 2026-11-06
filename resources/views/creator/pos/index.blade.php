@@ -632,7 +632,6 @@
             display: none;
             position: fixed;
             inset: 0;
-            bottom: 72px; /* clear the bottom nav */
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(8px);
             z-index: 99999;
@@ -2476,7 +2475,7 @@
             display: block !important;
         }
 
-        /* Checkmark Badge on Top Right of Image */
+        /* Checkmark Badge on Top Right of Image - HANYA MUNCUL KETIKA PRODUK DIPILIH (IN-CART) */
         .product-card .product-check-badge {
             position: absolute !important;
             top: 6px !important;
@@ -2485,11 +2484,14 @@
             height: 22px !important;
             border-radius: 50% !important;
             background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
-            display: flex !important;
+            display: none !important;
             align-items: center !important;
             justify-content: center !important;
             z-index: 10 !important;
             box-shadow: 0 2px 6px rgba(30,179,73,0.35) !important;
+        }
+        .product-card.in-cart .product-check-badge {
+            display: flex !important;
         }
 
         .product-card .product-name {
@@ -3670,30 +3672,42 @@
                     title="Hapus pencarian">&#x2715;</button>
             </div>
 
-            <!-- 2 Summary Cards: Belum Bayar & Sedang Diproses -->
-            <div class="pos-trans-summary-cards" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:0.85rem;">
-                <!-- Card Kiri: Belum Bayar -->
-                <div class="pos-summary-card" id="cardSummaryUnpaid" onclick="filterTransactionsByTab('unpaid')" style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:16px; padding:10px 14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(245,158,11,0.06);">
-                    <div>
-                        <div style="font-size:0.68rem; font-weight:800; color:#b45309; text-transform:uppercase; letter-spacing:0.5px;">Belum Bayar</div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#92400e; line-height:1.2; margin-top:2px;" id="countSummaryUnpaid">0</div>
+            <!-- 3 Summary Cards: Belum Bayar, Sedang Diproses, & Selesai -->
+            <div class="pos-trans-summary-cards" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:0.85rem;">
+                <!-- Card 1: Belum Bayar -->
+                <div class="pos-summary-card" id="cardSummaryUnpaid" onclick="filterTransactionsByTab('unpaid')" style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:14px; padding:8px 10px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(245,158,11,0.06);">
+                    <div style="min-width:0;">
+                        <div style="font-size:0.62rem; font-weight:800; color:#b45309; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Belum Bayar</div>
+                        <div style="font-size:1.2rem; font-weight:800; color:#92400e; line-height:1.2; margin-top:2px;" id="countSummaryUnpaid">0</div>
                     </div>
-                    <div style="width:34px; height:34px; border-radius:10px; background:#fef3c7; display:flex; align-items:center; justify-content:center; color:#d97706;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                    <div style="width:28px; height:28px; border-radius:8px; background:#fef3c7; display:flex; align-items:center; justify-content:center; color:#d97706; flex-shrink:0;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10"/>
                             <polyline points="12 6 12 12 16 14"/>
                         </svg>
                     </div>
                 </div>
-                <!-- Card Kanan: Sedang Diproses -->
-                <div class="pos-summary-card" id="cardSummaryProcessing" onclick="filterTransactionsByTab('processing')" style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:16px; padding:10px 14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(34,197,94,0.06);">
-                    <div>
-                        <div style="font-size:0.68rem; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:0.5px;">Sedang Diproses</div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#166534; line-height:1.2; margin-top:2px;" id="countSummaryProcessing">0</div>
+                <!-- Card 2: Sedang Diproses -->
+                <div class="pos-summary-card" id="cardSummaryProcessing" onclick="filterTransactionsByTab('processing')" style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:8px 10px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(34,197,94,0.06);">
+                    <div style="min-width:0;">
+                        <div style="font-size:0.62rem; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Diproses</div>
+                        <div style="font-size:1.2rem; font-weight:800; color:#166534; line-height:1.2; margin-top:2px;" id="countSummaryProcessing">0</div>
                     </div>
-                    <div style="width:34px; height:34px; border-radius:10px; background:#dcfce7; display:flex; align-items:center; justify-content:center; color:#16a34a;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                    <div style="width:28px; height:28px; border-radius:8px; background:#dcfce7; display:flex; align-items:center; justify-content:center; color:#16a34a; flex-shrink:0;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                             <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                    </div>
+                </div>
+                <!-- Card 3: Selesai -->
+                <div class="pos-summary-card" id="cardSummaryCompleted" onclick="filterTransactionsByTab('completed')" style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:14px; padding:8px 10px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(59,130,246,0.06);">
+                    <div style="min-width:0;">
+                        <div style="font-size:0.62rem; font-weight:800; color:#1d4ed8; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Selesai</div>
+                        <div style="font-size:1.2rem; font-weight:800; color:#1e40af; line-height:1.2; margin-top:2px;" id="countSummaryCompleted">0</div>
+                    </div>
+                    <div style="width:28px; height:28px; border-radius:8px; background:#dbeafe; display:flex; align-items:center; justify-content:center; color:#2563eb; flex-shrink:0;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12"/>
                         </svg>
                     </div>
                 </div>
@@ -10298,15 +10312,18 @@
             window.filterTransactionsByTab = function(tab) {
                 const unpaidCard = document.getElementById('cardSummaryUnpaid');
                 const procCard = document.getElementById('cardSummaryProcessing');
+                const compCard = document.getElementById('cardSummaryCompleted');
 
                 if (activeSummaryFilter === tab) {
                     activeSummaryFilter = null;
                     if (unpaidCard) unpaidCard.style.outline = 'none';
                     if (procCard) procCard.style.outline = 'none';
+                    if (compCard) compCard.style.outline = 'none';
                 } else {
                     activeSummaryFilter = tab;
                     if (unpaidCard) unpaidCard.style.outline = (tab === 'unpaid') ? '2.5px solid #d97706' : 'none';
                     if (procCard) procCard.style.outline = (tab === 'processing') ? '2.5px solid #16a34a' : 'none';
+                    if (compCard) compCard.style.outline = (tab === 'completed') ? '2.5px solid #2563eb' : 'none';
                 }
                 applyPeriodToTransactions(currentPeriodFilter);
             };
@@ -10315,16 +10332,17 @@
                 const allCards = document.querySelectorAll('.pos-trans-card');
                 let unpaidCount = 0;
                 let processingCount = 0;
+                let completedCount = 0;
 
                 allCards.forEach(c => {
                     const isPaid = c.getAttribute('data-paid') === '1';
                     const isComp = c.getAttribute('data-completed') === '1';
-                    if (!isComp) {
-                        if (!isPaid) {
-                            unpaidCount++;
-                        } else {
-                            processingCount++;
-                        }
+                    if (isComp) {
+                        completedCount++;
+                    } else if (!isPaid) {
+                        unpaidCount++;
+                    } else {
+                        processingCount++;
                     }
                 });
 
@@ -10333,6 +10351,9 @@
 
                 const procEl = document.getElementById('countSummaryProcessing');
                 if (procEl) procEl.innerText = processingCount;
+
+                const compEl = document.getElementById('countSummaryCompleted');
+                if (compEl) compEl.innerText = completedCount;
 
                 // Update bottom nav badge on Transaksi
                 const activeTotal = unpaidCount + processingCount;
@@ -10392,6 +10413,8 @@
                         matchesSummary = (!isPaid && !isComp);
                     } else if (activeSummaryFilter === 'processing') {
                         matchesSummary = (isPaid && !isComp);
+                    } else if (activeSummaryFilter === 'completed') {
+                        matchesSummary = isComp;
                     }
 
                     if (matchesQuery && matchesDate && matchesSummary) {

@@ -791,6 +791,24 @@
                 flex-shrink: 0;
             }
 
+            .rp-mut-filter-pill {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                color: #64748b;
+                border-radius: 999px;
+                padding: 5px 13px;
+                font-size: 0.72rem;
+                font-weight: 700;
+                white-space: nowrap;
+                cursor: pointer;
+                transition: all 0.15s ease;
+            }
+            .rp-mut-filter-pill.active {
+                background: #16a34a;
+                border-color: #16a34a;
+                color: #ffffff;
+            }
+
             /* ── Empty state ── */
             .rp-empty {
                 text-align: center;
@@ -1276,7 +1294,7 @@
             <button type="button" class="rp-sec-btn active" onclick="switchSec('struk',this)">Struk
                 ({{ count($posOrders) }})</button>
             <button type="button" class="rp-sec-btn" onclick="switchSec('menu',this)">Top Menu</button>
-            <button type="button" class="rp-sec-btn" onclick="switchSec('mutasi',this)">Mutasi Deposit</button>
+            <button type="button" class="rp-sec-btn" onclick="switchSec('mutasi',this)">Mutasi ({{ count($posMutationsList ?? $posMutations) }})</button>
         </div>
 
         {{-- SECTION 1: STRUK --}}
@@ -1356,27 +1374,71 @@
             @endforelse
         </div>
 
-        {{-- SECTION 3: MUTASI --}}
+        {{-- SECTION 3: MUTASI (Top Up, Pencairan/Withdrawal, & Biaya) --}}
         <div id="sec-mutasi" style="display:none;">
-            @forelse($posMutations as $m)
-                <div class="rp-mut-card">
-                    <div style="min-width:0;">
-                        <div class="rp-mut-type" style="color: {{ $m->type === 'topup' ? '#16a34a' : '#ef4444' }};">
-                            {{ $m->type === 'topup' ? '+ Top Up Deposit' : '- Potongan Biaya' }}
+            <!-- Filter Pills Mutasi -->
+            <div style="display:flex; align-items:center; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:0.75rem; scrollbar-width:none;">
+                <button type="button" class="rp-mut-filter-pill active" onclick="filterMutasiTab('all', this)">Semua ({{ count($posMutationsList ?? $posMutations) }})</button>
+                <button type="button" class="rp-mut-filter-pill" onclick="filterMutasiTab('topup', this)">Top Up</button>
+                <button type="button" class="rp-mut-filter-pill" onclick="filterMutasiTab('withdrawal', this)">Pencairan (Withdrawal)</button>
+                <button type="button" class="rp-mut-filter-pill" onclick="filterMutasiTab('fee_deduction', this)">Biaya POS</button>
+            </div>
+
+            <div id="mutasiItemsContainer">
+                @forelse($posMutationsList ?? $posMutations as $m)
+                    @php
+                        $mCategory = $m->category ?? ($m->type ?? 'topup');
+                        $isPos = $m->is_positive ?? ($m->type === 'topup');
+                        $badgeBg = match($mCategory) {
+                            'topup'       => '#dcfce7',
+                            'withdrawal'  => '#dbeafe',
+                            default       => '#fee2e2',
+                        };
+                        $badgeColor = match($mCategory) {
+                            'topup'       => '#15803d',
+                            'withdrawal'  => '#1d4ed8',
+                            default       => '#b91c1c',
+                        };
+                        $amtColor = match($mCategory) {
+                            'topup'       => '#16a34a',
+                            'withdrawal'  => '#2563eb',
+                            default       => '#dc2626',
+                        };
+                    @endphp
+                    <div class="rp-mut-card" data-category="{{ $mCategory }}">
+                        <div style="min-width:0; flex:1;">
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:2px;">
+                                <span style="font-size:0.68rem; font-weight:800; background:{{ $badgeBg }}; color:{{ $badgeColor }}; padding:2px 8px; border-radius:999px;">
+                                    {{ $m->type_label ?? ($m->type === 'topup' ? '+ Top Up Deposit' : '- Potongan Biaya') }}
+                                </span>
+                                @if(isset($m->status_label) && $mCategory === 'withdrawal')
+                                    <span style="font-size:0.65rem; font-weight:700; color:{{ $m->status === 'approved' || $m->status === 'completed' || $m->status === 'paid' ? '#16a34a' : '#d97706' }};">
+                                        ({{ $m->status_label }})
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="rp-mut-desc" style="font-size:0.75rem; color:#334155; margin-top:3px; word-break:break-word;">
+                                {{ $m->description ?? '-' }}
+                            </div>
+                            <div class="rp-mut-date" style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+                                <span>{{ $m->created_at->format('d M Y, H:i') }}</span>
+                                @if(isset($m->ref_number))
+                                    <span style="color:#cbd5e1;">&bull;</span>
+                                    <span style="color:#94a3b8; font-family:monospace;">{{ $m->ref_number }}</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="rp-mut-desc">{{ $m->description ?? '-' }}</div>
-                        <div class="rp-mut-date">{{ $m->created_at->format('d M Y, H:i') }}</div>
+                        <div class="rp-mut-amt" style="color:{{ $amtColor }}; text-align:right;">
+                            {{ $isPos ? '+' : '-' }} Rp {{ number_format(abs($m->amount), 0, ',', '.') }}
+                        </div>
                     </div>
-                    <div class="rp-mut-amt" style="color: {{ $m->type === 'topup' ? '#16a34a' : '#ef4444' }};">
-                        {{ $m->type === 'topup' ? '+' : '-' }} Rp {{ number_format(abs($m->amount), 0, ',', '.') }}
+                @empty
+                    <div class="rp-empty">
+                        <p>Belum ada riwayat mutasi</p>
+                        <small>Pada rentang waktu yang dipilih.</small>
                     </div>
-                </div>
-            @empty
-                <div class="rp-empty">
-                    <p>Belum ada riwayat mutasi deposit</p>
-                    <small>Pada rentang waktu yang dipilih.</small>
-                </div>
-            @endforelse
+                @endforelse
+            </div>
         </div>
 
     </div>{{-- end .rp-wrap --}}
@@ -1615,9 +1677,19 @@
             document.getElementById('sec-struk').style.display = sec === 'struk' ? '' : 'none';
             document.getElementById('sec-menu').style.display = sec === 'menu' ? '' : 'none';
             document.getElementById('sec-mutasi').style.display = sec === 'mutasi' ? '' : 'none';
-            document.getElementById('sec-struk').style.display = sec === 'struk' ? '' : 'none';
-            document.getElementById('sec-menu').style.display = sec === 'menu' ? '' : 'none';
-            document.getElementById('sec-mutasi').style.display = sec === 'mutasi' ? '' : 'none';
+        }
+
+        function filterMutasiTab(cat, btn) {
+            document.querySelectorAll('.rp-mut-filter-pill').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            const items = document.querySelectorAll('#mutasiItemsContainer .rp-mut-card');
+            items.forEach(item => {
+                if (cat === 'all' || item.getAttribute('data-category') === cat) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
 
         function filterOrders() {
