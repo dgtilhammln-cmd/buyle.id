@@ -893,6 +893,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/pos/order/{id}/mark-completed', [\App\Http\Controllers\Creator\PosController::class, 'markOrderCompleted'])->name('pos.order.mark-completed');
     Route::get('/pos/live-orders', [\App\Http\Controllers\Creator\PosController::class, 'getLiveOrders'])->name('pos.live-orders');
     Route::get('/pos/order/{id}/detail', [\App\Http\Controllers\Creator\PosController::class, 'getOrderDetail'])->name('pos.order.detail');
+    Route::post('/pos/heartbeat', [\App\Http\Controllers\Creator\PosController::class, 'heartbeat'])->name('pos.heartbeat');
+    Route::post('/pos/sync-offline', [\App\Http\Controllers\Creator\PosController::class, 'syncOfflineOrders'])->name('pos.sync-offline');
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');

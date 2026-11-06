@@ -560,6 +560,13 @@
             @if($posStoreAddress)
                 <p class="store-addr-text">{{ $posStoreAddress }}</p>
             @endif
+
+            @if(!$isSellerOnline)
+                <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:0.65rem 0.85rem; margin-top:0.75rem; display:flex; align-items:center; gap:0.5rem; color:#92400e; font-size:0.75rem; font-weight:600;">
+                    <span style="font-size:1rem;">⚠️</span>
+                    <span><strong>Kasir Sedang Offline:</strong> Pemesanan mandiri (Self-Order) sementara ditutup. Silakan lakukan pemesanan langsung di kasir (pembayaran tunai).</span>
+                </div>
+            @endif
         </div>
 
         {{-- Kelompok Produk Bar (Khusus Kelompok Produk Kreator & Makanan/Minuman) --}}
@@ -723,18 +730,32 @@
                     </div>
 
                     {{-- Option 2: Pembayaran Digital --}}
-                    <div class="pay-option-card" id="payOptMidtrans" onclick="selectPaymentMethod('midtrans')">
+                    <div class="pay-option-card" id="payOptMidtrans" onclick="selectPaymentMethod('midtrans')" style="{{ !$isSellerOnline ? 'display:none;' : '' }}">
                         <input type="radio" name="payMethod" value="midtrans" style="margin-top:3px;">
                         <div>
-                            <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Pembayaran Digital (Snap Midtrans)</div>
+                            <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Pembayaran Digital</div>
                             <div style="font-size:0.72rem; color:#64748b;">QRIS, GoPay, OVO, ShopeePay, Virtual Account online instan.</div>
                         </div>
                     </div>
                 </div>
 
-                <button type="button" id="btnSubmitOrder" class="btn-confirm-order" onclick="submitStorefrontOrder()">
-                    Konfirmasi &amp; Buat Pesanan
-                </button>
+                {{-- Client Offline Notice --}}
+                <div id="clientOfflineAlert" style="display:none; background:#fee2e2; border:1px solid #fca5a5; border-radius:10px; padding:0.6rem 0.85rem; margin-top:0.75rem; color:#b91c1c; font-size:0.73rem; font-weight:600;">
+                    Koneksi internet Anda terputus. Pembayaran digital disembunyikan.
+                </div>
+
+                @if(!$isSellerOnline)
+                    <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:0.75rem; margin-top:1rem; color:#92400e; font-size:0.74rem; font-weight:700; text-align:center;">
+                        ⚠️ Kasir toko sedang offline. Silakan pesan dan bayar tunai langsung di kasir.
+                    </div>
+                    <button type="button" class="btn-confirm-order" disabled style="background:#94a3b8; box-shadow:none; cursor:not-allowed; margin-top:0.5rem;">
+                        Kasir Sedang Offline
+                    </button>
+                @else
+                    <button type="button" id="btnSubmitOrder" class="btn-confirm-order" onclick="submitStorefrontOrder()">
+                        Konfirmasi &amp; Buat Pesanan
+                    </button>
+                @endif
             </div>
         </div>
     </div>
@@ -744,6 +765,26 @@
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const posFeesData = {!! json_encode($posFees ?? []) !!};
         const posDiscountsData = {!! json_encode($posDiscounts ?? []) !!};
+        const isSellerOnline = {{ $isSellerOnline ? 'true' : 'false' }};
+
+        // Client Online / Offline Auto Detection
+        function checkStorefrontConnection() {
+            const isClientOnline = navigator.onLine;
+            const payOptMidtrans = document.getElementById('payOptMidtrans');
+            const alertEl = document.getElementById('clientOfflineAlert');
+
+            if (!isClientOnline) {
+                if (payOptMidtrans) payOptMidtrans.style.display = 'none';
+                if (alertEl) alertEl.style.display = 'block';
+                selectPaymentMethod('cash');
+            } else {
+                if (payOptMidtrans && isSellerOnline) payOptMidtrans.style.display = '';
+                if (alertEl) alertEl.style.display = 'none';
+            }
+        }
+        window.addEventListener('online', checkStorefrontConnection);
+        window.addEventListener('offline', checkStorefrontConnection);
+        document.addEventListener('DOMContentLoaded', checkStorefrontConnection);
 
         let cartItems = {};
         let selectedPayment = 'cash';

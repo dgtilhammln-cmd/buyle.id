@@ -138,6 +138,7 @@ class StorefrontController extends Controller
         $posDiscounts = $profile->getPosDiscounts();
 
         $selectedTable = trim($request->query('meja') ?: $request->query('table', ''));
+        $isSellerOnline = (bool) ($profile->pos_last_online_at && $profile->pos_last_online_at->gt(now()->subMinutes(3)));
 
         return view('storefront.index', compact(
             'slug',
@@ -153,6 +154,7 @@ class StorefrontController extends Controller
             'storeOpen',
             'storeClose',
             'isOpen',
+            'isSellerOnline',
             'products',
             'groups',
             'posTables',
@@ -181,6 +183,14 @@ class StorefrontController extends Controller
 
         if (!$profile || !$profile->user) {
             return response()->json(['success' => false, 'message' => 'Toko tidak ditemukan.'], 404);
+        }
+
+        $isSellerOnline = (bool) ($profile->pos_last_online_at && $profile->pos_last_online_at->gt(now()->subMinutes(3)));
+        if (!$isSellerOnline) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kasir saat ini sedang offline. Silakan lakukan pemesanan langsung di meja kasir (pembayaran tunai).'
+            ], 422);
         }
 
         $seller = $profile->user;

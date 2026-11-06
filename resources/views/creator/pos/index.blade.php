@@ -3124,6 +3124,12 @@
 
 @section('topbar_actions')
     <div class="pos-topbar-bar">
+        <!-- Compact Status Jaringan (Online / Offline) -->
+        <div class="pos-topbar-chip" id="posNetworkStatusChip" title="Status Jaringan Kasir">
+            <span id="posNetworkDot" style="width:7px; height:7px; border-radius:50%; background:#16a34a; display:inline-block;"></span>
+            <span id="posNetworkLabel" style="font-weight:700; font-size:0.7rem; color:#15803d;">Online</span>
+        </div>
+
         <!-- Compact Indikator Kasir -->
         <div class="pos-topbar-chip" title="Kasir yang sedang bertugas">
             <span class="pos-status-pulse"></span>
@@ -4309,6 +4315,31 @@
         </div>
     </div>
         
+    <!-- ── POP-UP MODAL: MODE OFFLINE AKTIF ── -->
+    <div class="pos-modal-overlay" id="posOfflineModal" style="z-index: 100050; display:none;">
+        <div class="pos-modal-card" style="max-width: 440px; width: 92vw; border-radius: 24px; padding: 1.6rem; background: #ffffff; box-shadow: 0 20px 50px rgba(0,0,0,0.25); text-align:center;">
+            <div style="width:58px; height:58px; border-radius:50%; background:#fef3c7; border:2px solid #fde68a; display:flex; align-items:center; justify-content:center; margin:0 auto 1.1rem; color:#d97706;">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                    <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+                    <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+                    <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+                    <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                    <line x1="12" y1="20" x2="12.01" y2="20"/>
+                </svg>
+            </div>
+            <h3 style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:0.5rem;">Mode Offline Aktif</h3>
+            <p style="font-size:0.8rem; color:#64748b; line-height:1.55; margin-bottom:1.25rem;">
+                Koneksi internet Anda terputus. <strong>Pencatatan penjualan kasir (pembayaran tunai)</strong> tetap bisa dilakukan secara offline dan otomatis disinkronkan saat online kembali.<br><br>
+                <span style="color:#b45309; font-weight:700;">Catatan:</span> Fitur <strong>Self-Order pelanggan</strong> dan <strong>Pembayaran Digital</strong> sementara dinonaktifkan.
+            </p>
+            <button type="button" class="btn-submit-green" onclick="closePosOfflineModal()" style="width:100%; border-radius:999px; padding:0.75rem; font-weight:700; font-size:0.85rem;">
+                Mengerti, Lanjutkan Kasir
+            </button>
+        </div>
+    </div>
+
     <!-- ── POP-UP MODAL: ATUR PERIODE KALENDER POS (100% STYLE BUYLE) ── -->
     <div class="pos-modal-overlay" id="posPeriodCalendarModal" style="z-index: 100020;">
         <div class="pos-modal-card" style="max-width: 420px; width: 92vw; border-radius: 24px; padding: 1.4rem; background: #ffffff; box-shadow: 0 20px 50px rgba(0,0,0,0.25);">
@@ -6424,6 +6455,19 @@
 
             let activePosCategory = 'all';
 
+            // Cache catalog products to localStorage for offline access
+            try {
+                const catalogCache = {!! json_encode($products->map(fn($p) => [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'price' => (float) $p->price,
+                    'sale_price' => $p->sale_price ? (float) $p->sale_price : null,
+                    'stock' => $p->stock,
+                    'group_id' => $p->creator_group_id,
+                ])->values()) !!};
+                localStorage.setItem('buyle_pos_catalog_{{ auth()->id() }}', JSON.stringify(catalogCache));
+            } catch(e) {}
+
             function setPosCategoryFilter(cat, btn) {
                 activePosCategory = cat;
                 document.querySelectorAll('.pos-ref-cat-pill').forEach(p => p.classList.remove('active'));
@@ -7273,6 +7317,12 @@
                     cash_change: Math.max(0, cashPaid - grandTotal)
                 };
 
+                // Mode Offline Handling
+                if (!navigator.onLine) {
+                    saveOrderOffline(payload, grandTotal, custName, tableNum, cashPaid);
+                    return;
+                }
+
                 fetch('{{ route("creator.pos.store") }}', {
                     method: 'POST',
                     headers: {
@@ -7379,9 +7429,175 @@
                     .catch(err => {
                         btnSubmit.disabled = false;
                         btnSubmit.innerText = 'Konfirmasi & Bayar';
+                        if (!navigator.onLine || (err && (err.name === 'TypeError' || String(err.message).toLowerCase().includes('fetch')))) {
+                            saveOrderOffline(payload, grandTotal, custName, tableNum, cashPaid);
+                            return;
+                        }
                         showPosAlert('Terjadi kesalahan jaringan/server: ' + err.message, 'Kesalahan Koneksi', 'error');
                     });
             }
+
+            // ── OFFLINE STORAGE & AUTO-SYNC FUNCTIONS ─────────────────────────
+            function saveOrderOffline(payload, grandTotal, custName, tableNum, cashPaid) {
+                const btnSubmit = document.getElementById('btnSubmitOrder');
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = 'Konfirmasi & Bayar';
+                }
+
+                const offlineId = 'OFF-' + Date.now();
+                const offlineOrderNum = 'OFF-' + Math.floor(1000 + Math.random() * 9000);
+                const offlineOrder = {
+                    id: offlineId,
+                    order_number: offlineOrderNum,
+                    customer_name: custName || 'Pelanggan Umum',
+                    customer_phone: payload.customer_phone || '-',
+                    table_number: tableNum || null,
+                    order_type: payload.table_number ? 'dine_in' : 'takeaway',
+                    total: grandTotal,
+                    subtotal: (payload.items || []).reduce((sum, item) => sum + (item.price * item.qty), 0),
+                    discount: payload.discount_amount || 0,
+                    service_fee: payload.service_fee || 0,
+                    payment_method: 'cash',
+                    cash_paid: cashPaid,
+                    cash_change: Math.max(0, cashPaid - grandTotal),
+                    fees_breakdown: payload.fees_breakdown || [],
+                    discount_details: payload.discount_details || null,
+                    items: (cart || []).map(i => ({
+                        id: i.id,
+                        product_name: i.name,
+                        price: i.price,
+                        qty: i.qty,
+                        subtotal: i.price * i.qty,
+                        notes: i.notes || null
+                    })),
+                    created_at: new Date().toISOString(),
+                    shipping_address: {
+                        name: custName || 'Pelanggan Umum',
+                        phone: payload.customer_phone || '-',
+                        table_number: tableNum || null,
+                        order_type: payload.table_number ? 'dine_in' : 'takeaway',
+                        payment_method: 'cash',
+                        cash_paid: cashPaid,
+                        cash_change: Math.max(0, cashPaid - grandTotal),
+                        items_meta: (cart || []).map(i => ({
+                            product_name: i.name,
+                            qty: i.qty,
+                            price: i.price
+                        }))
+                    }
+                };
+
+                const queueKey = 'buyle_pos_offline_orders_{{ auth()->id() }}';
+                let queue = [];
+                try {
+                    queue = JSON.parse(localStorage.getItem(queueKey) || '[]');
+                } catch (e) { queue = []; }
+                queue.push(offlineOrder);
+                localStorage.setItem(queueKey, JSON.stringify(queue));
+
+                closeModal('posPaymentModal');
+                if (typeof clearCart === 'function') clearCart();
+
+                showPosToast('Transaksi berhasil dicatat OFFLINE (Tunai)!', 'warning');
+                showReceiptModal(offlineOrder);
+            }
+
+            function syncOfflineOrdersToServer() {
+                if (!navigator.onLine) return;
+                const queueKey = 'buyle_pos_offline_orders_{{ auth()->id() }}';
+                let queue = [];
+                try {
+                    queue = JSON.parse(localStorage.getItem(queueKey) || '[]');
+                } catch (e) { queue = []; }
+
+                if (!queue || queue.length === 0) return;
+
+                fetch('{{ route("creator.pos.sync-offline") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ orders: queue })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.synced_count > 0) {
+                        localStorage.removeItem(queueKey);
+                        showPosToast(data.message || (data.synced_count + ' transaksi offline berhasil disinkronkan ke server!'), 'success');
+                        if (typeof fetchRecentOrders === 'function') fetchRecentOrders();
+                    }
+                })
+                .catch(err => {
+                    console.warn('Sync offline orders retry failed:', err);
+                });
+            }
+
+            let isOfflineModalShownOnce = false;
+
+            function updatePosOnlineStatus() {
+                const isOnline = navigator.onLine;
+                const dot = document.getElementById('posNetworkDot');
+                const label = document.getElementById('posNetworkLabel');
+                const optCashless = document.getElementById('optCashless');
+                const modal = document.getElementById('posOfflineModal');
+
+                if (!isOnline) {
+                    if (dot) dot.style.background = '#dc2626';
+                    if (label) {
+                        label.innerText = 'Offline';
+                        label.style.color = '#dc2626';
+                    }
+                    if (optCashless) optCashless.style.display = 'none';
+                    if (typeof selectPaymentMethod === 'function') selectPaymentMethod('cash');
+
+                    if (!isOfflineModalShownOnce) {
+                        isOfflineModalShownOnce = true;
+                        if (modal) modal.style.display = 'flex';
+                    }
+                } else {
+                    if (dot) dot.style.background = '#16a34a';
+                    if (label) {
+                        label.innerText = 'Online';
+                        label.style.color = '#15803d';
+                    }
+                    if (optCashless) optCashless.style.display = 'flex';
+                    if (modal) modal.style.display = 'none';
+
+                    // Auto-sync offline orders
+                    syncOfflineOrdersToServer();
+                }
+            }
+
+            function closePosOfflineModal() {
+                const modal = document.getElementById('posOfflineModal');
+                if (modal) modal.style.display = 'none';
+            }
+
+            window.addEventListener('online', () => {
+                updatePosOnlineStatus();
+                showPosToast('Koneksi internet kembali online.', 'success');
+            });
+            window.addEventListener('offline', () => {
+                updatePosOnlineStatus();
+            });
+            document.addEventListener('DOMContentLoaded', updatePosOnlineStatus);
+
+            // Heartbeat kasir POS setiap 25 detik
+            setInterval(() => {
+                if (navigator.onLine) {
+                    fetch('{{ route("creator.pos.heartbeat") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        }
+                    }).catch(() => {});
+                }
+            }, 25000);
 
             // ── Order Status Real-Time Polling & Status Badge ─────────────────────
             let orderStatusPollTimer = null;

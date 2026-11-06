@@ -213,6 +213,9 @@ class PosController extends Controller
 
         // 1. Ambil profil toko creator
         $profile = CreatorProfile::where('user_id', $seller->id)->first();
+        if ($profile) {
+            $profile->update(['pos_last_online_at' => now()]);
+        }
 
         // 2. Ambil produk untuk POS
         $products = $this->getPosProducts($seller->id);
@@ -2244,6 +2247,11 @@ class PosController extends Controller
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;
         $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
 
+        $profile = CreatorProfile::where('user_id', $sellerId)->first();
+        if ($profile) {
+            $profile->update(['pos_last_online_at' => now()]);
+        }
+
         $order = Order::where('id', $id)
             ->where(function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId)
@@ -2291,6 +2299,11 @@ class PosController extends Controller
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;
         $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
 
+        $profile = CreatorProfile::where('user_id', $sellerId)->first();
+        if ($profile) {
+            $profile->update(['pos_last_online_at' => now()]);
+        }
+
         $order = Order::where('id', $id)
             ->where(function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId)
@@ -2327,6 +2340,11 @@ class PosController extends Controller
 
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;
         $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
+
+        $profile = CreatorProfile::where('user_id', $sellerId)->first();
+        if ($profile) {
+            $profile->update(['pos_last_online_at' => now()]);
+        }
 
         $lastId = (int) $request->query('last_id', 0);
 
@@ -2414,6 +2432,11 @@ class PosController extends Controller
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;
         $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
 
+        $profile = CreatorProfile::where('user_id', $sellerId)->first();
+        if ($profile) {
+            $profile->update(['pos_last_online_at' => now()]);
+        }
+
         $order = Order::where('id', $id)
             ->where(function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId)
@@ -2466,6 +2489,151 @@ class PosController extends Controller
             'shipping_address' => $addr,
             'items'            => $items,
             'source'           => $order->source,
+        ]);
+    }
+
+    /**
+     * Heartbeat kasir POS untuk memastikan status kasir online realtime.
+     */
+    public function heartbeat(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false], 401);
+        }
+
+        $sellerId = ($user->isPosCashier() && $user->parent_seller_id) ? $user->parent_seller_id : $user->id;
+        $profile = CreatorProfile::where('user_id', $sellerId)->first();
+        if ($profile) {
+            $profile->update(['pos_last_online_at' => now()]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'online'  => true,
+            'pos_last_online_at' => now()->toIso8601String()
+        ]);
+    }
+
+    /**
+     * Sinkronisasi antrean transaksi yang dicatat kasir saat perangkat offline.
+     */
+    public function syncOfflineOrders(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthenticated.'], 401);
+        }
+
+        $orders = $request->input('orders', []);
+        if (empty($orders) || !is_array($orders)) {
+            return response()->json(['success' => true, 'synced_count' => 0]);
+        }
+
+        $isStaff = $user->isPosCashier() && $user->parent_seller_id;
+        $seller = $isStaff ? (\App\Models\User::find($user->parent_seller_id) ?? $user) : $user;
+        $profile = CreatorProfile::where('user_id', $seller->id)->first();
+        if ($profile) {
+            $profile->update(['pos_last_online_at' => now()]);
+        }
+
+        $syncedCount = 0;
+        foreach ($orders as $offOrder) {
+            try {
+                DB::beginTransaction();
+
+                $items = $offOrder['items'] ?? [];
+                if (empty($items)) {
+                    DB::rollBack();
+                    continue;
+                }
+
+                $subtotal = 0;
+                foreach ($items as $item) {
+                    $subtotal += ((float) ($item['price'] ?? 0)) * ((int) ($item['qty'] ?? 1));
+                }
+
+                $orderNumber = $this->generatePosOrderNumber();
+                $discountAmount = (float) ($offOrder['discount_amount'] ?? 0);
+                $serviceFee = (float) ($offOrder['service_fee'] ?? 0);
+                $total = max(0, $subtotal - $discountAmount + $serviceFee);
+
+                $shippingAddress = [
+                    'name'            => $offOrder['customer_name'] ?? 'Pelanggan Umum',
+                    'phone'           => $offOrder['customer_phone'] ?? '-',
+                    'address'         => 'Transaksi Kasir POS (Offline Sync)',
+                    'table_number'    => $offOrder['table_number'] ?? null,
+                    'order_type'      => $offOrder['order_type'] ?? 'dine_in',
+                    'cashier_id'      => $user->id,
+                    'cashier_name'    => $user->name,
+                    'payment_method'  => 'cash',
+                    'cash_paid'       => (float) ($offOrder['cash_paid'] ?? $total),
+                    'cash_change'     => (float) ($offOrder['cash_change'] ?? 0),
+                    'fees_breakdown'  => $offOrder['fees_breakdown'] ?? [],
+                    'discount_details'=> $offOrder['discount_details'] ?? [],
+                    'synced_from_offline' => true,
+                    'offline_created_at'  => $offOrder['created_at'] ?? now()->toIso8601String(),
+                ];
+
+                $order = Order::create([
+                    'user_id'          => $seller->id,
+                    'seller_id'        => $seller->id,
+                    'order_number'     => $orderNumber,
+                    'status'           => OrderStatus::Completed,
+                    'subtotal'         => $subtotal,
+                    'discount'         => $discountAmount,
+                    'service_fee'      => $serviceFee,
+                    'total'            => $total,
+                    'payment_method'   => 'cash',
+                    'shipping_address' => $shippingAddress,
+                    'notes'            => $offOrder['notes'] ?? null,
+                    'source'           => 'pos',
+                    'created_at'       => !empty($offOrder['created_at']) ? Carbon::parse($offOrder['created_at']) : now(),
+                ]);
+
+                // Create Order Items & decrement stock
+                foreach ($items as $it) {
+                    $prod = Product::find($it['id']);
+                    if ($prod) {
+                        OrderItem::create([
+                            'order_id'     => $order->id,
+                            'product_id'   => $prod->id,
+                            'product_name' => $prod->name,
+                            'price'        => $it['price'],
+                            'qty'          => $it['qty'],
+                            'subtotal'     => $it['price'] * $it['qty'],
+                            'notes'        => $it['notes'] ?? null,
+                        ]);
+
+                        if ($prod->stock !== null) {
+                            $prod->decrement('stock', min($prod->stock, (int) $it['qty']));
+                        }
+                    }
+                }
+
+                // Create Payment Record
+                Payment::create([
+                    'order_id'       => $order->id,
+                    'user_id'        => $seller->id,
+                    'payment_number' => 'PAY-' . $orderNumber,
+                    'amount'         => $total,
+                    'method'         => 'cash',
+                    'status'         => 'paid',
+                    'created_at'     => $order->created_at,
+                ]);
+
+                DB::commit();
+                $syncedCount++;
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Error syncing offline POS order: ' . $e->getMessage(), ['order' => $offOrder]);
+            }
+        }
+
+        return response()->json([
+            'success'      => true,
+            'synced_count' => $syncedCount,
+            'message'      => $syncedCount . ' transaksi offline berhasil disinkronkan ke server.'
         ]);
     }
 }
