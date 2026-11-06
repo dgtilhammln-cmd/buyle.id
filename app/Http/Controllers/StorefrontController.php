@@ -85,21 +85,50 @@ class StorefrontController extends Controller
         $posStorePhone = $profile->pos_store_phone ?? $seller->phone ?? '';
         $posMapsLink = $profile->pos_maps_link;
 
-        // Products & Kelompok Produk (HANYA tipe makanan/minuman dan kelompok produk kreator)
+        // Products & Kelompok Produk (Mendukung tipe makanan/minuman, fnb, dan katalog produk fisik)
         $products = Product::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->whereIn('product_type', ['makanan', 'food', 'beverage', 'minuman'])
+            ->whereIn('product_type', ['makanan', 'food', 'beverage', 'minuman', 'fnb'])
             ->with(['creatorGroup', 'variantOptions.values'])
             ->orderBy('name')
             ->get();
 
+        if ($products->isEmpty()) {
+            $products = Product::where('seller_id', $seller->id)
+                ->where('is_active', true)
+                ->whereNotIn('product_type', ['digital', 'ticket', 'external_link'])
+                ->with(['creatorGroup', 'variantOptions.values'])
+                ->orderBy('name')
+                ->get();
+        }
+
+        // Sinkronisasi otomatis foto produk dari CreatorBioBlock jika kolom image pada tabel Product kosong
+        foreach ($products as $prod) {
+            if (empty($prod->image)) {
+                $block = \App\Models\CreatorBioBlock::where('creator_id', $profile->id)
+                    ->where(function ($q) use ($prod) {
+                        $q->where('title', $prod->name)
+                          ->orWhere('data_json->product_id', $prod->id);
+                    })
+                    ->first();
+
+                if ($block && !empty($block->data_json)) {
+                    $bImg = $block->data_json['image'] 
+                        ?? ($block->data_json['scraped_image'] 
+                        ?? ($block->data_json['thumbnail'] 
+                        ?? ($block->data_json['photo'] 
+                        ?? ($block->data_json['cover'] ?? null))));
+
+                    if (!empty($bImg)) {
+                        $prod->image = $bImg;
+                        Product::where('id', $prod->id)->whereNull('image')->update(['image' => $bImg]);
+                    }
+                }
+            }
+        }
+
         $groups = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->whereHas('products', function ($pq) use ($seller) {
-                $pq->where('seller_id', $seller->id)
-                    ->where('is_active', true)
-                    ->whereIn('product_type', ['makanan', 'food', 'beverage', 'minuman']);
-            })
             ->orderBy('order')
             ->orderBy('name')
             ->get();

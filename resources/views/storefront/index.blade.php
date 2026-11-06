@@ -583,11 +583,35 @@
                             <span>Tambah</span>
                         </button>
                     </div>
+                    @php
+                        $prodImgUrl = null;
+                        if (!empty($prod->image_url) && !str_contains($prod->image_url, 'service-default') && !str_contains($prod->image_url, 'placeholder')) {
+                            $prodImgUrl = $prod->image_url;
+                        }
+                        if (!$prodImgUrl) {
+                            $candidate = $prod->image ?: ($prod->thumbnail ?: ($prod->icon ?: null));
+                            if (!empty($candidate)) {
+                                $raw = trim($candidate);
+                                if (str_starts_with($raw, 'http://') || str_starts_with($raw, 'https://')) {
+                                    $prodImgUrl = $raw;
+                                } elseif (str_starts_with($raw, 'storage/') || str_starts_with($raw, '/storage/')) {
+                                    $prodImgUrl = asset(ltrim($raw, '/'));
+                                } else {
+                                    $prodImgUrl = asset('storage/' . ltrim($raw, '/'));
+                                }
+                            } elseif (!empty($prod->gallery) && is_array($prod->gallery) && !empty($prod->gallery[0])) {
+                                $raw = trim($prod->gallery[0]);
+                                if (str_starts_with($raw, 'http://') || str_starts_with($raw, 'https://')) {
+                                    $prodImgUrl = $raw;
+                                } else {
+                                    $prodImgUrl = asset('storage/' . ltrim($raw, '/'));
+                                }
+                            }
+                        }
+                    @endphp
                     <div class="product-img-wrap">
-                        @if($prod->thumbnail && str_starts_with($prod->thumbnail, 'http'))
-                            <img src="{{ $prod->thumbnail }}" alt="{{ $prod->name }}" loading="lazy">
-                        @elseif($prod->thumbnail)
-                            <img src="{{ asset('storage/' . $prod->thumbnail) }}" alt="{{ $prod->name }}" loading="lazy">
+                        @if($prodImgUrl)
+                            <img src="{{ $prodImgUrl }}" alt="{{ $prod->name }}" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#cbd5e1;\'><svg width=\'24\' height=\'24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.8\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>';">
                         @else
                             <div style="width:100%;height:100%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#cbd5e1;">
                                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>

@@ -216,17 +216,34 @@ class PosController extends Controller
         // 2. Ambil produk untuk POS
         $products = $this->getPosProducts($seller->id);
 
-        // 3. Transaksi POS hari ini
-        $todayOrders = Order::where('source', 'pos')
-            ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
-            ->whereDate('created_at', now()->today())
-            ->whereIn('status', [
-                OrderStatus::Confirmed,
-                OrderStatus::Processing,
-                OrderStatus::Shipped,
-                OrderStatus::Delivered,
-            ])
-            ->with(['items', 'payment'])
+        // 3. Transaksi POS & Storefront hari ini
+        $todayOrders = Order::whereIn('source', ['pos', 'storefront'])
+            ->where(function($q) use ($seller) {
+                $q->where('seller_id', $seller->id)
+                  ->orWhere('user_id', $seller->id)
+                  ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
+            })
+            ->where(function($q) {
+                $q->whereBetween('created_at', [Carbon::today('Asia/Jakarta')->startOfDay(), Carbon::today('Asia/Jakarta')->endOfDay()])
+                  ->orWhereDate('created_at', now()->today());
+            })
+            ->where(function($q) {
+                $q->whereIn('status', [
+                    OrderStatus::Confirmed,
+                    OrderStatus::Processing,
+                    OrderStatus::Shipped,
+                    OrderStatus::Delivered,
+                    'confirmed',
+                    'processing',
+                    'shipped',
+                    'delivered',
+                    'completed',
+                    'paid',
+                ])
+                ->orWhereHas('payment', fn($pq) => $pq->whereIn('status', ['paid', 'success', 'settlement']));
+            })
+            ->whereNotIn('status', [OrderStatus::Cancelled, OrderStatus::Refunded, 'cancelled', 'refunded'])
+            ->with(['items.product', 'payment'])
             ->orderByDesc('created_at')
             ->get();
 
@@ -1656,6 +1673,7 @@ class PosController extends Controller
 
         // Saldo Deposit POS & Mutasi Ledger
         $creatorProfile = CreatorProfile::firstOrCreate(['user_id' => $seller->id], ['store_name' => $seller->name]);
+        $storeName = $creatorProfile->store_name ?: ($seller->name ?: 'Buyle POS');
         $posBalance = (float) ($creatorProfile->pos_balance ?? 0);
 
         $posMutations = PosBalanceMutation::where('creator_id', $creatorProfile->id)
@@ -1676,7 +1694,7 @@ class PosController extends Controller
             ->get();
 
         return view('creator.pos.reports', compact(
-            'seller', 'creatorProfile',
+            'seller', 'creatorProfile', 'storeName',
             'filter', 'startDate', 'endDate',
             'posOrders', 'posTotalSales', 'posCashTotal', 'posDigitalTotal', 'posFeesTotal',
             'posTotalTransactions', 'posAov', 'posBalance', 'posMutations', 'posTotalTopup', 'posTotalFeeMutations',
