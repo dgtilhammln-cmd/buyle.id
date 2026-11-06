@@ -31,7 +31,7 @@ class StoreProductRequest extends FormRequest
             'product_sub_category_id' => ['nullable', 'exists:product_sub_categories,id'],
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
-            'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'image'               => [$this->filled('scraped_image_url') ? 'nullable' : 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'og_image'            => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'gallery'             => ['nullable', 'array', 'max:6'],
             'product_type'        => ['nullable', 'string', 'in:digital,physical,makanan,service,ticket,external_link'],
@@ -99,6 +99,10 @@ class StoreProductRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($v) {
+            if (!$this->hasFile('image') && !$this->filled('scraped_image_url')) {
+                $v->errors()->add('image', 'Thumbnail utama produk wajib diunggah.');
+            }
+
             if ($this->boolean('require_follow_join')) {
                 $hasAny = !empty($this->input('follow_instagram_url'))
                     || !empty($this->input('follow_tiktok_url'))
@@ -153,7 +157,7 @@ class StoreProductRequest extends FormRequest
         $merge = [
             'is_active'          => $this->boolean('is_active', true),
             'is_featured'        => $this->boolean('is_featured', false),
-            'is_buyle_checkout' => $this->boolean('is_buyle_checkout', true),
+            'is_buyle_checkout' => $this->input('product_type') === 'makanan' ? true : $this->boolean('is_buyle_checkout', true),
             'require_follow_join' => $this->boolean('require_follow_join', false),
             'stock'       => ($this->has('stock') && $this->input('stock') !== null && $this->input('stock') !== '') ? (int) $this->input('stock') : null,
             'weight'      => (int) ($this->input('weight') ?? 0),

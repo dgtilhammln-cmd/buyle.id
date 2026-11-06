@@ -999,6 +999,14 @@
                                         autocomplete="off">
                                 </div>
 
+                                {{-- STOK PRODUK MAKANAN --}}
+                                <div class="form-group" id="foodStockWrap" style="display:none;">
+                                    <label class="form-label">Stok Produk</label>
+                                    <input type="number" name="stock" id="input_stock" value="{{ old('stock') }}"
+                                        class="form-input" placeholder="Kosongkan = Unlimited" min="0">
+                                    <span class="form-hint">Kosongkan = stok tidak terbatas. Isi <strong>0</strong> = habis. Berkurang otomatis saat ada pesanan.</span>
+                                </div>
+
                                 @include('creator.products.partials.free-product-requirements', ['product' => null])
 
                                 @include('creator.products.partials.variants-manager')
@@ -1080,9 +1088,9 @@
                                     </div>
                                 @endif
 
-                                <div class="form-group full">
+                                <div class="form-group full" id="shortDescWrap">
                                     <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
-                                    <textarea name="short_desc" class="form-input" rows="2"
+                                    <textarea name="short_desc" id="shortDescInput" class="form-input" rows="2"
                                         placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160"
                                         required>{{ old('short_desc') }}</textarea>
                                     <span class="form-hint">Digunakan sebagai meta description SEO jika mode advanced
@@ -1502,6 +1510,32 @@
         // Auto-switch tab if an invalid element exists in a hidden tab
         const prodForm = document.getElementById('productForm');
         if (prodForm) {
+            prodForm.addEventListener('submit', function (e) {
+                const thumbInput = document.getElementById('thumb-input');
+                const scrapedImg = document.getElementById('scraped_image_url');
+                const previewImg = document.getElementById('thumbPreviewImg');
+                const hasImgFile = thumbInput && thumbInput.files && thumbInput.files.length > 0;
+                const hasScraped = scrapedImg && scrapedImg.value && scrapedImg.value.trim() !== '';
+                const hasPreviewSrc = previewImg && previewImg.src && !previewImg.src.includes('data:,') && previewImg.src.length > 20 && !previewImg.src.endsWith('#');
+
+                if (!hasImgFile && !hasScraped && !hasPreviewSrc) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const dropzone = document.getElementById('thumbDropzone');
+                    if (dropzone) {
+                        dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        dropzone.style.borderColor = '#ef4444';
+                        dropzone.style.backgroundColor = '#fef2f2';
+                        setTimeout(() => {
+                            dropzone.style.borderColor = '#bbf7d0';
+                            dropzone.style.backgroundColor = '#f9fefb';
+                        }, 3500);
+                    }
+                    alert('Semua tipe produk mewajibkan upload foto / thumbnail utama! Silakan pilih foto produk.');
+                    return false;
+                }
+            });
+
             prodForm.querySelectorAll('input, select, textarea').forEach(input => {
                 input.addEventListener('invalid', function () {
                     const pane = input.closest('.tab-pane');
@@ -1741,6 +1775,7 @@
         // Product Type Toggle
         function toggleProductTypeFields(val) {
             const isPhysicalOrFood = val === 'physical' || val === 'makanan';
+            const isMakanan = val === 'makanan';
             const isService = val === 'service';
             const wrap = document.getElementById('ticketFieldsWrap');
             const posterWrap = document.getElementById('posterUploadWrap');
@@ -1759,8 +1794,57 @@
             const weightInput = document.getElementById('input_weight');
             const buyleToggleWrap = document.getElementById('buyleCheckoutToggleWrap');
             const buyleToggle = document.getElementById('isBuyleCheckoutToggle');
+            const shortDescWrap = document.getElementById('shortDescWrap');
+            const shortDescInput = document.getElementById('shortDescInput');
+            const videoLinkWrap = document.getElementById('videoLinkWrap');
+            const foodStockWrap = document.getElementById('foodStockWrap');
+            const pricingTabGrid = document.getElementById('pricing-tab-grid');
+            const ptabFree = document.getElementById('ptab_free');
+            const ptabTraktir = document.getElementById('ptab_traktir');
+            const ptabPwyw = document.getElementById('ptab_pay_what_you_want');
 
-            // Toggle Pembayaran Buyle: HANYA untuk service, physical, makanan
+            // ── Khusus Makanan: sembunyikan toggle Buyle, video, deskripsi singkat; tampilkan stok & kelompok
+            if (isMakanan) {
+                if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
+                if (buyleToggle) buyleToggle.checked = true;
+                if (shortDescWrap) shortDescWrap.style.display = 'none';
+                if (shortDescInput) { shortDescInput.removeAttribute('required'); }
+                if (videoLinkWrap) videoLinkWrap.style.display = 'none';
+                if (foodStockWrap) foodStockWrap.style.display = 'block';
+                if (groupWrap) groupWrap.style.display = 'block';
+                if (categoryWrap) categoryWrap.style.display = 'none';
+                if (subCatWrap) subCatWrap.style.display = 'none';
+                if (catSelect) catSelect.removeAttribute('required');
+                if (physicalWrap) physicalWrap.style.display = 'none';
+                if (weightInput) weightInput.removeAttribute('required');
+                if (commissionWrap) commissionWrap.style.display = 'none';
+                if (commissionInput) commissionInput.removeAttribute('required');
+                // Paksa pricing ke fixed dan sembunyikan opsi lain
+                if (ptabFree) ptabFree.style.display = 'none';
+                if (ptabTraktir) ptabTraktir.style.display = 'none';
+                if (ptabPwyw) ptabPwyw.style.display = 'none';
+                if (pricingTabGrid) pricingTabGrid.style.gridTemplateColumns = '1fr';
+                if (typeof switchPricingTab === 'function') switchPricingTab('fixed');
+                // ticket/digital wrap
+                if (wrap) wrap.style.display = 'none';
+                if (posterWrap) posterWrap.style.display = 'none';
+                if (digitalCard) digitalCard.style.display = 'none';
+                if (whitelabelCard) whitelabelCard.style.display = 'none';
+                if (extInput) extInput.removeAttribute('required');
+                return;
+            }
+
+            // ── Reset semua field yang khusus makanan ke kondisi normal
+            if (shortDescWrap) shortDescWrap.style.display = '';
+            if (shortDescInput) { shortDescInput.setAttribute('required', 'required'); }
+            if (videoLinkWrap) videoLinkWrap.style.display = '';
+            if (foodStockWrap) foodStockWrap.style.display = 'none';
+            if (ptabFree) ptabFree.style.display = '';
+            if (ptabTraktir) ptabTraktir.style.display = '';
+            if (ptabPwyw) ptabPwyw.style.display = '';
+            if (pricingTabGrid) pricingTabGrid.style.gridTemplateColumns = '';
+
+            // Toggle Pembayaran Buyle: HANYA untuk service, physical
             if (isPhysicalOrFood || isService) {
                 if (buyleToggleWrap) buyleToggleWrap.style.display = 'block';
             } else {
