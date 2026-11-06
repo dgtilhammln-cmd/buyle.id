@@ -169,7 +169,7 @@
             <div id="dlResultBox" class="dl-result-card" style="display: none;">
                 <div class="dl-result-header" id="resHeaderWrap" style="display: none;">
                     <div class="dl-author-wrap" id="resAuthorWrap">
-                        <img id="resAuthorAvatar" class="dl-author-avatar" src="" alt="Avatar">
+                        <img id="resAuthorAvatar" class="dl-author-avatar" referrerpolicy="no-referrer" src="" alt="Avatar">
                         <div class="dl-author-info">
                             <div class="dl-author-name" id="resAuthorName">Kreator</div>
                             <div class="dl-author-username" id="resAuthorUsername">@user</div>
@@ -181,10 +181,10 @@
                     {{-- Media Preview (Video or Image) --}}
                     <div class="dl-preview-container">
                         <div id="resVideoWrapper" style="display:none;" class="dl-video-wrapper">
-                            <video id="resVideoPlayer" controls playsinline preload="metadata" poster="" class="dl-preview-video"></video>
+                            <video id="resVideoPlayer" controls playsinline preload="metadata" referrerpolicy="no-referrer" poster="" class="dl-preview-video"></video>
                         </div>
                         <div id="resImageWrapper" style="display:none;" class="dl-image-wrapper">
-                            <img id="resImagePlayer" src="" alt="Preview Media" class="dl-preview-img">
+                            <img id="resImagePlayer" src="" alt="Preview Media" referrerpolicy="no-referrer" class="dl-preview-img">
                         </div>
                     </div>
 

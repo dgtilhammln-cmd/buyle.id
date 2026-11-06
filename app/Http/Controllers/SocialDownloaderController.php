@@ -158,10 +158,16 @@ class SocialDownloaderController extends Controller
             'snapcdn.app',
             'tikwm.com',
             'tiktokcdn.com',
+            'tiktokcdn-us.com',
+            'tiktokcdn-eu.com',
+            'tiktokcdn-in.com',
+            'tiktokv.com',
+            'tiktok.com',
             'byteoversea.com',
             'ibytedtos.com',
+            'bytedance.com',
+            'muscdn.com',
             'musical.ly',
-            'tiktok.com',
             'saveinsta.to',
             'instagram.com',
         ];
@@ -190,7 +196,9 @@ class SocialDownloaderController extends Controller
             if (str_contains($host, 'snapcdn') || str_contains($host, 'saveinsta')) {
                 $headers[] = 'Referer: https://saveinsta.to/';
                 $headers[] = 'Origin: https://saveinsta.to';
-            } elseif (str_contains($host, 'tiktok') || str_contains($host, 'tikwm')) {
+            } elseif (str_contains($host, 'tikwm')) {
+                $headers[] = 'Referer: https://www.tikwm.com/';
+            } elseif (str_contains($host, 'tiktok') || str_contains($host, 'byte') || str_contains($host, 'musical') || str_contains($host, 'ibytedtos')) {
                 $headers[] = 'Referer: https://www.tiktok.com/';
             }
 

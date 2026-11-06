@@ -151,22 +151,26 @@ class PosController extends Controller
                     $block->data_json   = $data;
                     $block->save();
                 } else {
-                    $product->name = $block->title;
-
-                    if ($extractedPrice > 0) {
-                        $product->price = $extractedPrice;
-                    } elseif ((float)$product->price <= 0 && (float)$product->sale_price > 0) {
-                        $product->price = (float)$product->sale_price;
+                    // JANGAN timpa nama & harga produk dari bio block karena Product adalah master data
+                    // Sinkronisasi data bio block agar selalu update mengikuti perubahan produk terbaru
+                    $bData = $block->data_json ?? [];
+                    $needSave = false;
+                    if ($block->title !== $product->name) {
+                        $block->title = $product->name;
+                        $bData['title'] = $product->name;
+                        $needSave = true;
                     }
-
-                    if (!empty($extractedImg)) {
-                        if (empty($product->image) || strlen($product->image) <= 1) {
-                            $product->image = $extractedImg;
-                        }
+                    if (isset($bData['price']) && (float)$bData['price'] != (float)$product->price) {
+                        $bData['price'] = (float)$product->price;
+                        $needSave = true;
                     }
-
-                    if ($product->isDirty(['price', 'name', 'image'])) {
-                        $product->save();
+                    if ($product->image && (!isset($bData['image']) || $bData['image'] !== $product->image)) {
+                        $bData['image'] = $product->image;
+                        $needSave = true;
+                    }
+                    if ($needSave) {
+                        $block->data_json = $bData;
+                        $block->save();
                     }
                 }
 

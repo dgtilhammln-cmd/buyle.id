@@ -398,6 +398,24 @@ class SellerProductController extends Controller
 
         $product->update($data);
 
+        // Sinkronkan nama, harga, dan gambar ke CreatorBioBlock terkait agar data selalu konsisten
+        $linkedBioBlocks = \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+            $q->where('data_json->product_id', $product->id)
+              ->orWhere('data_json->product_id', (string)$product->id);
+        })->get();
+
+        foreach ($linkedBioBlocks as $bBlock) {
+            $bData = $bBlock->data_json ?? [];
+            $bBlock->title = $product->name;
+            $bData['title'] = $product->name;
+            $bData['price'] = (float)$product->price;
+            if ($product->image) {
+                $bData['image'] = $product->image;
+            }
+            $bBlock->data_json = $bData;
+            $bBlock->save();
+        }
+
         // Simpan variasi produk (jika ada)
         $this->saveProductVariants($product, $request);
 
