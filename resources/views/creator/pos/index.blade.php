@@ -632,6 +632,7 @@
             display: none;
             position: fixed;
             inset: 0;
+            bottom: 72px; /* clear the bottom nav */
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(8px);
             z-index: 99999;
@@ -652,7 +653,7 @@
             border-radius: 20px;
             width: 100%;
             max-width: 440px;
-            max-height: 88vh;
+            max-height: calc(100vh - 100px); /* clear top + bottom nav */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -3626,12 +3627,18 @@
             </div>
 
             <!-- Search in Transactions -->
-            <div class="pos-pill-search" style="margin-bottom:0.75rem;">
+            <div class="pos-pill-search" style="margin-bottom:0.75rem; position:relative;">
                 <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24" class="search-ico">
                     <circle cx="11" cy="11" r="8"/>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
-                <input type="text" id="posTransSearch" class="pos-pill-input" placeholder="Search transactions..." oninput="filterTransactionsList(this.value)">
+                <input type="text" id="posTransSearch" class="pos-pill-input" placeholder="Search transactions..."
+                    oninput="filterTransactionsList(this.value); document.getElementById('posTransSearchClear').style.display = this.value ? 'flex' : 'none';"
+                    style="padding-right:36px;">
+                <button type="button" id="posTransSearchClear"
+                    onclick="document.getElementById('posTransSearch').value=''; filterTransactionsList(''); this.style.display='none'; document.getElementById('posTransSearch').focus();"
+                    style="display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#94a3b8; padding:4px; border-radius:50%; width:24px; height:24px; align-items:center; justify-content:center; font-size:1rem; line-height:1; z-index:2;"
+                    title="Hapus pencarian">&#x2715;</button>
             </div>
 
             <!-- 2 Summary Cards: Belum Bayar & Sedang Diproses -->
@@ -3678,10 +3685,16 @@
                     <span style="font-size:0.82rem; font-weight:800; color:#0f172a; line-height:1.2;" id="posTransFilterLabel">Hari Ini</span>
                 </div>
 
-                <!-- Right: Quick Options (Hari Ini & Kemarin Saja) -->
+                <!-- Right: Quick Options (Hari Ini & Kemarin Saja) + Sort Toggle -->
                 <div class="pos-period-quick-opts" style="display:flex; align-items:center; gap:4px;">
                     <button type="button" class="pos-period-btn active" id="btnPeriodToday" data-period="today" onclick="selectPeriodPreset('today', this)">Hari Ini</button>
                     <button type="button" class="pos-period-btn" id="btnPeriodYesterday" data-period="yesterday" onclick="selectPeriodPreset('yesterday', this)">Kemarin</button>
+                    <button type="button" id="btnTransSortToggle" onclick="toggleTransactionSort()" title="Urut transaksi"
+                        style="display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1.5px solid #bbf7d0; color:#16a34a; cursor:pointer; flex-shrink:0; transition:background 0.2s;">
+                        <svg id="sortToggleIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="12" y1="20" x2="12" y2="4"/><polyline points="6 10 12 4 18 10"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
@@ -4338,7 +4351,7 @@
                         <div style="font-size:0.68rem; color:#64748b;">Tagihan telah lunas dan tercatat</div>
                     </div>
                 </div>
-                <button type="button" class="pos-modal-close" onclick="closeModal('posReceiptModal'); resetPOS();">&times;</button>
+                <button type="button" class="pos-modal-close" onclick="closeModal('posReceiptModal'); if(window._posReceiptFromTrans){window._posReceiptFromTrans=false;}else{resetPOS();}">&times;</button>
             </div>
 
             <div class="pos-modal-body" id="posReceiptModalContent" style="padding: 1.1rem 1.25rem;">
@@ -10340,12 +10353,53 @@
                 }
             }
 
+            // ── Sort Toggle (Terbaru / Terlama) ──
+            window.posTransSortOrder = 'newest'; // default: terbaru di atas
+
+            function toggleTransactionSort() {
+                const container = document.getElementById('posTransactionsListContainer');
+                if (!container) return;
+
+                // flip
+                window.posTransSortOrder = (window.posTransSortOrder === 'newest') ? 'oldest' : 'newest';
+                const isNewest = window.posTransSortOrder === 'newest';
+
+                // update icon: arrow-up = terbaru di atas, arrow-down = terlama di atas
+                const icon = document.getElementById('sortToggleIcon');
+                if (icon) {
+                    icon.innerHTML = isNewest
+                        ? '<line x1="12" y1="20" x2="12" y2="4"/><polyline points="6 10 12 4 18 10"/>'  // up arrow
+                        : '<line x1="12" y1="4" x2="12" y2="20"/><polyline points="6 14 12 20 18 14"/>'; // down arrow
+                }
+
+                // re-sort all cards
+                const cards = Array.from(container.querySelectorAll('.pos-trans-card'));
+                const emptyNotice = document.getElementById('posTransEmptyNotice');
+
+                cards.sort((a, b) => {
+                    const tsA = parseInt(a.getAttribute('data-timestamp') || '0', 10);
+                    const tsB = parseInt(b.getAttribute('data-timestamp') || '0', 10);
+                    return isNewest ? (tsB - tsA) : (tsA - tsB);
+                });
+
+                // re-append in sorted order (empty notice stays at end)
+                cards.forEach(c => container.appendChild(c));
+                if (emptyNotice) container.appendChild(emptyNotice);
+            }
+
             function toggleTransTimeFilter() {
                 openPeriodCalendarModal();
             }
 
             // Open Receipt from Transaction Card Click
             function openPosOrderReceipt(orderId) {
+                // Set header to "Detail Transaksi" mode
+                window._posReceiptFromTrans = true;
+                const recModalHead = document.querySelector('#posReceiptModal .pos-modal-head h5');
+                if (recModalHead) recModalHead.textContent = 'Detail Transaksi';
+                const recModalSub = document.querySelector('#posReceiptModal .pos-modal-head div:last-child > div:last-child');
+                if (recModalSub) recModalSub.textContent = 'Rincian Struk & Pesanan';
+
                 // Coba ambil dari data live dulu
                 const cached = (window._posLiveOrdersCache || []).find(o => o.id == orderId)
                             || (window._posTodayOrdersData || []).find(o => o.id == orderId);
@@ -10600,6 +10654,14 @@
                             playOrderChime();
                             updatePosTransactionsMetrics();
                             applyPeriodToTransactions(currentPeriodFilter);
+                            // Tampilkan popup pesanan masuk
+                            const firstNew = data.orders[0];
+                            const popupBody = firstNew
+                                ? ((firstNew.customer_name || 'Pelanggan') + (firstNew.table_number ? ' · Meja ' + firstNew.table_number : '') + ' — ' + (firstNew.items_text || (firstNew.items_count + ' item')))
+                                : (newCount + ' pesanan baru masuk');
+                            if (typeof window.showPosNewOrderPopup === 'function') {
+                                window.showPosNewOrderPopup('Pesanan Masuk! (' + newCount + ')', popupBody);
+                            }
                         }
                     }
                 } catch(e) { /* silent – jaringan buruk, coba lagi 3 detik */ }
@@ -10624,6 +10686,8 @@
                 // Hitung metrics awal & set periode default Hari Ini
                 updatePosTransactionsMetrics();
                 selectPeriodPreset('today');
+                // Apply default sort: terbaru (newest first) – karena PHP sudah order DESC, icon hanya di-sync
+                window.posTransSortOrder = 'newest';
                 startLiveOrderPoller();
             });
 
@@ -10837,6 +10901,31 @@
 
 </script>
 
+    <!-- ── PESANAN MASUK POPUP (Self-Order Live Notification) ── -->
+    <div id="posNewOrderPopup" style="display:none; position:fixed; top:72px; left:50%; transform:translateX(-50%); z-index:999990; width:calc(100% - 32px); max-width:380px;">
+        <div style="background:#ffffff; border-radius:20px; box-shadow:0 8px 32px rgba(0,0,0,0.18); border:1.5px solid #bbf7d0; overflow:hidden; animation:slideDownPop 0.3s cubic-bezier(0.16,1,0.3,1);">
+            <div style="background:linear-gradient(135deg,#1eb349,#a5cf37); padding:12px 16px; display:flex; align-items:center; gap:10px;">
+                <div style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">&#x1F514;</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-size:0.9rem; font-weight:800; color:#ffffff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="posPopupTitle">Pesanan Masuk!</div>
+                    <div style="font-size:0.72rem; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="posPopupBody">Ada pesanan baru masuk</div>
+                </div>
+                <button onclick="closePosNewOrderPopup()" style="background:rgba(255,255,255,0.2); border:none; color:#fff; cursor:pointer; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">&#x2715;</button>
+            </div>
+            <div style="padding:12px 16px; display:flex; gap:8px;">
+                <button onclick="closePosNewOrderPopup(); switchPosScreen('transactions');"
+                    style="flex:1; height:38px; border-radius:999px; background:#1eb349; color:#fff; border:none; font-size:0.82rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+                    Lihat Transaksi
+                </button>
+                <button onclick="closePosNewOrderPopup();"
+                    style="height:38px; padding:0 16px; border-radius:999px; background:#f1f5f9; color:#64748b; border:none; font-size:0.82rem; font-weight:700; cursor:pointer;">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ── BUYLE POS BOTTOM NAVIGATION BAR (Home, Transaksi, Laporan, Profil) ── -->
     <div class="pos-bottom-nav-wrap" id="posBottomNavWrap">
         <div class="pos-bottom-nav-bar">
@@ -10858,7 +10947,7 @@
                     <line x1="18" y1="15" x2="22" y2="15"/>
                 </svg>
                 <span class="pos-nav-label">Transaksi</span>
-                <span id="posTransNavBadge" style="display:none; position:absolute; top:4px; right:calc(50% - 20px); background:#ef4444; color:#ffffff; font-size:10px; font-weight:800; border-radius:999px; min-width:18px; height:18px; padding:0 5px; align-items:center; justify-content:center; border:2px solid #ffffff; box-shadow:0 2px 6px rgba(239,68,68,0.45); line-height:1; z-index:5;">0</span>
+                <span id="posTransNavBadge" style="display:none; position:absolute; top:2px; right:8px; background:#ef4444; color:#ffffff; font-size:10px; font-weight:800; border-radius:999px; min-width:18px; height:18px; padding:0 5px; align-items:center; justify-content:center; border:2px solid #ffffff; box-shadow:0 2px 6px rgba(239,68,68,0.45); line-height:1; z-index:5;">0</span>
             </button>
 
             <!-- 3. Laporan (Halaman Baru /pos/reports) -->
@@ -11060,6 +11149,10 @@
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        @keyframes slideDownPop {
+            from { transform: translateY(-16px) scale(0.97); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
     </style>
 
     <script>
@@ -11136,6 +11229,26 @@
     // Polling background notifikasi pesanan & deposit baru setiap 25 detik
     (function() {
         var lastNotifId = 0;
+        var popupDismissTimer = null;
+
+        window.closePosNewOrderPopup = function() {
+            var popup = document.getElementById('posNewOrderPopup');
+            if (popup) popup.style.display = 'none';
+            if (popupDismissTimer) { clearTimeout(popupDismissTimer); popupDismissTimer = null; }
+        };
+
+        window.showPosNewOrderPopup = function(title, body) {
+            var popup = document.getElementById('posNewOrderPopup');
+            if (!popup) return;
+            var titleEl = document.getElementById('posPopupTitle');
+            var bodyEl = document.getElementById('posPopupBody');
+            if (titleEl) titleEl.textContent = title || 'Pesanan Masuk!';
+            if (bodyEl) bodyEl.textContent = body || 'Ada pesanan baru masuk';
+            popup.style.display = 'block';
+            if (popupDismissTimer) clearTimeout(popupDismissTimer);
+            popupDismissTimer = setTimeout(function() { window.closePosNewOrderPopup(); }, 8000);
+        };
+
         function checkPosLiveUpdates() {
             fetch("{{ route('creator.pos.notifications.check') }}", { headers: { "Accept": "application/json", "X-Requested-With": "XMLHttpRequest" } })
                 .then(function(res) { return res.json(); })
@@ -11145,6 +11258,9 @@
                             if (item.id > lastNotifId) {
                                 lastNotifId = item.id;
                                 playPosNotificationChime();
+
+                                // Popup pesanan masuk (visible in-app)
+                                window.showPosNewOrderPopup(item.title || 'Pesanan Masuk!', item.body || '');
 
                                 // Tampilkan notifikasi sistem browser/OS
                                 if ("Notification" in window && Notification.permission === "granted") {
