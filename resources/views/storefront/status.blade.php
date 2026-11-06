@@ -428,13 +428,13 @@
 
         <p class="status-sub" id="statusSub">
             @if($isCompleted)
-                Pesanan Anda telah selesai dipersiapkan dan siap dinikmati / disajikan ke meja Anda!
+                Pesanan Anda telah selesai dipersiapkan dan siap disajikan ke meja Anda!
             @elseif($isPaid)
                 Pembayaran telah diterima. Dapur sedang menyiapkan pesanan makanan &amp; minuman Anda.
             @elseif($paymentMethod !== 'cash')
-                Pesanan sudah tercatat. Silakan selesaikan pembayaran QRIS Digital agar Pesanan mulai diproses.
+                Pesanan sudah tercatat. Silakan selesaikan pembayaran QRIS Digital agar Pesanan segera diproses.
             @else
-                Pesanan masuk ke kasir. Silahkan segera ke meja kasir dan bayar tunai pesanan anda agar segera dimasak.
+                Pesanan masuk ke kasir. Silahkan segera ke meja kasir dan bayar tunai pesanan Anda agar segera dimasak.
             @endif
         </p>
 
@@ -447,7 +447,7 @@
                         <rect x="3" y="5" width="18" height="14" rx="2" />
                         <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
-                    Bayar Sekarang (Buka Pembayaran)
+                    Bayar Sekarang
                 </button>
             </div>
         @endif
