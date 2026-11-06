@@ -2319,7 +2319,7 @@
         /* 2. Search Bar Capsule (Screen 1 Reference) */
         .pos-ref-search-wrap {
             position: relative;
-            margin-bottom: 0.65rem;
+            margin-bottom: 1rem;
             width: 100%;
         }
         .pos-ref-search-input {
@@ -3083,25 +3083,16 @@
             position: -webkit-sticky !important;
             position: sticky !important;
             top: 0 !important;
+            top: max(0px, env(safe-area-inset-top, 0px)) !important;
             z-index: 50 !important;
             background: #ffffff !important;
-            padding-top: max(8px, env(safe-area-inset-top, 8px)) !important;
+            padding-top: 6px !important;
             padding-bottom: 2px !important;
             margin-left: -12px !important;
             margin-right: -12px !important;
             padding-left: 12px !important;
             padding-right: 12px !important;
             transition: box-shadow 0.2s ease;
-        }
-        .pos-sticky-catalog-header::before {
-            content: '';
-            position: absolute;
-            bottom: 100%;
-            left: -30px;
-            right: -30px;
-            height: 200px;
-            background: #ffffff;
-            pointer-events: none;
         }
         #cartPanel {
             display: none !important;
