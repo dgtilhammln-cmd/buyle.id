@@ -19,7 +19,7 @@
             border-radius: 20px;
             border: 1.5px solid #e2e8f0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            overflow: visible;
+            overflow: hidden;
             margin-bottom: 1.25rem;
         }
 
@@ -3047,7 +3047,6 @@
             display: block !important;
             max-width: 480px !important;
             margin: 0 auto !important;
-            overflow: visible !important;
         }
         .cr-main-wrapper {
             min-height: 100vh !important;
@@ -3055,8 +3054,6 @@
             width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
-            overflow: visible !important;
-            overflow-x: clip !important;
         }
         #pos-real-content {
             margin-top: 0 !important;
@@ -3064,7 +3061,6 @@
             max-width: 480px !important;
             margin-left: auto !important;
             margin-right: auto !important;
-            overflow: visible !important;
         }
         .pos-wrapper {
             display: block !important;
@@ -3072,27 +3068,6 @@
             max-width: 480px !important;
             margin: 0 auto !important;
             grid-template-columns: 1fr !important;
-            overflow: visible !important;
-        }
-        .prof-card-body {
-            overflow: visible !important;
-        }
-
-        /* ── STICKY SEARCH & CATEGORY BAR (Capture Tetap di Posisi Saat Scroll) ── */
-        .pos-sticky-catalog-header {
-            position: -webkit-sticky !important;
-            position: sticky !important;
-            top: 0 !important;
-            top: max(0px, env(safe-area-inset-top, 0px)) !important;
-            z-index: 50 !important;
-            background: #ffffff !important;
-            padding-top: 6px !important;
-            padding-bottom: 2px !important;
-            margin-left: -12px !important;
-            margin-right: -12px !important;
-            padding-left: 12px !important;
-            padding-right: 12px !important;
-            transition: box-shadow 0.2s ease;
         }
         #cartPanel {
             display: none !important;
@@ -3360,40 +3335,36 @@
                             </div>
                         </div>
 
-                        <!-- Sticky Search & Category Bar (Capture yang tetap di posisi saat scroll) -->
-                        <div class="pos-sticky-catalog-header" id="posStickyCatalogHeader">
-                            <!-- 2. Search Bar Capsule (Screen 1 Reference 100% Match) -->
-                            <div class="pos-ref-search-wrap">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" class="pos-ref-search-icon">
-                                    <circle cx="11" cy="11" r="8"/>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        <!-- 2. Search Bar Capsule (Screen 1 Reference 100% Match) -->
+                        <div class="pos-ref-search-wrap">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" class="pos-ref-search-icon">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" id="posProductSearch" class="pos-ref-search-input"
+                                placeholder="Search dishes by name..." oninput="filterProducts()">
+                            <button type="button" class="pos-ref-barcode-btn" onclick="document.getElementById('posProductSearch').focus();" title="Scan Barcode">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                                    <line x1="7" y1="8" x2="7" y2="16" stroke-width="2.5"/><line x1="12" y1="8" x2="12" y2="16" stroke-width="2"/><line x1="17" y1="8" x2="17" y2="16" stroke-width="2.5"/>
                                 </svg>
-                                <input type="text" id="posProductSearch" class="pos-ref-search-input"
-                                    placeholder="Search dishes by name..." oninput="handlePosProductSearchInput(this)">
-                                <button type="button" class="pos-ref-barcode-btn" id="posProductSearchClearBtn" onclick="clearPosProductSearch()" title="Hapus pencarian / Scan Barcode">
-                                    <svg id="posSearchBarcodeIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                                        <line x1="7" y1="8" x2="7" y2="16" stroke-width="2.5"/><line x1="12" y1="8" x2="12" y2="16" stroke-width="2"/><line x1="17" y1="8" x2="17" y2="16" stroke-width="2.5"/>
-                                    </svg>
-                                    <span id="posSearchClearXIcon" style="display:none; font-size:1.15rem; font-weight:700; color:#94a3b8; line-height:1;">✕</span>
-                                </button>
-                            </div>
+                            </button>
+                        </div>
 
-                            <!-- 3. Category Filter - Kelompok Produk Creator -->
-                            <div class="pos-ref-cat-bar" id="posCategoryPillsContainer">
-                                <button type="button" class="pos-ref-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
-                                    Semua
-                                </button>
-                                @if(isset($categories) && count($categories) > 0)
-                                    @foreach($categories as $cItem)
-                                        @if(trim(strtolower($cItem->name)) !== 'kategori 1')
-                                            <button type="button" class="pos-ref-cat-pill" data-cat="cat-{{ $cItem->id }}" onclick="setPosCategoryFilter('cat-{{ $cItem->id }}', this)">
-                                                {{ $cItem->name }}
-                                            </button>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            </div>
+                        <!-- 3. Category Filter - Kelompok Produk Creator -->
+                        <div class="pos-ref-cat-bar" id="posCategoryPillsContainer">
+                            <button type="button" class="pos-ref-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
+                                Semua
+                            </button>
+                            @if(isset($categories) && count($categories) > 0)
+                                @foreach($categories as $cItem)
+                                    @if(trim(strtolower($cItem->name)) !== 'kategori 1')
+                                        <button type="button" class="pos-ref-cat-pill" data-cat="cat-{{ $cItem->id }}" onclick="setPosCategoryFilter('cat-{{ $cItem->id }}', this)">
+                                            {{ $cItem->name }}
+                                        </button>
+                                    @endif
+                                @endforeach
+                            @endif
                         </div>
 
                         <!-- Products Grid -->
@@ -6416,44 +6387,6 @@
                 if (btn) btn.classList.add('active');
                 filterProducts();
             }
-
-            // Input & Clear Search Box Produk Katalog
-            window.handlePosProductSearchInput = function(input) {
-                const clearX = document.getElementById('posSearchClearXIcon');
-                const barcodeIcon = document.getElementById('posSearchBarcodeIcon');
-                if (input && input.value && input.value.trim().length > 0) {
-                    if (clearX) clearX.style.display = 'block';
-                    if (barcodeIcon) barcodeIcon.style.display = 'none';
-                } else {
-                    if (clearX) clearX.style.display = 'none';
-                    if (barcodeIcon) barcodeIcon.style.display = 'block';
-                }
-                filterProducts();
-            };
-
-            window.clearPosProductSearch = function() {
-                const input = document.getElementById('posProductSearch');
-                if (input) {
-                    input.value = '';
-                    input.focus();
-                }
-                const clearX = document.getElementById('posSearchClearXIcon');
-                const barcodeIcon = document.getElementById('posSearchBarcodeIcon');
-                if (clearX) clearX.style.display = 'none';
-                if (barcodeIcon) barcodeIcon.style.display = 'block';
-                filterProducts();
-            };
-
-            // Sticky Header Box-Shadow & Border saat di-scroll
-            window.addEventListener('scroll', function() {
-                const stickyHeader = document.getElementById('posStickyCatalogHeader');
-                if (!stickyHeader) return;
-                if (window.scrollY > 80) {
-                    stickyHeader.style.boxShadow = '0 6px 18px rgba(0,0,0,0.06)';
-                } else {
-                    stickyHeader.style.boxShadow = 'none';
-                }
-            }, { passive: true });
 
             // Filter produk live (instant 0ms client-side filtering, tanpa debounce)
             function filterProducts() {
