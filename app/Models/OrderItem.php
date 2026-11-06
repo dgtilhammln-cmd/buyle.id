@@ -24,6 +24,7 @@ class OrderItem extends Model
         'affiliate_commission_amount',
         'qty',
         'subtotal',
+        'notes',
     ];
 
     protected function casts(): array

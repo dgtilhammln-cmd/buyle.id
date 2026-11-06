@@ -845,16 +845,25 @@
             const { subtotal, discountAmt, discLabel, feeRows, total } = calculateCart();
             const c = document.getElementById('drawerCartItemsWrap');
             c.innerHTML = Object.values(cartItems).map(it => `
-                <div class="cart-item-row">
-                    <div style="flex:1; min-width:0; padding-right:0.5rem;">
-                        <div style="font-weight:700; font-size:0.82rem; color:#0f172a;">${it.name}</div>
-                        <div style="font-size:0.72rem; color:#64748b;">Rp ${it.price.toLocaleString('id-ID')} &times; ${it.qty}</div>
+                <div class="cart-item-row" style="flex-direction:column; gap:0.3rem; padding:0.65rem 0; border-bottom:1px dashed #f1f5f9; align-items:stretch;">
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-weight:700; font-size:0.82rem; color:#0f172a;">${it.name}</div>
+                            <div style="font-size:0.72rem; color:#64748b;">Rp ${it.price.toLocaleString('id-ID')} &times; ${it.qty}</div>
+                        </div>
+                        <div class="qty-stepper">
+                            <button type="button" class="qty-btn" onclick="changeQty(${it.id}, -1)">&minus;</button>
+                            <span style="font-size:0.8rem; font-weight:700; min-width:16px; text-align:center;">${it.qty}</span>
+                            <button type="button" class="qty-btn" onclick="changeQty(${it.id}, 1)">&plus;</button>
+                        </div>
                     </div>
-                    <div class="qty-stepper">
-                        <button type="button" class="qty-btn" onclick="changeQty(${it.id}, -1)">&minus;</button>
-                        <span style="font-size:0.8rem; font-weight:700; min-width:16px; text-align:center;">${it.qty}</span>
-                        <button type="button" class="qty-btn" onclick="changeQty(${it.id}, 1)">&plus;</button>
-                    </div>
+                    <input type="text"
+                        id="note-item-${it.id}"
+                        value="${(it.notes || '').replace(/"/g, '&quot;')}"
+                        oninput="cartItems[${it.id}].notes = this.value"
+                        placeholder="Catatan (mis. pedas, es sedikit)..."
+                        style="font-size:0.73rem; color:#334155; border:1px solid #e2e8f0; border-radius:8px; padding:5px 10px; width:100%; background:#f8fafc; font-family:inherit; outline:none;"
+                    >
                 </div>
             `).join('');
 
@@ -924,7 +933,7 @@
                     'X-CSRF-TOKEN': csrfToken
                 },
                 body: JSON.stringify({
-                    items: items.map(it => ({ id: it.id, qty: it.qty })),
+                    items: items.map(it => ({ id: it.id, qty: it.qty, notes: it.notes || null })),
                     order_type: currentOrderType,
                     table_number: tableNo,
                     customer_name: custName,
@@ -944,21 +953,56 @@
 
                 // If digital payment via Snap Midtrans
                 if (selectedPayment === 'midtrans' && data.snap_token && typeof window.snap !== 'undefined') {
-                    window.snap.pay(data.snap_token, {
-                        onSuccess: function (result) {
-                            window.location.href = data.status_url;
-                        },
-                        onPending: function (result) {
-                            window.location.href = data.status_url;
-                        },
-                        onError: function (result) {
-                            alert('Pembayaran gagal atau dibatalkan.');
-                            window.location.href = data.status_url;
-                        },
-                        onClose: function () {
-                            window.location.href = data.status_url;
-                        }
-                    });
+                    // Store snap token & status URL for retry
+                    window._lastSnapToken = data.snap_token;
+                    window._lastStatusUrl = data.status_url;
+
+                    function openSnap() {
+                        window.snap.pay(window._lastSnapToken, {
+                            onSuccess: function (result) {
+                                window.location.href = window._lastStatusUrl;
+                            },
+                            onPending: function (result) {
+                                window.location.href = window._lastStatusUrl;
+                            },
+                            onError: function (result) {
+                                showSnapClosedOverlay(data.status_url);
+                            },
+                            onClose: function () {
+                                // Snap ditutup sebelum bayar — JANGAN redirect ke status (akan jadi Pesanan Diterima)
+                                showSnapClosedOverlay(data.status_url);
+                            }
+                        });
+                    }
+
+                    function showSnapClosedOverlay(statusUrl) {
+                        // Tampilkan overlay di atas drawer
+                        const overlay = document.createElement('div');
+                        overlay.id = 'snapClosedOverlay';
+                        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:999999;display:flex;align-items:flex-end;justify-content:center;';
+                        overlay.innerHTML = `
+                            <div style="background:#fff;border-radius:24px 24px 0 0;padding:1.5rem 1.25rem 2.5rem;max-width:480px;width:100%;box-shadow:0 -8px 32px rgba(0,0,0,0.15);">
+                                <div style="text-align:center;margin-bottom:1rem;">
+                                    <div style="width:48px;height:48px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
+                                        <svg width="24" height="24" fill="none" stroke="#d97706" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    </div>
+                                    <div style="font-size:1rem;font-weight:800;color:#0f172a;margin-bottom:4px;">Pembayaran Belum Selesai</div>
+                                    <div style="font-size:0.78rem;color:#64748b;line-height:1.5;">Pesanan Anda sudah tercatat. Silakan selesaikan pembayaran digital atau ganti ke bayar di kasir.</div>
+                                </div>
+                                <button onclick="document.getElementById('snapClosedOverlay').remove(); openSnap();"
+                                    style="width:100%;padding:0.9rem;border-radius:999px;background:linear-gradient(135deg,#1db349,#a5cf36);color:#fff;font-size:0.9rem;font-weight:800;border:none;cursor:pointer;font-family:inherit;margin-bottom:0.6rem;">
+                                    Bayar Sekarang (Buka Kembali)
+                                </button>
+                                <button onclick="window.location.href='${statusUrl}'"
+                                    style="width:100%;padding:0.75rem;border-radius:999px;background:#f1f5f9;color:#475569;font-size:0.82rem;font-weight:700;border:none;cursor:pointer;font-family:inherit;">
+                                    Lihat Status Pesanan (Belum Lunas)
+                                </button>
+                            </div>
+                        `;
+                        document.body.appendChild(overlay);
+                    }
+
+                    openSnap();
                 } else {
                     // Cash payment at cashier
                     window.location.href = data.status_url;

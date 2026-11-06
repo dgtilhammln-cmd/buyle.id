@@ -137,6 +137,11 @@
             100% { transform: scale(1); }
         }
 
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
         .status-title {
             font-size: 1.25rem;
             font-weight: 800;
@@ -297,18 +302,85 @@
     @endphp
 
     <div class="status-canvas">
-        {{-- Arahan Jangan di Close --}}
-        <div class="stay-notice-box">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <div>
-                <strong>Jangan tutup halaman ini!</strong>
-                <div>Status pesanan &amp; proses makanan Anda akan terupdate otomatis secara real-time.</div>
+        {{-- Store Header --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+            <div style="display:flex; align-items:center; gap:0.6rem; min-width:0;">
+                @if($posLogoUrl)
+                    <img src="{{ $posLogoUrl }}" alt="{{ $storeName }}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; flex-shrink:0;">
+                @endif
+                <div style="font-size:0.88rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $storeName }}</div>
+            </div>
+            <div style="font-size:0.65rem; color:#94a3b8; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; gap:4px;">
+                <span style="width:6px; height:6px; border-radius:50%; background:#22c55e; display:inline-block; animation:pulse-dot 1.5s infinite;"></span>
+                Live Update
             </div>
         </div>
+
+        {{-- Status Circle Badge --}}
+        <div class="status-badge-circle {{ $isCompleted ? 'circle-completed' : ($isPaid ? 'circle-confirmed' : ($paymentMethod !== 'cash' ? 'circle-pending' : 'circle-pending')) }}" id="statusBadgeCircle"
+             style="{{ !$isPaid && $paymentMethod !== 'cash' ? 'background:#fef3c7; color:#d97706; border-color:#fde68a;' : '' }}">
+            @if($isCompleted)
+                {{-- Centang 2 --}}
+                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12"/>
+                    <polyline points="20 10 9 21 4 16" style="opacity:0.6;"/>
+                </svg>
+            @elseif($isPaid)
+                {{-- Ceklis 1 --}}
+                <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            @elseif($paymentMethod !== 'cash')
+                {{-- Dompet / Waiting Digital --}}
+                <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="2" y="6" width="20" height="14" rx="2"/>
+                    <path d="M16 11h.01"/>
+                    <circle cx="12" cy="12" r="2"/>
+                    <path d="M6 11h.01M18 11h.01"/>
+                </svg>
+            @else
+                {{-- Jam pasir / cash pending --}}
+                <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            @endif
+        </div>
+
+        <h1 class="status-title" id="statusTitle">
+            @if($isCompleted)
+                Pesanan Sudah Selesai!
+            @elseif($isPaid)
+                Pesanan Terkonfirmasi
+            @elseif($paymentMethod !== 'cash')
+                Menunggu Pembayaran Digital
+            @else
+                Pesanan Diterima
+            @endif
+        </h1>
+
+        <p class="status-sub" id="statusSub">
+            @if($isCompleted)
+                Pesanan Anda telah selesai dipersiapkan dan siap dinikmati / disajikan ke meja Anda!
+            @elseif($isPaid)
+                Pembayaran telah diterima. Dapur sedang menyiapkan pesanan makanan &amp; minuman Anda.
+            @elseif($paymentMethod !== 'cash')
+                Pesanan sudah tercatat. Silakan selesaikan pembayaran QRIS / E-Wallet / VA untuk mulai diproses.
+            @else
+                Pesanan masuk ke kasir. Silakan bayar tunai di meja kasir sekarang agar segera dimasak.
+            @endif
+        </p>
+
+        {{-- Tombol Bayar Sekarang khusus digital belum lunas --}}
+        @if(!$isPaid && $paymentMethod !== 'cash')
+            <div id="digitalPayNowWrap" style="margin-bottom:1rem;">
+                <button type="button" onclick="triggerSnapPay()" id="btnPayNowSnap"
+                    style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:0.9rem; border-radius:999px; background:linear-gradient(135deg,#1db349,#a5cf36); color:#fff; font-size:0.88rem; font-weight:800; border:none; cursor:pointer; font-family:inherit; box-shadow:0 4px 16px rgba(29,179,73,0.3); margin-bottom:0.5rem;">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Bayar Sekarang (Buka Pembayaran)
+                </button>
+            </div>
+        @endif
 
         {{-- Cashier Notice jika Cash & belum bayar --}}
         @if(!$isPaid && $paymentMethod === 'cash')
@@ -323,55 +395,13 @@
                 <div>
                     <div class="cw-title">Wajib Sekarang ke Kasir</div>
                     <div class="cw-desc">
-                        Silakan segera ke kasir dan sebutkan <strong>#{{ $order->order_number }}</strong> ({{ $tableNo }}). Pesanan baru akan diproses dan dimasak setelah pembayaran diterima kasir.
+                        Silakan segera ke kasir dan sebutkan <strong>#{{ $order->order_number }}</strong>
+                        @if($orderType !== 'takeaway') ({{ $tableNo }})@endif.
+                        Pesanan baru akan diproses setelah pembayaran diterima kasir.
                     </div>
                 </div>
             </div>
         @endif
-
-        {{-- Status Circle Badge --}}
-        <div class="status-badge-circle {{ $isCompleted ? 'circle-completed' : ($isPaid ? 'circle-confirmed' : 'circle-pending') }}" id="statusBadgeCircle">
-            @if($isCompleted)
-                {{-- Centang 2 --}}
-                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"/>
-                    <polyline points="20 10 9 21 4 16" style="opacity:0.6;"/>
-                </svg>
-            @elseif($isPaid)
-                {{-- Ceklis 1 --}}
-                <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            @else
-                {{-- Jam pasir / pending --}}
-                <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                </svg>
-            @endif
-        </div>
-
-        <h1 class="status-title" id="statusTitle">
-            @if($isCompleted)
-                Pesanan Sudah Selesai!
-            @elseif($isPaid)
-                Pesanan Terkonfirmasi
-            @else
-                Pesanan Diterima
-            @endif
-        </h1>
-
-        <p class="status-sub" id="statusSub">
-            @if($isCompleted)
-                Pesanan Anda telah selesai dipersiapkan dan siap dinikmati / disajikan ke meja Anda!
-            @elseif($isPaid)
-                Pembayaran telah diterima. Dapur sedang menyiapkan pesanan makanan &amp; minuman Anda.
-            @elseif($paymentMethod === 'cash')
-                Pesanan masuk ke kasir. Silakan bayar tunai di meja kasir sekarang agar segera dimasak.
-            @else
-                Pesanan Anda menunggu konfirmasi pembayaran digital.
-            @endif
-        </p>
 
         {{-- Tombol Ganti Metode Pembayaran (Hanya jika belum lunas) --}}
         @if(!$isPaid)
@@ -520,6 +550,13 @@
         let isCompletedState = {{ $isCompleted ? 'true' : 'false' }};
         let isPaidState = {{ $isPaid ? 'true' : 'false' }};
 
+        // Trigger Snap langsung (untuk tombol Bayar Sekarang di halaman digital unpaid)
+        function triggerSnapPay() {
+            const btn = document.getElementById('btnPayNowSnap');
+            if (btn) { btn.disabled = true; btn.innerText = 'Membuka Pembayaran...'; }
+            switchPayment('midtrans');
+        }
+
         // Audio chime generator (Web Audio API)
         function playChime(isDone = false) {
             try {
@@ -649,10 +686,13 @@
                                     location.reload();
                                 },
                                 onError: function(result) {
-                                    alert('Pembayaran gagal atau dibatalkan.');
+                                    // Jangan reload — cukup tampilkan pesan, status tetap Menunggu Pembayaran Digital
+                                    if (btn) btn.disabled = false;
                                 },
                                 onClose: function() {
-                                    location.reload();
+                                    // Snap ditutup tanpa bayar — reload tidak akan salah tampilkan "Pesanan Diterima"
+                                    // karena status.blade.php sekarang membedakan digital unpaid dengan benar
+                                    if (btn) btn.disabled = false;
                                 }
                             });
                         } else {

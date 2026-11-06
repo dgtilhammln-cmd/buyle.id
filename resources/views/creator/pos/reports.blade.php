@@ -1693,7 +1693,103 @@
                 });
             }
         })();
-            let currentSelectedReportOrder = null;
+    </script>
+
+    {{-- MODAL DETAIL STRUK & PESANAN LENGKAP --}}
+    <div id="receiptDetailModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); backdrop-filter:blur(3px); z-index:9999; align-items:center; justify-content:center; padding:1rem; box-sizing:border-box;">
+        <div style="background:#ffffff; border-radius:24px; max-width:440px; width:100%; max-height:90vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+            {{-- Modal Head --}}
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.25rem; border-bottom:1px solid #f1f5f9;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:34px; height:34px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#16a34a;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:0.95rem; font-weight:800; color:#0f172a;" id="mRecStoreName">{{ $storeName }}</div>
+                        <div style="font-size:0.72rem; color:#64748b;">Rincian Struk &amp; Pesanan</div>
+                    </div>
+                </div>
+                <button type="button" onclick="closeReceiptModal()" style="background:#f1f5f9; border:none; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:#64748b; cursor:pointer;">&times;</button>
+            </div>
+
+            {{-- Modal Body Printable Area --}}
+            <div id="printableReportReceiptArea" style="padding:1.25rem; overflow-y:auto; flex:1; font-size:0.8rem; color:#334155; line-height:1.5;">
+                <div style="text-align:center; margin-bottom:1rem; border-bottom:1.5px dashed #cbd5e1; padding-bottom:0.75rem;">
+                    <div style="font-size:1.1rem; font-weight:800; color:#0f172a;" id="mRecOrderNo">#BYL-0000</div>
+                    <div style="font-size:0.74rem; color:#64748b; margin-top:2px;" id="mRecDateTime">-</div>
+                </div>
+
+                <div style="margin-bottom:0.85rem; font-size:0.78rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                        <span style="color:#64748b;">Pelanggan:</span>
+                        <strong style="color:#0f172a;" id="mRecCustomer">-</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                        <span style="color:#64748b;">Kasir:</span>
+                        <span style="color:#0f172a; font-weight:600;" id="mRecCashier">-</span>
+                    </div>
+                </div>
+
+                {{-- Items --}}
+                <div style="font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; border-top:1px dashed #e2e8f0; padding-top:8px;">
+                    Daftar Menu &amp; Catatan
+                </div>
+                <div id="mRecItemsWrap" style="margin-bottom:0.85rem;">
+                    {{-- Generated via JS --}}
+                </div>
+
+                {{-- Summary --}}
+                <div style="border-top:1.5px dashed #cbd5e1; padding-top:8px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#64748b; font-size:0.78rem;">
+                        <span>Total Kuantiti:</span>
+                        <strong style="color:#0f172a;" id="mRecTotalQty">0</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#64748b; font-size:0.78rem;">
+                        <span>Subtotal:</span>
+                        <strong style="color:#0f172a;" id="mRecSubtotal">Rp 0</strong>
+                    </div>
+                    <div id="mRecDiscountRow" style="display:none; justify-content:space-between; margin-bottom:4px; color:#16a34a; font-size:0.78rem; font-weight:600;">
+                        <span id="mRecDiscountLabel">Diskon:</span>
+                        <span id="mRecDiscount">-Rp 0</span>
+                    </div>
+                    <div id="mRecFeesWrap" style="font-size:0.78rem;"></div>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1.5px dashed #cbd5e1; font-size:0.96rem; font-weight:800; color:#0f172a;">
+                        <span>Total:</span>
+                        <span style="color:#16a34a;" id="mRecTotal">Rp 0</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:0.78rem;">
+                        <span style="color:#64748b;">Metode:</span>
+                        <strong style="color:#0f172a;" id="mRecPayMethod">-</strong>
+                    </div>
+                    <div id="mRecCashDetails" style="display:none; margin-top:4px; font-size:0.74rem; color:#64748b; background:#f8fafc; padding:6px 10px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                            <span>Tunai Dibayar:</span>
+                            <span id="mRecCashPaid" style="font-weight:700; color:#0f172a;">Rp 0</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Kembalian:</span>
+                            <span id="mRecCashChange" style="font-weight:700; color:#16a34a;">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Modal Foot --}}
+            <div style="padding:0.9rem 1.25rem; border-top:1px solid #f1f5f9; background:#f8fafc; display:flex; gap:8px;">
+                <button type="button" onclick="printReportReceipt()" style="flex:1; padding:0.65rem 1rem; border-radius:999px; background:#0f172a; color:#fff; font-size:0.8rem; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                    <span>Cetak Struk</span>
+                </button>
+                <button type="button" onclick="shareReportReceiptToWA()" style="padding:0.65rem 0.9rem; border-radius:999px; background:#22c55e; color:#fff; font-size:0.8rem; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                    <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824z"/></svg>
+                    <span>WA</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
 
         function openReceiptModal(order) {
             currentSelectedReportOrder = order;

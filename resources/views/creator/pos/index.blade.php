@@ -6526,6 +6526,14 @@
                 renderCart();
             }
 
+            // Update Item Note
+            window.updateItemNote = function(keyOrId, noteVal) {
+                const item = cart.find(i => (i.cartKey ? i.cartKey === keyOrId : i.id === keyOrId));
+                if (item) {
+                    item.notes = noteVal;
+                }
+            };
+
             // Clear Cart
             function clearCart() {
                 cart = [];
@@ -6711,14 +6719,12 @@
                                             <div class="cart-item-title">${escapeHtml(item.name)}</div>
                                             ${item.variant_name ? `
                                                 <div style="font-size:0.71rem; color:#15803d; font-weight:700; margin-top:2px; display:inline-flex; align-items:center; gap:3px; background:#f0fdf4; padding:1px 6px; border-radius:4px;">
-                                                    ✦ ${escapeHtml(item.variant_name)}
+                                                    ${escapeHtml(item.variant_name)}
                                                 </div>
                                             ` : ''}
-                                            ${item.notes ? `
-                                                <div style="font-size:0.71rem; color:#64748b; font-style:italic; margin-top:2px;">
-                                                    📝 "${escapeHtml(item.notes)}"
-                                                </div>
-                                            ` : ''}
+                                            <div style="margin-top:4px;">
+                                                <input type="text" placeholder="Catatan produk..." value="${escapeHtml(item.notes || '')}" oninput="updateItemNote('${escapedKey}', this.value)" style="width:100%; font-size:0.72rem; padding:3px 6px; border:1px solid #e2e8f0; border-radius:6px; outline:none; background:#f8fafc; color:#334155;">
+                                            </div>
                                             <div class="cart-item-unit-price" style="margin-top:2px;">Rp ${formatRupiah(itemSub)}</div>
                                         </div>
                                         <div class="cart-qty-ctrl">
@@ -10276,12 +10282,36 @@
 
             // Open Receipt from Transaction Card Click
             function openPosOrderReceipt(orderId) {
-                if (typeof openReceiptModal === 'function') {
-                    openReceiptModal(orderId);
-                } else {
-                    switchSettingTab('orders');
-                    openModal('posHistoryModal');
+                // Coba ambil dari data live dulu
+                const cached = (window._posLiveOrdersCache || []).find(o => o.id == orderId)
+                            || (window._posTodayOrdersData || []).find(o => o.id == orderId);
+
+                if (cached && cached.items && cached.items.length > 0) {
+                    // Data lengkap tersedia
+                    if (typeof showReceiptModal === 'function') {
+                        showReceiptModal(cached);
+                    }
+                    return;
                 }
+
+                // Fetch dari API
+                fetch('/creator/pos/order/' + orderId + '/detail', {
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        if (typeof showReceiptModal === 'function') {
+                            showReceiptModal(data);
+                        } else {
+                            // Fallback: buka modal laporan
+                            if (typeof openReceiptModal === 'function') openReceiptModal(data);
+                        }
+                    } else {
+                        alert('Gagal memuat detail pesanan.');
+                    }
+                })
+                .catch(() => alert('Gagal memuat detail pesanan. Periksa koneksi.'));
             }
 
             // ── REALTIME ORDER ACTIONS ──

@@ -301,7 +301,7 @@ class PosController extends Controller
             ->where('name', '!=', 'Kategori 1')
             ->orderBy('name')
             ->get();
-        $recentPosOrders = \App\Models\Order::where('source', 'pos')
+        $recentPosOrders = \App\Models\Order::whereIn('source', ['pos', 'storefront'])
             ->where('seller_id', $seller->id)
             ->where(function($q) use ($seller) {
                 $q->where('seller_id', $seller->id)
@@ -548,6 +548,7 @@ class PosController extends Controller
                     'price'            => $itemRow['price'],
                     'qty'              => $itemRow['qty'],
                     'subtotal'         => $itemRow['subtotal'],
+                    'notes'            => $itemRow['notes'] ?? null,
                 ]);
 
                 // Kurangi stok jika produk memiliki stok terhitung
@@ -1584,9 +1585,10 @@ class PosController extends Controller
         }
 
         $posPaymentMethod = $request->query('pos_method', 'all');
-        $posQuery = Order::where('source', 'pos')
+        $posQuery = Order::whereIn('source', ['pos', 'storefront'])
             ->where(function($q) use ($seller) {
                 $q->where('seller_id', $seller->id)
+                  ->orWhere('user_id', $seller->id)
                   ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
             })
             ->whereIn('status', [
@@ -2317,6 +2319,74 @@ class PosController extends Controller
             'success'   => true,
             'orders'    => $formatted,
             'latest_id' => $orders->max('id') ?? $lastId,
+        ]);
+    }
+
+    /**
+     * Dapatkan detail lengkap satu order untuk modal struk POS (klik transaksi).
+     */
+    public function getOrderDetail(Request $request, $id)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $isStaff = $user->isPosCashier() && $user->parent_seller_id;
+        $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
+
+        $order = Order::where('id', $id)
+            ->where(function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId)
+                  ->orWhere('user_id', $sellerId)
+                  ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $sellerId));
+            })
+            ->with(['items.product', 'payment'])
+            ->firstOrFail();
+
+        $addr = is_array($order->shipping_address)
+            ? $order->shipping_address
+            : (json_decode($order->shipping_address ?? '', true) ?? []);
+
+        $payMethodRaw = $order->payment_method ?? ($order->payment?->method ?? ($order->payment?->gateway ?? 'cash'));
+        $payMethod = strtolower(is_object($payMethodRaw) ? ($payMethodRaw->value ?? $payMethodRaw->name ?? 'cash') : ($payMethodRaw ?? 'cash'));
+
+        $payStat = strtolower($order->payment?->status?->value ?? $order->payment?->status?->name ?? (string)($order->payment?->status ?? ''));
+        $ordStat = strtolower($order->status?->value ?? $order->status?->name ?? (string)($order->status ?? ''));
+        $isPaid = in_array($payStat, ['success', 'paid']) || in_array($ordStat, ['confirmed', 'delivered', 'processing', 'completed', 'paid']);
+        $isCompleted = in_array($ordStat, ['delivered', 'completed']);
+
+        $items = $order->items->map(function ($it) {
+            $pName = $it->product ? $it->product->name : ($it->product_name ?? 'Item');
+            return [
+                'product_name' => $pName,
+                'variant_name' => $it->variant_name ?? null,
+                'qty'          => $it->qty,
+                'price'        => (float) $it->price,
+                'subtotal'     => (float) $it->subtotal,
+                'notes'        => $it->notes ?? null,
+            ];
+        })->values()->toArray();
+
+        return response()->json([
+            'success'          => true,
+            'id'               => $order->id,
+            'order_number'     => $order->order_number ?? ('BYL-' . $order->id),
+            'created_at'       => $order->created_at->toISOString(),
+            'customer_name'    => $addr['name'] ?? 'Pelanggan Umum',
+            'cashier_name'     => $addr['cashier_name'] ?? null,
+            'table_number'     => $addr['table_number'] ?? null,
+            'order_type'       => $addr['order_type'] ?? 'dine_in',
+            'payment_method'   => $payMethod,
+            'is_paid'          => $isPaid,
+            'is_completed'     => $isCompleted,
+            'subtotal'         => (float) $order->subtotal,
+            'discount'         => (float) $order->discount,
+            'total'            => (float) $order->total,
+            'notes'            => $order->notes,
+            'shipping_address' => $addr,
+            'items'            => $items,
+            'source'           => $order->source,
         ]);
     }
 }

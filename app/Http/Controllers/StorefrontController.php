@@ -302,6 +302,7 @@ class StorefrontController extends Controller
                     'price'            => $itemRow['price'],
                     'qty'              => $itemRow['qty'],
                     'subtotal'         => $itemRow['subtotal'],
+                    'notes'            => $itemRow['notes'] ?? null,
                 ]);
 
                 // Reduce stock
