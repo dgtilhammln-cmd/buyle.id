@@ -101,19 +101,41 @@ class SocialMediaDownloaderService
     }
 
     /**
+     * Normalisasi URL agar selalu merupakan absolute URL valid.
+     */
+    protected function normalizeUrl(?string $url, string $baseUrl = 'https://www.tikwm.com'): ?string
+    {
+        if (empty($url)) {
+            return null;
+        }
+        $url = trim($url);
+        if (str_starts_with($url, '//')) {
+            return 'https:' . $url;
+        }
+        if (str_starts_with($url, '/')) {
+            return rtrim($baseUrl, '/') . $url;
+        }
+        return $url;
+    }
+
+    /**
      * Ambil data video TikTok tanpa watermark.
      */
     protected function resolveTikTok(string $url): array
     {
         // 1. Coba via TikWM API (sangat cepat & tanpa watermark)
         try {
-            $response = Http::timeout(10)->asForm()->post('https://www.tikwm.com/api/', [
-                'url' => $url,
-                'count' => 12,
-                'cursor' => 0,
-                'web' => 1,
-                'hd' => 1,
-            ]);
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                ])
+                ->asForm()->post('https://www.tikwm.com/api/', [
+                    'url'    => $url,
+                    'count'  => 12,
+                    'cursor' => 0,
+                    'web'    => 1,
+                    'hd'     => 1,
+                ]);
 
             if ($response->successful() && $response->json('code') === 0) {
                 $data = $response->json('data');
@@ -121,44 +143,49 @@ class SocialMediaDownloaderService
                 $author = [
                     'name'     => $data['author']['nickname'] ?? 'Kreator TikTok',
                     'username' => '@' . ($data['author']['unique_id'] ?? 'user'),
-                    'avatar'   => $data['author']['avatar'] ?? null,
+                    'avatar'   => $this->normalizeUrl($data['author']['avatar'] ?? null),
                 ];
 
                 $downloads = [];
 
+                $hdPlay = $this->normalizeUrl($data['hdplay'] ?? null);
+                $play   = $this->normalizeUrl($data['play'] ?? null);
+                $cover  = $this->normalizeUrl($data['cover'] ?? ($data['origin_cover'] ?? null));
+                $music  = $this->normalizeUrl($data['music'] ?? null);
+
                 // Video tanpa watermark HD
-                if (!empty($data['hdplay'])) {
+                if (!empty($hdPlay)) {
                     $downloads[] = [
                         'type'  => 'video',
                         'label' => 'Download Video HD (Tanpa Watermark)',
-                        'url'   => $data['hdplay'],
+                        'url'   => $hdPlay,
                         'ext'   => 'mp4',
                     ];
-                } elseif (!empty($data['play'])) {
+                } elseif (!empty($play)) {
                     $downloads[] = [
                         'type'  => 'video',
                         'label' => 'Download Video (Tanpa Watermark)',
-                        'url'   => $data['play'],
+                        'url'   => $play,
                         'ext'   => 'mp4',
                     ];
                 }
 
                 // Cover / Thumbnail Video HD
-                if (!empty($data['cover'])) {
+                if (!empty($cover)) {
                     $downloads[] = [
                         'type'  => 'image',
                         'label' => 'Download Cover / Thumbnail HD',
-                        'url'   => $data['cover'],
+                        'url'   => $cover,
                         'ext'   => 'jpg',
                     ];
                 }
 
                 // Audio MP3 jika ada
-                if (!empty($data['music'])) {
+                if (!empty($music)) {
                     $downloads[] = [
                         'type'  => 'audio',
                         'label' => 'Download Audio Musik MP3',
-                        'url'   => $data['music'],
+                        'url'   => $music,
                         'ext'   => 'mp3',
                     ];
                 }
@@ -167,13 +194,16 @@ class SocialMediaDownloaderService
                 $images = [];
                 if (!empty($data['images']) && is_array($data['images'])) {
                     foreach ($data['images'] as $idx => $imgUrl) {
-                        $images[] = $imgUrl;
-                        $downloads[] = [
-                            'type'  => 'image',
-                            'label' => 'Foto Slide ' . ($idx + 1),
-                            'url'   => $imgUrl,
-                            'ext'   => 'jpg',
-                        ];
+                        $normalizedImg = $this->normalizeUrl($imgUrl);
+                        if ($normalizedImg) {
+                            $images[] = $normalizedImg;
+                            $downloads[] = [
+                                'type'  => 'image',
+                                'label' => 'Foto Slide ' . ($idx + 1),
+                                'url'   => $normalizedImg,
+                                'ext'   => 'jpg',
+                            ];
+                        }
                     }
                 }
 
@@ -181,10 +211,10 @@ class SocialMediaDownloaderService
                     'success'     => true,
                     'platform'    => 'tiktok',
                     'title'       => $data['title'] ?? 'Video TikTok',
-                    'preview'     => !empty($images) ? $images[0] : ($data['cover'] ?? null),
+                    'preview'     => !empty($images) ? $images[0] : $cover,
                     'author'      => $author,
                     'is_video'    => empty($images),
-                    'video_url'   => $data['play'] ?? ($data['hdplay'] ?? null),
+                    'video_url'   => $play ?? $hdPlay,
                     'downloads'   => $downloads,
                     'stats'       => [
                         'likes'    => $data['digg_count'] ?? 0,
@@ -200,26 +230,35 @@ class SocialMediaDownloaderService
         // 2. Fallback via TiklyDown API
         try {
             $cleanUrl = urlencode($url);
-            $response = Http::timeout(10)->get("https://api.tiklydown.eu.org/api/download?url={$cleanUrl}");
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                ])
+                ->get("https://api.tiklydown.eu.org/api/download?url={$cleanUrl}");
 
             if ($response->successful() && !empty($response->json('video'))) {
                 $res = $response->json();
                 $downloads = [];
 
-                if (!empty($res['video']['noWatermark'])) {
+                $videoNoWm = $this->normalizeUrl($res['video']['noWatermark'] ?? null, 'https://api.tiklydown.eu.org');
+                $musicUrl  = $this->normalizeUrl($res['music']['play_url'] ?? null, 'https://api.tiklydown.eu.org');
+                $coverUrl  = $this->normalizeUrl($res['video']['cover'] ?? null, 'https://api.tiklydown.eu.org');
+                $avatarUrl = $this->normalizeUrl($res['author']['avatar'] ?? null, 'https://api.tiklydown.eu.org');
+
+                if (!empty($videoNoWm)) {
                     $downloads[] = [
                         'type'  => 'video',
                         'label' => 'Video HD (Tanpa Watermark)',
-                        'url'   => $res['video']['noWatermark'],
+                        'url'   => $videoNoWm,
                         'ext'   => 'mp4',
                     ];
                 }
 
-                if (!empty($res['music']['play_url'])) {
+                if (!empty($musicUrl)) {
                     $downloads[] = [
                         'type'  => 'audio',
                         'label' => 'Audio Musik MP3',
-                        'url'   => $res['music']['play_url'],
+                        'url'   => $musicUrl,
                         'ext'   => 'mp3',
                     ];
                 }
@@ -228,14 +267,14 @@ class SocialMediaDownloaderService
                     'success'   => true,
                     'platform'  => 'tiktok',
                     'title'     => $res['title'] ?? 'Video TikTok',
-                    'preview'   => $res['video']['cover'] ?? null,
+                    'preview'   => $coverUrl,
                     'author'    => [
                         'name'     => $res['author']['name'] ?? 'Kreator TikTok',
                         'username' => '@' . ($res['author']['unique_id'] ?? 'user'),
-                        'avatar'   => $res['author']['avatar'] ?? null,
+                        'avatar'   => $avatarUrl,
                     ],
                     'is_video'  => true,
-                    'video_url' => $res['video']['noWatermark'] ?? null,
+                    'video_url' => $videoNoWm,
                     'downloads' => $downloads,
                 ];
             }

@@ -15,7 +15,18 @@ class WeddingPublicController extends Controller
      */
     public function landing()
     {
-        return view('wedding.landing');
+        $settings = \App\Models\Setting::getAllAsArray();
+        $siteName = $settings['site_name'] ?? 'buyle.id';
+
+        $seo = [
+            'title'       => 'Platform Undangan Digital & Smart Guest Book | ' . $siteName,
+            'description' => 'Platform undangan pernikahan digital modern dan smart guest book dari ' . $siteName . '. Buat undangan estetik, QR Code Check-in tamu otomatis, amplop digital QRIS, buku tamu digital, dan photobooth interaktif tanpa antrean.',
+            'keywords'    => 'undangan pernikahan digital, wedding invitation online, smart guest book, qr code check-in pernikahan, amplop digital wedding, buyle wedding, undangan web estetik, buku tamu digital',
+            'og_image'    => !empty($settings['og_image_default']) ? asset('storage/' . $settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('images/og-default.jpg')),
+            'canonical'   => route('wedding.landing'),
+        ];
+
+        return view('wedding.landing', compact('settings', 'seo'));
     }
 
     /**

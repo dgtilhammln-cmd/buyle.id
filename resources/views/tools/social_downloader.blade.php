@@ -169,7 +169,7 @@
             <div id="dlResultBox" class="dl-result-card" style="display: none;">
                 <div class="dl-result-header" id="resHeaderWrap" style="display: none;">
                     <div class="dl-author-wrap" id="resAuthorWrap">
-                        <img id="resAuthorAvatar" class="dl-author-avatar" referrerpolicy="no-referrer" src="" alt="Avatar">
+                        <img id="resAuthorAvatar" class="dl-author-avatar" referrerpolicy="no-referrer" src="" alt="" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\' viewBox=\'0 0 44 44\'%3E%3Crect width=\'44\' height=\'44\' rx=\'22\' fill=\'%231eb349\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' font-family=\'sans-serif\' font-size=\'18\' font-weight=\'bold\' fill=\'%23ffffff\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3E@%3C/text%3E%3C/svg%3E';">
                         <div class="dl-author-info">
                             <div class="dl-author-name" id="resAuthorName">Kreator</div>
                             <div class="dl-author-username" id="resAuthorUsername">@user</div>
@@ -181,7 +181,7 @@
                     {{-- Media Preview (Video or Image) --}}
                     <div class="dl-preview-container">
                         <div id="resVideoWrapper" style="display:none;" class="dl-video-wrapper">
-                            <video id="resVideoPlayer" controls playsinline preload="metadata" referrerpolicy="no-referrer" poster="" class="dl-preview-video"></video>
+                            <video id="resVideoPlayer" controls playsinline preload="metadata" referrerpolicy="no-referrer" class="dl-preview-video"></video>
                         </div>
                         <div id="resImageWrapper" style="display:none;" class="dl-image-wrapper">
                             <img id="resImagePlayer" src="" alt="Preview Media" referrerpolicy="no-referrer" class="dl-preview-img">
@@ -1951,25 +1951,27 @@ function renderSingleMediaResult(data) {
     // Author
     var authorWrap = document.getElementById('resAuthorWrap');
     var author = data.author;
-    if (author && (author.avatar || (author.username && author.username !== '@instagram' && author.username !== '@user'))) {
+    if (author && (author.avatar || author.direct_avatar_url || (author.username && author.username !== '@instagram' && author.username !== '@user'))) {
         authorWrap.style.display = 'flex';
         if (headerWrap) headerWrap.style.display = 'flex';
         document.getElementById('resAuthorName').textContent = author.name || 'Kreator';
         document.getElementById('resAuthorUsername').textContent = author.username || '';
         var avatarEl = document.getElementById('resAuthorAvatar');
-        if (author.avatar) {
-            avatarEl.src = author.avatar;
-        } else {
-            var initial = (author.name || author.username).replace('@', '').charAt(0).toUpperCase();
-            avatarEl.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\' viewBox=\'0 0 44 44\'%3E%3Crect width=\'44\' height=\'44\' rx=\'22\' fill=\'%231eb349\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' font-family=\'sans-serif\' font-size=\'18\' font-weight=\'bold\' fill=\'%23ffffff\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3E' + initial + '%3C/text%3E%3C/svg%3E';
-        }
+        var initial = (author.name || author.username || 'U').replace('@', '').charAt(0).toUpperCase();
+        var fallbackAvatar = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\' viewBox=\'0 0 44 44\'%3E%3Crect width=\'44\' height=\'44\' rx=\'22\' fill=\'%231eb349\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' font-family=\'sans-serif\' font-size=\'18\' font-weight=\'bold\' fill=\'%23ffffff\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3E' + initial + '%3C/text%3E%3C/svg%3E';
+
+        avatarEl.onerror = function() {
+            this.onerror = null;
+            this.src = fallbackAvatar;
+        };
+
+        var avatarSrc = author.direct_avatar_url || author.avatar;
+        avatarEl.src = avatarSrc || fallbackAvatar;
     } else {
         // Jika tidak ada info author asli, sembunyikan card author agar tidak polos abu-abu
         authorWrap.style.display = 'none';
         if (headerWrap) headerWrap.style.display = 'none';
     }
-
-    // Platform tag element removed (no badge shown)
 
     // Media Title
     document.getElementById('resMediaTitle').textContent = data.title || 'Pratinjau Media';
@@ -1980,15 +1982,38 @@ function renderSingleMediaResult(data) {
     var videoPlayer = document.getElementById('resVideoPlayer');
     var imagePlayer = document.getElementById('resImagePlayer');
 
-    if (data.is_video && data.video_url) {
+    var videoSrc = data.direct_video_url || data.video_url;
+    var previewSrc = data.direct_preview_url || data.preview;
+    var fallbackThumbSvg = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'300\' viewBox=\'0 0 300 300\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f1f5f9\'/%3E%3Cpath d=\'M120 130a15 15 0 1 0 0-30 15 15 0 0 0 0 30zM80 210h140l-45-60-35 45-20-25-40 40z\' fill=\'%23cbd5e1\'/%3E%3C/svg%3E';
+
+    imagePlayer.onerror = function() {
+        this.onerror = null;
+        this.src = fallbackThumbSvg;
+    };
+
+    if (data.is_video && videoSrc) {
         videoWrap.style.display = 'block';
         imageWrap.style.display = 'none';
-        videoPlayer.src = data.video_url;
-        if (data.preview) videoPlayer.poster = data.preview;
+
+        videoPlayer.onerror = function() {
+            // Jika browser gagal render streaming video, fallback rapi ke poster/gambar cover
+            if (previewSrc) {
+                videoWrap.style.display = 'none';
+                imageWrap.style.display = 'block';
+                imagePlayer.src = previewSrc;
+            }
+        };
+
+        if (previewSrc) {
+            videoPlayer.poster = previewSrc;
+        } else {
+            videoPlayer.removeAttribute('poster');
+        }
+        videoPlayer.src = videoSrc;
     } else {
         videoWrap.style.display = 'none';
         imageWrap.style.display = 'block';
-        imagePlayer.src = data.preview || (data.downloads && data.downloads[0] ? data.downloads[0].url : '');
+        imagePlayer.src = previewSrc || (data.downloads && data.downloads[0] ? (data.downloads[0].direct_download_url || data.downloads[0].url) : fallbackThumbSvg);
     }
 
     // Download buttons

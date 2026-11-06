@@ -97,6 +97,33 @@ class SocialDownloaderController extends Controller
             }
         }
 
+        // Bungkus video_url untuk inline preview yang aman dari blokir CORS/Referer
+        if (!empty($result['video_url'])) {
+            $result['direct_video_url'] = route('tools.social_downloader.stream', [
+                'url'      => base64_encode($result['video_url']),
+                'filename' => 'preview_' . time() . '.mp4',
+                'inline'   => 1,
+            ]);
+        }
+
+        // Bungkus preview / cover untuk inline display
+        if (!empty($result['preview'])) {
+            $result['direct_preview_url'] = route('tools.social_downloader.stream', [
+                'url'      => base64_encode($result['preview']),
+                'filename' => 'cover_' . time() . '.jpg',
+                'inline'   => 1,
+            ]);
+        }
+
+        // Bungkus author avatar untuk inline display
+        if (!empty($result['author']['avatar'])) {
+            $result['author']['direct_avatar_url'] = route('tools.social_downloader.stream', [
+                'url'      => base64_encode($result['author']['avatar']),
+                'filename' => 'avatar_' . time() . '.jpg',
+                'inline'   => 1,
+            ]);
+        }
+
         // Bungkus setiap postingan di dalam feed profil (jika ada)
         if (!empty($result['posts'])) {
             $username = $result['author']['username'] ?? 'instagram';
@@ -118,6 +145,7 @@ class SocialDownloaderController extends Controller
                     $p['direct_thumb_url'] = route('tools.social_downloader.stream', [
                         'url'      => base64_encode($thumbCandidate),
                         'filename' => 'ig_' . $safeUser . '_' . ($idx + 1) . '_thumb.jpg',
+                        'inline'   => 1,
                     ]);
                 }
             }
@@ -133,6 +161,7 @@ class SocialDownloaderController extends Controller
     {
         $encodedUrl = $request->query('url');
         $filename   = $request->query('filename', 'media_' . time() . '.mp4');
+        $isInline   = $request->boolean('inline', false);
 
         if (!$encodedUrl) {
             abort(400, 'Parameter unduhan tidak valid.');
@@ -165,9 +194,11 @@ class SocialDownloaderController extends Controller
             'tiktok.com',
             'byteoversea.com',
             'ibytedtos.com',
+            'ibyteimg.com',
             'bytedance.com',
             'muscdn.com',
             'musical.ly',
+            'tiklydown.eu.org',
             'saveinsta.to',
             'instagram.com',
         ];
@@ -188,10 +219,29 @@ class SocialDownloaderController extends Controller
         // Bersihkan nama file dari karakter berbahaya
         $safeFilename = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $filename);
 
+        $ext = strtolower(pathinfo($safeFilename, PATHINFO_EXTENSION));
+        $mimeMap = [
+            'mp4'  => 'video/mp4',
+            'webm' => 'video/webm',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'webp' => 'image/webp',
+            'mp3'  => 'audio/mpeg',
+            'm4a'  => 'audio/mp4',
+        ];
+
+        $contentType = $isInline ? ($mimeMap[$ext] ?? 'application/octet-stream') : 'application/octet-stream';
+        $disposition = $isInline ? 'inline' : 'attachment; filename="' . $safeFilename . '"';
+
         try {
             $headers = [
                 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             ];
+
+            if ($request->hasHeader('Range')) {
+                $headers[] = 'Range: ' . $request->header('Range');
+            }
 
             if (str_contains($host, 'snapcdn') || str_contains($host, 'saveinsta')) {
                 $headers[] = 'Referer: https://saveinsta.to/';
@@ -223,9 +273,10 @@ class SocialDownloaderController extends Controller
                 curl_exec($ch);
                 curl_close($ch);
             }, 200, [
-                'Content-Type'        => 'application/octet-stream',
-                'Content-Disposition' => 'attachment; filename="' . $safeFilename . '"',
-                'Cache-Control'       => 'no-cache, private',
+                'Content-Type'        => $contentType,
+                'Content-Disposition' => $disposition,
+                'Accept-Ranges'       => 'bytes',
+                'Cache-Control'       => $isInline ? 'public, max-age=86400' : 'no-cache, private',
             ]);
         } catch (\Throwable $e) {
             Log::warning('Download stream proxy error: ' . $e->getMessage());

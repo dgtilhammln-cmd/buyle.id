@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Status Pesanan #{{ $order->order_number }} – {{ $storeName }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet">
     @if(!empty($snapUrl) && !empty($midtransClientKey))
         <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
     @endif
     <style>
         :root {
-            --store-accent: {{ $posAccentColor }};
+            --store-accent:
+                {{ $posAccentColor }}
+            ;
             --safe-area-top: env(safe-area-inset-top, 0px);
             --safe-area-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -132,14 +138,29 @@
         }
 
         @keyframes pulseSuccess {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.04); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.04);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
         .status-title {
@@ -287,20 +308,45 @@
         }
 
         @keyframes scaleIn {
-            from { transform: scale(0.9) translateY(12px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
+            from {
+                transform: scale(0.9) translateY(12px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
         }
 
         @keyframes shake {
-            0% { transform: rotate(0deg); }
-            20% { transform: rotate(-14deg); }
-            40% { transform: rotate(14deg); }
-            60% { transform: rotate(-8deg); }
-            80% { transform: rotate(8deg); }
-            100% { transform: rotate(0deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            20% {
+                transform: rotate(-14deg);
+            }
+
+            40% {
+                transform: rotate(14deg);
+            }
+
+            60% {
+                transform: rotate(-8deg);
+            }
+
+            80% {
+                transform: rotate(8deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
         }
     </style>
 </head>
+
 <body>
     @php
         $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
@@ -308,7 +354,7 @@
         $tableNo = $addr['table_number'] ?? ($orderType === 'takeaway' ? 'Takeaway' : 'Umum');
         $paymentMethod = $addr['payment_method'] ?? 'cash';
         $statusVal = strtolower(is_object($order->status) ? $order->status->value : (string) $order->status);
-        $payStat = strtolower($order->payment?->status?->value ?? (string)($order->payment?->status ?? ''));
+        $payStat = strtolower($order->payment?->status?->value ?? (string) ($order->payment?->status ?? ''));
         $isPaid = in_array($statusVal, ['confirmed', 'delivered', 'processing', 'completed', 'paid']) || in_array($payStat, ['success', 'paid']);
         $isCompleted = in_array($statusVal, ['delivered', 'completed']);
         $feesBreakdown = $addr['fees_breakdown'] ?? [];
@@ -320,43 +366,49 @@
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
             <div style="display:flex; align-items:center; gap:0.6rem; min-width:0;">
                 @if($posLogoUrl)
-                    <img src="{{ $posLogoUrl }}" alt="{{ $storeName }}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; flex-shrink:0;">
+                    <img src="{{ $posLogoUrl }}" alt="{{ $storeName }}"
+                        style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; flex-shrink:0;">
                 @endif
-                <div style="font-size:0.88rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $storeName }}</div>
+                <div
+                    style="font-size:0.88rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    {{ $storeName }}</div>
             </div>
-            <div style="font-size:0.65rem; color:#94a3b8; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; gap:4px;">
-                <span style="width:6px; height:6px; border-radius:50%; background:#22c55e; display:inline-block; animation:pulse-dot 1.5s infinite;"></span>
+            <div
+                style="font-size:0.65rem; color:#94a3b8; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; gap:4px;">
+                <span
+                    style="width:6px; height:6px; border-radius:50%; background:#22c55e; display:inline-block; animation:pulse-dot 1.5s infinite;"></span>
                 Live Update
             </div>
         </div>
 
         {{-- Status Circle Badge --}}
-        <div class="status-badge-circle {{ $isCompleted ? 'circle-completed' : ($isPaid ? 'circle-confirmed' : ($paymentMethod !== 'cash' ? 'circle-pending' : 'circle-pending')) }}" id="statusBadgeCircle"
-             style="{{ !$isPaid && $paymentMethod !== 'cash' ? 'background:#fef3c7; color:#d97706; border-color:#fde68a;' : '' }}">
+        <div class="status-badge-circle {{ $isCompleted ? 'circle-completed' : ($isPaid ? 'circle-confirmed' : ($paymentMethod !== 'cash' ? 'circle-pending' : 'circle-pending')) }}"
+            id="statusBadgeCircle"
+            style="{{ !$isPaid && $paymentMethod !== 'cash' ? 'background:#fef3c7; color:#d97706; border-color:#fde68a;' : '' }}">
             @if($isCompleted)
                 {{-- Centang 2 --}}
                 <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"/>
-                    <polyline points="20 10 9 21 4 16" style="opacity:0.6;"/>
+                    <polyline points="20 6 9 17 4 12" />
+                    <polyline points="20 10 9 21 4 16" style="opacity:0.6;" />
                 </svg>
             @elseif($isPaid)
                 {{-- Ceklis 1 --}}
                 <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"/>
+                    <polyline points="20 6 9 17 4 12" />
                 </svg>
             @elseif($paymentMethod !== 'cash')
                 {{-- Dompet / Waiting Digital --}}
                 <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="2" y="6" width="20" height="14" rx="2"/>
-                    <path d="M16 11h.01"/>
-                    <circle cx="12" cy="12" r="2"/>
-                    <path d="M6 11h.01M18 11h.01"/>
+                    <rect x="2" y="6" width="20" height="14" rx="2" />
+                    <path d="M16 11h.01" />
+                    <circle cx="12" cy="12" r="2" />
+                    <path d="M6 11h.01M18 11h.01" />
                 </svg>
             @else
                 {{-- Jam pasir / cash pending --}}
                 <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
                 </svg>
             @endif
         </div>
@@ -390,7 +442,10 @@
             <div id="digitalPayNowWrap" style="margin-bottom:1rem;">
                 <button type="button" onclick="triggerSnapPay()" id="btnPayNowSnap"
                     style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:0.9rem; border-radius:999px; background:linear-gradient(135deg,#1db349,#a5cf36); color:#fff; font-size:0.88rem; font-weight:800; border:none; cursor:pointer; font-family:inherit; box-shadow:0 4px 16px rgba(29,179,73,0.3); margin-bottom:0.5rem;">
-                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
                     Bayar Sekarang (Buka Pembayaran)
                 </button>
             </div>
@@ -401,9 +456,9 @@
             <div class="cashier-warning-box" id="cashierWarningBox">
                 <div class="cw-icon">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <rect x="2" y="6" width="20" height="12" rx="2"/>
-                        <circle cx="12" cy="12" r="2.5"/>
-                        <path d="M6 12h.01M18 12h.01"/>
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="12" cy="12" r="2.5" />
+                        <path d="M6 12h.01M18 12h.01" />
                     </svg>
                 </div>
                 <div>
@@ -422,12 +477,18 @@
             <div class="switch-pay-wrap" id="switchPayWrap">
                 @if($paymentMethod === 'cash')
                     <button type="button" class="btn-switch-pay btn-switch-to-digital" onclick="switchPayment('midtrans')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="5" width="18" height="14" rx="2" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
                         <span>Ganti ke Pembayaran Digital (QRIS / GoPay / VA)</span>
                     </button>
                 @else
                     <button type="button" class="btn-switch-pay btn-switch-to-cash" onclick="switchPayment('cash')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="2" y="6" width="20" height="12" rx="2" />
+                            <circle cx="12" cy="12" r="2" />
+                        </svg>
                         <span>Ganti ke Bayar di Kasir (Cash)</span>
                     </button>
                 @endif
@@ -442,7 +503,8 @@
             </div>
             <div class="order-card-row">
                 <span class="order-label">Tipe Pesanan</span>
-                <span class="order-val">{{ $orderType === 'takeaway' ? 'Takeaway (Bawa Pulang)' : 'Dine In (Makan di Tempat)' }}</span>
+                <span
+                    class="order-val">{{ $orderType === 'takeaway' ? 'Takeaway (Bawa Pulang)' : 'Dine In (Makan di Tempat)' }}</span>
             </div>
             @if($orderType !== 'takeaway')
                 <div class="order-card-row">
@@ -456,11 +518,13 @@
             </div>
             <div class="order-card-row">
                 <span class="order-label">Metode Bayar</span>
-                <span class="order-val" id="dispPayMethod">{{ $paymentMethod === 'cash' ? 'Bayar di Kasir (Cash)' : 'Digital (Snap Midtrans)' }}</span>
+                <span class="order-val"
+                    id="dispPayMethod">{{ $paymentMethod === 'cash' ? 'Bayar di Kasir (Cash)' : 'Digital (Snap Midtrans)' }}</span>
             </div>
             <div class="order-card-row">
                 <span class="order-label">Status</span>
-                <span class="order-val" id="dispStatus" style="color: {{ $isCompleted ? '#16a34a' : ($isPaid ? '#16a34a' : '#d97706') }}; font-weight:800;">
+                <span class="order-val" id="dispStatus"
+                    style="color: {{ $isCompleted ? '#16a34a' : ($isPaid ? '#16a34a' : '#d97706') }}; font-weight:800;">
                     @if($isCompleted)
                         Selesai (Completed)
                     @elseif($isPaid)
@@ -473,7 +537,8 @@
 
             {{-- Breakdown Item & Pajak --}}
             <div class="items-box">
-                <div style="font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.5rem;">
+                <div
+                    style="font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.5rem;">
                     Rincian Menu &amp; Pajak
                 </div>
 
@@ -484,14 +549,16 @@
                     </div>
                 @endforeach
 
-                <div class="breakdown-row" style="margin-top:6px; padding-top:6px; border-top:1px dashed #e2e8f0; color:#64748b;">
+                <div class="breakdown-row"
+                    style="margin-top:6px; padding-top:6px; border-top:1px dashed #e2e8f0; color:#64748b;">
                     <span>Subtotal</span>
                     <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
                 </div>
 
                 @if($order->discount > 0)
                     <div class="breakdown-row" style="color:#16a34a; font-weight:600;">
-                        <span>Diskon {{ !empty($discountDetails['name']) ? '(' . $discountDetails['name'] . ')' : '' }}</span>
+                        <span>Diskon
+                            {{ !empty($discountDetails['name']) ? '(' . $discountDetails['name'] . ')' : '' }}</span>
                         <span>-Rp {{ number_format($order->discount, 0, ',', '.') }}</span>
                     </div>
                 @endif
@@ -530,11 +597,11 @@
             {{-- Tombol Unduh Struk Digital --}}
             <button type="button" onclick="downloadCustomerReceipt()" class="btn-action-pill btn-download-receipt">
                 <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-                <span>Unduh Struk Resmi (PNG)</span>
+                <span>Unduh Struk</span>
             </button>
 
             <a href="{{ route('storefront.show', ['slug' => $slug]) }}" class="btn-action-pill btn-primary">
@@ -542,8 +609,13 @@
             </a>
 
             @if($isCompleted)
-                <button type="button" onclick="start30sAlarmAndVibration()" class="btn-action-pill btn-outline" style="border-color:#bbf7d0; background:#f0fdf4; color:#166534; font-weight:700;">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <button type="button" onclick="start30sAlarmAndVibration()" class="btn-action-pill btn-outline"
+                    style="border-color:#bbf7d0; background:#f0fdf4; color:#166534; font-weight:700;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"
+                        style="margin-right:6px;">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
                     <span>Bunyikan Alarm &amp; Getar (30d)</span>
                 </button>
             @endif
@@ -562,7 +634,7 @@
         const orderTotal = {{ (float) $order->total }};
         const tableNumber = {!! json_encode($tableNo) !!};
         const orderTypeLabel = {!! json_encode($orderType === 'takeaway' ? 'Takeaway' : 'Dine In') !!};
-        const itemsList = {!! json_encode($order->items->map(fn($it) => ['name' => $it->product_name, 'qty' => $it->qty, 'subtotal' => (float)$it->subtotal])) !!};
+        const itemsList = {!! json_encode($order->items->map(fn($it) => ['name' => $it->product_name, 'qty' => $it->qty, 'subtotal' => (float) $it->subtotal])) !!};
         const feesList = {!! json_encode($feesBreakdown) !!};
         const discountVal = {{ (float) $order->discount }};
         const subtotalVal = {{ (float) $order->subtotal }};
@@ -633,7 +705,7 @@
                     osc.start(now);
                     osc.stop(now + 0.5);
                 }
-            } catch(e) {}
+            } catch (e) { }
         }
 
         // Getar HP (Vibration API)
@@ -641,7 +713,7 @@
             if ('vibrate' in navigator) {
                 try {
                     navigator.vibrate([400, 200, 400, 200, 600]);
-                } catch(e) {}
+                } catch (e) { }
             }
         }
 
@@ -677,7 +749,7 @@
                 alarmTimeout = null;
             }
             if ('vibrate' in navigator) {
-                try { navigator.vibrate(0); } catch(e) {}
+                try { navigator.vibrate(0); } catch (e) { }
             }
             const modal = document.getElementById('orderReadyModal');
             if (modal) modal.style.display = 'none';
@@ -690,61 +762,61 @@
             fetch(`/s/${storeSlug}/order/${orderId}/check-status`, {
                 headers: { 'Accept': 'application/json' }
             })
-            .then(r => r.json())
-            .then(data => {
-                if (!data.success) return;
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) return;
 
-                // 1. Cek jika baru saja Lunas
-                if (data.is_paid && !isPaidState) {
-                    isPaidState = true;
-                    playBeepChime(false);
-                    document.getElementById('cashierWarningBox')?.remove();
-                    document.getElementById('switchPayWrap')?.remove();
-                    const badge = document.getElementById('statusBadgeCircle');
-                    if (badge) {
-                        badge.className = 'status-badge-circle circle-confirmed';
-                        badge.innerHTML = '<svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                    // 1. Cek jika baru saja Lunas
+                    if (data.is_paid && !isPaidState) {
+                        isPaidState = true;
+                        playBeepChime(false);
+                        document.getElementById('cashierWarningBox')?.remove();
+                        document.getElementById('switchPayWrap')?.remove();
+                        const badge = document.getElementById('statusBadgeCircle');
+                        if (badge) {
+                            badge.className = 'status-badge-circle circle-confirmed';
+                            badge.innerHTML = '<svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                        }
+                        document.getElementById('statusTitle').innerText = 'Pesanan Terkonfirmasi';
+                        document.getElementById('statusSub').innerText = 'Pembayaran telah diterima kasir. Dapur sedang menyiapkan pesanan Anda.';
+                        const dispStat = document.getElementById('dispStatus');
+                        if (dispStat) {
+                            dispStat.innerText = 'Lunas / Sedang Diproses';
+                            dispStat.style.color = '#16a34a';
+                        }
                     }
-                    document.getElementById('statusTitle').innerText = 'Pesanan Terkonfirmasi';
-                    document.getElementById('statusSub').innerText = 'Pembayaran telah diterima kasir. Dapur sedang menyiapkan pesanan Anda.';
-                    const dispStat = document.getElementById('dispStatus');
-                    if (dispStat) {
-                        dispStat.innerText = 'Lunas / Sedang Diproses';
-                        dispStat.style.color = '#16a34a';
-                    }
-                }
 
-                // 2. Cek jika baru saja Selesai (Completed)
-                if (data.is_completed && !isCompletedState) {
-                    isCompletedState = true;
-                    isPaidState = true;
-                    start30sAlarmAndVibration();
+                    // 2. Cek jika baru saja Selesai (Completed)
+                    if (data.is_completed && !isCompletedState) {
+                        isCompletedState = true;
+                        isPaidState = true;
+                        start30sAlarmAndVibration();
 
-                    const badge = document.getElementById('statusBadgeCircle');
-                    if (badge) {
-                        badge.className = 'status-badge-circle circle-completed';
-                        badge.innerHTML = '<svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/><polyline points="20 10 9 21 4 16" style="opacity:0.6;"/></svg>';
+                        const badge = document.getElementById('statusBadgeCircle');
+                        if (badge) {
+                            badge.className = 'status-badge-circle circle-completed';
+                            badge.innerHTML = '<svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/><polyline points="20 10 9 21 4 16" style="opacity:0.6;"/></svg>';
+                        }
+                        document.getElementById('statusTitle').innerText = 'Pesanan Sudah Selesai!';
+                        document.getElementById('statusSub').innerText = 'Pesanan Anda telah selesai dipersiapkan dan siap dinikmati / disajikan ke meja Anda!';
+                        const dispStat = document.getElementById('dispStatus');
+                        if (dispStat) {
+                            dispStat.innerText = 'Selesai (Completed)';
+                            dispStat.style.color = '#16a34a';
+                        }
                     }
-                    document.getElementById('statusTitle').innerText = 'Pesanan Sudah Selesai!';
-                    document.getElementById('statusSub').innerText = 'Pesanan Anda telah selesai dipersiapkan dan siap dinikmati / disajikan ke meja Anda!';
-                    const dispStat = document.getElementById('dispStatus');
-                    if (dispStat) {
-                        dispStat.innerText = 'Selesai (Completed)';
-                        dispStat.style.color = '#16a34a';
+                })
+                .catch(() => { })
+                .finally(() => {
+                    if (!isCompletedState) {
+                        setTimeout(pollCustomerOrderStatus, 2800);
                     }
-                }
-            })
-            .catch(() => {})
-            .finally(() => {
-                if (!isCompletedState) {
-                    setTimeout(pollCustomerOrderStatus, 2800);
-                }
-            });
+                });
         }
 
         setTimeout(pollCustomerOrderStatus, 2800);
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             if (isCompletedState && !localStorage.getItem('order_ready_alarm_done_' + orderId)) {
                 setTimeout(start30sAlarmAndVibration, 600);
             }
@@ -764,47 +836,47 @@
                 },
                 body: JSON.stringify({ target_method: targetMethod })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    if (targetMethod === 'midtrans' && data.snap_token) {
-                        if (typeof snap !== 'undefined') {
-                            snap.pay(data.snap_token, {
-                                onSuccess: function(result) {
-                                    alert('Pembayaran digital berhasil!');
-                                    location.reload();
-                                },
-                                onPending: function(result) {
-                                    alert('Menunggu pembayaran diselesaikan.');
-                                    location.reload();
-                                },
-                                onError: function(result) {
-                                    // Jangan reload — cukup tampilkan pesan, status tetap Menunggu Pembayaran Digital
-                                    if (btn) btn.disabled = false;
-                                },
-                                onClose: function() {
-                                    // Snap ditutup tanpa bayar — reload tidak akan salah tampilkan "Pesanan Diterima"
-                                    // karena status.blade.php sekarang membedakan digital unpaid dengan benar
-                                    if (btn) btn.disabled = false;
-                                }
-                            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        if (targetMethod === 'midtrans' && data.snap_token) {
+                            if (typeof snap !== 'undefined') {
+                                snap.pay(data.snap_token, {
+                                    onSuccess: function (result) {
+                                        alert('Pembayaran digital berhasil!');
+                                        location.reload();
+                                    },
+                                    onPending: function (result) {
+                                        alert('Menunggu pembayaran diselesaikan.');
+                                        location.reload();
+                                    },
+                                    onError: function (result) {
+                                        // Jangan reload — cukup tampilkan pesan, status tetap Menunggu Pembayaran Digital
+                                        if (btn) btn.disabled = false;
+                                    },
+                                    onClose: function () {
+                                        // Snap ditutup tanpa bayar — reload tidak akan salah tampilkan "Pesanan Diterima"
+                                        // karena status.blade.php sekarang membedakan digital unpaid dengan benar
+                                        if (btn) btn.disabled = false;
+                                    }
+                                });
+                            } else {
+                                alert(data.message);
+                                location.reload();
+                            }
                         } else {
                             alert(data.message);
                             location.reload();
                         }
                     } else {
-                        alert(data.message);
-                        location.reload();
+                        alert(data.message || 'Gagal mengubah metode pembayaran.');
+                        if (btn) btn.disabled = false;
                     }
-                } else {
-                    alert(data.message || 'Gagal mengubah metode pembayaran.');
+                })
+                .catch(() => {
+                    alert('Terjadi kesalahan koneksi.');
                     if (btn) btn.disabled = false;
-                }
-            })
-            .catch(() => {
-                alert('Terjadi kesalahan koneksi.');
-                if (btn) btn.disabled = false;
-            });
+                });
         }
 
         // Unduh Struk Digital (HTML5 Canvas PNG)
@@ -955,22 +1027,29 @@
         }
     </script>
     <!-- ── POP-UP NOTIFIKASI PESANAN SELESAI / ALARM ── -->
-    <div id="orderReadyModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.75); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem; box-sizing:border-box;">
-        <div style="background:#ffffff; border-radius:28px; padding:1.75rem 1.5rem; max-width:380px; width:100%; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.35); position:relative; animation:scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
-            <div style="width:72px; height:72px; border-radius:50%; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem; position:relative; box-shadow:0 0 0 10px rgba(34,197,94,0.15);">
-                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24" style="animation:shake 1s infinite alternate;">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    <div id="orderReadyModal"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.75); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem; box-sizing:border-box;">
+        <div
+            style="background:#ffffff; border-radius:28px; padding:1.75rem 1.5rem; max-width:380px; width:100%; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.35); position:relative; animation:scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
+            <div
+                style="width:72px; height:72px; border-radius:50%; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem; position:relative; box-shadow:0 0 0 10px rgba(34,197,94,0.15);">
+                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"
+                    style="animation:shake 1s infinite alternate;">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
             </div>
-            <h3 style="font-size:1.3rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem; line-height:1.2;">Pesanan Anda Sudah Selesai!</h3>
+            <h3 style="font-size:1.3rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem; line-height:1.2;">Pesanan
+                Anda Sudah Selesai!</h3>
             <p style="font-size:0.85rem; color:#475569; margin:0 0 1.4rem; line-height:1.45;">
                 Makanan &amp; minuman pesanan Anda telah selesai dipersiapkan kasir/dapur dan siap dinikmati!
             </p>
-            <button type="button" onclick="stop30sAlarm()" style="width:100%; padding:0.9rem; border-radius:999px; background:linear-gradient(135deg,#1db349,#a5cf36); color:#ffffff; font-size:0.92rem; font-weight:800; border:none; cursor:pointer; font-family:inherit; box-shadow:0 6px 20px rgba(29,179,73,0.35);">
+            <button type="button" onclick="stop30sAlarm()"
+                style="width:100%; padding:0.9rem; border-radius:999px; background:linear-gradient(135deg,#1db349,#a5cf36); color:#ffffff; font-size:0.92rem; font-weight:800; border:none; cursor:pointer; font-family:inherit; box-shadow:0 6px 20px rgba(29,179,73,0.35);">
                 Saya Mengerti (Matikan Alarm)
             </button>
         </div>
     </div>
 </body>
+
 </html>
