@@ -861,23 +861,24 @@
 
     @php
         $authUser = auth()->user();
-        // PIN HANYA AKTIF saat user buka:
-        // 1. https://buyle.id/creator/pos/
-        // 2. https://buyle.id/creator/pos/reports
-        // 3. https://buyle.id/creator/pos/settings
-        $isPinGuardedRoute = request()->is('creator/pos')
-            || request()->is('creator/pos/reports*')
-            || request()->is('creator/pos/settings*')
-            || request()->routeIs('creator.pos.index')
-            || request()->routeIs('pos.index')
-            || request()->routeIs('creator.pos.reports*')
-            || request()->routeIs('creator.pos.settings*');
+        $isFromPos = request('from') === 'pos' || request()->query('from') === 'pos';
+
+        // PIN HANYA AKTIF saat masuk ke produk atau payout settings dari POS:
+        // 1. https://buyle.id/creator/products?from=pos
+        // 2. https://buyle.id/creator/payout-settings?from=pos
+        // Kasir POS (/creator/pos) kini langsung terbuka bebas PIN untuk kenyamanan transaksi kasir
+        $isPinGuardedRoute = $isFromPos && (
+            request()->is('creator/products*')
+            || request()->routeIs('creator.products.*')
+            || request()->is('creator/payout*')
+            || request()->routeIs('creator.payout*')
+        );
 
         $isPosRoute = request()->is('creator/pos*') || request()->is('login-pos*') || request()->routeIs('creator.pos.*') || request()->routeIs('pos.*');
         $hasAppPin = $authUser && (!empty($authUser->pos_pin) || !empty($authUser->security_pin));
-        $pwaUnlockedKey = 'pos_pwa_unlocked';
+        $pwaUnlockedKey = 'pos_secret_unlocked';
         $hasBiometric = $authUser && (bool) $authUser->biometric_enabled;
-        // Hanya aktif pada route yang ditentukan (POS, Laporan POS, Pengaturan POS)
+        // Hanya aktif pada route data rahasia usaha (?from=pos pada produk & payout settings)
         $hasSecurityLock = $isPinGuardedRoute && ($hasAppPin || $hasBiometric);
 
         // Fallback Avatar: 1. Pos Receipt Logo -> 2. Creator Profile Avatar -> 3. User Avatar
@@ -934,8 +935,13 @@
                                 </path>
                             </svg>
                         </button>
-                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-top:0.75rem;">Sentuh untuk scan
-                            ulang</div>
+                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-top:0.75rem;">Sentuh untuk scan ulang</div>
+                        <div style="margin-top:1.25rem;">
+                            <a href="{{ route('creator.pos.index') }}"
+                                style="background:none; border:none; color:#64748b; font-size:0.8rem; font-weight:600; text-decoration:none; padding:6px 12px; border-radius:8px; display:inline-block;">
+                                ← Kembali ke Kasir POS
+                            </a>
+                        </div>
                     </div>
                 @endif
 
@@ -990,6 +996,10 @@
                     </div>
 
                     <div style="margin-top:1.35rem; display:flex; align-items:center; justify-content:center; gap:1.25rem;">
+                        <a href="{{ route('creator.pos.index') }}"
+                            style="background:none; border:none; color:#64748b; font-size:0.78rem; font-weight:600; text-decoration:none; padding:4px 8px; border-radius:6px; transition:color 0.15s ease;">
+                            Kembali ke Kasir
+                        </a>
                         <button type="button" onclick="openForgotPinModal()"
                             style="background:none; border:none; color:#16a34a; font-size:0.78rem; font-weight:700; cursor:pointer; padding:4px 8px; border-radius:6px; transition:background 0.15s ease;">
                             Lupa PIN?

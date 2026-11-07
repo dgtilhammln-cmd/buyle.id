@@ -228,8 +228,9 @@ class SellerProductController extends Controller
             $msg .= " Produk ini telah dikirim ke Tim Buyle untuk proses persetujuan (approval) White Label.";
         }
 
+        $redirectParams = ($request->query('from') === 'pos' || $request->input('from') === 'pos') ? ['from' => 'pos'] : [];
         return redirect()
-            ->route('creator.products.index')
+            ->route('creator.products.index', $redirectParams)
             ->with('success', $msg);
     }
 
@@ -429,8 +430,9 @@ class SellerProductController extends Controller
             $msg .= ' Status White Label diajukan untuk ditinjau oleh Admin Tim Buyle.';
         }
 
+        $redirectParams = ($request->query('from') === 'pos' || $request->input('from') === 'pos') ? ['from' => 'pos'] : [];
         return redirect()
-            ->route('creator.products.edit', $product)
+            ->route('creator.products.edit', array_merge(['product' => $product->id], $redirectParams))
             ->with('success', $msg);
     }
 

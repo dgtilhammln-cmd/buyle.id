@@ -574,17 +574,20 @@
                     </svg>
                     Simpan Perubahan
                 </button>
-                <a href="{{ route('creator.products.index') }}" class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
+                <a href="{{ route('creator.products.index', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
                     Batal
                 </a>
             </div>
         </div>
 
         <div class="prof-content">
-            <form action="{{ route('creator.products.update', $product->id) }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('creator.products.update', array_merge(['product' => $product->id], request('from') === 'pos' ? ['from' => 'pos'] : [])) }}" method="POST" enctype="multipart/form-data"
                 id="productForm">
                 @csrf
                 @method('PUT')
+                @if(request('from') === 'pos')
+                    <input type="hidden" name="from" value="pos">
+                @endif
 
                 @if($errors->any())
                     <div
@@ -620,14 +623,18 @@
 
                                 <div class="form-group">
                                     <label class="form-label">Tipe Produk <span>*</span></label>
+                                    @php
+                                        $defaultType = request('from') === 'pos' ? 'makanan' : $product->product_type;
+                                        $selectedType = old('product_type', $defaultType);
+                                    @endphp
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="handleProductTypeSelectChange(this)" required>
-                                        <option value="external_link" {{ old('product_type', $product->product_type) == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
-                                        <option value="ticket" {{ old('product_type', $product->product_type) == 'ticket' ? 'selected' : '' }}>Tiket Event / Webinar</option>
-                                        <option value="service" {{ old('product_type', $product->product_type) == 'service' ? 'selected' : '' }}>Jasa / Layanan</option>
-                                        <option value="physical" {{ old('product_type', $product->product_type) == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang
+                                        <option value="external_link" {{ $selectedType == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
+                                        <option value="ticket" {{ $selectedType == 'ticket' ? 'selected' : '' }}>Tiket Event / Webinar</option>
+                                        <option value="service" {{ $selectedType == 'service' ? 'selected' : '' }}>Jasa / Layanan</option>
+                                        <option value="physical" {{ $selectedType == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang
                                         </option>
-                                        <option value="makanan" {{ old('product_type', $product->product_type) == 'makanan' ? 'selected' : '' }}>Makanan & Minuman (POS)
+                                        <option value="makanan" {{ $selectedType == 'makanan' ? 'selected' : '' }}>Makanan & Minuman (POS)
                                         </option>
                                     </select>
                                     <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">* Produk Digital & Tiket tampil di Marketplace, tipe lainnya di Bio Link.</span>
@@ -1528,7 +1535,7 @@
                 </div>
 
                 <div class="form-footer">
-                    <a href="{{ route('creator.products.index') }}" class="btn-cancel">Batal</a>
+                    <a href="{{ route('creator.products.index', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="btn-cancel">Batal</a>
                     <button type="submit" class="btn-submit">Simpan Perubahan</button>
                 </div>
             </form>
@@ -1880,7 +1887,7 @@
         }
 
         // ── KYC Verification Check on Product Type ──
-        let lastProductType = '{{ old('product_type', $product->product_type) }}';
+        let lastProductType = '{{ old('product_type', request('from') === 'pos' ? 'makanan' : $product->product_type) }}';
         const IS_CREATOR_VERIFIED = {{ auth()->user()?->isKycVerified() ? 'true' : 'false' }};
 
         function handleProductTypeSelectChange(selectEl) {

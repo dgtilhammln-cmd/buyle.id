@@ -7,6 +7,7 @@
 @section('topbar_actions')
   <div class="prod-actions-row">
     <form action="{{ route('creator.products.index') }}" method="GET" class="prod-search-form">
+      @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
       <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari..." class="prod-search-input">
       <button type="submit" class="prod-search-btn">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -63,7 +64,7 @@
       <span class="btn-add-text-short">✨</span>
     </button>
 
-    <a href="{{ route('creator.products.create') }}" class="btn-primary prod-add-btn">
+    <a href="{{ route('creator.products.create', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="btn-primary prod-add-btn">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />
@@ -1366,6 +1367,7 @@
     <form action="{{ route('creator.products.index') }}" method="GET" style="display:flex; align-items:center; position:relative; width:100%;">
       @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
       @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif
+      @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
       <div style="position:absolute; left:14px; display:flex; align-items:center; pointer-events:none; color:#94a3b8;">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8" />
@@ -1563,7 +1565,7 @@
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
               <div style="display:inline-flex;gap:.5rem;align-items:center;">
-                <a href="{{ route('creator.products.edit', $s) }}" title="Edit"
+                <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') === 'pos' ? ['from' => 'pos'] : [])) }}" title="Edit"
                   style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(59,130,246,0.08);border-radius:8px;color:#3B82F6;text-decoration:none;transition:all .2s;"
                   onmouseover="this.style.background='rgba(59,130,246,0.16)'"
                   onmouseout="this.style.background='rgba(59,130,246,0.08)'">
@@ -1663,7 +1665,7 @@
               
             </div>
             <div style="display:flex;gap:.25rem;">
-              <a href="{{ route('creator.products.edit', $s) }}" title="Edit"
+              <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') === 'pos' ? ['from' => 'pos'] : [])) }}" title="Edit"
                 style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;color:#3B82F6;transition:all .2s;"
                 onmouseover="this.style.background='rgba(59,130,246,0.2)'"
                 onmouseout="this.style.background='rgba(59,130,246,0.1)'">
@@ -2139,7 +2141,7 @@
     </a>
 
     {{-- 3. Tambah Produk FAB --}}
-    <a href="{{ route('creator.products.create') }}" class="prod-fab-btn prod-fab-add" title="Tambah Produk">
+    <a href="{{ route('creator.products.create', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="prod-fab-btn prod-fab-add" title="Tambah Produk">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />
@@ -2232,7 +2234,7 @@
   function redirectToCreateWithData(item, productType) {
     item.product_type = productType || item.product_type || 'physical';
     sessionStorage.setItem('smart_imported_item', JSON.stringify(item));
-    window.location.href = '{{ route("creator.products.create") }}?smart_import=1';
+    window.location.href = '{{ route("creator.products.create") }}?smart_import=1' + ('{{ request("from") }}' === 'pos' ? '&from=pos' : '');
   }
 
   // SCAN AI — process uploaded photo directly
