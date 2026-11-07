@@ -4310,7 +4310,7 @@
                                 </div>
                                 <div class="card-body" id="sortable-blocks">
                                     @php
-                                        $typeBlocks = $blocks->reject(fn($b) => in_array($b->type, ['buyle_product', 'buyle_affiliate', 'custom_product']));
+                                        $typeBlocks = $blocks->reject(function($b) { return in_array($b->type, ['buyle_product', 'buyle_affiliate', 'custom_product']); });
                                     @endphp
                                     @forelse($typeBlocks as $block)
                                         <div class="block-item" data-id="{{ $block->id }}"
@@ -4801,7 +4801,7 @@
                                 </div>
                                 <div class="card-body">
                                     @forelse($myProducts as $product)
-                                        @php $alreadyAdded = $blocks->contains(fn($b) => ($b->data_json['product_id'] ?? null) == $product->id); @endphp
+                                        @php $alreadyAdded = $blocks->contains(function($b) use ($product) { return ($b->data_json['product_id'] ?? null) == $product->id; }); @endphp
                                         <div
                                             style="display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0; border-bottom:1px solid #f3f7f3;">
                                             @if($product->image)
@@ -6863,7 +6863,7 @@
                             $commRate = $affProduct->affiliate_commission_rate ?? 10;
                             $commRp = round(($effPrice * $commRate) / 100);
                             $isAdded = in_array($affProduct->id, $addedAffProductIds);
-                            $matchingBlock = $blocks->where('type', 'buyle_affiliate')->first(fn($b) => ($b->data_json['product_id'] ?? null) == $affProduct->id);
+                            $matchingBlock = $blocks->where('type', 'buyle_affiliate')->first(function($b) use ($affProduct) { return ($b->data_json['product_id'] ?? null) == $affProduct->id; });
                         @endphp
                         <div class="affiliateModalItem modal-card-item"
                             data-search="{{ strtolower($affProduct->name . ' ' . ($affProduct->seller->name ?? '')) }}">
@@ -7004,7 +7004,7 @@
                     @forelse($whitelabelProducts as $wlProd)
                         @php
                             $isAddedWl = in_array($wlProd->id, $addedWlProductIds);
-                            $matchingWlBlock = $blocks->where('type', 'buyle_product')->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
+                            $matchingWlBlock = $blocks->where('type', 'buyle_product')->first(function($b) use ($wlProd) { return ($b->data_json['product_id'] ?? null) == $wlProd->id; });
                         @endphp
                         <div class="whitelabelModalItem modal-card-item"
                             data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}">
@@ -7513,8 +7513,7 @@
                                 ({{ (float) (\App\Models\Setting::get('tax_rate', 11)) }}%)</span>
                             <span id="modalTaxAmount" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
                         </div>
-                        <div class="dcm-info-row"
-                            style="padding-top:0.5rem; margin-top:0.
+            
                                             <polyline points="15 3 21 3 21 9"></polyline>
                                             <line x1="10" y1="14" x2="21" y2="3"></line>
                                         </svg>
@@ -7607,7 +7606,7 @@
                     @forelse($whitelabelProducts as $wlProd)
                         @php
                             $isAddedWl = in_array($wlProd->id, $addedWlProductIds);
-                            $matchingWlBlock = $blocks->where('type', 'buyle_product')->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
+                            $matchingWlBlock = $blocks->where('type', 'buyle_product')->first(function($b) use ($wlProd) { return ($b->data_json['product_id'] ?? null) == $wlProd->id; });
                         @endphp
                         <div class="whitelabelModalItem modal-card-item"
                             data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}">

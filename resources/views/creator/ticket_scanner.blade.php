@@ -771,7 +771,7 @@
             .bio-layout {
                 flex-direction: column;
                 width: 100%;
-                gap: 1.25rem;
+                gap: 0.75rem;
             }
 
             .bio-sidebar {
@@ -782,10 +782,33 @@
                 width: 100%;
                 max-width: 100%;
                 box-sizing: border-box;
+                padding-bottom: 90px !important;
+            }
+
+            .prof-card {
+                border-radius: 16px !important;
+                margin-bottom: 0.85rem !important;
+                border: 1.5px solid #f1f5f9 !important;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+            }
+
+            .prof-card-head {
+                padding: 0.75rem 0.9rem !important;
+                font-size: 0.86rem !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 0.5rem !important;
+                flex-direction: row !important;
+                min-height: unset !important;
             }
 
             .form-body {
-                padding: 1.15rem 1rem;
+                padding: 0.75rem 0.85rem !important;
+            }
+
+            .prof-card-body {
+                padding: 0.75rem 0.85rem !important;
             }
 
             .sidebar-info-card,
@@ -833,31 +856,293 @@
                 max-width: 100%;
             }
 
+            /* ── TAB KEHADIRAN: Header Minimalis & Elegan ── */
+            .attendance-card-head {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                flex-direction: row !important;
+                padding: 0.75rem 0.85rem !important;
+                border-bottom: 1.5px solid #f1f5f9 !important;
+            }
+            .att-head-left {
+                display: flex !important;
+                align-items: center !important;
+                gap: 0.45rem !important;
+                font-weight: 800 !important;
+                font-size: 0.88rem !important;
+                color: #0f172a !important;
+            }
+            .att-head-title {
+                white-space: nowrap !important;
+            }
+            .att-head-extra {
+                display: none !important;
+            }
+            .att-head-actions {
+                display: flex !important;
+                align-items: center !important;
+                gap: 0.4rem !important;
+            }
+            .att-cache-pill {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                padding: 3px 8px !important;
+                background: #f0fdf4 !important;
+                border: 1px solid #bbf7d0 !important;
+                border-radius: 999px !important;
+                font-size: 0.68rem !important;
+                color: #166534 !important;
+                font-weight: 700 !important;
+            }
+            .cache-green-dot {
+                width: 6px !important;
+                height: 6px !important;
+                border-radius: 50% !important;
+                background: #16a34a !important;
+                display: inline-block !important;
+            }
+            .cache-pill-text {
+                display: none !important;
+            }
+            .btn-export-sm {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                padding: 0.35rem 0.65rem !important;
+                background: #ffffff !important;
+                border: 1.5px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+                color: #0f172a !important;
+                font-size: 0.72rem !important;
+                font-weight: 700 !important;
+                text-decoration: none !important;
+                height: 30px !important;
+                box-sizing: border-box !important;
+                white-space: nowrap !important;
+            }
+
+            /* ── TAB KEHADIRAN: Filter Minimalis ── */
+            .filter-panel {
+                padding: 0.55rem 0.65rem !important;
+                border-radius: 14px !important;
+                background: #f8fafc !important;
+                border: 1.5px solid #f1f5f9 !important;
+                margin-bottom: 0.75rem !important;
+            }
             .filter-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.45rem !important;
+            }
+            .filter-search-wrap {
+                grid-column: 1 / -1 !important;
+                display: flex !important;
+                gap: 0.35rem !important;
+                width: 100% !important;
+            }
+            .filter-select-wrap {
+                width: 100% !important;
+            }
+            .filter-select, .filter-input {
+                height: 34px !important;
+                font-size: 0.75rem !important;
+                padding: 0 0.5rem 0 1.85rem !important;
+                border-radius: 8px !important;
+                border: 1px solid #cbd5e1 !important;
+                background-color: #ffffff !important;
+            }
+            .btn-reset {
+                height: 34px !important;
+                padding: 0 0.65rem !important;
+                font-size: 0.74rem !important;
+                border-radius: 8px !important;
+                background: #ffffff !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+            .input-icon-wrap .icon-left {
+                width: 14px !important;
+                height: 14px !important;
+                left: 0.5rem !important;
             }
 
+            /* ── TAB KEHADIRAN: 2x2 Clean Minimalist Stat Cards (Never 1-Column) ── */
             .stat-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.45rem !important;
+                margin-bottom: 0.75rem !important;
             }
-        }
-
-        @media (max-width: 576px) {
-            .stat-grid {
-                grid-template-columns: 1fr;
+            .stat-card {
+                padding: 0.55rem 0.65rem !important;
+                border-radius: 12px !important;
+                border: 1.5px solid #f1f5f9 !important;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+            }
+            .stat-head {
+                margin-bottom: 0.25rem !important;
+            }
+            .stat-icon-bubble {
+                width: 26px !important;
+                height: 26px !important;
+                border-radius: 7px !important;
+            }
+            .stat-icon-bubble svg {
+                width: 13px !important;
+                height: 13px !important;
+            }
+            .stat-title {
+                font-size: 0.62rem !important;
+                font-weight: 700 !important;
+                color: #64748b !important;
+                letter-spacing: 0.01em !important;
+            }
+            .stat-val {
+                font-size: 1.15rem !important;
+                font-weight: 800 !important;
+                line-height: 1.15 !important;
+                letter-spacing: -0.02em !important;
+            }
+            .stat-sub {
+                font-size: 0.62rem !important;
+                margin-top: 0.15rem !important;
+                color: #64748b !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            .pill-badge {
+                padding: 1px 6px !important;
+                font-size: 0.62rem !important;
             }
 
-            .prof-card-head {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
+            /* ── TAB KEHADIRAN: Responsive Mobile Card List ── */
+            .table-container {
+                border: none !important;
+                background: transparent !important;
+                overflow: visible !important;
+                box-shadow: none !important;
+            }
+            .custom-table {
+                border: none !important;
+                background: transparent !important;
+                display: block !important;
+                width: 100% !important;
+            }
+            .custom-table thead {
+                display: none !important;
+            }
+            .custom-table tbody {
+                display: block !important;
+                width: 100% !important;
+            }
+            .custom-table tr {
+                display: grid !important;
+                grid-template-columns: 1fr auto !important;
+                gap: 0.35rem 0.5rem !important;
+                align-items: center !important;
+                background: #ffffff !important;
+                border: 1.5px solid #f1f5f9 !important;
+                border-radius: 14px !important;
+                padding: 0.75rem 0.85rem !important;
+                margin-bottom: 0.55rem !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+            }
+            .custom-table td {
+                border: none !important;
+                padding: 0 !important;
+            }
+            .custom-table td.row-index {
+                display: none !important;
+            }
+            .custom-table td.row-code {
+                grid-column: 1 / 2 !important;
+                order: 1 !important;
+            }
+            .custom-table td.row-status {
+                grid-column: 2 / 3 !important;
+                order: 2 !important;
+                text-align: right !important;
+            }
+            .custom-table td.row-holder {
+                grid-column: 1 / 3 !important;
+                order: 3 !important;
+                padding-top: 0.15rem !important;
+            }
+            .custom-table td.row-event {
+                grid-column: 1 / 3 !important;
+                order: 4 !important;
+                font-size: 0.74rem !important;
+                color: #64748b !important;
+            }
+            .custom-table td.row-time {
+                grid-column: 1 / 2 !important;
+                order: 5 !important;
+                padding-top: 0.2rem !important;
+                font-size: 0.72rem !important;
+            }
+            .custom-table td.row-action {
+                grid-column: 2 / 3 !important;
+                order: 6 !important;
+                text-align: right !important;
+                padding-top: 0.2rem !important;
+            }
+            .btn-action-sm {
+                padding: 0.35rem 0.65rem !important;
+                font-size: 0.74rem !important;
+                border-radius: 8px !important;
+                font-weight: 700 !important;
             }
 
-            .btn-export {
-                width: 100%;
-                justify-content: center;
+            /* ── TAB GATE: Gate Staff Pass Kompak di Mobile ── */
+            .gate-event-card {
+                padding: 0.75rem 0.85rem !important;
+                border-radius: 14px !important;
+            }
+            .gate-v-divider {
+                display: none !important;
+            }
+            .gate-pin-box, .gate-sched-box {
+                flex: 1 1 100% !important;
+                min-width: 0 !important;
+            }
+
+            /* ── TAB e-KYC: Compact Styling di Mobile ── */
+            .kyc-verified-box, .kyc-pending-box {
+                padding: 0.85rem !important;
+                gap: 0.75rem !important;
+                border-radius: 14px !important;
+            }
+            .verified-icon-wrap, .pending-icon-wrap {
+                width: 38px !important;
+                height: 38px !important;
+            }
+            .verified-icon-wrap svg, .pending-icon-wrap svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+            .verified-meta-grid, .pending-meta-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.35rem !important;
+                font-size: 0.78rem !important;
+                padding-top: 0.65rem !important;
+                margin-top: 0.65rem !important;
+            }
+            .kyc-intro-card {
+                padding: 0.75rem !important;
+                border-radius: 12px !important;
+            }
+            .kyc-intro-title {
+                font-size: 0.82rem !important;
+            }
+            .kyc-intro-text {
+                font-size: 0.75rem !important;
+                line-height: 1.45 !important;
+            }
+            .kyc-badge-pill {
+                font-size: 0.68rem !important;
+                padding: 2px 8px !important;
             }
         }
 
@@ -1442,33 +1727,6 @@
         </button>
     </div>
 
-    {{-- Quick Mobile Stats Chips (Hadir & Total Tiket, inspired by /pos cards) --}}
-    <div class="scanner-mobile-stats-row">
-        <div class="sm-stat-card">
-            <div class="sm-stat-icon" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
-            <div class="sm-stat-content">
-                <span class="sm-stat-label">Hadir (Checked-In)</span>
-                <span class="sm-stat-val" id="smStatCheckedIn">{{ number_format($stats['checked_in']) }}</span>
-            </div>
-        </div>
-        <div class="sm-stat-card">
-            <div class="sm-stat-icon" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
-                    <path d="M13 5v14" />
-                </svg>
-            </div>
-            <div class="sm-stat-content">
-                <span class="sm-stat-label">Total Tiket</span>
-                <span class="sm-stat-val" id="smStatTotal">{{ number_format($stats['total']) }}</span>
-            </div>
-        </div>
-    </div>
-
     <div class="bio-layout">
 
         {{-- SUB SIDEBAR NAV --}}
@@ -1639,6 +1897,34 @@
             @if(isset($kyc) && $kyc->status === 'verified')
                 <div id="tab-scanner" class="payout-tab-pane"
                     style="display: {{ $activeTab === 'scanner' ? 'block' : 'none' }};">
+
+                    {{-- Quick Mobile Stats Chips (Hanya tampil di tab scanner) --}}
+                    <div class="scanner-mobile-stats-row">
+                        <div class="sm-stat-card">
+                            <div class="sm-stat-icon" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="sm-stat-content">
+                                <span class="sm-stat-label">Hadir (Checked-In)</span>
+                                <span class="sm-stat-val" id="smStatCheckedIn">{{ number_format($stats['checked_in']) }}</span>
+                            </div>
+                        </div>
+                        <div class="sm-stat-card">
+                            <div class="sm-stat-icon" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                                    <path d="M13 5v14" />
+                                </svg>
+                            </div>
+                            <div class="sm-stat-content">
+                                <span class="sm-stat-label">Total Tiket</span>
+                                <span class="sm-stat-val" id="smStatTotal">{{ number_format($stats['total']) }}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="prof-card">
                         <div class="prof-card-head">
                             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -1894,31 +2180,30 @@
                 {{-- TAB 2: DATA KEHADIRAN & EVENT --}}
                 <div id="tab-data" class="payout-tab-pane" style="display: {{ $activeTab === 'data' ? 'block' : 'none' }};">
                     <div class="prof-card">
-                        <div class="prof-card-head">
-                            <div style="display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                        <div class="prof-card-head attendance-card-head">
+                            <div class="att-head-left">
+                                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                     <circle cx="9" cy="7" r="4" />
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                 </svg>
-                                Data Kehadiran Pengunjung & Rekap Event
+                                <span class="att-head-title">Data Kehadiran</span>
+                                <span class="att-head-extra">Pengunjung & Rekap</span>
                             </div>
-                            <div style="display:flex; align-items:center; gap:0.5rem;">
-                                <span id="cacheStatusBadge"
-                                    style="display:inline-flex; align-items:center; gap:4px; font-size:0.74rem; font-weight:700; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; padding:0.25rem 0.65rem; border-radius:999px;">
-                                    <span
-                                        style="width:6px; height:6px; background:#16a34a; border-radius:50%; display:inline-block;"></span>
-                                    Cache Cepat Aktif
+                            <div class="att-head-actions">
+                                <span id="cacheStatusBadge" class="att-cache-pill" title="Cache Cepat Aktif">
+                                    <span class="cache-green-dot"></span>
+                                    <span class="cache-pill-text">Cache Aktif</span>
                                 </span>
-                                <a href="{{ route('creator.ticket.scanner.export', request()->all()) }}" class="btn-export">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                <a href="{{ route('creator.ticket.scanner.export', request()->all()) }}" class="btn-export-sm" title="Export Excel/CSV">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
                                         viewBox="0 0 24 24">
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                         <polyline points="7 10 12 15 17 10" />
                                         <line x1="12" y1="15" x2="12" y2="3" />
                                     </svg>
-                                    Export Excel/CSV
+                                    <span>Export</span>
                                 </a>
                             </div>
                         </div>
@@ -1928,9 +2213,29 @@
                             {{-- Modern Instant Filter Panel (0ms Latency & Offline Cache) --}}
                             <div class="filter-panel">
                                 <div class="filter-grid">
+                                    {{-- Search Input (0ms Live Filter, Tanpa Loading Page) --}}
+                                    <div class="filter-search-wrap">
+                                        <div class="input-icon-wrap" style="flex: 1;">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24" class="icon-left">
+                                                <circle cx="11" cy="11" r="8" />
+                                                <path d="M21 21l-4.35-4.35" />
+                                            </svg>
+                                            <input type="text" id="instantSearchInput" value="{{ $search }}"
+                                                class="filter-input"
+                                                placeholder="Ketik nama, email, no HP, kode tiket..."
+                                                oninput="runInstantFilter()" autocomplete="off">
+                                        </div>
+
+                                        <button type="button" onclick="resetInstantFilter()" class="btn-reset"
+                                            title="Reset Pencarian & Filter">
+                                            Reset
+                                        </button>
+                                    </div>
+
                                     {{-- Event Selector --}}
-                                    <div class="input-icon-wrap">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                    <div class="input-icon-wrap filter-select-wrap">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
                                             viewBox="0 0 24 24" class="icon-left">
                                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                             <line x1="16" y1="2" x2="16" y2="6" />
@@ -1942,48 +2247,23 @@
                                             @foreach($events as $event)
                                                 <option value="{{ $event->id }}" {{ (string) $selectedEventId === (string) $event->id ? 'selected' : '' }}>
                                                     {{ $event->name }}
-                                                    ({{ $event->event_date ? $event->event_date->format('d M Y') : 'Event' }})
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-
                                     {{-- Status Filter --}}
-                                    <div class="input-icon-wrap">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                    <div class="input-icon-wrap filter-select-wrap">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
                                             viewBox="0 0 24 24" class="icon-left">
                                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                                             <polyline points="22 4 12 14.01 9 11.01" />
                                         </svg>
                                         <select id="instantStatusFilter" class="filter-select" onchange="runInstantFilter()">
                                             <option value="">Semua Status</option>
-                                            <option value="used" {{ $statusFilter === 'used' ? 'selected' : '' }}>Checked-In
-                                                (Hadir)</option>
-                                            <option value="valid" {{ $statusFilter === 'valid' ? 'selected' : '' }}>Belum Hadir
-                                            </option>
-                                            <option value="cancelled" {{ $statusFilter === 'cancelled' ? 'selected' : '' }}>
-                                                Dibatalkan</option>
+                                            <option value="used" {{ $statusFilter === 'used' ? 'selected' : '' }}>Checked-In (Hadir)</option>
+                                            <option value="valid" {{ $statusFilter === 'valid' ? 'selected' : '' }}>Belum Hadir</option>
+                                            <option value="cancelled" {{ $statusFilter === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                                         </select>
-                                    </div>
-
-                                    {{-- Search Input (0ms Live Filter, Tanpa Loading Page) --}}
-                                    <div style="display: flex; gap: 0.5rem; width: 100%;">
-                                        <div class="input-icon-wrap" style="flex: 1;">
-                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24" class="icon-left">
-                                                <circle cx="11" cy="11" r="8" />
-                                                <path d="M21 21l-4.35-4.35" />
-                                            </svg>
-                                            <input type="text" id="instantSearchInput" value="{{ $search }}"
-                                                class="filter-input"
-                                                placeholder="Ketik nama, email, no HP, kode (instan 0ms)..."
-                                                oninput="runInstantFilter()" autocomplete="off">
-                                        </div>
-
-                                        <button type="button" onclick="resetInstantFilter()" class="btn-reset"
-                                            title="Reset Pencarian & Filter">
-                                            Reset
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -2084,14 +2364,14 @@
                                     <tbody id="attendanceTableBody">
                                         @forelse($tickets as $index => $ticket)
                                             <tr>
-                                                <td>{{ $tickets->firstItem() + $index }}</td>
-                                                <td>
+                                                <td class="row-index">{{ $tickets->firstItem() + $index }}</td>
+                                                <td class="row-code">
                                                     <span
                                                         style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
                                                         {{ $ticket->ticket_code }}
                                                     </span>
                                                 </td>
-                                                <td>
+                                                <td class="row-event">
                                                     <strong style="color: #0f172a; display: block; font-size: 0.84rem;">
                                                         {{ $ticket->product?->name ?? 'Event' }}
                                                     </strong>
@@ -2099,7 +2379,7 @@
                                                         {{ $ticket->product?->event_date ? $ticket->product->event_date->format('d M Y') : '' }}
                                                     </span>
                                                 </td>
-                                                <td>
+                                                <td class="row-holder">
                                                     <strong
                                                         style="color: #0f172a; display: block; font-size: 0.85rem;">{{ $ticket->holder_name ?? '-' }}</strong>
                                                     <span
@@ -2117,7 +2397,7 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="row-status">
                                                     @if($ticket->status === 'used')
                                                         <span class="badge-status badge-used">
                                                             <svg width="12" height="12" fill="none" stroke="currentColor"
@@ -2143,7 +2423,7 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="row-time">
                                                     @if($ticket->checked_in_at)
                                                         <span
                                                             style="font-weight: 700; color: #166534; display: block; font-size: 0.8rem;">
@@ -2173,7 +2453,7 @@
                                                             —</span>
                                                     @endif
                                                 </td>
-                                                <td style="text-align: center;">
+                                                <td style="text-align: center;" class="row-action">
                                                     @if($ticket->status !== 'cancelled')
                                                         <form action="{{ route('creator.ticket.scanner.toggle-checkin', $ticket->id) }}"
                                                             method="POST" style="display: inline-block;">
@@ -2357,7 +2637,7 @@
                                                 style="display:flex; gap:0.65rem; flex-wrap:wrap; align-items:flex-start; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.7rem; margin-bottom:0.55rem;">
 
                                                 {{-- PIN Box --}}
-                                                <div style="flex:1; min-width:170px;">
+                                                <div class="gate-pin-box" style="flex:1; min-width:170px;">
                                                     <div
                                                         style="font-size:0.71rem; font-weight:600; color:#475569; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.25rem;">
                                                         <svg width="11" height="11" fill="none" stroke="#1eb349" stroke-width="2.5"
@@ -2376,10 +2656,10 @@
                                                     </div>
                                                 </div>
 
-                                                <div style="width:1px; background:#e2e8f0; align-self:stretch; flex-shrink:0;"></div>
+                                                <div class="gate-v-divider" style="width:1px; background:#e2e8f0; align-self:stretch; flex-shrink:0;"></div>
 
                                                 {{-- Jadwal Box --}}
-                                                <div style="flex:1; min-width:200px;">
+                                                <div class="gate-sched-box" style="flex:1; min-width:200px;">
                                                     <div
                                                         style="font-size:0.71rem; font-weight:600; color:#475569; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.25rem;">
                                                         <svg width="11" height="11" fill="none" stroke="#1eb349" stroke-width="2.5"
@@ -4762,16 +5042,16 @@
 
                     html += `<tr id="row-ticket-${t.id}">
                                         <td class="row-index">${index + 1}</td>
-                                        <td>
+                                        <td class="row-code">
                                             <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
                                                 ${t.code}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td class="row-event">
                                             <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
                                             <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
                                         </td>
-                                        <td>
+                                        <td class="row-holder">
                                             <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
                                             <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
                                             <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>

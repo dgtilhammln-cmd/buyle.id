@@ -622,7 +622,7 @@
             $linkBlocks = $blocks->whereIn('type', ['link', 'pdf'])->sortBy('order')->values();
             $imageBlocks = $blocks->where('type', 'image')->sortBy('order')->values();
             $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels'])->sortBy('order')->values();
-            $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
+            $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortBy(function($b) { return [$b->order ?? 0, $b->id]; })->values();
 
             $isBlockPhysical = function($b) use ($products) {
                 if (in_array($b->type, ['buyle_product', 'buyle_affiliate', 'shopee', 'affiliate'])) {
@@ -649,7 +649,7 @@
                 return false;
             };
 
-            $customProdBlocks = $blocks->filter(fn($b) => $isBlockPhysical($b))->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
+            $customProdBlocks = $blocks->filter(function($b) use ($isBlockPhysical) { return $isBlockPhysical($b); })->sortBy(function($b) { return [$b->order ?? 0, $b->id]; })->values();
 
             $buyleBlocks = $blocks->filter(function($b) use ($products, $isBlockPhysical) {
                 if ($isBlockPhysical($b)) return false;
@@ -661,7 +661,7 @@
                     return true;
                 }
                 return false;
-            })->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
+            })->sortBy(function($b) { return [$b->order ?? 0, $b->id]; })->values();
         @endphp
 
         {{-- TikTok & Reels Slider --}}
