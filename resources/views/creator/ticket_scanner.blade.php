@@ -1069,9 +1069,18 @@
             to   { transform: translateY(0);    opacity: 1; }
         }
         @keyframes scanLineAnim {
-            0%   { top: 10%; }
-            50%  { top: 80%; }
-            100% { top: 10%; }
+            0% {
+                transform: translateY(8px);
+                opacity: 0.65;
+            }
+            50% {
+                transform: translateY(calc(min(260px, 72vw) - 16px));
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(8px);
+                opacity: 0.65;
+            }
         }
         @keyframes pulseGreen {
             0%, 100% { box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.4); }
@@ -1134,16 +1143,19 @@
         .fs-corner.tr { top: 0; right: 0; border-width: 4px 4px 0 0; border-radius: 0 18px 0 0; }
         .fs-corner.bl { bottom: 0; left: 0;  border-width: 0 0 4px 4px; border-radius: 0 0 0 18px; }
         .fs-corner.br { bottom: 0; right: 0; border-width: 0 4px 4px 0; border-radius: 0 0 18px 0; }
-        /* Scan line (laser bar matching Doritos reference) */
+        /* Scan line (hardware GPU accelerated, buttery smooth 60-120fps) */
         #fsScanLine {
             position: absolute;
-            left: 2px;
-            right: 2px;
+            top: 0;
+            left: 6px;
+            right: 6px;
             height: 3px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.2), #ffffff, #86efac, #ffffff, rgba(255,255,255,0.2));
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), #ffffff, #86efac, #ffffff, rgba(255,255,255,0.4), transparent);
             border-radius: 999px;
-            animation: scanLineAnim 2.2s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 20px rgba(30, 179, 73, 0.6);
+            animation: scanLineAnim 2.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.95), 0 0 24px rgba(34, 197, 94, 0.7);
+            will-change: transform;
+            pointer-events: none;
         }
 
         /* Top bar in fullscreen: safe-zone-aware */
@@ -3984,67 +3996,122 @@
         }
 
         // ══════════════════════════════════════════════════════════════════════
-        // FEEDBACK SUARA (WEB AUDIO SYNTHESIZER — ZERO ASSET LAG)
+        // FEEDBACK SUARA (WEB AUDIO SYNTHESIZER — ZERO ASSET LAG & MOBILE UNLOCKED)
         // ══════════════════════════════════════════════════════════════════════
+        let sharedAudioCtx = null;
+
+        function unlockAudio() {
+            try {
+                if (!sharedAudioCtx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) sharedAudioCtx = new AudioCtx();
+                }
+                if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
+                    sharedAudioCtx.resume();
+                }
+            } catch (e) {
+                console.warn('[Audio] unlock warning:', e);
+            }
+        }
+
+        // Unlock audio context on any user touch/click on screen
+        document.addEventListener('touchstart', unlockAudio, { passive: true });
+        document.addEventListener('click', unlockAudio, { passive: true });
+
         function playScanBeep(status = 'valid') {
+            unlockAudio();
+
+            // Haptic vibration feedback
             if (navigator.vibrate) {
                 try {
-                    navigator.vibrate(status === 'valid' ? [80, 40, 80] : [180, 60, 180]);
+                    navigator.vibrate(status === 'valid' ? [80, 40, 80] : [200, 90, 250]);
                 } catch (e) { }
             }
 
             try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (!AudioCtx) return;
-                const ctx = new AudioCtx();
+                if (!sharedAudioCtx) unlockAudio();
+                const ctx = sharedAudioCtx;
+                if (!ctx) return;
 
-                if (status === 'valid') {
-                    // Suara "CENTING" kristal bel ding yang sangat renyah, nyaring, dan bersih
-                    const now = ctx.currentTime;
-
-                    // Nada Utama (C7 ~2093Hz) dengan exponential decay alami
-                    const osc1 = ctx.createOscillator();
-                    const gain1 = ctx.createGain();
-                    osc1.type = 'sine';
-                    osc1.frequency.setValueAtTime(2093, now);
-                    osc1.frequency.exponentialRampToValueAtTime(2060, now + 0.45);
-
-                    gain1.gain.setValueAtTime(0.4, now);
-                    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
-
-                    osc1.connect(gain1);
-                    gain1.connect(ctx.destination);
-                    osc1.start(now);
-                    osc1.stop(now + 0.5);
-
-                    // Harmoni Kilau Kristal Overtone (G7 ~3136Hz)
-                    const osc2 = ctx.createOscillator();
-                    const gain2 = ctx.createGain();
-                    osc2.type = 'sine';
-                    osc2.frequency.setValueAtTime(3136, now);
-                    gain2.gain.setValueAtTime(0.2, now);
-                    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-
-                    osc2.connect(gain2);
-                    gain2.connect(ctx.destination);
-                    osc2.start(now);
-                    osc2.stop(now + 0.3);
+                if (ctx.state === 'suspended') {
+                    ctx.resume().then(() => playTones(ctx, status)).catch(() => {});
                 } else {
-                    // Warning low tone
-                    const now = ctx.currentTime;
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(220, now);
-                    osc.frequency.setValueAtTime(180, now + 0.1);
-                    gain.gain.setValueAtTime(0.3, now);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(now);
-                    osc.stop(now + 0.3);
+                    playTones(ctx, status);
                 }
-            } catch (e) { }
+            } catch (e) {
+                console.warn('[Audio] play error:', e);
+            }
+        }
+
+        function playTones(ctx, status) {
+            const now = ctx.currentTime;
+
+            if (status === 'valid') {
+                // ── SUARA BERHASIL: Chime Ding Dua Nada Kristal yang Sangat Nyaring & Renyah ──
+                // Nada 1: C7 (~2093 Hz)
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(2093, now);
+                osc1.frequency.exponentialRampToValueAtTime(2060, now + 0.35);
+
+                gain1.gain.setValueAtTime(0.55, now);
+                gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.45);
+
+                // Nada 2: Overtone E7 (~2637 Hz) meluncur harmonis
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(2637, now + 0.08);
+                osc2.frequency.exponentialRampToValueAtTime(2600, now + 0.4);
+
+                gain2.gain.setValueAtTime(0.0001, now);
+                gain2.gain.setValueAtTime(0.45, now + 0.08);
+                gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.start(now + 0.08);
+                osc2.stop(now + 0.5);
+
+            } else {
+                // ── SUARA GAGAL / SUDAH CHECK-IN: Double-Pulse Error Buzzer (Wah-Wah Rendah Tegas) ──
+                // Pulse 1: 220Hz (A3)
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sawtooth';
+                osc1.frequency.setValueAtTime(220, now);
+                osc1.frequency.exponentialRampToValueAtTime(180, now + 0.16);
+
+                gain1.gain.setValueAtTime(0.45, now);
+                gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.18);
+
+                // Pulse 2: 150Hz (D3) lebih rendah, tanda penolakan tegas
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'sawtooth';
+                osc2.frequency.setValueAtTime(160, now + 0.22);
+                osc2.frequency.exponentialRampToValueAtTime(130, now + 0.45);
+
+                gain2.gain.setValueAtTime(0.0001, now);
+                gain2.gain.setValueAtTime(0.5, now + 0.22);
+                gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
+
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.start(now + 0.22);
+                osc2.stop(now + 0.48);
+            }
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -4301,6 +4368,7 @@
 
         // ── Open Fullscreen Scanner ──
         async function openFullscreenScanner() {
+            unlockAudio();
             const overlay = document.getElementById('fullscreenScannerOverlay');
             const videoEl = document.getElementById('fsVideoEl');
             if (!overlay || !videoEl) return;
@@ -4502,6 +4570,7 @@
                 showFsScanCard(data);
             })
             .catch(() => {
+                playScanBeep('invalid');
                 showFsScanCard({
                     status: 'invalid',
                     title: 'Koneksi Bermasalah',
@@ -4528,8 +4597,12 @@
             // Loading state
             if (data.status === 'loading') {
                 card.classList.add('show');
-                if (statusBadge) statusBadge.innerHTML = `<span style="animation:spin 1s linear infinite;display:inline-block;">⏳</span> Memverifikasi...`;
-                if (statusBadge) { statusBadge.className = 'fs-card-status-badge'; statusBadge.style.background='#f8fafc'; statusBadge.style.color='#64748b'; statusBadge.style.border='1px solid #e2e8f0'; }
+                if (statusBadge) {
+                    statusBadge.style.background = '#f8fafc';
+                    statusBadge.style.color = '#64748b';
+                    statusBadge.style.border = '1px solid #e2e8f0';
+                    statusBadge.innerHTML = `<span style="animation:spin 1s linear infinite;display:inline-block;">⏳</span> Memverifikasi...`;
+                }
                 if (eventNameEl) eventNameEl.textContent = 'Sedang memeriksa tiket...';
                 if (eventDateEl) eventDateEl.textContent = '';
                 if (holderEl) holderEl.textContent = '—';
@@ -4542,15 +4615,24 @@
             const isValid = data.status === 'valid';
             const isUsed  = data.status === 'used';
 
-            // Status badge
+            // Status badge (Hijau untuk Berhasil, Kuning untuk Sudah Check-In, Merah untuk Tidak Valid)
             if (statusBadge) {
                 statusBadge.className = 'fs-card-status-badge ' + (isValid ? 'valid' : (isUsed ? 'used' : 'invalid'));
                 if (isValid) {
-                    statusBadge.innerHTML = `<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> CHECK-IN BERHASIL`;
+                    statusBadge.style.background = '#dcfce7';
+                    statusBadge.style.color = '#15803d';
+                    statusBadge.style.border = '1.5px solid #86efac';
+                    statusBadge.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> CHECK-IN BERHASIL`;
                 } else if (isUsed) {
-                    statusBadge.innerHTML = `<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> SUDAH CHECK-IN`;
+                    statusBadge.style.background = '#fef3c7';
+                    statusBadge.style.color = '#b45309';
+                    statusBadge.style.border = '1.5px solid #fde68a';
+                    statusBadge.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> SUDAH CHECK-IN`;
                 } else {
-                    statusBadge.innerHTML = `<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> TIKET TIDAK VALID`;
+                    statusBadge.style.background = '#fee2e2';
+                    statusBadge.style.color = '#b91c1c';
+                    statusBadge.style.border = '1.5px solid #fca5a5';
+                    statusBadge.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> TIKET TIDAK VALID`;
                 }
             }
 
