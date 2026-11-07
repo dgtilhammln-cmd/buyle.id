@@ -12,25 +12,22 @@
             --pos-gradient: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
         }
 
-        body {
-            background-color: #f8fafc !important;
-        }
-
-        /* Reset Global Layout Wrapper (Full Centered, Anti-Mepet, No Overflow) */
-        body {
-            background: #f8fafc !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .cr-main-wrapper {
-            margin-left: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            box-sizing: border-box !important;
-            overflow-x: hidden !important;
-            background: #f8fafc !important;
+        /* ── Reset Global Layout Wrapper (Responsive Mobile, Tablet & Desktop) ── */
+        @media (max-width: 1024px) {
+            body {
+                background: #f8fafc !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .cr-main-wrapper {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important;
+                background: #f8fafc !important;
+            }
         }
 
         @media (max-width: 767px) {
@@ -54,23 +51,63 @@
             }
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 768px) and (max-width: 1024px) {
             .cr-main-canvas {
-                margin: 0 !important;
-                padding: 1.5rem 2rem 80px 2rem !important;
+                margin: 0 auto !important;
+                padding: 1.25rem 1.75rem 100px 1.75rem !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 box-sizing: border-box !important;
                 background: #ffffff !important;
-                border-radius: 36px 0 0 0 !important;
-                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05) !important;
+                box-shadow: none !important;
             }
             .cr-main-wrapper {
-                background: #f1f5f9 !important;
+                background: #f8fafc !important;
             }
             .menu-hub-container {
                 width: 100% !important;
-                max-width: 680px !important;
+                max-width: 720px !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            body {
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            }
+            .cr-sidebar {
+                display: flex !important;
+                transform: none !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 240px !important;
+                z-index: 50 !important;
+            }
+            .cr-main-wrapper {
+                margin-left: 240px !important;
+                padding: 1.25rem 0 0 0 !important;
+                width: calc(100% - 240px) !important;
+                max-width: calc(100% - 240px) !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important;
+                background: transparent !important;
+            }
+            .cr-main-canvas {
+                margin: 0 !important;
+                padding: 1.5rem 2rem 100px 2rem !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                background: #ffffff !important;
+                border-radius: 40px 0 0 0 !important;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08) !important;
+            }
+            .menu-hub-container {
+                width: 100% !important;
+                max-width: 780px !important;
                 margin: 0 auto !important;
                 padding: 0 !important;
                 box-sizing: border-box !important;

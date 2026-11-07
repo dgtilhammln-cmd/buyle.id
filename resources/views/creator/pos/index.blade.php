@@ -420,15 +420,15 @@
 
         .cart-item-info {
             flex: 1;
-            padding-right: 0.5rem;
+            padding-right: 0.35rem;
             min-width: 0;
         }
 
         .cart-item-title {
             font-weight: 700;
-            font-size: 0.84rem;
+            font-size: 0.8rem;
             color: #0f172a;
-            line-height: 1.25;
+            line-height: 1.2;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -445,23 +445,25 @@
         .cart-qty-ctrl {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 2px;
+            flex-shrink: 0;
         }
 
         .btn-qty {
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             border-radius: 999px;
             border: 1.5px solid #cbd5e1;
             background: #ffffff;
             color: #0f172a;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.15s ease;
+            padding: 0;
         }
 
         .btn-qty:hover {
@@ -474,20 +476,20 @@
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             color: #ffffff !important;
             border: none !important;
-            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.35) !important;
+            box-shadow: 0 2px 6px rgba(30, 179, 73, 0.3) !important;
         }
 
         .btn-qty-plus:hover {
             background: linear-gradient(135deg, #16963c 0%, #8cb82b 100%) !important;
             color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.5) !important;
+            box-shadow: 0 4px 10px rgba(30, 179, 73, 0.4) !important;
             transform: scale(1.05);
         }
 
         .qty-num {
             font-weight: 800;
-            font-size: 0.88rem;
-            min-width: 22px;
+            font-size: 0.82rem;
+            min-width: 18px;
             text-align: center;
         }
 
@@ -495,19 +497,26 @@
         .summary-box {
             background: #f8fafc;
             border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            border-radius: 16px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.85rem;
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.83rem;
+            gap: 0.65rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.8rem;
             color: #475569;
+        }
+
+        .summary-row>span:first-child,
+        .summary-row>div:first-child {
+            font-size: 0.8rem;
+            color: #475569;
+            line-height: 1.3;
         }
 
         .summary-row>span:last-child,
@@ -515,15 +524,31 @@
             white-space: nowrap;
             flex-shrink: 0;
             text-align: right;
+            font-weight: 700;
+            font-size: 0.82rem;
         }
 
         .summary-total {
-            font-size: 1.15rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1.5px dashed #cbd5e1;
+            padding-top: 0.65rem;
+            margin-top: 0.65rem;
+            margin-bottom: 0;
+        }
+
+        .summary-total span:first-child {
+            font-size: 0.95rem;
             font-weight: 800;
             color: #0f172a;
-            border-top: 2px dashed #cbd5e1;
-            padding-top: 0.75rem;
-            margin-top: 0.75rem;
+        }
+
+        .summary-total span:last-child {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1eb349;
+            white-space: nowrap;
         }
 
         /* ── Thermal Receipt Printer Animation ───────────────────────────── */
@@ -2652,10 +2677,9 @@
             transform: scale(0.95);
         }
 
-        /* 6. Buyle POS Bottom Nav CSS moved below */
-
+        /* 6. Buyle POS Standard Bottom Navigation Bar (100% Identical Across All Screens) */
         .pos-bottom-nav-wrap {
-            display: none;
+            display: flex !important;
             position: fixed !important;
             bottom: 16px !important;
             left: 14px !important;
@@ -2667,11 +2691,6 @@
             justify-content: center !important;
             background: transparent !important;
             padding: 0 !important;
-        }
-        @media (max-width: 767px) {
-            .pos-bottom-nav-wrap {
-                display: flex !important;
-            }
         }
         .pos-bottom-nav-bar {
             pointer-events: auto !important;
@@ -3044,6 +3063,9 @@
 
         /* ── MOBILE SCREENS (< 768px) ── */
         @media (max-width: 767px) {
+            body {
+                background: #ffffff !important;
+            }
             .cr-main-canvas {
                 padding: 0.5rem 0.75rem 150px 0.75rem !important;
                 min-height: auto !important;
@@ -3084,9 +3106,6 @@
             .pos-mobile-floating-bar {
                 display: flex !important;
             }
-            .pos-bottom-nav-wrap {
-                display: flex !important;
-            }
             .product-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
                 padding-bottom: 210px !important;
@@ -3101,15 +3120,145 @@
             }
         }
 
-        /* ── LARGE SCREENS & DESKTOP (>= 1200px) ── */
-        @media (min-width: 1200px) {
+        /* ── TABLET SCREENS (768px to 1024px) ── */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            body {
+                background: #f8fafc !important;
+            }
+            .cr-main-wrapper {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                background: #f8fafc !important;
+            }
+            .cr-main-canvas {
+                padding: 1rem 1.25rem 100px 1.25rem !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                background: #f8fafc !important;
+                border-radius: 0 !important;
+                margin: 0 auto !important;
+            }
             .pos-wrapper {
-                grid-template-columns: minmax(0, 1fr) 380px !important;
-                gap: 1.25rem !important;
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) 340px !important;
+                gap: 1rem !important;
+                max-width: 100% !important;
+                align-items: start !important;
+                padding-bottom: 90px !important;
+            }
+            #cartPanel {
+                display: block !important;
+                position: -webkit-sticky !important;
+                position: sticky !important;
+                top: 1rem !important;
+                z-index: 40 !important;
+            }
+            #cartPanel .prof-card {
+                background: #ffffff !important;
+                border: 1.5px solid #e2e8f0 !important;
+                border-radius: 20px !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+            }
+            #cartPanel .cart-items-container {
+                max-height: calc(100vh - 430px) !important;
+                min-height: 160px !important;
+                overflow-y: auto !important;
+            }
+            .pos-mobile-floating-bar {
+                display: none !important;
             }
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
-                gap: 0.85rem !important;
+                display: grid !important;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+                gap: 0.65rem !important;
+                padding-bottom: 40px !important;
+            }
+            #posScreenTransactions {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 0 100px 0 !important;
+            }
+            .pos-desktop-nav-tabs {
+                display: flex !important;
+            }
+        }
+
+        /* ── DESKTOP SCREENS (>= 1025px) ── */
+        @media (min-width: 1025px) {
+            body {
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            }
+            .cr-sidebar {
+                display: flex !important;
+                transform: none !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 240px !important;
+                z-index: 50 !important;
+            }
+            .cr-main-wrapper {
+                margin-left: 240px !important;
+                padding: 1.25rem 0 0 0 !important;
+                width: calc(100% - 240px) !important;
+                max-width: calc(100% - 240px) !important;
+                box-sizing: border-box !important;
+                background: transparent !important;
+            }
+            .cr-main-canvas {
+                padding: 1.25rem 1.75rem 100px 1.75rem !important;
+                min-height: calc(100vh - 1.25rem) !important;
+                background: #f8fafc !important;
+                border-radius: 40px 0 0 0 !important;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08) !important;
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            .pos-wrapper {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) 360px !important;
+                gap: 1.25rem !important;
+                max-width: 100% !important;
+                align-items: start !important;
+                padding-bottom: 80px !important;
+            }
+            #cartPanel {
+                display: block !important;
+                position: -webkit-sticky !important;
+                position: sticky !important;
+                top: 1rem !important;
+                z-index: 40 !important;
+            }
+            #cartPanel .prof-card {
+                background: #ffffff !important;
+                border: 1.5px solid #e2e8f0 !important;
+                border-radius: 22px !important;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04) !important;
+            }
+            #cartPanel .cart-items-container {
+                max-height: calc(100vh - 430px) !important;
+                min-height: 180px !important;
+                overflow-y: auto !important;
+            }
+            .pos-mobile-floating-bar {
+                display: none !important;
+            }
+            .product-grid {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)) !important;
+                gap: 0.75rem !important;
+                padding-bottom: 40px !important;
+            }
+            #posScreenTransactions {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 0 80px 0 !important;
+            }
+            .pos-desktop-nav-tabs {
+                display: flex !important;
             }
         }
 
@@ -3721,19 +3870,16 @@
                                 <!-- Rendered dynamically by renderCartFees() -->
                             </div>
 
-                            <!-- Platform & Admin Fees Breakdown -->
-                            <div class="summary-row" style="font-size:0.75rem; color:#94a3b8; align-items:flex-start;">
-                                <span style="line-height:1.35; flex:1; min-width:0;">Platform Fee ({{ $platformFeeRate }}%)
-                                    &amp; Admin Fee ({{ $adminFeeRate }}%)</span>
-                                <span id="displaySystemFees"
-                                    style="white-space:nowrap; flex-shrink:0; text-align:right; font-weight:600; margin-left:8px;">Rp
-                                    0</span>
+                            <!-- Platform & Admin Fees Breakdown (Hanya tampil jika dibebankan ke pembeli dan bernilai > 0) -->
+                            <div class="summary-row" id="cartSystemFeeRow" style="font-size:0.8rem; color:#64748b; align-items:center; display:none;">
+                                <span id="displaySystemFeeLabel">Biaya Layanan</span>
+                                <span id="displaySystemFees" style="white-space:nowrap; font-weight:700; color:#0f172a;">Rp 0</span>
                             </div>
 
                             <!-- Grand Total -->
-                            <div class="summary-total summary-row">
+                            <div class="summary-total">
                                 <span>Total Bayar</span>
-                                <span style="color:#1eb349;" id="displayGrandTotal">Rp 0</span>
+                                <span id="displayGrandTotal">Rp 0</span>
                             </div>
                         </div>
 
@@ -7112,12 +7258,21 @@
                 const systemFees = platformFee + adminFee;
 
                 let grandTotal = 0;
-                if (posFeePayer === 'buyer') {
+                const feeRow = document.getElementById('cartSystemFeeRow');
+                if (posFeePayer === 'buyer' && systemFees > 0) {
                     grandTotal = Math.max(0, subtotal - discountAmount + customFeesTotal + systemFees);
-                    document.getElementById('displaySystemFees').innerText = 'Rp ' + formatRupiah(systemFees);
+                    if (feeRow) {
+                        feeRow.style.display = 'flex';
+                        const feeLabel = document.getElementById('displaySystemFeeLabel');
+                        if (feeLabel) feeLabel.innerText = 'Biaya Layanan (' + (platformFeeRate + adminFeeRate) + '%)';
+                        const feeVal = document.getElementById('displaySystemFees');
+                        if (feeVal) feeVal.innerText = '+Rp ' + formatRupiah(systemFees);
+                    }
                 } else {
                     grandTotal = Math.max(0, subtotal - discountAmount + customFeesTotal);
-                    document.getElementById('displaySystemFees').innerHTML = '<span style="color:#16a34a; font-weight:700;">Rp 0</span> <span style="font-size:0.7rem; color:#64748b;">(Ditanggung Penjual)</span>';
+                    if (feeRow) {
+                        feeRow.style.display = 'none';
+                    }
                 }
 
                 document.getElementById('displaySubtotal').innerText = 'Rp ' + formatRupiah(subtotal);
