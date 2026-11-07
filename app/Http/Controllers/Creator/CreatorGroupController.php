@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
 use App\Models\CreatorProductGroup;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -20,7 +21,20 @@ class CreatorGroupController extends Controller
 
     public function create()
     {
-        return view('creator.groups.create');
+        $sellerId = auth()->id();
+        $products = Product::where(function($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId);
+                if (Product::where('seller_id', $sellerId)->count() === 0) {
+                    $q->orWhereNull('seller_id');
+                }
+            })
+            ->where('is_active', true)
+            ->with('creatorGroup:id,name')
+            ->orderBy('name')
+            ->get();
+
+        $selectedProductIds = [];
+        return view('creator.groups.create', compact('products', 'selectedProductIds'));
     }
 
     public function store(Request $request)
@@ -29,6 +43,8 @@ class CreatorGroupController extends Controller
             'name' => 'required|string|max:100',
             'order' => 'nullable|integer|min:0',
             'description' => 'nullable|string|max:2000',
+            'product_ids' => 'nullable|array',
+            'product_ids.*' => 'integer|exists:products,id',
         ]);
 
         $slug = Str::slug($request->name);
@@ -39,7 +55,7 @@ class CreatorGroupController extends Controller
             $slug = $baseSlug . '-' . $i++;
         }
 
-        CreatorProductGroup::create([
+        $group = CreatorProductGroup::create([
             'seller_id' => auth()->id(),
             'name' => $request->name,
             'slug' => $slug,
@@ -48,6 +64,19 @@ class CreatorGroupController extends Controller
             'is_active' => $request->boolean('is_active', true),
         ]);
 
+        $selectedIds = $request->input('product_ids', []);
+        if (!empty($selectedIds)) {
+            $sellerId = auth()->id();
+            Product::where(function($q) use ($sellerId) {
+                    $q->where('seller_id', $sellerId);
+                    if (Product::where('seller_id', $sellerId)->count() === 0) {
+                        $q->orWhereNull('seller_id');
+                    }
+                })
+                ->whereIn('id', $selectedIds)
+                ->update(['creator_group_id' => $group->id]);
+        }
+
         return redirect()->route('creator.groups.index')->with('success', 'Kelompok produk berhasil ditambahkan!');
     }
 
@@ -55,7 +84,21 @@ class CreatorGroupController extends Controller
     {
         if ($group->seller_id !== auth()->id()) abort(403);
         
-        return view('creator.groups.edit', compact('group'));
+        $sellerId = auth()->id();
+        $products = Product::where(function($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId);
+                if (Product::where('seller_id', $sellerId)->count() === 0) {
+                    $q->orWhereNull('seller_id');
+                }
+            })
+            ->where('is_active', true)
+            ->with('creatorGroup:id,name')
+            ->orderBy('name')
+            ->get();
+
+        $selectedProductIds = $group->products()->pluck('id')->toArray();
+
+        return view('creator.groups.edit', compact('group', 'products', 'selectedProductIds'));
     }
 
     public function update(Request $request, CreatorProductGroup $group)
@@ -66,6 +109,8 @@ class CreatorGroupController extends Controller
             'name' => 'required|string|max:100',
             'order' => 'nullable|integer|min:0',
             'description' => 'nullable|string|max:2000',
+            'product_ids' => 'nullable|array',
+            'product_ids.*' => 'integer|exists:products,id',
         ]);
 
         $group->name = $request->name;
@@ -85,6 +130,32 @@ class CreatorGroupController extends Controller
         }
 
         $group->save();
+
+        $selectedIds = $request->input('product_ids', []);
+        $sellerId = auth()->id();
+
+        // 1. Lepas produk yang sebelumnya ada di kelompok ini tapi tidak lagi dicentang
+        Product::where(function($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId);
+                if (Product::where('seller_id', $sellerId)->count() === 0) {
+                    $q->orWhereNull('seller_id');
+                }
+            })
+            ->where('creator_group_id', $group->id)
+            ->whereNotIn('id', $selectedIds)
+            ->update(['creator_group_id' => null]);
+
+        // 2. Terapkan kelompok ini pada produk yang baru dicentang
+        if (!empty($selectedIds)) {
+            Product::where(function($q) use ($sellerId) {
+                    $q->where('seller_id', $sellerId);
+                    if (Product::where('seller_id', $sellerId)->count() === 0) {
+                        $q->orWhereNull('seller_id');
+                    }
+                })
+                ->whereIn('id', $selectedIds)
+                ->update(['creator_group_id' => $group->id]);
+        }
 
         return redirect()->route('creator.groups.index')->with('success', 'Kelompok produk berhasil diperbarui!');
     }

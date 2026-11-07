@@ -12,8 +12,8 @@
 @endsection
 
 @section('content')
-<div style="background:#fff; border-radius:16px; border:1px solid #e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.04); overflow:hidden;">
-    <table style="width:100%; border-collapse:collapse; font-size:0.875rem; text-align:left;">
+<div style="background:#fff; border-radius:16px; border:1px solid #e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.04); overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <table style="width:100%; min-width:580px; border-collapse:collapse; font-size:0.875rem; text-align:left;">
         <thead>
             <tr style="background:#f9fefb; border-bottom:1px solid #e7f0e7;">
                 <th style="padding:1rem 1.5rem; font-weight:700; color:#64748B; width:50px;">No</th>
