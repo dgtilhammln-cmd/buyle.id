@@ -52,7 +52,7 @@ class GateStaffController extends Controller
         $rawPin  = trim($request->input('pin', ''));
 
         if (empty($staffId) || empty($rawPin)) {
-            return response()->json(['success' => false, 'message' => 'Pilih nama dan masukkan PIN.'], 422);
+            return response()->json(['success' => false, 'message' => 'Pilih nama dan masukkan PIN/Password.'], 422);
         }
 
         $staff = GateStaff::where('id', $staffId)
@@ -65,7 +65,7 @@ class GateStaffController extends Controller
         }
 
         if (!$staff->verifyPin($rawPin)) {
-            return response()->json(['success' => false, 'message' => 'PIN salah. Periksa kembali PIN Anda.'], 401);
+            return response()->json(['success' => false, 'message' => 'PIN / Password salah.'], 401);
         }
 
         // Simpan sesi staff untuk event ini
@@ -81,14 +81,33 @@ class GateStaffController extends Controller
 
         return response()->json([
             'success'    => true,
-            'message'    => "Selamat datang, {$staff->name}! Anda masuk sebagai panitia Gate {$staff->gate_number}.",
+            'message'    => "Selamat datang, {$staff->name}! Anda masuk sebagai panitia Gate.",
             'staff_name' => $staff->name,
             'gate'       => $staff->gate_number,
         ]);
     }
 
     /**
-     * Daftar staff event (Creator only).
+     * Daftar seluruh staff panitia milik Creator di semua event tiketnya.
+     * GET /creator/scanner/all-staff
+     */
+    public function allStaff(Request $request): JsonResponse
+    {
+        $creatorId = auth()->id();
+        $staff = GateStaff::where('creator_id', $creatorId)
+            ->with('product:id,name,event_date')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'staff'   => $staff,
+            'count'   => $staff->count(),
+        ]);
+    }
+
+    /**
+     * Daftar staff event tertentu (Creator only).
      * GET /creator/scanner/staff/{product}
      */
     public function index(Request $request, Product $product): JsonResponse
@@ -96,15 +115,15 @@ class GateStaffController extends Controller
         $this->authorizeCreator($product);
 
         $staff = GateStaff::where('product_id', $product->id)
-            ->orderBy('gate_number')
-            ->orderBy('name')
-            ->get(['id', 'name', 'gate_number', 'is_active', 'created_at']);
+            ->with('product:id,name')
+            ->orderBy('id', 'desc')
+            ->get();
 
         return response()->json(['success' => true, 'staff' => $staff, 'count' => $staff->count()]);
     }
 
     /**
-     * Tambah staff baru (Creator only). PIN di-generate dan dikembalikan SEKALI.
+     * Tambah staff panitia baru dengan Nama & Password kustom (Creator only).
      * POST /creator/scanner/staff/{product}
      */
     public function store(Request $request, Product $product): JsonResponse
@@ -112,52 +131,59 @@ class GateStaffController extends Controller
         $this->authorizeCreator($product);
 
         $existing = GateStaff::where('product_id', $product->id)->count();
-        if ($existing >= 10) {
-            return response()->json(['success' => false, 'message' => 'Maksimal 10 panitia per event.'], 422);
+        if ($existing >= 30) {
+            return response()->json(['success' => false, 'message' => 'Maksimal 30 panitia per event tiket.'], 422);
         }
 
-        $name = trim($request->input('name', ''));
-        $gate = (int) $request->input('gate_number', 1);
+        $name     = trim($request->input('name', ''));
+        $password = trim($request->input('password', ''));
+        $gate     = (int) $request->input('gate_number', 1);
 
         if (empty($name)) {
             return response()->json(['success' => false, 'message' => 'Nama panitia wajib diisi.'], 422);
         }
-        if ($gate < 1 || $gate > 10) {
-            return response()->json(['success' => false, 'message' => 'Nomor gate harus antara 1–10.'], 422);
+        if (empty($password)) {
+            return response()->json(['success' => false, 'message' => 'Password panitia wajib diisi.'], 422);
+        }
+        if (strlen($password) < 4) {
+            return response()->json(['success' => false, 'message' => 'Password panitia minimal 4 karakter.'], 422);
         }
 
-        // Generate PIN 6 digit
-        $rawPin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
+        // Simpan password dalam bentuk hash di kolom pin
         $staff = GateStaff::create([
             'product_id'  => $product->id,
             'creator_id'  => auth()->id(),
             'name'        => $name,
             'gate_number' => $gate,
-            'pin'         => Hash::make($rawPin),
+            'pin'         => Hash::make($password),
             'is_active'   => true,
         ]);
 
         return response()->json([
             'success'    => true,
-            'message'    => "Panitia {$name} (Gate {$gate}) berhasil ditambahkan.",
+            'message'    => "Panitia {$name} berhasil didaftarkan.",
             'staff_id'   => $staff->id,
             'staff_name' => $staff->name,
-            'gate'       => $staff->gate_number,
-            // PIN dikembalikan SEKALI dan tidak pernah disimpan/ditampilkan lagi
-            'pin_once'   => $rawPin,
+            'staff'      => [
+                'id'         => $staff->id,
+                'name'       => $staff->name,
+                'product_id' => $product->id,
+                'event_name' => $product->name,
+                'is_active'  => $staff->is_active,
+                'created_at' => $staff->created_at ? $staff->created_at->format('d M Y H:i') : null,
+            ],
         ]);
     }
 
     /**
      * Aktifkan / Nonaktifkan staff (Creator only).
-     * PUT /creator/scanner/staff/{product}/{staff}
+     * PUT /creator/scanner/staff/{product}/{gateStaff}
      */
     public function toggle(Request $request, Product $product, GateStaff $gateStaff): JsonResponse
     {
         $this->authorizeCreator($product);
 
-        if ($gateStaff->product_id !== $product->id) {
+        if ($gateStaff->product_id !== $product->id && $gateStaff->creator_id !== auth()->id()) {
             abort(403);
         }
 
@@ -167,27 +193,27 @@ class GateStaffController extends Controller
             'success'   => true,
             'is_active' => $gateStaff->is_active,
             'message'   => $gateStaff->is_active
-                ? "{$gateStaff->name} diaktifkan kembali."
-                : "{$gateStaff->name} dinonaktifkan (akses gate dicabut).",
+                ? "Panitia {$gateStaff->name} diaktifkan."
+                : "Panitia {$gateStaff->name} dinonaktifkan.",
         ]);
     }
 
     /**
      * Hapus staff (Creator only).
-     * DELETE /creator/scanner/staff/{product}/{staff}
+     * DELETE /creator/scanner/staff/{product}/{gateStaff}
      */
     public function destroy(Request $request, Product $product, GateStaff $gateStaff): JsonResponse
     {
         $this->authorizeCreator($product);
 
-        if ($gateStaff->product_id !== $product->id) {
+        if ($gateStaff->product_id !== $product->id && $gateStaff->creator_id !== auth()->id()) {
             abort(403);
         }
 
         $name = $gateStaff->name;
         $gateStaff->delete();
 
-        return response()->json(['success' => true, 'message' => "Panitia {$name} dihapus."]);
+        return response()->json(['success' => true, 'message' => "Panitia {$name} berhasil dihapus."]);
     }
 
     /**
@@ -202,6 +228,7 @@ class GateStaffController extends Controller
 
         if ($event) {
             session()->forget('gate_staff_' . $event->id);
+            session()->forget('gate_staff_active');
         }
 
         return response()->json(['success' => true, 'message' => 'Anda telah keluar dari sesi panitia.']);

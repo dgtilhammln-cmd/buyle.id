@@ -180,6 +180,12 @@ Route::post('/request-order', [LeadController::class, 'store'])->name('lead.stor
 Route::get('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'showLogin'])->name('pos.login');
 Route::post('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'login'])->name('pos.login.submit');
 
+// Dedicated Portal Autentikasi Ticketing & Gate (Daftar Penyelenggara, Login Penyelenggara, Login Panitia)
+Route::get('/login-ticketing', [\App\Http\Controllers\TicketingAuthController::class, 'show'])->name('ticketing.login');
+Route::post('/login-ticketing/staff', [\App\Http\Controllers\TicketingAuthController::class, 'loginStaff'])->name('ticketing.login.staff');
+Route::post('/login-ticketing/organizer-login', [\App\Http\Controllers\TicketingAuthController::class, 'loginOrganizer'])->name('ticketing.login.organizer');
+Route::post('/login-ticketing/organizer-register', [\App\Http\Controllers\TicketingAuthController::class, 'registerOrganizer'])->name('ticketing.register.organizer');
+
 // PWA Manifest & Service Worker Routes (Explicit delivery for PWABuilder & Server Cache)
 Route::get('/pos-manifest.json', function () {
     $candidates = [
@@ -1029,6 +1035,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Bank / Payout Account (dari halaman event-attendance)
     Route::post('/event-attendance/bank', [\App\Http\Controllers\TicketScannerController::class, 'updateBankAccount'])->name('ticket.bank.update');
     // Gate Staff CRUD (Creator only)
+    Route::get('/scanner/all-staff', [\App\Http\Controllers\GateStaffController::class, 'allStaff'])->name('ticket.scanner.staff.all');
     Route::get('/scanner/staff/{product}', [\App\Http\Controllers\GateStaffController::class, 'index'])->name('ticket.scanner.staff.index');
     Route::post('/scanner/staff/{product}', [\App\Http\Controllers\GateStaffController::class, 'store'])->name('ticket.scanner.staff.store');
     Route::put('/scanner/staff/{product}/{gateStaff}', [\App\Http\Controllers\GateStaffController::class, 'toggle'])->name('ticket.scanner.staff.toggle');

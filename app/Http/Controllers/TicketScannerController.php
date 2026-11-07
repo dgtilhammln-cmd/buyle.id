@@ -122,6 +122,11 @@ class TicketScannerController extends Controller
             'robots'  => 'noindex, nofollow',
         ];
 
+        $gateStaffList = \App\Models\GateStaff::where('creator_id', $sellerId)
+            ->with('product:id,name,event_date')
+            ->orderBy('id', 'desc')
+            ->get();
+
         return view('creator.ticket_scanner', compact(
             'seo',
             'events',
@@ -132,7 +137,8 @@ class TicketScannerController extends Controller
             'activeTab',
             'stats',
             'allTicketsCached',
-            'kyc'
+            'kyc',
+            'gateStaffList'
         ));
     }
 
