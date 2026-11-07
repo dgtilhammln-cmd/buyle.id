@@ -244,6 +244,7 @@ class TicketScannerController extends Controller
                         'ticket'  => [
                             'code'          => $ticket->ticket_code,
                             'event_name'    => $ticket->product?->name ?? '-',
+                            'event_image'   => $ticket->product?->image_url ?? null,
                             'holder_name'   => $ticket->holder_name ?? '-',
                             'checked_in_at' => $time,
                         ]
@@ -265,6 +266,7 @@ class TicketScannerController extends Controller
                     'ticket'  => [
                         'code'           => $ticket->ticket_code,
                         'event_name'     => $ticket->product?->name ?? '-',
+                        'event_image'    => $ticket->product?->image_url ?? null,
                         'event_date'     => $ticket->product?->event_date?->format('d M Y') ?? '-',
                         'event_time'     => $ticket->product?->event_time ?? '-',
                         'event_location' => $ticket->product?->event_location ?? '-',
@@ -684,6 +686,7 @@ class TicketScannerController extends Controller
                         'ticket'  => [
                             'code'          => $ticket->ticket_code,
                             'event_name'    => $event->name,
+                            'event_image'   => $event->image_url,
                             'holder_name'   => $ticket->holder_name ?? '-',
                             'checked_in_at' => $time,
                         ]
@@ -713,6 +716,7 @@ class TicketScannerController extends Controller
                     'ticket'  => [
                         'code'              => $ticket->ticket_code,
                         'event_name'        => $event->name,
+                        'event_image'       => $event->image_url,
                         'holder_name'       => $ticket->holder_name ?? '-',
                         'holder_email'      => $ticket->holder_email ?? '-',
                         'holder_phone'      => $ticket->holder_phone ?? '-',

@@ -775,14 +775,7 @@
             }
 
             .bio-sidebar {
-                width: 100%;
-                position: static;
-                box-sizing: border-box;
-                padding: 0.5rem;
-                border-radius: 14px;
-                background: #ffffff;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-                margin-bottom: 0.5rem;
+                display: none !important;
             }
 
             .bio-content {
@@ -867,10 +860,603 @@
                 justify-content: center;
             }
         }
+
+        /* ══════════════════════════════════════════════════════════════════════
+           MOBILE BOTTOM NAVIGATION BAR (Identical style to /pos page)
+        ══════════════════════════════════════════════════════════════════════ */
+        .scanner-bottom-nav-wrap {
+            display: none;
+        }
+        @media (max-width: 991px) {
+            .scanner-bottom-nav-wrap {
+                display: flex !important;
+                position: fixed !important;
+                bottom: 16px !important;
+                left: 14px !important;
+                right: 14px !important;
+                max-width: 440px !important;
+                margin: 0 auto !important;
+                z-index: 10000 !important;
+                pointer-events: none !important;
+                justify-content: center !important;
+                background: transparent !important;
+                padding: 0 !important;
+            }
+            .scanner-bottom-nav-bar {
+                pointer-events: auto !important;
+                width: 100% !important;
+                height: 62px !important;
+                background: #ffffff !important;
+                border-radius: 999px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 0.35rem 0.65rem !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+                border: 1.5px solid #f1f5f9 !important;
+                box-sizing: border-box !important;
+            }
+            .scanner-nav-item {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                color: #64748b;
+                padding: 0;
+                outline: none;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                text-decoration: none;
+                -webkit-tap-highlight-color: transparent;
+                gap: 0;
+            }
+            .scanner-nav-item.active {
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+                color: #ffffff !important;
+                padding: 0.5rem 1.1rem !important;
+                border-radius: 999px !important;
+                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
+                gap: 6px !important;
+                width: auto !important;
+            }
+            .scanner-nav-item.active .scanner-nav-label {
+                display: inline-block;
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #ffffff;
+                letter-spacing: -0.01em;
+            }
+            .scanner-nav-label {
+                display: none;
+            }
+            .scanner-nav-item:not(.active):active {
+                transform: scale(0.92);
+                background: #f1f5f9;
+            }
+            /* Add padding to content to prevent nav overlap */
+            .bio-content {
+                padding-bottom: 90px !important;
+            }
+            .bio-layout {
+                padding-bottom: 90px !important;
+            }
+
+            /* ── SAFE ZONE MOBILE HEADER (Matching /pos mobile quality) ── */
+            .scanner-mobile-top-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                padding-top: max(env(safe-area-inset-top, 0px), 8px);
+                padding-bottom: 0.65rem;
+                margin-bottom: 0.5rem;
+                position: sticky;
+                top: 0;
+                z-index: 40;
+                background: #ffffff;
+            }
+            .smh-title {
+                font-size: 1.05rem;
+                font-weight: 800;
+                color: #0f172a;
+                margin: 0;
+                text-align: center;
+                letter-spacing: -0.01em;
+                line-height: 1.2;
+            }
+            .smh-badge {
+                font-size: 0.65rem;
+                font-weight: 800;
+                background: #f0fdf4;
+                color: #166534;
+                border: 1px solid #bbf7d0;
+                padding: 2px 8px;
+                border-radius: 999px;
+                text-transform: uppercase;
+                display: inline-block;
+                margin-top: 2px;
+            }
+            .smh-icon-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background: #ffffff;
+                border: 1.5px solid #e2e8f0;
+                color: #0f172a;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                text-decoration: none;
+                transition: all 0.15s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .smh-icon-btn:active {
+                transform: scale(0.92);
+                background: #f8fafc;
+            }
+            .smh-scan-trigger {
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+                border: none !important;
+                color: #ffffff !important;
+                box-shadow: 0 4px 12px rgba(30, 179, 73, 0.35) !important;
+            }
+
+            /* Quick Mobile Stats Row (Hadir & Total Tiket, like POS Deposit & Revenue cards) */
+            .scanner-mobile-stats-row {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.65rem;
+                margin-bottom: 0.85rem;
+            }
+            .sm-stat-card {
+                background: #ffffff;
+                border: 1.5px solid #f1f5f9;
+                border-radius: 16px;
+                padding: 0.75rem 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 0.65rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            }
+            .sm-stat-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            .sm-stat-content {
+                min-width: 0;
+                flex: 1;
+            }
+            .sm-stat-label {
+                font-size: 0.65rem;
+                font-weight: 700;
+                color: #64748b;
+                display: block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .sm-stat-val {
+                font-size: 1.15rem;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1.2;
+                display: block;
+            }
+        }
+
+        .scanner-mobile-top-header {
+            display: none;
+        }
+        .scanner-mobile-stats-row {
+            display: none;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════
+           FULLSCREEN QR SCANNER MODE (Mobile-only, superapp quality)
+        ══════════════════════════════════════════════════════════════════════ */
+        @keyframes slideUpCard {
+            from { transform: translateY(100%); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        @keyframes scanLineAnim {
+            0%   { top: 10%; }
+            50%  { top: 80%; }
+            100% { top: 10%; }
+        }
+        @keyframes pulseGreen {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.4); }
+            50%       { box-shadow: 0 0 0 16px rgba(30, 179, 73, 0); }
+        }
+
+        /* Fullscreen overlay */
+        #fullscreenScannerOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99990;
+            background: #000;
+            flex-direction: column;
+        }
+        #fullscreenScannerOverlay.active {
+            display: flex !important;
+        }
+
+        /* Camera fullscreen video */
+        #fsVideoWrapper {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            overflow: hidden;
+            background: #000;
+        }
+        #fsVideoEl {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* Green tint overlay */
+        #fsGreenTint {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 179, 73, 0.08);
+            pointer-events: none;
+        }
+        /* Scan frame corners */
+        #fsScanFrame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            width: min(260px, 72vw);
+            height: min(260px, 72vw);
+            pointer-events: none;
+        }
+        .fs-corner {
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            border-color: #ffffff;
+            border-style: solid;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+        }
+        .fs-corner.tl { top: 0; left: 0;  border-width: 4px 0 0 4px; border-radius: 18px 0 0 0; }
+        .fs-corner.tr { top: 0; right: 0; border-width: 4px 4px 0 0; border-radius: 0 18px 0 0; }
+        .fs-corner.bl { bottom: 0; left: 0;  border-width: 0 0 4px 4px; border-radius: 0 0 0 18px; }
+        .fs-corner.br { bottom: 0; right: 0; border-width: 0 4px 4px 0; border-radius: 0 0 18px 0; }
+        /* Scan line (laser bar matching Doritos reference) */
+        #fsScanLine {
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2), #ffffff, #86efac, #ffffff, rgba(255,255,255,0.2));
+            border-radius: 999px;
+            animation: scanLineAnim 2.2s ease-in-out infinite;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 20px rgba(30, 179, 73, 0.6);
+        }
+
+        /* Top bar in fullscreen: safe-zone-aware */
+        #fsTopBar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding-top: max(env(safe-area-inset-top, 0px), 14px);
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%);
+        }
+        #fsBackBtn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.15s;
+        }
+        #fsBackBtn:active { transform: scale(0.9); }
+
+        #fsTopRight {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        /* Signal widget in fullscreen */
+        #fsSignalWidget {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.3rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.18);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        #fsFlashBtn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.18);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.2s;
+        }
+        #fsFlashBtn.on {
+            background: rgba(255, 220, 0, 0.3);
+            border-color: rgba(255, 220, 0, 0.5);
+            color: #fde68a;
+        }
+        #fsFlashBtn:active { transform: scale(0.95); }
+
+        /* Guide text below frame */
+        #fsGuideText {
+            position: absolute;
+            bottom: 42%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            text-align: center;
+            white-space: nowrap;
+            pointer-events: none;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        /* ── Fullscreen Scan Result Card (curved floating card, 100% like Doritos reference) ── */
+        #fsScanResultCard {
+            position: absolute;
+            bottom: max(env(safe-area-inset-bottom, 0px), 18px);
+            left: 14px;
+            right: 14px;
+            max-width: 430px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 1rem 1.15rem 1.15rem;
+            box-shadow: 0 16px 45px rgba(0,0,0,0.35);
+            display: none;
+            animation: slideUpCard 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            z-index: 20;
+        }
+        #fsScanResultCard.show {
+            display: block;
+        }
+        .fs-card-drag-pill {
+            width: 36px;
+            height: 4px;
+            background: #cbd5e1;
+            border-radius: 999px;
+            margin: 0 auto 0.75rem;
+        }
+        .fs-card-event-row {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+        .fs-card-event-img {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: #f1f5f9;
+            flex-shrink: 0;
+            border: 1.5px solid #f1f5f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .fs-card-event-img-placeholder {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1.5px solid #bbf7d0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1eb349;
+            box-shadow: 0 4px 12px rgba(30,179,73,0.12);
+        }
+        .fs-card-event-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .fs-card-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+        .fs-card-status-badge.valid   { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .fs-card-status-badge.used    { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+        .fs-card-status-badge.invalid { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .fs-card-event-name {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.1rem;
+        }
+        .fs-card-event-date {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Guest data rows */
+        .fs-card-data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.9rem;
+        }
+        .fs-card-data-item {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 0.5rem 0.65rem;
+        }
+        .fs-card-data-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #94a3b8;
+            margin-bottom: 2px;
+        }
+        .fs-card-data-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .fs-card-next-btn {
+            width: 100%;
+            height: 50px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            border: none;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(30, 179, 73, 0.4);
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .fs-card-next-btn:active { transform: scale(0.97); }
+        .fs-card-next-btn.error-btn {
+            background: #0f172a;
+            box-shadow: none;
+        }
+
+        /* Fullscreen button (shows in normal scanner mode on mobile) */
+        #openFullscreenBtn {
+            display: none;
+        }
+        @media (max-width: 991px) {
+            #openFullscreenBtn {
+                display: flex !important;
+                width: 100%;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 0.75rem 1rem;
+                background: linear-gradient(135deg, #0f172a, #1e293b);
+                color: #ffffff;
+                border: none;
+                border-radius: 14px;
+                font-size: 0.88rem;
+                font-weight: 700;
+                cursor: pointer;
+                margin-top: 0.75rem;
+                box-shadow: 0 4px 16px rgba(15,23,42,0.3);
+                transition: all 0.2s;
+                -webkit-tap-highlight-color: transparent;
+                font-family: 'Montserrat', sans-serif;
+            }
+            #openFullscreenBtn:active { transform: scale(0.98); }
+        }
     </style>
 @endsection
 
 @section('content')
+    {{-- ══ MOBILE TOP HEADER WITH SAFE ZONE (Identical standard to /pos) ══ --}}
+    <div class="scanner-mobile-top-header">
+        <a href="{{ route('creator.app.index') }}" class="smh-icon-btn" title="Kembali ke Aplikasi">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </a>
+        <div style="text-align:center;">
+            <h2 class="smh-title">Gatekeeper Scanner</h2>
+            <span class="smh-badge">Live System</span>
+        </div>
+        <button type="button" class="smh-icon-btn smh-scan-trigger" onclick="openFullscreenScanner()" title="Buka Mode Fullscreen Scanner">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                <rect x="7" y="7" width="10" height="10" rx="1" />
+            </svg>
+        </button>
+    </div>
+
+    {{-- Quick Mobile Stats Chips (Hadir & Total Tiket, inspired by /pos cards) --}}
+    <div class="scanner-mobile-stats-row">
+        <div class="sm-stat-card">
+            <div class="sm-stat-icon" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="sm-stat-content">
+                <span class="sm-stat-label">Hadir (Checked-In)</span>
+                <span class="sm-stat-val" id="smStatCheckedIn">{{ number_format($stats['checked_in']) }}</span>
+            </div>
+        </div>
+        <div class="sm-stat-card">
+            <div class="sm-stat-icon" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                    <path d="M13 5v14" />
+                </svg>
+            </div>
+            <div class="sm-stat-content">
+                <span class="sm-stat-label">Total Tiket</span>
+                <span class="sm-stat-val" id="smStatTotal">{{ number_format($stats['total']) }}</span>
+            </div>
+        </div>
+    </div>
+
     <div class="bio-layout">
 
         {{-- SUB SIDEBAR NAV --}}
@@ -950,8 +1536,8 @@
                     <button type="button" class="tab-btn {{ $activeTab === 'rekening' ? 'active' : '' }}"
                         onclick="switchTab('tab-rekening', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                            <line x1="1" y1="10" x2="23" y2="10"/>
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
                         </svg>
                         <span class="tab-text-full">Rekening Pencairan</span>
                         <small class="tab-text-mob">Rekening</small>
@@ -1153,6 +1739,14 @@
                                             kamera</span>
                                     </div>
                                     <div id="reader"></div>
+
+                                    {{-- Fullscreen Button (Mobile Only) --}}
+                                    <button type="button" id="openFullscreenBtn" onclick="openFullscreenScanner()">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                                        </svg>
+                                        Buka Mode Fullscreen Scanner
+                                    </button>
                                 </div>
 
                                 {{-- Kolom Kanan: Live Data Hasil Scan --}}
@@ -1677,7 +2271,8 @@
                                                 style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
                                                 <div>
                                                     <h3 style="font-weight:600; font-size:0.95rem; color:#0f172a; margin:0 0 0.15rem;">
-                                                        {{ $ev->name }}</h3>
+                                                        {{ $ev->name }}
+                                                    </h3>
                                                     <div
                                                         style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; font-size:0.74rem; color:#64748b;">
                                                         <span style="display:inline-flex; align-items:center; gap:0.25rem;">
@@ -1888,29 +2483,43 @@
             @endif {{-- end: verified only tabs --}}
 
             {{-- TAB REKENING: Selalu tampil untuk creator --}}
-            <div id="tab-rekening" class="payout-tab-pane" style="display: {{ $activeTab === 'rekening' ? 'block' : 'none' }};">
+            <div id="tab-rekening" class="payout-tab-pane"
+                style="display: {{ $activeTab === 'rekening' ? 'block' : 'none' }};">
                 <div class="prof-card">
                     <div class="prof-card-head" style="display:flex; align-items:center; gap:0.5rem;">
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                            <line x1="1" y1="10" x2="23" y2="10"/>
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
                         </svg>
                         <span style="font-weight:800; font-size:1rem; color:#0f172a;">Rekening Pencairan Dana</span>
                     </div>
                     <div class="prof-card-body" style="padding:1rem 1.5rem;">
                         <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
-                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data akan otomatis tersinkron dengan <a href="{{ route('creator.payout') }}" style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
+                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data akan otomatis
+                            tersinkron dengan <a href="{{ route('creator.payout') }}"
+                                style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
                         </p>
 
                         @if(session('bank_success'))
-                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <div
+                                style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
                                 {{ session('bank_success') }}
                             </div>
                         @endif
                         @if(session('bank_error'))
-                            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                            <div
+                                style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="15" y1="9" x2="9" y2="15" />
+                                    <line x1="9" y1="9" x2="15" y2="15" />
+                                </svg>
                                 {{ session('bank_error') }}
                             </div>
                         @endif
@@ -1921,29 +2530,32 @@
 
                                 {{-- Bank / E-Wallet --}}
                                 <div>
-                                    <label style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+                                    <label
+                                        style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
                                         Bank / E-Wallet
                                     </label>
                                     <select name="bank_name" required
                                         style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
                                         <option value="">— Pilih Bank / E-Wallet —</option>
                                         <optgroup label="Bank Nasional">
-                                            @foreach(['BCA','Mandiri','BRI','BNI','CIMB Niaga','Danamon','Permata','BSI','BTN','Maybank','Panin','OCBC NISP','Bank Neo Commerce','Jenius (SMBC)'] as $bank)
+                                            @foreach(['BCA', 'Mandiri', 'BRI', 'BNI', 'CIMB Niaga', 'Danamon', 'Permata', 'BSI', 'BTN', 'Maybank', 'Panin', 'OCBC NISP', 'Bank Neo Commerce', 'Jenius (SMBC)'] as $bank)
                                                 <option value="{{ $bank }}" {{ auth()->user()->bank_name === $bank ? 'selected' : '' }}>{{ $bank }}</option>
                                             @endforeach
                                         </optgroup>
                                         <optgroup label="E-Wallet">
-                                            @foreach(['GoPay','OVO','Dana','ShopeePay','LinkAja','Flip'] as $ewallet)
+                                            @foreach(['GoPay', 'OVO', 'Dana', 'ShopeePay', 'LinkAja', 'Flip'] as $ewallet)
                                                 <option value="{{ $ewallet }}" {{ auth()->user()->bank_name === $ewallet ? 'selected' : '' }}>{{ $ewallet }}</option>
                                             @endforeach
                                         </optgroup>
                                     </select>
-                                    @error('bank_name')<span style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                    @error('bank_name')<span
+                                    style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
                                 {{-- Nomor Rekening --}}
                                 <div>
-                                    <label style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+                                    <label
+                                        style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
                                         Nomor Rekening / No. HP
                                     </label>
                                     <input type="text" name="bank_account_number" inputmode="numeric"
@@ -1951,14 +2563,18 @@
                                         placeholder="Contoh: 1234567890"
                                         style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:monospace; outline:none; box-sizing:border-box;"
                                         required>
-                                    @error('bank_account_number')<span style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                    @error('bank_account_number')<span
+                                    style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
                                 {{-- Nama Rekening --}}
                                 <div>
-                                    <label style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+                                    <label
+                                        style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
                                         Nama Pemilik Rekening
-                                        <span style="font-weight:500; color:#94a3b8; font-size:0.74rem; margin-left:4px;">(harus sesuai nama pendaftar)</span>
+                                        <span
+                                            style="font-weight:500; color:#94a3b8; font-size:0.74rem; margin-left:4px;">(harus
+                                            sesuai nama pendaftar)</span>
                                     </label>
                                     <input type="text" name="bank_account_name"
                                         value="{{ old('bank_account_name', auth()->user()->bank_account_name) }}"
@@ -1966,14 +2582,21 @@
                                         style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:inherit; outline:none; box-sizing:border-box;"
                                         required>
                                     <div style="font-size:0.73rem; color:#94a3b8; margin-top:0.3rem;">
-                                        Nama akun terdaftar: <strong style="color:#0f172a;">{{ auth()->user()->name }}</strong>
+                                        Nama akun terdaftar: <strong
+                                            style="color:#0f172a;">{{ auth()->user()->name }}</strong>
                                     </div>
-                                    @error('bank_account_name')<span style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                    @error('bank_account_name')<span
+                                    style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
                                 <button type="submit"
                                     style="padding:0.8rem 1.5rem; background:linear-gradient(135deg, #1eb349, #15803d); color:#fff; border:none; border-radius:12px; font-weight:700; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; box-shadow:0 4px 14px rgba(30,179,73,0.3);">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                        <polyline points="17 21 17 13 7 13 7 21" />
+                                        <polyline points="7 3 7 8 15 8" />
+                                    </svg>
                                     Simpan Rekening
                                 </button>
                             </div>
@@ -1985,6 +2608,179 @@
         </div> {{-- Close .bio-content --}}
 
     </div> {{-- Close .bio-layout --}}
+
+    {{-- ══ MOBILE BOTTOM NAVIGATION BAR (like /pos page) ══ --}}
+    <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
+        <div class="scanner-bottom-nav-bar">
+            {{-- 1. e-KYC / Settings --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'settings' ? 'active' : '' }}" id="scanNavSettings"
+                onclick="switchTab('tab-settings', this); updateBottomNav('settings')" title="Pengaturan e-KYC">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <circle cx="12" cy="11" r="3"/>
+                </svg>
+                <span class="scanner-nav-label">e-KYC</span>
+            </button>
+
+            @if(isset($kyc) && $kyc->status === 'verified')
+            {{-- 2. Live Scanner --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'scanner' ? 'active' : '' }}" id="scanNavScanner"
+                onclick="switchTab('tab-scanner', this); updateBottomNav('scanner')" title="Live QR Scanner">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+                    <rect x="7" y="7" width="10" height="10" rx="1"/>
+                </svg>
+                <span class="scanner-nav-label">Scanner</span>
+            </button>
+
+            {{-- 3. Data Kehadiran --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'data' ? 'active' : '' }}" id="scanNavData"
+                onclick="switchTab('tab-data', this); updateBottomNav('data')" title="Data Kehadiran">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span class="scanner-nav-label">Kehadiran</span>
+            </button>
+
+            {{-- 4. Gate Staff --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'gate' ? 'active' : '' }}" id="scanNavGate"
+                onclick="switchTab('tab-gate', this); updateBottomNav('gate')" title="Gate Staff">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <line x1="19" y1="8" x2="19" y2="14"/>
+                    <line x1="22" y1="11" x2="16" y2="11"/>
+                </svg>
+                <span class="scanner-nav-label">Gate</span>
+            </button>
+            @endif
+
+            {{-- 5. Rekening --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'rekening' ? 'active' : '' }}" id="scanNavRekening"
+                onclick="switchTab('tab-rekening', this); updateBottomNav('rekening')" title="Rekening Pencairan">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                    <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                <span class="scanner-nav-label">Rekening</span>
+            </button>
+        </div>
+    </div>
+
+    {{-- ══ FULLSCREEN QR SCANNER OVERLAY (Mobile Superapp Style) ══ --}}
+    <div id="fullscreenScannerOverlay">
+        {{-- Camera Video Area --}}
+        <div id="fsVideoWrapper">
+            <video id="fsVideoEl" autoplay playsinline muted></video>
+            {{-- Green tint overlay --}}
+            <div id="fsGreenTint"></div>
+
+            {{-- Scan frame with animated corners --}}
+            <div id="fsScanFrame">
+                <div class="fs-corner tl"></div>
+                <div class="fs-corner tr"></div>
+                <div class="fs-corner bl"></div>
+                <div class="fs-corner br"></div>
+                <div id="fsScanLine"></div>
+            </div>
+
+            {{-- Top bar: back + signal + flash --}}
+            <div id="fsTopBar">
+                {{-- Back button (left) --}}
+                <button type="button" id="fsBackBtn" onclick="closeFullscreenScanner()" aria-label="Kembali">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                </button>
+
+                {{-- Right: Signal + Flash --}}
+                <div id="fsTopRight">
+                    {{-- Signal widget --}}
+                    <div id="fsSignalWidget">
+                        <div id="fsSignalBars" style="display:flex; align-items:flex-end; gap:1.5px; height:12px;">
+                            <div id="fsBar1" style="width:2.5px; height:3px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar2" style="width:2.5px; height:5px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar3" style="width:2.5px; height:7.5px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar4" style="width:2.5px; height:10px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar5" style="width:2.5px; height:12px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                        </div>
+                        <span id="fsSignalLabel" style="font-size:0.68rem;">--</span>
+                    </div>
+                    {{-- Flash toggle --}}
+                    <button type="button" id="fsFlashBtn" onclick="toggleFsFlash()" aria-label="Flash">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        <span id="fsFlashLabel">Flash off</span>
+                    </button>
+                </div>
+            </div>
+
+            {{-- Guide text --}}
+            <div id="fsGuideText">Arahkan QR Code ke dalam bingkai</div>
+
+            {{-- Scan Result Card (curved bottom, slides up on success) --}}
+            <div id="fsScanResultCard">
+                <div class="fs-card-drag-pill"></div>
+
+                {{-- Event Row: Image + Name + Status --}}
+                <div class="fs-card-event-row">
+                    <div id="fsCardEventImgWrap" class="fs-card-event-img-placeholder">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </div>
+                    <div class="fs-card-event-info">
+                        <div id="fsCardStatusBadge" class="fs-card-status-badge valid">
+                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            CHECK-IN BERHASIL
+                        </div>
+                        <div id="fsCardEventName" class="fs-card-event-name">—</div>
+                        <div id="fsCardEventDate" class="fs-card-event-date">—</div>
+                    </div>
+                </div>
+
+                {{-- Guest Data Grid --}}
+                <div class="fs-card-data-grid">
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Pemegang Tiket</div>
+                        <div id="fsCardHolderName" class="fs-card-data-value">—</div>
+                    </div>
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Kode Tiket</div>
+                        <div id="fsCardTicketCode" class="fs-card-data-value" style="font-family:monospace; color:#1eb349;">—</div>
+                    </div>
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Email</div>
+                        <div id="fsCardEmail" class="fs-card-data-value" style="font-size:0.72rem;">—</div>
+                    </div>
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Waktu Check-In</div>
+                        <div id="fsCardTime" class="fs-card-data-value">—</div>
+                    </div>
+                </div>
+
+                {{-- Action button --}}
+                <button type="button" class="fs-card-next-btn" id="fsCardNextBtn" onclick="closeFsScanCard()">
+                    <span id="fsCardNextLabel">Scan Berikutnya</span>
+                    <svg id="fsCardNextIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+            </div>
+
+            {{-- Hidden canvas for QR processing --}}
+            <canvas id="fsCanvas" style="display:none;"></canvas>
+        </div>
+    </div>
 
     {{-- POPUP MODAL RESULT SCANNER (KHUSUS MOBILE: INFO POP UP BUKAN DI BAWAH & TOMBOL KECIL NEXT) --}}
     <div id="scanResultModal" onclick="if(event.target===this)closeScanModal()"
@@ -2180,9 +2976,25 @@
         function switchTab(tabId, btn) {
             document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).style.display = 'block';
-            btn.classList.add('active');
+            document.querySelectorAll('.scanner-nav-item').forEach(el => el.classList.remove('active'));
+
+            const targetPane = document.getElementById(tabId);
+            if (targetPane) targetPane.style.display = 'block';
+
+            if (btn && btn.classList) {
+                btn.classList.add('active');
+            }
+
             const tabName = tabId === 'tab-settings' ? 'settings' : (tabId === 'tab-data' ? 'data' : (tabId === 'tab-gate' ? 'gate' : (tabId === 'tab-rekening' ? 'rekening' : 'scanner')));
+
+            // Sync both desktop sidebar tabs and mobile bottom navbar
+            const desktopBtn = document.querySelector(`.tab-btn[onclick*="${tabId}"]`);
+            if (desktopBtn) desktopBtn.classList.add('active');
+
+            if (typeof updateBottomNav === 'function') {
+                updateBottomNav(tabName);
+            }
+
             const url = new URL(window.location);
             url.searchParams.set('tab', tabName);
             window.history.pushState({}, '', url);
@@ -2439,7 +3251,7 @@
             @foreach($events as $ev)
                 loadStaffForEvent('{{ $ev->id }}');
             @endforeach
-        }
+                        }
 
         async function loadStaffForEvent(eventId) {
             const container = document.getElementById(`staff-list-container-${eventId}`);
@@ -2466,26 +3278,26 @@
                         const toggleTitle = s.is_active ? 'Nonaktifkan akses' : 'Aktifkan kembali';
 
                         html += `
-                            <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.4rem 0.65rem; font-size:0.75rem;">
-                                <div style="display:flex; align-items:center; gap:0.45rem; min-width:0; flex:1;">
-                                    <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:#0f172a; color:#fff; font-size:0.68rem; font-weight:800; flex-shrink:0;">
-                                        ${s.gate_number}
-                                    </span>
-                                    <div style="min-width:0;">
-                                        <strong style="color:#0f172a; display:block; font-size:0.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.name}</strong>
-                                        <span style="font-size:0.68rem; color:#64748b;">Gate ${s.gate_number}</span>
-                                    </div>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
-                                    <button type="button" onclick="toggleStaffActive('${eventId}', ${s.id})" title="${toggleTitle}" class="badge-status ${statusClass}" style="cursor:pointer; border:none; padding:0.18rem 0.5rem; font-size:0.68rem;">
-                                        ${statusText}
-                                    </button>
-                                    <button type="button" onclick="deleteStaff('${eventId}', ${s.id}, '${s.name.replace(/'/g, "\\'")}')" title="Hapus Panitia" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:2px; display:inline-flex; align-items:center;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </div>
-                        `;
+                                            <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.4rem 0.65rem; font-size:0.75rem;">
+                                                <div style="display:flex; align-items:center; gap:0.45rem; min-width:0; flex:1;">
+                                                    <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:#0f172a; color:#fff; font-size:0.68rem; font-weight:800; flex-shrink:0;">
+                                                        ${s.gate_number}
+                                                    </span>
+                                                    <div style="min-width:0;">
+                                                        <strong style="color:#0f172a; display:block; font-size:0.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.name}</strong>
+                                                        <span style="font-size:0.68rem; color:#64748b;">Gate ${s.gate_number}</span>
+                                                    </div>
+                                                </div>
+                                                <div style="display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
+                                                    <button type="button" onclick="toggleStaffActive('${eventId}', ${s.id})" title="${toggleTitle}" class="badge-status ${statusClass}" style="cursor:pointer; border:none; padding:0.18rem 0.5rem; font-size:0.68rem;">
+                                                        ${statusText}
+                                                    </button>
+                                                    <button type="button" onclick="deleteStaff('${eventId}', ${s.id}, '${s.name.replace(/'/g, "\\'")}')" title="Hapus Panitia" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:2px; display:inline-flex; align-items:center;">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        `;
                     });
                     container.innerHTML = html;
                 }
@@ -3410,15 +4222,15 @@
                 card.style.display = 'block';
                 const t = data.ticket;
                 card.innerHTML = `
-                    <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
-                        <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
-                        <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-                        <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
-                        <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
-                    </div>
-                `;
+                                    <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+                                        <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
+                                        <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                                        <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
+                                        <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
+                                    </div>
+                                `;
             } else {
                 card.style.display = 'none';
             }
@@ -3444,6 +4256,357 @@
             } else {
                 isProcessing = false;
             }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // BOTTOM NAV SYNC HELPER
+        // ══════════════════════════════════════════════════════════════════════
+        function updateBottomNav(activeKey) {
+            const map = {
+                'settings':  'scanNavSettings',
+                'scanner':   'scanNavScanner',
+                'data':      'scanNavData',
+                'gate':      'scanNavGate',
+                'rekening':  'scanNavRekening',
+            };
+            Object.entries(map).forEach(([key, id]) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (key === activeKey) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
+
+        // Override switchTab to also sync bottom nav
+        const _origSwitchTab = switchTab;
+        // Already defined above; just add bottom nav sync inside DOMContentLoaded
+
+        // ══════════════════════════════════════════════════════════════════════
+        // FULLSCREEN SCANNER — Variables
+        // ══════════════════════════════════════════════════════════════════════
+        let fsStream = null;
+        let fsTorchTrack = null;
+        let fsFlashOn = false;
+        let fsQrInterval = null;
+        let fsNativeDetector = null;
+        let fsScanCard = null;
+        let fsIsProcessing = false;
+
+        if ('BarcodeDetector' in window) {
+            try { fsNativeDetector = new window.BarcodeDetector({ formats: ['qr_code'] }); } catch(e){}
+        }
+
+        // ── Open Fullscreen Scanner ──
+        async function openFullscreenScanner() {
+            const overlay = document.getElementById('fullscreenScannerOverlay');
+            const videoEl = document.getElementById('fsVideoEl');
+            if (!overlay || !videoEl) return;
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Lock screen orientation to portrait if possible
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    await screen.orientation.lock('portrait').catch(() => {});
+                }
+            } catch(e) {}
+
+            fsFlashOn = false;
+            fsIsProcessing = false;
+            document.getElementById('fsFlashLabel').textContent = 'Flash off';
+            document.getElementById('fsFlashBtn').classList.remove('on');
+            closeFsScanCard();
+
+            try {
+                // Prefer rear camera
+                const constraints = {
+                    video: {
+                        facingMode: { ideal: 'environment' },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+                fsStream = await navigator.mediaDevices.getUserMedia(constraints);
+                videoEl.srcObject = fsStream;
+                await videoEl.play();
+
+                // Check torch capability
+                const tracks = fsStream.getVideoTracks();
+                if (tracks.length > 0) {
+                    fsTorchTrack = tracks[0];
+                    const caps = fsTorchTrack.getCapabilities ? fsTorchTrack.getCapabilities() : {};
+                    if (!caps.torch) {
+                        document.getElementById('fsFlashBtn').style.opacity = '0.5';
+                        document.getElementById('fsFlashBtn').style.pointerEvents = 'none';
+                    } else {
+                        document.getElementById('fsFlashBtn').style.opacity = '1';
+                        document.getElementById('fsFlashBtn').style.pointerEvents = 'auto';
+                    }
+                }
+
+                startFsQrLoop();
+            } catch(err) {
+                console.error('[FS Scanner] Camera error:', err);
+                alert('Gagal mengakses kamera. Pastikan izin kamera telah diberikan.');
+                closeFullscreenScanner();
+            }
+        }
+
+        // ── Close Fullscreen Scanner ──
+        function closeFullscreenScanner() {
+            const overlay = document.getElementById('fullscreenScannerOverlay');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+
+            stopFsCamera();
+            stopFsQrLoop();
+            closeFsScanCard();
+        }
+
+        function stopFsCamera() {
+            const videoEl = document.getElementById('fsVideoEl');
+            if (videoEl) { videoEl.pause(); videoEl.srcObject = null; }
+            if (fsStream) {
+                fsStream.getTracks().forEach(t => t.stop());
+                fsStream = null;
+                fsTorchTrack = null;
+            }
+        }
+
+        // ── Flash Toggle ──
+        async function toggleFsFlash() {
+            if (!fsTorchTrack) return;
+            fsFlashOn = !fsFlashOn;
+            try {
+                await fsTorchTrack.applyConstraints({ advanced: [{ torch: fsFlashOn }] });
+                const btn = document.getElementById('fsFlashBtn');
+                const lbl = document.getElementById('fsFlashLabel');
+                if (fsFlashOn) {
+                    btn.classList.add('on');
+                    lbl.textContent = 'Flash on';
+                } else {
+                    btn.classList.remove('on');
+                    lbl.textContent = 'Flash off';
+                }
+            } catch(e) {
+                console.warn('[FS Flash] torch not supported:', e);
+            }
+        }
+
+        // ── QR Scan Loop for Fullscreen ──
+        function startFsQrLoop() {
+            stopFsQrLoop();
+            const video = document.getElementById('fsVideoEl');
+            const canvas = document.getElementById('fsCanvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const guideEl = document.getElementById('fsGuideText');
+
+            fsQrInterval = setInterval(async () => {
+                if (fsIsProcessing) return;
+                if (!video || video.readyState < 2 || video.paused) return;
+                const vw = video.videoWidth, vh = video.videoHeight;
+                if (!vw || !vh) return;
+
+                // Engine 1: Native BarcodeDetector (fastest)
+                if (fsNativeDetector) {
+                    try {
+                        const barcodes = await fsNativeDetector.detect(video);
+                        if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
+                            if (guideEl) guideEl.textContent = 'QR ditemukan! Memverifikasi...';
+                            fsScanSuccess(barcodes[0].rawValue);
+                            return;
+                        }
+                    } catch(e) {}
+                }
+
+                // Engine 2: jsQR with contrast boost
+                if (typeof window.jsQR !== 'function') return;
+                canvas.width = vw;
+                canvas.height = vh;
+                ctx.drawImage(video, 0, 0, vw, vh);
+                try {
+                    const imgData = ctx.getImageData(0, 0, vw, vh);
+                    const code = window.jsQR(imgData.data, vw, vh, { inversionAttempts: 'attemptBoth' });
+                    if (code && code.data) {
+                        if (guideEl) guideEl.textContent = 'QR ditemukan! Memverifikasi...';
+                        fsScanSuccess(code.data);
+                        return;
+                    }
+                    // Contrast boost for glare
+                    const d = new Uint8ClampedArray(imgData.data);
+                    for (let i = 0; i < d.length; i += 4) {
+                        const g = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
+                        const b = g < 128 ? 0 : 255;
+                        d[i] = d[i+1] = d[i+2] = b;
+                    }
+                    const code2 = window.jsQR(d, vw, vh, { inversionAttempts: 'attemptBoth' });
+                    if (code2 && code2.data) {
+                        fsScanSuccess(code2.data);
+                        return;
+                    }
+                    if (guideEl) guideEl.textContent = 'Arahkan QR Code ke dalam bingkai';
+                } catch(e) {}
+            }, 80);
+        }
+
+        function stopFsQrLoop() {
+            if (fsQrInterval) { clearInterval(fsQrInterval); fsQrInterval = null; }
+        }
+
+        // ── Handle Scan Result in Fullscreen Mode ──
+        function fsScanSuccess(decodedText) {
+            if (fsIsProcessing) return;
+            fsIsProcessing = true;
+            stopFsQrLoop();
+
+            const cleanToken = parseScannedToken(decodedText);
+            const code = cleanToken || decodedText;
+
+            // Vibrate
+            if (navigator.vibrate) {
+                try { navigator.vibrate([60, 30, 60]); } catch(e) {}
+            }
+
+            // Show loading state in card
+            showFsScanCard({
+                status: 'loading',
+                title: 'Memverifikasi...',
+                ticket: null
+            });
+
+            fetch("{{ route('creator.ticket.scanner.verify') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ code: code })
+            })
+            .then(r => r.json())
+            .then(data => {
+                // Update cache
+                if (data.status === 'valid' && data.ticket && data.ticket.code) {
+                    const t = ALL_TICKETS.find(x => x.code === data.ticket.code);
+                    if (t) {
+                        t.status = 'used';
+                        t.checked_in_at = data.ticket.checked_in_at || 'Baru saja';
+                        try { localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(ALL_TICKETS)); } catch(e) {}
+                        updateStatsUI();
+                    }
+                }
+                playScanBeep(data.status);
+                showFsScanCard(data);
+            })
+            .catch(() => {
+                showFsScanCard({
+                    status: 'invalid',
+                    title: 'Koneksi Bermasalah',
+                    message: 'Gagal terhubung ke server. Periksa koneksi internet.'
+                });
+            });
+        }
+
+        function showFsScanCard(data) {
+            const card = document.getElementById('fsScanResultCard');
+            const statusBadge = document.getElementById('fsCardStatusBadge');
+            const eventNameEl = document.getElementById('fsCardEventName');
+            const eventDateEl = document.getElementById('fsCardEventDate');
+            const holderEl = document.getElementById('fsCardHolderName');
+            const codeEl = document.getElementById('fsCardTicketCode');
+            const emailEl = document.getElementById('fsCardEmail');
+            const timeEl = document.getElementById('fsCardTime');
+            const imgWrap = document.getElementById('fsCardEventImgWrap');
+            const nextBtn = document.getElementById('fsCardNextBtn');
+            const nextLabel = document.getElementById('fsCardNextLabel');
+            const nextIcon = document.getElementById('fsCardNextIcon');
+            if (!card) return;
+
+            // Loading state
+            if (data.status === 'loading') {
+                card.classList.add('show');
+                if (statusBadge) statusBadge.innerHTML = `<span style="animation:spin 1s linear infinite;display:inline-block;">⏳</span> Memverifikasi...`;
+                if (statusBadge) { statusBadge.className = 'fs-card-status-badge'; statusBadge.style.background='#f8fafc'; statusBadge.style.color='#64748b'; statusBadge.style.border='1px solid #e2e8f0'; }
+                if (eventNameEl) eventNameEl.textContent = 'Sedang memeriksa tiket...';
+                if (eventDateEl) eventDateEl.textContent = '';
+                if (holderEl) holderEl.textContent = '—';
+                if (codeEl) codeEl.textContent = '—';
+                if (emailEl) emailEl.textContent = '—';
+                if (timeEl) timeEl.textContent = '—';
+                return;
+            }
+
+            const isValid = data.status === 'valid';
+            const isUsed  = data.status === 'used';
+
+            // Status badge
+            if (statusBadge) {
+                statusBadge.className = 'fs-card-status-badge ' + (isValid ? 'valid' : (isUsed ? 'used' : 'invalid'));
+                if (isValid) {
+                    statusBadge.innerHTML = `<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> CHECK-IN BERHASIL`;
+                } else if (isUsed) {
+                    statusBadge.innerHTML = `<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> SUDAH CHECK-IN`;
+                } else {
+                    statusBadge.innerHTML = `<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> TIKET TIDAK VALID`;
+                }
+            }
+
+            // Event image
+            if (imgWrap && data.ticket && data.ticket.event_image) {
+                imgWrap.innerHTML = `<img src="${data.ticket.event_image}" class="fs-card-event-img" alt="Event" onerror="this.parentElement.innerHTML='<svg width=24 height=24 fill=none stroke=currentColor stroke-width=2 viewBox=\\'0 0 24 24\\'><rect x=3 y=4 width=18 height=18 rx=2/><line x1=16 y1=2 x2=16 y2=6/><line x1=8 y1=2 x2=8 y2=6/><line x1=3 y1=10 x2=21 y2=10/></svg>'">`;
+            } else if (imgWrap) {
+                imgWrap.className = 'fs-card-event-img-placeholder';
+                imgWrap.innerHTML = `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+            }
+
+            // Event & ticket data
+            if (eventNameEl) eventNameEl.textContent = (data.ticket && data.ticket.event_name) ? data.ticket.event_name : (data.title || 'Tiket Tidak Valid');
+            if (eventDateEl) eventDateEl.textContent = (data.ticket && data.ticket.event_date) ? data.ticket.event_date : (data.message || '');
+            if (holderEl) holderEl.textContent = (data.ticket && data.ticket.holder_name) ? data.ticket.holder_name : '—';
+            if (codeEl) { codeEl.textContent = (data.ticket && data.ticket.code) ? data.ticket.code : '—'; codeEl.style.color = isValid ? '#1eb349' : '#64748b'; }
+            if (emailEl) emailEl.textContent = (data.ticket && data.ticket.holder_email) ? data.ticket.holder_email : '—';
+            if (timeEl) timeEl.textContent = (data.ticket && data.ticket.checked_in_at) ? data.ticket.checked_in_at : (isValid ? 'Baru saja' : '—');
+
+            // Button
+            if (nextBtn) {
+                nextBtn.className = 'fs-card-next-btn' + (!isValid ? ' error-btn' : '');
+            }
+            if (nextLabel) nextLabel.textContent = isValid ? 'Scan Berikutnya' : 'Tutup';
+            if (nextIcon) nextIcon.style.display = isValid ? 'block' : 'none';
+
+            card.classList.add('show');
+
+            // Auto-dismiss after 4s for valid scans
+            if (isValid) {
+                setTimeout(() => closeFsScanCard(), 4000);
+            }
+        }
+
+        function closeFsScanCard() {
+            const card = document.getElementById('fsScanResultCard');
+            if (card) card.classList.remove('show');
+            fsIsProcessing = false;
+            // Restart scan loop
+            const overlay = document.getElementById('fullscreenScannerOverlay');
+            if (overlay && overlay.classList.contains('active')) {
+                setTimeout(() => startFsQrLoop(), 500);
+            }
+        }
+
+        // ── Sync fullscreen signal bars with main signal widget ──
+        function syncFsSignalBars(level) {
+            const fsBars = [1,2,3,4,5].map(i => document.getElementById('fsBar' + i));
+            const fsLabel = document.getElementById('fsSignalLabel');
+            const colors = ['#ef4444','#ef4444','#f59e0b','#f59e0b','#4ade80','#4ade80'];
+            const labels = ['Offline','Sangat Lemot','Lemot','Standar','Cepat','Sangat Cepat'];
+            fsBars.forEach((bar, i) => {
+                if (!bar) return;
+                bar.style.background = i < level ? (colors[level] || '#4ade80') : 'rgba(255,255,255,0.3)';
+            });
+            if (fsLabel) fsLabel.textContent = labels[level] || '--';
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -3483,11 +4646,11 @@
             // Render rows instan
             if (filtered.length === 0) {
                 tbody.innerHTML = `<tr>
-                    <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
-                        <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.92rem;">Tidak Ada Tiket yang Cocok</div>
-                        <div style="font-size: 0.78rem; color: #64748b;">Pencarian instan tidak menemukan data untuk filter yang dipilih.</div>
-                    </td>
-                </tr>`;
+                                    <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
+                                        <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.92rem;">Tidak Ada Tiket yang Cocok</div>
+                                        <div style="font-size: 0.78rem; color: #64748b;">Pencarian instan tidak menemukan data untuk filter yang dipilih.</div>
+                                    </td>
+                                </tr>`;
             } else {
                 let html = '';
                 filtered.forEach((t, index) => {
@@ -3499,16 +4662,16 @@
                         badgeClass = 'badge-used';
                         statusLabel = 'Hadir (Checked-In)';
                         btnHtml = `<button type="button" class="btn-action-sm btn-toggle-undo" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
-                        </button>`;
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
+                                        </button>`;
                     } else if (t.status === 'cancelled') {
                         badgeClass = 'badge-cancelled';
                         statusLabel = 'Dibatalkan';
                         btnHtml = `<span style="font-size: 0.75rem; color: #94a3b8;">Tidak Aktif</span>`;
                     } else {
                         btnHtml = `<button type="button" class="btn-action-sm btn-toggle-checkin" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Check-In
-                        </button>`;
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Check-In
+                                        </button>`;
                     }
 
                     const timeDisplay = t.checked_in_at
@@ -3516,31 +4679,31 @@
                         : `<span style="color: #94a3b8; font-style: italic; font-size: 0.8rem;">— Belum —</span>`;
 
                     html += `<tr id="row-ticket-${t.id}">
-                        <td class="row-index">${index + 1}</td>
-                        <td>
-                            <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                ${t.code}
-                            </span>
-                        </td>
-                        <td>
-                            <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
-                            <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
-                        </td>
-                        <td>
-                            <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
-                            <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
-                            <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>
-                            ${t.holder_nik ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
-                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                ${t.holder_nik}
-                            </span>` : ''}
-                        </td>
-                        <td class="row-status">
-                            <span class="badge-status ${badgeClass}">${statusLabel}</span>
-                        </td>
-                        <td class="row-time">${timeDisplay}${t.scanned_by ? `<span style="font-size: 0.71rem; color: #475569; display: flex; align-items: center; gap: 3px; margin-top: 2px; font-weight: 600;"><svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.scanned_by}</span>` : ''}</td>
-                        <td style="text-align: center;" class="row-action">${btnHtml}</td>
-                    </tr>`;
+                                        <td class="row-index">${index + 1}</td>
+                                        <td>
+                                            <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                                ${t.code}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
+                                            <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
+                                        </td>
+                                        <td>
+                                            <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
+                                            <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
+                                            <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>
+                                            ${t.holder_nik ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
+                                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                                ${t.holder_nik}
+                                            </span>` : ''}
+                                        </td>
+                                        <td class="row-status">
+                                            <span class="badge-status ${badgeClass}">${statusLabel}</span>
+                                        </td>
+                                        <td class="row-time">${timeDisplay}${t.scanned_by ? `<span style="font-size: 0.71rem; color: #475569; display: flex; align-items: center; gap: 3px; margin-top: 2px; font-weight: 600;"><svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.scanned_by}</span>` : ''}</td>
+                                        <td style="text-align: center;" class="row-action">${btnHtml}</td>
+                                    </tr>`;
                 });
                 tbody.innerHTML = html;
             }
@@ -3576,11 +4739,17 @@
             const uncheckedEl = document.getElementById('statUncheckedVal');
             const cancelledEl = document.getElementById('statCancelledVal');
 
+            const smCheckedEl = document.getElementById('smStatCheckedIn');
+            const smTotalEl = document.getElementById('smStatTotal');
+
             if (totalEl) totalEl.textContent = total.toLocaleString('id-ID');
             if (checkedEl) checkedEl.textContent = checkedIn.toLocaleString('id-ID');
             if (rateEl) rateEl.textContent = `Tingkat Kehadiran: ${rate}%`;
             if (uncheckedEl) uncheckedEl.textContent = unchecked.toLocaleString('id-ID');
             if (cancelledEl) cancelledEl.textContent = cancelled.toLocaleString('id-ID');
+
+            if (smCheckedEl) smCheckedEl.textContent = checkedIn.toLocaleString('id-ID');
+            if (smTotalEl) smTotalEl.textContent = total.toLocaleString('id-ID');
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -3662,6 +4831,10 @@
                 if (LABEL) { LABEL.textContent = c.label; LABEL.style.color = c.textColor; }
                 WIDGET.style.background = c.bgColor;
                 WIDGET.style.borderColor = c.borderColor;
+
+                if (typeof syncFsSignalBars === 'function') {
+                    syncFsSignalBars(level);
+                }
             }
 
             function rttToLevel(rttMs) {
