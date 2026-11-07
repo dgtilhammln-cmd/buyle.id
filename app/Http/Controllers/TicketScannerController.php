@@ -23,7 +23,14 @@ class TicketScannerController extends Controller
         $selectedEventId = $request->input('event_id');
         $statusFilter = $request->input('status');
         $search = trim($request->input('search', ''));
-        $activeTab = $request->input('tab', 'scanner'); // 'scanner' or 'data'
+        $rawTab = $request->input('tab');
+        if (in_array($rawTab, ['settings', 'rekening', 'profile'])) {
+            $activeTab = 'profile';
+        } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
+            $activeTab = $rawTab;
+        } else {
+            $activeTab = 'home';
+        }
 
         // Ambil daftar event/produk bertipe ticket milik creator ini (menggunakan seller_id)
         $events = Product::where('seller_id', $sellerId)
@@ -113,8 +120,12 @@ class TicketScannerController extends Controller
         }
 
         $kyc = \App\Models\CreatorKyc::where('user_id', $sellerId)->first();
-        if ((!$kyc || $kyc->status !== 'verified') && !$request->has('tab')) {
-            $activeTab = 'settings';
+
+        // Primary / Featured upcoming event for Home tab
+        $primaryEvent = $selectedEventId ? $events->firstWhere('id', $selectedEventId) : $events->first();
+        $daysUntilEvent = null;
+        if ($primaryEvent && $primaryEvent->event_date) {
+            $daysUntilEvent = max(0, (int) now()->startOfDay()->diffInDays($primaryEvent->event_date->startOfDay(), false));
         }
 
         $seo = [
@@ -138,7 +149,9 @@ class TicketScannerController extends Controller
             'stats',
             'allTicketsCached',
             'kyc',
-            'gateStaffList'
+            'gateStaffList',
+            'primaryEvent',
+            'daysUntilEvent'
         ));
     }
 

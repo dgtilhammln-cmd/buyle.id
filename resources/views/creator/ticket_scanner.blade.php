@@ -1226,10 +1226,10 @@
             .scanner-bottom-nav-wrap {
                 display: flex !important;
                 position: fixed !important;
-                bottom: 16px !important;
-                left: 14px !important;
-                right: 14px !important;
-                max-width: 440px !important;
+                bottom: 12px !important;
+                left: 12px !important;
+                right: 12px !important;
+                max-width: 420px !important;
                 margin: 0 auto !important;
                 z-index: 10000 !important;
                 pointer-events: none !important;
@@ -1240,14 +1240,14 @@
             .scanner-bottom-nav-bar {
                 pointer-events: auto !important;
                 width: 100% !important;
-                height: 62px !important;
+                height: 52px !important;
                 background: #ffffff !important;
                 border-radius: 999px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: space-between !important;
-                padding: 0.35rem 0.65rem !important;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+                padding: 0.25rem 0.65rem !important;
+                box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
                 border: 1.5px solid #f1f5f9 !important;
                 box-sizing: border-box !important;
             }
@@ -1258,39 +1258,63 @@
                 border: none;
                 background: transparent;
                 cursor: pointer;
-                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
                 color: #64748b;
                 padding: 0;
                 outline: none;
-                width: 44px;
-                height: 44px;
+                width: 38px;
+                height: 38px;
                 border-radius: 50%;
                 text-decoration: none;
                 -webkit-tap-highlight-color: transparent;
                 gap: 0;
+                flex-shrink: 0;
             }
-            .scanner-nav-item.active {
+            .scanner-nav-item.active:not(.scanner-nav-center) {
                 background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
                 color: #ffffff !important;
-                padding: 0.5rem 1.1rem !important;
+                padding: 0.4rem 0.85rem !important;
                 border-radius: 999px !important;
-                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
-                gap: 6px !important;
+                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32) !important;
+                gap: 5px !important;
                 width: auto !important;
             }
-            .scanner-nav-item.active .scanner-nav-label {
+            .scanner-nav-item.active:not(.scanner-nav-center) .scanner-nav-label {
                 display: inline-block;
-                font-size: 0.8rem;
-                font-weight: 700;
+                font-size: 0.74rem;
+                font-weight: 800;
                 color: #ffffff;
                 letter-spacing: -0.01em;
             }
             .scanner-nav-label {
                 display: none;
             }
-            .scanner-nav-item:not(.active):active {
+            .scanner-nav-item:not(.active):not(.scanner-nav-center):active {
                 transform: scale(0.92);
                 background: #f1f5f9;
+            }
+            /* Center Floating Scanner Button (Prominent & Larger) */
+            .scanner-nav-center {
+                width: 50px !important;
+                height: 50px !important;
+                border-radius: 50% !important;
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+                color: #ffffff !important;
+                margin-top: -18px !important;
+                box-shadow: 0 8px 20px rgba(30, 179, 73, 0.45) !important;
+                border: 3.5px solid #ffffff !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                flex-shrink: 0 !important;
+                transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+            }
+            .scanner-nav-center:active {
+                transform: scale(0.92) !important;
+            }
+            .scanner-nav-center.active {
+                box-shadow: 0 8px 22px rgba(30, 179, 73, 0.6) !important;
+                transform: translateY(-2px) scale(1.04) !important;
             }
             /* Add padding to content to prevent nav overlap */
             .bio-content {
@@ -1888,71 +1912,66 @@
             </div>
 
             <div class="bio-tabs-list">
-                <button type="button" class="tab-btn {{ $activeTab === 'settings' ? 'active' : '' }}"
-                    onclick="switchTab('tab-settings', this)">
+                <button type="button" class="tab-btn {{ $activeTab === 'home' ? 'active' : '' }}"
+                    onclick="switchTab('tab-home', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        <circle cx="12" cy="11" r="3" />
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
-                    <span class="tab-text-full">Pengaturan & e-KYC</span>
-                    <small class="tab-text-mob">e-KYC</small>
+                    <span class="tab-text-full">Home Event</span>
+                    <small class="tab-text-mob">Home</small>
+                </button>
+                <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}"
+                    onclick="switchTab('tab-data', this)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span class="tab-text-full">Data Kehadiran & Event</span>
+                    <small class="tab-text-mob">Kehadiran</small>
+                </button>
+                <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}"
+                    onclick="switchTab('tab-scanner', this)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path
+                            d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                        <rect x="7" y="7" width="10" height="10" rx="1" />
+                    </svg>
+                    <span class="tab-text-full">Live QR Scanner</span>
+                    <small class="tab-text-mob">Scanner</small>
+                </button>
+                <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}"
+                    onclick="switchTab('tab-gate', this)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <line x1="19" y1="8" x2="19" y2="14" />
+                        <line x1="22" y1="11" x2="16" y2="11" />
+                    </svg>
+                    <span class="tab-text-full">Akses Gate Panitia</span>
+                    <small class="tab-text-mob">Gate Staff</small>
+                </button>
+                <button type="button" class="tab-btn {{ $activeTab === 'profile' ? 'active' : '' }}"
+                    onclick="switchTab('tab-profile', this)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span class="tab-text-full">Profil & Rekening</span>
+                    <small class="tab-text-mob">Profil</small>
                     @if(isset($kyc) && $kyc->status === 'verified')
                         <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#dcfce7; color:#166534; padding:2px 7px; border-radius:999px;">Terverifikasi</span>
+                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#dcfce7; color:#166534; padding:2px 7px; border-radius:999px;">Verified</span>
                     @elseif(isset($kyc) && $kyc->status === 'pending')
                         <span
                             style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#fef3c7; color:#92400e; padding:2px 7px; border-radius:999px;">Review</span>
-                    @elseif(isset($kyc) && $kyc->status === 'rejected')
-                        <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#fee2e2; color:#991b1b; padding:2px 7px; border-radius:999px;">Ditolak</span>
                     @else
                         <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">Wajib</span>
+                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">KYC</span>
                     @endif
                 </button>
-                @if(isset($kyc) && $kyc->status === 'verified')
-                    <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}"
-                        onclick="switchTab('tab-scanner', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path
-                                d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                            <rect x="7" y="7" width="10" height="10" rx="1" />
-                        </svg>
-                        <span class="tab-text-full">Live QR Scanner</span>
-                        <small class="tab-text-mob">Live Scanner</small>
-                    </button>
-                    <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}"
-                        onclick="switchTab('tab-data', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
-                        <span class="tab-text-full">Data Kehadiran & Event</span>
-                        <small class="tab-text-mob">Data Kehadiran</small>
-                    </button>
-                    <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}"
-                        onclick="switchTab('tab-gate', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <line x1="19" y1="8" x2="19" y2="14" />
-                            <line x1="22" y1="11" x2="16" y2="11" />
-                        </svg>
-                        <span class="tab-text-full">Link Gate Panitia</span>
-                        <small class="tab-text-mob">Gate Staff</small>
-                    </button>
-                    <button type="button" class="tab-btn {{ $activeTab === 'rekening' ? 'active' : '' }}"
-                        onclick="switchTab('tab-rekening', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                            <line x1="1" y1="10" x2="23" y2="10" />
-                        </svg>
-                        <span class="tab-text-full">Rekening Pencairan</span>
-                        <small class="tab-text-mob">Rekening</small>
-                    </button>
-                @endif
             </div>
 
             <div class="sidebar-tips-card"
@@ -1998,45 +2017,277 @@
                 </div>
             @endif
 
-            {{-- TAB 0: PENGATURAN & VERIFIKASI e-KYC --}}
-            @include('creator.partials.kyc_tab')
+            {{-- TAB 0: HOME EVENT (Super App Dashboard - Inspired by Reference Image) --}}
+            <div id="tab-home" class="payout-tab-pane" style="display: {{ $activeTab === 'home' ? 'block' : 'none' }};">
 
-            {{-- NOTICE: Fitur Scanner hanya untuk creator yang belum terverifikasi DAN sedang membuka tab selain Pengaturan
-            e-KYC --}}
-            @if((!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified') && $activeTab !== 'settings')
-                <div id="tab-unverified-notice" class="payout-tab-pane" style="display: block;">
-                    <div
-                        style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #fcd34d; border-radius: 18px; padding: 1.75rem 1.5rem; text-align: center; margin-top: 0.5rem;">
-                        <div
-                            style="width: 56px; height: 56px; background: #fef3c7; border: 2px solid #fcd34d; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                            <svg width="28" height="28" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
+                {{-- 1. Mobile Superapp Profile & Greeting Header --}}
+                <div class="home-user-header-card" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.15rem; padding:0.25rem 0.2rem;">
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <div style="width:46px; height:46px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:1.1rem; border:2.5px solid #fff; box-shadow:0 3px 10px rgba(30,179,73,0.25); flex-shrink:0;">
+                            @if(auth()->user()->avatar)
+                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" style="width:100%; height:100%; object-fit:cover;">
+                            @else
+                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                            @endif
+                        </div>
+                        <div>
+                            <span style="font-size:0.75rem; color:#64748b; font-weight:600; display:block; line-height:1.2;">
+                                Halo, Selamat {{ now()->format('H') < 11 ? 'Pagi' : (now()->format('H') < 15 ? 'Siang' : (now()->format('H') < 18 ? 'Sore' : 'Malam')) }}! 👋
+                            </span>
+                            <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px;">
+                                {{ auth()->user()->name }}
+                            </h3>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        {{-- Date Pill Button --}}
+                        <div style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#334155; box-shadow:0 2px 6px rgba(0,0,0,0.03);" title="{{ now()->translatedFormat('l, d F Y') }}">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        {{-- Notification / Live Status Pill --}}
+                        <div style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#1eb349; position:relative; box-shadow:0 2px 6px rgba(0,0,0,0.03);" title="Sistem Aktif & Terhubung">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                            </svg>
+                            <span style="position:absolute; top:8px; right:8px; width:7px; height:7px; background:#22c55e; border-radius:50%; border:1.5px solid #fff;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Unverified Notice Banner on Home (if applicable) --}}
+                @if(!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified')
+                    <div style="background:linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border:1.5px solid #fcd34d; border-radius:16px; padding:0.9rem 1.1rem; margin-bottom:1.15rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.65rem;">
+                            <div style="width:34px; height:34px; border-radius:50%; background:#fde68a; display:flex; align-items:center; justify-content:center; color:#d97706; flex-shrink:0;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+                            </div>
+                            <div>
+                                <strong style="font-size:0.8rem; color:#92400e; display:block;">Verifikasi Identitas e-KYC</strong>
+                                <span style="font-size:0.72rem; color:#b45309;">Selesaikan verifikasi untuk akses penuh Scanner & Pencairan.</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="switchTab('tab-profile')" style="background:#d97706; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.72rem; font-weight:700; cursor:pointer; flex-shrink:0;">
+                            Verifikasi
+                        </button>
+                    </div>
+                @endif
+
+                {{-- 2. Highlight Card (Your Weekly Progress style from Image 2) --}}
+                <div class="home-highlight-card" style="background:#eaf8ed; border:1px solid #c8eccf; border-radius:22px; padding:1.25rem 1.35rem; margin-bottom:1.15rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; position:relative; overflow:hidden; box-shadow:0 3px 12px rgba(30,179,73,0.06);">
+                    <div style="flex:1; min-width:0; z-index:2;">
+                        <div style="display:inline-flex; align-items:center; gap:0.35rem; background:rgba(255,255,255,0.7); border:1px solid #bbf7d0; padding:0.25rem 0.65rem; border-radius:999px; margin-bottom:0.55rem;">
+                            <svg width="13" height="13" fill="#16a34a" stroke="#16a34a" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <span style="font-size:0.72rem; font-weight:700; color:#15803d; letter-spacing:0.02em;">Kesiapan Event</span>
+                        </div>
+                        <h4 style="font-size:1.15rem; font-weight:900; color:#0f172a; margin:0 0 0.35rem; line-height:1.25; letter-spacing:-0.02em;">
+                            Hitung Mundur &<br>Kesiapan Hari H
+                        </h4>
+                        <p style="font-size:0.75rem; color:#475569; margin:0; line-height:1.4;">
+                            @if(isset($primaryEvent) && $primaryEvent && $primaryEvent->event_date)
+                                {{ $primaryEvent->name }} · {{ $primaryEvent->event_date->translatedFormat('d M Y') }}
+                            @else
+                                Kelola gate & pemindaian tiket secara real-time.
+                            @endif
+                        </p>
+                    </div>
+
+                    {{-- Circular Ring Progress (Exact style as Image 2) --}}
+                    <div style="flex-shrink:0; position:relative; width:86px; height:86px; display:flex; align-items:center; justify-content:center;">
+                        <svg width="86" height="86" viewBox="0 0 86 86" style="transform:rotate(-90deg);">
+                            <circle cx="43" cy="43" r="35" stroke="#ffffff" stroke-width="7" fill="none" />
+                            <circle cx="43" cy="43" r="35" stroke="#84cc16" stroke-width="7" stroke-dasharray="220" stroke-dashoffset="{{ max(15, 220 - (min(100, max(10, 100 - (($daysUntilEvent ?? 0) * 10))) / 100) * 220) }}" stroke-linecap="round" fill="none" />
+                        </svg>
+                        <div style="position:absolute; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                            <span style="font-size:1.25rem; font-weight:900; color:#0f172a; line-height:1;">
+                                {{ $daysUntilEvent !== null ? $daysUntilEvent : '0' }}
+                            </span>
+                            <span style="font-size:0.65rem; color:#64748b; font-weight:700; margin-top:2px;">
+                                hari lagi
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 3. Side-by-Side Metric Cards (Step to walk & Drink Water from Image 2) --}}
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:1.25rem;">
+                    {{-- Card 1: Total Tiket --}}
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:1rem 1.1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                            <span style="font-size:0.74rem; font-weight:700; color:#64748b; line-height:1.2;">Total Tiket<br>Terbit</span>
+                            <div style="width:32px; height:32px; border-radius:50%; background:#fff7ed; display:flex; align-items:center; justify-content:center; color:#ea580c; flex-shrink:0;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:baseline; gap:0.35rem;">
+                            <span style="font-size:1.4rem; font-weight:900; color:#0f172a; line-height:1;">{{ number_format($stats['total']) }}</span>
+                            <span style="font-size:0.72rem; color:#64748b; font-weight:600;">tiket</span>
+                        </div>
+                    </div>
+
+                    {{-- Card 2: Hadir (Check-In) --}}
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:1rem 1.1rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                            <span style="font-size:0.74rem; font-weight:700; color:#64748b; line-height:1.2;">Hadir<br>(Checked-In)</span>
+                            <div style="width:32px; height:32px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; color:#16a34a; flex-shrink:0;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:baseline; gap:0.35rem;">
+                            <span style="font-size:1.4rem; font-weight:900; color:#16a34a; line-height:1;">{{ number_format($stats['checked_in']) }}</span>
+                            <span style="font-size:0.72rem; color:#64748b; font-weight:600;">({{ $stats['rate'] }}%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 4. Interactive Horizontal Calendar Strip (August 2025 style from Image 2) --}}
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px; padding:1.15rem 1.25rem; margin-bottom:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+                        <h5 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">
+                            {{ now()->translatedFormat('F Y') }}
+                        </h5>
+                        <div style="display:flex; align-items:center; gap:0.35rem;">
+                            <button type="button" onclick="shiftHomeCalendar(-7)" style="width:28px; height:28px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;" title="Minggu Sebelumnya">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <button type="button" onclick="shiftHomeCalendar(7)" style="width:28px; height:28px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;" title="Minggu Selanjutnya">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Weekday Strip (S M T W T F S) with Rounded Highlight Pill --}}
+                    <div id="homeCalendarStrip" style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; gap:0.25rem;">
+                        @php
+                            $startOfWeek = now()->startOfWeek(\Carbon\Carbon::SUNDAY);
+                            $todayDateStr = now()->format('Y-m-d');
+                            $primaryEventDateStr = isset($primaryEvent) && $primaryEvent && $primaryEvent->event_date ? $primaryEvent->event_date->format('Y-m-d') : null;
+                        @endphp
+                        @for($i = 0; $i < 7; $i++)
+                            @php
+                                $curDay = $startOfWeek->copy()->addDays($i);
+                                $curDateStr = $curDay->format('Y-m-d');
+                                $isToday = $curDateStr === $todayDateStr;
+                                $isEventDay = $curDateStr === $primaryEventDateStr;
+                            @endphp
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.35rem 0.1rem; border-radius:16px; {{ ($isEventDay || ($isToday && !$primaryEventDateStr)) ? 'background:#c8eccf; color:#14532d; font-weight:800; box-shadow:0 3px 8px rgba(34,197,94,0.18);' : 'color:#64748b;' }}">
+                                <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase;">
+                                    {{ substr($curDay->translatedFormat('l'), 0, 1) }}
+                                </span>
+                                <span style="font-size:0.85rem; font-weight:{{ ($isEventDay || ($isToday && !$primaryEventDateStr)) ? '900' : '600' }}; {{ ($isEventDay || ($isToday && !$primaryEventDateStr)) ? 'color:#14532d;' : 'color:#0f172a;' }}">
+                                    {{ $curDay->format('d') }}
+                                </span>
+                                @if($isEventDay)
+                                    <span style="width:4px; height:4px; background:#16a34a; border-radius:50%;"></span>
+                                @else
+                                    <span style="width:4px; height:4px; opacity:0;"></span>
+                                @endif
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+
+                {{-- 5. Landscape Event Poster & Countdown Section (Requested by User) --}}
+                <div class="home-poster-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:22px; overflow:hidden; margin-bottom:1.25rem; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
+                    {{-- Landscape Banner Image Container --}}
+                    <div style="position:relative; width:100%; height:180px; background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); overflow:hidden;">
+                        @if(isset($primaryEvent) && $primaryEvent && ($primaryEvent->featured_image || $primaryEvent->image))
+                            @php
+                                $imgSrc = $primaryEvent->featured_image ? asset('storage/' . $primaryEvent->featured_image) : asset('storage/' . $primaryEvent->image);
+                            @endphp
+                            <img src="{{ $imgSrc }}" alt="{{ $primaryEvent->name }}" style="width:100%; height:100%; object-fit:cover; opacity:0.88;">
+                        @else
+                            <div style="width:100%; height:100%; background:linear-gradient(135deg, #052e16 0%, #15803d 50%, #166534 100%); display:flex; align-items:center; justify-content:center; position:relative;">
+                                <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+                            </div>
+                        @endif
+
+                        {{-- Dark Gradient Overlay for Typography Contrast --}}
+                        <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.78) 100%);"></div>
+
+                        {{-- Top Badge: Event Type --}}
+                        <div style="position:absolute; top:12px; left:12px; display:inline-flex; align-items:center; gap:0.35rem; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.2); padding:0.25rem 0.65rem; border-radius:999px; color:#ffffff; font-size:0.72rem; font-weight:700;">
+                            <svg width="12" height="12" fill="none" stroke="#86efac" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>{{ (isset($primaryEvent) && $primaryEvent && $primaryEvent->event_type) ? ucfirst($primaryEvent->event_type) : 'Offline Event' }}</span>
+                        </div>
+
+                        {{-- Bottom Banner Content: Title & Location --}}
+                        <div style="position:absolute; bottom:12px; left:14px; right:14px; color:#ffffff;">
+                            <h4 style="margin:0 0 3px; font-size:1.05rem; font-weight:900; line-height:1.25; color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,0.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                {{ (isset($primaryEvent) && $primaryEvent) ? $primaryEvent->name : 'Event Tiket Buyle.id' }}
+                            </h4>
+                            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:rgba(255,255,255,0.85); flex-wrap:wrap;">
+                                <span>📅 {{ (isset($primaryEvent) && $primaryEvent && $primaryEvent->event_date) ? $primaryEvent->event_date->translatedFormat('d M Y') : 'Jadwal Ditentukan' }}</span>
+                                <span>•</span>
+                                <span>📍 {{ (isset($primaryEvent) && $primaryEvent) ? ($primaryEvent->event_location ?? 'Main Venue') : 'Main Venue' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Countdown Bar Container --}}
+                    <div style="padding:1.15rem 1.25rem;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                            <span style="font-size:0.76rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.35rem;">
+                                <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                Hitung Mundur Hari H
+                            </span>
+                            <span id="homeCountdownPill" style="font-size:0.74rem; font-weight:800; color:#166534; background:#dcfce7; border:1px solid #bbf7d0; padding:0.2rem 0.55rem; border-radius:999px;">
+                                H-{{ $daysUntilEvent !== null ? $daysUntilEvent : '0' }} Menuju Hari H
+                            </span>
+                        </div>
+
+                        {{-- Progress Bar Countdown --}}
+                        <div style="width:100%; height:8px; background:#f1f5f9; border-radius:999px; overflow:hidden; margin-bottom:1rem; position:relative;">
+                            @php
+                                $progressPct = $daysUntilEvent !== null ? min(100, max(8, 100 - ($daysUntilEvent * 7))) : 100;
+                            @endphp
+                            <div style="width:{{ $progressPct }}%; height:100%; background:linear-gradient(90deg, #1eb349 0%, #a5cf37 100%); border-radius:999px; transition:width 0.4s ease;"></div>
+                        </div>
+
+                        {{-- Quick Action Buttons --}}
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
+                            <button type="button" onclick="switchTab('tab-scanner')"
+                                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                                <span>Buka Scanner</span>
+                            </button>
+                            <button type="button" onclick="switchTab('tab-data')"
+                                style="background:#f8fafc; color:#334155; border:1.5px solid #e2e8f0; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                <span>Data Kehadiran</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- TAB 1: SCANNER --}}
+            <div id="tab-scanner" class="payout-tab-pane"
+                style="display: {{ $activeTab === 'scanner' ? 'block' : 'none' }};">
+
+                @if(!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified')
+                    <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #fcd34d; border-radius: 18px; padding: 1.75rem 1.5rem; text-align: center; margin-top: 0.5rem;">
+                        <div style="width: 52px; height: 52px; background: #fef3c7; border: 2px solid #fcd34d; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.85rem;">
+                            <svg width="26" height="26" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                 <circle cx="12" cy="11" r="3" />
                             </svg>
                         </div>
-                        <h3 style="font-size: 1rem; font-weight: 800; color: #92400e; margin: 0 0 0.5rem;">Verifikasi e-KYC
-                            Diperlukan</h3>
-                        <p style="font-size: 0.82rem; color: #b45309; line-height: 1.6; margin: 0 0 1.25rem;">Fitur <strong>Live
-                                QR Scanner</strong>, <strong>Data Kehadiran & Event</strong>, dan <strong>Link Gate
-                                Panitia</strong> hanya tersedia untuk Creator Buyle yang telah menyelesaikan verifikasi
-                            identitas (e-KYC).</p>
-                        <button type="button" onclick="switchTab('tab-settings', document.querySelector('.tab-btn'))"
-                            style="background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; padding: 0.65rem 1.5rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(217,119,6,0.3);">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                <circle cx="12" cy="11" r="3" />
-                            </svg>
-                            Lengkapi e-KYC Sekarang
+                        <h3 style="font-size: 0.98rem; font-weight: 800; color: #92400e; margin: 0 0 0.4rem;">Verifikasi e-KYC Diperlukan</h3>
+                        <p style="font-size: 0.8rem; color: #b45309; line-height: 1.55; margin: 0 0 1.15rem;">Fitur <strong>Live QR Scanner</strong> membutuhkan verifikasi e-KYC aktif demi keamanan sistem tiket event Anda.</p>
+                        <button type="button" onclick="switchTab('tab-profile')"
+                            style="background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #fff; border: none; padding: 0.55rem 1.25rem; border-radius: 9px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 12px rgba(30,179,73,0.3);">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+                            Lengkapi e-KYC di Profil
                         </button>
                     </div>
-                </div>
-            @endif
-
-            {{-- TAB 1: SCANNER (hanya untuk creator terverifikasi) --}}
-            @if(isset($kyc) && $kyc->status === 'verified')
-                <div id="tab-scanner" class="payout-tab-pane"
-                    style="display: {{ $activeTab === 'scanner' ? 'block' : 'none' }};">
+                @else
 
                     {{-- Quick Mobile Stats Chips (Hanya tampil di tab scanner) --}}
                     <div class="scanner-mobile-stats-row">
@@ -2289,6 +2540,7 @@
                             </div>
                         </div>
                     </div>
+                @endif
                 </div>
 
                 {{-- TAB 2: DATA KEHADIRAN & EVENT --}}
@@ -2649,47 +2901,6 @@
 
                         <div class="prof-card-body" style="padding:1.25rem 1.5rem;">
 
-                            {{-- PORTAL LOGIN INFO BANNER --}}
-                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1rem 1.2rem; margin-bottom:1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
-                                <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
-                                    <div style="display:flex; align-items:flex-start; gap:0.65rem;">
-                                        <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <strong style="color:#0f172a; font-size:0.88rem; display:block;">Portal Petugas Panitia: <span style="color:#1eb349;">buyle.id/login-ticketing</span></strong>
-                                            <p style="font-size:0.76rem; color:#475569; margin-top:2px; line-height:1.45;">
-                                                Bagikan link portal ini ke petugas panitia gate. Petugas cukup login menggunakan <strong>Nama Panitia</strong> dan <strong>Password</strong> yang Anda daftarkan di bawah ini.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-                                        <button type="button" onclick="copyPortalUrl(this)" class="btn-primary-gradient"
-                                            style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:9px; font-size:0.76rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                            </svg>
-                                            <span>Salin Link</span>
-                                        </button>
-                                        <a href="/login-ticketing" target="_blank"
-                                            style="background:#fff; border:1.5px solid #cbd5e1; color:#334155; padding:0.42rem 0.75rem; border-radius:9px; font-size:0.76rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem;">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                                <polyline points="15 3 21 3 21 9"></polyline>
-                                                <line x1="10" y1="14" x2="21" y2="3"></line>
-                                            </svg>
-                                            <span>Buka Portal</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
                             @if($events->count() === 0)
                                 <div style="text-align:center; padding:2.5rem 1rem; color:#94a3b8;">
                                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -2704,9 +2915,9 @@
                                 </div>
                             @else
                                 {{-- FORM TAMBAH PANITIA (LOGIKA & FITUR CUKUP INPUT NAMA & INPUT PASSWORD) --}}
-                                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem; margin-bottom:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-                                    <div style="display:flex; align-items:center; gap:0.45rem; font-size:0.88rem; font-weight:800; color:#0f172a; margin-bottom:0.9rem;">
-                                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.15rem; margin-bottom:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                                    <div style="display:flex; align-items:center; gap:0.45rem; font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem;">
+                                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
                                             <line x1="12" y1="5" x2="12" y2="19" />
                                             <line x1="5" y1="12" x2="19" y2="12" />
                                         </svg>
@@ -2714,14 +2925,14 @@
                                     </div>
 
                                     <form id="formAddStaffSimple" onsubmit="submitSimpleAddStaff(event)">
-                                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:0.85rem; align-items:flex-end;">
+                                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; align-items:flex-end;">
                                             {{-- Event Selector --}}
                                             <div>
-                                                <label style="display:block; font-size:0.76rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">
+                                                <label style="display:block; font-size:0.74rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">
                                                     Pilih Event Tiket
                                                 </label>
                                                 <select id="simpleStaffProductId" required
-                                                    style="width:100%; height:44px; padding:0 0.85rem; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.82rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
+                                                    style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #cbd5e1; border-radius:9px; font-size:0.78rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
                                                     @foreach($events as $ev)
                                                         <option value="{{ $ev->id }}">{{ $ev->name }}</option>
                                                     @endforeach
@@ -2730,23 +2941,23 @@
 
                                             {{-- Input Nama Panitia --}}
                                             <div>
-                                                <label style="display:block; font-size:0.76rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">
+                                                <label style="display:block; font-size:0.74rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">
                                                     Nama Panitia
                                                 </label>
                                                 <input type="text" id="simpleStaffName" required placeholder="Contoh: Panitia Gate 1 / Budi"
-                                                    style="width:100%; height:44px; padding:0 0.85rem; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.82rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
+                                                    style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #cbd5e1; border-radius:9px; font-size:0.78rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
                                             </div>
 
                                             {{-- Input Password Panitia --}}
                                             <div>
-                                                <label style="display:block; font-size:0.76rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">
+                                                <label style="display:block; font-size:0.74rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">
                                                     Password Panitia
                                                 </label>
                                                 <div style="position:relative; display:flex; align-items:center;">
                                                     <input type="password" id="simpleStaffPassword" required placeholder="Minimal 4 karakter"
-                                                        style="width:100%; height:44px; padding:0 2.4rem 0 0.85rem; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.82rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
-                                                    <button type="button" onclick="toggleSimplePwd()" style="position:absolute; right:0.6rem; background:none; border:none; color:#94a3b8; cursor:pointer; padding:0.2rem; display:flex; align-items:center;">
-                                                        <svg id="eyeSimpleStaff" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                        style="width:100%; height:38px; padding:0 2.2rem 0 0.75rem; border:1.5px solid #cbd5e1; border-radius:9px; font-size:0.78rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
+                                                    <button type="button" onclick="toggleSimplePwd()" style="position:absolute; right:0.5rem; background:none; border:none; color:#94a3b8; cursor:pointer; padding:0.2rem; display:flex; align-items:center;">
+                                                        <svg id="eyeSimpleStaff" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                                     </button>
                                                 </div>
                                             </div>
@@ -2754,8 +2965,17 @@
                                             {{-- Submit Button --}}
                                             <div>
                                                 <button type="submit" id="btnSubmitSimpleStaff"
-                                                    style="width:100%; height:44px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:10px; font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s ease;">
-                                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    style="width:100%; height:38px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:9px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.25); transition:all 0.2s ease;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <line x1="12" y1="5" x2="12" y2="19" />
+                                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                                    </svg>
+                                                    <span>Daftarkan Panitia</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                                         <line x1="12" y1="5" x2="12" y2="19" />
                                                         <line x1="5" y1="12" x2="19" y2="12" />
                                                     </svg>
@@ -2835,62 +3055,71 @@
                     </div>
                 </div>
 
-            @endif {{-- end: verified only tabs --}}
+            {{-- TAB 4: PROFIL & REKENING EVENT (Modeled after /creator/pos/profile) --}}
+            <div id="tab-profile" class="payout-tab-pane"
+                style="display: {{ $activeTab === 'profile' ? 'block' : 'none' }};">
 
-            {{-- TAB REKENING: Selalu tampil untuk creator --}}
-            <div id="tab-rekening" class="payout-tab-pane"
-                style="display: {{ $activeTab === 'rekening' ? 'block' : 'none' }};">
-                <div class="prof-card">
+                {{-- CARD 1: User Profile Header Card (Identical to POS Profile) --}}
+                <div style="background:#ffffff; border-radius:20px; border:1px solid #e2e8f0; padding:1.1rem 1.25rem; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 10px rgba(0,0,0,0.02); margin-bottom:1.15rem;">
+                    <div style="display:flex; align-items:center; gap:0.85rem; min-width:0;">
+                        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#ffffff; font-weight:800; font-size:1.1rem; border:2px solid #ffffff; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
+                            @if(auth()->user()->avatar)
+                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" style="width:100%; height:100%; object-fit:cover;">
+                            @else
+                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                            @endif
+                        </div>
+                        <div style="min-width:0;">
+                            <div style="font-size:1rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                {{ auth()->user()->name }}
+                            </div>
+                            <div style="font-size:0.78rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">
+                                {{ auth()->user()->email }}
+                            </div>
+                            <div style="display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; font-weight:800; background:#dcfce7; color:#166534; padding:2px 8px; border-radius:999px; margin-top:4px;">
+                                <span>Penyelenggara Event Official</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ route('creator.profile.edit') }}" style="width:36px; height:36px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#334155; text-decoration:none; flex-shrink:0;" title="Edit Profil">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </a>
+                </div>
+
+                {{-- CARD 2: Rekening Pencairan Dana Event (Embedded Cleanly from tab-rekening) --}}
+                <div id="section-rekening" class="prof-card" style="margin-bottom:1.25rem;">
                     <div class="prof-card-head" style="display:flex; align-items:center; gap:0.5rem;">
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
                             <line x1="1" y1="10" x2="23" y2="10" />
                         </svg>
-                        <span style="font-weight:800; font-size:1rem; color:#0f172a;">Rekening Pencairan Dana</span>
+                        <span style="font-weight:800; font-size:0.95rem; color:#0f172a;">Rekening Pencairan Dana Event</span>
                     </div>
-                    <div class="prof-card-body" style="padding:1rem 1.5rem;">
-                        <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
-                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data akan otomatis
-                            tersinkron dengan <a href="{{ route('creator.payout.settings') }}"
-                                style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
+                    <div class="prof-card-body" style="padding:1rem 1.25rem;">
+                        <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.15rem; line-height:1.5;">
+                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data otomatis tersinkron dengan
+                            <a href="{{ url('/creator/payout-settings') }}" style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
                         </p>
 
                         @if(session('bank_success'))
-                            <div
-                                style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                </svg>
+                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.75rem 1rem; border-radius:12px; font-weight:600; font-size:0.8rem; margin-bottom:1.15rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                                 {{ session('bank_success') }}
                             </div>
                         @endif
                         @if(session('bank_error'))
-                            <div
-                                style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="15" y1="9" x2="9" y2="15" />
-                                    <line x1="9" y1="9" x2="15" y2="15" />
-                                </svg>
+                            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:12px; font-weight:600; font-size:0.8rem; margin-bottom:1.15rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
                                 {{ session('bank_error') }}
                             </div>
                         @endif
 
                         <form method="POST" action="{{ route('creator.ticket.bank.update') }}">
                             @csrf
-                            <div style="display:flex; flex-direction:column; gap:1.1rem;">
-
-                                {{-- Bank / E-Wallet --}}
+                            <div style="display:flex; flex-direction:column; gap:0.95rem;">
                                 <div>
-                                    <label
-                                        style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
-                                        Bank / E-Wallet
-                                    </label>
-                                    <select name="bank_name" required
-                                        style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
+                                    <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Bank / E-Wallet</label>
+                                    <select name="bank_name" required style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:9px; font-size:0.8rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
                                         <option value="">— Pilih Bank / E-Wallet —</option>
                                         <optgroup label="Bank Nasional">
                                             @foreach(['BCA', 'Mandiri', 'BRI', 'BNI', 'CIMB Niaga', 'Danamon', 'Permata', 'BSI', 'BTN', 'Maybank', 'Panin', 'OCBC NISP', 'Bank Neo Commerce', 'Jenius (SMBC)'] as $bank)
@@ -2903,61 +3132,85 @@
                                             @endforeach
                                         </optgroup>
                                     </select>
-                                    @error('bank_name')<span
-                                    style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                    @error('bank_name')<span style="font-size:0.72rem; color:#dc2626; margin-top:0.2rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
-                                {{-- Nomor Rekening --}}
                                 <div>
-                                    <label
-                                        style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
-                                        Nomor Rekening / No. HP
-                                    </label>
-                                    <input type="text" name="bank_account_number" inputmode="numeric"
-                                        value="{{ old('bank_account_number', auth()->user()->bank_account_number) }}"
-                                        placeholder="Contoh: 1234567890"
-                                        style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:monospace; outline:none; box-sizing:border-box;"
-                                        required>
-                                    @error('bank_account_number')<span
-                                    style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                    <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Nomor Rekening / No. HP</label>
+                                    <input type="text" name="bank_account_number" inputmode="numeric" value="{{ old('bank_account_number', auth()->user()->bank_account_number) }}" required placeholder="Contoh: 1234567890" style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:9px; font-size:0.8rem; color:#0f172a; outline:none; font-family:inherit;">
+                                    @error('bank_account_number')<span style="font-size:0.72rem; color:#dc2626; margin-top:0.2rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
-                                {{-- Nama Rekening --}}
                                 <div>
-                                    <label
-                                        style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
-                                        Nama Pemilik Rekening
-                                        <span
-                                            style="font-weight:500; color:#94a3b8; font-size:0.74rem; margin-left:4px;">(harus
-                                            sesuai nama pendaftar)</span>
+                                    <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">
+                                        Nama Pemilik Rekening <span style="font-weight:400; color:#64748b; font-size:0.72rem;">(harus sesuai nama pendaftar)</span>
                                     </label>
-                                    <input type="text" name="bank_account_name"
-                                        value="{{ old('bank_account_name', auth()->user()->bank_account_name) }}"
-                                        placeholder="Sesuai nama di rekening bank"
-                                        style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:inherit; outline:none; box-sizing:border-box;"
-                                        required>
-                                    <div style="font-size:0.73rem; color:#94a3b8; margin-top:0.3rem;">
-                                        Nama akun terdaftar: <strong
-                                            style="color:#0f172a;">{{ auth()->user()->name }}</strong>
-                                    </div>
-                                    @error('bank_account_name')<span
-                                    style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                    <input type="text" name="bank_account_name" value="{{ old('bank_account_name', auth()->user()->bank_account_name ?? auth()->user()->name) }}" required style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:9px; font-size:0.8rem; color:#0f172a; outline:none; font-family:inherit;">
+                                    <span style="font-size:0.72rem; color:#64748b; margin-top:0.25rem; display:block;">Nama akun terdaftar: <strong>{{ auth()->user()->name }}</strong></span>
+                                    @error('bank_account_name')<span style="font-size:0.72rem; color:#dc2626; margin-top:0.2rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
-                                <button type="submit"
-                                    style="width:100%; height:46px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:12px; font-weight:800; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; box-shadow:0 6px 18px rgba(30,179,73,0.32); transition:all 0.2s ease;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                                        <polyline points="17 21 17 13 7 13 7 21" />
-                                        <polyline points="7 3 7 8 15 8" />
-                                    </svg>
+                                <button type="submit" style="width:100%; height:40px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:10px; font-size:0.82rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 12px rgba(30,179,73,0.25);">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                                     <span>Simpan Rekening</span>
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                {{-- CARD 3: Verifikasi e-KYC (Embedded from kyc_tab) --}}
+                <div id="section-kyc" style="margin-bottom:1.25rem;">
+                    @include('creator.partials.kyc_tab')
+                </div>
+
+                {{-- CARD 4: Pintasan Navigasi Kasir & Bisnis (Modeled after POS Profile) --}}
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px; padding:1.15rem 1.25rem; box-shadow:0 2px 10px rgba(0,0,0,0.02); margin-bottom:1.5rem;">
+                    <span style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:0.75rem;">
+                        Pintasan Aplikasi & Sistem
+                    </span>
+                    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                        <a href="{{ route('creator.pos.index') }}" style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:12px; text-decoration:none; color:#0f172a; border:1px solid #f1f5f9;">
+                            <div style="display:flex; align-items:center; gap:0.65rem;">
+                                <div style="width:32px; height:32px; border-radius:8px; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                </div>
+                                <div>
+                                    <strong style="font-size:0.82rem; display:block;">Kasir Digital (POS)</strong>
+                                    <span style="font-size:0.7rem; color:#64748b;">Buka sistem kasir dan penjualan offline</span>
+                                </div>
+                            </div>
+                            <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+
+                        <a href="{{ url('/creator/payout-settings') }}" style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:12px; text-decoration:none; color:#0f172a; border:1px solid #f1f5f9;">
+                            <div style="display:flex; align-items:center; gap:0.65rem;">
+                                <div style="width:32px; height:32px; border-radius:8px; background:#f0fdf4; color:#16a34a; display:flex; align-items:center; justify-content:center;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>
+                                </div>
+                                <div>
+                                    <strong style="font-size:0.82rem; display:block;">Pusat Penarikan Dana & Saldo</strong>
+                                    <span style="font-size:0.7rem; color:#64748b;">Kelola payout dan riwayat transfer</span>
+                                </div>
+                            </div>
+                            <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+
+                        <a href="{{ route('creator.dashboard') }}" style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:12px; text-decoration:none; color:#0f172a; border:1px solid #f1f5f9;">
+                            <div style="display:flex; align-items:center; gap:0.65rem;">
+                                <div style="width:32px; height:32px; border-radius:8px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                </div>
+                                <div>
+                                    <strong style="font-size:0.82rem; display:block;">Creator Studio Dashboard</strong>
+                                    <span style="font-size:0.7rem; color:#64748b;">Kembali ke ringkasan toko</span>
+                                </div>
+                            </div>
+                            <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
             </div>
 
         </div> {{-- Close .bio-content --}}
@@ -2967,28 +3220,17 @@
     {{-- ══ MOBILE BOTTOM NAVIGATION BAR (like /pos page) ══ --}}
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
         <div class="scanner-bottom-nav-bar">
-            {{-- 1. e-KYC / Settings --}}
-            <button type="button" class="scanner-nav-item {{ $activeTab === 'settings' ? 'active' : '' }}" id="scanNavSettings"
-                onclick="switchTab('tab-settings', this); updateBottomNav('settings')" title="Pengaturan e-KYC">
+            {{-- 1. Home (Pojok Kiri) --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'home' ? 'active' : '' }}" id="scanNavHome"
+                onclick="switchTab('tab-home', this); updateBottomNav('home')" title="Home">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <circle cx="12" cy="11" r="3"/>
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
-                <span class="scanner-nav-label">e-KYC</span>
+                <span class="scanner-nav-label">Home</span>
             </button>
 
-            @if(isset($kyc) && $kyc->status === 'verified')
-            {{-- 2. Live Scanner --}}
-            <button type="button" class="scanner-nav-item {{ $activeTab === 'scanner' ? 'active' : '' }}" id="scanNavScanner"
-                onclick="switchTab('tab-scanner', this); updateBottomNav('scanner')" title="Live QR Scanner">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
-                    <rect x="7" y="7" width="10" height="10" rx="1"/>
-                </svg>
-                <span class="scanner-nav-label">Scanner</span>
-            </button>
-
-            {{-- 3. Data Kehadiran --}}
+            {{-- 2. Data Kehadiran --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'data' ? 'active' : '' }}" id="scanNavData"
                 onclick="switchTab('tab-data', this); updateBottomNav('data')" title="Data Kehadiran">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -2998,6 +3240,15 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
                 <span class="scanner-nav-label">Kehadiran</span>
+            </button>
+
+            {{-- 3. Center Scanner (Larger Prominent Floating Circle Button) --}}
+            <button type="button" class="scanner-nav-item scanner-nav-center {{ $activeTab === 'scanner' ? 'active' : '' }}" id="scanNavScanner"
+                onclick="switchTab('tab-scanner', this); updateBottomNav('scanner')" title="Live QR Scanner">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+                    <rect x="7" y="7" width="10" height="10" rx="1"/>
+                </svg>
             </button>
 
             {{-- 4. Gate Staff --}}
@@ -3011,16 +3262,15 @@
                 </svg>
                 <span class="scanner-nav-label">Gate</span>
             </button>
-            @endif
 
-            {{-- 5. Rekening --}}
-            <button type="button" class="scanner-nav-item {{ $activeTab === 'rekening' ? 'active' : '' }}" id="scanNavRekening"
-                onclick="switchTab('tab-rekening', this); updateBottomNav('rekening')" title="Rekening Pencairan">
+            {{-- 5. Profil Event (Pojok Kanan) --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'profile' ? 'active' : '' }}" id="scanNavProfile"
+                onclick="switchTab('tab-profile', this); updateBottomNav('profile')" title="Menu Profil & Rekening">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                    <line x1="1" y1="10" x2="23" y2="10"/>
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
                 </svg>
-                <span class="scanner-nav-label">Rekening</span>
+                <span class="scanner-nav-label">Profil</span>
             </button>
         </div>
     </div>
@@ -3237,6 +3487,16 @@
         } catch (e) { }
 
         function switchTab(tabId, btn) {
+            // Smooth alias mapping for legacy URLs
+            let scrollToSection = null;
+            if (tabId === 'tab-settings') {
+                tabId = 'tab-profile';
+                scrollToSection = 'section-kyc';
+            } else if (tabId === 'tab-rekening') {
+                tabId = 'tab-profile';
+                scrollToSection = 'section-rekening';
+            }
+
             document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.scanner-nav-item').forEach(el => el.classList.remove('active'));
@@ -3248,7 +3508,12 @@
                 btn.classList.add('active');
             }
 
-            const tabName = tabId === 'tab-settings' ? 'settings' : (tabId === 'tab-data' ? 'data' : (tabId === 'tab-gate' ? 'gate' : (tabId === 'tab-rekening' ? 'rekening' : 'scanner')));
+            let tabName = 'home';
+            if (tabId === 'tab-home') tabName = 'home';
+            else if (tabId === 'tab-data') tabName = 'data';
+            else if (tabId === 'tab-scanner') tabName = 'scanner';
+            else if (tabId === 'tab-gate') tabName = 'gate';
+            else if (tabId === 'tab-profile') tabName = 'profile';
 
             // Sync both desktop sidebar tabs and mobile bottom navbar
             const desktopBtn = document.querySelector(`.tab-btn[onclick*="${tabId}"]`);
@@ -3262,7 +3527,14 @@
             url.searchParams.set('tab', tabName);
             window.history.pushState({}, '', url);
 
-            if (tabId !== 'tab-settings') {
+            if (scrollToSection) {
+                setTimeout(() => {
+                    const sec = document.getElementById(scrollToSection);
+                    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 120);
+            }
+
+            if (tabId !== 'tab-profile') {
                 if (typeof stopKtpCamera === 'function') stopKtpCamera();
                 if (typeof stopFaceCamera === 'function') stopFaceCamera();
             }
@@ -3273,6 +3545,37 @@
             if (tabId === 'tab-gate') {
                 loadAllStaff();
             }
+        }
+
+        // ── Home Calendar Week Strip Navigation ──
+        let currentCalendarShift = 0;
+        function shiftHomeCalendar(days) {
+            currentCalendarShift += days;
+            const strip = document.getElementById('homeCalendarStrip');
+            if (!strip) return;
+            const baseDate = new Date();
+            baseDate.setDate(baseDate.getDate() + currentCalendarShift);
+            const dayOfWeek = baseDate.getDay();
+            const startOfWeek = new Date(baseDate);
+            startOfWeek.setDate(baseDate.getDate() - dayOfWeek);
+
+            const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            let html = '';
+            const today = new Date();
+            for (let i = 0; i < 7; i++) {
+                const cur = new Date(startOfWeek);
+                cur.setDate(startOfWeek.getDate() + i);
+                const isToday = cur.toDateString() === today.toDateString();
+                const dStr = String(cur.getDate()).padStart(2, '0');
+                html += `
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.35rem 0.1rem; border-radius:16px; ${isToday ? 'background:#c8eccf; color:#14532d; font-weight:800; box-shadow:0 3px 8px rgba(34,197,94,0.18);' : 'color:#64748b;'}">
+                        <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase;">${dayNames[i]}</span>
+                        <span style="font-size:0.85rem; font-weight:${isToday ? '900' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
+                        <span style="width:4px; height:4px; ${isToday ? 'background:#16a34a;' : 'opacity:0;'} border-radius:50%;"></span>
+                    </div>
+                `;
+            }
+            strip.innerHTML = html;
         }
 
         // ── Helper Gate Link & Modal ──
@@ -4584,11 +4887,13 @@
         // ══════════════════════════════════════════════════════════════════════
         function updateBottomNav(activeKey) {
             const map = {
-                'settings':  'scanNavSettings',
-                'scanner':   'scanNavScanner',
+                'home':      'scanNavHome',
                 'data':      'scanNavData',
+                'scanner':   'scanNavScanner',
                 'gate':      'scanNavGate',
-                'rekening':  'scanNavRekening',
+                'profile':   'scanNavProfile',
+                'settings':  'scanNavProfile',
+                'rekening':  'scanNavProfile',
             };
             Object.entries(map).forEach(([key, id]) => {
                 const el = document.getElementById(id);

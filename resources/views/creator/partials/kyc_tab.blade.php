@@ -1,5 +1,5 @@
 {{-- TAB PENGATURAN & VERIFIKASI e-KYC BIOMETRIK --}}
-<div id="tab-settings" class="payout-tab-pane" style="display: {{ $activeTab === 'settings' ? 'block' : 'none' }};">
+<div id="section-kyc-content" style="display:block;">
 
     {{-- CARD 1: STATUS VERIFIKASI --}}
     <div class="prof-card" style="margin-bottom: 1.5rem;">
