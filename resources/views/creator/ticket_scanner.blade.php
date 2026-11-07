@@ -953,13 +953,35 @@
                 border: 1px solid #cbd5e1 !important;
                 background-color: #ffffff !important;
             }
+            .filter-input {
+                height: 38px !important;
+                font-size: 0.78rem !important;
+                padding: 0 0.5rem 0 2rem !important;
+                border-radius: 10px !important;
+                border: 1.5px solid #e2e8f0 !important;
+                background-color: #ffffff !important;
+            }
             .btn-reset {
-                height: 34px !important;
-                padding: 0 0.65rem !important;
-                font-size: 0.74rem !important;
-                border-radius: 8px !important;
-                background: #ffffff !important;
-                border: 1px solid #cbd5e1 !important;
+                height: 38px !important;
+                padding: 0 0.85rem !important;
+                font-size: 0.76rem !important;
+                font-weight: 700 !important;
+                border-radius: 10px !important;
+                background: #f1f5f9 !important;
+                border: 1.5px solid #e2e8f0 !important;
+                color: #475569 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+            }
+            .filter-select {
+                height: 38px !important;
+                padding: 0 0.5rem 0 1.85rem !important;
+                font-size: 0.76rem !important;
+                border-radius: 10px !important;
+                border: 1.5px solid #e2e8f0 !important;
+                background-color: #ffffff !important;
             }
             .input-icon-wrap .icon-left {
                 width: 14px !important;
@@ -1059,11 +1081,59 @@
             .custom-table td.row-code {
                 grid-column: 1 / 2 !important;
                 order: 1 !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+            }
+            .custom-table td.row-code span {
+                white-space: nowrap !important;
+                font-size: 0.74rem !important;
+                font-family: monospace !important;
+                font-weight: 700 !important;
+                color: #0f172a !important;
+                background: #f8fafc !important;
+                padding: 0.22rem 0.55rem !important;
+                border-radius: 8px !important;
+                border: 1px solid #e2e8f0 !important;
+                display: inline-block !important;
+                letter-spacing: -0.01em !important;
             }
             .custom-table td.row-status {
                 grid-column: 2 / 3 !important;
                 order: 2 !important;
                 text-align: right !important;
+                white-space: nowrap !important;
+            }
+            .custom-table td.row-status .badge-status {
+                font-size: 0.71rem !important;
+                font-weight: 700 !important;
+                padding: 0.22rem 0.6rem !important;
+                border-radius: 8px !important;
+                white-space: nowrap !important;
+            }
+            .custom-table .btn-toggle-checkin {
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+                color: #ffffff !important;
+                border: none !important;
+                border-radius: 8px !important;
+                padding: 0.38rem 0.85rem !important;
+                font-size: 0.76rem !important;
+                font-weight: 800 !important;
+                box-shadow: 0 2px 8px rgba(30,179,73,0.25) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 0.35rem !important;
+            }
+            .custom-table .btn-toggle-undo {
+                background: #fef2f2 !important;
+                color: #dc2626 !important;
+                border: 1.5px solid #fecaca !important;
+                border-radius: 8px !important;
+                padding: 0.38rem 0.85rem !important;
+                font-size: 0.76rem !important;
+                font-weight: 700 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 0.35rem !important;
             }
             .custom-table td.row-holder {
                 grid-column: 1 / 3 !important;
@@ -1706,6 +1776,74 @@
             }
             #openFullscreenBtn:active { transform: scale(0.98); }
         }
+    
+        /* ── UNIFIED SCANNER & DATA CONTROLS ── */
+        .scanner-controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .sc-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .sc-bar-title {
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: -0.01em;
+        }
+        .sc-signal-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            height: 30px;
+            padding: 0 0.55rem;
+            border-radius: 9999px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            cursor: default;
+            user-select: none;
+            transition: all 0.3s;
+        }
+        .sc-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .sc-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #166534;
+            background: #f0fdf4;
+            border: 1.5px solid #bbf7d0;
+            height: 30px;
+            padding: 0 0.65rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .sc-pill-btn:hover {
+            background: #dcfce7;
+            border-color: #86efac;
+        }
+
     </style>
 @endsection
 
@@ -1960,63 +2098,37 @@
                             </form>
 
                             {{-- Header & Camera Switch Control --}}
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
-                                {{-- Kiri: Label + Signal Widget --}}
-                                <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                                    <div
-                                        style="font-weight: 700; font-size: 0.85rem; color: #334155; display: flex; align-items: center; gap: 6px;">
-                                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
+                            <div class="scanner-controls-bar">
+                                <div class="sc-bar-left">
+                                    <div class="sc-bar-title">
+                                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="10" />
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>
-                                        Viewport Live QR Scanner
+                                        <span>Viewport Live Scanner</span>
                                     </div>
-                                    {{-- Signal Strength Widget (dekat label kamera, tidak nabrak kontrol) --}}
-                                    <div id="signalWidget" title="Kekuatan Sinyal Internet"
-                                        style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#f8fafc; border:1.5px solid #e2e8f0; cursor:default; user-select:none; transition:all 0.3s;">
-                                        <div id="signalBars"
-                                            style="display:flex; align-items:flex-end; gap:1.5px; height:13px;">
-                                            <div id="bar1"
-                                                style="width:2.5px; height:3px; border-radius:1.5px; background:#cbd5e1;"></div>
-                                            <div id="bar2"
-                                                style="width:2.5px; height:5.5px; border-radius:1.5px; background:#cbd5e1;">
-                                            </div>
-                                            <div id="bar3"
-                                                style="width:2.5px; height:8px; border-radius:1.5px; background:#cbd5e1;"></div>
-                                            <div id="bar4"
-                                                style="width:2.5px; height:10.5px; border-radius:1.5px; background:#cbd5e1;">
-                                            </div>
-                                            <div id="bar5"
-                                                style="width:2.5px; height:13px; border-radius:1.5px; background:#cbd5e1;">
-                                            </div>
+                                    <div id="signalWidget" title="Kekuatan Sinyal Internet" class="sc-signal-pill">
+                                        <div id="signalBars" style="display:flex; align-items:flex-end; gap:1.5px; height:12px;">
+                                            <div id="bar1" style="width:2.5px; height:3px; border-radius:1px; background:#cbd5e1;"></div>
+                                            <div id="bar2" style="width:2.5px; height:5px; border-radius:1px; background:#cbd5e1;"></div>
+                                            <div id="bar3" style="width:2.5px; height:7px; border-radius:1px; background:#cbd5e1;"></div>
+                                            <div id="bar4" style="width:2.5px; height:9.5px; border-radius:1px; background:#cbd5e1;"></div>
+                                            <div id="bar5" style="width:2.5px; height:12px; border-radius:1px; background:#cbd5e1;"></div>
                                         </div>
-                                        <span id="signalLabel" style="color:#64748b;">Mengukur...</span>
+                                        <span id="signalLabel">Cepat</span>
                                     </div>
                                 </div>
-                                {{-- Kanan: Fast Mode + Mirror --}}
-                                <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                                    <label
-                                        style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none;"
-                                        title="Scan cepat otomatis tanpa popup modal yang memblokir">
-                                        <input type="checkbox" id="autoScanToggle" checked
-                                            style="accent-color:#1eb349; width:16px; height:16px;"
-                                            onchange="handleFastModeChange(this.checked)">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
+                                <div class="sc-bar-right">
+                                    <label class="sc-pill-btn" title="Scan cepat otomatis tanpa popup modal yang memblokir">
+                                        <input type="checkbox" id="autoScanToggle" checked style="accent-color:#1eb349; width:14px; height:14px; margin:0; cursor:pointer;" onchange="handleFastModeChange(this.checked)">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                                         </svg>
-                                        <span>Fast Mode (Auto Next)</span>
+                                        <span>Fast Mode</span>
                                     </label>
-                                    <button type="button" id="mirrorToggleBtn" onclick="toggleMirror()"
-                                        style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none; transition: all 0.2s;"
-                                        title="Cerminkan tampilan kamera (mirror) untuk webcam desktop">
-                                        <svg id="mirrorIcon" width="14" height="14" fill="none" stroke="currentColor"
-                                            stroke-width="2.2" viewBox="0 0 24 24">
-                                            <path
-                                                d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20" />
-                                            <path d="M8 12h-.01M16 12h.01" />
+                                    <button type="button" id="mirrorToggleBtn" onclick="toggleMirror()" class="sc-pill-btn" title="Cerminkan tampilan kamera">
+                                        <svg id="mirrorIcon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20" />
                                         </svg>
                                         <span id="mirrorLabel">Mirror: ON</span>
                                     </button>
@@ -2245,7 +2357,7 @@
                                             <line x1="3" y1="10" x2="21" y2="10" />
                                         </svg>
                                         <select id="instantEventFilter" class="filter-select" onchange="runInstantFilter()">
-                                            <option value="">— Semua Event Ticket —</option>
+                                            <option value="">Semua Event</option>
                                             @foreach($events as $event)
                                                 <option value="{{ $event->id }}" {{ (string) $selectedEventId === (string) $event->id ? 'selected' : '' }}>
                                                     {{ $event->name }}
@@ -2833,14 +2945,14 @@
                                 </div>
 
                                 <button type="submit"
-                                    style="padding:0.8rem 1.5rem; background:linear-gradient(135deg, #1eb349, #15803d); color:#fff; border:none; border-radius:12px; font-weight:700; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; box-shadow:0 4px 14px rgba(30,179,73,0.3);">
+                                    style="width:100%; height:46px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:12px; font-weight:800; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; box-shadow:0 6px 18px rgba(30,179,73,0.32); transition:all 0.2s ease;">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                                         viewBox="0 0 24 24">
                                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
                                         <polyline points="17 21 17 13 7 13 7 21" />
                                         <polyline points="7 3 7 8 15 8" />
                                     </svg>
-                                    Simpan Rekening
+                                    <span>Simpan Rekening</span>
                                 </button>
                             </div>
                         </form>
