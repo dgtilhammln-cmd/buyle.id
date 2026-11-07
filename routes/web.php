@@ -689,6 +689,7 @@ Route::get('/debug-bio-error', function () {
     try {
         $profile = \App\Models\CreatorProfile::first();
         if (!$profile) return 'No profile found';
+        auth()->loginUsingId($profile->user_id);
         $blocks = $profile->bioBlocks()->get();
         $myProducts = \App\Models\Product::where('seller_id', $profile->user_id)->where('is_active', true)->orderBy('name')->get(['id', 'name', 'price', 'image', 'slug']);
         $whitelabelProducts = \App\Models\Product::whiteLabelApproved()->where('is_active', true)->where('seller_id', '!=', $profile->user_id)->with('seller:id,name')->orderBy('name')->get(['id', 'name', 'price', 'sale_price', 'whitelabel_price', 'whitelabel_terms', 'image', 'slug', 'seller_id']);
