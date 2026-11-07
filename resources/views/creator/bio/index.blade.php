@@ -943,7 +943,6 @@
                 padding: 0 1rem;
             }
         }
-        }
 
         @keyframes spin {
             from {
@@ -1690,27 +1689,28 @@
                         @endforeach
                     </div>
                 </div>
+            </div>{{-- /sidebarSecReorderCard --}}
 
-                {{-- Card 3: Mobile Preview Mockup --}}
-                @if($bioUrl)
-                    <div class="bio-sidebar-card bio-mockup-wrapper">
+            {{-- Card 3: Mobile Preview Mockup --}}
+            @if($bioUrl)
+                <div class="bio-sidebar-card bio-mockup-wrapper">
+                    <div
+                        style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">
+                        Live Preview</div>
+                    <div
+                        style="width: 260px; height: 530px; margin: 0 auto; border: 12px solid #1a1a1a; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background:#fff;">
+                        {{-- Notch --}}
                         <div
-                            style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">
-                            Live Preview</div>
-                        <div
-                            style="width: 260px; height: 530px; margin: 0 auto; border: 12px solid #1a1a1a; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background:#fff;">
-                            {{-- Notch --}}
-                            <div
-                                style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:100px; height:20px; background:#1a1a1a; border-bottom-left-radius:12px; border-bottom-right-radius:12px; z-index:10;">
-                            </div>
-                            <iframe src="{{ $bioUrl }}" style="width:100%; height:100%; border:none; background:#fff;"
-                                id="bioPreviewFrame"></iframe>
+                            style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:100px; height:20px; background:#1a1a1a; border-bottom-left-radius:12px; border-bottom-right-radius:12px; z-index:10;">
                         </div>
-                        <p style="text-align:center; font-size:0.7rem; color:#94a3b8; margin-top:0.75rem;">Perubahan profil akan
-                            terupdate otomatis saat disimpan.</p>
+                        <iframe src="{{ $bioUrl }}" style="width:100%; height:100%; border:none; background:#fff;"
+                            id="bioPreviewFrame"></iframe>
                     </div>
-                @endif
-            </div>
+                    <p style="text-align:center; font-size:0.7rem; color:#94a3b8; margin-top:0.75rem;">Perubahan profil akan
+                        terupdate otomatis saat disimpan.</p>
+                </div>
+            @endif
+        </div>{{-- /bio-sidebar-column --}}
 
             {{-- Main Content --}}
             <div class="bio-content">
@@ -8178,6 +8178,9 @@
                             style="flex:1.5; height:42px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,.3);">Simpan
                             & Tambahkan</button>
                     </div>
+                </form>
+            </div>
+        </div>
                     <script>
                         function updateHomepageSectionInputs() {
                             const hiddenContainer = document.getElementById('secReorderHiddenContainer');
