@@ -417,7 +417,7 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/track-bio', [TrackingController::class, 'bioClick'])->name('track.bio-click');
 Route::post('/track/{type}', [TrackingController::class, 'track'])->name('track');
 
-// Instagram Reels thumbnail proxy (server-side fetch to bypass CORS)
+// Instagram Reels thumbnail proxy (server-side fetch & permanent caching to bypass CORS & expirations)
 Route::get('/api/ig-thumb', function (\Illuminate\Http\Request $request) {
     $url = $request->query('url');
     if (!$url) return response()->json(['error' => 'no url'], 400);
@@ -427,7 +427,18 @@ Route::get('/api/ig-thumb', function (\Illuminate\Http\Request $request) {
         return response()->json(['error' => 'invalid url'], 400);
     }
     $shortcode = $m[1];
+    $localFile = "bio/video_thumbs/ig_{$shortcode}.jpg";
 
+    // If already saved on disk, return local asset immediately
+    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($localFile)) {
+        return response()->json([
+            'thumbnail_url' => asset('storage/' . $localFile),
+            'permanent'     => true,
+        ])->header('Cache-Control', 'public, max-age=604800')
+          ->header('Access-Control-Allow-Origin', '*');
+    }
+
+    $cleanThumb = null;
     try {
         // Method 1: Fetch Instagram embed page with Mobile User Agent
         $embedResponse = \Illuminate\Support\Facades\Http::timeout(6)
@@ -444,75 +455,174 @@ Route::get('/api/ig-thumb', function (\Illuminate\Http\Request $request) {
                     $clean = stripslashes(html_entity_decode($match));
                     if (strpos($clean, 'profile_pic') === false && strpos($clean, 's100x100') === false) {
                         if (strpos($clean, 't51.82787-15') !== false || strpos($clean, 'CLIPS') !== false || strpos($clean, 'cover_frame') !== false || strpos($clean, 's320x320') !== false || strpos($clean, 's640x640') !== false) {
-                            return response()->json(['thumbnail_url' => $clean])
-                                ->header('Cache-Control', 'public, max-age=86400')
-                                ->header('Access-Control-Allow-Origin', '*');
+                            $cleanThumb = $clean;
+                            break;
                         }
                     }
                 }
-                foreach ($matches[0] as $match) {
-                    $clean = stripslashes(html_entity_decode($match));
-                    if (strpos($clean, 'profile_pic') === false && strpos($clean, 's100x100') === false && strpos($clean, 'rsrc.php') === false) {
-                        return response()->json(['thumbnail_url' => $clean])
-                            ->header('Cache-Control', 'public, max-age=86400')
-                            ->header('Access-Control-Allow-Origin', '*');
+                if (!$cleanThumb) {
+                    foreach ($matches[0] as $match) {
+                        $clean = stripslashes(html_entity_decode($match));
+                        if (strpos($clean, 'profile_pic') === false && strpos($clean, 's100x100') === false && strpos($clean, 'rsrc.php') === false) {
+                            $cleanThumb = $clean;
+                            break;
+                        }
                     }
                 }
             }
         }
 
         // Method 2: Googlebot User-Agent og:image
-        $response = \Illuminate\Support\Facades\Http::timeout(6)
-            ->withHeaders([
-                'User-Agent' => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-            ])
-            ->get("https://www.instagram.com/p/{$shortcode}/");
+        if (!$cleanThumb) {
+            $response = \Illuminate\Support\Facades\Http::timeout(6)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                ])
+                ->get("https://www.instagram.com/p/{$shortcode}/");
 
-        if ($response->ok()) {
-            $html = $response->body();
-            if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](https?:[^"\']+)["\']/', $html, $img)) {
-                return response()->json(['thumbnail_url' => $img[1]])
-                    ->header('Cache-Control', 'public, max-age=86400')
-                    ->header('Access-Control-Allow-Origin', '*');
+            if ($response->ok()) {
+                $html = $response->body();
+                if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](https?:[^"\']+)["\']/', $html, $img)) {
+                    $cleanThumb = $img[1];
+                }
             }
         }
-    } catch (\Exception $e) {
-        // Fallback below
+    } catch (\Throwable $e) {}
+
+    // Fallback: weserv proxy URL
+    if (!$cleanThumb) {
+        $cleanThumb = 'https://images.weserv.nl/?url=' . urlencode("https://www.instagram.com/p/{$shortcode}/media/?size=l");
     }
 
-    // Fallback: return weserv proxy URL
-    $proxied = 'https://images.weserv.nl/?url=' . urlencode("https://www.instagram.com/p/{$shortcode}/media/?size=l");
-    return response()->json(['thumbnail_url' => $proxied])
-        ->header('Cache-Control', 'public, max-age=1800')
+    // Download & cache locally so it never expires!
+    if ($cleanThumb) {
+        try {
+            $dl = \Illuminate\Support\Facades\Http::timeout(8)->get($cleanThumb);
+            if ($dl->successful() && strlen($dl->body()) > 500) {
+                \Illuminate\Support\Facades\Storage::disk('public')->put($localFile, $dl->body());
+                $localAsset = asset('storage/' . $localFile);
+
+                // Auto-sync CreatorBioBlock in database
+                foreach (\App\Models\CreatorBioBlock::where('url', $url)->get() as $b) {
+                    $dj = $b->data_json ?? [];
+                    $dj['image'] = $localFile;
+                    $b->update(['data_json' => $dj]);
+                }
+
+                return response()->json([
+                    'thumbnail_url' => $localAsset,
+                    'permanent'     => true,
+                ])->header('Cache-Control', 'public, max-age=604800')
+                  ->header('Access-Control-Allow-Origin', '*');
+            }
+        } catch (\Throwable $e) {}
+
+        return response()->json(['thumbnail_url' => $cleanThumb])
+            ->header('Cache-Control', 'public, max-age=1800')
+            ->header('Access-Control-Allow-Origin', '*');
+    }
+
+    return response()->json(['error' => 'Gagal mengambil data Instagram'], 502)
         ->header('Access-Control-Allow-Origin', '*');
 })->name('api.ig-thumb');
 
-// TikTok oEmbed proxy - server-side fetch to bypass CORS (same pattern as ig-thumb above)
+// TikTok oEmbed proxy - server-side fetch & permanent local cache
 Route::get('/api/tiktok-thumb', function (\Illuminate\Http\Request $request) {
     $url = $request->query('url');
     if (!$url || !str_contains($url, 'tiktok.com')) {
         return response()->json(['error' => 'URL TikTok tidak valid'], 422);
     }
 
+    $hash = md5($url);
+    $localFile = "bio/video_thumbs/tt_{$hash}.jpg";
+
+    // If already saved on disk, return local asset immediately
+    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($localFile)) {
+        return response()->json([
+            'thumbnail_url' => asset('storage/' . $localFile),
+            'permanent'     => true,
+        ])->header('Cache-Control', 'public, max-age=604800')
+          ->header('Access-Control-Allow-Origin', '*');
+    }
+
+    $thumbUrl   = null;
+    $title      = null;
+    $authorName = null;
+
     try {
-        $response = \Illuminate\Support\Facades\Http::timeout(8)
+        $response = \Illuminate\Support\Facades\Http::timeout(10)
             ->withHeaders([
-                'User-Agent' => 'Mozilla/5.0 (compatible; oEmbed/1.0; +https://oembed.com)',
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept'     => 'application/json',
             ])
             ->get('https://www.tiktok.com/oembed', ['url' => $url]);
 
         if ($response->successful()) {
-            $data = $response->json();
-            return response()->json([
-                'thumbnail_url' => $data['thumbnail_url'] ?? null,
-                'title'         => $data['title'] ?? null,
-                'author_name'   => $data['author_name'] ?? null,
-            ])->header('Cache-Control', 'public, max-age=86400')
-              ->header('Access-Control-Allow-Origin', '*');
+            $data       = $response->json();
+            $thumbUrl   = $data['thumbnail_url'] ?? null;
+            $title      = $data['title'] ?? null;
+            $authorName = $data['author_name'] ?? null;
         }
-    } catch (\Exception $e) {
-        // Fallback below
+    } catch (\Throwable $e) {}
+
+    // Fallback: scraper if oembed failed
+    if (!$thumbUrl) {
+        try {
+            $cRes = \Illuminate\Support\Facades\Http::timeout(8)
+                ->withHeaders([
+                    'User-Agent' => 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+                    'Accept'     => 'text/html,application/xhtml+xml',
+                ])
+                ->get($url);
+            if ($cRes->ok()) {
+                $html = $cRes->body();
+                if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](https?:[^"\']+)["\']/', $html, $m)) {
+                    $thumbUrl = html_entity_decode($m[1]);
+                }
+                if (preg_match('/<meta[^>]+property=["\']og:title["\'][^>]+content=["\']([^"\']+)["\']/', $html, $m)) {
+                    $title = html_entity_decode($m[1]);
+                }
+            }
+        } catch (\Throwable $e) {}
+    }
+
+    // Download & cache locally so it never expires!
+    if ($thumbUrl) {
+        try {
+            $imgRes = \Illuminate\Support\Facades\Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Referer'    => 'https://www.tiktok.com/',
+                ])
+                ->get($thumbUrl);
+
+            if ($imgRes->successful() && strlen($imgRes->body()) > 500) {
+                \Illuminate\Support\Facades\Storage::disk('public')->put($localFile, $imgRes->body());
+                $localAsset = asset('storage/' . $localFile);
+
+                // Auto-sync CreatorBioBlock in database
+                foreach (\App\Models\CreatorBioBlock::where('url', $url)->get() as $b) {
+                    $dj = $b->data_json ?? [];
+                    $dj['image'] = $localFile;
+                    $b->update(['data_json' => $dj]);
+                }
+
+                return response()->json([
+                    'thumbnail_url' => $localAsset,
+                    'title'         => $title,
+                    'author_name'   => $authorName,
+                    'permanent'     => true,
+                ])->header('Cache-Control', 'public, max-age=604800')
+                  ->header('Access-Control-Allow-Origin', '*');
+            }
+        } catch (\Throwable $e) {}
+
+        return response()->json([
+            'thumbnail_url' => $thumbUrl,
+            'title'         => $title,
+            'author_name'   => $authorName,
+        ])->header('Cache-Control', 'public, max-age=86400')
+          ->header('Access-Control-Allow-Origin', '*');
     }
 
     return response()->json(['error' => 'Gagal mengambil data TikTok'], 502)
@@ -561,6 +671,7 @@ Route::get('/deploy-hostinger', function () {
         $gitOutput = shell_exec('git fetch origin main 2>&1 && git reset --hard origin/main 2>&1');
         \Illuminate\Support\Facades\Artisan::call('storage:link');
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        \Illuminate\Support\Facades\Artisan::call('bio:cache-video-thumbs');
         return 'SUKSES! Sync Git & Clear Cache Berhasil.<br><pre>' . $gitOutput . '</pre>';
     } catch (\Exception $e) {
         return 'ERROR: ' . $e->getMessage();

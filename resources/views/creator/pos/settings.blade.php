@@ -19,6 +19,7 @@
                 margin: 0 !important;
                 padding: 0 !important;
             }
+
             .cr-main-wrapper {
                 margin-left: 0 !important;
                 padding: 0 !important;
@@ -28,6 +29,7 @@
                 overflow-x: hidden !important;
                 background: #f8fafc !important;
             }
+
             .cr-main-canvas {
                 margin: 0 auto !important;
                 padding: 0.5rem 0.75rem 120px 0.75rem !important;
@@ -45,6 +47,7 @@
             body {
                 background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             }
+
             .cr-sidebar {
                 display: flex !important;
                 transform: none !important;
@@ -54,6 +57,7 @@
                 width: 240px !important;
                 z-index: 50 !important;
             }
+
             .cr-main-wrapper {
                 margin-left: 240px !important;
                 padding: 1.25rem 0 0 0 !important;
@@ -63,6 +67,7 @@
                 overflow-x: hidden !important;
                 background: transparent !important;
             }
+
             .cr-main-canvas {
                 margin: 0 !important;
                 padding: 1.5rem 2rem 100px 2rem !important;
@@ -382,11 +387,11 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider-clean {
+        input:checked+.slider-clean {
             background-color: #1eb349;
         }
 
-        input:checked + .slider-clean:before {
+        input:checked+.slider-clean:before {
             transform: translateX(16px);
         }
 
@@ -499,31 +504,58 @@
         {{-- Horizontal Pill Navigation --}}
         <div class="pos-settings-tabs-scroll">
             <button type="button" class="tab-pill-btn active" onclick="switchSettingTab('struk', this)">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
                 Struk
             </button>
             <button type="button" class="tab-pill-btn" onclick="switchSettingTab('bayar', this)">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                    <line x1="1" y1="10" x2="23" y2="10" />
+                </svg>
                 Pembayaran
             </button>
             <button type="button" class="tab-pill-btn" onclick="switchSettingTab('pajak', this)">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <line x1="19" y1="5" x2="5" y2="19" />
+                    <circle cx="6.5" cy="6.5" r="2.5" />
+                    <circle cx="17.5" cy="17.5" r="2.5" />
+                </svg>
                 Pajak &amp; Biaya
             </button>
             <button type="button" class="tab-pill-btn" onclick="switchSettingTab('diskon', this)">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                </svg>
                 Diskon
             </button>
             <button type="button" class="tab-pill-btn" onclick="switchSettingTab('meja', this)">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <line x1="3" y1="9" x2="21" y2="9" />
+                    <line x1="9" y1="21" x2="9" y2="9" />
+                </svg>
                 Meja
             </button>
             <button type="button" class="tab-pill-btn" onclick="switchSettingTab('staf', this)">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
                 Staf Kasir
             </button>
             <button type="button" class="tab-pill-btn" onclick="switchSettingTab('frontstore', this)">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
                 Front Store
             </button>
         </div>
@@ -536,21 +568,37 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.85rem;">
-                    <div id="logoPreviewWrap" style="width: 56px; height: 56px; border-radius: 14px; border: 1.5px dashed #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                    <div id="logoPreviewWrap"
+                        style="width: 56px; height: 56px; border-radius: 14px; border: 1.5px dashed #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
                         @if($posLogoUrl)
-                            <img src="{{ $posLogoUrl }}" alt="Logo" id="logoPreviewImg" style="width: 100%; height: 100%; object-fit: contain;">
+                            <img src="{{ $posLogoUrl }}" alt="Logo" id="logoPreviewImg"
+                                style="width: 100%; height: 100%; object-fit: contain;">
                         @else
-                            <svg id="logoPreviewSvg" width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            <svg id="logoPreviewSvg" width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
                         @endif
                     </div>
                     <div style="flex: 1; min-width: 0;">
-                        <input type="file" id="posLogoInput" accept="image/*" style="display: none;" onchange="uploadLogoAjax(this)">
+                        <input type="file" id="posLogoInput" accept="image/*" style="display: none;"
+                            onchange="uploadLogoAjax(this)">
                         <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
-                            <button type="button" class="btn-white-pill" onclick="document.getElementById('posLogoInput').click()">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <button type="button" class="btn-white-pill"
+                                onclick="document.getElementById('posLogoInput').click()">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
                                 Ganti Logo
                             </button>
-                            <button type="button" class="btn-white-pill" id="btnDeleteLogo" style="color: #dc2626; border-color: #fecaca; {{ empty($posLogoUrl) ? 'display:none;' : '' }}" onclick="deleteLogoAjax()">
+                            <button type="button" class="btn-white-pill" id="btnDeleteLogo"
+                                style="color: #dc2626; border-color: #fecaca; {{ empty($posLogoUrl) ? 'display:none;' : '' }}"
+                                onclick="deleteLogoAjax()">
                                 Hapus
                             </button>
                         </div>
@@ -560,17 +608,20 @@
 
                 <div class="form-group-clean">
                     <label class="form-label-clean">Nama Toko di Struk</label>
-                    <input type="text" id="settingStoreName" class="form-control-clean" value="{{ $storeName }}" placeholder="Nama Brand / Usaha">
+                    <input type="text" id="settingStoreName" class="form-control-clean" value="{{ $storeName }}"
+                        placeholder="Nama Brand / Usaha">
                 </div>
 
                 <div class="form-group-clean">
                     <label class="form-label-clean">Alamat Toko</label>
-                    <textarea id="settingStoreAddress" class="form-control-clean" rows="2" placeholder="Alamat cabang atau outlet">{{ $posStoreAddress }}</textarea>
+                    <textarea id="settingStoreAddress" class="form-control-clean" rows="2"
+                        placeholder="Alamat cabang atau outlet">{{ $posStoreAddress }}</textarea>
                 </div>
 
                 <div class="form-group-clean">
                     <label class="form-label-clean">No. Telepon / WhatsApp</label>
-                    <input type="text" id="settingStorePhone" class="form-control-clean" value="{{ $posStorePhone }}" placeholder="Contoh: 08123456789">
+                    <input type="text" id="settingStorePhone" class="form-control-clean" value="{{ $posStorePhone }}"
+                        placeholder="Contoh: 08123456789">
                 </div>
 
                 <button type="button" class="btn-green-pill" onclick="saveStrukInfoSettings()">
@@ -588,26 +639,39 @@
 
                 <div class="form-group-clean">
                     <label class="form-label-clean">Sistem QRIS / Non-Tunai</label>
-                    <select id="settingCashlessMode" class="form-control-clean" onchange="toggleQrisUploadVisibility(this.value)">
-                        <option value="snap_midtrans" {{ $posCashlessMode === 'snap_midtrans' ? 'selected' : '' }}>Otomatis (QRIS Dinamis Midtrans)</option>
-                        <option value="qris_static" {{ $posCashlessMode === 'qris_static' ? 'selected' : '' }}>Statis (Upload Gambar QRIS Sendiri)</option>
+                    <select id="settingCashlessMode" class="form-control-clean"
+                        onchange="toggleQrisUploadVisibility(this.value)">
+                        <option value="snap_midtrans" {{ $posCashlessMode === 'snap_midtrans' ? 'selected' : '' }}>Otomatis
+                            (QRIS Dinamis Midtrans)</option>
+                        <option value="qris_static" {{ $posCashlessMode === 'qris_static' ? 'selected' : '' }}>Statis (Upload
+                            Gambar QRIS Sendiri)</option>
                     </select>
                 </div>
 
                 {{-- QRIS Statis Upload --}}
-                <div id="qrisStaticWrap" style="margin-bottom: 0.85rem; {{ $posCashlessMode === 'qris_static' ? '' : 'display:none;' }}">
+                <div id="qrisStaticWrap"
+                    style="margin-bottom: 0.85rem; {{ $posCashlessMode === 'qris_static' ? '' : 'display:none;' }}">
                     <label class="form-label-clean">Gambar QRIS Toko</label>
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <div id="qrisPreviewWrap" style="width: 52px; height: 52px; border-radius: 12px; border: 1px solid #e2e8f0; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                        <div id="qrisPreviewWrap"
+                            style="width: 52px; height: 52px; border-radius: 12px; border: 1px solid #e2e8f0; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
                             @if($posQrisUrl)
-                                <img src="{{ $posQrisUrl }}" alt="QRIS" id="qrisPreviewImg" style="width: 100%; height: 100%; object-fit: contain;">
+                                <img src="{{ $posQrisUrl }}" alt="QRIS" id="qrisPreviewImg"
+                                    style="width: 100%; height: 100%; object-fit: contain;">
                             @else
-                                <svg width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                <svg width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" />
+                                    <rect x="14" y="3" width="7" height="7" />
+                                    <rect x="14" y="14" width="7" height="7" />
+                                    <rect x="3" y="14" width="7" height="7" />
+                                </svg>
                             @endif
                         </div>
                         <div>
-                            <input type="file" id="posQrisInput" accept="image/*" style="display: none;" onchange="uploadQrisAjax(this)">
-                            <button type="button" class="btn-white-pill" onclick="document.getElementById('posQrisInput').click()">
+                            <input type="file" id="posQrisInput" accept="image/*" style="display: none;"
+                                onchange="uploadQrisAjax(this)">
+                            <button type="button" class="btn-white-pill"
+                                onclick="document.getElementById('posQrisInput').click()">
                                 Upload Gambar QRIS
                             </button>
                         </div>
@@ -617,8 +681,10 @@
                 <div class="form-group-clean">
                     <label class="form-label-clean">Penanggung Biaya Sistem (Rp 500 + 0.5%)</label>
                     <select id="settingFeePayer" class="form-control-clean">
-                        <option value="seller" {{ ($posFeePayer ?? 'seller') === 'seller' ? 'selected' : '' }}>Penjual (Potong dari Deposit POS)</option>
-                        <option value="buyer" {{ ($posFeePayer ?? 'seller') === 'buyer' ? 'selected' : '' }}>Pembeli (Ditambahkan ke Tagihan)</option>
+                        <option value="seller" {{ ($posFeePayer ?? 'seller') === 'seller' ? 'selected' : '' }}>Penjual (Potong
+                            dari Deposit POS)</option>
+                        <option value="buyer" {{ ($posFeePayer ?? 'seller') === 'buyer' ? 'selected' : '' }}>Pembeli
+                            (Ditambahkan ke Tagihan)</option>
                     </select>
                 </div>
 
@@ -641,7 +707,8 @@
                 </div>
 
                 <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px dashed #e2e8f0;">
-                    <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Tambah Pajak / Biaya Baru</div>
+                    <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Tambah Pajak /
+                        Biaya Baru</div>
                     <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 0.35rem; margin-bottom: 0.5rem;">
                         <input type="text" id="newFeeName" class="form-control-clean" placeholder="Nama (e.g. PPN)">
                         <select id="newFeeType" class="form-control-clean">
@@ -651,7 +718,11 @@
                         <input type="number" id="newFeeValue" class="form-control-clean" placeholder="Nilai (e.g. 11)">
                     </div>
                     <button type="button" class="btn-white-pill" style="width: 100%;" onclick="addNewFeeItem()">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                         Tambahkan ke Daftar
                     </button>
                 </div>
@@ -677,20 +748,29 @@
                 </div>
 
                 <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px dashed #e2e8f0;">
-                    <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Tambah Preset Diskon Baru</div>
+                    <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Tambah Preset
+                        Diskon Baru</div>
                     <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.45rem; margin-bottom: 0.45rem;">
-                        <input type="text" id="newDiscName" class="form-control-clean" placeholder="Nama Diskon (e.g. Diskon Member)">
+                        <input type="text" id="newDiscName" class="form-control-clean"
+                            placeholder="Nama Diskon (e.g. Diskon Member)">
                         <select id="newDiscType" class="form-control-clean">
                             <option value="percent">Persen (%)</option>
                             <option value="nominal">Nominal (Rp)</option>
                         </select>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin-bottom: 0.5rem;">
-                        <input type="number" id="newDiscValue" class="form-control-clean" placeholder="Nilai Diskon (e.g. 10)">
-                        <input type="number" id="newDiscMinQty" class="form-control-clean" placeholder="Min. Pembelian Qty" value="1" min="1">
+                        <input type="number" id="newDiscValue" class="form-control-clean"
+                            placeholder="Nilai Diskon (e.g. 10)">
+                        <input type="number" id="newDiscMinQty" class="form-control-clean" placeholder="Min. Pembelian Qty"
+                            value="1" min="1">
                     </div>
-                    <button type="button" class="btn-green-pill" style="width: 100%; justify-content: center;" onclick="addNewDiscountItem()">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <button type="button" class="btn-green-pill" style="width: 100%; justify-content: center;"
+                        onclick="addNewDiscountItem()">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                         Tambahkan Preset Diskon
                     </button>
                 </div>
@@ -717,7 +797,8 @@
 
                 <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px dashed #e2e8f0;">
                     <div style="display: flex; gap: 0.45rem;">
-                        <input type="text" id="newTableName" class="form-control-clean" placeholder="Nomor / Nama Meja (e.g. Meja 01)">
+                        <input type="text" id="newTableName" class="form-control-clean"
+                            placeholder="Nomor / Nama Meja (e.g. Meja 01)">
                         <button type="button" class="btn-white-pill" style="flex-shrink: 0;" onclick="addNewTableItem()">
                             Tambah
                         </button>
@@ -744,20 +825,25 @@
                     @forelse($cashiers as $c)
                         <div class="list-row-item">
                             <div class="list-row-left">
-                                <div style="width: 32px; height: 32px; border-radius: 50%; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">
+                                <div
+                                    style="width: 32px; height: 32px; border-radius: 50%; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">
                                     {{ strtoupper(substr($c->name, 0, 1)) }}
                                 </div>
                                 <div style="min-width: 0;">
                                     <div class="list-row-name">{{ $c->name }}</div>
-                                    <div class="list-row-sub">{{ $c->shift_hours ?? 'Shift Standar' }} &middot; {{ $c->email }}</div>
+                                    <div class="list-row-sub">{{ $c->shift_hours ?? 'Shift Standar' }} &middot; {{ $c->email }}
+                                    </div>
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.4rem;">
                                 <label class="switch-clean">
-                                    <input type="checkbox" {{ $c->is_active ? 'checked' : '' }} onchange="toggleCashierStatus({{ $c->id }})">
+                                    <input type="checkbox" {{ $c->is_active ? 'checked' : '' }}
+                                        onchange="toggleCashierStatus({{ $c->id }})">
                                     <span class="slider-clean"></span>
                                 </label>
-                                <button type="button" class="btn-white-pill" style="color: #dc2626; border-color: #fecaca; padding: 0 0.5rem; height: 28px;" onclick="deleteCashierAjax({{ $c->id }}, '{{ addslashes($c->name) }}')">
+                                <button type="button" class="btn-white-pill"
+                                    style="color: #dc2626; border-color: #fecaca; padding: 0 0.5rem; height: 28px;"
+                                    onclick="deleteCashierAjax({{ $c->id }}, '{{ addslashes($c->name) }}')">
                                     &times;
                                 </button>
                             </div>
@@ -771,7 +857,8 @@
 
                 {{-- Form Tambah Kasir --}}
                 <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px dashed #e2e8f0;">
-                    <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Tambah Staf Kasir Baru</div>
+                    <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Tambah Staf
+                        Kasir Baru</div>
                     <div class="form-group-clean">
                         <label class="form-label-clean">Nama Lengkap</label>
                         <input type="text" id="addStaffName" class="form-control-clean" placeholder="Nama Kasir">
@@ -782,11 +869,13 @@
                     </div>
                     <div class="form-group-clean">
                         <label class="form-label-clean">Kata Sandi (Min 6 Karakter)</label>
-                        <input type="password" id="addStaffPassword" class="form-control-clean" placeholder="Password akun kasir">
+                        <input type="password" id="addStaffPassword" class="form-control-clean"
+                            placeholder="Password akun kasir">
                     </div>
                     <div class="form-group-clean">
                         <label class="form-label-clean">Jam Shift</label>
-                        <input type="text" id="addStaffShift" class="form-control-clean" value="08:00 - 16:00" placeholder="08:00 - 16:00">
+                        <input type="text" id="addStaffShift" class="form-control-clean" value="08:00 - 16:00"
+                            placeholder="08:00 - 16:00">
                     </div>
                     <button type="button" class="btn-green-pill" onclick="saveNewCashierAjax()">
                         Simpan Akun Kasir Baru
@@ -800,26 +889,36 @@
             <div class="settings-card">
                 <div class="card-sec-head">
                     <h3 class="card-sec-title">Storefront &amp; Self-Order</h3>
-                    <span class="card-sec-badge" id="frontStoreBadgeStatus">{{ $profile->pos_storefront_enabled ? 'Aktif' : 'Nonaktif' }}</span>
+                    <span class="card-sec-badge"
+                        id="frontStoreBadgeStatus">{{ $profile->pos_storefront_enabled ? 'Aktif' : 'Nonaktif' }}</span>
                 </div>
 
                 {{-- Link Storefront Publik --}}
-                <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 14px; padding: 0.85rem; margin-bottom: 1.1rem;">
-                    <div style="font-size: 0.74rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem;">
+                <div
+                    style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 14px; padding: 0.85rem; margin-bottom: 1.1rem;">
+                    <div
+                        style="font-size: 0.74rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem;">
                         Link Storefront Publik
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; background: #ffffff; border: 1px solid #86efac; border-radius: 10px; padding: 0.45rem 0.65rem;">
-                        <input type="text" id="frontStoreUrlInput" value="{{ $storefrontUrl ?? url('/s/' . ($profile->store_slug ?: ($seller->username ?: 'toko-' . $seller->id))) }}" readonly
+                    <div
+                        style="display: flex; align-items: center; gap: 0.5rem; background: #ffffff; border: 1px solid #86efac; border-radius: 10px; padding: 0.45rem 0.65rem;">
+                        <input type="text" id="frontStoreUrlInput"
+                            value="{{ $storefrontUrl ?? url('/s/' . ($profile->store_slug ?: ($seller->username ?: 'toko-' . $seller->id))) }}"
+                            readonly
                             style="flex: 1; border: none; outline: none; font-size: 0.8rem; font-weight: 600; color: #15803d; background: transparent; font-family: 'Montserrat', sans-serif;">
-                        <button type="button" onclick="copyFrontStoreUrl()" class="btn-green-pill" style="padding: 0.35rem 0.75rem; font-size: 0.72rem;">
+                        <button type="button" onclick="copyFrontStoreUrl()" class="btn-green-pill"
+                            style="padding: 0.35rem 0.75rem; font-size: 0.72rem;">
                             Salin
                         </button>
-                        <a href="{{ $storefrontUrl ?? url('/s/' . ($profile->store_slug ?: ($seller->username ?: 'toko-' . $seller->id))) }}" target="_blank" class="btn-white-pill" style="padding: 0.35rem 0.65rem; font-size: 0.72rem; text-decoration: none;">
+                        <a href="{{ $storefrontUrl ?? url('/s/' . ($profile->store_slug ?: ($seller->username ?: 'toko-' . $seller->id))) }}"
+                            target="_blank" class="btn-white-pill"
+                            style="padding: 0.35rem 0.65rem; font-size: 0.72rem; text-decoration: none;">
                             Buka
                         </a>
                     </div>
                     <div style="font-size: 0.7rem; color: #15803d; margin-top: 0.4rem;">
-                        Pelanggan dapat membuka link ini langsung atau scan QR meja untuk melihat menu dan pesan sendiri (self-order).
+                        Pelanggan dapat membuka link ini langsung atau scan QR meja untuk melihat menu dan pesan sendiri
+                        (self-order).
                     </div>
                 </div>
 
@@ -838,22 +937,33 @@
                 {{-- Banner Toko (19:6 Landscape WebP) --}}
                 <div class="form-group-clean">
                     <label class="form-label-clean">Banner Toko (19:6 Landscape)</label>
-                    <div id="bannerPreviewWrap" style="width: 100%; aspect-ratio: 19/6; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; margin-bottom: 0.5rem;">
+                    <div id="bannerPreviewWrap"
+                        style="width: 100%; aspect-ratio: 19/6; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; margin-bottom: 0.5rem;">
                         @if($posBannerUrl ?? ($profile->pos_banner ? asset('storage/' . $profile->pos_banner) : null))
-                            <img src="{{ $posBannerUrl ?? asset('storage/' . $profile->pos_banner) }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ $posBannerUrl ?? asset('storage/' . $profile->pos_banner) }}" alt="Banner"
+                                style="width: 100%; height: 100%; object-fit: cover;">
                         @else
                             <div style="text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 1rem;">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin: 0 auto 4px auto; display: block;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    viewBox="0 0 24 24" style="margin: 0 auto 4px auto; display: block;">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
                                 Rekomendasi rasio 19:6 landscape (Otomatis convert ke WebP)
                             </div>
                         @endif
                     </div>
                     <div style="display: flex; gap: 0.45rem;">
-                        <label class="btn-white-pill" style="flex: 1; cursor: pointer; text-align: center; justify-content: center; display: inline-flex; align-items: center;">
-                            <input type="file" id="bannerFileInput" accept="image/png,image/jpeg,image/webp" style="display: none;" onchange="uploadBannerAjax(this)">
+                        <label class="btn-white-pill"
+                            style="flex: 1; cursor: pointer; text-align: center; justify-content: center; display: inline-flex; align-items: center;">
+                            <input type="file" id="bannerFileInput" accept="image/png,image/jpeg,image/webp"
+                                style="display: none;" onchange="uploadBannerAjax(this)">
                             Unggah Banner
                         </label>
-                        <button type="button" id="btnDeleteBanner" class="btn-white-pill" style="color: #dc2626; border-color: #fecaca; display: {{ !empty($posBannerUrl ?? $profile->pos_banner) ? 'inline-flex' : 'none' }};" onclick="deleteBannerAjax()">
+                        <button type="button" id="btnDeleteBanner" class="btn-white-pill"
+                            style="color: #dc2626; border-color: #fecaca; display: {{ !empty($posBannerUrl ?? $profile->pos_banner) ? 'inline-flex' : 'none' }};"
+                            onclick="deleteBannerAjax()">
                             Hapus
                         </button>
                     </div>
@@ -861,33 +971,43 @@
 
                 {{-- Jam Buka & Tutup Toko --}}
                 <div class="form-group-clean">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                    <div
+                        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
                         <label class="form-label-clean" style="margin-bottom: 0;">Jam Operasional Toko</label>
                         @if(!empty($staffEarlyStart) && !empty($staffLateEnd))
-                            <button type="button" onclick="applyStaffHours()" style="background: none; border: none; color: #16a34a; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-decoration: underline;">
+                            <button type="button" onclick="applyStaffHours()"
+                                style="background: none; border: none; color: #16a34a; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-decoration: underline;">
                                 Pakai Jam Shift Staf ({{ $staffEarlyStart }} - {{ $staffLateEnd }})
                             </button>
                         @endif
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
                         <div>
-                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 600; display: block; margin-bottom: 3px;">Jam Buka</span>
-                            <input type="time" id="frontStoreOpen" class="form-control-clean" value="{{ $storeOpen ?? ($profile->pos_store_open ?: ($staffEarlyStart ?: '08:00')) }}">
+                            <span
+                                style="font-size: 0.7rem; color: #64748b; font-weight: 600; display: block; margin-bottom: 3px;">Jam
+                                Buka</span>
+                            <input type="time" id="frontStoreOpen" class="form-control-clean"
+                                value="{{ $storeOpen ?? ($profile->pos_store_open ?: ($staffEarlyStart ?: '08:00')) }}">
                         </div>
                         <div>
-                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 600; display: block; margin-bottom: 3px;">Jam Tutup</span>
-                            <input type="time" id="frontStoreClose" class="form-control-clean" value="{{ $storeClose ?? ($profile->pos_store_close ?: ($staffLateEnd ?: '22:00')) }}">
+                            <span
+                                style="font-size: 0.7rem; color: #64748b; font-weight: 600; display: block; margin-bottom: 3px;">Jam
+                                Tutup</span>
+                            <input type="time" id="frontStoreClose" class="form-control-clean"
+                                value="{{ $storeClose ?? ($profile->pos_store_close ?: ($staffLateEnd ?: '22:00')) }}">
                         </div>
                     </div>
                     <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.35rem;">
-                        Jika sudah ada staf kasir terdaftar, jam operasional dapat membaca jam shift staf paling awal dan paling akhir secara otomatis sebagai fallback.
+                        Jika sudah ada staf kasir terdaftar, jam operasional dapat membaca jam shift staf paling awal dan
+                        paling akhir secara otomatis sebagai fallback.
                     </div>
                 </div>
 
                 {{-- Lokasi Google Maps --}}
                 <div class="form-group-clean">
                     <label class="form-label-clean">Lokasi Google Maps</label>
-                    <input type="url" id="frontStoreMaps" class="form-control-clean" value="{{ $profile->pos_maps_link }}" placeholder="https://maps.google.com/?q=...">
+                    <input type="url" id="frontStoreMaps" class="form-control-clean" value="{{ $profile->pos_maps_link }}"
+                        placeholder="https://maps.google.com/?q=...">
                     <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.35rem;">
                         Masukkan link Google Maps toko Anda agar pelanggan dapat membuka rute lokasi dengan mudah.
                     </div>
@@ -897,7 +1017,9 @@
                 <div class="form-group-clean">
                     <label class="form-label-clean">Warna Aksen / Tema Storefront</label>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <input type="text" id="frontStoreAccent" class="form-control-clean" value="{{ $profile->pos_accent_color ?: 'linear-gradient(135deg, #1db349 0%, #a5cf36 100%)' }}" placeholder="#1db349">
+                        <input type="text" id="frontStoreAccent" class="form-control-clean"
+                            value="{{ $profile->pos_accent_color ?: 'linear-gradient(135deg, #1db349 0%, #a5cf36 100%)' }}"
+                            placeholder="#1db349">
                         <button type="button" class="btn-white-pill" style="flex-shrink: 0;" onclick="resetAccentDefault()">
                             Default
                         </button>
@@ -908,7 +1030,8 @@
                 </div>
 
                 {{-- Metode Pembayaran Self-Order (Wajib Beda dengan Kasir Fisik) --}}
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 0.85rem; margin-top: 1rem;">
+                <div
+                    style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 0.85rem; margin-top: 1rem;">
                     <div style="font-size: 0.76rem; font-weight: 700; color: #0f172a; margin-bottom: 0.4rem;">
                         Metode Pembayaran Self-Order (Front Store)
                     </div>
@@ -916,18 +1039,26 @@
                         Pembayaran self-order di Front Store secara khusus terpisah dari pengaturan kasir fisik internal:
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 0.45rem;">
-                        <div style="display: flex; align-items: flex-start; gap: 0.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.55rem 0.75rem;">
-                            <div style="width: 24px; height: 24px; border-radius: 6px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;">1</div>
+                        <div
+                            style="display: flex; align-items: flex-start; gap: 0.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.55rem 0.75rem;">
+                            <div
+                                style="width: 24px; height: 24px; border-radius: 6px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;">
+                                1</div>
                             <div style="font-size: 0.74rem;">
                                 <div style="font-weight: 700; color: #0f172a;">Bayar di Kasir (Cash)</div>
-                                <div style="color: #64748b;">Pelanggan memesan dari meja, pesanan masuk ke kasir dengan status menunggu pembayaran tunai.</div>
+                                <div style="color: #64748b;">Pelanggan memesan dari meja, pesanan masuk ke kasir dengan
+                                    status menunggu pembayaran tunai.</div>
                             </div>
                         </div>
-                        <div style="display: flex; align-items: flex-start; gap: 0.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.55rem 0.75rem;">
-                            <div style="width: 24px; height: 24px; border-radius: 6px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;">2</div>
+                        <div
+                            style="display: flex; align-items: flex-start; gap: 0.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.55rem 0.75rem;">
+                            <div
+                                style="width: 24px; height: 24px; border-radius: 6px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;">
+                                2</div>
                             <div style="font-size: 0.74rem;">
                                 <div style="font-weight: 700; color: #0f172a;">Pembayaran Digital (Snap Midtrans)</div>
-                                <div style="color: #64748b;">Pelanggan bayar langsung via QRIS, GoPay, OVO, transfer bank secara online otomatis.</div>
+                                <div style="color: #64748b;">Pelanggan bayar langsung via QRIS, GoPay, OVO, transfer bank
+                                    secara online otomatis.</div>
                             </div>
                         </div>
                     </div>
@@ -1029,15 +1160,15 @@
                     pos_store_phone: storePhone
                 })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Pengaturan struk berhasil disimpan!');
-                } else {
-                    alert(data.message || 'Gagal menyimpan.');
-                }
-            })
-            .catch(() => alert('Terjadi kesalahan jaringan.'));
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Pengaturan struk berhasil disimpan!');
+                    } else {
+                        alert(data.message || 'Gagal menyimpan.');
+                    }
+                })
+                .catch(() => alert('Terjadi kesalahan jaringan.'));
         }
 
         function uploadLogoAjax(input) {
@@ -1050,18 +1181,18 @@
                 method: 'POST',
                 body: fd
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success && data.logo_url) {
-                    const wrap = document.getElementById('logoPreviewWrap');
-                    wrap.innerHTML = `<img src="${data.logo_url}" alt="Logo" style="width:100%;height:100%;object-fit:contain;">`;
-                    document.getElementById('btnDeleteLogo').style.display = 'inline-flex';
-                    showToast('Logo struk berhasil dipasang!');
-                } else {
-                    alert(data.message || 'Gagal upload logo.');
-                }
-            })
-            .catch(() => alert('Gagal upload logo.'));
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.logo_url) {
+                        const wrap = document.getElementById('logoPreviewWrap');
+                        wrap.innerHTML = `<img src="${data.logo_url}" alt="Logo" style="width:100%;height:100%;object-fit:contain;">`;
+                        document.getElementById('btnDeleteLogo').style.display = 'inline-flex';
+                        showToast('Logo struk berhasil dipasang!');
+                    } else {
+                        alert(data.message || 'Gagal upload logo.');
+                    }
+                })
+                .catch(() => alert('Gagal upload logo.'));
         }
 
         function deleteLogoAjax() {
@@ -1070,15 +1201,15 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    const wrap = document.getElementById('logoPreviewWrap');
-                    wrap.innerHTML = `<svg width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
-                    document.getElementById('btnDeleteLogo').style.display = 'none';
-                    showToast('Logo struk berhasil dihapus.');
-                }
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const wrap = document.getElementById('logoPreviewWrap');
+                        wrap.innerHTML = `<svg width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+                        document.getElementById('btnDeleteLogo').style.display = 'none';
+                        showToast('Logo struk berhasil dihapus.');
+                    }
+                });
         }
 
         // ── 2. Pembayaran ──
@@ -1094,13 +1225,13 @@
                     pos_fee_payer: feePayer
                 })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Pengaturan pembayaran berhasil disimpan!');
-                }
-            })
-            .catch(() => alert('Terjadi kesalahan jaringan.'));
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Pengaturan pembayaran berhasil disimpan!');
+                    }
+                })
+                .catch(() => alert('Terjadi kesalahan jaringan.'));
         }
 
         function uploadQrisAjax(input) {
@@ -1113,14 +1244,14 @@
                 method: 'POST',
                 body: fd
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success && data.qris_url) {
-                    const wrap = document.getElementById('qrisPreviewWrap');
-                    wrap.innerHTML = `<img src="${data.qris_url}" alt="QRIS" style="width:100%;height:100%;object-fit:contain;">`;
-                    showToast('QRIS toko berhasil dipasang!');
-                }
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.qris_url) {
+                        const wrap = document.getElementById('qrisPreviewWrap');
+                        wrap.innerHTML = `<img src="${data.qris_url}" alt="QRIS" style="width:100%;height:100%;object-fit:contain;">`;
+                        showToast('QRIS toko berhasil dipasang!');
+                    }
+                });
         }
 
         // ── 3. Pajak & Biaya ──
@@ -1132,22 +1263,22 @@
                 return;
             }
             c.innerHTML = posFeesData.map((f, i) => `
-                <div class="list-row-item">
-                    <div class="list-row-left">
-                        <div>
-                            <div class="list-row-name">${escapeHtml(f.name)}</div>
-                            <div class="list-row-sub">${f.type === 'percent' ? f.value + '%' : 'Rp ' + Number(f.value).toLocaleString('id-ID')}</div>
+                    <div class="list-row-item">
+                        <div class="list-row-left">
+                            <div>
+                                <div class="list-row-name">${escapeHtml(f.name)}</div>
+                                <div class="list-row-sub">${f.type === 'percent' ? f.value + '%' : 'Rp ' + Number(f.value).toLocaleString('id-ID')}</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                            <label class="switch-clean">
+                                <input type="checkbox" ${f.is_active ? 'checked' : ''} onchange="toggleFeeItem(${i}, this.checked)">
+                                <span class="slider-clean"></span>
+                            </label>
+                            <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeFeeItem(${i})">&times;</button>
                         </div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:0.4rem;">
-                        <label class="switch-clean">
-                            <input type="checkbox" ${f.is_active ? 'checked' : ''} onchange="toggleFeeItem(${i}, this.checked)">
-                            <span class="slider-clean"></span>
-                        </label>
-                        <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeFeeItem(${i})">&times;</button>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
             document.getElementById('feesBadgeCount').innerText = posFeesData.length + ' Item';
         }
 
@@ -1177,10 +1308,10 @@
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
                 body: JSON.stringify({ pos_fees: posFeesData })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) showToast('Pajak & biaya berhasil disimpan!');
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) showToast('Pajak & biaya berhasil disimpan!');
+                });
         }
 
         // ── 4. Diskon ──
@@ -1196,24 +1327,24 @@
                 const isActive = d.is_active !== false;
                 const minQty = d.min_qty || 1;
                 return `
-                    <div class="list-row-item" style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem;">
-                        <div class="list-row-left" style="flex:1; min-width:0;">
-                            <div>
-                                <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(d.name)}</div>
-                                <div class="list-row-sub" style="font-size:0.72rem; color:#64748b;">
-                                    ${d.type === 'percent' ? d.value + '%' : 'Rp ' + Number(d.value).toLocaleString('id-ID')} &middot; Min. ${minQty} Qty &middot; ${d.scope === 'specific' ? 'Produk Tertentu' : 'Semua Produk'}
+                        <div class="list-row-item" style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem;">
+                            <div class="list-row-left" style="flex:1; min-width:0;">
+                                <div>
+                                    <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(d.name)}</div>
+                                    <div class="list-row-sub" style="font-size:0.72rem; color:#64748b;">
+                                        ${d.type === 'percent' ? d.value + '%' : 'Rp ' + Number(d.value).toLocaleString('id-ID')} &middot; Min. ${minQty} Qty &middot; ${d.scope === 'specific' ? 'Produk Tertentu' : 'Semua Produk'}
+                                    </div>
                                 </div>
                             </div>
+                            <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
+                                <label class="switch-toggle" style="margin:0;">
+                                    <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleDiscountActiveItem(${i}, this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                                <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeDiscountItem(${i})">&times;</button>
+                            </div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
-                            <label class="switch-toggle" style="margin:0;">
-                                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleDiscountActiveItem(${i}, this.checked)">
-                                <span class="slider round"></span>
-                            </label>
-                            <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeDiscountItem(${i})">&times;</button>
-                        </div>
-                    </div>
-                `;
+                    `;
             }).join('');
             document.getElementById('discountsBadgeCount').innerText = posDiscountsData.length + ' Preset';
         }
@@ -1269,10 +1400,10 @@
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
                 body: JSON.stringify({ pos_discounts: posDiscountsData })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success && !silent) showToast('Preset diskon berhasil disimpan!');
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && !silent) showToast('Preset diskon berhasil disimpan!');
+                });
         }
 
         // ── 5. Meja & Barcode QR ──
@@ -1286,28 +1417,28 @@
             }
 
             c.innerHTML = posTablesData.map((t, i) => {
-                const name = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i+1))) : String(t);
+                const name = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i + 1))) : String(t);
                 const tableUrl = storefrontBaseUrl + '?meja=' + encodeURIComponent(name);
                 return `
-                    <div class="list-row-item" style="display:flex; align-items:center; padding:0.65rem 0.85rem; gap:0.75rem;">
-                        <div id="tableQrThumb_${i}" style="width:44px; height:44px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
-                        <div class="list-row-left" style="flex:1; min-width:0;">
-                            <div>
-                                <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(name)}</div>
-                                <div class="list-row-sub" style="font-size:0.72rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                    ${escapeHtml(tableUrl.replace('https://', ''))}
+                        <div class="list-row-item" style="display:flex; align-items:center; padding:0.65rem 0.85rem; gap:0.75rem;">
+                            <div id="tableQrThumb_${i}" style="width:44px; height:44px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
+                            <div class="list-row-left" style="flex:1; min-width:0;">
+                                <div>
+                                    <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(name)}</div>
+                                    <div class="list-row-sub" style="font-size:0.72rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        ${escapeHtml(tableUrl.replace('https://', ''))}
+                                    </div>
                                 </div>
                             </div>
+                            <div style="display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
+                                <button type="button" class="btn-white-pill" style="font-size:0.72rem; padding:0.35rem 0.65rem; height:32px; display:flex; align-items:center; gap:4px;" onclick="downloadTableQr(${i})" title="Download Barcode / QR Meja">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    <span>Download QR</span>
+                                </button>
+                                <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.55rem; height:32px;" onclick="removeTableItem(${i})" title="Hapus Meja">&times;</button>
+                            </div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
-                            <button type="button" class="btn-white-pill" style="font-size:0.72rem; padding:0.35rem 0.65rem; height:32px; display:flex; align-items:center; gap:4px;" onclick="downloadTableQr(${i})" title="Download Barcode / QR Meja">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                <span>Download QR</span>
-                            </button>
-                            <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.55rem; height:32px;" onclick="removeTableItem(${i})" title="Hapus Meja">&times;</button>
-                        </div>
-                    </div>
-                `;
+                    `;
             }).join('');
 
             document.getElementById('tablesBadgeCount').innerText = posTablesData.length + ' Meja';
@@ -1318,7 +1449,7 @@
                     const el = document.getElementById('tableQrThumb_' + i);
                     if (el && typeof QRCode !== 'undefined') {
                         el.innerHTML = '';
-                        const name = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i+1))) : String(t);
+                        const name = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i + 1))) : String(t);
                         const tableUrl = storefrontBaseUrl + '?meja=' + encodeURIComponent(name);
                         new QRCode(el, {
                             text: tableUrl,
@@ -1336,7 +1467,7 @@
         function downloadTableQr(i) {
             if (!posTablesData || !posTablesData[i]) return;
             const t = posTablesData[i];
-            const tableName = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i+1))) : String(t);
+            const tableName = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i + 1))) : String(t);
             const tableUrl = storefrontBaseUrl + '?meja=' + encodeURIComponent(tableName);
 
             const tempDiv = document.createElement('div');
@@ -1444,10 +1575,10 @@
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
                 body: JSON.stringify({ pos_tables: posTablesData })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success && !silent) showToast('Daftar meja berhasil disimpan!');
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && !silent) showToast('Daftar meja berhasil disimpan!');
+                });
         }
 
         // ── 7. Front Store & Self-Order Functions ──
@@ -1484,18 +1615,18 @@
                 method: 'POST',
                 body: fd
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success && data.banner_url) {
-                    const wrap = document.getElementById('bannerPreviewWrap');
-                    wrap.innerHTML = `<img src="${data.banner_url}" alt="Banner" style="width:100%;height:100%;object-fit:cover;">`;
-                    document.getElementById('btnDeleteBanner').style.display = 'inline-flex';
-                    showToast('Banner storefront berhasil dipasang!');
-                } else {
-                    alert(data.message || 'Gagal unggah banner.');
-                }
-            })
-            .catch(() => alert('Terjadi kesalahan saat unggah banner.'));
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.banner_url) {
+                        const wrap = document.getElementById('bannerPreviewWrap');
+                        wrap.innerHTML = `<img src="${data.banner_url}" alt="Banner" style="width:100%;height:100%;object-fit:cover;">`;
+                        document.getElementById('btnDeleteBanner').style.display = 'inline-flex';
+                        showToast('Banner storefront berhasil dipasang!');
+                    } else {
+                        alert(data.message || 'Gagal unggah banner.');
+                    }
+                })
+                .catch(() => alert('Terjadi kesalahan saat unggah banner.'));
         }
 
         function deleteBannerAjax() {
@@ -1504,15 +1635,15 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    const wrap = document.getElementById('bannerPreviewWrap');
-                    wrap.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:0.75rem; padding:1rem;"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 4px auto; display:block;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Rekomendasi rasio 19:6 landscape (Otomatis convert ke WebP)</div>`;
-                    document.getElementById('btnDeleteBanner').style.display = 'none';
-                    showToast('Banner storefront berhasil dihapus.');
-                }
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const wrap = document.getElementById('bannerPreviewWrap');
+                        wrap.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:0.75rem; padding:1rem;"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 4px auto; display:block;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Rekomendasi rasio 19:6 landscape (Otomatis convert ke WebP)</div>`;
+                        document.getElementById('btnDeleteBanner').style.display = 'none';
+                        showToast('Banner storefront berhasil dihapus.');
+                    }
+                });
         }
 
         function saveFrontStoreSettingsAjax() {
@@ -1533,17 +1664,17 @@
                     pos_accent_color: accent
                 })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    const badge = document.getElementById('frontStoreBadgeStatus');
-                    if (badge) badge.innerText = enabled ? 'Aktif' : 'Nonaktif';
-                    showToast('Pengaturan Front Store berhasil disimpan!');
-                } else {
-                    alert(data.message || 'Gagal menyimpan pengaturan.');
-                }
-            })
-            .catch(() => alert('Terjadi kesalahan jaringan.'));
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const badge = document.getElementById('frontStoreBadgeStatus');
+                        if (badge) badge.innerText = enabled ? 'Aktif' : 'Nonaktif';
+                        showToast('Pengaturan Front Store berhasil disimpan!');
+                    } else {
+                        alert(data.message || 'Gagal menyimpan pengaturan.');
+                    }
+                })
+                .catch(() => alert('Terjadi kesalahan jaringan.'));
         }
 
         // ── 6. Staf Kasir ──
@@ -1552,10 +1683,10 @@
                 method: 'POST',
                 headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) showToast('Status kasir berhasil diubah.');
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) showToast('Status kasir berhasil diubah.');
+                });
         }
 
         function deleteCashierAjax(id, name) {
@@ -1564,13 +1695,13 @@
                 method: 'DELETE',
                 headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Staf kasir berhasil dihapus.');
-                    location.reload();
-                }
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Staf kasir berhasil dihapus.');
+                        location.reload();
+                    }
+                });
         }
 
         function saveNewCashierAjax() {
@@ -1593,15 +1724,15 @@
                     is_active: 1
                 })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Staf kasir baru berhasil ditambahkan!');
-                    location.reload();
-                } else {
-                    alert(data.message || 'Gagal menambahkan staf.');
-                }
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Staf kasir baru berhasil ditambahkan!');
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Gagal menambahkan staf.');
+                    }
+                });
         }
 
         function escapeHtml(str) {

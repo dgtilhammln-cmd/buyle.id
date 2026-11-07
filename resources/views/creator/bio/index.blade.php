@@ -4480,6 +4480,7 @@
                         {{-- ══ TAB 4: KATALOG & AFFILIATE ══ --}}
                         <div class="tab-pane" id="tab-catalog">
 
+                            @if($currentTheme !== 'theme5')
                             {{-- 1. Affiliate buyle.id --}}
                             <div class="prof-card"
                                 style="border: 1px solid #E2E8F0; background: #ffffff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;">
@@ -4782,242 +4783,7 @@
                                     @endforelse
                                 </div>
                             </div>
-
-                            {{-- 4. Produk Fisik / UMKM --}}
-                            <div class="prof-card">
-                                <div class="prof-card-head"
-                                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                                    <span style="display:flex; align-items:center; gap:0.5rem;">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                            <polyline points="9 22 9 12 15 12 15 22" />
-                                        </svg>
-                                        Produk Fisik / UMKM
-                                    </span>
-                                    <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
-                                        {{-- Search --}}
-                                        <div style="position:relative; display:flex; align-items:center;">
-                                            <svg width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2.5"
-                                                viewBox="0 0 24 24" style="position:absolute; left:0.55rem; pointer-events:none;">
-                                                <circle cx="11" cy="11" r="8" />
-                                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                            </svg>
-                                            <input type="text" id="umkmSearch" placeholder="Cari produk..."
-                                                oninput="filterUmkmProducts()"
-                                                style="height:32px; padding:0 0.75rem 0 2rem; border-radius:8px; border:1.5px solid #e2e8f0; font-size:0.75rem; background:#f8fafc; color:#1e293b; outline:none; width:150px;">
-                                        </div>
-                                        {{-- Sort --}}
-                                        <div style="display:flex; gap:0.25rem;">
-                                            <button id="sortTerbaru" onclick="sortUmkmProducts('terbaru')" title="Terbaru"
-                                                style="height:32px; padding:0 0.65rem; border-radius:8px 0 0 8px; border:1.5px solid #e2e8f0; border-right:none; background:#0f172a; color:#fff; font-size:0.72rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <line x1="12" y1="19" x2="12" y2="5" />
-                                                    <polyline points="5 12 12 5 19 12" />
-                                                </svg>
-                                                Terbaru
-                                            </button>
-                                            <button id="sortTerlama" onclick="sortUmkmProducts('terlama')" title="Terlama"
-                                                style="height:32px; padding:0 0.65rem; border-radius:0 8px 8px 0; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:0.72rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                                    <polyline points="19 12 12 19 5 12" />
-                                                </svg>
-                                                Terlama
-                                            </button>
-                                        </div>
-                                        @if($blocks->where('type', 'custom_product')->count() > 0)
-                                            <form action="{{ route('creator.bio.blocks.destroy-all-custom-products') }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA produk fisik/UMKM dari Link Bio Anda?');"
-                                                style="margin:0;">
-                                                @csrf @method('DELETE')
-                                                <button type="submit"
-                                                    style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight: 500; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; height:32px;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                        viewBox="0 0 24 24">
-                                                        <polyline points="3 6 5 6 21 6" />
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                                    </svg>
-                                                    Hapus Semua
-                                                </button>
-                                            </form>
-                                        @endif
-                                        <button type="button" onclick="openScanMenuModal()"
-                                            style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight: 500; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                            </svg>
-                                            Scan Menu AI
-                                        </button>
-                                        <button type="button" onclick="openAddUmkmWithCheck()"
-                                            style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight: 500; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 1.1rem; border-radius:999px; font-size:0.78rem; cursor:pointer; height:34px; box-shadow:0 4px 14px rgba(30, 179, 73, 0.32); transition:all 0.2s ease;">
-                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <line x1="12" y1="5" x2="12" y2="19" />
-                                                <line x1="5" y1="12" x2="19" y2="12" />
-                                            </svg>
-                                            Tambah
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="card-body" id="umkmProductList">
-                                    @php
-                                        $umkmBlocks = $blocks->filter(function ($b) use ($myProducts) {
-                                            // 0. buyle_product blocks are catalog products toggled from "Tampilkan Produk Buyle Saya".
-                                            // They are NOT custom UMKM physical blocks and must never appear in the "Produk Fisik / UMKM" section!
-                                            if ($b->type === 'buyle_product') {
-                                                return false;
-                                            }
-
-                                            // 1. If linked to a catalog Product, respect the Product's product_type
-                                            $pid = $b->data_json['product_id'] ?? null;
-                                            if ($pid) {
-                                                $p = $myProducts->firstWhere('id', $pid);
-                                                if ($p) {
-                                                    $pType = strtolower($p->product_type ?? $p->type ?? '');
-                                                    if (in_array($pType, ['external_link', 'digital', 'ticket'])) {
-                                                        return false; // Digital product / ticket belongs to Buyle catalog, NOT UMKM Physical!
-                                                    }
-                                                    if (in_array($pType, ['physical', 'makanan', 'service', 'product', 'umkm', 'barang', 'jasa', 'food'])) {
-                                                        return true;
-                                                    }
-                                                }
-                                            }
-
-                                            // 2. If block is custom_product, check category and title for digital/ebook terms
-                                            if ($b->type === 'custom_product') {
-                                                $cat = strtolower(trim($b->data_json['category'] ?? ''));
-                                                if (in_array($cat, ['digital', 'ebook', 'link', 'tiket', 'event'])) {
-                                                    return false;
-                                                }
-                                                $title = strtolower($b->title ?? '');
-                                                if (preg_match('/(ebook|e-book|pdf|modul|panduan|link|akses|webinar|tiket|course|kursus|spreadsheet|planner|template)/i', $title)) {
-                                                    return false;
-                                                }
-                                                return true;
-                                            }
-
-                                            $cat = strtolower(trim($b->data_json['category'] ?? ''));
-                                            if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm']))
-                                                return true;
-                                            if (!empty($b->data_json['weight']) || !empty($b->data_json['sku']))
-                                                return true;
-
-                                            $title = strtolower($b->title ?? '');
-                                            return (bool) preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|sepatu|baju|celana)/i', $title);
-                                        })->sortBy(fn($b) => [$b->order ?? 0, $b->id]);
-                                    @endphp
-                                    @forelse($umkmBlocks as $block)
-                                                                                                                        @php
-                                                                                                                            $imgs = $block->data_json['images'] ?? [];
-                                                                                                                            $firstImg = !empty($imgs[0]) ? $imgs[0] : ($block->data_json['image'] ?? null);
-                                                                                                                        @endphp
-                                                                                                                        <div class="aff-card" data-id="{{ $block->id }}"
-                                                                                                                            style="display:flex; align-items:center; gap:0; padding:0; border-radius:14px; overflow:hidden; border:1px solid #e8f0e8; background:#fff; margin-bottom:0.6rem; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
-                                                                                                                            {{-- Thumbnail foto produk --}}
-                                                                                                                            @if(!empty($firstImg))
-                                                                                                                                <div style="width:72px; height:72px; flex-shrink:0; overflow:hidden; background:#f1f5f9;">
-                                                                                                                                    <img src="{{ Str::startsWith($firstImg, 'http') ? $firstImg : asset('storage/' . $firstImg) }}"
-                                                                                                                                        style="width:72px; height:72px; object-fit:cover; display:block;"
-                                                                                                                                        onerror="this.parentElement.innerHTML='<div style=&quot;width:72px;height:72px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;&quot;><svg width=\'28\' height=\'28\' fill=\'none\' stroke=\'#cbd5e1\' stroke-width=\'1.5\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>'">
-                                                                                                                                </div>
-                                                                                                                            @else
-                                                                                                                                <div
-                                                                                                                                    style="width:72px; height:72px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#f8fafc; border-right:1px solid #e8f0e8;">
-                                                                                                                                    <svg width="26" height="26" fill="none" stroke="#cbd5e1" stroke-width="1.5"
-                                                                                                                                        viewBox="0 0 24 24">
-                                                                                                                                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                                                                                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                                                                                                                        <polyline points="21 15 16 10 5 21" />
-                                                                                                                                    </svg>
-                                                                                                                                </div>
-                                                                                                                            @endif
-                                                                                                                            <div class="aff-info" style="flex:1; min-width:0; padding:0.55rem 0.75rem;">
-                                                                                                                                <div class="aff-title"
-                                                                                                                                    style="font-size:0.83rem; font-weight: 500; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">
-                                                                                                                                    {{ $block->title }}
-                                                                                                                                </div>
-                                                                                                                                <div class="aff-sub" style="font-size:0.72rem; color:#64748b;">
-                                                                                                                                    @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
-                                                                                                                                        <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.3rem;">Rp
-                                                                                                                                            {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
-                                                                                                                                    @endif
-                                                                                                                                    <strong style="color:#1eb349;">Rp
-                                                                                                                                        {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong>
-                                                                                                                                    &middot;
-                                                                                                                                    {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
-                                                                                                                                    @if(!empty($block->data_json['category']))
-                                                                                                                                        &middot; <span
-                                                                                                                                            style="background:#f0fdf4;color:#1eb349;padding:1px 6px;border-radius:4px;font-size:0.68rem;font-weight:600;">{{ $block->data_json['category'] }}</span>
-                                                                                                                                    @endif
-                                                                                                                                    @if(isset($block->data_json['stock']) && $block->data_json['stock'] !== null)
-                                                                                                                                        @if($block->data_json['stock'] == 0)
-                                                                                                                                            &middot; <span style="color:#ef4444;font-weight: 500;">Habis</span>
-                                                                                                                                        @else
-                                                                                                                                            &middot; <span style="color:#64748b;">Stok: {{ $block->data_json['stock'] }}</span>
-                                                                                                                                        @endif
-                                                                                                                                    @endif
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                            <div
-                                                                                                                                style="padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
-                                                                                                                                @if(!empty($profile->store_slug))
-                                                                                                                                    <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}"
-                                                                                                                                        target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;"
-                                                                                                                                        title="Lihat Halaman Produk">
-                                                                                                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                                                                                                            viewBox="0 0 24 24">
-                                                                                                                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                                                                                                                                            <polyline points="15 3 21 3 21 9" />
-                                                                                                                                            <line x1="10" y1="14" x2="21" y2="3" />
-                                                                                                                                        </svg>
-                                                                                                                                    </a>
-                                                                                                                                @endif
-                                                                                                                                <button type="button" onclick="editUmkmProduct({{ json_encode([
-                                            'id' => $block->id,
-                                            'title' => $block->title,
-                                            'price' => $block->data_json['price'] ?? 0,
-                                            'original_price' => $block->data_json['original_price'] ?? '',
-                                            'category' => $block->data_json['category'] ?? 'Makanan',
-                                            'stock' => $block->data_json['stock'] ?? '',
-                                            'payment_method' => $block->data_json['payment_method'] ?? 'wa',
-                                            'description' => $block->data_json['description'] ?? '',
-                                            'wa_text' => $block->data_json['wa_text'] ?? '',
-                                            'url' => $block->url ?? '',
-                                            'images' => $block->data_json['images'] ?? []
-                                        ]) }})" class="btn-icon-sm" style="background:#eff6ff; color:#2563eb;"
-                                                                                                                                    title="Edit Produk">
-                                                                                                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                                                                                                        viewBox="0 0 24 24">
-                                                                                                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                                                                                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                                                                                                                    </svg>
-                                                                                                                                </button>
-                                                                                                                                <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST"
-                                                                                                                                    class="form-delete-block">
-                                                                                                                                    @csrf @method('DELETE')
-                                                                                                                                    <button type="button" class="btn-icon-sm btn-delete-block"
-                                                                                                                                        style="background:#fef2f2; color:#ef4444;" title="Hapus Produk">
-                                                                                                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                                                                                                            viewBox="0 0 24 24">
-                                                                                                                                            <polyline points="3 6 5 6 21 6" />
-                                                                                                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                                                                                                                        </svg>
-                                                                                                                                    </button>
-                                                                                                                                </form>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                    @empty
-                                        <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada
-                                            produk
-                                            fisik/UMKM. Klik "+ Tambah Produk" untuk menambahkan.</p>
-                                    @endforelse
-                                </div>
-                            </div>
+                            @endif
 
                             {{-- 5. Produk Buyle Saya --}}
                             <div class="prof-card">
@@ -7146,6 +6912,609 @@
                                         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
                                             viewBox="0 0 24 24">
                                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                            <polyline points="15 3 21 3 21 9"></polyline>
+                                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                                        </svg>
+                                        Lihat Detail
+                                    </a>
+
+                                    @if($isAdded && $matchingBlock)
+                                        <form action="{{ route('creator.bio.blocks.destroy', $matchingBlock) }}" method="POST"
+                                            style="margin:0;">
+                                            @csrf @method('DELETE')
+                                            <button type="submit"
+                                                style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight: 500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
+                                                    <polyline points="3 6 5 6 21 6" />
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                                </svg>
+                                                Hapus dari Bio
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="margin:0;">
+                                            @csrf
+                                            <input type="hidden" name="type" value="buyle_affiliate">
+                                            <input type="hidden" name="title" value="{{ $affProduct->name }}">
+                                            <input type="hidden" name="url" value="{{ route('products.show', $affProduct->slug) }}">
+                                            <input type="hidden" name="product_id" value="{{ $affProduct->id }}">
+                                            <button type="submit"
+                                                style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight: 500; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                                + Tambah ke Bio
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div style="grid-column: 1 / -1; text-align:center; padding:2.5rem; color:#94A3B8; font-size:0.85rem;">
+                            Belum ada produk affiliate yang tersedia saat ini.
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        {{-- ── Modal Wide: Katalog White Label buyle.id ── --}}
+        <div class="modal-overlay" id="whitelabelCatalogModal"
+            onclick="if(event.target===this)this.classList.remove('open')">
+            <div class="modal-box-wide" style="border: 1px solid #E2E8F0;">
+                <div
+                    style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
+                    <div>
+                        <h3
+                            style="font-size:1.15rem; font-weight: 600; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg>
+                            Katalog Produk White Label buyle.id
+                        </h3>
+                        <p style="font-size:0.78rem; color:#64748B; margin:0.25rem 0 0;">
+                            Bebas watermark & disetujui Tim Buyle. Tentukan harga jual (markup) sendiri di Bio Page Anda!
+                        </p>
+                    </div>
+                    <button type="button"
+                        onclick="document.getElementById('whitelabelCatalogModal').classList.remove('open')"
+                        style="background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#64748B; display:flex; align-items:center; justify-content:center;">&times;</button>
+                </div>
+
+                {{-- Search Bar --}}
+                <div style="position:relative; margin-bottom:1rem;">
+                    <span
+                        style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); pointer-events:none;">
+                        <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </span>
+                    <input type="text" id="searchWhitelabelModalInput"
+                        onkeyup="filterModalCatalog('whitelabelModalItem', this.value)" class="form-input"
+                        placeholder="Cari nama produk white label, creator, atau lisensi..."
+                        style="height:38px; padding-left:2.3rem; font-size:0.76rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
+                </div>
+
+                {{-- Grid Product List --}}
+                <div class="modal-catalog-grid">
+                    @php
+                        $addedWlProductIds = $blocks->where('type', 'buyle_product')->pluck('data_json.product_id')->filter()->toArray();
+                    @endphp
+
+                    @forelse($whitelabelProducts as $wlProd)
+                        @php
+                            $isAddedWl = in_array($wlProd->id, $addedWlProductIds);
+                            $matchingWlBlock = $blocks->where('type', 'buyle_product')->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
+                        @endphp
+                        <div class="whitelabelModalItem modal-card-item"
+                            data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}">
+
+                            {{-- 1:1 Aspect Ratio Photo --}}
+                            <div
+                                style="position:relative; width:100%; aspect-ratio:1/1; border-radius:10px; overflow:hidden; background:#F8FAFC; border:1px solid #E2E8F0;">
+                                <img src="{{ $wlProd->main_image }}"
+                                    style="width:100%; height:100%; object-fit:cover; display:block;">
+                            </div>
+
+                            {{-- Details --}}
+                            <div
+                                style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:0.4rem; margin-top:0.5rem;">
+                                <div>
+                                    <div style="font-weight: 500; font-size:0.8rem; color:#0F172A; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
+                                        title="{{ $wlProd->name }}">
+                                        {{ $wlProd->name }}
+                                    </div>
+                                    <div
+                                        style="font-size:0.7rem; color:#64748B; margin-top:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        Oleh: <strong
+                                            style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator buyle.id' }}</strong>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    @php
+                                        $wlBasePrice = $wlProd->sale_price ?: ($wlProd->whitelabel_price ?: $wlProd->price);
+                                        $wlOrigPrice = ($wlProd->sale_price && $wlProd->price > $wlProd->sale_price) ? $wlProd->price : null;
+                                    @endphp
+                                    <div style="font-size:0.68rem; color:#64748B;">Harga Modal Reseller:</div>
+                                    <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
+                                        Rp {{ number_format($wlBasePrice, 0, ',', '.') }}
+                                        @if($wlOrigPrice)
+                                            <span
+                                                style="font-size:0.65rem; color:#94a3b8; text-decoration:line-through; margin-left:3px;">Rp
+                                                {{ number_format($wlOrigPrice, 0, ',', '.') }}</span>
+                                        @endif
+                                    </div>
+                                    @if($wlProd->whitelabel_terms)
+                                        <div
+                                            style="font-size:0.65rem; color:#64748b; margin-top:0.2rem; display:flex; align-items:center; gap:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                            <svg width="10" height="10" fill="none" stroke="#94a3b8" stroke-width="2"
+                                                viewBox="0 0 24 24" style="flex-shrink:0;">
+                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                <polyline points="14 2 14 8 20 8" />
+                                            </svg>
+                                            <span>Lisensi: {{ Str::limit($wlProd->whitelabel_terms, 25) }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                {{-- Action Buttons --}}
+                                <div style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;">
+                                    <a href="{{ route('products.show', $wlProd->slug) }}" target="_blank"
+                                        style="display:flex; align-items:center; justify-content:center; gap:0.25rem; font-size:0.72rem; font-weight: 500; color:#475569; background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.4rem; border-radius:8px; text-decoration:none; transition:all 0.15s;">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                            <polyline points="15 3 21 3 21 9"></polyline>
+                                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                                        </svg>
+                                        Lihat Detail
+                                    </a>
+
+                                    @if($isAddedWl && $matchingWlBlock)
+                                        <form action="{{ route('creator.bio.blocks.destroy', $matchingWlBlock) }}" method="POST"
+                                            style="margin:0;">
+                                            @csrf @method('DELETE')
+                                            <button type="submit"
+                                                style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight: 500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
+                                                    <polyline points="3 6 5 6 21 6" />
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                                </svg>
+                                                Hapus dari Bio
+                                            </button>
+                                        </form>
+                                    @else
+                                        <input type="hidden" name="type" value="buyle_product">
+                                        <input type="hidden" name="category" value="whitelabel">
+                                        <input type="hidden" name="title" value="{{ $wlProd->name }}">
+                                        <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
+                                        <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
+                                        <button type="button"
+                                            onclick="openAddWhitelabelMarkupModal('{{ $wlProd->id }}', '{{ addslashes($wlProd->name) }}', '{{ route('products.show', $wlProd->slug) }}', {{ $wlProd->sale_price ?: ($wlProd->whitelabel_price ?: $wlProd->price) }})"
+                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight: 500; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            + Tambah ke Bio & Atur Harga
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div style="grid-column: 1 / -1; text-align:center; padding:2.5rem; color:#94a3b8; font-size:0.85rem;">
+                            Belum ada produk White Label yang tersedia saat ini.
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        @include('partials.scan_menu_modal')
+
+        {{-- ============================================================ --}}
+        {{-- DOMAIN CHECKOUT MODAL — Premium Interactive --}}
+        {{-- ============================================================ --}}
+        <style>
+            /* Light Theme Modal */
+            #domainCheckoutModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                background: rgba(15, 23, 42, 0.48);
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                overflow-y: auto;
+            }
+
+            #domainCheckoutModal.open {
+                display: flex;
+                animation: dcmFadeIn .2s ease;
+            }
+
+            @keyframes dcmFadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .dcm-card {
+                background: #fff;
+                border-radius: 18px;
+                max-width: 450px;
+                width: 100%;
+                padding: 0;
+                box-shadow: 0 16px 48px -8px rgba(0, 0, 0, 0.15);
+                border: 1px solid #E8EDF2;
+                position: relative;
+                overflow: hidden;
+                animation: dcmSlideUp .26s cubic-bezier(.34, 1.4, .64, 1);
+            }
+
+            @keyframes dcmSlideUp {
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            .dcm-header {
+                background: #fff;
+                border-bottom: 1px solid #F1F5F9;
+                padding: 1.4rem 1.4rem 1.1rem;
+                text-align: center;
+                position: relative;
+            }
+
+            .dcm-close-btn {
+                position: absolute;
+                top: 0.9rem;
+                right: 0.9rem;
+                background: #F1F5F9;
+                border: 1px solid #E2E8F0;
+                color: #94A3B8;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all .15s;
+            }
+
+            .dcm-close-btn:hover {
+                background: #E2E8F0;
+                color: #475569;
+            }
+
+            .dcm-icon-wrap {
+                width: 48px;
+                height: 48px;
+                background: linear-gradient(135deg, #1eb349, #a5cf37);
+                border-radius: 12px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.65rem;
+                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.25);
+            }
+
+            .dcm-title {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #0F172A;
+                margin: 0 0 0.15rem;
+            }
+
+            .dcm-subtitle {
+                font-size: 0.75rem;
+                color: #94A3B8;
+                margin: 0;
+                font-weight: 400;
+            }
+
+            .dcm-body {
+                padding: 1.1rem 1.4rem 1.3rem;
+            }
+
+            .dcm-info-card {
+                background: #F8FFF9;
+                border: 1px solid #D1FAE5;
+                border-radius: 11px;
+                padding: 0.85rem 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .dcm-info-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .dcm-info-row+.dcm-info-row {
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+                border-top: 1px solid #ECFDF5;
+            }
+
+            .dcm-info-label {
+                font-size: 0.68rem;
+                font-weight: 600;
+                color: #16a34a;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+            }
+
+            .dcm-domain-name {
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: #166534;
+            }
+
+            .dcm-domain-price {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #0F172A;
+            }
+
+            .dcm-domain-period {
+                font-size: 0.67rem;
+                color: #94A3B8;
+                margin-left: 2px;
+                font-weight: 400;
+            }
+
+            .dcm-benefits {
+                display: flex;
+                flex-direction: column;
+                gap: 0.35rem;
+                margin-bottom: 1rem;
+            }
+
+            .dcm-benefit-item {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+                font-size: 0.76rem;
+                color: #64748B;
+                font-weight: 400;
+            }
+
+            .dcm-benefit-icon {
+                width: 16px;
+                height: 16px;
+                background: #F0FDF4;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .dcm-notice {
+                background: #FFFBEB;
+                border: 1px solid #FDE68A;
+                border-radius: 9px;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.72rem;
+                color: #92400E;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.4rem;
+                font-weight: 400;
+                line-height: 1.5;
+            }
+
+            .dcm-error-box {
+                background: #FEF2F2;
+                border: 1px solid #FCA5A5;
+                border-radius: 9px;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.76rem;
+                color: #DC2626;
+                margin-bottom: 0.85rem;
+                display: none;
+                align-items: flex-start;
+                gap: 0.4rem;
+                font-weight: 400;
+                line-height: 1.5;
+            }
+
+            .dcm-actions {
+                display: grid;
+                grid-template-columns: 1fr 1.7fr;
+                gap: 0.6rem;
+            }
+
+            .dcm-btn-cancel {
+                height: 42px;
+                background: #F8FAFC;
+                color: #64748B;
+                border: 1px solid #E2E8F0;
+                border-radius: 10px;
+                font-weight: 500;
+                font-size: 0.83rem;
+                cursor: pointer;
+                transition: all .15s;
+            }
+
+            .dcm-btn-cancel:hover {
+                background: #F1F5F9;
+                color: #334155;
+            }
+
+            .dcm-btn-pay {
+                height: 42px;
+                background: linear-gradient(135deg, #1eb349 0%, #16a34a 60%, #a5cf37 100%);
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 0.83rem;
+                cursor: pointer;
+                box-shadow: 0 3px 12px rgba(30, 179, 73, 0.3);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.32rem;
+                transition: all .18s;
+            }
+
+            .dcm-btn-pay:hover:not(:disabled) {
+                transform: translateY(-1px);
+                box-shadow: 0 5px 18px rgba(30, 179, 73, 0.4);
+            }
+
+            .dcm-btn-pay:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            /* Toast */
+            #domainToast {
+                position: fixed;
+                bottom: 1.25rem;
+                left: 50%;
+                transform: translateX(-50%) translateY(80px);
+                z-index: 999999;
+                min-width: 280px;
+                max-width: calc(100vw - 2rem);
+                background: #1e293b;
+                color: #fff;
+                border-radius: 13px;
+                padding: 0.85rem 1rem;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.6rem;
+                box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+                transition: transform .32s cubic-bezier(.34, 1.4, .64, 1), opacity .22s;
+                opacity: 0;
+            }
+
+            #domainToast.show {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+
+            #domainToast.toast-success {
+                background: #166534;
+            }
+
+            #domainToast.toast-error {
+                background: #991B1B;
+            }
+
+            #domainToast.toast-info {
+                background: #1e40af;
+            }
+
+            .toast-icon {
+                width: 30px;
+                height: 30px;
+                background: rgba(255, 255, 255, 0.12);
+                border-radius: 7px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .toast-content {
+                flex: 1;
+            }
+
+            .toast-title {
+                font-size: 0.8rem;
+                font-weight: 600;
+                margin: 0 0 0.12rem;
+            }
+
+            .toast-msg {
+                font-size: 0.72rem;
+                opacity: 0.8;
+                margin: 0;
+                line-height: 1.45;
+                font-weight: 400;
+            }
+
+            .toast-close {
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.5);
+                cursor: pointer;
+                padding: 0;
+                flex-shrink: 0;
+            }
+
+            .toast-close:hover {
+                color: #fff;
+            }
+        </style>
+
+        {{-- Domain Checkout Modal --}}
+        <div id="domainCheckoutModal">
+            <div class="dcm-card">
+                <div class="dcm-header">
+                    <button type="button" class="dcm-close-btn" onclick="closeCheckoutModal()" aria-label="Tutup">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                    <div class="dcm-icon-wrap">
+                        <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path
+                                d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        </svg>
+                    </div>
+                    <h3 class="dcm-title">Amankan Custom Domain</h3>
+                    <p class="dcm-subtitle">Periksa detail pesanan sebelum lanjut bayar</p>
+                </div>
+                <div class="dcm-body">
+                    <div class="dcm-info-card">
+                        <div class="dcm-info-row">
+                            <span class="dcm-info-label">Nama Domain</span>
+                            <span id="modalDomainName" class="dcm-domain-name"></span>
+                        </div>
+                        <div class="dcm-info-row"
+                            style="padding-top:0.35rem; margin-top:0.35rem; border-top:1px dashed #E2E8F0;">
+                            <span style="font-size:0.75rem; color:#475569;">Harga Domain</span>
+                            <span id="modalBasePrice" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                        </div>
+                        <div class="dcm-info-row">
+                            <span style="font-size:0.75rem; color:#475569;">Platform Fee
+                                ({{ (float) (\App\Models\Setting::get('platform_fee_rate', 5)) }}%)</span>
+                            <span id="modalPlatformFee" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                        </div>
+                        <div class="dcm-info-row">
+                            <span style="font-size:0.75rem; color:#475569;">Admin Fee
+                                ({{ (float) (\App\Models\Setting::get('admin_fee_rate', 5)) }}%)</span>
+                            <span id="modalAdminFee" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                        </div>
+                        <div class="dcm-info-row">
+                            <span style="font-size:0.75rem; color:#475569;">PPN / Pajak
+                                ({{ (float) (\App\Models\Setting::get('tax_rate', 11)) }}%)</span>
+                            <span id="modalTaxAmount" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                        </div>
+                        <div class="dcm-info-row"
+                            style="padding-top:0.5rem; margin-top:0.
                                             <polyline points="15 3 21 3 21 9"></polyline>
                                             <line x1="10" y1="14" x2="21" y2="3"></line>
                                         </svg>

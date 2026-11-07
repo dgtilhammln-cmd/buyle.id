@@ -584,6 +584,12 @@ class CreatorBioController extends Controller
             if ($scraped) $data['image'] = $this->saveRemoteImageLocally($scraped);
         }
 
+        // If tiktok/reels: automatically fetch thumbnail and save permanently to local storage
+        if (in_array($request->type, ['tiktok', 'reels']) && $request->filled('url') && empty($data['image'])) {
+            $cachedThumb = $this->cacheVideoThumbnailLocally($request->url, $request->type);
+            if ($cachedThumb) $data['image'] = $cachedThumb;
+        }
+
         if ($request->filled('description')) $data['description'] = $request->description;
         if ($request->filled('product_id'))  $data['product_id']  = $request->product_id;
         if ($request->filled('icon_class'))  $data['icon_class']  = $request->icon_class;
@@ -806,6 +812,14 @@ class CreatorBioController extends Controller
         
         if ($request->has('description')) $data['description'] = $request->description;
         if ($request->has('icon_class'))  $data['icon_class']  = $request->icon_class;
+
+        // If tiktok/reels: re-cache thumbnail if URL changed or image missing
+        if (in_array($block->type, ['tiktok', 'reels']) && $request->filled('url')) {
+            if ($request->url !== $block->url || empty($data['image']) || Str::startsWith($data['image'], 'http')) {
+                $cachedThumb = $this->cacheVideoThumbnailLocally($request->url, $block->type);
+                if ($cachedThumb) $data['image'] = $cachedThumb;
+            }
+        }
         
         if (in_array($block->type, ['custom_product', 'buyle_product'])) {
             if ($request->has('price')) $data['price'] = (int)$request->price;
@@ -1065,6 +1079,93 @@ class CreatorBioController extends Controller
         } catch (\Throwable $e) {}
 
         return $imageUrl;
+    }
+
+    /**
+     * Download & permanently cache video thumbnail for TikTok & Instagram Reels
+     */
+    private function cacheVideoThumbnailLocally(string $url, string $type = 'tiktok'): ?string
+    {
+        if (empty($url)) return null;
+
+        $hash = md5($url);
+        $prefix = ($type === 'reels' || str_contains($url, 'instagram.com')) ? 'ig' : 'tt';
+        $filename = "bio/video_thumbs/{$prefix}_{$hash}.jpg";
+
+        if (Storage::disk('public')->exists($filename)) {
+            return $filename;
+        }
+
+        $thumbUrl = null;
+
+        if ($prefix === 'tt') {
+            try {
+                $res = Http::timeout(8)
+                    ->withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept'     => 'application/json',
+                    ])
+                    ->get('https://www.tiktok.com/oembed', ['url' => $url]);
+                if ($res->successful()) {
+                    $thumbUrl = $res->json('thumbnail_url');
+                }
+            } catch (\Throwable $e) {}
+
+            if (!$thumbUrl) {
+                try {
+                    $cRes = Http::timeout(8)
+                        ->withHeaders([
+                            'User-Agent' => 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+                        ])
+                        ->get($url);
+                    if ($cRes->ok() && preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](https?:[^"\']+)["\']/', $cRes->body(), $m)) {
+                        $thumbUrl = html_entity_decode($m[1]);
+                    }
+                } catch (\Throwable $e) {}
+            }
+        } else {
+            if (preg_match('/instagram\.com\/(?:reel|reels|p)\/([A-Za-z0-9_-]+)/i', $url, $m)) {
+                $shortcode = $m[1];
+                try {
+                    $embedRes = Http::timeout(6)
+                        ->withHeaders([
+                            'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1',
+                        ])
+                        ->get("https://www.instagram.com/p/{$shortcode}/embed/captioned/");
+                    if ($embedRes->ok() && preg_match_all('#https?:\\\\?/\\\\?/[^"\'\s>]*(?:fbcdn|scontent|cdninstagram)[^"\'\s>]*\.jpg[^"\'\s>]*#i', $embedRes->body(), $matches)) {
+                        foreach ($matches[0] as $match) {
+                            $clean = stripslashes(html_entity_decode($match));
+                            if (!str_contains($clean, 'profile_pic') && !str_contains($clean, 's100x100')) {
+                                $thumbUrl = $clean;
+                                break;
+                            }
+                        }
+                    }
+                } catch (\Throwable $e) {}
+
+                if (!$thumbUrl) {
+                    $thumbUrl = 'https://images.weserv.nl/?url=' . urlencode("https://www.instagram.com/p/{$shortcode}/media/?size=l");
+                }
+            }
+        }
+
+        if ($thumbUrl) {
+            try {
+                $imgRes = Http::timeout(10)
+                    ->withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Referer'    => $prefix === 'tt' ? 'https://www.tiktok.com/' : 'https://www.instagram.com/',
+                    ])
+                    ->get($thumbUrl);
+
+                if ($imgRes->successful() && strlen($imgRes->body()) > 500) {
+                    Storage::disk('public')->put($filename, $imgRes->body());
+                    return $filename;
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        return null;
     }
 
     /**

@@ -1899,7 +1899,7 @@
                     </div>
                     <div class="prof-card-body" style="padding:1rem 1.5rem;">
                         <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
-                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data akan otomatis tersinkron dengan <a href="{{ route('creator.payout.settings') }}" style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
+                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data akan otomatis tersinkron dengan <a href="{{ route('creator.payout') }}" style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
                         </p>
 
                         @if(session('bank_success'))

@@ -888,43 +888,74 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // TikTok & Instagram Reels Thumbnail Fetcher
+            // TikTok & Instagram Reels Thumbnail Fetcher (Permanent Cached)
+            const defaultVideoPoster = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="260" height="400" viewBox="0 0 260 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="%230f172a"/><stop offset="100%" stop-color="%231e293b"/></linearGradient></defs><rect width="260" height="400" fill="url(%23g)"/><circle cx="130" cy="180" r="32" fill="rgba(255,255,255,0.12)"/><polygon points="124,166 142,180 124,194" fill="%23fff"/></svg>';
+
             document.querySelectorAll('.video-fetch, .tt-fetch').forEach(card => {
                 const url = card.dataset.url;
                 const type = card.dataset.type || (url && url.includes('instagram.com') ? 'reels' : 'tiktok');
                 const img = card.querySelector('.video-thumb, .tt-thumb');
                 if (!img) return;
 
+                img.onerror = function() {
+                    this.onerror = null;
+                    if (this.dataset.retried) {
+                        this.src = defaultVideoPoster;
+                        this.style.opacity = '1';
+                        return;
+                    }
+                    this.dataset.retried = '1';
+                    const endpoint = (type === 'reels' || (url && url.includes('instagram.com')))
+                        ? `/api/ig-thumb?url=${encodeURIComponent(url)}`
+                        : `/api/tiktok-thumb?url=${encodeURIComponent(url)}`;
+                    fetch(endpoint)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data && data.thumbnail_url) {
+                                img.src = data.thumbnail_url;
+                                img.style.opacity = '1';
+                            } else {
+                                img.src = defaultVideoPoster;
+                                img.style.opacity = '1';
+                            }
+                        })
+                        .catch(() => {
+                            img.src = defaultVideoPoster;
+                            img.style.opacity = '1';
+                        });
+                };
+
                 const currentSrc = img.getAttribute('src');
                 if (currentSrc && currentSrc.trim() !== '' && !currentSrc.endsWith('/')) {
                     img.style.opacity = '1';
                     return;
                 }
-                if (!url) return;
-
-                if (type === 'reels' || (url && url.includes('instagram.com'))) {
-                    fetch(`/api/ig-thumb?url=${encodeURIComponent(url)}`)
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data.thumbnail_url) {
-                                img.src = data.thumbnail_url;
-                                img.onload = () => { img.style.opacity = '1'; };
-                                img.onerror = () => { img.src = 'https://placehold.co/130x200/db2777/fff?text=Reels'; img.style.opacity = '1'; };
-                            } else {
-                                img.src = 'https://placehold.co/130x200/db2777/fff?text=Reels';
-                                img.style.opacity = '1';
-                            }
-                        })
-                        .catch(() => { img.src = 'https://placehold.co/130x200/db2777/fff?text=Reels'; img.style.opacity = '1'; });
-                } else {
-                    fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
-                            else { img.src = 'https://placehold.co/130x200/111/fff?text=TikTok'; img.style.opacity = '1'; }
-                        })
-                        .catch(() => { img.src = 'https://placehold.co/130x200/111/fff?text=TikTok'; img.style.opacity = '1'; });
+                if (!url) {
+                    img.src = defaultVideoPoster;
+                    img.style.opacity = '1';
+                    return;
                 }
+
+                const endpoint = (type === 'reels' || (url && url.includes('instagram.com')))
+                    ? `/api/ig-thumb?url=${encodeURIComponent(url)}`
+                    : `/api/tiktok-thumb?url=${encodeURIComponent(url)}`;
+
+                fetch(endpoint)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data && data.thumbnail_url) {
+                            img.src = data.thumbnail_url;
+                            img.onload = () => { img.style.opacity = '1'; };
+                            img.onerror = () => { img.src = defaultVideoPoster; img.style.opacity = '1'; };
+                        } else {
+                            img.src = defaultVideoPoster;
+                            img.style.opacity = '1';
+                        }
+                    })
+                    .catch(() => {
+                        img.src = defaultVideoPoster;
+                        img.style.opacity = '1';
+                    });
             });
 
             // Bio Link Click Tracker
