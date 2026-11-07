@@ -861,12 +861,24 @@
 
     @php
         $authUser = auth()->user();
-        // POS routes use pos_pin; Creator/Dashboard routes use security_pin
+        // PIN HANYA AKTIF saat user buka:
+        // 1. https://buyle.id/creator/pos/
+        // 2. https://buyle.id/creator/pos/reports
+        // 3. https://buyle.id/creator/pos/settings
+        $isPinGuardedRoute = request()->is('creator/pos')
+            || request()->is('creator/pos/reports*')
+            || request()->is('creator/pos/settings*')
+            || request()->routeIs('creator.pos.index')
+            || request()->routeIs('pos.index')
+            || request()->routeIs('creator.pos.reports*')
+            || request()->routeIs('creator.pos.settings*');
+
         $isPosRoute = request()->is('creator/pos*') || request()->is('login-pos*') || request()->routeIs('creator.pos.*') || request()->routeIs('pos.*');
-        $hasAppPin = $authUser && !empty($isPosRoute ? $authUser->pos_pin : $authUser->security_pin);
-        $pwaUnlockedKey = $isPosRoute ? 'pos_pwa_unlocked' : 'creator_pwa_unlocked';
+        $hasAppPin = $authUser && (!empty($authUser->pos_pin) || !empty($authUser->security_pin));
+        $pwaUnlockedKey = 'pos_pwa_unlocked';
         $hasBiometric = $authUser && (bool) $authUser->biometric_enabled;
-        $hasSecurityLock = $hasAppPin || $hasBiometric;
+        // Hanya aktif pada route yang ditentukan (POS, Laporan POS, Pengaturan POS)
+        $hasSecurityLock = $isPinGuardedRoute && ($hasAppPin || $hasBiometric);
 
         // Fallback Avatar: 1. Pos Receipt Logo -> 2. Creator Profile Avatar -> 3. User Avatar
         $authSeller = ($authUser && $authUser->isPosCashier() && $authUser->parent_seller_id)
@@ -1603,25 +1615,36 @@
     {{-- ── Super App Bottom Navigation (Mobile Only - 100% Sesuai Gambar 3) ── --}}
     @php
         $navIsFromPos = request('from') === 'pos';
+        $isProductsFromPos = request()->is('creator/products*') && $navIsFromPos;
+        $isPayoutFromPos = (request()->is('creator/payout-settings*') || request()->routeIs('creator.payout.settings')) && $navIsFromPos;
     @endphp
 
-    @if(request()->is('creator/products*') && $navIsFromPos)
-        {{-- Jika masuk ke halaman produk dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi, Laporan,
-        Profil) --}}
+    @if($isProductsFromPos || $isPayoutFromPos)
+        {{-- Jika masuk ke halaman produk atau payout dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi, Laporan, Profil) --}}
         <div class="pos-bottom-nav-wrap" id="posBottomNavWrap"
             style="display: flex !important; position: fixed !important; bottom: 16px !important; left: 14px !important; right: 14px !important; max-width: 440px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
             <div class="pos-bottom-nav-bar"
                 style="width: 100% !important; height: 62px !important; background: #ffffff !important; border-radius: 999px !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 0.35rem 0.65rem !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important; border: 1.5px solid #f1f5f9 !important; gap: 6px !important;">
-                <!-- 1. Home / Kasir (active / klik balik ke kasir POS) -->
-                <a href="{{ route('creator.pos.index') }}" class="pos-nav-item active" id="posNavBtnHome" title="Kasir Home"
-                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                    <span class="pos-nav-label"
-                        style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Home</span>
-                </a>
+                <!-- 1. Home / Kasir -->
+                @if($isPayoutFromPos)
+                    <a href="{{ route('creator.pos.index') }}" class="pos-nav-item" id="posNavBtnHome" title="Kasir Home"
+                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                    </a>
+                @else
+                    <a href="{{ route('creator.pos.index') }}" class="pos-nav-item active" id="posNavBtnHome" title="Kasir Home"
+                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                        <span class="pos-nav-label"
+                            style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Home</span>
+                    </a>
+                @endif
 
                 <!-- 2. Transactions -->
                 <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item"
@@ -1646,14 +1669,27 @@
                 </a>
 
                 <!-- 4. Profile -->
-                <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item" id="posNavBtnProfile"
-                    title="Profil Kasir & Toko"
-                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                </a>
+                @if($isPayoutFromPos)
+                    <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item active" id="posNavBtnProfile"
+                        title="Profil Kasir & Toko"
+                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <span class="pos-nav-label"
+                            style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Profil</span>
+                    </a>
+                @else
+                    <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item" id="posNavBtnProfile"
+                        title="Profil Kasir & Toko"
+                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </a>
+                @endif
             </div>
         </div>
     @elseif(!request()->is('creator/pos*'))

@@ -208,7 +208,7 @@ class SellerController extends Controller
     public function verifyPin(Request $request)
     {
         $user = auth()->user();
-        if (empty($user->security_pin)) {
+        if (empty($user->security_pin) && empty($user->pos_pin)) {
             return response()->json(['success' => true]);
         }
 
@@ -219,7 +219,18 @@ class SellerController extends Controller
 
         $request->validate(['pin' => 'required|digits:6']);
 
-        if (\Illuminate\Support\Facades\Hash::check($request->pin, $user->security_pin) || ($request->pin === $user->security_pin)) {
+        $validSecurity = !empty($user->security_pin) && (\Illuminate\Support\Facades\Hash::check($request->pin, $user->security_pin) || ($request->pin === $user->security_pin));
+        $validPos = !empty($user->pos_pin) && (\Illuminate\Support\Facades\Hash::check($request->pin, $user->pos_pin) || ($request->pin === $user->pos_pin));
+
+        // Jika staf kasir dengan parent seller
+        if (!$validSecurity && !$validPos && $user->parent_seller_id) {
+            $parent = \App\Models\User::find($user->parent_seller_id);
+            if ($parent && !empty($parent->pos_pin)) {
+                $validPos = \Illuminate\Support\Facades\Hash::check($request->pin, $parent->pos_pin) || ($request->pin === $parent->pos_pin);
+            }
+        }
+
+        if ($validSecurity || $validPos) {
             return response()->json(['success' => true]);
         }
 

@@ -264,18 +264,19 @@
             flex-shrink: 0;
         }
 
-        /* ── CARD 2: Dark Modern Tier Banner ── */
+        /* ── CARD 2: Light Modern Revenue Banner ── */
         .tier-modern-banner {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
             border-radius: 20px;
-            padding: 1.15rem 1.25rem;
-            color: #ffffff;
+            padding: 1.1rem 1.25rem;
+            color: #0f172a;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
             margin-bottom: 1.15rem;
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
             position: relative;
             overflow: hidden;
         }
@@ -283,11 +284,11 @@
         .tier-modern-banner::before {
             content: '';
             position: absolute;
-            top: -40px;
-            right: -40px;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(30, 179, 73, 0.35) 0%, transparent 70%);
+            top: -30px;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
         }
@@ -300,50 +301,62 @@
         }
 
         .tier-sparkle-box {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #38bdf8;
+            color: #16a34a;
             flex-shrink: 0;
         }
 
         .tier-title-text {
-            font-size: 0.92rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: #f8fafc;
-            line-height: 1.25;
+            color: #64748b;
+            line-height: 1.2;
+            margin-bottom: 3px;
         }
 
         .tier-sub-text {
-            font-size: 0.72rem;
-            color: #94a3b8;
-            margin-top: 2px;
-            line-height: 1.3;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
         }
 
         .tier-pill-btn {
-            background: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            color: #ffffff;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            color: #334155;
             border-radius: 24px;
             padding: 0.45rem 0.85rem;
-            font-size: 0.72rem;
-            font-weight: 600;
+            font-size: 0.74rem;
+            font-weight: 700;
             text-decoration: none;
             white-space: nowrap;
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
-            transition: background 0.15s ease;
+            transition: all 0.15s ease;
             flex-shrink: 0;
         }
 
         .tier-pill-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+
+        /* Sembunyikan bagian pasang aplikasi jika sudah mode standalone / sudah install */
+        @media all and (display-mode: standalone), (display-mode: fullscreen) {
+            #downloadAppSection, .download-app-section {
+                display: none !important;
+            }
         }
 
         /* ── iOS Grouped Cards List ── */
@@ -585,20 +598,18 @@
             </div>
         </a>
 
-        {{-- 3. Dark Modern Tier Banner --}}
+        {{-- 3. Light Modern Revenue Banner --}}
         <div class="tier-modern-banner">
             <div class="tier-banner-left">
                 <div class="tier-sparkle-box">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z" />
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                     </svg>
                 </div>
                 <div>
-                    <div class="tier-title-text">Tier: {{ $tierInfo['badge'] ?? 'Perintis' }}</div>
-                    <div class="tier-sub-text">
-                        Total GMV: Rp {{ number_format($gmv ?? 0, 0, ',', '.') }} ·
-                        {{ $cp?->is_verified ? 'Verified Store' : 'Status Aktif' }}
-                    </div>
+                    <div class="tier-title-text">Total Pendapatan:</div>
+                    <div class="tier-sub-text">Rp {{ number_format($gmv ?? 0, 0, ',', '.') }}</div>
                 </div>
             </div>
             <a href="{{ route('creator.pos.reports') }}" class="tier-pill-btn">
@@ -610,8 +621,8 @@
         </div>
 
 
-        {{-- 3b. Install PWA Section --}}
-        <div class="download-app-section">
+        {{-- 3b. Install PWA Section (Otomatis tersembunyi jika sudah dipasang / install) --}}
+        <div class="download-app-section" id="downloadAppSection">
             <div class="download-section-title">Pasang Aplikasi Kasir</div>
             <div class="download-cards-row">
                 {{-- Android --}}
@@ -657,6 +668,22 @@
                 </div>
             </div>
         </div>
+        <script>
+            // Segera cek apakah aplikasi sudah terpasang di layar utama / mode standalone
+            (function () {
+                try {
+                    var isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                        || window.navigator.standalone === true
+                        || (document.referrer && document.referrer.includes('android-app://'))
+                        || localStorage.getItem('buyle_pos_installed') === '1'
+                        || localStorage.getItem('pos_app_installed') === '1';
+                    if (isStandalone) {
+                        var el = document.getElementById('downloadAppSection');
+                        if (el) el.style.display = 'none';
+                    }
+                } catch (e) {}
+            })();
+        </script>
 
         {{-- 4b. Group 1: Kasir Digital & Pengaturan Utama (Pusat Pengaturan POS) --}}
         <div class="menu-group-card">
@@ -872,7 +899,7 @@
         {{-- 6. Group 3: Akun, Penarikan & Logout --}}
         <div class="menu-group-card">
             {{-- Tarik Saldo Toko --}}
-            <a href="{{ route('creator.payout.settings') }}" class="menu-group-item">
+            <a href="{{ route('creator.payout.settings', ['from' => 'pos']) }}" class="menu-group-item">
                 <div class="menu-item-left">
                     <div class="menu-item-icon">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1441,10 +1468,25 @@
             document.getElementById("pwaInstallModal").style.display = "none";
         }
 
+        window.addEventListener('appinstalled', function() {
+            try {
+                localStorage.setItem('buyle_pos_installed', '1');
+                var sec = document.getElementById('downloadAppSection');
+                if (sec) sec.style.display = 'none';
+            } catch(e) {}
+        });
+
         function runInstallAction() {
             if (deferredPosPrompt) {
                 deferredPosPrompt.prompt();
                 deferredPosPrompt.userChoice.then(function(choiceResult) {
+                    if (choiceResult && choiceResult.outcome === 'accepted') {
+                        try {
+                            localStorage.setItem('buyle_pos_installed', '1');
+                            var sec = document.getElementById('downloadAppSection');
+                            if (sec) sec.style.display = 'none';
+                        } catch(e) {}
+                    }
                     closeInstallModal();
                     deferredPosPrompt = null;
                 });

@@ -932,6 +932,14 @@
                 display: none;
             }
         }
+
+        @if(request('from') === 'pos')
+        @media (max-width: 768px) {
+            .bio-layout, .bio-content, .card-section {
+                padding-bottom: 95px !important;
+            }
+        }
+        @endif
     </style>
 @endsection
 
@@ -955,6 +963,15 @@
         $savedName = $seller->bank_account_name ?? '';
         $hasSaved = !empty($savedBank) && !empty($savedNum);
     @endphp
+
+    @if(request('from') === 'pos')
+        <div style="margin-bottom: 0.85rem;">
+            <a href="{{ route('creator.pos.profile') }}" style="display:inline-flex; align-items:center; gap:6px; font-size:0.8rem; font-weight:700; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; padding:6px 14px; border-radius:999px; text-decoration:none; transition:all 0.15s ease;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Kembali ke Profil POS
+            </a>
+        </div>
+    @endif
 
     <div class="bio-layout">
 
