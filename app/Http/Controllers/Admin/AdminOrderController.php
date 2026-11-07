@@ -17,11 +17,12 @@ class AdminOrderController extends Controller
 {
     // Tab config: [label, status values or null for all, key]
     private array $tabs = [
-        'all'        => ['label' => 'Semua',         'statuses' => null],
-        'processing' => ['label' => 'Perlu Dikirim', 'statuses' => ['processing']],
-        'shipped'    => ['label' => 'Dikirim',       'statuses' => ['shipped']],
-        'completed'  => ['label' => 'Selesai',       'statuses' => ['confirmed','completed','delivered']],
-        'omset'      => ['label' => 'Riwayat Omset & Keuangan', 'statuses' => null],
+        'all'        => ['label' => 'Produk Digital & Marketplace', 'statuses' => null],
+        'processing' => ['label' => 'Perlu Dikirim',                 'statuses' => ['processing']],
+        'shipped'    => ['label' => 'Dikirim',                       'statuses' => ['shipped']],
+        'completed'  => ['label' => 'Selesai',                       'statuses' => ['confirmed','completed','delivered']],
+        'pos'        => ['label' => 'Kasir POS',                     'statuses' => null],
+        'omset'      => ['label' => 'Riwayat Omset & Keuangan',      'statuses' => null],
     ];
 
     public function index(Request $request)
@@ -59,9 +60,27 @@ class AdminOrderController extends Controller
             ->orderByDesc('created_at');
         $applyDate($buyerQuery);
 
+        if ($tab === 'pos') {
+            $buyerQuery->where(function($q) {
+                $q->where('source', 'pos')
+                  ->orWhere('shipping_address->is_pos', true);
+            });
+        } elseif ($tab !== 'omset') {
+            // Tab pesanan online biasa: KELUARKAN transaksi POS agar tidak tercampur!
+            $buyerQuery->where(function($q) {
+                $q->whereNull('source')->orWhere('source', '!=', 'pos');
+            })->where(function($q) {
+                $q->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
+            });
+        }
+
         if ($q) {
             $buyerQuery->where(function($sub) use ($q) {
                 $sub->where('order_number', 'like', "%{$q}%")
+                    ->orWhere('user_phone', 'like', "%{$q}%")
+                    ->orWhere('receiver_name', 'like', "%{$q}%")
+                    ->orWhere('shipping_address->customer_name', 'like', "%{$q}%")
+                    ->orWhere('shipping_address->customer_phone', 'like', "%{$q}%")
                     ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$q}%")
                         ->orWhere('email', 'like', "%{$q}%")
                         ->orWhere('username', 'like', "%{$q}%"))
@@ -74,26 +93,47 @@ class AdminOrderController extends Controller
             });
         }
 
-        // Stats standard untuk 4 tab pesanan produk biasa
-        $statsBase = Order::query()->where('status', '!=', OrderStatus::Pending);
+        // Stats standard untuk 4 tab pesanan produk online biasa (eksklusif tanpa POS)
+        $statsBase = Order::query()->where('status', '!=', OrderStatus::Pending)
+            ->where(function($q) {
+                $q->whereNull('source')->orWhere('source', '!=', 'pos');
+            })->where(function($q) {
+                $q->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
+            });
         $applyDate($statsBase);
 
+        // Stats khusus transaksi Kasir POS
+        $posStatsBase = Order::query()->where('status', '!=', OrderStatus::Pending)
+            ->where(function($q) {
+                $q->where('source', 'pos')
+                  ->orWhere('shipping_address->is_pos', true);
+            });
+        $applyDate($posStatsBase);
+
         $stats = [
-            'total'      => (clone $statsBase)->count(),
-            'processing' => (clone $statsBase)->whereIn('status', ['processing'])->count(),
-            'shipped'    => (clone $statsBase)->whereIn('status', ['shipped'])->count(),
-            'completed'  => (clone $statsBase)->whereIn('status', ['confirmed', 'completed', 'delivered'])->count(),
-            'revenue'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
+            'total'       => (clone $statsBase)->count(),
+            'processing'  => (clone $statsBase)->whereIn('status', ['processing'])->count(),
+            'shipped'     => (clone $statsBase)->whereIn('status', ['shipped'])->count(),
+            'completed'   => (clone $statsBase)->whereIn('status', ['confirmed', 'completed', 'delivered'])->count(),
+            'revenue'     => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
+            'pos_total'   => (clone $posStatsBase)->count(),
+            'pos_revenue' => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('total'),
         ];
 
         // Tab counts
         $counts = [];
         foreach ($this->tabs as $key => $cfg) {
-            $cQuery = clone $statsBase;
-            if ($cfg['statuses'] !== null) {
-                $cQuery->whereIn('status', $cfg['statuses']);
+            if ($key === 'pos') {
+                $counts[$key] = (clone $posStatsBase)->count();
+            } elseif ($key === 'omset') {
+                $counts[$key] = (clone $statsBase)->count() + (clone $posStatsBase)->count();
+            } else {
+                $cQuery = clone $statsBase;
+                if ($cfg['statuses'] !== null) {
+                    $cQuery->whereIn('status', $cfg['statuses']);
+                }
+                $counts[$key] = $cQuery->count();
             }
-            $counts[$key] = $cQuery->count();
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -597,6 +637,16 @@ class AdminOrderController extends Controller
             );
 
             $orders = $omsetItems;
+        } elseif ($tab === 'pos') {
+            $orders = $buyerQuery->paginate(20)->withQueryString();
+
+            $revenueStats = [
+                'gross'        => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('total'),
+                'subtotal'     => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('subtotal'),
+                'admin_fee'    => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('admin_fee'),
+                'platform_fee' => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('platform_fee'),
+                'profit'       => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->selectRaw('SUM(COALESCE(admin_fee,0) + COALESCE(platform_fee,0)) as profit')->value('profit') ?? 0,
+            ];
         } else {
             // Tab pesanan biasa: filter status tab & paginate
             $statuses = $this->tabs[$tab]['statuses'];

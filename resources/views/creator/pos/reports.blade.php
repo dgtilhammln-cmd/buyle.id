@@ -34,32 +34,48 @@
             background: #f8fafc !important;
         }
 
-        .cr-main-canvas {
-            margin: 0 auto !important;
-            padding: 0.5rem 0.75rem 120px 0.75rem !important;
-            padding-top: max(0.5rem, calc(0.5rem + env(safe-area-inset-top, 0px))) !important;
-            width: 100% !important;
-            max-width: 480px !important;
-            /* Super App width, perfectly centered */
-            box-sizing: border-box !important;
-            background: transparent !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
+        @media (max-width: 767px) {
+            .cr-main-canvas {
+                margin: 0 auto !important;
+                padding: 0.5rem 0.75rem 120px 0.75rem !important;
+                padding-top: max(0.5rem, calc(0.5rem + env(safe-area-inset-top, 0px))) !important;
+                width: 100% !important;
+                max-width: 480px !important;
+                box-sizing: border-box !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            .rp-wrap {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+            }
         }
 
-        .cr-topbar-header-row {
-            display: none !important;
-        }
-
-        .rp-wrap {
-            max-width: 520px;
-            margin: 0 auto;
-            padding: 0.65rem 0.75rem 6rem;
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 auto !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
+        @media (min-width: 768px) {
+            .cr-main-canvas {
+                margin: 0 !important;
+                padding: 1.5rem 2rem 80px 2rem !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                background: #ffffff !important;
+                border-radius: 36px 0 0 0 !important;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05) !important;
+            }
+            .cr-main-wrapper {
+                background: #f1f5f9 !important;
+            }
+            .rp-wrap {
+                width: 100% !important;
+                max-width: 960px !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+            }
         }
 
         /* ── Header ── */

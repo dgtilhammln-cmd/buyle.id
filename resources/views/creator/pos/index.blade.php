@@ -170,19 +170,16 @@
 
 
         /* Screen 2 Display Toggles */
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
             .pos-mobile-transactions-list {
                 display: none !important;
             }
         }
 
-        @media (max-width: 991px) {
+        @media (max-width: 767px) {
             .pos-desktop-only-table {
                 display: none !important;
             }
-        }
-
-        @media (max-width: 991px) {
             .pos-wrapper {
                 grid-template-columns: 1fr;
             }
@@ -2071,8 +2068,8 @@
             100% { background: #ffffff; border-color: #f1f5f9; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         }
 
-        /* ── Responsive Mobile Overrides (< 991px) ── */
-        @media (max-width: 991px) {
+        /* ── Responsive Mobile Overrides (< 768px) ── */
+        @media (max-width: 767px) {
             .pos-mobile-top-header {
                 display: flex !important;
             }
@@ -2598,7 +2595,7 @@
             justify-content: space-between !important;
             z-index: 9980 !important;
         }
-        @media (max-width: 991px) {
+        @media (max-width: 767px) {
             .pos-mobile-floating-bar {
                 display: flex !important;
             }
@@ -2669,7 +2666,7 @@
             background: transparent !important;
             padding: 0 !important;
         }
-        @media (max-width: 991px) {
+        @media (max-width: 767px) {
             .pos-bottom-nav-wrap {
                 display: flex !important;
             }
@@ -2737,7 +2734,7 @@
         }
 
         /* Adjust Floating Cart Bar to sit neatly above Buyle POS Bottom Nav */
-        @media (max-width: 991px) {
+        @media (max-width: 767px) {
             .pos-mobile-floating-bar {
                 bottom: 86px !important;
                 z-index: 9990 !important;
@@ -2974,7 +2971,7 @@
             justify-content: space-between !important;
             z-index: 9990 !important;
         }
-        @media (max-width: 991px) {
+        @media (max-width: 767px) {
             .pos-mobile-floating-bar {
                 display: flex !important;
             }
@@ -3038,49 +3035,178 @@
         }
 
 
-        /* Unified Mobile-First Super App Layout (HP, Tab, iPad, Desktop 100% Identical) */
+        /* ── SUPER RESPONSIVE POS LAYOUT (Mobile, Tablet / iPad, Desktop) ── */
         .cr-topbar-header-row {
             display: none !important;
         }
-        .cr-main-canvas {
-            padding: 0.5rem 0.75rem 150px 0.75rem !important;
-            min-height: auto !important;
-            background: #ffffff !important;
-            display: block !important;
-            max-width: 480px !important;
-            margin: 0 auto !important;
-            overflow: visible !important;
-        }
-        .cr-main-wrapper {
-            min-height: 100vh !important;
-            background: #f8fafc !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: visible !important;
-            overflow-x: clip !important;
-        }
-        #pos-real-content {
-            margin-top: 0 !important;
-            padding-top: max(0px, env(safe-area-inset-top, 0px)) !important;
-            max-width: 480px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            overflow: visible !important;
-        }
-        .pos-wrapper {
-            display: block !important;
-            padding-top: 0 !important;
-            max-width: 480px !important;
-            margin: 0 auto !important;
-            grid-template-columns: 1fr !important;
-            overflow: visible !important;
-        }
-        .prof-card-body {
-            overflow: visible !important;
+
+        /* ── MOBILE SCREENS (< 768px) ── */
+        @media (max-width: 767px) {
+            .cr-main-canvas {
+                padding: 0.5rem 0.75rem 150px 0.75rem !important;
+                min-height: auto !important;
+                background: #ffffff !important;
+                display: block !important;
+                max-width: 480px !important;
+                margin: 0 auto !important;
+                overflow: visible !important;
+            }
+            .cr-main-wrapper {
+                min-height: 100vh !important;
+                background: #f8fafc !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                overflow-x: clip !important;
+            }
+            #pos-real-content {
+                margin-top: 0 !important;
+                padding-top: max(0px, env(safe-area-inset-top, 0px)) !important;
+                max-width: 480px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                overflow: visible !important;
+            }
+            .pos-wrapper {
+                display: block !important;
+                padding-top: 0 !important;
+                max-width: 480px !important;
+                margin: 0 auto !important;
+                grid-template-columns: 1fr !important;
+                overflow: visible !important;
+            }
+            #cartPanel {
+                display: none !important;
+            }
+            .pos-mobile-floating-bar {
+                display: flex !important;
+            }
+            .pos-bottom-nav-wrap {
+                display: flex !important;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                padding-bottom: 210px !important;
+            }
+            #posScreenTransactions {
+                max-width: 480px !important;
+                margin: 0 auto !important;
+                padding: 0 0 160px 0 !important;
+            }
+            .pos-desktop-nav-tabs {
+                display: none !important;
+            }
         }
 
-        /* ── STICKY SEARCH & CATEGORY BAR (Capture Tetap di Posisi Saat Scroll) ── */
+        /* ── TABLET & DESKTOP (>= 768px) ── */
+        @media (min-width: 768px) {
+            .cr-main-canvas {
+                padding: 1.25rem 1.75rem 50px 1.75rem !important;
+                min-height: calc(100vh - 1.25rem) !important;
+                background: #f8fafc !important;
+                display: block !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 36px 0 0 0 !important;
+                overflow: visible !important;
+            }
+            .cr-main-wrapper {
+                min-height: 100vh !important;
+                width: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                background: #f1f5f9 !important;
+            }
+            #pos-real-content {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            .pos-wrapper {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) 380px !important;
+                gap: 1.25rem !important;
+                max-width: 100% !important;
+                align-items: start !important;
+            }
+            #cartPanel {
+                display: block !important;
+                position: -webkit-sticky !important;
+                position: sticky !important;
+                top: 1rem !important;
+                z-index: 40 !important;
+            }
+            #cartPanel .prof-card {
+                background: #ffffff !important;
+                border: 1.5px solid #e2e8f0 !important;
+                border-radius: 22px !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+                overflow: visible !important;
+            }
+            #cartPanel .cart-items-container {
+                max-height: calc(100vh - 430px) !important;
+                min-height: 180px !important;
+                overflow-y: auto !important;
+            }
+            .pos-mobile-floating-bar {
+                display: none !important;
+            }
+            .pos-bottom-nav-wrap {
+                display: none !important;
+            }
+            .product-grid {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)) !important;
+                gap: 0.85rem !important;
+                padding-bottom: 40px !important;
+            }
+            .prof-card {
+                background: #ffffff !important;
+                border: 1.5px solid #e2e8f0 !important;
+                border-radius: 22px !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+            }
+            .prof-card-head {
+                display: flex !important;
+            }
+            .prof-card-body {
+                padding: 1.35rem !important;
+            }
+            #posScreenTransactions {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 0 50px 0 !important;
+            }
+            .pos-desktop-only-table {
+                display: table !important;
+            }
+            .pos-mobile-transactions-list {
+                display: none !important;
+            }
+            .pos-desktop-nav-tabs {
+                display: flex !important;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+
+        /* ── LARGE SCREENS & DESKTOP (>= 1200px) ── */
+        @media (min-width: 1200px) {
+            .pos-wrapper {
+                grid-template-columns: minmax(0, 1fr) 420px !important;
+                gap: 1.5rem !important;
+            }
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)) !important;
+                gap: 1rem !important;
+            }
+        }
+
+        /* ── STICKY SEARCH & CATEGORY BAR ── */
         .pos-sticky-catalog-header {
             position: -webkit-sticky !important;
             position: sticky !important;
@@ -3096,28 +3222,38 @@
             padding-right: 12px !important;
             transition: box-shadow 0.2s ease;
         }
-        #cartPanel {
-            display: none !important;
-        }
-        .pos-mobile-floating-bar {
-            display: flex !important;
-        }
-        .pos-bottom-nav-wrap {
-            display: flex !important;
-        }
-        .product-grid {
-            padding-bottom: 210px !important;
-        }
-        /* Eliminate Image 1 Modal completely */
+
+        /* Eliminate Legacy Modals */
         #posHistoryModal {
             display: none !important;
             pointer-events: none !important;
         }
-        /* Screen 2 Transactions full width wrapper */
-        #posScreenTransactions {
-            max-width: 480px !important;
-            margin: 0 auto !important;
-            padding: 0 0 160px 0 !important;
+
+        /* Desktop Header Nav Pill Buttons */
+        .pos-dtab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .pos-dtab-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .pos-dtab-btn.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);
         }
     </style>
 @endsection
@@ -3320,14 +3456,37 @@
 
                     <div class="prof-card-body">
                         <!-- 1. Header (Screen 1 Reference 100% Match) -->
-                        <div class="pos-ref-header">
-                            <button type="button" class="pos-ref-menu-btn" onclick="openPosSettingsModal('struk')" title="Pengaturan POS">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="3" />
-                                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
-                                </svg>
-                            </button>
-                            <h1 class="pos-ref-title">Buyle POS</h1>
+                        <div class="pos-ref-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <button type="button" class="pos-ref-menu-btn" onclick="openPosSettingsModal('struk')" title="Pengaturan POS">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="3" />
+                                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+                                    </svg>
+                                </button>
+                                <h1 class="pos-ref-title" style="margin:0;">Buyle POS</h1>
+                            </div>
+
+                            <!-- Tablet & Desktop Tab Switchers -->
+                            <div class="pos-desktop-nav-tabs">
+                                <button type="button" class="pos-dtab-btn active" id="posDtabHome" onclick="switchPosScreen('catalog')">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                    <span>Kasir & Menu</span>
+                                </button>
+                                <button type="button" class="pos-dtab-btn" id="posDtabTrans" onclick="switchPosScreen('transactions')">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><line x1="2" y1="9" x2="6" y2="9"/><line x1="18" y1="15" x2="22" y2="15"/></svg>
+                                    <span>Riwayat Transaksi</span>
+                                </button>
+                                <a href="{{ route('creator.pos.reports') }}" class="pos-dtab-btn">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                    <span>Laporan</span>
+                                </a>
+                                <a href="{{ route('creator.pos.profile') }}" class="pos-dtab-btn">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                    <span>Profil</span>
+                                </a>
+                            </div>
+
                             <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-ref-add-btn" id="posBtnHeaderAdd" title="Kelola Produk di Buyle" style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #e2e8f0; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </a>
@@ -9988,16 +10147,21 @@
                 const screenTrans = document.getElementById('posScreenTransactions');
                 const navHome = document.getElementById('posNavBtnHome');
                 const navTrans = document.getElementById('posNavBtnTrans');
+                const dtabHome = document.getElementById('posDtabHome');
+                const dtabTrans = document.getElementById('posDtabTrans');
                 const floatingBar = document.getElementById('posMobileFloatingBar');
 
                 if (navHome) navHome.classList.remove('active');
                 if (navTrans) navTrans.classList.remove('active');
+                if (dtabHome) dtabHome.classList.remove('active');
+                if (dtabTrans) dtabTrans.classList.remove('active');
 
                 if (screen === 'transactions') {
                     if (navTrans) navTrans.classList.add('active');
+                    if (dtabTrans) dtabTrans.classList.add('active');
                     if (screenCat) screenCat.style.display = 'none';
-                    if (floatingBar && window.innerWidth <= 991) {
-                        floatingBar.style.display = 'flex';
+                    if (floatingBar && window.innerWidth < 768) {
+                        floatingBar.style.display = 'none';
                     }
 
                     if (screenTrans) {
@@ -10013,6 +10177,7 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     if (navHome) navHome.classList.add('active');
+                    if (dtabHome) dtabHome.classList.add('active');
                     if (screenTrans) screenTrans.style.display = 'none';
 
                     if (screenCat) {
@@ -10026,7 +10191,7 @@
                         }, 20);
                     }
                     // Restore floating bar on mobile if items in cart
-                    if (floatingBar && window.innerWidth <= 991) {
+                    if (floatingBar && window.innerWidth < 768 && typeof cart !== 'undefined' && cart.length > 0) {
                         floatingBar.style.display = 'flex';
                     }
                     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -1128,7 +1128,15 @@
                         <div class="o-card-user">
                             @php
                                 $userAvatar = $o->user->avatar ?? null;
-                                $userName = $o->user->name ?? $o->receiver_name ?? 'Konsumen';
+                                $shipAddr = is_array($o->shipping_address) ? $o->shipping_address : [];
+                                $isPosOrder = ($o->source === 'pos') || (!empty($shipAddr['is_pos'])) || ($tab === 'pos');
+                                $userName = $isPosOrder
+                                    ? ($shipAddr['customer_name'] ?? $o->receiver_name ?? ($o->user->name ?? 'Pelanggan Walk-In'))
+                                    : ($o->user->name ?? $o->receiver_name ?? 'Konsumen');
+                                $userPhone = $isPosOrder
+                                    ? ($shipAddr['customer_phone'] ?? $o->user_phone ?? null)
+                                    : ($o->user_phone ?? null);
+                                $creatorStore = $o->items->first()?->product?->seller?->store_name ?? $o->items->first()?->product?->seller?->name ?? 'Kasir POS';
                             @endphp
                             @if($userAvatar)
                                 <img src="{{ asset('storage/' . $userAvatar) }}" loading="lazy" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0;flex-shrink:0;">
@@ -1138,13 +1146,23 @@
                                 </div>
                             @endif
                             <div>
-                                <span>{{ $userName }}</span>
-                                @if($o->user && $o->user->email)
+                                <span style="font-weight:700;">{{ $userName }}</span>
+                                @if($userPhone)
+                                    <span style="font-size:0.75rem;color:#059669;font-weight:600;margin-left:0.25rem;">({{ $userPhone }})</span>
+                                @elseif($o->user && $o->user->email)
                                     <span style="font-size:0.75rem;color:#94A3B8;font-weight:400;margin-left:0.25rem;">({{ $o->user->email }})</span>
+                                @endif
+                                @if($isPosOrder)
+                                    <div style="font-size:0.7rem;color:#64748B;margin-top:2px;">Toko / Kasir: <strong style="color:#0F172A;">{{ $creatorStore }}</strong></div>
                                 @endif
                             </div>
                         </div>
-                        <div class="o-card-ordernum">#{{ $o->order_number }}</div>
+                        <div class="o-card-ordernum">
+                            @if($isPosOrder)
+                                <span style="font-size:0.62rem;background:#DCFCE7;color:#166534;font-weight:800;padding:2px 6px;border-radius:4px;margin-right:4px;">STRUK POS</span>
+                            @endif
+                            #{{ $o->order_number }}
+                        </div>
                     </div>
 
                     {{-- Card Body --}}
@@ -1157,7 +1175,7 @@
                                     <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('img/no-image.jpg') }}" loading="lazy" class="o-item-img" onerror="this.src='https://via.placeholder.com/60?text=No+Img'">
                                     <div>
                                         <div class="o-item-title">{{ Str::limit($item->product_name ?? ($item->product->name ?? 'Produk'), 50) }}</div>
-                                        @if($item->product && $item->product->seller)
+                                        @if(!$isPosOrder && $item->product && $item->product->seller)
                                             <div style="font-size:0.725rem;color:#059669;font-weight:600;margin-bottom:0.15rem;">Toko: {{ $item->product->seller->store_name ?? $item->product->seller->name }}</div>
                                         @endif
                                         <div style="font-size:0.725rem;color:#64748B;font-weight:500;">Qty: {{ $item->qty }} &bull; Rp {{ number_format($item->price, 0, ',', '.') }}</div>
@@ -1171,25 +1189,57 @@
                             @endif
                         </div>
 
-                        {{-- Status & Courier --}}
+                        {{-- Status & Courier / Layanan --}}
                         <div>
-                            <div class="o-col-title">Status Pesanan</div>
-                            @php
-                                $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                                $stBadge = match($statusVal) {
-                                    'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Perlu Dikirim'],
-                                    'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
-                                    'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
-                                    default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
-                                };
-                            @endphp
-                            <span class="badge-pill" style="color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};">
-                                {{ $stBadge[2] }}
-                            </span>
+                            @if($isPosOrder)
+                                @php
+                                    $orderType = $shipAddr['order_type'] ?? 'dine_in';
+                                    $orderTypeLabel = match($orderType) {
+                                        'dine_in' => 'Makan di Tempat (Dine In)',
+                                        'take_away' => 'Bawa Pulang (Take Away)',
+                                        default => 'Pesanan Kasir POS'
+                                    };
+                                    $tableNo = $shipAddr['table_no'] ?? null;
+                                @endphp
+                                <div class="o-col-title">Layanan & Meja</div>
+                                <span class="badge-pill" style="color:#166534;background:#DCFCE7;font-weight:700;">
+                                    {{ $orderTypeLabel }}
+                                </span>
+                                @if($tableNo)
+                                    <div style="font-size:0.75rem;font-weight:700;color:#0F172A;margin-top:0.25rem;">Meja #{{ $tableNo }}</div>
+                                @endif
 
-                            <div class="o-col-title" style="margin-top:0.65rem;">Ekspedisi / Resi</div>
-                            <div style="font-size:0.775rem;font-weight:600;color:#1E293B;">{{ $o->shipment->courier_name ?? 'Pengiriman Digital / Reguler' }}</div>
-                            <div style="font-size:0.725rem;color:#64748B;margin-top:0.1rem;">Resi: {{ $o->shipment->tracking_number ?? 'Belum ada resi' }}</div>
+                                <div class="o-col-title" style="margin-top:0.65rem;">Status Transaksi</div>
+                                @php
+                                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+                                    $stBadge = match($statusVal) {
+                                        'completed', 'confirmed', 'delivered' => ['#166534', '#DCFCE7', 'Selesai'],
+                                        'cancelled'                           => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
+                                        default                               => ['#059669', '#E6F4EA', ucfirst($statusVal)]
+                                    };
+                                @endphp
+                                <span class="badge-pill" style="color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};">
+                                    {{ $stBadge[2] }}
+                                </span>
+                            @else
+                                <div class="o-col-title">Status Pesanan</div>
+                                @php
+                                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+                                    $stBadge = match($statusVal) {
+                                        'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Perlu Dikirim'],
+                                        'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
+                                        'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
+                                        default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
+                                    };
+                                @endphp
+                                <span class="badge-pill" style="color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};">
+                                    {{ $stBadge[2] }}
+                                </span>
+
+                                <div class="o-col-title" style="margin-top:0.65rem;">Ekspedisi / Resi</div>
+                                <div style="font-size:0.775rem;font-weight:600;color:#1E293B;">{{ $o->shipment->courier_name ?? 'Pengiriman Digital / Reguler' }}</div>
+                                <div style="font-size:0.725rem;color:#64748B;margin-top:0.1rem;">Resi: {{ $o->shipment->tracking_number ?? 'Belum ada resi' }}</div>
+                            @endif
                         </div>
 
                         {{-- Total Amount --}}
@@ -1197,14 +1247,25 @@
                             <div class="o-col-title">Total Pembayaran</div>
                             <div class="o-total-price">Rp {{ number_format($o->total, 0, ',', '.') }}</div>
                             <div style="font-size:0.725rem;color:#64748B;margin-top:0.2rem;font-weight:500;">
-                                {{ $o->payment->method ?? 'Payment Gateway' }}
+                                @php
+                                    $posMethod = $shipAddr['payment_method'] ?? null;
+                                    $payLabel = $posMethod ? match(strtolower($posMethod)) {
+                                        'cash', 'tunai' => 'Tunai (Cash)',
+                                        'qris', 'qris_pos' => 'QRIS POS',
+                                        'deposit', 'pos_deposit' => 'Saldo Deposit Kasir',
+                                        default => strtoupper($posMethod)
+                                    } : ($o->payment->method ?? 'Payment Gateway');
+                                @endphp
+                                <span style="background:#F1F5F9; color:#334155; padding:2px 6px; border-radius:4px; font-size:0.7rem; border:1px solid #E2E8F0;">
+                                    {{ $payLabel }}
+                                </span>
                             </div>
                         </div>
 
                         {{-- Action Minimalist Button --}}
                         <div style="text-align:right;">
                             <a href="{{ route('admin.orders.show', $o) }}" class="o-btn-action">
-                                Rincian
+                                {{ $isPosOrder ? 'Detail Struk' : 'Rincian' }}
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </a>
                         </div>
