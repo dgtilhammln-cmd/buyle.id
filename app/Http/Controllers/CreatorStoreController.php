@@ -10,10 +10,26 @@ class CreatorStoreController extends Controller
 {
     public function show(Request $request, $slug, $groupSlug = null)
     {
-        // 1. Cari profil creator berdasarkan slug
+        // 1. Cari profil creator berdasarkan slug (store_slug, handle, atau username user)
         $profile = CreatorProfile::where('store_slug', $slug)
+            ->where('store_slug', '!=', '')
             ->with(['user'])
             ->first();
+
+        if (!$profile) {
+            $profile = CreatorProfile::where('handle', $slug)
+                ->where('handle', '!=', '')
+                ->with(['user'])
+                ->first();
+        }
+
+        if (!$profile) {
+            $profile = CreatorProfile::whereHas('user', function ($q) use ($slug) {
+                    $q->where('username', $slug);
+                })
+                ->with(['user'])
+                ->first();
+        }
 
         // Jika bukan toko kreator, cek apakah ini ShortLink Automation (/c/{code})
         if (!$profile) {
@@ -29,22 +45,27 @@ class CreatorStoreController extends Controller
             abort(404);
         }
 
+        // Tipe produk digital yang diizinkan tampil di storefront
+        $digitalTypes = ['external_link', 'digital', 'link', 'ebook', 'course', 'license', 'file', 'download'];
+
         // 2. Ambil grup produk yang aktif untuk filter kategori
         $groups = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->withCount(['products' => function ($q) {
-                $q->where('is_active', true);
+            ->withCount(['products' => function ($q) use ($digitalTypes) {
+                $q->where('is_active', true)->whereIn('product_type', $digitalTypes);
             }])
             ->orderBy('order')
             ->get();
 
         $totalProductsCount = Product::where('seller_id', $seller->id)
             ->where('is_active', true)
+            ->whereIn('product_type', $digitalTypes)
             ->count();
 
-        // 3. Ambil produk berdasarkan grup (atau semua)
+        // 3. Ambil produk berdasarkan grup (atau semua) — hanya produk digital
         $query = Product::where('seller_id', $seller->id)
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->whereIn('product_type', $digitalTypes);
 
         // Fallback ke request('group') untuk support old URL
         $activeGroupSlug = $groupSlug ?? $request->group;

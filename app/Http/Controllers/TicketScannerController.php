@@ -909,4 +909,42 @@ class TicketScannerController extends Controller
                 : 'Proteksi PIN dinonaktifkan (Gate terbuka langsung).',
         ]);
     }
+
+    /**
+     * Simpan / update rekening bank creator dari halaman Event Attendance.
+     * Data otomatis tersinkron dengan /creator/payout-settings.
+     */
+    public function updateBankAccount(\Illuminate\Http\Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'bank_name'           => 'required|string|max:100',
+            'bank_account_number' => 'required|string|max:50|regex:/^[0-9\-]+$/',
+            'bank_account_name'   => 'required|string|max:100',
+        ], [
+            'bank_account_number.regex' => 'Nomor rekening hanya boleh berisi angka.',
+        ]);
+
+        $inputName = trim($request->bank_account_name);
+        $userName  = trim($user->name);
+
+        // Validasi: nama rekening HARUS sama dengan nama akun terdaftar (case-insensitive)
+        if (mb_strtolower($inputName) !== mb_strtolower($userName)) {
+            return back()
+                ->withInput()
+                ->with('bank_error', 'Nama pemilik rekening harus sama persis dengan nama akun terdaftar: "' . $userName . '".')
+                ->withFragment('tab-rekening');
+        }
+
+        $user->update([
+            'bank_name'           => $request->bank_name,
+            'bank_account_number' => $request->bank_account_number,
+            'bank_account_name'   => $inputName,
+        ]);
+
+        return redirect()
+            ->route('creator.ticket.scanner', ['tab' => 'rekening'])
+            ->with('bank_success', 'Rekening pencairan berhasil disimpan!');
+    }
 }

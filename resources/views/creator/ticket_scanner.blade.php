@@ -947,6 +947,15 @@
                         <span class="tab-text-full">Link Gate Panitia</span>
                         <small class="tab-text-mob">Gate Staff</small>
                     </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'rekening' ? 'active' : '' }}"
+                        onclick="switchTab('tab-rekening', this)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                        <span class="tab-text-full">Rekening Pencairan</span>
+                        <small class="tab-text-mob">Rekening</small>
+                    </button>
                 @endif
             </div>
 
@@ -1878,6 +1887,101 @@
                 </div>
             @endif {{-- end: verified only tabs --}}
 
+            {{-- TAB REKENING: Selalu tampil untuk creator --}}
+            <div id="tab-rekening" class="payout-tab-pane" style="display: {{ $activeTab === 'rekening' ? 'block' : 'none' }};">
+                <div class="prof-card">
+                    <div class="prof-card-head" style="display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                        <span style="font-weight:800; font-size:1rem; color:#0f172a;">Rekening Pencairan Dana</span>
+                    </div>
+                    <div class="prof-card-body" style="padding:1rem 1.5rem;">
+                        <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
+                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data akan otomatis tersinkron dengan <a href="{{ route('creator.payout') }}" style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
+                        </p>
+
+                        @if(session('bank_success'))
+                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                {{ session('bank_success') }}
+                            </div>
+                        @endif
+                        @if(session('bank_error'))
+                            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.85rem 1.1rem; border-radius:12px; font-weight:600; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                {{ session('bank_error') }}
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('creator.ticket.bank.update') }}">
+                            @csrf
+                            <div style="display:flex; flex-direction:column; gap:1.1rem;">
+
+                                {{-- Bank / E-Wallet --}}
+                                <div>
+                                    <label style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+                                        Bank / E-Wallet
+                                    </label>
+                                    <select name="bank_name" required
+                                        style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
+                                        <option value="">— Pilih Bank / E-Wallet —</option>
+                                        <optgroup label="Bank Nasional">
+                                            @foreach(['BCA','Mandiri','BRI','BNI','CIMB Niaga','Danamon','Permata','BSI','BTN','Maybank','Panin','OCBC NISP','Bank Neo Commerce','Jenius (SMBC)'] as $bank)
+                                                <option value="{{ $bank }}" {{ auth()->user()->bank_name === $bank ? 'selected' : '' }}>{{ $bank }}</option>
+                                            @endforeach
+                                        </optgroup>
+                                        <optgroup label="E-Wallet">
+                                            @foreach(['GoPay','OVO','Dana','ShopeePay','LinkAja','Flip'] as $ewallet)
+                                                <option value="{{ $ewallet }}" {{ auth()->user()->bank_name === $ewallet ? 'selected' : '' }}>{{ $ewallet }}</option>
+                                            @endforeach
+                                        </optgroup>
+                                    </select>
+                                    @error('bank_name')<span style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                </div>
+
+                                {{-- Nomor Rekening --}}
+                                <div>
+                                    <label style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+                                        Nomor Rekening / No. HP
+                                    </label>
+                                    <input type="text" name="bank_account_number" inputmode="numeric"
+                                        value="{{ old('bank_account_number', auth()->user()->bank_account_number) }}"
+                                        placeholder="Contoh: 1234567890"
+                                        style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:monospace; outline:none; box-sizing:border-box;"
+                                        required>
+                                    @error('bank_account_number')<span style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                </div>
+
+                                {{-- Nama Rekening --}}
+                                <div>
+                                    <label style="display:block; font-size:0.8rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+                                        Nama Pemilik Rekening
+                                        <span style="font-weight:500; color:#94a3b8; font-size:0.74rem; margin-left:4px;">(harus sesuai nama pendaftar)</span>
+                                    </label>
+                                    <input type="text" name="bank_account_name"
+                                        value="{{ old('bank_account_name', auth()->user()->bank_account_name) }}"
+                                        placeholder="Sesuai nama di rekening bank"
+                                        style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.85rem; color:#0f172a; background:#fff; font-family:inherit; outline:none; box-sizing:border-box;"
+                                        required>
+                                    <div style="font-size:0.73rem; color:#94a3b8; margin-top:0.3rem;">
+                                        Nama akun terdaftar: <strong style="color:#0f172a;">{{ auth()->user()->name }}</strong>
+                                    </div>
+                                    @error('bank_account_name')<span style="font-size:0.75rem; color:#dc2626; margin-top:0.25rem; display:block;">{{ $message }}</span>@enderror
+                                </div>
+
+                                <button type="submit"
+                                    style="padding:0.8rem 1.5rem; background:linear-gradient(135deg, #1eb349, #15803d); color:#fff; border:none; border-radius:12px; font-weight:700; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem; box-shadow:0 4px 14px rgba(30,179,73,0.3);">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                    Simpan Rekening
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div> {{-- Close .bio-content --}}
 
     </div> {{-- Close .bio-layout --}}
@@ -2078,7 +2182,7 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).style.display = 'block';
             btn.classList.add('active');
-            const tabName = tabId === 'tab-settings' ? 'settings' : (tabId === 'tab-data' ? 'data' : (tabId === 'tab-gate' ? 'gate' : 'scanner'));
+            const tabName = tabId === 'tab-settings' ? 'settings' : (tabId === 'tab-data' ? 'data' : (tabId === 'tab-gate' ? 'gate' : (tabId === 'tab-rekening' ? 'rekening' : 'scanner')));
             const url = new URL(window.location);
             url.searchParams.set('tab', tabName);
             window.history.pushState({}, '', url);

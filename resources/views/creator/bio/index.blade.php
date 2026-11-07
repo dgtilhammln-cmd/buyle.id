@@ -22,6 +22,8 @@
             display: flex;
             gap: 2rem;
             align-items: flex-start;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .bio-sidebar-column,
@@ -54,6 +56,7 @@
         .bio-content {
             flex: 1;
             min-width: 0;
+            overflow: hidden;
         }
 
         .tab-btn {
