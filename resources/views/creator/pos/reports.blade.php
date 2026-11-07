@@ -1849,19 +1849,37 @@
 
             {{-- Modal Foot --}}
             <div style="padding:0.9rem 1.25rem; border-top:1px solid #f1f5f9; background:#f8fafc; display:flex; gap:8px;">
-                <button type="button" onclick="printReportReceipt()" style="flex:1; padding:0.65rem 1rem; border-radius:999px; background:#0f172a; color:#fff; font-size:0.8rem; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                <button type="button" onclick="printReportReceipt()" style="flex:1; padding:0.65rem 0.9rem; border-radius:999px; background:#0f172a; color:#fff; font-size:0.8rem; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                     <span>Cetak Struk</span>
                 </button>
-                <button type="button" onclick="shareReportReceiptToWA()" style="padding:0.65rem 0.9rem; border-radius:999px; background:#22c55e; color:#fff; font-size:0.8rem; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-                    <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824z"/></svg>
-                    <span>WA</span>
+                <button type="button" onclick="downloadReportReceiptImg()" style="padding:0.65rem 0.85rem; border-radius:999px; background:#ffffff; border:1.5px solid #cbd5e1; color:#0f172a; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;" title="Unduh Gambar Struk PNG">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>PNG</span>
+                </button>
+                <button type="button" id="btnShareWaReport" onclick="shareReportReceiptToWA()" style="flex:1.2; padding:0.65rem 0.9rem; border-radius:999px; background:#22c55e; color:#fff; font-size:0.8rem; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; box-shadow:0 3px 10px rgba(34,197,94,0.3);">
+                    <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+                    <span>Share WA &amp; Struk PNG</span>
                 </button>
             </div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
+
+        function formatWaPhone(raw) {
+            if (!raw) return '';
+            let p = String(raw).replace(/[^0-9]/g, '');
+            if (p.startsWith('0')) {
+                p = '62' + p.substring(1);
+            } else if (p.startsWith('8')) {
+                p = '62' + p;
+            } else if (!p.startsWith('62') && p.length >= 9) {
+                p = '62' + p;
+            }
+            return p;
+        }
 
         function openReceiptModal(order) {
             currentSelectedReportOrder = order;
@@ -1871,8 +1889,12 @@
             document.getElementById('mRecDateTime').innerText = new Date(order.created_at).toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
             
             const cName = addr.name || order.customer_name || 'Pelanggan Umum';
+            const rawPhone = addr.phone || addr.customer_phone || order.customer_phone || order.phone || '';
+            const cPhone = formatWaPhone(rawPhone);
+            window._currentReportReceiptPhone = cPhone;
+            
             const tableVal = addr.table_number || addr.table || '';
-            document.getElementById('mRecCustomer').innerText = cName + (tableVal ? ' (Meja ' + tableVal + ')' : '');
+            document.getElementById('mRecCustomer').innerText = cName + (cPhone ? ' (' + (rawPhone || cPhone) + ')' : '') + (tableVal ? ' · Meja ' + tableVal : '');
             
             document.getElementById('mRecCashier').innerText = addr.cashier_name || order.cashier_name || 'Kasir';
             
@@ -1980,7 +2002,24 @@
             setTimeout(() => { w.print(); w.close(); }, 300);
         }
 
-        function shareReportReceiptToWA() {
+        async function downloadReportReceiptImg() {
+            if (!currentSelectedReportOrder) return;
+            const area = document.getElementById('printableReportReceiptArea');
+            if (!area || typeof html2canvas === 'undefined') return;
+            
+            const invNum = currentSelectedReportOrder.order_number || ('BYL-' + currentSelectedReportOrder.id);
+            try {
+                const canvas = await html2canvas(area, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' });
+                const link = document.createElement('a');
+                link.download = `Struk-${String(invNum).replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (e) {
+                console.warn('downloadReportReceiptImg error:', e);
+            }
+        }
+
+        async function shareReportReceiptToWA() {
             if (!currentSelectedReportOrder) return;
             const order = currentSelectedReportOrder;
             const addr = typeof order.shipping_address === 'string' ? JSON.parse(order.shipping_address || '{}') : (order.shipping_address || {});
@@ -1988,6 +2027,15 @@
             const invNum = order.order_number || ('BYL-' + order.id);
             const totalFmt = Number(order.total || 0).toLocaleString('id-ID');
             
+            let phone = window._currentReportReceiptPhone || formatWaPhone(addr.phone || addr.customer_phone || order.customer_phone || order.phone || '');
+            if (!phone) {
+                const manual = prompt('Nomor WhatsApp pelanggan belum terdaftar pada transaksi ini.\nMasukkan nomor WhatsApp tujuan (contoh: 081234567890):', '');
+                if (manual) {
+                    phone = formatWaPhone(manual);
+                    window._currentReportReceiptPhone = phone;
+                }
+            }
+
             let itemsText = '';
             (order.items || []).forEach((it, idx) => {
                 const qty = it.qty || it.quantity || 1;
@@ -2020,13 +2068,41 @@
             }
             const pMethod = addr.payment_method === 'cash' ? 'Tunai (Cash)' : 'Non-Tunai';
             
-            const msg = `🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*${custName ? '\nPelanggan: ' + custName : ''}\nTanggal: ${new Date(order.created_at).toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*RINGKASAN:*\nSubtotal: Rp ${Number(order.subtotal||0).toLocaleString('id-ID')}\n${discText}${feeText}*TOTAL: Rp ${totalFmt}*\nMetode: ${pMethod}${cashText}\nStatus: *LUNAS* ✅\n--------------------------------\n_Terima kasih telah berbelanja!_`;
+            const msg = `🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*${custName ? '\nPelanggan: ' + custName : ''}\nTanggal: ${new Date(order.created_at).toLocaleDateString('id-ID')}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*RINGKASAN:*\nSubtotal: Rp ${Number(order.subtotal||0).toLocaleString('id-ID')}\n${discText}${feeText}*TOTAL: Rp ${totalFmt}*\nMetode: ${pMethod}${cashText}\nStatus: *LUNAS* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
             
-            let phone = (addr.phone || order.customer_phone || '').replace(/[^0-9]/g, '');
-            if (phone.startsWith('0')) phone = '62' + phone.substring(1);
             const enc = encodeURIComponent(msg);
             const waUrl = phone ? `https://api.whatsapp.com/send?phone=${phone}&text=${enc}` : `https://api.whatsapp.com/send?text=${enc}`;
-            window.open(waUrl, '_blank');
+
+            // Auto-generate Struk PNG via html2canvas & Download + Copy to clipboard
+            const area = document.getElementById('printableReportReceiptArea');
+            if (area && typeof html2canvas !== 'undefined') {
+                try {
+                    const canvas = await html2canvas(area, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' });
+                    const filename = `Struk-${String(invNum).replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
+                    
+                    // 1. Auto download PNG
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                    // 2. Try copy image to clipboard
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        canvas.toBlob(blob => {
+                            if (blob) {
+                                navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).catch(() => {});
+                            }
+                        }, 'image/png');
+                    }
+                } catch (e) {
+                    console.warn('html2canvas error:', e);
+                }
+            }
+
+            // Buka WhatsApp langsung ter-target ke nomor pelanggan
+            setTimeout(() => {
+                window.open(waUrl, '_blank');
+            }, 500);
         }
 </script>
 @endsection

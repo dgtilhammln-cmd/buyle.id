@@ -1348,8 +1348,6 @@
                                 <p style="font-size:0.76rem; color:#64748b; margin:0 0 0.5rem 0;">
                                     Minimal penarikan dana Rp 50.000.
                                 </p>
-                                @if($holdBalance > 0)
-                                @endif
                             </div>
                         @endif
                     </div>

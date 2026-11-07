@@ -7470,6 +7470,7 @@
             function showReceiptModal(order) {
                 currentCompletedOrder = order;
                 const addr = order.shipping_address || {};
+                window._currentReceiptPhone = order.customer_phone || (addr ? (addr.phone || addr.customer_phone) : '') || '';
 
                 // 1. Order Number & Date / Time
                 const orderCode = order.order_number || ('BYL-' + order.id);
@@ -10815,8 +10816,22 @@
                 if (itemsCountEl) itemsCountEl.innerText = `${totalQty} Items`;
             }
 
-            // ── Share Bill to WhatsApp (Greeting + Auto Image) ──
-            function shareBillToWhatsApp() {
+            // Helper: Format nomor telepon menjadi standar internasional WhatsApp Indonesia (62xxx)
+            function formatWaPhone(raw) {
+                if (!raw) return '';
+                let p = String(raw).replace(/[^0-9]/g, '');
+                if (p.startsWith('0')) {
+                    p = '62' + p.substring(1);
+                } else if (p.startsWith('8')) {
+                    p = '62' + p;
+                } else if (!p.startsWith('62') && p.length >= 9) {
+                    p = '62' + p;
+                }
+                return p;
+            }
+
+            // ── Share Bill to WhatsApp (Langsung Target ke Nomor Pelanggan + Auto Unduh Struk PNG) ──
+            async function shareBillToWhatsApp() {
                 if (!currentCompletedOrder) {
                     showPosAlert('Data transaksi tidak ditemukan.', 'Perhatian', 'warning');
                     return;
@@ -10871,76 +10886,70 @@
 
                 const msg = `${greeting}\n\n🧾 *STRUK BELANJA RESMI*\n*${storeTitle}*\n--------------------------------\nNo. Invoice: *#${invNum}*${custName ? '\nPelanggan: ' + custName : ''}${tableInfo}\nKasir: ${cashierName}\nTanggal: ${new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'})}\n--------------------------------\n*DETAIL PESANAN:*\n${itemsText}--------------------------------\n*RINGKASAN:* \n${subtotalText}${discText}${feeText}*TOTAL: Rp ${totalFormatted}*\nMetode: ${payMethod}${cashDetailsText}\nStatus: *LUNAS (BERHASIL)* ✅\n--------------------------------\n_Terima kasih telah berbelanja di ${storeTitle}!_\nPowered by buyle.id`;
 
-                let phone = (document.getElementById('posCustomerPhone')?.value || addr.phone || order.customer_phone || '').replace(/[^0-9]/g, '');
-                if (phone.startsWith('0')) {
-                    phone = '62' + phone.substring(1);
+                // Targetkan langsung nomor pelanggan
+                let phone = formatWaPhone(window._currentReceiptPhone || addr.phone || addr.customer_phone || order.customer_phone || order.phone || document.getElementById('posCustomerPhone')?.value || '');
+                if (!phone) {
+                    const manual = prompt('Nomor WhatsApp pelanggan belum terisi pada transaksi ini.\nMasukkan nomor WhatsApp tujuan (contoh: 081234567890):', '');
+                    if (manual) {
+                        phone = formatWaPhone(manual);
+                        window._currentReceiptPhone = phone;
+                    }
                 }
+
                 const encodedMsg = encodeURIComponent(msg);
+                // Langsung arahkan ke chat nomor pelanggan agar tidak perlu pilih kontak di WA
                 const waUrl = phone ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}` : `https://api.whatsapp.com/send?text=${encodedMsg}`;
 
-                // Coba auto-share gambar bill via Web Share API, fallback ke teks WA link
+                // 1. Generate dan Unduh Struk PNG via html2canvas
                 const billArea = document.getElementById('printablePosReceiptArea');
-                if (billArea && typeof html2canvas !== 'undefined' && navigator.canShare) {
-                    _shareBillImageToWA(billArea, waUrl, msg, phone);
-                } else if (billArea && typeof html2canvas !== 'undefined') {
-                    // Fallback: generate gambar dulu lalu buka WA
-                    _generateAndOpenWA(billArea, waUrl);
+                const invCode = document.getElementById('recOrderCode')?.innerText || invNum || 'POS-RECEIPT';
+                const filename = `Struk-${String(invCode).replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
+
+                const executeOpenWA = () => {
+                    setTimeout(() => {
+                        window.open(waUrl, '_blank');
+                    }, 500);
+                };
+
+                if (billArea && typeof html2canvas !== 'undefined') {
+                    try {
+                        const canvas = await html2canvas(billArea, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' });
+                        // Download gambar Struk PNG
+                        const link = document.createElement('a');
+                        link.download = filename;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+
+                        // Salin gambar ke clipboard jika didukung browser
+                        if (navigator.clipboard && window.ClipboardItem) {
+                            canvas.toBlob(blob => {
+                                if (blob) {
+                                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).catch(() => {});
+                                }
+                            }, 'image/png');
+                        }
+                    } catch (e) {
+                        console.warn('html2canvas error:', e);
+                    }
+                    executeOpenWA();
                 } else if (billArea && typeof html2canvas === 'undefined') {
-                    // Load html2canvas dulu
                     const s = document.createElement('script');
                     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-                    s.onload = () => {
-                        if (navigator.canShare) {
-                            _shareBillImageToWA(billArea, waUrl, msg, phone);
-                        } else {
-                            _generateAndOpenWA(billArea, waUrl);
-                        }
-                    };
-                    s.onerror = () => window.open(waUrl, '_blank');
-                    document.head.appendChild(s);
-                } else {
-                    window.open(waUrl, '_blank');
-                }
-            }
-
-            // Helper: generate gambar & share via Web Share API (mobile-friendly)
-            function _shareBillImageToWA(billArea, waUrl, msg, phone) {
-                html2canvas(billArea, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' })
-                    .then(async canvas => {
-                        const invCode = document.getElementById('recOrderCode')?.innerText || 'POS-RECEIPT';
-                        const filename = `Struk-${invCode.replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
-                        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-                        const file = new File([blob], filename, { type: 'image/png' });
-                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                            navigator.share({
-                                files: [file],
-                                text: msg,
-                                title: 'Struk Belanja'
-                            }).catch(() => window.open(waUrl, '_blank'));
-                        } else {
-                            // Download gambar + buka WA link
+                    s.onload = async () => {
+                        try {
+                            const canvas = await html2canvas(billArea, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' });
                             const link = document.createElement('a');
                             link.download = filename;
                             link.href = canvas.toDataURL('image/png');
                             link.click();
-                            setTimeout(() => window.open(waUrl, '_blank'), 800);
-                        }
-                    })
-                    .catch(() => window.open(waUrl, '_blank'));
-            }
-
-            // Helper: generate gambar, download, lalu buka WA
-            function _generateAndOpenWA(billArea, waUrl) {
-                html2canvas(billArea, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff' })
-                    .then(canvas => {
-                        const invCode = document.getElementById('recOrderCode')?.innerText || 'POS-RECEIPT';
-                        const link = document.createElement('a');
-                        link.download = `Struk-${invCode.replace(/[^a-zA-Z0-9_-]/g, '')}.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        setTimeout(() => window.open(waUrl, '_blank'), 800);
-                    })
-                    .catch(() => window.open(waUrl, '_blank'));
+                        } catch (e) {}
+                        executeOpenWA();
+                    };
+                    s.onerror = () => executeOpenWA();
+                    document.head.appendChild(s);
+                } else {
+                    executeOpenWA();
+                }
             }
 
             // ── Auto Generate Bill Image via html2canvas ──

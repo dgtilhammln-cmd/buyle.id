@@ -2470,12 +2470,16 @@ class PosController extends Controller
             ];
         })->values()->toArray();
 
+        $customerPhone = $addr['phone'] ?? ($addr['customer_phone'] ?? ($order->user?->phone ?? null));
+        $customerName  = $addr['name'] ?? ($addr['receiver_name'] ?? ($order->user?->name ?? 'Pelanggan Umum'));
+
         return response()->json([
             'success'          => true,
             'id'               => $order->id,
             'order_number'     => $order->order_number ?? ('BYL-' . $order->id),
             'created_at'       => $order->created_at->toISOString(),
-            'customer_name'    => $addr['name'] ?? 'Pelanggan Umum',
+            'customer_name'    => $customerName,
+            'customer_phone'   => $customerPhone,
             'cashier_name'     => $addr['cashier_name'] ?? null,
             'table_number'     => $addr['table_number'] ?? null,
             'order_type'       => $addr['order_type'] ?? 'dine_in',

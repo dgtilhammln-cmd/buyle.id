@@ -12,11 +12,10 @@ use Carbon\Carbon;
 class SellerBalanceService
 {
     /**
-     * Menghitung rincian saldo creator dengan mitigasi risiko anti-fraud:
-     * - Produk Fisik / Digital / Jasa: Holding 72 jam (3 hari) dari waktu pembayaran.
-     * - Tiket Event: Holding Escrow hingga H+3 SETELAH EVENT DILAKSANAKAN (Post-Event Settlement)
-     *   untuk mencegah risiko event bodong / pencairan fiktif sebelum acara terselenggara.
-     * - Transaksi Kasir POS: Otomatis cair instan (cleared) tanpa masa tunggu 72 jam.
+     * Menghitung rincian saldo creator secara REAL-TIME:
+     * - Seluruh pendapatan (Marketplace, Produk Fisik, Digital, Tiket Event, POS Payment Gateway)
+     *   langsung cair (cleared) seketika tanpa masa tunggu/hold reguler 3 hari.
+     * - Transaksi Kasir POS Tunai / QRIS Statis Toko: Langsung dipegang merchant (direct_pos_sales).
      */
     public static function calculateBalance(User $seller): array
     {
@@ -45,24 +44,16 @@ class SellerBalanceService
             $sellerOrders = collect();
         }
 
-        $now = Carbon::now();
-        $ecommerceThreshold = $now->copy()->subHours(72);
-
         $clearedGmv = 0;
-        $standardHoldBalance = 0;
-        $ticketEscrowBalance = 0;
         $directPosSales = 0;
-        $upcomingEventsInEscrow = [];
 
         foreach ($sellerOrders as $order) {
-            $paidAt = $order->payment?->paid_at ?? $order->created_at;
-            $orderPaidTime = Carbon::parse($paidAt);
             $isPos = ($order->source === 'pos');
 
             // Proteksi Finansial Platform:
             // Pembayaran Tunai (Cash), Transfer Langsung ke Toko, atau QRIS Statis Toko:
             // Uang diterima LANGSUNG secara fisik oleh merchant / masuk ke rekening toko sendiri.
-            // Buyle Platform TIDAK memegang dana ini, sehingga DILARANG masuk ke Saldo Penarikan Buyle!
+            // Buyle Platform TIDAK memegang dana ini, sehingga tidak masuk ke Saldo Penarikan Buyle.
             $isPosDirect = false;
             if ($isPos) {
                 $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
@@ -89,21 +80,12 @@ class SellerBalanceService
                             - (float)($item->reseller_margin ?? 0)));
                     }
 
-                    $productType = $item->product?->product_type;
-
-                    // TIKET EVENT: Langsung cair tanpa escrow / holding, bisa ditarik kapanpun
-                    if ($productType === 'ticket') {
-                        $clearedGmv += $sellerEarnings;
+                    if ($isPosDirect) {
+                        // Tunai & QRIS Statis POS: Uang sudah dipegang fisik oleh seller
+                        $directPosSales += $sellerEarnings;
                     } else {
-                        if ($isPosDirect) {
-                            // Tunai & QRIS Statis POS: Uang sudah dipegang fisik oleh seller, tidak masuk saldo penarikan Buyle
-                            $directPosSales += $sellerEarnings;
-                        } elseif ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
-                            // Midtrans PG POS / Online cleared: masuk saldo penarikan
-                            $clearedGmv += $sellerEarnings;
-                        } else {
-                            $standardHoldBalance += $sellerEarnings;
-                        }
+                        // Real-time masuk ke saldo penarikan tanpa penahanan 3 hari
+                        $clearedGmv += $sellerEarnings;
                     }
                 }
 
@@ -112,10 +94,8 @@ class SellerBalanceService
                     $resellerEarnings = (float) ($item->reseller_margin > 0 ? $item->reseller_margin : $item->subtotal);
                     if ($isPosDirect) {
                         $directPosSales += $resellerEarnings;
-                    } elseif ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
-                        $clearedGmv += $resellerEarnings;
                     } else {
-                        $standardHoldBalance += $resellerEarnings;
+                        $clearedGmv += $resellerEarnings;
                     }
                 }
 
@@ -124,10 +104,8 @@ class SellerBalanceService
                     $affiliateCommission = (float) $item->affiliate_commission_amount;
                     if ($isPosDirect) {
                         $directPosSales += $affiliateCommission;
-                    } elseif ($isPos || $orderPaidTime->lte($ecommerceThreshold)) {
-                        $clearedGmv += $affiliateCommission;
                     } else {
-                        $standardHoldBalance += $affiliateCommission;
+                        $clearedGmv += $affiliateCommission;
                     }
                 }
             }
@@ -138,19 +116,18 @@ class SellerBalanceService
             ->sum('amount');
 
         $availableBalance = max(0, $clearedGmv - $totalPayout);
-        $totalHoldBalance = $standardHoldBalance + $ticketEscrowBalance;
-        $totalGmv = $clearedGmv + $totalHoldBalance + $directPosSales;
+        $totalGmv = $clearedGmv + $directPosSales;
 
         return [
             'gmv'                    => $totalGmv,
             'cleared_gmv'            => $clearedGmv,
             'available_balance'      => $availableBalance,
             'direct_pos_sales'       => $directPosSales,
-            'standard_hold_balance'  => $standardHoldBalance,
-            'ticket_escrow_balance'  => $ticketEscrowBalance,
-            'total_hold_balance'     => $totalHoldBalance,
+            'standard_hold_balance'  => 0,
+            'ticket_escrow_balance'  => 0,
+            'total_hold_balance'     => 0,
             'total_payout'           => $totalPayout,
-            'upcoming_events'        => array_values($upcomingEventsInEscrow),
+            'upcoming_events'        => [],
         ];
     }
 }

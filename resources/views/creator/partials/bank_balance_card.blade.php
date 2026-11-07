@@ -23,21 +23,10 @@
     </div>
     <div class="bank-note">Dapat dicairkan kapan saja ke rekening Anda</div>
 
+    @if(($posBalance ?? 0) > 0)
     <div class="bank-divider"></div>
 
     <div class="bank-sub-box">
-        <div class="bank-sub-row">
-            <div class="bank-sub-left">
-                <span>Hold Reguler</span>
-                <span class="bank-sub-tag">3 Hari</span>
-            </div>
-            <div class="bank-sub-right">
-                <span class="val-real">Rp {{ number_format($standardHoldBalance ?? 0, 0, ',', '.') }}</span>
-                <span class="val-masked" style="display:none;">••••••</span>
-            </div>
-        </div>
-
-        @if(($posBalance ?? 0) > 0)
         <div class="bank-sub-row">
             <div class="bank-sub-left">
                 <span>Deposit POS</span>
@@ -49,6 +38,6 @@
                 <button type="button" class="bank-btn-transfer" onclick="openTransferPosModal()" title="Pindah ke saldo utama">+ Pindah</button>
             </div>
         </div>
-        @endif
     </div>
+    @endif
 </div>
