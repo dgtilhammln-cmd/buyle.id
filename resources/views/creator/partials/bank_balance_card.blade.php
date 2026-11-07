@@ -37,19 +37,6 @@
             </div>
         </div>
 
-        @if(($ticketEscrowBalance ?? 0) > 0)
-        <div class="bank-sub-row">
-            <div class="bank-sub-left">
-                <span>Escrow Tiket</span>
-                <span class="bank-sub-tag">Event</span>
-            </div>
-            <div class="bank-sub-right">
-                <span class="val-real">Rp {{ number_format($ticketEscrowBalance, 0, ',', '.') }}</span>
-                <span class="val-masked" style="display:none;">••••••</span>
-            </div>
-        </div>
-        @endif
-
         @if(($posBalance ?? 0) > 0)
         <div class="bank-sub-row">
             <div class="bank-sub-left">

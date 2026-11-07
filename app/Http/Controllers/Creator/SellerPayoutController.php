@@ -95,16 +95,12 @@ class SellerPayoutController extends Controller
             return back()->with('error', 'Silakan pilih atau daftarkan rekening tujuan terlebih dahulu.');
         }
 
-        // Hitung ulang saldo siap ditarik (server-side validasi dengan mitigasi anti-fraud tiket event)
+        // Hitung ulang saldo siap ditarik
         $balanceData      = \App\Services\SellerBalanceService::calculateBalance($seller);
         $availableBalance = $balanceData['available_balance'];
 
         if ($validated['amount'] > $availableBalance) {
-            $msg = 'Jumlah penarikan melebihi saldo yang tersedia (Rp ' . number_format($availableBalance, 0, ',', '.') . ').';
-            if ($balanceData['ticket_escrow_balance'] > 0) {
-                $msg .= ' Catatan: Saldo penjualan tiket event (Rp ' . number_format($balanceData['ticket_escrow_balance'], 0, ',', '.') . ') masih berada dalam masa Escrow dan otomatis cair H+3 setelah acara sukses terselenggara.';
-            }
-            return back()->with('error', $msg);
+            return back()->with('error', 'Jumlah penarikan melebihi saldo yang tersedia (Rp ' . number_format($availableBalance, 0, ',', '.') . '). Minimal penarikan Rp 50.000.');
         }
 
         // Cek tidak ada payout pending

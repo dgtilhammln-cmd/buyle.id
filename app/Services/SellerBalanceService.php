@@ -91,36 +91,9 @@ class SellerBalanceService
 
                     $productType = $item->product?->product_type;
 
+                    // TIKET EVENT: Langsung cair tanpa escrow / holding, bisa ditarik kapanpun
                     if ($productType === 'ticket') {
-                        // TIKET EVENT: Holding sampai H+3 pasca tanggal acara
-                        $eventDate = $item->product->event_date 
-                            ? Carbon::parse($item->product->event_date)->endOfDay() 
-                            : null;
-
-                        $clearanceDate = $eventDate 
-                            ? $eventDate->copy()->addDays(3) 
-                            : $orderPaidTime->copy()->addDays(30);
-
-                        if ($now->gte($clearanceDate)) {
-                            $clearedGmv += $sellerEarnings;
-                        } else {
-                            $ticketEscrowBalance += $sellerEarnings;
-                            $pId = $item->product ? $item->product->id : ('item_' . $item->id);
-                            if (!isset($upcomingEventsInEscrow[$pId])) {
-                                $upcomingEventsInEscrow[$pId] = [
-                                    'id'             => $pId,
-                                    'name'           => $item->product_name ?? 'Tiket Event',
-                                    'title'          => $item->product_name ?? 'Tiket Event',
-                                    'event_date'     => $item->product && $item->product->event_date ? $item->product->event_date->format('d M Y') : 'Belum ditentukan',
-                                    'clearance_date' => $clearanceDate->format('d M Y, H:i'),
-                                    'release_date'   => $clearanceDate->format('d M Y, H:i'),
-                                    'amount'         => 0,
-                                    'escrow_amount'  => 0,
-                                ];
-                            }
-                            $upcomingEventsInEscrow[$pId]['amount'] += $sellerEarnings;
-                            $upcomingEventsInEscrow[$pId]['escrow_amount'] += $sellerEarnings;
-                        }
+                        $clearedGmv += $sellerEarnings;
                     } else {
                         if ($isPosDirect) {
                             // Tunai & QRIS Statis POS: Uang sudah dipegang fisik oleh seller, tidak masuk saldo penarikan Buyle

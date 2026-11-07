@@ -668,7 +668,7 @@
 
             .cr-main-canvas {
                 border-radius: 0;
-                padding: 1rem 0.9rem 100px;
+                padding: max(1.15rem, calc(0.85rem + env(safe-area-inset-top, 0px))) 0.9rem max(100px, calc(90px + env(safe-area-inset-bottom, 0px)));
                 margin: 0;
                 min-height: 100vh;
                 width: 100%;
@@ -1622,7 +1622,7 @@
     @if($isProductsFromPos || $isPayoutFromPos)
         {{-- Jika masuk ke halaman produk atau payout dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi, Laporan, Profil) --}}
         <div class="pos-bottom-nav-wrap" id="posBottomNavWrap"
-            style="display: flex !important; position: fixed !important; bottom: 16px !important; left: 14px !important; right: 14px !important; max-width: 440px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
+            style="display: flex !important; position: fixed !important; bottom: max(16px, calc(10px + env(safe-area-inset-bottom, 0px))) !important; left: 14px !important; right: 14px !important; max-width: 440px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
             <div class="pos-bottom-nav-bar"
                 style="width: 100% !important; height: 62px !important; background: #ffffff !important; border-radius: 999px !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 0.35rem 0.65rem !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important; border: 1.5px solid #f1f5f9 !important; gap: 6px !important;">
                 <!-- 1. Home / Kasir -->

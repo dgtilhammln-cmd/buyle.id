@@ -616,7 +616,7 @@
                         @if(($holdBalance ?? 0) > 0)
                             <div style="margin-top: 0.5rem;">
                                 <a href="{{ route('creator.payout.settings') }}" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-size:0.72rem; color:#64748b; font-weight:600; background:#ffffff; padding:2px 10px; border-radius:999px; border:1px solid #e2e8f0; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
-                                    <span>(Rp {{ number_format($holdBalance, 0, ',', '.') }} Tertahan di Escrow)</span>
+                                    <span>(Rp {{ number_format($holdBalance, 0, ',', '.') }} Menunggu Clearance)</span>
                                     <i class="ph ph-arrow-right" style="font-size:0.65rem;"></i>
                                 </a>
                             </div>

@@ -934,9 +934,86 @@
         }
 
         @if(request('from') === 'pos')
+        /* ── Tampilan POS Match Header & Safe Area iOS ── */
+        .cr-topbar-header-row {
+            display: none !important;
+        }
+
+        .cr-sidebar {
+            display: none !important;
+        }
+
+        .cr-main-wrapper {
+            margin-left: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .cr-main-canvas {
+            padding-top: max(0.75rem, calc(0.65rem + env(safe-area-inset-top, 0px))) !important;
+            padding-bottom: max(120px, calc(100px + env(safe-area-inset-bottom, 0px))) !important;
+            max-width: 980px !important;
+            margin: 0 auto !important;
+        }
+
+        .payout-pos-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-top: 0 !important;
+        }
+
+        .payout-pos-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+
+        .pos-header-page-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .pos-header-page-sub {
+            font-size: 0.72rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .pos-header-icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.18s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .pos-header-icon-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
         @media (max-width: 768px) {
+            .cr-main-canvas {
+                padding-left: 0.85rem !important;
+                padding-right: 0.85rem !important;
+            }
             .bio-layout, .bio-content, .card-section {
-                padding-bottom: 95px !important;
+                padding-bottom: max(95px, calc(80px + env(safe-area-inset-bottom, 0px))) !important;
             }
         }
         @endif
@@ -965,10 +1042,23 @@
     @endphp
 
     @if(request('from') === 'pos')
-        <div style="margin-bottom: 0.85rem;">
-            <a href="{{ route('creator.pos.profile') }}" style="display:inline-flex; align-items:center; gap:6px; font-size:0.8rem; font-weight:700; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; padding:6px 14px; border-radius:999px; text-decoration:none; transition:all 0.15s ease;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                Kembali ke Profil POS
+        <div class="payout-pos-header-bar">
+            <div class="payout-pos-header-left">
+                <a href="{{ route('creator.pos.profile') }}" class="pos-header-icon-btn" title="Kembali ke Profil POS">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="pos-header-page-title">Saldo &amp; Pencairan</h1>
+                    <div class="pos-header-page-sub">Tarik saldo penjualan ke rekening bank</div>
+                </div>
+            </div>
+            <a href="{{ route('creator.pos.index') }}" class="pos-header-icon-btn" title="Masuk ke Kasir POS">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
             </a>
         </div>
     @endif
@@ -1058,54 +1148,6 @@
                                 Min. penarikan <strong>Rp 50.000</strong> &bull; 100% utuh tanpa potongan biaya &bull; Proses 1-3 hari kerja
                             </div>
                         </div>
-
-                        @if(($ticketEscrowBalance ?? 0) > 0)
-                            {{-- Escrow Security Protection Alert Ringkas --}}
-                            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:0.65rem 0.85rem; margin-bottom:0.85rem;">
-                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.25rem;">
-                                    <div style="display:flex; align-items:center; gap:0.4rem; font-weight:700; color:#1e40af; font-size:0.76rem;">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                                        </svg>
-                                        Escrow Tiket Event
-                                    </div>
-                                    <span style="font-size:0.65rem; font-weight:700; background:#dbeafe; color:#1e40af; padding:1px 6px; border-radius:4px;">Cair H+3 Acara</span>
-                                </div>
-                                <div style="font-size:0.7rem; color:#1e3a8a; line-height:1.35; margin-bottom:0.4rem;">
-                                    Dana tiket dikunci sementara.
-                                </div>
-                                @if(!empty($upcomingEvents) && count($upcomingEvents) > 0)
-                                    <div
-                                        style="background:#fff;border-radius:10px;border:1px solid #dbeafe;padding:0.6rem 0.85rem;">
-                                        <div
-                                            style="font-size:0.68rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">
-                                            Jadwal Pelepasan Dana Event</div>
-                                        @foreach($upcomingEvents as $evt)
-                                            @php
-                                                $evtName = $evt['name'] ?? $evt['title'] ?? 'Event';
-                                                $evtAmount = $evt['amount'] ?? $evt['escrow_amount'] ?? 0;
-                                                $evtClearance = $evt['clearance_date'] ?? $evt['release_date'] ?? '-';
-                                                $evtDate = $evt['event_date'] ?? '-';
-                                            @endphp
-                                            <div
-                                                style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;padding:0.35rem 0;border-bottom:1px dashed #f1f5f9;">
-                                                <div>
-                                                    <span style="font-weight:700;color:#1e293b;">{{ $evtName }}</span>
-                                                    <span style="font-size:0.68rem;color:#64748b;margin-left:0.35rem;">(Acara:
-                                                        {{ $evtDate }})</span>
-                                                </div>
-                                                <div style="text-align:right;">
-                                                    <span style="font-weight:700;color:#1e40af;">Rp
-                                                        {{ number_format($evtAmount, 0, ',', '.') }}</span>
-                                                    <span style="display:block;font-size:0.65rem;color:#059669;font-weight:600;">Cair:
-                                                        {{ $evtClearance }}</span>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
 
                         {{-- Saldo Breakdown Ringkas --}}
                         <div class="breakdown-box" style="margin-bottom:0.85rem; padding:0.75rem 0.9rem; border-radius:12px;">
