@@ -19,7 +19,7 @@ class AdminSettingsController extends Controller
 
     public function update(Request $request)
     {
-        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image', 'landscape_banner', 'app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket', 'app_logo_automation_reply'];
+        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image', 'landscape_banner', 'app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket', 'app_logo_automation_reply', 'tix_partner_1_logo', 'tix_partner_2_logo', 'tix_partner_3_logo'];
         $data      = $request->except(array_merge(['_token', '_method'], $imageKeys));
 
         // Handle explicit deletion of app logos if requested
@@ -179,6 +179,20 @@ class AdminSettingsController extends Controller
                 Setting::clearCache();
                 \Illuminate\Support\Facades\Cache::forget("setting_v_{$key}");
                 \Illuminate\Support\Facades\Cache::forget('all_settings_v2');
+                continue;
+            }
+
+            if (in_array($key, ['tix_partner_1_logo', 'tix_partner_2_logo', 'tix_partner_3_logo'])) {
+                $ext = strtolower($file->getClientOriginalExtension());
+                if ($ext === 'svg') {
+                    $filename = $key . '_' . time() . '.svg';
+                    $path = 'settings/' . $filename;
+                    Storage::disk('public')->put($path, file_get_contents($file->getRealPath()));
+                } else {
+                    $path = $this->storeWebPNoCrop($file, 'settings', 800, 400, 95);
+                }
+                Setting::set($key, $path, 'image');
+                Setting::clearCache();
                 continue;
             }
 

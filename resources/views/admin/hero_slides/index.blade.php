@@ -318,6 +318,71 @@
             </form>
         </div>
 
+        {{-- 1.5 KELOLA MEDIA PARTNER BUYLE TIX (3 LOGO CENTER) --}}
+        <div class="banner-admin-card" id="mediaPartnerCard">
+            <h3 class="banner-card-head-title">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Media Partner Buyle TIX (Maksimal 3 Logo Partner)
+            </h3>
+            <p class="banner-card-desc">
+                Kelola 3 logo media partner / sponsor resmi yang tampil di bagian bawah hero section Buyle TIX. Format transparan SVG atau PNG direkomendasikan.
+            </p>
+
+            <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
+                    @for($p = 1; $p <= 3; $p++)
+                        @php
+                            $defaultNames = [1 => 'Spotify', 2 => 'Google', 3 => 'YouTube'];
+                            $pName = \App\Models\Setting::get("tix_partner_{$p}_name", $defaultNames[$p]);
+                            $pLogo = \App\Models\Setting::get("tix_partner_{$p}_logo");
+                            $pUrl  = \App\Models\Setting::get("tix_partner_{$p}_url", '#');
+                        @endphp
+                        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem;">
+                            <div style="font-size: 0.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                                <span>Media Partner {{ $p }}</span>
+                                <span style="font-size: 0.65rem; background: #e2e8f0; color: #475569; padding: 2px 7px; border-radius: 99px;">Slot {{ $p }}/3</span>
+                            </div>
+
+                            {{-- Nama Partner --}}
+                            <div style="margin-bottom: 0.65rem;">
+                                <label style="font-size: 0.72rem; font-weight: 700; color: #475569; display: block; margin-bottom: 0.25rem;">Nama Brand / Partner</label>
+                                <input type="text" name="tix_partner_{{ $p }}_name" value="{{ $pName }}" class="form-input" style="width: 100%; height: 36px; padding: 0 0.75rem; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.8rem; color: #0f172a; outline: none; background: #fff;">
+                            </div>
+
+                            {{-- Logo Upload & Preview --}}
+                            <div style="margin-bottom: 0.65rem;">
+                                <label style="font-size: 0.72rem; font-weight: 700; color: #475569; display: block; margin-bottom: 0.25rem;">Upload Logo (SVG / PNG)</label>
+                                @if($pLogo)
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; padding: 0.4rem 0.6rem; background: #0f172a; border-radius: 8px;">
+                                        <img src="{{ asset('storage/' . $pLogo) }}" alt="{{ $pName }}" style="max-height: 22px; max-width: 90px; object-fit: contain; filter: brightness(0) invert(1);">
+                                        <span style="font-size: 0.65rem; color: #94a3b8;">(Logo Aktif)</span>
+                                    </div>
+                                @endif
+                                <input type="file" name="tix_partner_{{ $p }}_logo" accept="image/*,.svg" style="font-size: 0.72rem; width: 100%;">
+                            </div>
+
+                            {{-- Link URL --}}
+                            <div>
+                                <label style="font-size: 0.72rem; font-weight: 700; color: #475569; display: block; margin-bottom: 0.25rem;">Link URL (Opsional)</label>
+                                <input type="text" name="tix_partner_{{ $p }}_url" value="{{ $pUrl }}" placeholder="https://..." class="form-input" style="width: 100%; height: 36px; padding: 0 0.75rem; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.8rem; color: #0f172a; outline: none; background: #fff;">
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+
+                <button type="submit" class="btn-primary" style="height: 40px; padding: 0 1.25rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 3px 10px rgba(30,179,73,0.3);">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Simpan Pengaturan Media Partner</span>
+                </button>
+            </form>
+        </div>
+
         {{-- 2. HEADER TOP ROW: TOTAL & TAMBAH BANNER --}}
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
             <div>

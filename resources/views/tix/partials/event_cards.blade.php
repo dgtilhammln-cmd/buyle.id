@@ -31,7 +31,13 @@
         $tSellerCp = $tProd->seller?->creatorProfile;
         $tIsVerified = $tSellerCp ? (bool) $tSellerCp->is_verified : false;
         $tRatingVal = method_exists($tProd, 'getEffectiveRating') ? $tProd->getEffectiveRating() : ($tProd->rating ?? null);
-        $tOrganizer = $tProd->seller ? ($tSellerCp->display_name ?? $tProd->seller->name) : null;
+        $tOrganizer = $tProd->seller ? ($tSellerCp->display_name ?? ($tSellerCp->store_name ?? $tProd->seller->name)) : 'Organizer';
+
+        // Resolve Creator / Organizer Logo
+        $sellerAvatar = $tProd->seller?->avatar 
+            ?: ($tSellerCp?->avatar 
+                ?: ($tSellerCp?->pos_logo ?: null));
+        $sellerAvatarUrl = $sellerAvatar ? asset('storage/' . $sellerAvatar) : null;
     @endphp
 
     <a href="{{ route('products.show', $tProd->slug) }}"
@@ -98,12 +104,16 @@
                         {{ $tProd->name }}
                     </h3>
 
-                    {{-- Organizer (Required) --}}
+                    {{-- Creator / Organizer Logo & Name --}}
                     @if($tOrganizer)
-                        <div style="font-size: 0.74rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.3rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #DCFCE7; color: #16A34A; font-size: 0.6rem; font-weight: 800; flex-shrink: 0;">
-                                {{ strtoupper(substr($tOrganizer, 0, 1)) }}
-                            </span>
+                        <div style="font-size: 0.74rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.35rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="Penyelenggara: {{ $tOrganizer }}">
+                            @if($sellerAvatarUrl)
+                                <img src="{{ $sellerAvatarUrl }}" alt="{{ $tOrganizer }}" style="width: 18px; height: 18px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid #E2E8F0;">
+                            @else
+                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #DCFCE7; color: #16A34A; font-size: 0.65rem; font-weight: 800; flex-shrink: 0;">
+                                    {{ strtoupper(substr($tOrganizer, 0, 1)) }}
+                                </span>
+                            @endif
                             <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $tOrganizer }}</span>
                         </div>
                     @endif
