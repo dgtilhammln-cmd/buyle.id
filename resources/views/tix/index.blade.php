@@ -97,72 +97,58 @@
             min-width: 0;
         }
 
-        /* Headline: Clean Regular/Medium Weight, NOT Heavy Bold */
+        /* Headline: Same Font Size on Both Lines, Strictly 2 Lines */
         .tix-hero-heading {
             margin: 0;
-            line-height: 1.12;
+            line-height: 1.18;
             color: #ffffff;
-            letter-spacing: -0.015em;
+            font-size: clamp(1.4rem, 2.7vw, 2.35rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         .tix-hero-line1 {
-            font-size: clamp(2rem, 4.2vw, 3.5rem);
-            font-weight: 400;
-            /* Regular weight matching Image 2 */
+            font-size: inherit;
+            font-weight: inherit;
             display: block;
+            white-space: nowrap;
             margin-bottom: 0.35rem;
             color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         }
 
         .tix-highlight-text {
             color: #ffffff;
-            font-weight: 600;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-weight: inherit;
         }
 
         .tix-hero-line2 {
-            display: flex;
-            align-items: center;
-            gap: 1.1rem;
-            flex-wrap: wrap;
-        }
-
-        .tix-hero-badge-est {
-            display: inline-flex;
-            flex-direction: column;
-            line-height: 1.1;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.68rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-        }
-
-        .tix-hero-badge-est strong {
-            font-size: 1.15rem;
+            display: block;
+            white-space: nowrap;
+            font-size: inherit;
+            font-weight: inherit;
             color: #ffffff;
-            font-weight: 700;
-            letter-spacing: 0;
-        }
-
-        .tix-hero-agency-txt {
-            font-size: clamp(1.75rem, 3.8vw, 3.2rem);
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: -0.02em;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         }
 
+        .tix-hero-agency-txt {
+            font-size: inherit;
+            font-weight: inherit;
+            color: #ffffff;
+            letter-spacing: inherit;
+        }
+
         @media (max-width: 600px) {
+            .tix-hero-heading {
+                font-size: clamp(1.15rem, 5vw, 1.75rem);
+            }
+
             .tix-hero-line1 {
-                font-size: 1.75rem;
+                font-size: inherit;
             }
 
             .tix-hero-agency-txt {
-                font-size: 1.55rem;
-            }
-
-            .tix-hero-badge-est strong {
-                font-size: 0.95rem;
+                font-size: inherit;
             }
         }
 
