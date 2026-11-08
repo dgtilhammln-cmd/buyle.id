@@ -32,35 +32,50 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           1. HERO DARK CARD (EXACT MATCH TO REFERENCE IMAGE 2)
-           Deep Dark Forest Green Ambient Gradient, Non-Bold Sleek Typography,
-           Nested 1920x600 Banner Frame
+           1. HERO SPLIT SECTION (EXACT MATCH TO REFERENCE IMAGE 2)
+           Top Half: Dark Forest Green Card
+           Bottom Half: Pure White Background with Overlapping Banner & Logos
         ══════════════════════════════════════════════════════════════════════ */
+        .tix-hero-outer-wrap {
+            position: relative;
+            margin-bottom: 2.25rem;
+            background: #ffffff;
+            border-radius: 32px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            overflow: visible;
+        }
+
         .tix-hero-dark-card {
             background: radial-gradient(circle at 85% 15%, rgba(45, 212, 191, 0.16) 0%, transparent 45%),
                         radial-gradient(circle at 15% 25%, rgba(29, 179, 73, 0.14) 0%, transparent 50%),
                         linear-gradient(165deg, #071412 0%, #0d241f 42%, #05100e 100%);
-            border-radius: 32px;
-            padding: 3.25rem 3rem 2.75rem;
-            margin-bottom: 0;
+            border-radius: 32px 32px 0 0; /* Flat bottom border: stops right at the banner midline */
+            padding: 3.25rem 3rem 0; /* No bottom padding: banner sits on lower edge and overlaps */
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+            border-bottom: none;
             color: #ffffff;
             position: relative;
-            overflow: hidden;
         }
 
         @media (max-width: 900px) {
-            .tix-hero-dark-card {
-                padding: 2rem 1.4rem 1.75rem;
+            .tix-hero-outer-wrap {
                 border-radius: 24px;
+            }
+            .tix-hero-dark-card {
+                padding: 2rem 1.4rem 0;
+                border-radius: 24px 24px 0 0;
             }
         }
 
         @media (max-width: 600px) {
-            .tix-hero-dark-card {
-                padding: 1.5rem 1rem 1.25rem;
+            .tix-hero-outer-wrap {
                 border-radius: 18px;
+                margin-bottom: 1.5rem;
+            }
+            .tix-hero-dark-card {
+                padding: 1.4rem 1rem 0;
+                border-radius: 18px 18px 0 0;
             }
         }
 
@@ -127,13 +142,13 @@
         .tix-hero-badge-est strong {
             font-size: 1.15rem;
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0;
         }
 
         .tix-hero-agency-txt {
             font-size: clamp(1.75rem, 3.8vw, 3.2rem);
-            font-weight: 600; /* Medium-semi weight, not heavy bold */
+            font-weight: 500; /* Sleek medium weight, NOT heavy bold */
             color: #ffffff;
             letter-spacing: -0.02em;
         }
@@ -217,14 +232,30 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        /* Banner Frame Inside Hero Card (Image 2 Video/Banner Frame) */
+        /* Banner Frame Protruding Out of Dark Card (Image 2 Red-Line Overlap) */
         .tix-hero-banner-frame {
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             position: relative;
             background: #0f172a;
+            z-index: 10;
+            margin-bottom: -150px; /* Overlaps outside across the red line into the white section */
+        }
+
+        @media (max-width: 900px) {
+            .tix-hero-banner-frame {
+                margin-bottom: -90px;
+                border-radius: 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .tix-hero-banner-frame {
+                margin-bottom: -65px;
+                border-radius: 12px;
+            }
         }
 
         .tix-carousel-container {
@@ -413,10 +444,28 @@
         ══════════════════════════════════════════════════════════════════════ */
         .tix-partners-white-section {
             background: #ffffff;
-            padding: 2.25rem 1rem 2.25rem;
+            border-radius: 0 0 32px 32px;
+            padding-top: 185px; /* Leaves clear space for the bottom half of the overlapping banner */
+            padding-bottom: 2.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .tix-partners-white-section {
+                border-radius: 0 0 24px 24px;
+                padding-top: 120px;
+                padding-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .tix-partners-white-section {
+                border-radius: 0 0 18px 18px;
+                padding-top: 85px;
+                padding-bottom: 1.5rem;
+            }
         }
 
         .tix-partners-row {
@@ -432,9 +481,6 @@
         @media (max-width: 768px) {
             .tix-partners-row {
                 gap: 2rem;
-            }
-            .tix-partners-white-section {
-                padding: 1.5rem 0.75rem 1.75rem;
             }
         }
 
@@ -657,7 +703,7 @@
         {{-- ══ SKELETON SHIMMER OVERLAY (Smooth Initial Render) ══ --}}
         <div id="tixInitialSkeleton" class="tix-container">
             {{-- Hero Skeleton Box --}}
-            <div class="tix-skeleton" style="width: 100%; height: 420px; border-radius: 32px; margin-bottom: 2rem;"></div>
+            <div class="tix-skeleton" style="width: 100%; height: 380px; border-radius: 32px; margin-bottom: 2rem;"></div>
 
             {{-- 3 Logo Skeleton Bar --}}
             <div style="display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem;">
@@ -700,157 +746,160 @@
         {{-- ══ REAL CONTENT CONTAINER ══ --}}
         <div id="tixRealContent" class="tix-container" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
 
-            {{-- ══ 1. HERO DARK CARD (100% IDENTICAL STYLE REFERENSI IMAGE 2) ══ --}}
-            <section class="tix-hero-dark-card">
+            {{-- ══ 1. HERO SPLIT SECTION (EXACT IMAGE 2 OVERLAP) ══ --}}
+            <div class="tix-hero-outer-wrap">
 
-                {{-- Top Row: Heading on Left & Description / Stats on Right --}}
-                <div class="tix-hero-top-row">
-                    <div class="tix-hero-left">
-                        <h1 class="tix-hero-heading">
-                            <span class="tix-hero-line1">
-                                We Are <span class="tix-highlight-text">Creative</span>
-                            </span>
-                            <span class="tix-hero-line2">
-                                <span class="tix-hero-badge-est">
-                                    <span>Establish</span>
-                                    <strong>2026</strong>
+                {{-- Dark Top Card (Ends at the red line, behind the top half of the banner) --}}
+                <div class="tix-hero-dark-card">
+                    {{-- Top Row: Heading on Left & Description / Stats on Right --}}
+                    <div class="tix-hero-top-row">
+                        <div class="tix-hero-left">
+                            <h1 class="tix-hero-heading">
+                                <span class="tix-hero-line1">
+                                    We Are <span class="tix-highlight-text">Creative</span>
                                 </span>
-                                <span class="tix-hero-agency-txt">Digital Ticketing</span>
-                            </span>
-                        </h1>
-                    </div>
+                                <span class="tix-hero-line2">
+                                    <span class="tix-hero-badge-est">
+                                        <span>Establish</span>
+                                        <strong>2026</strong>
+                                    </span>
+                                    <span class="tix-hero-agency-txt">Digital Ticketing</span>
+                                </span>
+                            </h1>
+                        </div>
 
-                    <div class="tix-hero-right">
-                        <p class="tix-hero-desc">
-                            we are a premier ticketing marketplace with verified organizers, instant QR code check-in gate, and secure e-tickets for top concerts and events
-                        </p>
-                        <div class="tix-hero-stats-wrap">
-                            <div class="tix-hero-stat-item">
-                                <div class="tix-stat-num">
-                                    <span>100%</span>
-                                    <span class="tix-stat-plus">+</span>
+                        <div class="tix-hero-right">
+                            <p class="tix-hero-desc">
+                                we are a premier ticketing marketplace with verified organizers, instant QR code check-in gate, and secure e-tickets for top concerts and events
+                            </p>
+                            <div class="tix-hero-stats-wrap">
+                                <div class="tix-hero-stat-item">
+                                    <div class="tix-stat-num">
+                                        <span>100%</span>
+                                        <span class="tix-stat-plus">+</span>
+                                    </div>
+                                    <div class="tix-stat-lbl">Official E-Tickets</div>
                                 </div>
-                                <div class="tix-stat-lbl">Official E-Tickets</div>
-                            </div>
-                            <div class="tix-hero-stat-sep"></div>
-                            <div class="tix-hero-stat-item">
-                                <div class="tix-stat-num">
-                                    <span>24/7</span>
-                                    <span class="tix-stat-plus">+</span>
+                                <div class="tix-hero-stat-sep"></div>
+                                <div class="tix-hero-stat-item">
+                                    <div class="tix-stat-num">
+                                        <span>24/7</span>
+                                        <span class="tix-stat-plus">+</span>
+                                    </div>
+                                    <div class="tix-stat-lbl">Gate Scanner Live</div>
                                 </div>
-                                <div class="tix-stat-lbl">Gate Scanner Live</div>
-                            </div>
-                            <div class="tix-hero-stat-sep"></div>
-                            <div class="tix-hero-stat-item">
-                                <div class="tix-stat-num">
-                                    <span>0%</span>
-                                    <span class="tix-stat-plus">+</span>
+                                <div class="tix-hero-stat-sep"></div>
+                                <div class="tix-hero-stat-item">
+                                    <div class="tix-stat-num">
+                                        <span>0%</span>
+                                        <span class="tix-stat-plus">+</span>
+                                    </div>
+                                    <div class="tix-stat-lbl">Hidden Fees</div>
                                 </div>
-                                <div class="tix-stat-lbl">Hidden Fees</div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Center: Nested 1920x600 Pure Banner Frame (Image 2 Style) --}}
-                <div class="tix-hero-banner-frame">
-                    <div class="tix-carousel-container" id="tixCarousel">
-                        <div class="tix-carousel-viewport">
-                            <div class="tix-carousel-track" id="tixCarouselTrack">
-                                @foreach($banners as $index => $banner)
-                                    <a href="{{ $banner['url'] }}" class="tix-slide">
-                                        @if(!empty($banner['image']))
-                                            {{-- Clean Pure 1920x600 Image (No Crop, No Text Overlaid on Faces) --}}
-                                            <img src="{{ $banner['image'] }}" alt="{{ $banner['title'] }}" class="tix-slide-img">
-                                        @else
-                                            {{-- Clean Modern SVG Landscape Placeholder --}}
-                                            <div class="tix-banner-placeholder-box">
-                                                <div class="tix-ph-icon">
-                                                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+                    {{-- Center: Nested 1920x600 Banner Frame Protruding Down into the White Area --}}
+                    <div class="tix-hero-banner-frame">
+                        <div class="tix-carousel-container" id="tixCarousel">
+                            <div class="tix-carousel-viewport">
+                                <div class="tix-carousel-track" id="tixCarouselTrack">
+                                    @foreach($banners as $index => $banner)
+                                        <a href="{{ $banner['url'] }}" class="tix-slide">
+                                            @if(!empty($banner['image']))
+                                                {{-- Clean Pure 1920x600 Image (No Crop, No Text Overlaid on Faces) --}}
+                                                <img src="{{ $banner['image'] }}" alt="{{ $banner['title'] }}" class="tix-slide-img">
+                                            @else
+                                                {{-- Clean Modern SVG Landscape Placeholder --}}
+                                                <div class="tix-banner-placeholder-box">
+                                                    <div class="tix-ph-icon">
+                                                        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+                                                    </div>
+                                                    <span class="tix-ph-badge">BANNER BUYLE TIX (1920 X 600)</span>
+                                                    <h3 class="tix-ph-title">{{ $banner['title'] }}</h3>
+                                                    <p class="tix-ph-sub">{{ $banner['description'] ?: 'Upload gambar banner 1920x600 Anda di Admin Panel > Manajemen Banner.' }}</p>
+                                                    <span class="tix-ph-hint">Upload Gambar di Admin Panel</span>
                                                 </div>
-                                                <span class="tix-ph-badge">BANNER BUYLE TIX (1920 X 600)</span>
-                                                <h3 class="tix-ph-title">{{ $banner['title'] }}</h3>
-                                                <p class="tix-ph-sub">{{ $banner['description'] ?: 'Upload gambar banner 1920x600 Anda di Admin Panel > Manajemen Banner.' }}</p>
-                                                <span class="tix-ph-hint">Upload Gambar di Admin Panel</span>
-                                            </div>
-                                        @endif
-                                    </a>
-                                @endforeach
-                            </div>
+                                            @endif
+                                        </a>
+                                    @endforeach
+                                </div>
 
-                            {{-- Prev & Next Nav Buttons --}}
-                            <button type="button" class="tix-nav-btn prev" onclick="tixPrevSlide()" aria-label="Slide Sebelumnya">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <polyline points="15 18 9 12 15 6"></polyline>
-                                </svg>
-                            </button>
-                            <button type="button" class="tix-nav-btn next" onclick="tixNextSlide()" aria-label="Slide Selanjutnya">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                            </button>
+                                {{-- Prev & Next Nav Buttons --}}
+                                <button type="button" class="tix-nav-btn prev" onclick="tixPrevSlide()" aria-label="Slide Sebelumnya">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                    </svg>
+                                </button>
+                                <button type="button" class="tix-nav-btn next" onclick="tixNextSlide()" aria-label="Slide Selanjutnya">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </button>
 
-                            {{-- Bottom Pill Dash Indicators --}}
-                            <div class="tix-carousel-dots" id="tixCarouselDots">
-                                @foreach($banners as $index => $banner)
-                                    <button type="button" class="tix-dot {{ $index === 0 ? 'active' : '' }}" onclick="tixGoToSlide({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
-                                @endforeach
+                                {{-- Bottom Pill Dash Indicators --}}
+                                <div class="tix-carousel-dots" id="tixCarouselDots">
+                                    @foreach($banners as $index => $banner)
+                                        <button type="button" class="tix-dot {{ $index === 0 ? 'active' : '' }}" onclick="tixGoToSlide({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-            </section>
+                {{-- White Section Below Dark Card (Holds the protruding lower half of banner + 3 Media Partner Logos) --}}
+                @php
+                    $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
+                    $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
+                    $partner1Url  = \App\Models\Setting::get('tix_partner_1_url', '#');
 
-            {{-- ══ 2. 3 MEDIA PARTNER LOGOS (ON WHITE BACKGROUND — EXACT MATCH IMAGE 2) ══ --}}
-            @php
-                $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
-                $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
-                $partner1Url  = \App\Models\Setting::get('tix_partner_1_url', '#');
+                    $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
+                    $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
+                    $partner2Url  = \App\Models\Setting::get('tix_partner_2_url', '#');
 
-                $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
-                $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
-                $partner2Url  = \App\Models\Setting::get('tix_partner_2_url', '#');
+                    $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
+                    $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
+                    $partner3Url  = \App\Models\Setting::get('tix_partner_3_url', '#');
 
-                $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
-                $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
-                $partner3Url  = \App\Models\Setting::get('tix_partner_3_url', '#');
+                    $partners = [
+                        ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
+                        ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
+                        ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
+                    ];
+                @endphp
 
-                $partners = [
-                    ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
-                    ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
-                    ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
-                ];
-            @endphp
-
-            <div class="tix-partners-white-section">
-                <div class="tix-partners-row">
-                    @foreach($partners as $p)
-                        <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}" class="tix-partner-item" title="{{ $p['name'] }}">
-                            @if(!empty($p['logo']))
-                                <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}" class="tix-partner-logo-img">
-                            @else
-                                @if(stripos($p['name'], 'spotify') !== false)
-                                    <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
-                                        <path d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z"/>
-                                        <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="20" fill="currentColor">Spotify</text>
-                                    </svg>
-                                @elseif(stripos($p['name'], 'google') !== false)
-                                    <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
-                                        <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
-                                    </svg>
-                                @elseif(stripos($p['name'], 'youtube') !== false)
-                                    <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
-                                        <path d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z"/>
-                                        <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
-                                    </svg>
+                <div class="tix-partners-white-section">
+                    <div class="tix-partners-row">
+                        @foreach($partners as $p)
+                            <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}" class="tix-partner-item" title="{{ $p['name'] }}">
+                                @if(!empty($p['logo']))
+                                    <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}" class="tix-partner-logo-img">
                                 @else
-                                    <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                    @if(stripos($p['name'], 'spotify') !== false)
+                                        <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
+                                            <path d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z"/>
+                                            <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="20" fill="currentColor">Spotify</text>
+                                        </svg>
+                                    @elseif(stripos($p['name'], 'google') !== false)
+                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
+                                            <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
+                                        </svg>
+                                    @elseif(stripos($p['name'], 'youtube') !== false)
+                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
+                                            <path d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z"/>
+                                            <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
+                                        </svg>
+                                    @else
+                                        <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                    @endif
                                 @endif
-                            @endif
-                        </a>
-                    @endforeach
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
+
             </div>
 
             {{-- ══ 3. SEARCH & QUICK FILTER BAR ══ --}}
