@@ -1355,10 +1355,6 @@
             {{-- ══ 6. PROMOTER & CREATOR CTA BANNER ══ --}}
             <div class="tix-cta-box">
                 <div>
-                    <span
-                        style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; background: rgba(30, 179, 73, 0.18); color: #4ADE80; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; margin-bottom: 0.75rem;">
-                        Penyelenggara Event Official
-                    </span>
                     <h3
                         style="font-size: clamp(1.15rem, 2.5vw, 1.55rem); font-weight: 700; color: #ffffff; margin: 0 0 0.5rem;">
                         Punya Konser, Seminar, atau Event Sendiri?

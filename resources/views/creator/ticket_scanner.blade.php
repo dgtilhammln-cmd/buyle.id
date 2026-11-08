@@ -167,7 +167,7 @@
             padding: 1.25rem 1.5rem;
             border-bottom: 1.5px solid #f1f5f9;
             font-size: 0.92rem;
-            font-weight: 800;
+            font-weight: 700;
             color: #0f172a;
             display: flex;
             align-items: center;
@@ -602,7 +602,7 @@
 
         .stat-title {
             font-size: 0.72rem;
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #64748b;
@@ -610,7 +610,7 @@
 
         .stat-val {
             font-size: 1.65rem;
-            font-weight: 800;
+            font-weight: 700;
             line-height: 1.1;
             letter-spacing: -0.02em;
             color: #0f172a;
@@ -653,7 +653,7 @@
         .custom-table th {
             background: #f8fafc;
             padding: 0.9rem 1.1rem;
-            font-weight: 800;
+            font-weight: 700;
             color: #475569;
             border-bottom: 1.5px solid #e2e8f0;
             white-space: nowrap;
@@ -875,7 +875,7 @@
                 display: flex !important;
                 align-items: center !important;
                 gap: 0.45rem !important;
-                font-weight: 800 !important;
+                font-weight: 700 !important;
                 font-size: 0.88rem !important;
                 color: #0f172a !important;
             }
@@ -1028,7 +1028,7 @@
             }
             .stat-val {
                 font-size: 1.15rem !important;
-                font-weight: 800 !important;
+                font-weight: 700 !important;
                 line-height: 1.15 !important;
                 letter-spacing: -0.02em !important;
             }
@@ -1123,7 +1123,7 @@
                 border-radius: 8px !important;
                 padding: 0.38rem 0.85rem !important;
                 font-size: 0.76rem !important;
-                font-weight: 800 !important;
+                font-weight: 700 !important;
                 box-shadow: 0 2px 8px rgba(30,179,73,0.25) !important;
                 display: inline-flex !important;
                 align-items: center !important;
@@ -1355,7 +1355,7 @@
         }
         .menu-header-title {
             font-size: 1.15rem;
-            font-weight: 800;
+            font-weight: 700;
             color: #0f172a;
             margin: 0;
             letter-spacing: -0.01em;
@@ -1473,7 +1473,7 @@
             }
             .tier-sub-text {
                 font-size: 1.05rem;
-                font-weight: 800;
+                font-weight: 700;
                 color: #0f172a;
                 line-height: 1.2;
             }
@@ -1677,7 +1677,7 @@
             }
             .smh-title {
                 font-size: 1.05rem;
-                font-weight: 800;
+                font-weight: 700;
                 color: #0f172a;
                 margin: 0;
                 text-align: center;
@@ -1686,7 +1686,7 @@
             }
             .smh-badge {
                 font-size: 0.65rem;
-                font-weight: 800;
+                font-weight: 700;
                 background: #f0fdf4;
                 color: #166534;
                 border: 1px solid #bbf7d0;
@@ -1764,7 +1764,7 @@
             }
             .sm-stat-val {
                 font-size: 1.15rem;
-                font-weight: 800;
+                font-weight: 700;
                 color: #0f172a;
                 line-height: 1.2;
                 display: block;
@@ -2036,7 +2036,7 @@
             padding: 0.2rem 0.65rem;
             border-radius: 999px;
             font-size: 0.7rem;
-            font-weight: 800;
+            font-weight: 700;
             margin-bottom: 0.3rem;
         }
         .fs-card-status-badge.valid   { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
@@ -2044,7 +2044,7 @@
         .fs-card-status-badge.invalid { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
         .fs-card-event-name {
             font-size: 0.95rem;
-            font-weight: 800;
+            font-weight: 700;
             color: #0f172a;
             white-space: nowrap;
             overflow: hidden;
@@ -2154,7 +2154,7 @@
         }
         .sc-bar-title {
             font-size: 0.84rem;
-            font-weight: 800;
+            font-weight: 700;
             color: #0f172a;
             display: flex;
             align-items: center;
@@ -2217,7 +2217,6 @@
         </a>
         <div style="text-align:center;">
             <h2 class="smh-title">Gatekeeper Scanner</h2>
-            <span class="smh-badge">Live System</span>
         </div>
         <button type="button" class="smh-icon-btn smh-scan-trigger" onclick="openFullscreenScanner()" title="Buka Mode Fullscreen Scanner">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -2234,7 +2233,7 @@
             <div class="sidebar-info-card"
                 style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 1.1rem; margin-bottom: 1.25rem;">
                 <div
-                    style="font-size: 0.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+                    style="font-size: 0.85rem; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
                     <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                         <path
                             d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
@@ -2298,13 +2297,13 @@
                     <small class="tab-text-mob">Profil</small>
                     @if(isset($kyc) && $kyc->status === 'verified')
                         <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#dcfce7; color:#166534; padding:2px 7px; border-radius:999px;">Verified</span>
+                            style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#dcfce7; color:#166534; padding:2px 7px; border-radius:999px;">Verified</span>
                     @elseif(isset($kyc) && $kyc->status === 'pending')
                         <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#fef3c7; color:#92400e; padding:2px 7px; border-radius:999px;">Review</span>
+                            style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#fef3c7; color:#92400e; padding:2px 7px; border-radius:999px;">Review</span>
                     @else
                         <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">KYC</span>
+                            style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">KYC</span>
                     @endif
                 </a>
             </div>
@@ -2358,7 +2357,7 @@
                 {{-- 1. Mobile Superapp Profile & Greeting Header --}}
                 <div class="home-user-header-card" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.15rem; padding:0.25rem 0.2rem;">
                     <div style="display:flex; align-items:center; gap:0.75rem;">
-                        <div style="width:46px; height:46px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:1.1rem; border:2.5px solid #fff; box-shadow:0 3px 10px rgba(30,179,73,0.25); flex-shrink:0;">
+                        <div style="width:46px; height:46px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1.1rem; border:2.5px solid #fff; box-shadow:0 3px 10px rgba(30,179,73,0.25); flex-shrink:0;">
                             @if(auth()->user()->avatar)
                                 <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" style="width:100%; height:100%; object-fit:cover;">
                             @else
@@ -2369,7 +2368,7 @@
                             <span style="font-size:0.75rem; color:#64748b; font-weight:600; display:block; line-height:1.2;">
                                 Halo, Selamat {{ now()->format('H') < 11 ? 'Pagi' : (now()->format('H') < 15 ? 'Siang' : (now()->format('H') < 18 ? 'Sore' : 'Malam')) }}! 👋
                             </span>
-                            <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px;">
+                            <h3 style="font-size:1.05rem; font-weight:700; color:#0f172a; margin:0; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px;">
                                 {{ auth()->user()->name }}
                             </h3>
                         </div>
@@ -2418,7 +2417,7 @@
                             <svg width="13" height="13" fill="#16a34a" stroke="#16a34a" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                             <span style="font-size:0.72rem; font-weight:700; color:#15803d; letter-spacing:0.02em;">Kesiapan Event</span>
                         </div>
-                        <h4 style="font-size:1.15rem; font-weight:900; color:#0f172a; margin:0 0 0.35rem; line-height:1.25; letter-spacing:-0.02em;">
+                        <h4 style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0 0 0.35rem; line-height:1.25; letter-spacing:-0.02em;">
                             Hitung Mundur &<br>Kesiapan Hari H
                         </h4>
                         <p style="font-size:0.75rem; color:#475569; margin:0; line-height:1.4;">
@@ -2437,10 +2436,10 @@
                             <circle cx="43" cy="43" r="35" stroke="#84cc16" stroke-width="7" stroke-dasharray="220" stroke-dashoffset="{{ max(15, 220 - (min(100, max(10, 100 - (($daysUntilEvent ?? 0) * 10))) / 100) * 220) }}" stroke-linecap="round" fill="none" />
                         </svg>
                         <div style="position:absolute; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                            <span style="font-size:1.25rem; font-weight:900; color:#0f172a; line-height:1;">
+                            <span style="font-size:1.25rem; font-weight:700; color:#0f172a; line-height:1;">
                                 {{ $daysUntilEvent !== null ? $daysUntilEvent : '0' }}
                             </span>
-                            <span style="font-size:0.65rem; color:#64748b; font-weight:700; margin-top:2px;">
+                            <span style="font-size:0.65rem; color:#64748b; font-weight:600; margin-top:2px;">
                                 hari lagi
                             </span>
                         </div>
@@ -2458,7 +2457,7 @@
                             </div>
                         </div>
                         <div style="display:flex; align-items:baseline; gap:0.35rem;">
-                            <span style="font-size:1.4rem; font-weight:900; color:#0f172a; line-height:1;">{{ number_format($stats['total']) }}</span>
+                            <span style="font-size:1.4rem; font-weight:700; color:#0f172a; line-height:1;">{{ number_format($stats['total']) }}</span>
                             <span style="font-size:0.72rem; color:#64748b; font-weight:600;">tiket</span>
                         </div>
                     </div>
@@ -2472,7 +2471,7 @@
                             </div>
                         </div>
                         <div style="display:flex; align-items:baseline; gap:0.35rem;">
-                            <span style="font-size:1.4rem; font-weight:900; color:#16a34a; line-height:1;">{{ number_format($stats['checked_in']) }}</span>
+                            <span style="font-size:1.4rem; font-weight:700; color:#16a34a; line-height:1;">{{ number_format($stats['checked_in']) }}</span>
                             <span style="font-size:0.72rem; color:#64748b; font-weight:600;">({{ $stats['rate'] }}%)</span>
                         </div>
                     </div>
@@ -2508,11 +2507,11 @@
                                 $isToday = $curDateStr === $todayDateStr;
                                 $isEventDay = $curDateStr === $primaryEventDateStr;
                             @endphp
-                            <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; {{ $isToday ? 'background:#cbf3cb; color:#14532d; font-weight:800; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;' }} font-family:'Montserrat',sans-serif;">
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; {{ $isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;' }} font-family:'Montserrat',sans-serif;">
                                 <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; {{ $isToday ? 'color:#15803d;' : 'color:#64748b;' }}">
                                     {{ substr($curDay->translatedFormat('l'), 0, 1) }}
                                 </span>
-                                <span style="font-size:0.9rem; font-weight:{{ $isToday ? '800' : '600' }}; {{ $isToday ? 'color:#14532d;' : 'color:#0f172a;' }}">
+                                <span style="font-size:0.9rem; font-weight:{{ $isToday ? '700' : '600' }}; {{ $isToday ? 'color:#14532d;' : 'color:#0f172a;' }}">
                                     {{ $curDay->format('d') }}
                                 </span>
                                 @if($isEventDay)
@@ -2553,7 +2552,7 @@
 
                         {{-- Bottom Banner Content: Title & Location --}}
                         <div style="position:absolute; bottom:12px; left:14px; right:14px; color:#ffffff;">
-                            <h4 style="margin:0 0 3px; font-size:1.05rem; font-weight:900; line-height:1.25; color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,0.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            <h4 style="margin:0 0 3px; font-size:1.05rem; font-weight:700; line-height:1.25; color:#ffffff; text-shadow:0 1px 3px rgba(0,0,0,0.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                 {{ (isset($primaryEvent) && $primaryEvent) ? $primaryEvent->name : 'Event Tiket Buyle.id' }}
                             </h4>
                             <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:rgba(255,255,255,0.85); flex-wrap:wrap;">
@@ -2567,11 +2566,11 @@
                     {{-- Countdown Bar Container --}}
                     <div style="padding:1.15rem 1.25rem;">
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
-                            <span style="font-size:0.76rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.35rem;">
+                            <span style="font-size:0.76rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.35rem;">
                                 <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                 Hitung Mundur Hari H
                             </span>
-                            <span id="homeCountdownPill" style="font-size:0.74rem; font-weight:800; color:#166534; background:#dcfce7; border:1px solid #bbf7d0; padding:0.2rem 0.55rem; border-radius:999px;">
+                            <span id="homeCountdownPill" style="font-size:0.74rem; font-weight:700; color:#166534; background:#dcfce7; border:1px solid #bbf7d0; padding:0.2rem 0.55rem; border-radius:999px;">
                                 H-{{ $daysUntilEvent !== null ? $daysUntilEvent : '0' }} Menuju Hari H
                             </span>
                         </div>
@@ -2587,7 +2586,7 @@
                         {{-- Quick Action Buttons --}}
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
                             <button type="button" onclick="switchTab('tab-scanner')"
-                                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
+                                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                                 <span>Buka Scanner</span>
                             </button>
@@ -2614,7 +2613,7 @@
                                 <circle cx="12" cy="11" r="3" />
                             </svg>
                         </div>
-                        <h3 style="font-size: 0.98rem; font-weight: 800; color: #92400e; margin: 0 0 0.4rem;">Verifikasi e-KYC Diperlukan</h3>
+                        <h3 style="font-size: 0.98rem; font-weight: 700; color: #92400e; margin: 0 0 0.4rem;">Verifikasi e-KYC Diperlukan</h3>
                         <p style="font-size: 0.8rem; color: #b45309; line-height: 1.55; margin: 0 0 1.15rem;">Fitur <strong>Live QR Scanner</strong> membutuhkan verifikasi e-KYC aktif demi keamanan sistem tiket event Anda.</p>
                         <a href="{{ route('creator.ticket.profile') }}"
                             style="background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #fff; border: none; padding: 0.55rem 1.25rem; border-radius: 9px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 12px rgba(30,179,73,0.3);">
@@ -2770,7 +2769,7 @@
                                                 Kamera Siap Memindai
                                             </div>
                                             <h4
-                                                style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 0.35rem 0;">
+                                                style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin: 0 0 0.35rem 0;">
                                                 Menunggu Scan Tiket</h4>
                                             <p
                                                 style="font-size: 0.8rem; color: #64748b; line-height: 1.5; margin: 0 0 1.25rem 0; max-width: 300px;">
@@ -2805,7 +2804,7 @@
                                                 <circle cx="12" cy="12" r="10" stroke-dasharray="31" stroke-dashoffset="10" />
                                             </svg>
                                             <h4
-                                                style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.35rem;">
+                                                style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem;">
                                                 Memverifikasi Tiket...</h4>
                                             <p id="resLoadingCode"
                                                 style="font-size: 0.82rem; color: #64748b; font-family: monospace;"></p>
@@ -2821,10 +2820,10 @@
                                                     <div id="resActiveIcon" style="flex-shrink: 0;"></div>
                                                     <div style="flex: 1; min-width: 0;">
                                                         <div id="resActiveStatusTag"
-                                                            style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">
+                                                            style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">
                                                         </div>
                                                         <h4 id="resActiveTitle"
-                                                            style="font-size: 0.96rem; font-weight: 800; margin: 0; line-height: 1.25;">
+                                                            style="font-size: 0.96rem; font-weight: 700; margin: 0; line-height: 1.25;">
                                                         </h4>
                                                     </div>
                                                 </div>
@@ -3220,7 +3219,7 @@
                     <div class="prof-card">
                         <div class="prof-card-head"
                             style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
-                            <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; font-size:1rem; color:#0f172a;">
+                            <div style="display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:1rem; color:#0f172a;">
                                 <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                                     <circle cx="9" cy="7" r="4" />
@@ -3251,7 +3250,7 @@
                             @else
                                 {{-- FORM TAMBAH PANITIA (LOGIKA & FITUR CUKUP INPUT NAMA & INPUT PASSWORD) --}}
                                 <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.15rem; margin-bottom:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-                                    <div style="display:flex; align-items:center; gap:0.45rem; font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem;">
+                                    <div style="display:flex; align-items:center; gap:0.45rem; font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:0.85rem;">
                                         <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
                                             <line x1="12" y1="5" x2="12" y2="19" />
                                             <line x1="5" y1="12" x2="19" y2="12" />
@@ -3324,7 +3323,7 @@
                                 {{-- DAFTAR PANITIA TERDAFTAR --}}
                                 <div>
                                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
-                                        <div style="font-size:0.84rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.4rem;">
+                                        <div style="font-size:0.84rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.4rem;">
                                             <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                                 <circle cx="9" cy="7" r="4" />
@@ -3348,7 +3347,7 @@
                                                 <div id="staff-row-{{ $st->id }}"
                                                     style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                                                     <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
-                                                        <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.8rem; flex-shrink:0;">
+                                                        <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
                                                             {{ strtoupper(substr($st->name, 0, 2)) }}
                                                         </div>
                                                         <div style="min-width:0;">
@@ -3408,14 +3407,13 @@
                 </svg>
             </button>
 
-            {{-- 2. Data Kehadiran --}}
+            {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'data' ? 'active' : '' }}" id="scanNavData"
                 onclick="switchTab('tab-data', this); updateBottomNav('data')" title="Data Kehadiran">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                    <rect x="9" y="3" width="6" height="4" rx="2"/>
+                    <path d="m9 14 2 2 4-4"/>
                 </svg>
             </button>
 
@@ -3428,14 +3426,13 @@
                 </svg>
             </button>
 
-            {{-- 4. Gate Staff --}}
+            {{-- 4. Gate Staff (Gate Door) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'gate' ? 'active' : '' }}" id="scanNavGate"
                 onclick="switchTab('tab-gate', this); updateBottomNav('gate')" title="Gate Staff">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <line x1="19" y1="8" x2="19" y2="14"/>
-                    <line x1="22" y1="11" x2="16" y2="11"/>
+                    <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/>
+                    <path d="M2 20h20"/>
+                    <circle cx="14" cy="12" r="1" fill="currentColor"/>
                 </svg>
             </button>
 
@@ -3574,7 +3571,7 @@
 
             {{-- Status Title & Message --}}
             <h3 id="modalTitle"
-                style="font-size:1.18rem; font-weight:800; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;"></h3>
+                style="font-size:1.18rem; font-weight:700; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;"></h3>
             <p id="modalMsg" style="font-size:0.8rem; color:#64748B; margin:0 0 0.85rem; line-height:1.45;"></p>
 
             {{-- Ticket Detail Card --}}
@@ -3602,7 +3599,7 @@
         onclick="if(event.target===this) closeGateQrModal()">
         <div
             style="background:#ffffff; border-radius:20px; padding:2rem; max-width:380px; width:100%; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);">
-            <div style="font-weight:800; font-size:1.15rem; color:#0f172a; margin-bottom:0.25rem;">Scan untuk Buka Scanner
+            <div style="font-weight:700; font-size:1.15rem; color:#0f172a; margin-bottom:0.25rem;">Scan untuk Buka Scanner
                 Panitia</div>
             <div id="gateQrEventTitle" style="font-size:0.85rem; color:#64748b; margin-bottom:1.25rem; font-weight:600;">
             </div>
@@ -3751,9 +3748,9 @@
                 const isToday = cur.toDateString() === today.toDateString();
                 const dStr = String(cur.getDate()).padStart(2, '0');
                 html += `
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; ${isToday ? 'background:#cbf3cb; color:#14532d; font-weight:800; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;'} font-family:'Montserrat',sans-serif;">
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; ${isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;'} font-family:'Montserrat',sans-serif;">
                         <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; ${isToday ? 'color:#15803d;' : 'color:#64748b;'}">${dayNames[i]}</span>
-                        <span style="font-size:0.9rem; font-weight:${isToday ? '800' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
+                        <span style="font-size:0.9rem; font-weight:${isToday ? '700' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
                         <span style="width:4px; height:4px; ${isToday ? 'background:#15803d;' : 'opacity:0;'} border-radius:50%;"></span>
                     </div>
                 `;
@@ -4093,7 +4090,7 @@
                         html += `
                             <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                                 <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
-                                    <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.8rem; flex-shrink:0;">
+                                    <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
                                         ${initial}
                                     </div>
                                     <div style="min-width:0;">

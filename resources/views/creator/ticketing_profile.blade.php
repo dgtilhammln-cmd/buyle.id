@@ -459,73 +459,96 @@
             flex-shrink: 0;
         }
 
-        /* POS Bottom Navigation Bar (100% Identical) */
-        .pos-bottom-nav-wrap {
+        /* ── Floating Mobile / Hub Bottom Navigation Bar (Identical to /creator/event-attendance) ── */
+        .scanner-bottom-nav-wrap {
             display: flex !important;
             position: fixed !important;
-            bottom: 16px !important;
-            left: 14px !important;
-            right: 14px !important;
-            max-width: 440px !important;
+            bottom: 12px !important;
+            left: 12px !important;
+            right: 12px !important;
+            max-width: 420px !important;
             margin: 0 auto !important;
             z-index: 10000 !important;
-            justify-content: center !important;
             pointer-events: none !important;
+            justify-content: center !important;
+            background: transparent !important;
+            padding: 0 !important;
         }
 
-        .pos-bottom-nav-bar {
+        .scanner-bottom-nav-bar {
             pointer-events: auto !important;
             width: 100% !important;
-            height: 62px !important;
+            height: 56px !important;
             background: #ffffff !important;
             border-radius: 999px !important;
-            display: flex !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr 52px 1fr 1fr !important;
             align-items: center !important;
-            justify-content: space-between !important;
-            padding: 0.35rem 0.65rem !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            justify-items: center !important;
+            padding: 0 0.5rem !important;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
             border: 1.5px solid #f1f5f9 !important;
             box-sizing: border-box !important;
         }
 
-        .pos-nav-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            color: #64748b;
-            padding: 0;
-            outline: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            text-decoration: none;
-            -webkit-tap-highlight-color: transparent;
+        .scanner-nav-item {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border: none !important;
+            background: transparent !important;
+            cursor: pointer !important;
+            color: #64748b !important;
+            padding: 0 !important;
+            outline: none !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            text-decoration: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            transition: none !important;
+            position: relative !important;
+            flex-shrink: 0 !important;
         }
 
-        .pos-nav-item.active {
+        .scanner-nav-item.active:not(.scanner-nav-center) {
+            background: transparent !important;
+            color: #16a34a !important;
+            box-shadow: none !important;
+            width: 44px !important;
+            height: 44px !important;
+            padding: 0 !important;
+        }
+
+        .scanner-nav-item.active:not(.scanner-nav-center)::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            width: 4px;
+            height: 4px;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+
+        .scanner-nav-center {
+            width: 52px !important;
+            height: 52px !important;
+            border-radius: 50% !important;
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             color: #ffffff !important;
-            padding: 0.5rem 1.1rem !important;
-            border-radius: 999px !important;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
-            gap: 6px !important;
-            width: auto !important;
+            margin-top: -18px !important;
+            box-shadow: 0 8px 20px rgba(30, 179, 73, 0.45) !important;
+            border: 3.5px solid #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+            text-decoration: none !important;
+            transition: none !important;
         }
 
-        .pos-nav-label {
-            display: none;
-        }
-
-        .pos-nav-item.active .pos-nav-label {
-            display: inline-block;
-            font-size: 0.8rem;
-            font-weight: 700;
+        .scanner-nav-center:hover {
             color: #ffffff !important;
-            letter-spacing: -0.01em;
         }
 
         /* ── MODAL STYLES (Clean & Closeable) ── */
@@ -606,10 +629,6 @@
                 <div class="profile-meta-text">
                     <div class="profile-user-name">{{ $seller->name }}</div>
                     <div class="profile-user-email">{{ $seller->email }}</div>
-                    <div class="profile-role-pill">
-                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span>Penyelenggara Event Official</span>
-                    </div>
                 </div>
             </div>
             <div style="color: #94a3b8; display: flex; align-items: center;">
@@ -905,56 +924,49 @@
 
     </div>
 
-    {{-- ── 5-BUTTON BOTTOM NAVIGATION BAR (100% IDENTICAL STYLING TO POS) ── --}}
-    <div class="pos-bottom-nav-wrap" id="posBottomNavWrap">
-        <div class="pos-bottom-nav-bar">
-            <!-- 1. Home / Event -->
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'home']) }}" class="pos-nav-item" title="Home Event">
+    {{-- ── 5-BUTTON BOTTOM NAVIGATION BAR (IDENTICAL TO /creator/event-attendance) ── --}}
+    <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
+        <div class="scanner-bottom-nav-bar">
+            {{-- 1. Home --}}
+            <a href="{{ route('creator.ticket.scanner', ['tab' => 'home']) }}" class="scanner-nav-item" title="Home">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
-                <span class="pos-nav-label">Home</span>
             </a>
 
-            <!-- 2. Data Hadir -->
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" class="pos-nav-item" title="Data Kehadiran">
+            {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
+            <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" class="scanner-nav-item" title="Data Kehadiran">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                    <rect x="9" y="3" width="6" height="4" rx="2"/>
+                    <path d="m9 14 2 2 4-4"/>
                 </svg>
-                <span class="pos-nav-label">Data</span>
             </a>
 
-            <!-- 3. Scanner QR -->
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'scanner']) }}" class="pos-nav-item" title="Scanner Gate">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            {{-- 3. Center Scanner (Floating Circle) --}}
+            <a href="{{ route('creator.ticket.scanner', ['tab' => 'scanner']) }}" class="scanner-nav-item scanner-nav-center" title="Live QR Scanner">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                     <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
                     <rect x="7" y="7" width="10" height="10" rx="1"/>
                 </svg>
-                <span class="pos-nav-label">Scan</span>
             </a>
 
-            <!-- 4. Gate Staff -->
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'gate']) }}" class="pos-nav-item" title="Akses Gate Staff">
+            {{-- 4. Gate Staff (Gate Door) --}}
+            <a href="{{ route('creator.ticket.scanner', ['tab' => 'gate']) }}" class="scanner-nav-item" title="Gate Staff">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <line x1="19" y1="8" x2="19" y2="14"/>
-                    <line x1="22" y1="11" x2="16" y2="11"/>
+                    <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/>
+                    <path d="M2 20h20"/>
+                    <circle cx="14" cy="12" r="1" fill="currentColor"/>
                 </svg>
-                <span class="pos-nav-label">Staff</span>
             </a>
 
-            <!-- 5. Profile (ACTIVE) -->
-            <a href="{{ route('creator.ticket.profile') }}" class="pos-nav-item active" title="Profil Organizer">
+            {{-- 5. Profile (ACTIVE dengan Dot Indicator) --}}
+            <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item active" title="Profil Organizer">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
                 </svg>
-                <span class="pos-nav-label">Profil</span>
             </a>
         </div>
     </div>
