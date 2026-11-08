@@ -14,9 +14,21 @@
             font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif !important;
             background: #ffffff;
             min-height: 100vh;
-            padding-top: 5.5rem;
+            padding-top: 4.5rem;
             padding-bottom: 5rem;
             color: #0F172A;
+        }
+
+        @media (max-width: 991px) {
+            .buyle-tix-page {
+                padding-top: 6.75rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .buyle-tix-page {
+                padding-top: 6.5rem;
+            }
         }
 
         .buyle-tix-page * {
@@ -29,6 +41,12 @@
             max-width: 1240px;
             margin: 0 auto;
             padding: 0 1.25rem;
+        }
+
+        @media (max-width: 600px) {
+            .tix-container {
+                padding: 0 1rem;
+            }
         }
 
         /* ══════════════════════════════════════════════════════════════════════
@@ -64,14 +82,14 @@
             }
         }
 
-        @media (max-width: 600px) {
-            .tix-hero-outer-wrap {
-                margin-bottom: 1.25rem;
+        @media (max-width: 768px) {
+            .tix-hero-dark-card {
+                display: none !important;
             }
 
-            .tix-hero-dark-card {
-                padding: 1.2rem 1rem 90px;
-                border-radius: 18px;
+            .tix-hero-outer-wrap {
+                margin-top: 0.25rem;
+                margin-bottom: 1.25rem;
             }
         }
 
@@ -321,13 +339,13 @@
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .tix-hero-banner-frame {
-                width: calc(100% - 2rem);
-                max-width: calc(100% - 2rem);
-                margin: -90px auto 0;
-                border-radius: 14px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+                border-radius: 16px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             }
         }
 
@@ -353,8 +371,8 @@
             width: 100%;
             position: relative;
             aspect-ratio: 1920 / 600;
-            min-height: 180px;
-            max-height: 420px;
+            min-height: 0;
+            max-height: none;
             overflow: hidden;
             text-decoration: none;
             color: #ffffff;
@@ -364,8 +382,9 @@
 
         @media (max-width: 768px) {
             .tix-slide {
-                aspect-ratio: 16 / 9;
-                min-height: 160px;
+                aspect-ratio: 1920 / 600 !important;
+                min-height: 0 !important;
+                max-height: none !important;
             }
         }
 
@@ -538,15 +557,15 @@
 
         @media (max-width: 900px) {
             .tix-partners-white-section {
-                padding-top: 1.75rem;
-                padding-bottom: 1.5rem;
+                padding-top: 1.5rem;
+                padding-bottom: 1.25rem;
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .tix-partners-white-section {
-                padding-top: 1.5rem;
-                padding-bottom: 1.25rem;
+                padding-top: 1rem;
+                padding-bottom: 1.15rem;
             }
         }
 
@@ -922,6 +941,14 @@
                 align-items: flex-start;
                 padding: 1.5rem;
             }
+
+            #tixHeroSkel {
+                aspect-ratio: 1920 / 600 !important;
+                height: auto !important;
+                border-radius: 16px !important;
+                margin-top: 0.25rem !important;
+                margin-bottom: 1.25rem !important;
+            }
         }
     </style>
 
@@ -930,7 +957,7 @@
         {{-- ══ SKELETON SHIMMER OVERLAY (Smooth Initial Render) ══ --}}
         <div id="tixInitialSkeleton" class="tix-container">
             {{-- Hero Skeleton Box --}}
-            <div class="tix-skeleton" style="width: 100%; height: 380px; border-radius: 32px; margin-bottom: 2rem;"></div>
+            <div id="tixHeroSkel" class="tix-skeleton" style="width: 100%; height: 380px; border-radius: 32px; margin-bottom: 2rem;"></div>
 
             {{-- 3 Logo Skeleton Bar --}}
             <div style="display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem;">
