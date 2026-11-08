@@ -595,10 +595,17 @@
         }
 
         .tix-chip.active {
-            background: #1eb349;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
             color: #ffffff;
-            border-color: #1eb349;
-            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        }
+
+        .tix-chip.active:hover {
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.45);
         }
 
         /* ══════════════════════════════════════════════════════════════════════
