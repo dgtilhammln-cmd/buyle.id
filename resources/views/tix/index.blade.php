@@ -1504,6 +1504,29 @@
                     }
                 }, { passive: true });
             }
+
+            // Bind Realtime Search Input (Debounced 250ms)
+            const searchInput = document.getElementById('tixSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    clearTimeout(tixSearchTimeout);
+                    tixSearchQuery = this.value.trim();
+                    tixSearchTimeout = setTimeout(() => {
+                        tixTriggerSearch(true);
+                    }, 250);
+                });
+            }
+
+            // Setup IntersectionObserver for Infinite Scroll
+            if ('IntersectionObserver' in window) {
+                const sentinel = document.getElementById('infiniteScrollSentinel');
+                if (sentinel) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && tixHasMore && !tixIsLoading) {
+                                tixLoadMore();
+                            }
+                        });
                     }, {
                         rootMargin: '250px',
                         threshold: 0.1
