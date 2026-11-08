@@ -25,7 +25,7 @@ class TicketScannerController extends Controller
         $search = trim($request->input('search', ''));
         $rawTab = $request->input('tab');
         if (in_array($rawTab, ['settings', 'rekening', 'profile'])) {
-            $activeTab = 'profile';
+            return redirect()->route('ticketing.profile');
         } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
             $activeTab = $rawTab;
         } else {
@@ -966,8 +966,83 @@ class TicketScannerController extends Controller
             'bank_account_name'   => $inputName,
         ]);
 
+        if ($request->header('referer') && str_contains($request->header('referer'), 'ticketing/profile')) {
+            return redirect()
+                ->route('ticketing.profile')
+                ->with('bank_success', 'Rekening pencairan berhasil disimpan!');
+        }
+
         return redirect()
-            ->route('creator.ticket.scanner', ['tab' => 'rekening'])
+            ->route('creator.ticket.scanner', ['tab' => 'home'])
             ->with('bank_success', 'Rekening pencairan berhasil disimpan!');
+    }
+
+    /**
+     * Halaman Menu & Profil Penyelenggara Tiket (/ticketing/profile).
+     * Desain 100% konsisten & identik dengan /creator/pos/profile.
+     */
+    public function profileMenu(Request $request)
+    {
+        $seller = auth()->user();
+        $sellerId = $seller->id;
+
+        $cp = \App\Models\CreatorProfile::firstOrCreate(
+            ['user_id' => $seller->id],
+            ['store_name' => $seller->name]
+        );
+
+        $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $gmv              = $balanceData['gmv'] ?? 0;
+        $availableBalance = $balanceData['available_balance'] ?? 0;
+        $tierInfo         = $cp->getTierInfo($gmv);
+
+        $kyc = \App\Models\CreatorKyc::where('user_id', $sellerId)->first();
+
+        // Query tiket milik creator
+        $baseQuery = TicketPass::where(function ($q) use ($sellerId) {
+            $q->where('seller_id', $sellerId)
+              ->orWhereHas('product', function ($pq) use ($sellerId) {
+                  $pq->where('seller_id', $sellerId);
+              });
+        });
+
+        $totalTickets   = (clone $baseQuery)->count();
+        $totalCheckedIn = (clone $baseQuery)->where('status', 'used')->count();
+        $totalEvents    = Product::where('seller_id', $sellerId)->where('product_type', 'ticket')->count();
+        $gateStaffCount = \App\Models\GateStaff::where('creator_id', $sellerId)->count();
+
+        // Omset penjualan tiket
+        $ticketRevenue = \App\Models\OrderItem::whereHas('product', function ($pq) use ($sellerId) {
+            $pq->where('seller_id', $sellerId)->where('product_type', 'ticket');
+        })->whereHas('order', function ($oq) {
+            $oq->whereIn('payment_status', ['paid', 'settled', 'success', 'completed']);
+        })->sum('subtotal');
+
+        if ($ticketRevenue <= 0 && $gmv > 0) {
+            $ticketRevenue = $gmv;
+        }
+
+        $hasPushSub = \App\Models\PushSubscription::where('user_id', $seller->id)->exists();
+
+        $seo = [
+            'title'  => 'Menu & Profil Penyelenggara Event · Buyle.id Ticketing',
+            'robots' => 'noindex, nofollow',
+        ];
+
+        return view('creator.ticketing_profile', compact(
+            'seller',
+            'cp',
+            'gmv',
+            'availableBalance',
+            'tierInfo',
+            'ticketRevenue',
+            'kyc',
+            'totalTickets',
+            'totalCheckedIn',
+            'totalEvents',
+            'gateStaffCount',
+            'hasPushSub',
+            'seo'
+        ));
     }
 }
