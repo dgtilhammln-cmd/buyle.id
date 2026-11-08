@@ -577,6 +577,13 @@
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
             transition: all 0.15s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            line-height: 1.4;
+            outline: none;
         }
 
         .tix-chip:hover {
@@ -897,40 +904,49 @@
 
             </div>
 
-            {{-- ══ 3. SEARCH & QUICK FILTER BAR ══ --}}
+            {{-- ══ 3. SEARCH & QUICK FILTER BAR (REALTIME AJAX, NO URL PARAMS) ══ --}}
             <div class="tix-search-bar-wrap">
-                <form action="{{ route('tix.index') }}" method="GET" class="tix-search-form">
-                    <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2.2" viewBox="0 0 24 24">
+                <form id="tixSearchForm" action="javascript:void(0)" class="tix-search-form" onsubmit="return false;">
+                    <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0;">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" name="q" value="{{ $search }}" placeholder="Cari nama konser, seminar, festival, kota atau artis..." class="tix-search-input">
-                    @if($type)
-                        <input type="hidden" name="type" value="{{ $type }}">
-                    @endif
+                    <input type="text" id="tixSearchInput" name="q" value="" placeholder="Cari nama konser, seminar, festival, kota atau artis..." class="tix-search-input" autocomplete="off">
+                    <button type="button" id="tixSearchClearBtn" style="display: none; background: none; border: none; cursor: pointer; color: #94A3B8; padding: 4px; align-items: center;" onclick="tixClearSearch()" title="Hapus pencarian">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
                 </form>
 
                 <div class="tix-filter-chips">
-                    <a href="{{ route('tix.index', array_filter(['q' => $search])) }}" class="tix-chip {{ empty($type) ? 'active' : '' }}">
+                    <button type="button" class="tix-chip active" data-type="" onclick="tixFilterType('')">
                         Semua Event
-                    </a>
-                    <a href="{{ route('tix.index', array_filter(['q' => $search, 'type' => 'offline'])) }}" class="tix-chip {{ $type === 'offline' ? 'active' : '' }}">
-                        📍 Event Offline
-                    </a>
-                    <a href="{{ route('tix.index', array_filter(['q' => $search, 'type' => 'online'])) }}" class="tix-chip {{ $type === 'online' ? 'active' : '' }}">
-                        💻 Webinar / Online
-                    </a>
+                    </button>
+                    <button type="button" class="tix-chip" data-type="offline" onclick="tixFilterType('offline')">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>Event Offline</span>
+                    </button>
+                    <button type="button" class="tix-chip" data-type="online" onclick="tixFilterType('online')">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <span>Webinar / Online</span>
+                    </button>
                 </div>
             </div>
 
-            {{-- ══ 4. SECTION: TIKET EVENT & KONSER (EXACT MATCH HOMEPAGE SECTION) ══ --}}
+            {{-- ══ 4. SECTION: TIKET EVENT & KONSER (DYNAMIC REALTIME RESULTS) ══ --}}
             <section style="margin-bottom: 2.75rem;" id="event-terdekat">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <h2 id="tixSectionTitle" style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                         Tiket Event & Konser
                     </h2>
-                    <a href="{{ route('tix.index') }}" style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
-                        Lihat Semua Tiket
+                    <a href="javascript:void(0)" id="tixResetBtn" onclick="tixResetAll()" style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                        <span id="tixResetBtnText">Lihat Semua Tiket</span>
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M5 12h14m-7-7l7 7-7 7" />
                         </svg>
@@ -938,7 +954,7 @@
                 </div>
 
                 {{-- Cards Grid Container --}}
-                <div class="tix-grid" id="upcomingGrid">
+                <div class="tix-grid" id="upcomingGrid" style="transition: opacity 0.2s ease;">
                     @if(count($upcomingEvents) > 0)
                         @include('tix.partials.event_cards', ['events' => $upcomingEvents, 'is_past' => false])
                     @else
@@ -1087,12 +1103,157 @@
             tixStartTimer();
         }
 
-        // Infinite Scroll Setup
+        // Infinite Scroll & Realtime Search Setup
         let tixCurrentPage = 1;
         let tixHasMore = {{ $hasMoreUpcoming ? 'true' : 'false' }};
         let tixIsLoading = false;
-        const tixSearchQuery = @json($search);
-        const tixEventType = @json($type);
+        let tixSearchQuery = '';
+        let tixEventType = '';
+        let tixSearchTimeout = null;
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function tixTriggerSearch(resetPage = true) {
+            if (resetPage) {
+                tixCurrentPage = 1;
+                tixHasMore = true;
+            }
+
+            const grid = document.getElementById('upcomingGrid');
+            const skeleton = document.getElementById('infiniteScrollSkeleton');
+            const statusBox = document.getElementById('infiniteScrollStatus');
+            const statusText = document.getElementById('infiniteScrollStatusText');
+            const titleEl = document.getElementById('tixSectionTitle');
+            const resetBtnText = document.getElementById('tixResetBtnText');
+            const pastSection = document.getElementById('event-berakhir');
+            const clearBtn = document.getElementById('tixSearchClearBtn');
+
+            // Toggle clear button inside input
+            if (clearBtn) {
+                clearBtn.style.display = tixSearchQuery ? 'inline-flex' : 'none';
+            }
+
+            // Realtime Section Title & UI State Switching
+            if (titleEl) {
+                if (tixSearchQuery.trim().length > 0) {
+                    titleEl.innerHTML = `Hasil Pencarian: <span style="color: #1eb349; font-weight: 700; margin-left: 4px;">"${escapeHtml(tixSearchQuery)}"</span>`;
+                    if (resetBtnText) resetBtnText.textContent = 'Reset Pencarian';
+                    if (pastSection) pastSection.style.display = 'none';
+                } else if (tixEventType === 'offline') {
+                    titleEl.textContent = 'Tiket Event Offline';
+                    if (resetBtnText) resetBtnText.textContent = 'Lihat Semua Tiket';
+                    if (pastSection) pastSection.style.display = 'none';
+                } else if (tixEventType === 'online') {
+                    titleEl.textContent = 'Tiket Webinar / Online';
+                    if (resetBtnText) resetBtnText.textContent = 'Lihat Semua Tiket';
+                    if (pastSection) pastSection.style.display = 'none';
+                } else {
+                    titleEl.textContent = 'Tiket Event & Konser';
+                    if (resetBtnText) resetBtnText.textContent = 'Lihat Semua Tiket';
+                    if (pastSection) pastSection.style.display = 'block';
+                }
+            }
+
+            // Build request URL without affecting the browser URL
+            let url = new URL('{{ route("tix.index") }}', window.location.origin);
+            url.searchParams.set('page', tixCurrentPage);
+            if (tixSearchQuery) url.searchParams.set('q', tixSearchQuery);
+            if (tixEventType) url.searchParams.set('type', tixEventType);
+
+            tixIsLoading = true;
+            if (resetPage && grid) {
+                grid.style.opacity = '0.55';
+            }
+
+            fetch(url.toString(), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (resetPage && grid) {
+                    grid.innerHTML = '';
+                    grid.style.opacity = '1';
+                }
+
+                if (data.html && data.html.trim().length > 0) {
+                    if (grid) {
+                        grid.insertAdjacentHTML('beforeend', data.html);
+                    }
+                    tixCurrentPage = data.current_page;
+                    tixHasMore = data.has_more;
+                } else if (resetPage) {
+                    // Clean Empty State
+                    tixHasMore = false;
+                    if (grid) {
+                        grid.innerHTML = `
+                            <div class="tix-empty-card">
+                                <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                </div>
+                                <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Tidak Ada Tiket Ditemukan</h4>
+                                <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Coba kata kunci lain atau klik kategori Semua Event.</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    tixHasMore = false;
+                }
+
+                if (!tixHasMore && statusBox && statusText && tixCurrentPage > 1) {
+                    statusText.textContent = 'Semua tiket event telah dimuat ✨';
+                    statusBox.style.display = 'block';
+                } else if (statusBox) {
+                    statusBox.style.display = 'none';
+                }
+            })
+            .catch(err => {
+                console.error('Error in tix search:', err);
+                if (grid) grid.style.opacity = '1';
+            })
+            .finally(() => {
+                tixIsLoading = false;
+                if (skeleton) skeleton.style.display = 'none';
+            });
+        }
+
+        function tixFilterType(type) {
+            tixEventType = type;
+            document.querySelectorAll('.tix-filter-chips .tix-chip').forEach(chip => {
+                if (chip.getAttribute('data-type') === type) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+            tixTriggerSearch(true);
+        }
+
+        function tixClearSearch() {
+            const input = document.getElementById('tixSearchInput');
+            if (input) input.value = '';
+            tixSearchQuery = '';
+            tixTriggerSearch(true);
+        }
+
+        function tixResetAll() {
+            const input = document.getElementById('tixSearchInput');
+            if (input) input.value = '';
+            tixSearchQuery = '';
+            tixEventType = '';
+            document.querySelectorAll('.tix-filter-chips .tix-chip').forEach(chip => {
+                if (chip.getAttribute('data-type') === '') {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+            tixTriggerSearch(true);
+        }
 
         function tixLoadMore() {
             if (!tixHasMore || tixIsLoading) return;
@@ -1187,6 +1348,18 @@
                         tixPrevSlide();
                     }
                 }, { passive: true });
+            }
+
+            // Bind Realtime Search Input (Debounced 250ms)
+            const searchInput = document.getElementById('tixSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(tixSearchTimeout);
+                    tixSearchQuery = this.value.trim();
+                    tixSearchTimeout = setTimeout(() => {
+                        tixTriggerSearch(true);
+                    }, 250);
+                });
             }
 
             // Setup IntersectionObserver for Infinite Scroll
