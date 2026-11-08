@@ -101,6 +101,7 @@ Route::middleware(['track.pageview'])->group(function () {
         ->middleware('throttle:60,1')
         ->name('tools.social_downloader.stream');
     Route::get('/cron/clean-temp-images', [\App\Http\Controllers\ToolController::class, 'cronCleanTempImages'])->name('cron.clean_temp_images');
+    Route::get('/tix',            [\App\Http\Controllers\TixController::class, 'index'])->name('tix.index');
     Route::get('/ticketing',      [\App\Http\Controllers\TicketingController::class, 'index'])->name('ticketing');
     Route::get('/kontak',         [ContactController::class,'index'])->name('contact');
     Route::post('/kontak',        [ContactController::class,'send'])->name('contact.send');
