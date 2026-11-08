@@ -42,13 +42,13 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 3.5rem;
+        gap: clamp(1.5rem, 3.5vw, 3rem);
     }
 
     /* Brand Left Column */
     .cv-footer-brand {
-        flex: 0 0 320px;
-        max-width: 340px;
+        flex: 0 0 220px;
+        max-width: 240px;
     }
 
     .cv-footer-logo-link {
@@ -108,23 +108,25 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
         box-shadow: 0 4px 12px rgba(30, 179, 73, 0.22);
     }
 
-    /* Right Navigation Columns */
+    /* Right Navigation Columns: Exactly 1 Row with 4 Columns on Desktop */
     .cv-footer-nav-cols {
-        display: flex;
-        gap: clamp(2.5rem, 5vw, 4.5rem);
-        flex-wrap: wrap;
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(1rem, 2vw, 2.5rem);
     }
 
     .cv-footer-col {
-        min-width: 140px;
+        min-width: 0;
     }
 
     .cv-footer-col-title {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         font-weight: 700;
         color: #0f172a;
-        margin-bottom: 1.15rem;
+        margin-bottom: 1rem;
         letter-spacing: -0.01em;
+        white-space: nowrap;
     }
 
     .cv-footer-links {
@@ -133,16 +135,17 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
         margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.65rem;
     }
 
     .cv-footer-links a {
-        font-size: 0.88rem;
+        font-size: 0.78rem;
         font-weight: 500;
         color: #64748b;
         text-decoration: none;
         transition: all 0.2s ease;
         display: inline-block;
+        white-space: nowrap;
     }
 
     .cv-footer-links a:hover {
@@ -197,10 +200,10 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
     }
 
     /* ── Responsive Styling ── */
-    @media (max-width: 960px) {
+    @media (max-width: 880px) {
         .cv-footer-top {
             flex-direction: column;
-            gap: 2.5rem;
+            gap: 2.25rem;
         }
 
         .cv-footer-brand {
@@ -210,9 +213,8 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
 
         .cv-footer-nav-cols {
             width: 100%;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem 1.5rem;
         }
 
         .cv-footer-wireframe-wrap {
@@ -229,7 +231,7 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
 
         .cv-footer-nav-cols {
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.75rem;
+            gap: 1.75rem 1.25rem;
         }
 
         .cv-footer-wireframe-wrap {
