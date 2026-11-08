@@ -49,7 +49,7 @@
             background: linear-gradient(180deg, #1db349 10%, #a4ff01 100%);
             border-radius: 32px;
             /* Beautiful curved corners on all 4 sides */
-            padding: 3.25rem 3rem 165px;
+            padding: 2.25rem 3rem 165px;
             /* 165px bottom space exactly matches the red line */
             border: none;
             box-shadow: 0 16px 40px rgba(29, 179, 73, 0.18);
@@ -59,7 +59,7 @@
 
         @media (max-width: 900px) {
             .tix-hero-dark-card {
-                padding: 2rem 1.4rem 110px;
+                padding: 1.6rem 1.4rem 110px;
                 border-radius: 24px;
             }
         }
@@ -70,7 +70,7 @@
             }
 
             .tix-hero-dark-card {
-                padding: 1.4rem 1rem 90px;
+                padding: 1.2rem 1rem 90px;
                 border-radius: 18px;
             }
         }
@@ -78,17 +78,18 @@
         /* Top Row: Left Headline vs Right Desc & Stats */
         .tix-hero-top-row {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             gap: 2.5rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.35rem;
         }
 
         @media (max-width: 900px) {
             .tix-hero-top-row {
                 flex-direction: column;
-                gap: 1.25rem;
-                margin-bottom: 1.75rem;
+                align-items: flex-start;
+                gap: 1.1rem;
+                margin-bottom: 1.25rem;
             }
         }
 
@@ -154,10 +155,10 @@
 
         /* Right Description & Stats (Clean & Light) */
         .tix-hero-right {
-            max-width: 440px;
             display: flex;
             flex-direction: column;
-            gap: 1.35rem;
+            gap: 0;
+            flex-shrink: 0;
         }
 
         @media (max-width: 900px) {
@@ -168,20 +169,15 @@
         }
 
         .tix-hero-desc {
-            font-size: 0.88rem;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.95);
-            margin: 0;
-            font-weight: 400;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: none !important;
         }
 
         .tix-hero-stats-wrap {
             display: flex;
             align-items: center;
             gap: 1.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            padding-top: 0;
+            border-top: none;
         }
 
         @media (max-width: 600px) {
@@ -802,7 +798,7 @@
                         </div>
 
                         <div class="tix-hero-right">
-                            <p class="tix-hero-desc">
+                            <p class="tix-hero-desc" style="display: none;">
                                 Beli tiket event & konser favorit dengan kemudahan checkout instan. Dilengkapi sistem Smart
                                 E-Ticketing 100% anti tiket palsu serta Scanner kilat 0,1 detik anti-loading tanpa antre
                                 panjang.
