@@ -170,3 +170,4 @@ class TixController extends Controller
         return $banners;
     }
 }
+
