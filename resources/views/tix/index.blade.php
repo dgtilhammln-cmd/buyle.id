@@ -46,13 +46,11 @@
         }
 
         .tix-hero-dark-card {
-            background: radial-gradient(circle at 85% 15%, rgba(45, 212, 191, 0.16) 0%, transparent 45%),
-                        radial-gradient(circle at 15% 25%, rgba(29, 179, 73, 0.14) 0%, transparent 50%),
-                        linear-gradient(165deg, #071412 0%, #0d241f 42%, #05100e 100%);
-            border-radius: 32px 32px 0 0; /* Flat bottom border: stops right at the banner midline */
+            background: linear-gradient(180deg, #1db349 10%, #a4ff01 100%);
+            border-radius: 32px; /* Beautiful curved corners on all 4 sides */
             padding: 3.25rem 3rem 0; /* No bottom padding: banner sits on lower edge and overlaps */
             border: none;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 16px 40px rgba(29, 179, 73, 0.18);
             color: #ffffff;
             position: relative;
         }
@@ -60,7 +58,7 @@
         @media (max-width: 900px) {
             .tix-hero-dark-card {
                 padding: 2rem 1.4rem 0;
-                border-radius: 24px 24px 0 0;
+                border-radius: 24px;
             }
         }
 
@@ -70,7 +68,7 @@
             }
             .tix-hero-dark-card {
                 padding: 1.4rem 1rem 0;
-                border-radius: 18px 18px 0 0;
+                border-radius: 18px;
             }
         }
 
@@ -113,8 +111,9 @@
         }
 
         .tix-highlight-text {
-            color: #2dd4bf;
-            font-weight: 500;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .tix-hero-line2 {
@@ -128,24 +127,25 @@
             display: inline-flex;
             flex-direction: column;
             line-height: 1.1;
-            color: #94A3B8;
+            color: rgba(255, 255, 255, 0.85);
             font-size: 0.68rem;
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 0.04em;
         }
 
         .tix-hero-badge-est strong {
             font-size: 1.15rem;
             color: #ffffff;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0;
         }
 
         .tix-hero-agency-txt {
             font-size: clamp(1.75rem, 3.8vw, 3.2rem);
-            font-weight: 500; /* Sleek medium weight, NOT heavy bold */
+            font-weight: 600;
             color: #ffffff;
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         }
 
         @media (max-width: 600px) {
@@ -172,9 +172,10 @@
         .tix-hero-desc {
             font-size: 0.88rem;
             line-height: 1.6;
-            color: #cbd5e1;
+            color: rgba(255, 255, 255, 0.95);
             margin: 0;
             font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .tix-hero-stats-wrap {
@@ -182,7 +183,7 @@
             align-items: center;
             gap: 1.75rem;
             padding-top: 0.75rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         @media (max-width: 600px) {
@@ -200,31 +201,32 @@
 
         .tix-stat-num {
             font-size: 1.25rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #ffffff;
             letter-spacing: -0.01em;
             display: flex;
             align-items: center;
             gap: 3px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
 
         .tix-stat-plus {
-            color: #2dd4bf;
+            color: #ffffff;
             font-size: 0.95rem;
-            font-weight: 400;
+            font-weight: 600;
         }
 
         .tix-stat-lbl {
             font-size: 0.7rem;
-            color: #94A3B8;
-            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
             white-space: nowrap;
         }
 
         .tix-hero-stat-sep {
             width: 1px;
             height: 28px;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         /* Banner Frame Protruding Out of Dark Card (Image 2 Red-Line Overlap) */
