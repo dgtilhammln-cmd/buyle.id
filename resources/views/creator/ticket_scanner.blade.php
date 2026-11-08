@@ -87,11 +87,17 @@
             scrollbar-color: #cbd5e1 #f8fafc;
         }
 
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+        .bio-layout, .bio-layout *, .scanner-mobile-top-header, .scanner-bottom-nav-wrap, .scanner-modal, .menu-hub-container, .event-profile-modal, .event-profile-modal * {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
         .bio-layout {
             display: flex;
             gap: 1.5rem;
             align-items: flex-start;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Montserrat', sans-serif !important;
         }
 
         .bio-sidebar {
@@ -1219,6 +1225,11 @@
         /* ══════════════════════════════════════════════════════════════════════
            MOBILE BOTTOM NAVIGATION BAR (Identical style to /pos page)
         ══════════════════════════════════════════════════════════════════════ */
+        /* Prevent duplicate superapp navbar on event-attendance */
+        #superappBottomNav {
+            display: none !important;
+        }
+
         .scanner-bottom-nav-wrap {
             display: none;
         }
@@ -1240,63 +1251,61 @@
             .scanner-bottom-nav-bar {
                 pointer-events: auto !important;
                 width: 100% !important;
-                height: 52px !important;
+                height: 56px !important;
                 background: #ffffff !important;
                 border-radius: 999px !important;
-                display: flex !important;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 52px 1fr 1fr !important;
                 align-items: center !important;
-                justify-content: space-between !important;
-                padding: 0.25rem 0.65rem !important;
-                box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+                justify-items: center !important;
+                padding: 0 0.5rem !important;
+                box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
                 border: 1.5px solid #f1f5f9 !important;
                 box-sizing: border-box !important;
             }
             .scanner-nav-item {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: none;
-                background: transparent;
-                cursor: pointer;
-                transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-                color: #64748b;
-                padding: 0;
-                outline: none;
-                width: 38px;
-                height: 38px;
-                border-radius: 50%;
-                text-decoration: none;
-                -webkit-tap-highlight-color: transparent;
-                gap: 0;
-                flex-shrink: 0;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border: none !important;
+                background: transparent !important;
+                cursor: pointer !important;
+                color: #64748b !important;
+                padding: 0 !important;
+                outline: none !important;
+                width: 44px !important;
+                height: 44px !important;
+                border-radius: 50% !important;
+                text-decoration: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+                transition: none !important;
+                position: relative !important;
+                flex-shrink: 0 !important;
             }
             .scanner-nav-item.active:not(.scanner-nav-center) {
-                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
-                color: #ffffff !important;
-                padding: 0.4rem 0.85rem !important;
-                border-radius: 999px !important;
-                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32) !important;
-                gap: 5px !important;
-                width: auto !important;
+                background: transparent !important;
+                color: #16a34a !important;
+                box-shadow: none !important;
+                width: 44px !important;
+                height: 44px !important;
+                padding: 0 !important;
             }
-            .scanner-nav-item.active:not(.scanner-nav-center) .scanner-nav-label {
-                display: inline-block;
-                font-size: 0.74rem;
-                font-weight: 800;
-                color: #ffffff;
-                letter-spacing: -0.01em;
+            .scanner-nav-item.active:not(.scanner-nav-center)::after {
+                content: '';
+                position: absolute;
+                bottom: 5px;
+                width: 4px;
+                height: 4px;
+                background: #16a34a;
+                border-radius: 50%;
             }
             .scanner-nav-label {
-                display: none;
+                display: none !important;
             }
-            .scanner-nav-item:not(.active):not(.scanner-nav-center):active {
-                transform: scale(0.92);
-                background: #f1f5f9;
-            }
-            /* Center Floating Scanner Button (Prominent & Larger) */
+            /* Center Floating Scanner Button (STABLE PERMANENT CENTER) */
             .scanner-nav-center {
-                width: 50px !important;
-                height: 50px !important;
+                width: 52px !important;
+                height: 52px !important;
                 border-radius: 50% !important;
                 background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
                 color: #ffffff !important;
@@ -1307,15 +1316,245 @@
                 align-items: center !important;
                 justify-content: center !important;
                 flex-shrink: 0 !important;
-                transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
-            }
-            .scanner-nav-center:active {
-                transform: scale(0.92) !important;
+                transition: none !important;
             }
             .scanner-nav-center.active {
-                box-shadow: 0 8px 22px rgba(30, 179, 73, 0.6) !important;
-                transform: translateY(-2px) scale(1.04) !important;
+                box-shadow: 0 8px 24px rgba(30, 179, 73, 0.6) !important;
             }
+
+            /* ── iOS Profile & Menu Hub Styling (Identical to /creator/pos/profile) ── */
+            .profile-touch-card {
+                background: #ffffff;
+                border-radius: 20px;
+                border: 1px solid #e2e8f0;
+                padding: 1.1rem 1.25rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                text-decoration: none;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+                margin-bottom: 1rem;
+                font-family: 'Montserrat', sans-serif !important;
+            }
+            .profile-info-group {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                min-width: 0;
+            }
+            .profile-avatar-wrap {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+                overflow: hidden;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                font-weight: 700;
+                font-size: 1.1rem;
+                border: 2px solid #ffffff;
+                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.25);
+            }
+            .profile-avatar-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .profile-user-name {
+                font-size: 1.02rem;
+                font-weight: 700;
+                color: #0f172a;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 1.3;
+            }
+            .profile-user-email {
+                font-size: 0.78rem;
+                color: #64748b;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-top: 2px;
+            }
+            .tier-modern-banner {
+                background: #ffffff;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 20px;
+                padding: 1.1rem 1.25rem;
+                color: #0f172a;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                margin-bottom: 1.15rem;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+                font-family: 'Montserrat', sans-serif !important;
+            }
+            .tier-sparkle-box {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                background: #f0fdf4;
+                border: 1px solid #bbf7d0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #16a34a;
+                flex-shrink: 0;
+            }
+            .tier-title-text {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #64748b;
+                line-height: 1.2;
+                margin-bottom: 3px;
+            }
+            .tier-sub-text {
+                font-size: 1.05rem;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1.2;
+            }
+            .tier-pill-btn {
+                background: #f8fafc;
+                border: 1.5px solid #e2e8f0;
+                color: #334155;
+                border-radius: 24px;
+                padding: 0.45rem 0.85rem;
+                font-size: 0.74rem;
+                font-weight: 700;
+                text-decoration: none;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                font-family: inherit;
+            }
+            .menu-group-card {
+                background: #ffffff;
+                border-radius: 20px;
+                border: 1px solid #e2e8f0;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+                margin-bottom: 1rem;
+                font-family: 'Montserrat', sans-serif !important;
+            }
+            .menu-group-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.92rem 1.15rem;
+                text-decoration: none;
+                color: #1e293b;
+                transition: background 0.15s ease;
+                border-bottom: 1px solid #f1f5f9;
+                background: #ffffff;
+                cursor: pointer;
+                border-left: none;
+                border-right: none;
+                border-top: none;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: left;
+                font-family: inherit;
+            }
+            .menu-group-item:last-child {
+                border-bottom: none;
+            }
+            .menu-group-item:hover, .menu-group-item:active {
+                background: #f8fafc;
+            }
+            .menu-item-left {
+                display: flex;
+                align-items: center;
+                gap: 0.85rem;
+                min-width: 0;
+            }
+            .menu-item-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: #f1f5f9;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #475569;
+                flex-shrink: 0;
+            }
+            .menu-item-icon.highlight {
+                background: #ecfdf5;
+                color: #16a34a;
+            }
+            .menu-item-icon.blue {
+                background: #eff6ff;
+                color: #2563eb;
+            }
+            .menu-item-icon.amber {
+                background: #fffbeb;
+                color: #d97706;
+            }
+            .menu-item-title {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #0f172a;
+            }
+            .menu-item-sub {
+                font-size: 0.7rem;
+                color: #64748b;
+                margin-top: 1px;
+            }
+            .menu-item-right {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #94a3b8;
+                flex-shrink: 0;
+            }
+            .menu-item-badge {
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 0.2rem 0.6rem;
+                border-radius: 10px;
+                background: #f1f5f9;
+                color: #64748b;
+            }
+            .menu-item-badge.badge-green {
+                background: #dcfce7;
+                color: #15803d;
+            }
+            .menu-logout-btn {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.95rem 1.15rem;
+                background: none;
+                border: none;
+                color: #dc2626;
+                cursor: pointer;
+                text-align: left;
+                font-family: inherit;
+                transition: background 0.15s ease;
+            }
+            .menu-logout-btn:hover {
+                background: #fef2f2;
+            }
+            .menu-logout-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                background: #fee2e2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #dc2626;
+                flex-shrink: 0;
+            }
+        }
             /* Add padding to content to prevent nav overlap */
             .bio-content {
                 padding-bottom: 90px !important;
@@ -1338,6 +1577,45 @@
                 background: #f8fafc !important;
                 border: none !important;
                 box-shadow: none !important;
+            }
+            .scanner-mobile-top-header.header-hidden-home {
+                display: none !important;
+            }
+
+            /* ── POPUP MODAL STYLING FOR REKENING & KYC ── */
+            .event-profile-modal {
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 99999 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 1rem !important;
+                box-sizing: border-box !important;
+            }
+            .event-profile-modal-backdrop {
+                position: absolute !important;
+                inset: 0 !important;
+                background: rgba(15, 23, 42, 0.6) !important;
+                backdrop-filter: blur(4px) !important;
+                -webkit-backdrop-filter: blur(4px) !important;
+            }
+            .event-profile-modal-content {
+                position: relative !important;
+                background: #ffffff !important;
+                border-radius: 24px !important;
+                width: 100% !important;
+                max-width: 520px !important;
+                padding: 1.35rem 1.45rem !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+                box-sizing: border-box !important;
+                animation: modalPop 0.22s ease-out !important;
+                max-height: 88vh !important;
+                overflow-y: auto !important;
+            }
+            @keyframes modalPop {
+                from { opacity: 0; transform: scale(0.95) translateY(10px); }
+                to { opacity: 1; transform: scale(1) translateY(0); }
             }
             .smh-title {
                 font-size: 1.05rem;
@@ -1873,7 +2151,7 @@
 
 @section('content')
     {{-- ══ MOBILE TOP HEADER WITH SAFE ZONE (Identical standard to /pos) ══ --}}
-    <div class="scanner-mobile-top-header">
+    <div class="scanner-mobile-top-header {{ $activeTab === 'home' ? 'header-hidden-home' : '' }}" id="scannerMobileTopHeader" style="{{ $activeTab === 'home' ? 'display: none !important;' : '' }}">
         <a href="{{ route('creator.app.index') }}" class="smh-icon-btn" title="Kembali ke Aplikasi">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <polyline points="15 18 9 12 15 6"></polyline>
@@ -2040,15 +2318,13 @@
                         </div>
                     </div>
                     <div style="display:flex; align-items:center; gap:0.5rem;">
-                        {{-- Date Pill Button --}}
-                        <div style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#334155; box-shadow:0 2px 6px rgba(0,0,0,0.03);" title="{{ now()->translatedFormat('l, d F Y') }}">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
+                        {{-- Add Ticket / Event Plus Button --}}
+                        <a href="{{ url('/creator/products?from=ticketing') }}" style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.03); text-decoration:none; transition:all 0.15s ease;" title="Tambah Tiket / Event Baru">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
-                        </div>
+                        </a>
                         {{-- Notification / Live Status Pill --}}
                         <div style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#1eb349; position:relative; box-shadow:0 2px 6px rgba(0,0,0,0.03);" title="Sistem Aktif & Terhubung">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -2148,7 +2424,7 @@
                 {{-- 4. Interactive Horizontal Calendar Strip (August 2025 style from Image 2) --}}
                 <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px; padding:1.15rem 1.25rem; margin-bottom:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
-                        <h5 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">
+                        <h5 id="homeCalendarMonthLabel" style="margin:0; font-size:0.95rem; font-weight:700; color:#0f172a; font-family:'Montserrat',sans-serif;">
                             {{ now()->translatedFormat('F Y') }}
                         </h5>
                         <div style="display:flex; align-items:center; gap:0.35rem;">
@@ -2175,15 +2451,17 @@
                                 $isToday = $curDateStr === $todayDateStr;
                                 $isEventDay = $curDateStr === $primaryEventDateStr;
                             @endphp
-                            <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.35rem 0.1rem; border-radius:16px; {{ ($isEventDay || ($isToday && !$primaryEventDateStr)) ? 'background:#c8eccf; color:#14532d; font-weight:800; box-shadow:0 3px 8px rgba(34,197,94,0.18);' : 'color:#64748b;' }}">
-                                <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase;">
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; {{ $isToday ? 'background:#cbf3cb; color:#14532d; font-weight:800; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;' }} font-family:'Montserrat',sans-serif;">
+                                <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; {{ $isToday ? 'color:#15803d;' : 'color:#64748b;' }}">
                                     {{ substr($curDay->translatedFormat('l'), 0, 1) }}
                                 </span>
-                                <span style="font-size:0.85rem; font-weight:{{ ($isEventDay || ($isToday && !$primaryEventDateStr)) ? '900' : '600' }}; {{ ($isEventDay || ($isToday && !$primaryEventDateStr)) ? 'color:#14532d;' : 'color:#0f172a;' }}">
+                                <span style="font-size:0.9rem; font-weight:{{ $isToday ? '800' : '600' }}; {{ $isToday ? 'color:#14532d;' : 'color:#0f172a;' }}">
                                     {{ $curDay->format('d') }}
                                 </span>
                                 @if($isEventDay)
-                                    <span style="width:4px; height:4px; background:#16a34a; border-radius:50%;"></span>
+                                    <span style="width:4px; height:4px; background:#16a34a; border-radius:50%;" title="Hari H Event"></span>
+                                @elseif($isToday)
+                                    <span style="width:4px; height:4px; background:#15803d; border-radius:50%;"></span>
                                 @else
                                     <span style="width:4px; height:4px; opacity:0;"></span>
                                 @endif
@@ -3055,60 +3333,314 @@
                     </div>
                 </div>
 
-            {{-- TAB 4: PROFIL & REKENING EVENT (Modeled after /creator/pos/profile) --}}
+            {{-- TAB 4: PROFIL & MENU HUB EVENT (100% Modeled after /creator/pos/profile) --}}
             <div id="tab-profile" class="payout-tab-pane"
                 style="display: {{ $activeTab === 'profile' ? 'block' : 'none' }};">
 
-                {{-- CARD 1: User Profile Header Card (Identical to POS Profile) --}}
-                <div style="background:#ffffff; border-radius:20px; border:1px solid #e2e8f0; padding:1.1rem 1.25rem; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 10px rgba(0,0,0,0.02); margin-bottom:1.15rem;">
-                    <div style="display:flex; align-items:center; gap:0.85rem; min-width:0;">
-                        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#ffffff; font-weight:800; font-size:1.1rem; border:2px solid #ffffff; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
+                {{-- 1. Top Bar Header --}}
+                <div class="menu-header-bar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+                    <button type="button" onclick="switchTab('tab-home', document.getElementById('scanNavHome'))" class="menu-icon-btn" title="Kembali ke Home">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </button>
+                    <h2 class="menu-header-title" style="font-size:1.15rem; font-weight:800; color:#0f172a; margin:0;">Menu & Profil Event</h2>
+                    <a href="{{ route('creator.profile.edit') }}" class="menu-icon-btn" title="Pengaturan Akun">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+                        </svg>
+                    </a>
+                </div>
+
+                {{-- 2. Profile Touch Card --}}
+                <a href="{{ route('creator.profile.edit') }}" class="profile-touch-card" title="Edit Profil">
+                    <div class="profile-info-group">
+                        <div class="profile-avatar-wrap">
                             @if(auth()->user()->avatar)
-                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" style="width:100%; height:100%; object-fit:cover;">
+                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="profile-avatar-img">
                             @else
                                 {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                             @endif
                         </div>
-                        <div style="min-width:0;">
-                            <div style="font-size:1rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ auth()->user()->name }}
-                            </div>
-                            <div style="font-size:0.78rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">
-                                {{ auth()->user()->email }}
-                            </div>
+                        <div class="profile-meta-text">
+                            <div class="profile-user-name">{{ auth()->user()->name }}</div>
+                            <div class="profile-user-email">{{ auth()->user()->email }}</div>
                             <div style="display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; font-weight:800; background:#dcfce7; color:#166534; padding:2px 8px; border-radius:999px; margin-top:4px;">
                                 <span>Penyelenggara Event Official</span>
                             </div>
                         </div>
                     </div>
-                    <a href="{{ route('creator.profile.edit') }}" style="width:36px; height:36px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#334155; text-decoration:none; flex-shrink:0;" title="Edit Profil">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    <div style="color: #94a3b8; display: flex; align-items: center;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                </a>
+
+                {{-- 3. Metric Banner --}}
+                <div class="tier-modern-banner">
+                    <div class="tier-banner-left">
+                        <div class="tier-sparkle-box">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="tier-title-text">Hadir (Checked-In):</div>
+                            <div class="tier-sub-text">{{ number_format($stats['checked_in']) }} / {{ number_format($stats['total']) }} Tiket</div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="switchTab('tab-data', document.getElementById('scanNavData'))" class="tier-pill-btn">
+                        Data Hadir
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- 4. Group 1: Pengaturan Event & Finansial --}}
+                <div class="menu-group-card">
+                    {{-- Rekening Pencairan Dana --}}
+                    <div onclick="openRekeningModal()" class="menu-group-item" style="cursor:pointer;">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon highlight">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title" style="font-weight:700; color:#166534;">Rekening Pencairan Dana</span>
+                                <div class="menu-item-sub">Pencairan hasil penjualan tiket event</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            @if(auth()->user()->bank_name)
+                                <span class="menu-item-badge badge-green">{{ auth()->user()->bank_name }} •• {{ substr(auth()->user()->bank_account_number, -4) }}</span>
+                            @else
+                                <span class="menu-item-badge" style="background:#fee2e2; color:#dc2626;">Belum Diatur</span>
+                            @endif
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {{-- Verifikasi Identitas (e-KYC) --}}
+                    <div onclick="openKycModal()" class="menu-group-item" style="cursor:pointer;">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    <circle cx="12" cy="11" r="3"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title">Verifikasi Identitas (e-KYC)</span>
+                                <div class="menu-item-sub">Syarat penarikan & payout dana</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            @if(isset($kyc) && $kyc && $kyc->status === 'verified')
+                                <span class="menu-item-badge badge-green">Terverifikasi</span>
+                            @elseif(isset($kyc) && $kyc && $kyc->status === 'pending')
+                                <span class="menu-item-badge" style="background:#fef3c7; color:#b45309;">Menunggu Review</span>
+                            @else
+                                <span class="menu-item-badge" style="background:#fee2e2; color:#dc2626;">Belum Verifikasi</span>
+                            @endif
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {{-- Akses & Panitia Gate --}}
+                    <div onclick="switchTab('tab-gate', document.getElementById('scanNavGate'))" class="menu-group-item" style="cursor:pointer;">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <line x1="19" y1="8" x2="19" y2="14"/>
+                                    <line x1="22" y1="11" x2="16" y2="11"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title">Akses & Staf Panitia Gate</span>
+                                <div class="menu-item-sub">Kelola akun petugas gate live</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            <span class="menu-item-badge">{{ isset($gateStaffList) ? $gateStaffList->count() : 0 }} Panitia</span>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 5. Group 2: Manajemen Tiket & Penjualan --}}
+                <div class="menu-group-card">
+                    {{-- Buat & Kelola Tiket Event --}}
+                    <a href="{{ url('/creator/products?from=ticketing') }}" class="menu-group-item">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon highlight">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title" style="font-weight:700; color:#166534;">Buat & Kelola Tiket Event</span>
+                                <div class="menu-item-sub">Tambah tiket, atur kuota & harga tetap</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            <span class="menu-item-badge badge-green">+ Baru</span>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </a>
+
+                    {{-- Pusat Payout & Penarikan Saldo --}}
+                    <a href="{{ url('/creator/payout-settings') }}" class="menu-group-item">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title">Pusat Payout & Saldo</span>
+                                <div class="menu-item-sub">Riwayat penarikan dana & saldo masuk</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </a>
+
+                    {{-- Kasir Digital (POS) --}}
+                    <a href="{{ route('creator.pos.index') }}" class="menu-group-item">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title">Kasir Digital (POS)</span>
+                                <div class="menu-item-sub">Sistem kasir OTS & F&B offline</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
                     </a>
                 </div>
 
-                {{-- CARD 2: Rekening Pencairan Dana Event (Embedded Cleanly from tab-rekening) --}}
-                <div id="section-rekening" class="prof-card" style="margin-bottom:1.25rem;">
-                    <div class="prof-card-head" style="display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                            <line x1="1" y1="10" x2="23" y2="10" />
-                        </svg>
-                        <span style="font-weight:800; font-size:0.95rem; color:#0f172a;">Rekening Pencairan Dana Event</span>
+                {{-- 6. Group 3: Sesi & Navigasi Studio --}}
+                <div class="menu-group-card">
+                    {{-- Kembali ke Home Event --}}
+                    <div onclick="switchTab('tab-home', document.getElementById('scanNavHome'))" class="menu-group-item" style="cursor:pointer;">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title">Kembali ke Beranda Event</span>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="prof-card-body" style="padding:1rem 1.25rem;">
-                        <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.15rem; line-height:1.5;">
-                            Rekening ini digunakan untuk pencairan pendapatan tiket event Anda. Data otomatis tersinkron dengan
-                            <a href="{{ url('/creator/payout-settings') }}" style="color:#1eb349; font-weight:600;">Pengaturan Pencairan</a>.
-                        </p>
+
+                    {{-- Creator Studio Dashboard --}}
+                    <a href="{{ route('creator.dashboard') }}" class="menu-group-item">
+                        <div class="menu-item-left">
+                            <div class="menu-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="menu-item-title">Creator Studio Dashboard</span>
+                                <div class="menu-item-sub">Menu utama seluruh toko & produk</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-right">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </a>
+
+                    {{-- Logout Action --}}
+                    <form method="POST" action="{{ route('logout') }}" id="logoutFormEvent" style="margin:0;">
+                        @csrf
+                        <button type="submit" class="menu-logout-btn">
+                            <div class="menu-item-left">
+                                <div class="menu-logout-icon">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: #dc2626;">Keluar Akun</span>
+                                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 1px;">Akhiri sesi akun Anda saat ini</div>
+                                </div>
+                            </div>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                {{-- 7. POPUP MODAL: Rekening Pencairan Dana Event --}}
+                <div id="modalRekeningPencairan" class="event-profile-modal" style="display:none;">
+                    <div class="event-profile-modal-backdrop" onclick="closeRekeningModal()"></div>
+                    <div class="event-profile-modal-content">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
+                            <div style="display:flex; align-items:center; gap:0.6rem;">
+                                <div style="width:36px; height:36px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#16a34a;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                        <line x1="1" y1="10" x2="23" y2="10" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Rekening Pencairan Dana</h4>
+                                    <p style="margin:2px 0 0; font-size:0.72rem; color:#64748b;">Tersinkron otomatis dengan Pengaturan Pencairan</p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="closeRekeningModal()" style="border:none; background:#f1f5f9; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
 
                         @if(session('bank_success'))
-                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.75rem 1rem; border-radius:12px; font-weight:600; font-size:0.8rem; margin-bottom:1.15rem; display:flex; align-items:center; gap:0.5rem;">
+                            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.75rem 1rem; border-radius:12px; font-weight:600; font-size:0.8rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                                 {{ session('bank_success') }}
                             </div>
                         @endif
                         @if(session('bank_error'))
-                            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:12px; font-weight:600; font-size:0.8rem; margin-bottom:1.15rem; display:flex; align-items:center; gap:0.5rem;">
+                            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:12px; font-weight:600; font-size:0.8rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
                                 {{ session('bank_error') }}
                             </div>
@@ -3119,7 +3651,7 @@
                             <div style="display:flex; flex-direction:column; gap:0.95rem;">
                                 <div>
                                     <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Bank / E-Wallet</label>
-                                    <select name="bank_name" required style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:9px; font-size:0.8rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
+                                    <select name="bank_name" required style="width:100%; height:40px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.82rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
                                         <option value="">— Pilih Bank / E-Wallet —</option>
                                         <optgroup label="Bank Nasional">
                                             @foreach(['BCA', 'Mandiri', 'BRI', 'BNI', 'CIMB Niaga', 'Danamon', 'Permata', 'BSI', 'BTN', 'Maybank', 'Panin', 'OCBC NISP', 'Bank Neo Commerce', 'Jenius (SMBC)'] as $bank)
@@ -3137,7 +3669,7 @@
 
                                 <div>
                                     <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Nomor Rekening / No. HP</label>
-                                    <input type="text" name="bank_account_number" inputmode="numeric" value="{{ old('bank_account_number', auth()->user()->bank_account_number) }}" required placeholder="Contoh: 1234567890" style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:9px; font-size:0.8rem; color:#0f172a; outline:none; font-family:inherit;">
+                                    <input type="text" name="bank_account_number" inputmode="numeric" value="{{ old('bank_account_number', auth()->user()->bank_account_number) }}" required placeholder="Contoh: 1234567890" style="width:100%; height:40px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.82rem; color:#0f172a; outline:none; font-family:inherit;">
                                     @error('bank_account_number')<span style="font-size:0.72rem; color:#dc2626; margin-top:0.2rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
@@ -3145,69 +3677,49 @@
                                     <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">
                                         Nama Pemilik Rekening <span style="font-weight:400; color:#64748b; font-size:0.72rem;">(harus sesuai nama pendaftar)</span>
                                     </label>
-                                    <input type="text" name="bank_account_name" value="{{ old('bank_account_name', auth()->user()->bank_account_name ?? auth()->user()->name) }}" required style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:9px; font-size:0.8rem; color:#0f172a; outline:none; font-family:inherit;">
+                                    <input type="text" name="bank_account_name" value="{{ old('bank_account_name', auth()->user()->bank_account_name ?? auth()->user()->name) }}" required style="width:100%; height:40px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.82rem; color:#0f172a; outline:none; font-family:inherit;">
                                     <span style="font-size:0.72rem; color:#64748b; margin-top:0.25rem; display:block;">Nama akun terdaftar: <strong>{{ auth()->user()->name }}</strong></span>
                                     @error('bank_account_name')<span style="font-size:0.72rem; color:#dc2626; margin-top:0.2rem; display:block;">{{ $message }}</span>@enderror
                                 </div>
 
-                                <button type="submit" style="width:100%; height:40px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:10px; font-size:0.82rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 12px rgba(30,179,73,0.25);">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                                    <span>Simpan Rekening</span>
-                                </button>
+                                <div style="display:flex; gap:0.65rem; margin-top:0.5rem;">
+                                    <button type="button" onclick="closeRekeningModal()" style="flex:1; height:42px; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer;">
+                                        Tutup
+                                    </button>
+                                    <button type="submit" style="flex:2; height:42px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:12px; font-size:0.82rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 12px rgba(30,179,73,0.25);">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                        <span>Simpan Rekening</span>
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                {{-- CARD 3: Verifikasi e-KYC (Embedded from kyc_tab) --}}
-                <div id="section-kyc" style="margin-bottom:1.25rem;">
-                    @include('creator.partials.kyc_tab')
-                </div>
-
-                {{-- CARD 4: Pintasan Navigasi Kasir & Bisnis (Modeled after POS Profile) --}}
-                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px; padding:1.15rem 1.25rem; box-shadow:0 2px 10px rgba(0,0,0,0.02); margin-bottom:1.5rem;">
-                    <span style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:0.75rem;">
-                        Pintasan Aplikasi & Sistem
-                    </span>
-                    <div style="display:flex; flex-direction:column; gap:0.5rem;">
-                        <a href="{{ route('creator.pos.index') }}" style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:12px; text-decoration:none; color:#0f172a; border:1px solid #f1f5f9;">
-                            <div style="display:flex; align-items:center; gap:0.65rem;">
-                                <div style="width:32px; height:32px; border-radius:8px; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                {{-- 8. POPUP MODAL: Verifikasi e-KYC --}}
+                <div id="modalKycVerifikasi" class="event-profile-modal" style="display:none;">
+                    <div class="event-profile-modal-backdrop" onclick="closeKycModal()"></div>
+                    <div class="event-profile-modal-content" style="max-width:680px; max-height:86vh; overflow-y:auto;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; position:sticky; top:0; background:#ffffff; z-index:10; padding-bottom:0.75rem; border-bottom:1px solid #f1f5f9;">
+                            <div style="display:flex; align-items:center; gap:0.6rem;">
+                                <div style="width:36px; height:36px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe; display:flex; align-items:center; justify-content:center; color:#2563eb;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                        <circle cx="12" cy="11" r="3"/>
+                                    </svg>
                                 </div>
                                 <div>
-                                    <strong style="font-size:0.82rem; display:block;">Kasir Digital (POS)</strong>
-                                    <span style="font-size:0.7rem; color:#64748b;">Buka sistem kasir dan penjualan offline</span>
+                                    <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Verifikasi Identitas (e-KYC)</h4>
+                                    <p style="margin:2px 0 0; font-size:0.72rem; color:#64748b;">Lengkapi dokumen identitas untuk pencairan dana</p>
                                 </div>
                             </div>
-                            <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                        </a>
-
-                        <a href="{{ url('/creator/payout-settings') }}" style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:12px; text-decoration:none; color:#0f172a; border:1px solid #f1f5f9;">
-                            <div style="display:flex; align-items:center; gap:0.65rem;">
-                                <div style="width:32px; height:32px; border-radius:8px; background:#f0fdf4; color:#16a34a; display:flex; align-items:center; justify-content:center;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>
-                                </div>
-                                <div>
-                                    <strong style="font-size:0.82rem; display:block;">Pusat Penarikan Dana & Saldo</strong>
-                                    <span style="font-size:0.7rem; color:#64748b;">Kelola payout dan riwayat transfer</span>
-                                </div>
-                            </div>
-                            <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                        </a>
-
-                        <a href="{{ route('creator.dashboard') }}" style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:12px; text-decoration:none; color:#0f172a; border:1px solid #f1f5f9;">
-                            <div style="display:flex; align-items:center; gap:0.65rem;">
-                                <div style="width:32px; height:32px; border-radius:8px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center;">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                                </div>
-                                <div>
-                                    <strong style="font-size:0.82rem; display:block;">Creator Studio Dashboard</strong>
-                                    <span style="font-size:0.7rem; color:#64748b;">Kembali ke ringkasan toko</span>
-                                </div>
-                            </div>
-                            <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                        </a>
+                            <button type="button" onclick="closeKycModal()" style="border:none; background:#f1f5f9; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <div style="padding-top:0.5rem;">
+                            @include('creator.partials.kyc_tab')
+                        </div>
                     </div>
                 </div>
 
@@ -3227,7 +3739,6 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
-                <span class="scanner-nav-label">Home</span>
             </button>
 
             {{-- 2. Data Kehadiran --}}
@@ -3239,7 +3750,6 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
-                <span class="scanner-nav-label">Kehadiran</span>
             </button>
 
             {{-- 3. Center Scanner (Larger Prominent Floating Circle Button) --}}
@@ -3260,7 +3770,6 @@
                     <line x1="19" y1="8" x2="19" y2="14"/>
                     <line x1="22" y1="11" x2="16" y2="11"/>
                 </svg>
-                <span class="scanner-nav-label">Gate</span>
             </button>
 
             {{-- 5. Profil Event (Pojok Kanan) --}}
@@ -3270,7 +3779,6 @@
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                 </svg>
-                <span class="scanner-nav-label">Profil</span>
             </button>
         </div>
     </div>
@@ -3487,14 +3995,13 @@
         } catch (e) { }
 
         function switchTab(tabId, btn) {
-            // Smooth alias mapping for legacy URLs
-            let scrollToSection = null;
+            let openModalFn = null;
             if (tabId === 'tab-settings') {
                 tabId = 'tab-profile';
-                scrollToSection = 'section-kyc';
+                openModalFn = openKycModal;
             } else if (tabId === 'tab-rekening') {
                 tabId = 'tab-profile';
-                scrollToSection = 'section-rekening';
+                openModalFn = openRekeningModal;
             }
 
             document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
@@ -3506,6 +4013,17 @@
 
             if (btn && btn.classList) {
                 btn.classList.add('active');
+            }
+
+            const mobHeader = document.getElementById('scannerMobileTopHeader');
+            if (mobHeader) {
+                if (tabId === 'tab-home') {
+                    mobHeader.classList.add('header-hidden-home');
+                    mobHeader.style.setProperty('display', 'none', 'important');
+                } else {
+                    mobHeader.classList.remove('header-hidden-home');
+                    mobHeader.style.setProperty('display', 'flex', 'important');
+                }
             }
 
             let tabName = 'home';
@@ -3527,11 +4045,8 @@
             url.searchParams.set('tab', tabName);
             window.history.pushState({}, '', url);
 
-            if (scrollToSection) {
-                setTimeout(() => {
-                    const sec = document.getElementById(scrollToSection);
-                    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 120);
+            if (openModalFn) {
+                setTimeout(openModalFn, 100);
             }
 
             if (tabId !== 'tab-profile') {
@@ -3549,6 +4064,7 @@
 
         // ── Home Calendar Week Strip Navigation ──
         let currentCalendarShift = 0;
+        const monthNamesIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         function shiftHomeCalendar(days) {
             currentCalendarShift += days;
             const strip = document.getElementById('homeCalendarStrip');
@@ -3559,7 +4075,12 @@
             const startOfWeek = new Date(baseDate);
             startOfWeek.setDate(baseDate.getDate() - dayOfWeek);
 
-            const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            const monthLabel = document.getElementById('homeCalendarMonthLabel');
+            if (monthLabel) {
+                monthLabel.textContent = monthNamesIndo[baseDate.getMonth()] + ' ' + baseDate.getFullYear();
+            }
+
+            const dayNames = ['M', 'S', 'S', 'R', 'K', 'J', 'S'];
             let html = '';
             const today = new Date();
             for (let i = 0; i < 7; i++) {
@@ -3568,10 +4089,10 @@
                 const isToday = cur.toDateString() === today.toDateString();
                 const dStr = String(cur.getDate()).padStart(2, '0');
                 html += `
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.35rem 0.1rem; border-radius:16px; ${isToday ? 'background:#c8eccf; color:#14532d; font-weight:800; box-shadow:0 3px 8px rgba(34,197,94,0.18);' : 'color:#64748b;'}">
-                        <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase;">${dayNames[i]}</span>
-                        <span style="font-size:0.85rem; font-weight:${isToday ? '900' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
-                        <span style="width:4px; height:4px; ${isToday ? 'background:#16a34a;' : 'opacity:0;'} border-radius:50%;"></span>
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; ${isToday ? 'background:#cbf3cb; color:#14532d; font-weight:800; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;'} font-family:'Montserrat',sans-serif;">
+                        <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; ${isToday ? 'color:#15803d;' : 'color:#64748b;'}">${dayNames[i]}</span>
+                        <span style="font-size:0.9rem; font-weight:${isToday ? '800' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
+                        <span style="width:4px; height:4px; ${isToday ? 'background:#15803d;' : 'opacity:0;'} border-radius:50%;"></span>
                     </div>
                 `;
             }
@@ -4883,28 +5404,55 @@
         }
 
         // ══════════════════════════════════════════════════════════════════════
-        // BOTTOM NAV SYNC HELPER
+        // BOTTOM NAV SYNC HELPER (ZERO ANIMATION, NO JUMP)
         // ══════════════════════════════════════════════════════════════════════
         function updateBottomNav(activeKey) {
-            const map = {
-                'home':      'scanNavHome',
-                'data':      'scanNavData',
-                'scanner':   'scanNavScanner',
-                'gate':      'scanNavGate',
-                'profile':   'scanNavProfile',
-                'settings':  'scanNavProfile',
-                'rekening':  'scanNavProfile',
-            };
-            Object.entries(map).forEach(([key, id]) => {
+            const activeId = (activeKey === 'profile' || activeKey === 'settings' || activeKey === 'rekening')
+                ? 'scanNavProfile'
+                : (activeKey === 'data' ? 'scanNavData'
+                : (activeKey === 'scanner' ? 'scanNavScanner'
+                : (activeKey === 'gate' ? 'scanNavGate' : 'scanNavHome')));
+
+            ['scanNavHome', 'scanNavData', 'scanNavScanner', 'scanNavGate', 'scanNavProfile'].forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) return;
-                if (key === activeKey) {
+                if (id === activeId) {
                     el.classList.add('active');
                 } else {
                     el.classList.remove('active');
                 }
             });
         }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // MODALS FOR REKENING & KYC (Profile Menu Hub)
+        // ══════════════════════════════════════════════════════════════════════
+        function openRekeningModal() {
+            const m = document.getElementById('modalRekeningPencairan');
+            if (m) m.style.display = 'flex';
+        }
+        function closeRekeningModal() {
+            const m = document.getElementById('modalRekeningPencairan');
+            if (m) m.style.display = 'none';
+        }
+        function openKycModal() {
+            const m = document.getElementById('modalKycVerifikasi');
+            if (m) m.style.display = 'flex';
+        }
+        function closeKycModal() {
+            const m = document.getElementById('modalKycVerifikasi');
+            if (m) m.style.display = 'none';
+        }
+
+        // Auto open modals if query or session triggers it
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(session('bank_success') || session('bank_error') || request('tab') === 'rekening')
+                openRekeningModal();
+            @endif
+            @if(session('kyc_success') || session('kyc_error') || request('tab') === 'settings')
+                openKycModal();
+            @endif
+        });
 
         // Override switchTab to also sync bottom nav
         const _origSwitchTab = switchTab;

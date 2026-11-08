@@ -584,7 +584,7 @@
                     </svg>
                     Simpan
                 </button>
-                <a href="{{ route('creator.products.index', request('from') === 'pos' ? ['from' => 'pos'] : []) }}"
+                <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
                     class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
                     Batal
                 </a>
@@ -592,11 +592,11 @@
         </div>
 
         <div class="prof-content">
-            <form action="{{ route('creator.products.store', request('from') === 'pos' ? ['from' => 'pos'] : []) }}"
+            <form action="{{ route('creator.products.store', request('from') ? ['from' => request('from')] : []) }}"
                 method="POST" enctype="multipart/form-data" id="productForm">
                 @csrf
-                @if(request('from') === 'pos')
-                    <input type="hidden" name="from" value="pos">
+                @if(request('from'))
+                    <input type="hidden" name="from" value="{{ request('from') }}">
                 @endif
 
                 @if($errors->any())
@@ -634,7 +634,10 @@
                                 <div class="form-group">
                                     <label class="form-label">Tipe Produk <span>*</span></label>
                                     @php
-                                        $selectedType = old('product_type', request('from') === 'pos' ? 'makanan' : 'external_link');
+                                        $defaultType = 'external_link';
+                                        if (request('from') === 'pos') $defaultType = 'makanan';
+                                        elseif (request('from') === 'ticketing') $defaultType = 'ticket';
+                                        $selectedType = old('product_type', $defaultType);
                                     @endphp
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="handleProductTypeSelectChange(this)" required>
@@ -1502,7 +1505,7 @@
                 </div>
 
                 <div class="form-footer">
-                    <a href="{{ route('creator.products.index', request('from') === 'pos' ? ['from' => 'pos'] : []) }}"
+                    <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
                         class="btn-cancel">Batal</a>
                     <button type="submit" class="btn-submit">Simpan</button>
                 </div>
@@ -1953,6 +1956,14 @@
 
         const initPType = document.getElementById('productTypeSelect');
         if (initPType) toggleProductTypeFields(initPType.value);
+        try {
+            const urlParamsTicketing = new URLSearchParams(window.location.search);
+            if (urlParamsTicketing.get('from') === 'ticketing') {
+                if (typeof switchPricingTab === 'function') {
+                    switchPricingTab('fixed');
+                }
+            }
+        } catch (e) {}
         // Init affiliate toggle state
         const initAffToggle = document.getElementById('affiliateCommissionToggle');
         if (initAffToggle) handleAffiliateToggle(initAffToggle.checked);
@@ -2130,7 +2141,7 @@
             }
         });
         // ── KYC Verification Check on Product Type ──
-        let lastProductType = '{{ old('product_type', request('from') === 'pos' ? 'makanan' : 'external_link') }}';
+        let lastProductType = '{{ old('product_type', request('from') === 'pos' ? 'makanan' : (request('from') === 'ticketing' ? 'ticket' : 'external_link')) }}';
         const IS_CREATOR_VERIFIED = {{ auth()->user()?->isKycVerified() ? 'true' : 'false' }};
 
         function handleProductTypeSelectChange(selectEl) {

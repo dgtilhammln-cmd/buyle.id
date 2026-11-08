@@ -64,7 +64,7 @@
       <span class="btn-add-text-short">✨</span>
     </button>
 
-    <a href="{{ route('creator.products.create', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="btn-primary prod-add-btn">
+    <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}" class="btn-primary prod-add-btn">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />
@@ -1261,6 +1261,10 @@
           window.location.href = "{{ route('creator.pos.index') }}";
           return;
         }
+        if (urlParams.get('from') === 'ticketing' || document.referrer.includes('/event-attendance')) {
+          window.location.href = "{{ url('/creator/event-attendance') }}";
+          return;
+        }
       } catch(e) {}
       if (window.history.length > 1) {
         window.history.back();
@@ -1565,7 +1569,7 @@
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
               <div style="display:inline-flex;gap:.5rem;align-items:center;">
-                <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') === 'pos' ? ['from' => 'pos'] : [])) }}" title="Edit"
+                <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') ? ['from' => request('from')] : [])) }}" title="Edit"
                   style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(59,130,246,0.08);border-radius:8px;color:#3B82F6;text-decoration:none;transition:all .2s;"
                   onmouseover="this.style.background='rgba(59,130,246,0.16)'"
                   onmouseout="this.style.background='rgba(59,130,246,0.08)'">
@@ -1665,7 +1669,7 @@
               
             </div>
             <div style="display:flex;gap:.25rem;">
-              <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') === 'pos' ? ['from' => 'pos'] : [])) }}" title="Edit"
+              <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') ? ['from' => request('from')] : [])) }}" title="Edit"
                 style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;color:#3B82F6;transition:all .2s;"
                 onmouseover="this.style.background='rgba(59,130,246,0.2)'"
                 onmouseout="this.style.background='rgba(59,130,246,0.1)'">
@@ -2141,7 +2145,7 @@
     </a>
 
     {{-- 3. Tambah Produk FAB --}}
-    <a href="{{ route('creator.products.create', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="prod-fab-btn prod-fab-add" title="Tambah Produk">
+    <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}" class="prod-fab-btn prod-fab-add" title="Tambah Produk">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />

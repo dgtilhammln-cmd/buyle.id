@@ -1702,8 +1702,8 @@
                 @endif
             </div>
         </div>
-    @elseif(!request()->is('creator/pos*'))
-        {{-- Jika bukan POS, tampilkan navbar reguler Super App --}}
+    @elseif(!request()->is('creator/pos*') && !request()->is('creator/event-attendance*') && !request()->routeIs('creator.event.attendance'))
+        {{-- Jika bukan POS dan bukan event-attendance, tampilkan navbar reguler Super App --}}
         <nav class="superapp-bottom-nav" id="superappBottomNav">
             @php
                 $bottomNavIsBuyer = auth()->user()->role === 'buyer';

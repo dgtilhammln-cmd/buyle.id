@@ -574,19 +574,19 @@
                     </svg>
                     Simpan Perubahan
                 </button>
-                <a href="{{ route('creator.products.index', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
+                <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}" class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
                     Batal
                 </a>
             </div>
         </div>
 
         <div class="prof-content">
-            <form action="{{ route('creator.products.update', array_merge(['product' => $product->id], request('from') === 'pos' ? ['from' => 'pos'] : [])) }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('creator.products.update', array_merge(['product' => $product->id], request('from') ? ['from' => request('from')] : [])) }}" method="POST" enctype="multipart/form-data"
                 id="productForm">
                 @csrf
                 @method('PUT')
-                @if(request('from') === 'pos')
-                    <input type="hidden" name="from" value="pos">
+                @if(request('from'))
+                    <input type="hidden" name="from" value="{{ request('from') }}">
                 @endif
 
                 @if($errors->any())
@@ -624,7 +624,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Tipe Produk <span>*</span></label>
                                     @php
-                                        $defaultType = request('from') === 'pos' ? 'makanan' : $product->product_type;
+                                        $defaultType = request('from') === 'pos' ? 'makanan' : (request('from') === 'ticketing' ? 'ticket' : $product->product_type);
                                         $selectedType = old('product_type', $defaultType);
                                     @endphp
                                     <select name="product_type" id="productTypeSelect" class="form-input"
@@ -1535,7 +1535,7 @@
                 </div>
 
                 <div class="form-footer">
-                    <a href="{{ route('creator.products.index', request('from') === 'pos' ? ['from' => 'pos'] : []) }}" class="btn-cancel">Batal</a>
+                    <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}" class="btn-cancel">Batal</a>
                     <button type="submit" class="btn-submit">Simpan Perubahan</button>
                 </div>
             </form>
@@ -1887,7 +1887,7 @@
         }
 
         // ── KYC Verification Check on Product Type ──
-        let lastProductType = '{{ old('product_type', request('from') === 'pos' ? 'makanan' : $product->product_type) }}';
+        let lastProductType = '{{ old('product_type', request('from') === 'pos' ? 'makanan' : (request('from') === 'ticketing' ? 'ticket' : $product->product_type)) }}';
         const IS_CREATOR_VERIFIED = {{ auth()->user()?->isKycVerified() ? 'true' : 'false' }};
 
         function handleProductTypeSelectChange(selectEl) {
@@ -2125,6 +2125,14 @@
 
         const initPType = document.getElementById('productTypeSelect');
         if (initPType) toggleProductTypeFields(initPType.value);
+        try {
+            const urlParamsTicketing = new URLSearchParams(window.location.search);
+            if (urlParamsTicketing.get('from') === 'ticketing') {
+                if (typeof switchPricingTab === 'function') {
+                    switchPricingTab('fixed');
+                }
+            }
+        } catch (e) {}
 
         // ── Video Link Panel Toggle & Preview ──
         function toggleVideoLinkPanel() {

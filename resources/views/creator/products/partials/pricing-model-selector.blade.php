@@ -5,7 +5,8 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
 --}}
 
 @php
-    $pt = old('pricing_type', $product->pricing_type ?? 'fixed');
+    $defaultPt = request('from') === 'ticketing' ? 'fixed' : ($product->pricing_type ?? 'fixed');
+    $pt = old('pricing_type', $defaultPt);
     $pUnit = old('traktir_unit_name', $product->traktir_unit_name ?? 'Kopi');
     $pIcon = old('traktir_unit_icon', $product->traktir_unit_icon_key ?? 'coffee');
     $pPrice = (int) round((float) old('traktir_unit_price', $product->traktir_unit_price ?? 10000));
