@@ -676,6 +676,9 @@ Route::get('/robots.txt', function () {
 Route::get('/deploy-hostinger', function () {
     try {
         $gitOutput = shell_exec('git fetch origin main 2>&1 && git reset --hard origin/main 2>&1');
+        if (file_exists(base_path('public_html/fix_storage.php'))) {
+            @shell_exec('php ' . escapeshellarg(base_path('public_html/fix_storage.php')) . ' 2>&1');
+        }
         \Illuminate\Support\Facades\Artisan::call('storage:link');
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'TixHeroSlideSeeder', '--force' => true]);
