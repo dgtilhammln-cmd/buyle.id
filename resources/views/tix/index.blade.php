@@ -124,12 +124,50 @@
         }
 
         .tix-hero-line2 {
-            display: block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.85rem;
             white-space: nowrap;
             font-size: inherit;
             font-weight: inherit;
             color: #ffffff;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .tix-hero-btn-daftar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            color: #15803d;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.42rem 1.15rem;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+            vertical-align: middle;
+            white-space: nowrap;
+            text-shadow: none;
+            letter-spacing: 0;
+            line-height: 1;
+        }
+
+        .tix-hero-btn-daftar:hover {
+            background: #0f172a;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+        }
+
+        .tix-hero-btn-daftar svg {
+            transition: transform 0.2s ease;
+        }
+
+        .tix-hero-btn-daftar:hover svg {
+            transform: translateX(2px);
         }
 
         .tix-hero-agency-txt {
@@ -150,6 +188,15 @@
 
             .tix-hero-agency-txt {
                 font-size: inherit;
+            }
+
+            .tix-hero-line2 {
+                gap: 0.5rem;
+            }
+
+            .tix-hero-btn-daftar {
+                font-size: 0.72rem;
+                padding: 0.32rem 0.85rem;
             }
         }
 
@@ -817,6 +864,12 @@
                                 </span>
                                 <span class="tix-hero-line2">
                                     <span class="tix-hero-agency-txt">Event & Konser</span>
+                                    <a href="https://buyle.id/login-ticketing" class="tix-hero-btn-daftar">
+                                        <span>Daftar</span>
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </a>
                                 </span>
                             </h1>
                         </div>
