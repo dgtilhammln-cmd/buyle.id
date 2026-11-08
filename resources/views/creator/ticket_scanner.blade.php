@@ -2289,7 +2289,7 @@
                     <span class="tab-text-full">Akses Gate Panitia</span>
                     <small class="tab-text-mob">Gate Staff</small>
                 </button>
-                <a href="{{ route('ticketing.profile') }}" class="tab-btn" title="Menu & Profil Penyelenggara">
+                <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil Penyelenggara">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
@@ -2405,7 +2405,7 @@
                                 <span style="font-size:0.72rem; color:#b45309;">Selesaikan verifikasi untuk akses penuh Scanner & Pencairan.</span>
                             </div>
                         </div>
-                        <a href="{{ route('ticketing.profile') }}" style="background:#d97706; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.72rem; font-weight:700; text-decoration:none; display:inline-block; flex-shrink:0;">
+                        <a href="{{ route('creator.ticket.profile') }}" style="background:#d97706; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.72rem; font-weight:700; text-decoration:none; display:inline-block; flex-shrink:0;">
                             Verifikasi
                         </a>
                     </div>
@@ -2616,7 +2616,7 @@
                         </div>
                         <h3 style="font-size: 0.98rem; font-weight: 800; color: #92400e; margin: 0 0 0.4rem;">Verifikasi e-KYC Diperlukan</h3>
                         <p style="font-size: 0.8rem; color: #b45309; line-height: 1.55; margin: 0 0 1.15rem;">Fitur <strong>Live QR Scanner</strong> membutuhkan verifikasi e-KYC aktif demi keamanan sistem tiket event Anda.</p>
-                        <a href="{{ route('ticketing.profile') }}"
+                        <a href="{{ route('creator.ticket.profile') }}"
                             style="background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #fff; border: none; padding: 0.55rem 1.25rem; border-radius: 9px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 4px 12px rgba(30,179,73,0.3);">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
                             <span>Lengkapi e-KYC di Profil</span>
@@ -3439,8 +3439,8 @@
                 </svg>
             </button>
 
-            {{-- 5. Profil Event (Pojok Kanan - Direct ke /ticketing/profile) --}}
-            <a href="{{ route('ticketing.profile') }}" class="scanner-nav-item" id="scanNavProfile" title="Menu & Profil Penyelenggara">
+            {{-- 5. Profil Event (Pojok Kanan - Direct ke /creator/ticketing/profile) --}}
+            <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item" id="scanNavProfile" title="Menu & Profil Penyelenggara">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
@@ -3662,7 +3662,7 @@
 
         function switchTab(tabId, btn) {
             if (tabId === 'tab-settings' || tabId === 'tab-rekening' || tabId === 'tab-profile') {
-                window.location.href = "{{ route('ticketing.profile') }}";
+                window.location.href = "{{ route('creator.ticket.profile') }}";
                 return;
             }
 

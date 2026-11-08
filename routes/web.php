@@ -103,7 +103,7 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/cron/clean-temp-images', [\App\Http\Controllers\ToolController::class, 'cronCleanTempImages'])->name('cron.clean_temp_images');
     Route::get('/tix',            [\App\Http\Controllers\TixController::class, 'index'])->name('tix.index');
     Route::get('/ticketing',      [\App\Http\Controllers\TicketingController::class, 'index'])->name('ticketing');
-    Route::get('/ticketing/profile', [\App\Http\Controllers\TicketScannerController::class, 'profileMenu'])->middleware('auth')->name('ticketing.profile');
+    Route::get('/ticketing/profile', fn() => redirect()->route('creator.ticket.profile'))->name('ticketing.profile');
     Route::get('/kontak',         [ContactController::class,'index'])->name('contact');
     Route::post('/kontak',        [ContactController::class,'send'])->name('contact.send');
     Route::post('/chat-cs',       [\App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
@@ -1030,7 +1030,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
 
     // Ticket Gate Scanner & Attendance Data
     Route::get('/event-attendance', [\App\Http\Controllers\TicketScannerController::class, 'index'])->name('ticket.scanner');
-    Route::get('/ticketing/profile', fn() => redirect()->route('ticketing.profile'))->name('ticket.profile');
+    Route::get('/ticketing/profile', [\App\Http\Controllers\TicketScannerController::class, 'profileMenu'])->name('ticket.profile');
     Route::get('/scanner', fn() => redirect()->route('creator.ticket.scanner'))->name('scanner.index');
     Route::post('/scanner/verify', [\App\Http\Controllers\TicketScannerController::class, 'verify'])->name('ticket.scanner.verify');
     Route::post('/scanner/toggle-checkin/{ticket}', [\App\Http\Controllers\TicketScannerController::class, 'toggleCheckin'])->name('ticket.scanner.toggle-checkin');

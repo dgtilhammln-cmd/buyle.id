@@ -25,7 +25,7 @@ class TicketScannerController extends Controller
         $search = trim($request->input('search', ''));
         $rawTab = $request->input('tab');
         if (in_array($rawTab, ['settings', 'rekening', 'profile'])) {
-            return redirect()->route('ticketing.profile');
+            return redirect()->route('creator.ticket.profile');
         } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
             $activeTab = $rawTab;
         } else {
@@ -968,7 +968,7 @@ class TicketScannerController extends Controller
 
         if ($request->header('referer') && str_contains($request->header('referer'), 'ticketing/profile')) {
             return redirect()
-                ->route('ticketing.profile')
+                ->route('creator.ticket.profile')
                 ->with('bank_success', 'Rekening pencairan berhasil disimpan!');
         }
 
@@ -978,7 +978,7 @@ class TicketScannerController extends Controller
     }
 
     /**
-     * Halaman Menu & Profil Penyelenggara Tiket (/ticketing/profile).
+     * Halaman Menu & Profil Penyelenggara Tiket (/creator/ticketing/profile).
      * Desain 100% konsisten & identik dengan /creator/pos/profile.
      */
     public function profileMenu(Request $request)
@@ -1011,12 +1011,16 @@ class TicketScannerController extends Controller
         $totalEvents    = Product::where('seller_id', $sellerId)->where('product_type', 'ticket')->count();
         $gateStaffCount = \App\Models\GateStaff::where('creator_id', $sellerId)->count();
 
-        // Omset penjualan tiket
-        $ticketRevenue = \App\Models\OrderItem::whereHas('product', function ($pq) use ($sellerId) {
-            $pq->where('seller_id', $sellerId)->where('product_type', 'ticket');
-        })->whereHas('order', function ($oq) {
-            $oq->whereIn('payment_status', ['paid', 'settled', 'success', 'completed']);
-        })->sum('subtotal');
+        // Omset penjualan tiket (tanpa error column not found)
+        try {
+            $ticketRevenue = (float) \App\Models\OrderItem::whereHas('product', function ($pq) use ($sellerId) {
+                $pq->where('seller_id', $sellerId)->where('product_type', 'ticket');
+            })->whereHas('order', function ($oq) {
+                $oq->whereNotIn('status', ['cancelled', 'refunded', 'pending']);
+            })->sum('subtotal');
+        } catch (\Throwable $e) {
+            $ticketRevenue = 0;
+        }
 
         if ($ticketRevenue <= 0 && $gmv > 0) {
             $ticketRevenue = $gmv;

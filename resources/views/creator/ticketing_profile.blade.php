@@ -1043,7 +1043,7 @@
             </a>
 
             <!-- 5. Profile (ACTIVE) -->
-            <a href="{{ route('ticketing.profile') }}" class="pos-nav-item active" title="Profil Organizer">
+            <a href="{{ route('creator.ticket.profile') }}" class="pos-nav-item active" title="Profil Organizer">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
