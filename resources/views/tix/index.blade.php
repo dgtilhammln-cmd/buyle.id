@@ -137,17 +137,17 @@
         .tix-hero-btn-daftar {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: #ffffff;
             color: #15803d;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            padding: 0.42rem 1.15rem;
+            padding: 0.32rem 0.85rem;
             border-radius: 999px;
             text-decoration: none;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             vertical-align: middle;
             white-space: nowrap;
             text-shadow: none;
@@ -156,10 +156,10 @@
         }
 
         .tix-hero-btn-daftar:hover {
-            background: #0f172a;
-            color: #ffffff;
+            color: #15803d;
+            background: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
         }
 
         .tix-hero-btn-daftar svg {
@@ -195,8 +195,8 @@
             }
 
             .tix-hero-btn-daftar {
-                font-size: 0.72rem;
-                padding: 0.32rem 0.85rem;
+                font-size: 0.68rem;
+                padding: 0.25rem 0.65rem;
             }
         }
 
@@ -864,9 +864,9 @@
                                 </span>
                                 <span class="tix-hero-line2">
                                     <span class="tix-hero-agency-txt">Event & Konser</span>
-                                    <a href="https://buyle.id/login-ticketing" class="tix-hero-btn-daftar">
-                                        <span>Daftar</span>
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <a href="https://buyle.id/ticketing" class="tix-hero-btn-daftar" title="Pelajari lebih lanjut">
+                                        <span>Pelajari lebih lanjut</span>
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                             <polyline points="9 18 15 12 9 6"></polyline>
                                         </svg>
                                     </a>
