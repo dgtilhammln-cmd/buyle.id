@@ -48,7 +48,7 @@
         .tix-hero-dark-card {
             background: linear-gradient(180deg, #1db349 10%, #a4ff01 100%);
             border-radius: 32px; /* Beautiful curved corners on all 4 sides */
-            padding: 3.25rem 3rem 0; /* No bottom padding: banner sits on lower edge and overlaps */
+            padding: 3.25rem 3rem 165px; /* 165px bottom space exactly matches the red line */
             border: none;
             box-shadow: 0 16px 40px rgba(29, 179, 73, 0.18);
             color: #ffffff;
@@ -57,7 +57,7 @@
 
         @media (max-width: 900px) {
             .tix-hero-dark-card {
-                padding: 2rem 1.4rem 0;
+                padding: 2rem 1.4rem 110px;
                 border-radius: 24px;
             }
         }
@@ -67,7 +67,7 @@
                 margin-bottom: 1.25rem;
             }
             .tix-hero-dark-card {
-                padding: 1.4rem 1rem 0;
+                padding: 1.4rem 1rem 90px;
                 border-radius: 18px;
             }
         }
@@ -206,19 +206,18 @@
             letter-spacing: -0.01em;
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 7px;
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
 
-        .tix-stat-plus {
+        .tix-stat-num svg {
+            flex-shrink: 0;
             color: #ffffff;
-            font-size: 0.95rem;
-            font-weight: 600;
         }
 
         .tix-stat-lbl {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.92);
             font-weight: 500;
             white-space: nowrap;
         }
@@ -238,12 +237,14 @@
             position: relative;
             background: #0f172a;
             z-index: 10;
-            margin-bottom: -270px; /* White background rises exactly to the red line */
+            margin-top: -165px; /* Sits 165px inside the green card, remainder in pure white! */
+            margin-bottom: 0;
+            max-width: 100%;
         }
 
         @media (max-width: 900px) {
             .tix-hero-banner-frame {
-                margin-bottom: -180px;
+                margin-top: -110px;
                 border-radius: 16px;
                 box-shadow: 0 16px 35px rgba(0, 0, 0, 0.22);
             }
@@ -251,7 +252,7 @@
 
         @media (max-width: 600px) {
             .tix-hero-banner-frame {
-                margin-bottom: -120px;
+                margin-top: -90px;
                 border-radius: 14px;
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             }
@@ -444,8 +445,8 @@
         .tix-partners-white-section {
             background: transparent;
             border: none;
-            padding-top: 305px; /* Leaves clear space for the bottom half of the overlapping banner */
-            padding-bottom: 2.25rem;
+            padding-top: 2.25rem;
+            padding-bottom: 2rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -453,14 +454,14 @@
 
         @media (max-width: 900px) {
             .tix-partners-white-section {
-                padding-top: 215px;
-                padding-bottom: 1.75rem;
+                padding-top: 1.75rem;
+                padding-bottom: 1.5rem;
             }
         }
 
         @media (max-width: 600px) {
             .tix-partners-white-section {
-                padding-top: 145px;
+                padding-top: 1.5rem;
                 padding-bottom: 1.25rem;
             }
         }
@@ -753,7 +754,7 @@
             {{-- ══ 1. HERO SPLIT SECTION (EXACT IMAGE 2 OVERLAP) ══ --}}
             <div class="tix-hero-outer-wrap">
 
-                {{-- Dark Top Card (Ends at the red line, behind the top half of the banner) --}}
+                {{-- Green Card (Ends at the red line, behind the top half of the banner) --}}
                 <div class="tix-hero-dark-card">
                     {{-- Top Row: Heading on Left & Description / Stats on Right --}}
                     <div class="tix-hero-top-row">
@@ -763,10 +764,6 @@
                                     Solusi <span class="tix-highlight-text">Smart E-Ticketing</span>
                                 </span>
                                 <span class="tix-hero-line2">
-                                    <span class="tix-hero-badge-est">
-                                        <span>RESMI</span>
-                                        <strong>2026</strong>
-                                    </span>
                                     <span class="tix-hero-agency-txt">Event & Konser</span>
                                 </span>
                             </h1>
@@ -779,33 +776,43 @@
                             <div class="tix-hero-stats-wrap">
                                 <div class="tix-hero-stat-item">
                                     <div class="tix-stat-num">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                        </svg>
                                         <span>0,1s</span>
-                                        <span class="tix-stat-plus">⚡</span>
                                     </div>
                                     <div class="tix-stat-lbl">Scan Kilat Anti Loading</div>
                                 </div>
                                 <div class="tix-hero-stat-sep"></div>
                                 <div class="tix-hero-stat-item">
                                     <div class="tix-stat-num">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                            <polyline points="9 12 11 14 15 10"></polyline>
+                                        </svg>
                                         <span>100%</span>
-                                        <span class="tix-stat-plus">✓</span>
                                     </div>
                                     <div class="tix-stat-lbl">Bebas Tiket Palsu</div>
                                 </div>
                                 <div class="tix-hero-stat-sep"></div>
                                 <div class="tix-hero-stat-item">
                                     <div class="tix-stat-num">
-                                        <span>Bebas</span>
-                                        <span class="tix-stat-plus">Antre</span>
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <polyline points="16 11 18 13 22 9"></polyline>
+                                        </svg>
+                                        <span>Bebas Antre</span>
                                     </div>
                                     <div class="tix-stat-lbl">Gate Masuk & CO Cepat</div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {{-- Center: Nested 1920x600 Banner Frame Protruding Down into the White Area --}}
-                    <div class="tix-hero-banner-frame">
+                {{-- Center: Nested 1920x600 Banner Frame Protruding Down into the White Area --}}
+                <div class="tix-hero-banner-frame">
                         <div class="tix-carousel-container" id="tixCarousel">
                             <div class="tix-carousel-viewport">
                                 <div class="tix-carousel-track" id="tixCarouselTrack">
@@ -851,7 +858,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
                 {{-- White Section Below Dark Card (Holds the protruding lower half of banner + 3 Media Partner Logos) --}}
                 @php
