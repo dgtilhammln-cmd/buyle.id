@@ -229,8 +229,35 @@
 
         @media (max-width: 600px) {
             .tix-hero-stats-wrap {
-                gap: 1rem;
+                gap: 0.25rem;
                 justify-content: space-between;
+                width: 100%;
+            }
+
+            .tix-hero-stat-item {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .tix-stat-num {
+                font-size: 0.95rem;
+                gap: 4px;
+            }
+
+            .tix-stat-num svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .tix-stat-lbl {
+                font-size: 0.62rem;
+                white-space: normal;
+                line-height: 1.15;
+            }
+
+            .tix-hero-stat-sep {
+                height: 22px;
+                margin: 0 2px;
             }
         }
 
@@ -651,6 +678,41 @@
             flex-wrap: wrap;
         }
 
+        @media (max-width: 600px) {
+            .tix-search-bar-wrap {
+                padding: 0.5rem 0.65rem;
+                gap: 0.5rem;
+                margin-bottom: 1.75rem;
+            }
+
+            .tix-filter-chips {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                width: 100%;
+                gap: 0.35rem;
+                padding-bottom: 2px;
+            }
+
+            .tix-filter-chips::-webkit-scrollbar {
+                display: none;
+            }
+
+            .tix-chip {
+                padding: 0.28rem 0.65rem;
+                font-size: 0.72rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+                gap: 4px;
+            }
+
+            .tix-chip svg {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
         .tix-chip {
             padding: 0.35rem 0.85rem;
             border-radius: 999px;
@@ -687,6 +749,73 @@
             color: #ffffff;
             transform: translateY(-1px);
             box-shadow: 0 6px 18px rgba(30, 179, 73, 0.45);
+        }
+
+        /* Section Header & Title / Reset Link */
+        .tix-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tix-section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .tix-reset-btn {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1eb349;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tix-section-sub {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #94A3B8;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            .tix-section-header {
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .tix-section-title {
+                font-size: 0.95rem;
+                gap: 0.3rem;
+            }
+
+            .tix-reset-btn {
+                font-size: 0.7rem;
+                gap: 0.2rem;
+            }
+
+            .tix-reset-btn svg {
+                width: 12px;
+                height: 12px;
+            }
+
+            .tix-section-sub {
+                font-size: 0.68rem;
+            }
         }
 
         /* ══════════════════════════════════════════════════════════════════════
@@ -1091,13 +1220,11 @@
 
             {{-- ══ 4. SECTION: TIKET EVENT & KONSER (DYNAMIC REALTIME RESULTS) ══ --}}
             <section style="margin-bottom: 2.75rem;" id="event-terdekat">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                    <h2 id="tixSectionTitle"
-                        style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <div class="tix-section-header">
+                    <h2 id="tixSectionTitle" class="tix-section-title">
                         Tiket Event & Konser
                     </h2>
-                    <a href="javascript:void(0)" id="tixResetBtn" onclick="tixResetAll()"
-                        style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                    <a href="javascript:void(0)" id="tixResetBtn" onclick="tixResetAll()" class="tix-reset-btn">
                         <span id="tixResetBtnText">Lihat Semua Tiket</span>
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                             viewBox="0 0 24 24">
@@ -1166,14 +1293,13 @@
 
             {{-- ══ 5. SECTION: EVENT BERAKHIR ══ --}}
             <section style="margin-bottom: 2.75rem;" id="event-berakhir">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                <div class="tix-section-header">
                     <div>
-                        <h2
-                            style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0;">
+                        <h2 class="tix-section-title">
                             Event Berakhir
                         </h2>
                     </div>
-                    <span style="font-size: 0.82rem; font-weight: 600; color: #94A3B8;">
+                    <span class="tix-section-sub">
                         Arsip Kegiatan & Dokumentasi
                     </span>
                 </div>
