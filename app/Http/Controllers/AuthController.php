@@ -475,6 +475,9 @@ class AuthController extends Controller
     // ── Google OAuth Redirect ──
     public function googleRedirect(Request $request)
     {
+        if ($request->filled('role')) {
+            session()->put('auth_role_requested', $request->query('role'));
+        }
         if ($request->filled('redirect')) {
             $redirect = $request->query('redirect');
             if (Str::startsWith($redirect, [url('/'), '/'])) {
@@ -503,7 +506,8 @@ class AuthController extends Controller
 
         $oldSessionId = request()->session()->getId();
         $target = session('auth_redirect') ?? session('url.intended');
-        session()->forget(['auth_redirect', 'url.intended']);
+        $roleRequested = session('auth_role_requested');
+        session()->forget(['auth_redirect', 'url.intended', 'auth_role_requested']);
 
         if ($target && Str::contains($target, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar', '/auth/google'])) {
             $target = null;
@@ -523,6 +527,9 @@ class AuthController extends Controller
             if (!$user->avatar && $googleUser->getAvatar()) {
                 $updates['avatar'] = $googleUser->getAvatar();
             }
+            if ($roleRequested === 'seller' && $user->role === 'buyer') {
+                $updates['role'] = 'seller';
+            }
             if (!empty($updates)) {
                 $user->update($updates);
             }
@@ -535,6 +542,8 @@ class AuthController extends Controller
                 $username = $base . $i++;
             }
 
+            $userRole = ($roleRequested === 'seller') ? 'seller' : 'buyer';
+
             $user = User::create([
                 'name'      => $googleUser->getName(),
                 'email'     => $googleUser->getEmail(),
@@ -542,7 +551,7 @@ class AuthController extends Controller
                 'google_id' => $googleUser->getId(),
                 'username'  => $username,
                 'password'  => Hash::make(Str::random(24)),
-                'role'      => 'buyer',
+                'role'      => $userRole,
             ]);
 
             try {
@@ -573,7 +582,7 @@ class AuthController extends Controller
         if ($user->role === 'super_admin' || $user->role === 'admin') {
             $fallback = route('admin.dashboard');
         } elseif ($user->role === 'seller') {
-            $fallback = route('creator.dashboard');
+            $fallback = ($roleRequested === 'seller') ? route('creator.ticket.scanner') : route('creator.dashboard');
         }
 
         $destination = $target ?: $fallback;

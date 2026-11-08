@@ -5,29 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Portal Tiket & Gatekeeper - Buyle.id</title>
+    <title>Portal Tiket & Gatekeeper · Buyle.id</title>
     <meta name="description"
-        content="Portal resmi penyelenggara event dan petugas panitia scanner tiket Buyle.id. Masuk dan validasi tiket dengan cepat dan aman.">
-    <meta name="theme-color" content="#f8fafc">
+        content="Platform e-ticketing modern untuk konser, webinar, dan festival. Masuk sebagai penyelenggara event atau petugas gate scanner.">
+    <meta name="theme-color" content="#030704">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <!-- Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
     <style>
         :root {
-            --pg: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
-            --pg-shadow: rgba(30, 179, 73, 0.32);
-            --pg-hover: linear-gradient(135deg, #18983e 0%, #95bd30 100%);
-            --bg-page: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --card-border: #e2e8f0;
+            --buyle-green: #1eb349;
+            --buyle-green-light: #a5cf37;
+            --buyle-emerald: #10b981;
+            --buyle-gradient: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            --buyle-gradient-hover: linear-gradient(135deg, #18983e 0%, #95bd30 100%);
+            --bg-dark: #030704;
+            --text-pure: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.72);
+            --text-muted: rgba(255, 255, 255, 0.45);
         }
 
         * {
@@ -38,756 +40,918 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html,
         body {
-            background: var(--bg-page);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: max(env(safe-area-inset-top, 0px), 1.25rem) 1rem max(env(safe-area-inset-bottom, 0px), 1.5rem);
-            position: relative;
+            height: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-pure);
             overflow-x: hidden;
         }
 
-        /* ── SUPER APP CONTAINER ── */
-        .portal-wrapper {
-            width: 100%;
-            max-width: 440px;
-            background: #ffffff;
-            border-radius: 28px;
-            padding: 2rem 1.65rem 2.25rem;
-            box-shadow: 0 14px 45px rgba(15, 23, 42, 0.05), 0 2px 10px rgba(15, 23, 42, 0.02);
-            border: 1.5px solid #f1f5f9;
-            position: relative;
-            z-index: 10;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* ── BRAND TOP BADGE ── */
-        .portal-header {
-            text-align: center;
-            margin-bottom: 1.75rem;
-        }
-
-        .portal-icon-pill {
-            width: 64px;
-            height: 64px;
-            border-radius: 20px;
-            background: var(--pg);
-            box-shadow: 0 10px 24px var(--pg-shadow);
-            display: inline-flex;
+        body {
+            display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            margin-bottom: 0.9rem;
+            min-height: 100dvh;
+            background: #020704;
+            position: relative;
         }
 
-        .portal-title {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--text-main);
-            letter-spacing: -0.02em;
-            line-height: 1.25;
+        /* ── AMBIENT BACKGROUND GLOW (DESKTOP CANVAS) ── */
+        .ambient-bg-glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background:
+                radial-gradient(circle at 50% 25%, rgba(30, 179, 73, 0.22) 0%, rgba(5, 18, 9, 0) 55%),
+                radial-gradient(circle at 85% 75%, rgba(165, 207, 55, 0.12) 0%, rgba(2, 7, 4, 0) 50%),
+                radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, rgba(2, 7, 4, 0) 50%),
+                #020704;
         }
 
-        .portal-subtitle {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            margin-top: 0.35rem;
-            font-weight: 500;
-            line-height: 1.5;
-        }
-
-        /* ── SMOOTH TRANSITION VIEWS ── */
-        .auth-view {
-            display: none;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .auth-view.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ── 3 PRIMARY ACTION BUTTON CARDS (INITIAL MENU) ── */
-        .action-cards-grid {
+        /* ── SMARTPHONE APP CANVAS / MOCKUP CONTAINER ── */
+        .phone-canvas {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            height: 100dvh;
+            max-height: 860px;
+            background: linear-gradient(180deg, #041c0e 0%, #030f07 35%, #020704 100%);
+            border-radius: 46px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                0 30px 90px rgba(0, 0, 0, 0.85),
+                0 0 60px rgba(30, 179, 73, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            justify-content: space-between;
+            padding: 1.25rem 1.65rem 1.5rem;
+            overflow: hidden;
+            box-sizing: border-box;
         }
 
-        .action-card-btn {
+        @media (max-width: 480px) {
+            .phone-canvas {
+                max-width: 100%;
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+                padding: max(env(safe-area-inset-top, 0px), 1rem) 1.45rem max(env(safe-area-inset-bottom, 0px), 1.25rem);
+            }
+        }
+
+        /* ── INNER LUSH MESH LIGHTING (UPPER HALF) ── */
+        .canvas-ambient-light {
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            right: -10%;
+            height: 65%;
+            background: radial-gradient(circle at 60% 35%, rgba(30, 179, 73, 0.58) 0%, rgba(165, 207, 55, 0.28) 42%, rgba(2, 7, 4, 0) 75%);
+            filter: blur(28px);
+            pointer-events: none;
+            z-index: 1;
+            transform: translateZ(0);
+        }
+
+        .canvas-content-wrap {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        /* ── 1. PHONE STATUS BAR ── */
+        .status-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
-            padding: 1.1rem 1.2rem;
-            background: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 20px;
-            text-align: left;
-            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            padding: 0.25rem 0.35rem 0.75rem;
+            user-select: none;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── 2. BRAND LOGO (Replaces Zentra) ── */
+        .brand-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-top: auto;
+            margin-bottom: 1.25rem;
+            user-select: none;
+        }
+
+        .brand-icon-mark {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: var(--buyle-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.4);
+            flex-shrink: 0;
+        }
+
+        .brand-text-label {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .brand-text-label .dot-accent {
+            color: #a5cf37;
+        }
+
+        .brand-tag-pill {
+            font-size: 0.62rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: rgba(30, 179, 73, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            padding: 2px 7px;
+            border-radius: 999px;
+            margin-left: 2px;
+        }
+
+        /* ── 3. CAROUSEL SLIDES WRAPPER ── */
+        .slider-viewport {
+            position: relative;
+            overflow: hidden;
+            touch-action: pan-y;
+            user-select: none;
+        }
+
+        .slides-container {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 300%;
+        }
+
+        .slide-item {
+            width: 33.333333%;
+            flex-shrink: 0;
+            padding-right: 0.5rem;
+            box-sizing: border-box;
+        }
+
+        .slide-headline {
+            font-size: 1.95rem;
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+        }
+
+        @media (max-width: 380px) {
+            .slide-headline {
+                font-size: 1.75rem;
+            }
+        }
+
+        .hl-green {
+            background: linear-gradient(135deg, #22c55e 0%, #a3e635 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline;
+        }
+
+        .slide-subtitle {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+            font-weight: 500;
+            min-height: 48px;
+        }
+
+        /* ── 4. SLIDE DOT INDICATORS (Pill shape like reference) ── */
+        .slide-indicators-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .indicator-dot {
+            height: 4.5px;
+            width: 7px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.22);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+
+        .indicator-dot.active {
+            width: 30px;
+            background: var(--buyle-gradient);
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+        }
+
+        /* ── 5. THREE ACTION BUTTONS ── */
+        .actions-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Button 1: Daftar Penyelenggara (Primary Green Curved Button) */
+        .btn-register-organizer {
+            width: 100%;
+            height: 54px;
+            border-radius: 999px;
+            background: var(--buyle-gradient);
+            color: #ffffff;
+            font-size: 0.96rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(30, 179, 73, 0.42), 0 2px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
-            width: 100%;
         }
 
-        .action-card-btn:hover {
+        .btn-register-organizer:hover {
             transform: translateY(-2px);
-            border-color: #a5cf37;
-            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.12);
+            box-shadow: 0 14px 30px rgba(30, 179, 73, 0.55);
+            background: var(--buyle-gradient-hover);
         }
 
-        .action-card-btn:active {
+        .btn-register-organizer:active {
             transform: scale(0.98);
         }
 
-        .action-card-left {
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
-            min-width: 0;
-            flex: 1;
-        }
-
-        .action-card-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: #f0fdf4;
-            color: #1eb349;
-            border: 1px solid #dcfce7;
-            transition: transform 0.2s ease;
-        }
-
-        .action-card-btn:hover .action-card-icon {
-            transform: scale(1.06);
-            background: var(--pg);
+        /* Button 2: Login Penyelenggara (Frosted Dark Glass Button) */
+        .btn-login-organizer {
+            width: 100%;
+            height: 50px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: #ffffff;
-            border-color: transparent;
-        }
-
-        .action-card-text {
-            min-width: 0;
-        }
-
-        .action-card-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #0f172a;
-            display: block;
-            margin-bottom: 0.2rem;
+            font-size: 0.92rem;
+            font-weight: 700;
             letter-spacing: -0.01em;
-        }
-
-        .action-card-desc {
-            font-size: 0.76rem;
-            color: #64748b;
-            font-weight: 500;
-            line-height: 1.4;
-            display: block;
-        }
-
-        .action-card-arrow {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #f8fafc;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #94a3b8;
-            flex-shrink: 0;
-            transition: all 0.2s ease;
+            gap: 0.5rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .action-card-btn:hover .action-card-arrow {
-            background: var(--pg);
+        .btn-login-organizer:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-login-organizer:active {
+            transform: scale(0.98);
+        }
+
+        /* Button 3: Login Scanner (Sleek Minimal Text Link) */
+        .btn-login-scanner {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            cursor: pointer;
+            padding: 0.4rem;
+            text-decoration: none;
+            transition: color 0.18s ease;
+            margin-top: 0.25rem;
+        }
+
+        .btn-login-scanner strong {
+            color: #4ade80;
+            font-weight: 700;
+        }
+
+        .btn-login-scanner:hover {
             color: #ffffff;
-            transform: translateX(3px);
         }
 
-        /* ── TOP NAV BAR FOR FORMS (BACK BUTTON) ── */
-        .form-top-nav {
+        /* ── 6. BOTTOM HOME INDICATOR (iOS Bar) ── */
+        .home-indicator-wrap {
+            display: flex;
+            justify-content: center;
+            padding-top: 0.5rem;
+        }
+
+        .home-indicator-bar {
+            width: 134px;
+            height: 4.5px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* ── 7. SCANNER STAFF LOGIN MODAL / BOTTOM SHEET ── */
+        .scanner-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .scanner-modal-backdrop.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        @media (min-width: 640px) {
+            .scanner-modal-backdrop {
+                align-items: center;
+                padding: 1rem;
+            }
+        }
+
+        .scanner-sheet {
+            width: 100%;
+            max-width: 440px;
+            background: #09130c;
+            border: 1.5px solid rgba(34, 197, 94, 0.3);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(30, 179, 73, 0.25);
+            border-radius: 32px 32px 0 0;
+            padding: 1.25rem 1.65rem 2rem;
+            box-sizing: border-box;
+            transform: translateY(100%);
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (min-width: 640px) {
+            .scanner-sheet {
+                border-radius: 32px;
+                transform: scale(0.95) translateY(20px);
+                transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+        }
+
+        .scanner-modal-backdrop.active .scanner-sheet {
+            transform: translateY(0);
+        }
+
+        @media (min-width: 640px) {
+            .scanner-modal-backdrop.active .scanner-sheet {
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .sheet-drag-handle {
+            width: 36px;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.22);
+            margin: 0 auto 1.15rem;
+        }
+
+        .sheet-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 0.75rem;
-            margin-bottom: 1.35rem;
-            padding-bottom: 0.85rem;
-            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 1.25rem;
         }
 
-        .btn-back-menu {
-            display: inline-flex;
+        .sheet-title-group {
+            display: flex;
             align-items: center;
-            gap: 0.4rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            color: #475569;
-            font-size: 0.78rem;
-            font-weight: 700;
-            padding: 0.45rem 0.8rem;
+            gap: 0.75rem;
+        }
+
+        .sheet-icon-box {
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.18s ease;
+            background: rgba(30, 179, 73, 0.18);
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            color: #4ade80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .btn-back-menu:hover {
-            background: #f1f5f9;
-            color: #0f172a;
-        }
-
-        .form-badge-tag {
-            font-size: 0.7rem;
+        .sheet-title {
+            font-size: 1.05rem;
             font-weight: 800;
-            color: #059669;
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            padding: 0.25rem 0.65rem;
-            border-radius: 9999px;
-            letter-spacing: 0.02em;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.25;
         }
 
-        /* ── FORM ELEMENTS ── */
-        .form-group {
-            margin-bottom: 1rem;
+        .sheet-sub {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
-        .form-label {
-            display: block;
+        .btn-sheet-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-sheet-close:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+        }
+
+        /* Form Inputs */
+        .sheet-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .field-label {
             font-size: 0.78rem;
             font-weight: 700;
-            color: #334155;
-            margin-bottom: 0.4rem;
+            color: rgba(255, 255, 255, 0.85);
         }
 
-        .form-input-wrap {
+        .field-input-box {
             position: relative;
             display: flex;
             align-items: center;
         }
 
-        .form-input {
+        .field-input {
             width: 100%;
-            height: 48px;
-            border: 1.5px solid #e2e8f0;
+            height: 46px;
             border-radius: 14px;
-            padding: 0 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(255, 255, 255, 0.14);
+            padding: 0 1rem 0 2.6rem;
+            color: #ffffff;
             font-size: 0.88rem;
-            color: #0f172a;
-            background: #f8fafc;
+            font-weight: 600;
             outline: none;
-            transition: all 0.2s ease;
-            font-family: inherit;
+            transition: all 0.18s ease;
+            box-sizing: border-box;
         }
 
-        .form-input:focus {
-            background: #ffffff;
-            border-color: #1eb349;
-            box-shadow: 0 0 0 4px rgba(30, 179, 73, 0.12);
+        .field-input:focus {
+            border-color: #22c55e;
+            background: rgba(30, 179, 73, 0.08);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
         }
 
-        .form-input.has-icon-right {
-            padding-right: 2.8rem;
+        .field-icon-left {
+            position: absolute;
+            left: 0.85rem;
+            color: #64748b;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
         }
 
-        .toggle-pwd {
+        .btn-toggle-pin {
             position: absolute;
             right: 0.75rem;
             background: none;
             border: none;
-            color: #94a3b8;
+            color: #64748b;
             cursor: pointer;
-            padding: 0.3rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            transition: color 0.18s ease;
+            padding: 4px;
         }
 
-        .toggle-pwd:hover {
-            color: #1eb349;
+        .btn-toggle-pin:hover {
+            color: #ffffff;
         }
 
-        /* ── PRIMARY SUBMIT BUTTON WITH SIGNATURE GREEN GRADIENT ── */
-        .btn-submit-gradient {
+        .btn-sheet-submit {
             width: 100%;
-            height: 50px;
-            border-radius: 14px;
-            background: var(--pg);
-            box-shadow: 0 8px 24px var(--pg-shadow);
-            border: none;
+            height: 48px;
+            border-radius: 999px;
+            background: var(--buyle-gradient);
             color: #ffffff;
             font-size: 0.92rem;
             font-weight: 800;
+            border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-            margin-top: 1.25rem;
-            letter-spacing: -0.01em;
+            box-shadow: 0 8px 20px rgba(30, 179, 73, 0.35);
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
         }
 
-        .btn-submit-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(30, 179, 73, 0.42);
-            filter: brightness(1.04);
+        .btn-sheet-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(30, 179, 73, 0.45);
         }
 
-        .btn-submit-gradient:active {
-            transform: scale(0.98);
-        }
-
-        .btn-submit-gradient:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* ── HELPER ROWS & FOOTERS ── */
-        .options-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            margin-top: 0.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .remember-label {
-            display: flex;
-            align-items: center;
-            gap: 0.45rem;
-            cursor: pointer;
-            color: #475569;
+        .alert-error-sheet {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #fca5a5;
+            font-size: 0.76rem;
             font-weight: 600;
-        }
-
-        .remember-label input[type="checkbox"] {
-            accent-color: #1eb349;
-            width: 15px;
-            height: 15px;
-            border-radius: 4px;
-        }
-
-        .switch-link-row {
-            text-align: center;
-            margin-top: 1.35rem;
-            font-size: 0.8rem;
-            color: #64748b;
-        }
-
-        .switch-link-btn {
-            background: none;
-            border: none;
-            color: #1eb349;
-            font-weight: 800;
-            cursor: pointer;
-            font-size: inherit;
-            text-decoration: underline;
-            padding: 0;
-            font-family: inherit;
-        }
-
-        .switch-link-btn:hover {
-            color: #15803d;
-        }
-
-        /* ── ALERTS / ERROR BANNERS ── */
-        .alert-box {
-            padding: 0.75rem 0.95rem;
+            padding: 0.65rem 0.85rem;
             border-radius: 12px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            line-height: 1.45;
-        }
-
-        .alert-danger {
-            background: #fef2f2;
-            border: 1.5px solid #fecaca;
-            color: #b91c1c;
-        }
-
-        .alert-success {
-            background: #f0fdf4;
-            border: 1.5px solid #bbf7d0;
-            color: #15803d;
-        }
-
-        .portal-bottom-footer {
-            margin-top: 1.75rem;
-            text-align: center;
-            font-size: 0.74rem;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        .portal-bottom-footer a {
-            color: #64748b;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .portal-bottom-footer a:hover {
-            color: #1eb349;
+            margin-bottom: 0.75rem;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="portal-wrapper">
+    {{-- Atmospheric Background for Desktop View --}}
+    <div class="ambient-bg-glow"></div>
 
-        {{-- ══ BRAND TOP HEADER (Always Visible) ══ --}}
-        <div class="portal-header">
-            <div class="portal-icon-pill">
-                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
+    {{-- Main Smartphone Canvas --}}
+    <main class="phone-canvas">
+        <div class="canvas-ambient-light"></div>
+
+        <div class="canvas-content-wrap">
+
+            {{-- 1. Status Bar Header --}}
+            <header class="status-bar">
+                <span id="statusBarTime">9:41</span>
+                <div class="status-icons">
+                    {{-- Cellular --}}
+                    <svg width="15" height="11" viewBox="0 0 17 11" fill="currentColor">
+                        <rect x="0" y="8" width="2.5" height="3" rx="0.5"/>
+                        <rect x="4.5" y="5.5" width="2.5" height="5.5" rx="0.5"/>
+                        <rect x="9" y="3" width="2.5" height="8" rx="0.5"/>
+                        <rect x="13.5" y="0" width="2.5" height="11" rx="0.5"/>
+                    </svg>
+                    {{-- Wi-Fi --}}
+                    <svg width="14" height="11" viewBox="0 0 16 12" fill="currentColor">
+                        <path d="M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4.95-3.34a7 7 0 019.9 0l-.7.7a6 6 0 00-8.5 0l-.7-.7zm-2.12-2.12a10 10 0 0114.14 0l-.7.7a9 9 0 00-12.74 0l-.7-.7z"/>
+                    </svg>
+                    {{-- Battery --}}
+                    <svg width="22" height="11" viewBox="0 0 24 12" fill="none">
+                        <rect x="0.5" y="0.5" width="20" height="11" rx="3.5" stroke="currentColor"/>
+                        <rect x="2" y="2" width="13" height="8" rx="2" fill="currentColor"/>
+                        <path d="M22 4v4" stroke="currentColor" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </header>
+
+            {{-- 2. Buyle Brand Logo Row (Replaces Zentra) --}}
+            <div class="brand-badge-row">
+                <div class="brand-icon-mark">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+                        <path d="M9 12c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3" fill="#ffffff"/>
+                    </svg>
+                </div>
+                <div class="brand-text-label">
+                    buyle<span class="dot-accent">.id</span>
+                    <span class="brand-tag-pill">TIX</span>
+                </div>
             </div>
-            <h1 class="portal-title">Buyle Ticketing & Gate</h1>
-            <p class="portal-subtitle">Portal Resmi Penyelenggara Event & Panitia Scanner Tiket</p>
+
+            {{-- 3. Carousel: 3 Slide Informasi Copywriting Indonesia To-The-Point & Bervalue --}}
+            <div class="slider-viewport" id="sliderViewport">
+                <div class="slides-container" id="slidesContainer">
+
+                    {{-- SLIDE 1: PENJUALAN TIKET --}}
+                    <article class="slide-item">
+                        <h1 class="slide-headline">
+                            Kelola Tiket Event,<br>
+                            <span class="hl-green">Semudah 1 Klik.</span>
+                        </h1>
+                        <p class="slide-subtitle">
+                            Platform e-ticketing modern untuk konser, festival, dan seminar. Atur kuota, kategori tiket, dan publikasi instan tanpa ribet.
+                        </p>
+                    </article>
+
+                    {{-- SLIDE 2: SCANNER & GATEKEEPER --}}
+                    <article class="slide-item">
+                        <h1 class="slide-headline">
+                            Scan Kilat 0,1 Detik,<br>
+                            <span class="hl-green">100% Bebas Antre.</span>
+                        </h1>
+                        <p class="slide-subtitle">
+                            Validasi QR code & barcode super cepat di gate panitia. Sistem proteksi anti-duplikasi menjamin tiket palsu tidak tembus.
+                        </p>
+                    </article>
+
+                    {{-- SLIDE 3: PENCAIRAN SALDO INSTAN --}}
+                    <article class="slide-item">
+                        <h1 class="slide-headline">
+                            Pencairan Saldo Instan,<br>
+                            <span class="hl-green">Aman & Terpercaya.</span>
+                        </h1>
+                        <p class="slide-subtitle">
+                            Pantau arus kas tiket secara real-time dari HP Anda. Payout otomatis langsung ke rekening bank & e-wallet kapan saja.
+                        </p>
+                    </article>
+
+                </div>
+
+                {{-- Pill-shaped 3 Dots Indicator --}}
+                <div class="slide-indicators-row" id="slideIndicators">
+                    <button type="button" class="indicator-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
+                    <button type="button" class="indicator-dot" onclick="goToSlide(1)" aria-label="Slide 2"></button>
+                    <button type="button" class="indicator-dot" onclick="goToSlide(2)" aria-label="Slide 3"></button>
+                </div>
+            </div>
+
+            {{-- 4. Three Action Buttons (Replaces Next & Skip) --}}
+            <div class="actions-group">
+
+                {{-- BUTTON 1: DAFTAR PENYELENGGARA (Direct Google OAuth -> Dashboard Ticketing) --}}
+                <a href="{{ route('auth.google', ['role' => 'seller', 'redirect' => route('creator.ticket.scanner')]) }}"
+                   class="btn-register-organizer" id="btnDaftarPenyelenggara" title="Daftar sebagai Penyelenggara Event">
+                    {{-- Google Icon --}}
+                    <svg width="19" height="19" viewBox="0 0 24 24">
+                        <path fill="#ffffff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#ffffff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#ffffff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#ffffff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span>Daftar Penyelenggara</span>
+                </a>
+
+                {{-- BUTTON 2: LOGIN PENYELENGGARA (Direct Google OAuth -> Dashboard Ticketing) --}}
+                <a href="{{ route('auth.google', ['role' => 'seller', 'redirect' => route('creator.ticket.scanner')]) }}"
+                   class="btn-login-organizer" id="btnLoginPenyelenggara" title="Login Penyelenggara Event">
+                    <span>Login Penyelenggara</span>
+                </a>
+
+                {{-- BUTTON 3: LOGIN SCANNER (Opens Staff Login Form Modal) --}}
+                <button type="button" class="btn-login-scanner" onclick="openScannerModal()" id="btnOpenScannerModal">
+                    Petugas Gate? <strong>Login Scanner &rarr;</strong>
+                </button>
+
+            </div>
+
+            {{-- 5. Bottom iOS Home Indicator --}}
+            <div class="home-indicator-wrap">
+                <div class="home-indicator-bar"></div>
+            </div>
+
         </div>
+    </main>
 
-        {{-- Global session alerts --}}
-        @if(session('success'))
-            <div class="alert-box alert-success">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
+    {{-- ══ SCANNER STAFF LOGIN BOTTOM SHEET / MODAL ══ --}}
+    <div class="scanner-modal-backdrop {{ ($errors->has('staff_name') || $errors->has('staff_password')) ? 'active' : '' }}"
+         id="scannerModalBackdrop" onclick="handleBackdropClick(event)">
+        <div class="scanner-sheet" id="scannerSheet">
+            <div class="sheet-drag-handle"></div>
 
-        @if($errors->any())
-            <div class="alert-box alert-danger">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <span>{{ $errors->first() }}</span>
-            </div>
-        @endif
-
-        {{-- ══════════════════════════════════════════════════════════════════
-             VIEW 1: MENU UTAMA (3 BUTTONS TAMPIL DI AWAL)
-        ══════════════════════════════════════════════════════════════════ --}}
-        <div id="viewMenu" class="auth-view {{ (!in_array($initialTab, ['register', 'organizer', 'staff']) && !$errors->any()) ? 'active' : '' }}">
-            <div class="action-cards-grid">
-
-                {{-- BUTTON 1: DAFTAR PENYELENGGARA --}}
-                <button type="button" class="action-card-btn" onclick="showView('register')">
-                    <div class="action-card-left">
-                        <div class="action-card-icon">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="8.5" cy="7" r="4" />
-                                <line x1="20" y1="8" x2="20" y2="14" />
-                                <line x1="23" y1="11" x2="17" y2="11" />
-                            </svg>
-                        </div>
-                        <div class="action-card-text">
-                            <span class="action-card-title">Daftar Penyelenggara</span>
-                            <span class="action-card-desc">Buka akun penyelenggara baru & buat tiket event</span>
-                        </div>
-                    </div>
-                    <div class="action-card-arrow">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <polyline points="9 18 15 12 9 6" />
+            <div class="sheet-header">
+                <div class="sheet-title-group">
+                    <div class="sheet-icon-box">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                            <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                            <rect x="7" y="7" width="10" height="10" rx="1" />
                         </svg>
                     </div>
+                    <div>
+                        <h3 class="sheet-title">Login Petugas Scanner</h3>
+                        <p class="sheet-sub">Validasi tiket gate konser & event</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-sheet-close" onclick="closeScannerModal()" aria-label="Tutup">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
+            </div>
 
-                {{-- BUTTON 2: LOGIN PENYELENGGARA --}}
-                <button type="button" class="action-card-btn" onclick="showView('organizer')">
-                    <div class="action-card-left">
-                        <div class="action-card-icon">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
+            {{-- Error alerts --}}
+            @if($errors->has('staff_name') || $errors->has('staff_password'))
+                <div class="alert-error-sheet">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <span>{{ $errors->first('staff_name') ?: $errors->first('staff_password') }}</span>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('ticketing.login.staff') }}" class="sheet-form">
+                @csrf
+                <div class="form-field">
+                    <label class="field-label" for="staffNameInput">Nama Petugas / Panitia</label>
+                    <div class="field-input-box">
+                        <span class="field-icon-left">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                             </svg>
-                        </div>
-                        <div class="action-card-text">
-                            <span class="action-card-title">Login Penyelenggara</span>
-                            <span class="action-card-desc">Masuk kelola event, rekap tiket & pantau gate</span>
-                        </div>
+                        </span>
+                        <input type="text" id="staffNameInput" name="name" class="field-input"
+                               placeholder="Contoh: Gate 1 - Budi" value="{{ old('name') }}" required autocomplete="off">
                     </div>
-                    <div class="action-card-arrow">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg>
-                    </div>
-                </button>
+                </div>
 
-                {{-- BUTTON 3: LOGIN PANITIA --}}
-                <button type="button" class="action-card-btn" onclick="showView('staff')">
-                    <div class="action-card-left">
-                        <div class="action-card-icon" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                                <rect x="7" y="7" width="10" height="10" rx="1" />
+                <div class="form-field">
+                    <label class="field-label" for="staffPinInput">Password / PIN Gate</label>
+                    <div class="field-input-box">
+                        <span class="field-icon-left">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                             </svg>
-                        </div>
-                        <div class="action-card-text">
-                            <span class="action-card-title">Login Panitia Gate</span>
-                            <span class="action-card-desc">Masuk scanner dengan Nama & Password panitia</span>
-                        </div>
-                    </div>
-                    <div class="action-card-arrow">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg>
-                    </div>
-                </button>
-
-            </div>
-        </div>
-
-        {{-- ══════════════════════════════════════════════════════════════════
-             VIEW 2: FORM DAFTAR PENYELENGGARA
-        ══════════════════════════════════════════════════════════════════ --}}
-        <div id="viewRegister" class="auth-view {{ $initialTab === 'register' ? 'active' : '' }}">
-            <div class="form-top-nav">
-                <button type="button" class="btn-back-menu" onclick="showView('menu')">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    <span>Kembali</span>
-                </button>
-                <span class="form-badge-tag">Penyelenggara Baru</span>
-            </div>
-
-            <form method="POST" action="{{ route('ticketing.register.organizer') }}">
-                @csrf
-                <div class="form-group">
-                    <label class="form-label">Nama Lengkap Penyelenggara</label>
-                    <div class="form-input-wrap">
-                        <input type="text" name="name" class="form-input" placeholder="Contoh: Andi Pratama" value="{{ old('name') }}" required autofocus>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Alamat Email</label>
-                    <div class="form-input-wrap">
-                        <input type="email" name="email" class="form-input" placeholder="nama@email.com" value="{{ old('email') }}" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">No. WhatsApp</label>
-                    <div class="form-input-wrap">
-                        <input type="tel" name="phone" class="form-input" placeholder="08xxxxxxxxxx" value="{{ old('phone') }}" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Kata Sandi</label>
-                    <div class="form-input-wrap">
-                        <input type="password" id="regPassword" name="password" class="form-input has-icon-right" placeholder="Minimal 6 karakter" required>
-                        <button type="button" class="toggle-pwd" onclick="togglePwd('regPassword', this)" title="Lihat Password">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </span>
+                        <input type="password" id="staffPinInput" name="password" class="field-input"
+                               placeholder="Masukkan PIN gate panitia" required autocomplete="off">
+                        <button type="button" class="btn-toggle-pin" onclick="togglePinVisibility()" title="Lihat PIN">
+                            <svg id="eyeIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Ulangi Kata Sandi</label>
-                    <div class="form-input-wrap">
-                        <input type="password" id="regPasswordConfirm" name="password_confirmation" class="form-input has-icon-right" placeholder="Ketik ulang kata sandi" required>
-                        <button type="button" class="toggle-pwd" onclick="togglePwd('regPasswordConfirm', this)" title="Lihat Password">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit-gradient">
-                    <span>Daftar Sebagai Penyelenggara</span>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </form>
-
-            <div class="switch-link-row">
-                Sudah punya akun penyelenggara?
-                <button type="button" class="switch-link-btn" onclick="showView('organizer')">Masuk di sini</button>
-            </div>
-        </div>
-
-        {{-- ══════════════════════════════════════════════════════════════════
-             VIEW 3: FORM LOGIN PENYELENGGARA
-        ══════════════════════════════════════════════════════════════════ --}}
-        <div id="viewOrganizer" class="auth-view {{ ($initialTab === 'organizer' || $errors->has('organizer_email')) ? 'active' : '' }}">
-            <div class="form-top-nav">
-                <button type="button" class="btn-back-menu" onclick="showView('menu')">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    <span>Kembali</span>
-                </button>
-                <span class="form-badge-tag">Penyelenggara</span>
-            </div>
-
-            <form method="POST" action="{{ route('ticketing.login.organizer') }}">
-                @csrf
-                <div class="form-group">
-                    <label class="form-label">Email atau No. WhatsApp</label>
-                    <div class="form-input-wrap">
-                        <input type="text" name="email" class="form-input" placeholder="Email atau 08xxxxxxxxxx" value="{{ old('email') }}" required autofocus>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Kata Sandi</label>
-                    <div class="form-input-wrap">
-                        <input type="password" id="orgPassword" name="password" class="form-input has-icon-right" placeholder="Masukkan kata sandi" required>
-                        <button type="button" class="toggle-pwd" onclick="togglePwd('orgPassword', this)" title="Lihat Password">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="options-row">
-                    <label class="remember-label">
-                        <input type="checkbox" name="remember" value="1" checked>
-                        <span>Ingat saya</span>
-                    </label>
-                    <a href="{{ route('password.request') }}" style="color:#64748b; text-decoration:none; font-weight:600;">Lupa sandi?</a>
-                </div>
-
-                <button type="submit" class="btn-submit-gradient">
-                    <span>Masuk Penyelenggara</span>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </form>
-
-            <div class="switch-link-row">
-                Belum punya akun penyelenggara?
-                <button type="button" class="switch-link-btn" onclick="showView('register')">Daftar sekarang</button>
-            </div>
-        </div>
-
-        {{-- ══════════════════════════════════════════════════════════════════
-             VIEW 4: FORM LOGIN PANITIA (GATE SCANNER)
-        ══════════════════════════════════════════════════════════════════ --}}
-        <div id="viewStaff" class="auth-view {{ ($initialTab === 'staff' || $errors->has('staff_name') || $errors->has('staff_password')) ? 'active' : '' }}">
-            <div class="form-top-nav">
-                <button type="button" class="btn-back-menu" onclick="showView('menu')">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    <span>Kembali</span>
-                </button>
-                <span class="form-badge-tag" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">Panitia Gate</span>
-            </div>
-
-            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.65rem 0.85rem; margin-bottom:1.15rem; font-size:0.75rem; color:#166534; line-height:1.45; display:flex; align-items:center; gap:0.45rem;">
-                <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <span>Masukkan <strong>Nama Panitia</strong> dan <strong>Password</strong> yang didaftarkan oleh pihak Penyelenggara Event.</span>
-            </div>
-
-            <form method="POST" action="{{ route('ticketing.login.staff') }}">
-                @csrf
-                <div class="form-group">
-                    <label class="form-label">Nama Panitia</label>
-                    <div class="form-input-wrap">
-                        <input type="text" name="name" class="form-input" placeholder="Contoh: Pintu Barat / Budi" value="{{ old('name') }}" required autofocus autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Password Panitia</label>
-                    <div class="form-input-wrap">
-                        <input type="password" id="staffPassword" name="password" class="form-input has-icon-right" placeholder="Masukkan password panitia" required autocomplete="off">
-                        <button type="button" class="toggle-pwd" onclick="togglePwd('staffPassword', this)" title="Lihat Password">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit-gradient">
-                    <span>Masuk Layar Scanner</span>
+                <button type="submit" class="btn-sheet-submit">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
                         <rect x="7" y="7" width="10" height="10" rx="1" />
                     </svg>
+                    <span>Masuk Layar Scanner</span>
                 </button>
             </form>
-
-            <div class="switch-link-row">
-                Anda Penyelenggara Event?
-                <button type="button" class="switch-link-btn" onclick="showView('organizer')">Masuk di sini</button>
-            </div>
         </div>
-
-        {{-- ══ FOOTER ══ --}}
-        <div class="portal-bottom-footer">
-            <a href="/">© {{ date('Y') }} Buyle.id</a> · Sistem Validasi Tiket Digital
-        </div>
-
     </div>
 
+    {{-- Interactive Carousel & Modal Logic --}}
     <script>
-        function showView(viewId) {
-            const views = {
-                'menu': document.getElementById('viewMenu'),
-                'register': document.getElementById('viewRegister'),
-                'organizer': document.getElementById('viewOrganizer'),
-                'staff': document.getElementById('viewStaff')
-            };
+        // Update live time on status bar mock
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            if (hours < 10) hours = '0' + hours;
+            if (minutes < 10) minutes = '0' + minutes;
+            const el = document.getElementById('statusBarTime');
+            if (el) el.textContent = hours + ':' + minutes;
+        }
+        updateClock();
+        setInterval(updateClock, 30000);
 
-            Object.values(views).forEach(function (v) {
-                if (v) {
-                    v.classList.remove('active');
-                    v.style.display = 'none';
-                }
+        // 3-Slide Carousel Logic
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const slidesContainer = document.getElementById('slidesContainer');
+        const dots = document.querySelectorAll('.indicator-dot');
+        let autoSlideTimer = null;
+
+        function goToSlide(index) {
+            currentSlide = (index + totalSlides) % totalSlides;
+            if (slidesContainer) {
+                slidesContainer.style.transform = `translateX(-${currentSlide * 33.333333}%)`;
+            }
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentSlide);
             });
-
-            const target = views[viewId];
-            if (target) {
-                target.style.display = 'block';
-                // Trigger smooth CSS animation
-                setTimeout(function () {
-                    target.classList.add('active');
-                    const firstInput = target.querySelector('input:not([type=hidden])');
-                    if (firstInput) firstInput.focus();
-                }, 20);
-            }
-
-            // Update URL query cleanly
-            try {
-                const url = new URL(window.location);
-                if (viewId === 'menu') {
-                    url.searchParams.delete('mode');
-                } else {
-                    url.searchParams.set('mode', viewId);
-                }
-                window.history.replaceState({}, '', url);
-            } catch (e) { }
+            resetAutoSlide();
         }
 
-        function togglePwd(inputId, btn) {
-            const input = document.getElementById(inputId);
-            if (!input) return;
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+        function resetAutoSlide() {
+            clearInterval(autoSlideTimer);
+            autoSlideTimer = setInterval(() => {
+                goToSlide(currentSlide + 1);
+            }, 5000);
+        }
+        resetAutoSlide();
+
+        // Touch Swipe Support for Mobile
+        const viewport = document.getElementById('sliderViewport');
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        if (viewport) {
+            viewport.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            viewport.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipeGesture();
+            }, { passive: true });
+        }
+
+        function handleSwipeGesture() {
+            const threshold = 40;
+            if (touchEndX < touchStartX - threshold) {
+                // Swipe Left -> Next Slide
+                goToSlide(currentSlide + 1);
+            } else if (touchEndX > touchStartX + threshold) {
+                // Swipe Right -> Prev Slide
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        // Scanner Modal Open / Close
+        function openScannerModal() {
+            const backdrop = document.getElementById('scannerModalBackdrop');
+            if (backdrop) {
+                backdrop.classList.add('active');
+                setTimeout(() => {
+                    const input = document.getElementById('staffNameInput');
+                    if (input) input.focus();
+                }, 300);
+            }
+        }
+
+        function closeScannerModal() {
+            const backdrop = document.getElementById('scannerModalBackdrop');
+            if (backdrop) {
+                backdrop.classList.remove('active');
+            }
+        }
+
+        function handleBackdropClick(e) {
+            if (e.target.id === 'scannerModalBackdrop') {
+                closeScannerModal();
+            }
+        }
+
+        // Toggle PIN Visibility
+        function togglePinVisibility() {
+            const pinInput = document.getElementById('staffPinInput');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (!pinInput) return;
+
+            if (pinInput.type === 'password') {
+                pinInput.type = 'text';
+                eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
             } else {
-                input.type = 'password';
-                btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+                pinInput.type = 'password';
+                eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
             }
         }
+
+        // Close on Escape Key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeScannerModal();
+            }
+        });
     </script>
 </body>
 
 </html>
-
