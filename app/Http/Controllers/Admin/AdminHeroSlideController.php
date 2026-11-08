@@ -24,7 +24,7 @@ class AdminHeroSlideController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'position'    => 'required|in:hero,utama,samping',
+            'position'    => 'required|in:hero,utama,samping,tix',
             'title'       => 'required|max:200',
             'description' => 'nullable|max:500',
             'icon'        => 'nullable|max:50',
@@ -63,7 +63,7 @@ class AdminHeroSlideController extends Controller
     public function update(Request $request, HeroSlide $heroSlide)
     {
         $validated = $request->validate([
-            'position'    => 'required|in:hero,utama,samping',
+            'position'    => 'required|in:hero,utama,samping,tix',
             'title'       => 'required|max:200',
             'description' => 'nullable|max:500',
             'icon'        => 'nullable|max:50',

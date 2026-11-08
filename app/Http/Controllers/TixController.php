@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\HeroSlide;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -49,14 +50,40 @@ class TixController extends Controller
             $baseQuery->where('event_type', $type);
         }
 
-        // 1. Event Terdekat (Upcoming Events: event_date >= today or null)
-        $upcomingEvents = (clone $baseQuery)
+        // AJAX Infinite Scroll Request for Upcoming Events
+        if ($request->ajax()) {
+            $page = (int) $request->input('page', 1);
+            $perPage = 8;
+            $paginated = (clone $baseQuery)
+                ->where(function ($q) use ($today) {
+                    $q->whereNull('event_date')
+                      ->orWhere('event_date', '>=', $today);
+                })
+                ->orderByRaw('CASE WHEN event_date IS NULL THEN 1 ELSE 0 END, event_date ASC')
+                ->paginate($perPage, ['*'], 'page', $page);
+
+            $html = view('tix.partials.event_cards', ['events' => $paginated->items()])->render();
+
+            return response()->json([
+                'html'         => $html,
+                'has_more'     => $paginated->hasMorePages(),
+                'current_page' => $paginated->currentPage(),
+                'last_page'    => $paginated->lastPage(),
+                'total'        => $paginated->total(),
+            ]);
+        }
+
+        // 1. Event Terdekat (Upcoming Events: paginated 8 per page)
+        $upcomingPaginated = (clone $baseQuery)
             ->where(function ($q) use ($today) {
                 $q->whereNull('event_date')
                   ->orWhere('event_date', '>=', $today);
             })
             ->orderByRaw('CASE WHEN event_date IS NULL THEN 1 ELSE 0 END, event_date ASC')
-            ->get();
+            ->paginate(8);
+
+        $upcomingEvents = $upcomingPaginated->items();
+        $hasMoreUpcoming = $upcomingPaginated->hasMorePages();
 
         // 2. Event Berakhir (Past Events: event_date < today)
         $pastEvents = (clone $baseQuery)
@@ -65,8 +92,8 @@ class TixController extends Controller
             ->orderBy('event_date', 'desc')
             ->get();
 
-        // 3. Carousel Banners (1920 x 600 style)
-        $banners = $this->buildBanners($upcomingEvents);
+        // 3. Carousel Banners (1920 x 600 clean image slides from Admin / Seeder)
+        $banners = $this->buildBanners();
 
         $seo = [
             'title'       => 'Buyle TIX – Marketplace Tiket Event, Konser & Webinar Online | ' . $siteName,
@@ -78,6 +105,7 @@ class TixController extends Controller
 
         return view('tix.index', compact(
             'upcomingEvents',
+            'hasMoreUpcoming',
             'pastEvents',
             'banners',
             'settings',
@@ -89,82 +117,42 @@ class TixController extends Controller
 
     /**
      * Build landscape banners (1920 x 600) for the top carousel.
-     * Combines active upcoming events with rich curated showcase slides.
+     * Dedicated pure image banners seeded for Buyle TIX (position = 'tix').
+     * Displays clean uploaded image or a modern placeholder (no text crop).
      *
-     * @param  \Illuminate\Support\Collection  $upcomingEvents
      * @return array
      */
-    protected function buildBanners($upcomingEvents): array
+    protected function buildBanners(): array
     {
         $banners = [];
 
-        // 1. Add real upcoming events that have featured images or standard images
-        foreach ($upcomingEvents as $evt) {
-            $img = $evt->featured_image ? asset('storage/' . $evt->featured_image) : ($evt->image ? asset('storage/' . $evt->image) : null);
-            $organizer = $evt->seller ? ($evt->seller->creatorProfile->display_name ?? $evt->seller->name) : 'Official Event Organizer';
+        // Fetch custom banners configured by Admin specifically for Buyle TIX (position = 'tix')
+        $adminSlides = HeroSlide::where('position', 'tix')
+            ->where('is_active', true)
+            ->ordered()
+            ->get();
 
-            $banners[] = [
-                'is_dynamic'  => true,
-                'title'       => $evt->name,
-                'organizer'   => $organizer,
-                'date'        => $evt->event_date ? $evt->event_date->translatedFormat('d M Y') : 'Segera Hadir',
-                'location'    => $evt->event_location ?: ($evt->event_type === 'online' ? 'Online Streaming' : 'Indonesia'),
-                'image'       => $img,
-                'price'       => 'Rp ' . number_format($evt->sale_price ?: $evt->price, 0, ',', '.'),
-                'badge'       => strtoupper($evt->event_type ?: 'EVENT'),
-                'url'         => route('products.show', $evt->slug),
-            ];
-
-            if (count($banners) >= 3) break;
+        // If none exist yet, automatically trigger seeder
+        if ($adminSlides->isEmpty()) {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'TixHeroSlideSeeder', '--force' => true]);
+                $adminSlides = HeroSlide::where('position', 'tix')
+                    ->where('is_active', true)
+                    ->ordered()
+                    ->get();
+            } catch (\Exception $e) {
+                // Ignore seeder exception if any
+            }
         }
 
-        // 2. Add curated showcase landscape slides (1920 x 600) matching Image 1 aesthetics
-        $showcases = [
-            [
-                'is_dynamic'  => false,
-                'title'       => 'KONSER NASYID NOSTALGIA',
-                'subtitle'    => 'SNADA ★ IZZATUL ISLAM ★ EDCOUSTIC ★ THE RAYHAN',
-                'organizer'   => 'TRUST ENTERTAINMENT',
-                'date'        => '15 NOV 2026',
-                'location'    => 'JAKARTA',
-                'image'       => null, // Will use CSS dark retro-stage synthwave gradient
-                'bg_gradient' => 'linear-gradient(135deg, #090a1a 0%, #171b3c 40%, #2a113a 70%, #0d1b2a 100%)',
-                'accent_color'=> '#38bdf8',
-                'badge'       => 'KONSER MUSIK',
-                'url'         => !empty($banners[0]['url']) ? $banners[0]['url'] : '#event-terdekat',
-            ],
-            [
-                'is_dynamic'  => false,
-                'title'       => 'INDONESIA DIGITAL SUMMIT 2026',
-                'subtitle'    => 'Artificial Intelligence, Future Tech & Creative Economy Expo',
-                'organizer'   => 'HVM DIGITAL X BLUEPRYNTS',
-                'date'        => '30 NOV 2026',
-                'location'    => 'SURABAYA',
-                'image'       => null,
-                'bg_gradient' => 'linear-gradient(135deg, #031e13 0%, #064e3b 45%, #0f172a 100%)',
-                'accent_color'=> '#34d399',
-                'badge'       => 'EXPO & CONFERENCE',
-                'url'         => !empty($banners[0]['url']) ? $banners[0]['url'] : '#event-terdekat',
-            ],
-            [
-                'is_dynamic'  => false,
-                'title'       => 'CREATOR FESTIVAL & TALKSHOW',
-                'subtitle'    => 'Monetisasi Karya, Bio Link & Solusi Ticketing Mandiri',
-                'organizer'   => 'BUYLE.ID CREATOR NETWORK',
-                'date'        => 'DESEMBER 2026',
-                'location'    => 'ONLINE & HYBRID',
-                'image'       => null,
-                'bg_gradient' => 'linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #0f766e 100%)',
-                'accent_color'=> '#a7f3d0',
-                'badge'       => 'WORKSHOP RESMI',
-                'url'         => url('/creator/products?from=ticketing'),
-            ],
-        ];
-
-        // Merge to guarantee at least 3 slides in the carousel
-        foreach ($showcases as $sc) {
-            if (count($banners) >= 5) break;
-            $banners[] = $sc;
+        foreach ($adminSlides as $slide) {
+            $banners[] = [
+                'id'          => $slide->id,
+                'title'       => $slide->title ?: 'Banner Buyle TIX',
+                'description' => $slide->description,
+                'image'       => $slide->image ? asset('storage/' . $slide->image) : null,
+                'url'         => $slide->button_url ?: '#event-terdekat',
+            ];
         }
 
         return $banners;

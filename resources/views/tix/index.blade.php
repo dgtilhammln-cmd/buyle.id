@@ -5,28 +5,18 @@
     <style>
         /* ══════════════════════════════════════════════════════════════════════
            BUYLE TIX — DEDICATED TICKETING MARKETPLACE
-           Theme: Montserrat, Modern Clean White + Emerald #1eb349 / #16a34a
+           Theme: Montserrat, Modern Clean White + Emerald Green (#1eb349 / #16a34a)
+           Exact Match to Homepage "Tiket Event & Konser" Section
         ══════════════════════════════════════════════════════════════════════ */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
-        :root {
-            --tix-green: #16a34a;
-            --tix-green-light: #22c55e;
-            --tix-green-gradient: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
-            --tix-dark: #0f172a;
-            --tix-muted: #64748b;
-            --tix-border: #e2e8f0;
-            --tix-bg: #f8fafc;
-        }
-
         .buyle-tix-page {
             font-family: 'Montserrat', sans-serif !important;
-            background: #f8fafc;
+            background: #F8FAFC;
             min-height: 100vh;
             padding-top: 5.5rem;
             padding-bottom: 5rem;
-            color: #0f172a;
-            overflow-x: hidden;
+            color: #0F172A;
         }
 
         .buyle-tix-page * {
@@ -36,13 +26,13 @@
 
         .tix-container {
             width: 100%;
-            max-width: 1320px;
+            max-width: 1240px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 1.25rem;
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           1. TOP BANNER CAROUSEL (1920 x 600 LANDSCAPE — EXACT STYLE IMAGE 1)
+           1. TOP BANNER CAROUSEL (1920 X 600 LANDSCAPE PURE IMAGE SLIDER)
         ══════════════════════════════════════════════════════════════════════ */
         .tix-banner-section {
             margin-bottom: 2.25rem;
@@ -52,16 +42,16 @@
         .tix-carousel-container {
             position: relative;
             width: 100%;
-            max-width: 1320px;
+            max-width: 1240px;
             margin: 0 auto;
         }
 
         .tix-carousel-viewport {
             overflow: hidden;
-            border-radius: 24px;
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08), 0 2px 10px rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            background: #0f172a;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+            border: 1px solid #E2E8F0;
+            background: #0F172A;
             position: relative;
         }
 
@@ -76,260 +66,82 @@
             width: 100%;
             position: relative;
             aspect-ratio: 1920 / 600;
-            min-height: 220px;
-            max-height: 440px;
+            min-height: 180px;
+            max-height: 420px;
             overflow: hidden;
             text-decoration: none;
             color: #ffffff;
-            display: flex;
-            align-items: center;
+            display: block;
+            background: #0F172A;
         }
 
         @media (max-width: 768px) {
             .tix-slide {
-                aspect-ratio: 16 / 8.5;
-                min-height: 195px;
+                aspect-ratio: 16 / 9;
+                min-height: 160px;
             }
-        }
-
-        @media (max-width: 480px) {
-            .tix-slide {
-                aspect-ratio: 16 / 10;
-                min-height: 185px;
-            }
-        }
-
-        /* Retro synth / concert stage mesh overlay */
-        .tix-slide-bg-grid {
-            position: absolute;
-            inset: 0;
-            background-size: 32px 32px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-            opacity: 0.6;
-            pointer-events: none;
         }
 
         .tix-slide-img {
-            position: absolute;
-            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 1;
+            display: block;
         }
 
-        .tix-slide-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.72) 48%, rgba(15, 23, 42, 0.88) 100%);
-            z-index: 2;
-        }
-
-        .tix-slide-content {
-            position: relative;
-            z-index: 3;
-            width: 100%;
-            height: 100%;
-            padding: 1.5rem 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .tix-slide-content {
-                padding: 1rem 1.25rem;
-                flex-direction: column;
-                justify-content: center;
-                align-items: flex-start;
-                gap: 0.6rem;
-            }
-        }
-
-        .tix-slide-left {
-            max-width: 65%;
-            min-width: 0;
-        }
-
-        @media (max-width: 768px) {
-            .tix-slide-left {
-                max-width: 100%;
-            }
-        }
-
-        .tix-slide-presenter {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: #94a3b8;
-            margin-bottom: 0.4rem;
-        }
-
-        @media (max-width: 640px) {
-            .tix-slide-presenter {
-                font-size: 0.65rem;
-                margin-bottom: 0.2rem;
-            }
-        }
-
-        .tix-slide-title {
-            font-size: clamp(1.2rem, 3.2vw, 2.4rem);
-            font-weight: 900;
-            color: #ffffff;
-            line-height: 1.15;
-            margin: 0 0 0.5rem 0;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-            text-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
-        }
-
-        .tix-slide-sub {
-            font-size: clamp(0.72rem, 1.2vw, 0.95rem);
-            color: #cbd5e1;
-            font-weight: 600;
-            line-height: 1.4;
-            margin: 0;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        .tix-slide-right {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-            .tix-slide-right {
-                text-align: left;
-                align-items: flex-start;
-                flex-direction: row;
-                gap: 0.75rem;
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
-
-        .tix-slide-loc-tag {
-            font-size: 1.1rem;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 0.04em;
-            line-height: 1.2;
-            text-transform: uppercase;
-        }
-
-        @media (max-width: 640px) {
-            .tix-slide-loc-tag {
-                font-size: 0.85rem;
-            }
-        }
-
-        .tix-slide-date-tag {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #38bdf8;
-            letter-spacing: 0.02em;
-        }
-
-        @media (max-width: 640px) {
-            .tix-slide-date-tag {
-                font-size: 0.8rem;
-            }
-        }
-
-        .tix-slide-cta-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
-            color: #ffffff;
-            font-size: 0.82rem;
-            font-weight: 800;
-            padding: 0.55rem 1.2rem;
-            border-radius: 999px;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.4);
-            margin-top: 0.35rem;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            transition: all 0.2s ease;
-        }
-
-        @media (max-width: 640px) {
-            .tix-slide-cta-btn {
-                padding: 0.4rem 0.85rem;
-                font-size: 0.74rem;
-                margin-top: 0;
-            }
-        }
-
-        /* Carousel Navigation Buttons (Identical to Image 1) */
+        /* Nav Prev / Next Circular Buttons */
         .tix-nav-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: #ffffff;
-            border: 1.5px solid #e2e8f0;
+            border: 1.5px solid #E2E8F0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0f172a;
+            color: #0F172A;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
             z-index: 10;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             outline: none;
         }
 
         .tix-nav-btn:hover {
-            background: #f8fafc;
+            background: #F8FAFC;
             transform: translateY(-50%) scale(1.08);
-            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
-        .tix-nav-btn.prev {
-            left: -18px;
-        }
-
-        .tix-nav-btn.next {
-            right: -18px;
-        }
+        .tix-nav-btn.prev { left: -16px; }
+        .tix-nav-btn.next { right: -16px; }
 
         @media (max-width: 768px) {
             .tix-nav-btn {
-                width: 36px;
-                height: 36px;
+                width: 34px;
+                height: 34px;
             }
             .tix-nav-btn.prev { left: 8px; }
             .tix-nav-btn.next { right: 8px; }
         }
 
-        /* Carousel Dash Indicators (Image 1 Style) */
+        /* Carousel Dash Indicators */
         .tix-carousel-dots {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 1rem;
+            margin-top: 0.85rem;
         }
 
         .tix-dot {
             height: 5px;
             width: 18px;
             border-radius: 999px;
-            background: #cbd5e1;
+            background: #CBD5E1;
             transition: all 0.3s ease;
             cursor: pointer;
             border: none;
@@ -337,8 +149,8 @@
         }
 
         .tix-dot.active {
-            width: 38px;
-            background: #eab308; /* Gold dash matching image 1 */
+            width: 36px;
+            background: #1eb349;
         }
 
         /* ══════════════════════════════════════════════════════════════════════
@@ -346,11 +158,11 @@
         ══════════════════════════════════════════════════════════════════════ */
         .tix-search-bar-wrap {
             background: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 0.65rem 0.9rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 0.65rem 0.85rem;
+            margin-bottom: 2.25rem;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.025);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -371,13 +183,13 @@
             border: none;
             outline: none;
             font-size: 0.88rem;
-            color: #0f172a;
+            color: #0F172A;
             font-weight: 600;
             background: transparent;
         }
 
         .tix-search-input::placeholder {
-            color: #94a3b8;
+            color: #94A3B8;
             font-weight: 500;
         }
 
@@ -395,387 +207,111 @@
             font-weight: 700;
             text-decoration: none;
             color: #475569;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
             transition: all 0.15s ease;
         }
 
         .tix-chip:hover {
-            background: #e2e8f0;
-            color: #0f172a;
+            background: #E2E8F0;
+            color: #0F172A;
         }
 
         .tix-chip.active {
-            background: #16a34a;
+            background: #1eb349;
             color: #ffffff;
-            border-color: #16a34a;
-            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+            border-color: #1eb349;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.28);
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           3. SECTION HEADER (100% IDENTICAL TO IMAGE 2)
-        ══════════════════════════════════════════════════════════════════════ */
-        .tix-section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.25rem;
-        }
-
-        .tix-section-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-        }
-
-        .tix-section-title {
-            font-size: 1.28rem;
-            font-weight: 800;
-            color: #0f172a;
-            margin: 0;
-            letter-spacing: -0.01em;
-            line-height: 1.2;
-        }
-
-        @media (max-width: 640px) {
-            .tix-section-title {
-                font-size: 1.1rem;
-            }
-        }
-
-        .tix-section-link {
-            font-size: 0.84rem;
-            font-weight: 700;
-            color: #16a34a;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            transition: all 0.15s ease;
-        }
-
-        .tix-section-link:hover {
-            color: #15803d;
-            transform: translateX(2px);
-        }
-
-        /* ══════════════════════════════════════════════════════════════════════
-           4. RESPONSIVE EVENT CARDS GRID (ANTI-BESAR, ANTI-NABRAK, ANTI-RUSAK)
+           3. RESPONSIVE EVENT CARDS GRID (EXACT HOMEPAGE CARD STYLES)
         ══════════════════════════════════════════════════════════════════════ */
         .tix-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1.25rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2.75rem;
         }
 
-        @media (max-width: 1180px) {
+        @media (max-width: 1140px) {
             .tix-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 1.1rem;
-            }
-        }
-
-        @media (max-width: 820px) {
-            .tix-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.95rem;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .tix-grid {
-                grid-template-columns: 1fr;
                 gap: 1rem;
             }
         }
 
-        /* ══════════════════════════════════════════════════════════════════════
-           5. EVENT CARD COMPONENT (100% IDENTICAL TO IMAGE 2)
-        ══════════════════════════════════════════════════════════════════════ */
-        .tix-card {
-            background: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 1rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.025);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
-            position: relative;
-            overflow: hidden;
+        @media (max-width: 780px) {
+            .tix-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.85rem;
+            }
         }
 
-        .tix-card:hover {
+        @media (max-width: 500px) {
+            .tix-grid {
+                grid-template-columns: 1fr;
+                gap: 0.85rem;
+            }
+        }
+
+        .article-card-box:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-            border-color: #cbd5e1;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-color: #CBD5E1;
         }
 
-        /* Card Image Container */
-        .tix-card-media {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            border-radius: 14px;
-            overflow: hidden;
-            background: #0f172a;
-            margin-bottom: 0.85rem;
-            flex-shrink: 0;
-            text-decoration: none;
-            display: block;
-        }
-
-        .tix-card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .tix-card:hover .tix-card-img {
+        .article-card-box:hover .article-banner-img {
             transform: scale(1.04);
-        }
-
-        /* Top Left Green Badge (EVENT / OFFLINE) */
-        .tix-media-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #16a34a;
-            color: #ffffff;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 3px 9px;
-            border-radius: 6px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-            z-index: 2;
-        }
-
-        .tix-media-badge.past {
-            background: #64748b;
-        }
-
-        /* Body Info Container */
-        .tix-card-body {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 0;
-        }
-
-        /* Rating & Verified Badge Row */
-        .tix-meta-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.45rem;
-        }
-
-        .tix-rating {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #94a3b8;
-        }
-
-        .tix-rating .star {
-            color: #94a3b8;
-            font-size: 0.95rem;
-        }
-
-        .tix-verified-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.72rem;
-            font-weight: 800;
-            color: #0d9488; /* Teal verified text */
-            letter-spacing: 0.01em;
-        }
-
-        .tix-verified-badge svg {
-            color: #0d9488;
-        }
-
-        /* Event Title (2 Lines clamped) */
-        .tix-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.35;
-            margin: 0 0 0.4rem 0;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-height: 2.65em;
-        }
-
-        .tix-title a {
-            color: inherit;
-            text-decoration: none;
-            transition: color 0.15s ease;
-        }
-
-        .tix-title a:hover {
-            color: #16a34a;
-        }
-
-        /* Creator / Organizer Name (Explicitly requested by user) */
-        .tix-organizer {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.76rem;
-            font-weight: 700;
-            color: #334155;
-            margin-bottom: 0.45rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .tix-organizer-avatar {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #dcfce7;
-            color: #166534;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.62rem;
-            font-weight: 800;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-
-        .tix-organizer-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .tix-organizer-name {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Date & Location Lines */
-        .tix-info-line {
-            display: flex;
-            align-items: center;
-            gap: 0.45rem;
-            font-size: 0.78rem;
-            color: #64748b;
-            font-weight: 500;
-            margin-bottom: 0.35rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .tix-info-line.location {
-            margin-bottom: 0.95rem;
-        }
-
-        .tix-info-icon {
-            font-size: 0.85rem;
-            line-height: 1;
-            flex-shrink: 0;
-        }
-
-        /* Card Bottom Row: Price & Lihat Button (Identical to Image 2) */
-        .tix-footer-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            margin-top: auto;
-            padding-top: 0.6rem;
-            border-top: 1px dashed #f1f5f9;
-        }
-
-        .tix-price {
-            font-size: 1.15rem;
-            font-weight: 900;
-            color: #16a34a;
-            line-height: 1.2;
-            letter-spacing: -0.01em;
-        }
-
-        .tix-price.past {
-            color: #64748b;
-        }
-
-        .tix-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.3rem;
-            background: #22c55e; /* Image 2 green pill button */
-            color: #ffffff;
-            font-size: 0.82rem;
-            font-weight: 700;
-            padding: 0.45rem 1.15rem;
-            border-radius: 999px;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.32);
-            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-            white-space: nowrap;
-            border: none;
-        }
-
-        .tix-btn:hover {
-            background: #16a34a;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
-            color: #ffffff;
-        }
-
-        .tix-btn.past {
-            background: #f1f5f9;
-            color: #475569;
-            box-shadow: none;
-        }
-
-        .tix-btn.past:hover {
-            background: #e2e8f0;
-            color: #0f172a;
         }
 
         /* Empty State */
         .tix-empty-card {
             background: #ffffff;
-            border: 1.5px dashed #cbd5e1;
-            border-radius: 20px;
+            border: 1.5px dashed #CBD5E1;
+            border-radius: 16px;
             padding: 3rem 1.5rem;
             text-align: center;
-            color: #64748b;
+            color: #64748B;
             grid-column: 1 / -1;
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           6. PROMOTER CTA BANNER (Footer Showcase)
+           4. SKELETON SHIMMER & LAZY LOAD STYLES
         ══════════════════════════════════════════════════════════════════════ */
+        @keyframes tixShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .tix-skeleton {
+            background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 37%, #F1F5F9 63%);
+            background-size: 400% 100%;
+            animation: tixShimmer 1.4s ease infinite;
+            border-radius: 10px;
+        }
+
+        .tix-skeleton-card {
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+        }
+
+        /* Promoter Footer Box */
         .tix-cta-box {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border-radius: 24px;
-            padding: 2.25rem 2.5rem;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            border-radius: 20px;
+            padding: 2.25rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1.5rem;
             color: #ffffff;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-top: 1.5rem;
             position: relative;
             overflow: hidden;
@@ -788,74 +324,84 @@
                 padding: 1.5rem;
             }
         }
-
-        .tix-cta-box::after {
-            content: '';
-            position: absolute;
-            right: -60px;
-            bottom: -60px;
-            width: 240px;
-            height: 240px;
-            background: radial-gradient(circle, rgba(34, 197, 94, 0.25) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
     </style>
 
     <div class="buyle-tix-page">
-        <div class="tix-container">
 
-            {{-- ══ 1. TOP CAROUSEL BANNER (1920 X 600 LANDSCAPE — STYLE IMAGE 1) ══ --}}
+        {{-- ══ SKELETON SHIMMER OVERLAY (Smooth Initial Render) ══ --}}
+        <div id="tixInitialSkeleton" class="tix-container">
+            {{-- Top Banner Skeleton (1920x600) --}}
+            <div class="tix-skeleton" style="width: 100%; aspect-ratio: 1920/600; min-height: 180px; max-height: 420px; border-radius: 20px; margin-bottom: 2.25rem;"></div>
+
+            {{-- Search Bar Skeleton --}}
+            <div class="tix-skeleton" style="width: 100%; height: 56px; border-radius: 16px; margin-bottom: 2.25rem;"></div>
+
+            {{-- Section Title Skeleton --}}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div class="tix-skeleton" style="width: 220px; height: 26px; border-radius: 8px;"></div>
+                <div class="tix-skeleton" style="width: 130px; height: 20px; border-radius: 8px;"></div>
+            </div>
+
+            {{-- 4 Responsive Card Skeletons --}}
+            <div class="tix-grid">
+                @for($i = 0; $i < 4; $i++)
+                    <div class="tix-skeleton-card">
+                        <div class="tix-skeleton" style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 0.85rem;"></div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <div class="tix-skeleton" style="width: 45px; height: 16px; border-radius: 4px;"></div>
+                            <div class="tix-skeleton" style="width: 65px; height: 16px; border-radius: 4px;"></div>
+                        </div>
+                        <div class="tix-skeleton" style="width: 88%; height: 18px; margin-bottom: 0.35rem; border-radius: 6px;"></div>
+                        <div class="tix-skeleton" style="width: 60%; height: 16px; margin-bottom: 0.6rem; border-radius: 6px;"></div>
+                        <div class="tix-skeleton" style="width: 110px; height: 14px; margin-bottom: 0.3rem; border-radius: 4px;"></div>
+                        <div class="tix-skeleton" style="width: 90px; height: 14px; margin-bottom: 0.8rem; border-radius: 4px;"></div>
+                        <div style="border-top: 1px solid #F1F5F9; padding-top: 0.65rem; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                            <div class="tix-skeleton" style="width: 70px; height: 20px; border-radius: 6px;"></div>
+                            <div class="tix-skeleton" style="width: 75px; height: 28px; border-radius: 99px;"></div>
+                        </div>
+                    </div>
+                @endfor
+            </div>
+        </div>
+
+        {{-- ══ REAL CONTENT CONTAINER ══ --}}
+        <div id="tixRealContent" class="tix-container" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
+
+            {{-- ══ 1. TOP CAROUSEL BANNER (1920 X 600 PURE IMAGE SLIDES / SEEDED PLACEHOLDERS) ══ --}}
             <section class="tix-banner-section">
                 <div class="tix-carousel-container" id="tixCarousel">
                     <div class="tix-carousel-viewport">
                         <div class="tix-carousel-track" id="tixCarouselTrack">
                             @foreach($banners as $index => $banner)
-                                <a href="{{ $banner['url'] }}" class="tix-slide" style="{{ isset($banner['bg_gradient']) ? 'background:' . $banner['bg_gradient'] . ';' : 'background:#0f172a;' }}">
-                                    <div class="tix-slide-bg-grid"></div>
-
+                                <a href="{{ $banner['url'] }}" class="tix-slide">
                                     @if(!empty($banner['image']))
+                                        {{-- Pure Uploaded 1920x600 Image Banner (No text overlay) --}}
                                         <img src="{{ $banner['image'] }}" alt="{{ $banner['title'] }}" class="tix-slide-img">
-                                        <div class="tix-slide-overlay"></div>
-                                    @endif
-
-                                    <div class="tix-slide-content">
-                                        {{-- Left: Event Title & Headliner --}}
-                                        <div class="tix-slide-left">
-                                            <div class="tix-slide-presenter">
-                                                <span>{{ $banner['organizer'] }}</span>
-                                                <span style="opacity:0.6;">• PROUDLY PRESENT</span>
+                                    @else
+                                        {{-- Clean SVG Landscape Placeholder --}}
+                                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #064E3B 100%); color: #ffffff; text-align: center; padding: 1.5rem; position: relative;">
+                                            <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(30, 179, 73, 0.18); border: 1.5px solid rgba(30, 179, 73, 0.4); display: flex; align-items: center; justify-content: center; margin-bottom: 0.65rem; color: #4ADE80;">
+                                                <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
                                             </div>
-                                            <h1 class="tix-slide-title">
+                                            <span style="font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: #4ADE80; text-transform: uppercase; margin-bottom: 0.25rem;">
+                                                BUYLE TIX BANNER (1920 X 600 PX)
+                                            </span>
+                                            <h3 style="font-size: clamp(1rem, 2vw, 1.35rem); font-weight: 800; margin: 0 0 0.35rem; color: #ffffff;">
                                                 {{ $banner['title'] }}
-                                            </h1>
-                                            @if(!empty($banner['subtitle']))
-                                                <p class="tix-slide-sub">
-                                                    {{ $banner['subtitle'] }}
-                                                </p>
-                                            @endif
-                                        </div>
-
-                                        {{-- Right: Location & Date & CTA --}}
-                                        <div class="tix-slide-right">
-                                            <div>
-                                                <div class="tix-slide-loc-tag">{{ $banner['location'] }}</div>
-                                                <div class="tix-slide-date-tag">{{ $banner['date'] }}</div>
-                                            </div>
-                                            <span class="tix-slide-cta-btn">
-                                                Beli Tiket
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                                </svg>
+                                            </h3>
+                                            <p style="font-size: 0.8rem; color: #94A3B8; margin: 0 0 0.75rem; max-width: 480px; line-height: 1.4;">
+                                                {{ $banner['description'] ?: 'Upload banner promosi Anda melalui Admin Panel > Manajemen Banner.' }}
+                                            </p>
+                                            <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; font-weight: 700; color: #CBD5E1; background: rgba(255,255,255,0.08); padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.15);">
+                                                Upload Gambar 1920x600 di Admin Panel
                                             </span>
                                         </div>
-                                    </div>
+                                    @endif
                                 </a>
                             @endforeach
                         </div>
 
-                        {{-- Nav Prev / Next Circular Buttons (Image 1 Style) --}}
+                        {{-- Nav Prev / Next Circular Buttons --}}
                         <button type="button" class="tix-nav-btn prev" onclick="tixPrevSlide()" aria-label="Slide Sebelumnya">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <polyline points="15 18 9 12 15 6"></polyline>
@@ -868,7 +414,7 @@
                         </button>
                     </div>
 
-                    {{-- Bottom Pill Dash Indicators (Image 1 Style) --}}
+                    {{-- Bottom Pill Dash Indicators --}}
                     <div class="tix-carousel-dots" id="tixCarouselDots">
                         @foreach($banners as $index => $banner)
                             <button type="button" class="tix-dot {{ $index === 0 ? 'active' : '' }}" onclick="tixGoToSlide({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
@@ -880,7 +426,7 @@
             {{-- ══ 2. SEARCH & QUICK FILTER BAR ══ --}}
             <div class="tix-search-bar-wrap">
                 <form action="{{ route('tix.index') }}" method="GET" class="tix-search-form">
-                    <svg width="18" height="18" fill="none" stroke="#64748b" stroke-width="2.2" viewBox="0 0 24 24">
+                    <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2.2" viewBox="0 0 24 24">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
@@ -903,232 +449,110 @@
                 </div>
             </div>
 
-            {{-- ══ 3. SECTION: EVENT TERDEKAT (100% IDENTIK DENGAN IMAGE 2) ══ --}}
-            <section style="margin-bottom: 2.5rem;" id="event-terdekat">
-                <div class="tix-section-header">
-                    <div class="tix-section-title-wrap">
-                        <h2 class="tix-section-title">Event Terdekat</h2>
-                    </div>
-                    <a href="{{ route('tix.index') }}" class="tix-section-link">
+            {{-- ══ 3. SECTION: TIKET EVENT & KONSER (EXACT MATCH HOMEPAGE SECTION) ══ --}}
+            <section style="margin-bottom: 2.75rem;" id="event-terdekat">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        Tiket Event & Konser
+                    </h2>
+                    <a href="{{ route('tix.index') }}" style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
                         Lihat Semua Tiket
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M5 12h14m-7-7l7 7-7 7" />
                         </svg>
                     </a>
                 </div>
 
-                <div class="tix-grid">
-                    @forelse($upcomingEvents as $event)
-                        @php
-                            $imgSrc = $event->featured_image ? asset('storage/' . $event->featured_image) : ($event->image ? asset('storage/' . $event->image) : asset('images/service-default.jpg'));
-                            $organizerName = $event->seller ? ($event->seller->creatorProfile->display_name ?? $event->seller->name) : 'Official Organizer';
-                            $organizerAvatar = $event->seller?->avatar ? asset('storage/' . $event->seller->avatar) : null;
-                            $price = $event->sale_price ?: $event->price;
-                            $badgeLabel = strtoupper($event->event_type ?: 'EVENT');
-                        @endphp
-                        <div class="tix-card">
-                            {{-- Image Container with Top-Left Badge --}}
-                            <a href="{{ route('products.show', $event->slug) }}" class="tix-card-media">
-                                <img src="{{ $imgSrc }}" alt="{{ $event->name }}" class="tix-card-img" loading="lazy">
-                                <span class="tix-media-badge">{{ $badgeLabel }}</span>
-                            </a>
-
-                            <div class="tix-card-body">
-                                {{-- Rating & Verified Row (Image 2) --}}
-                                <div class="tix-meta-row">
-                                    <div class="tix-rating">
-                                        <span class="star">★</span>
-                                        <span>{{ number_format($event->rating ?: 5.0, 1) }}</span>
-                                    </div>
-                                    <div class="tix-verified-badge">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                        <span>Verified</span>
-                                    </div>
-                                </div>
-
-                                {{-- Event Title --}}
-                                <h3 class="tix-title">
-                                    <a href="{{ route('products.show', $event->slug) }}" title="{{ $event->name }}">{{ $event->name }}</a>
-                                </h3>
-
-                                {{-- Creator / Organizer (User Requirement) --}}
-                                <div class="tix-organizer" title="Penyelenggara: {{ $organizerName }}">
-                                    <span class="tix-organizer-avatar">
-                                        @if($organizerAvatar)
-                                            <img src="{{ $organizerAvatar }}" alt="{{ $organizerName }}">
-                                        @else
-                                            {{ strtoupper(substr($organizerName, 0, 1)) }}
-                                        @endif
-                                    </span>
-                                    <span class="tix-organizer-name">{{ $organizerName }}</span>
-                                </div>
-
-                                {{-- Date --}}
-                                <div class="tix-info-line">
-                                    <span class="tix-info-icon">📅</span>
-                                    <span>{{ $event->event_date ? $event->event_date->translatedFormat('d F Y') : 'Jadwal Segera Diumumkan' }}</span>
-                                </div>
-
-                                {{-- Location --}}
-                                <div class="tix-info-line location">
-                                    <span class="tix-info-icon">📍</span>
-                                    <span>{{ $event->event_location ?: ($event->event_type === 'online' ? 'Online / Webinar' : 'Indonesia') }}</span>
-                                </div>
-
-                                {{-- Bottom Row: Price & Lihat Button (Image 2) --}}
-                                <div class="tix-footer-row">
-                                    <div class="tix-price">
-                                        @if($price > 0)
-                                            Rp{{ number_format($price, 0, ',', '.') }}
-                                        @else
-                                            <span style="color:#16a34a;">Gratis</span>
-                                        @endif
-                                    </div>
-                                    <a href="{{ route('products.show', $event->slug) }}" class="tix-btn">
-                                        <span>Lihat</span>
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            <polyline points="12 5 19 12 12 19"></polyline>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
+                {{-- Cards Grid Container --}}
+                <div class="tix-grid" id="upcomingGrid">
+                    @if(count($upcomingEvents) > 0)
+                        @include('tix.partials.event_cards', ['events' => $upcomingEvents, 'is_past' => false])
+                    @else
                         <div class="tix-empty-card">
-                            <div style="width:52px; height:52px; border-radius:50%; background:#f1f5f9; display:inline-flex; align-items:center; justify-content:center; color:#94a3b8; margin-bottom:0.75rem;">
+                            <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
                                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
                             </div>
-                            <h4 style="margin:0 0 0.35rem 0; font-size:1rem; font-weight:700; color:#0f172a;">Belum Ada Tiket Terdekat</h4>
-                            <p style="margin:0; font-size:0.8rem; color:#64748b;">Nantikan pengumuman jadwal konser & event menarik lainnya segera!</p>
+                            <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Belum Ada Tiket Terdekat</h4>
+                            <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Nantikan pengumuman jadwal konser & event menarik lainnya segera!</p>
                         </div>
-                    @endforelse
+                    @endif
+                </div>
+
+                {{-- Infinite Scroll Skeleton Placeholders (4 cards matching grid) --}}
+                <div class="tix-grid" id="infiniteScrollSkeleton" style="display: none; margin-top: -1.75rem; margin-bottom: 1.5rem;">
+                    @for($i = 0; $i < 4; $i++)
+                        <div class="tix-skeleton-card">
+                            <div class="tix-skeleton" style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 0.85rem;"></div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <div class="tix-skeleton" style="width: 45px; height: 16px; border-radius: 4px;"></div>
+                                <div class="tix-skeleton" style="width: 65px; height: 16px; border-radius: 4px;"></div>
+                            </div>
+                            <div class="tix-skeleton" style="width: 88%; height: 18px; margin-bottom: 0.35rem; border-radius: 6px;"></div>
+                            <div class="tix-skeleton" style="width: 60%; height: 16px; margin-bottom: 0.6rem; border-radius: 6px;"></div>
+                            <div class="tix-skeleton" style="width: 110px; height: 14px; margin-bottom: 0.3rem; border-radius: 4px;"></div>
+                            <div class="tix-skeleton" style="width: 90px; height: 14px; margin-bottom: 0.8rem; border-radius: 4px;"></div>
+                            <div style="border-top: 1px solid #F1F5F9; padding-top: 0.65rem; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                                <div class="tix-skeleton" style="width: 70px; height: 20px; border-radius: 6px;"></div>
+                                <div class="tix-skeleton" style="width: 75px; height: 28px; border-radius: 99px;"></div>
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+
+                {{-- Infinite Scroll Sentinel and Status Feedback --}}
+                <div id="infiniteScrollSentinel" style="height: 20px;"></div>
+                <div id="infiniteScrollStatus" style="text-align: center; padding: 0.5rem 0 1.5rem; font-size: 0.84rem; font-weight: 700; color: #94A3B8; display: none;">
+                    <span id="infiniteScrollStatusText"></span>
                 </div>
             </section>
 
-            {{-- ══ 4. SECTION: EVENT BERAKHIR (100% IDENTIK DENGAN IMAGE 2) ══ --}}
-            <section style="margin-bottom: 2.5rem;" id="event-berakhir">
-                <div class="tix-section-header">
-                    <div class="tix-section-title-wrap">
-                        <h2 class="tix-section-title">Event Berakhir</h2>
+            {{-- ══ 4. SECTION: EVENT BERAKHIR ══ --}}
+            <section style="margin-bottom: 2.75rem;" id="event-berakhir">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0;">
+                            Event Berakhir
+                        </h2>
                     </div>
-                    <span style="font-size:0.82rem; font-weight:600; color:#94a3b8;">
+                    <span style="font-size: 0.82rem; font-weight: 600; color: #94A3B8;">
                         Arsip Kegiatan & Dokumentasi
                     </span>
                 </div>
 
                 <div class="tix-grid">
-                    @forelse($pastEvents as $event)
-                        @php
-                            $imgSrc = $event->featured_image ? asset('storage/' . $event->featured_image) : ($event->image ? asset('storage/' . $event->image) : asset('images/service-default.jpg'));
-                            $organizerName = $event->seller ? ($event->seller->creatorProfile->display_name ?? $event->seller->name) : 'Official Organizer';
-                            $organizerAvatar = $event->seller?->avatar ? asset('storage/' . $event->seller->avatar) : null;
-                            $price = $event->sale_price ?: $event->price;
-                        @endphp
-                        <div class="tix-card" style="opacity: 0.9;">
-                            {{-- Image Container with Past Badge --}}
-                            <a href="{{ route('products.show', $event->slug) }}" class="tix-card-media">
-                                <img src="{{ $imgSrc }}" alt="{{ $event->name }}" class="tix-card-img" style="filter: grayscale(20%);" loading="lazy">
-                                <span class="tix-media-badge past">BERAKHIR</span>
-                            </a>
-
-                            <div class="tix-card-body">
-                                {{-- Rating & Verified Row --}}
-                                <div class="tix-meta-row">
-                                    <div class="tix-rating">
-                                        <span class="star">★</span>
-                                        <span>{{ number_format($event->rating ?: 5.0, 1) }}</span>
-                                    </div>
-                                    <div class="tix-verified-badge" style="color:#64748b;">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                        <span>Selesai</span>
-                                    </div>
-                                </div>
-
-                                {{-- Event Title --}}
-                                <h3 class="tix-title">
-                                    <a href="{{ route('products.show', $event->slug) }}" title="{{ $event->name }}">{{ $event->name }}</a>
-                                </h3>
-
-                                {{-- Creator / Organizer --}}
-                                <div class="tix-organizer">
-                                    <span class="tix-organizer-avatar">
-                                        @if($organizerAvatar)
-                                            <img src="{{ $organizerAvatar }}" alt="{{ $organizerName }}">
-                                        @else
-                                            {{ strtoupper(substr($organizerName, 0, 1)) }}
-                                        @endif
-                                    </span>
-                                    <span class="tix-organizer-name">{{ $organizerName }}</span>
-                                </div>
-
-                                {{-- Date --}}
-                                <div class="tix-info-line">
-                                    <span class="tix-info-icon">📅</span>
-                                    <span>{{ $event->event_date ? $event->event_date->translatedFormat('d F Y') : 'Event Telah Selesai' }}</span>
-                                </div>
-
-                                {{-- Location --}}
-                                <div class="tix-info-line location">
-                                    <span class="tix-info-icon">📍</span>
-                                    <span>{{ $event->event_location ?: ($event->event_type === 'online' ? 'Online / Webinar' : 'Indonesia') }}</span>
-                                </div>
-
-                                {{-- Bottom Row: Historical Price & Detail Button --}}
-                                <div class="tix-footer-row">
-                                    <div class="tix-price past">
-                                        @if($price > 0)
-                                            Rp{{ number_format($price, 0, ',', '.') }}
-                                        @else
-                                            <span>Gratis</span>
-                                        @endif
-                                    </div>
-                                    <a href="{{ route('products.show', $event->slug) }}" class="tix-btn past">
-                                        <span>Detail</span>
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            <polyline points="12 5 19 12 12 19"></polyline>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
+                    @if(count($pastEvents) > 0)
+                        @include('tix.partials.event_cards', ['events' => $pastEvents, 'is_past' => true])
+                    @else
                         <div class="tix-empty-card">
-                            <div style="width:52px; height:52px; border-radius:50%; background:#f1f5f9; display:inline-flex; align-items:center; justify-content:center; color:#94a3b8; margin-bottom:0.75rem;">
+                            <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
                                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
-                            <h4 style="margin:0 0 0.35rem 0; font-size:1rem; font-weight:700; color:#0f172a;">Belum Ada Arsip Event Berakhir</h4>
-                            <p style="margin:0; font-size:0.8rem; color:#64748b;">Semua tiket event yang terdaftar saat ini masih berstatus aktif dan siap dipesan.</p>
+                            <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Belum Ada Arsip Event Berakhir</h4>
+                            <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Semua tiket event yang terdaftar saat ini masih berstatus aktif dan siap dipesan.</p>
                         </div>
-                    @endforelse
+                    @endif
                 </div>
             </section>
 
             {{-- ══ 5. PROMOTER & CREATOR CTA BANNER ══ --}}
             <div class="tix-cta-box">
                 <div>
-                    <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:800; background:rgba(34,197,94,0.18); color:#4ade80; padding:4px 12px; border-radius:999px; text-transform:uppercase; margin-bottom:0.75rem;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 800; background: rgba(30, 179, 73, 0.18); color: #4ADE80; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; margin-bottom: 0.75rem;">
                         Penyelenggara Event Official
                     </span>
-                    <h3 style="font-size:clamp(1.2rem, 2.5vw, 1.6rem); font-weight:800; color:#ffffff; margin:0 0 0.5rem 0;">
+                    <h3 style="font-size: clamp(1.15rem, 2.5vw, 1.55rem); font-weight: 800; color: #ffffff; margin: 0 0 0.5rem;">
                         Punya Konser, Seminar, atau Event Sendiri?
                     </h3>
-                    <p style="font-size:0.85rem; color:#cbd5e1; margin:0; line-height:1.5; max-width:640px;">
+                    <p style="font-size: 0.85rem; color: #CBD5E1; margin: 0; line-height: 1.5; max-width: 640px;">
                         Jual tiket gratis maupun berbayar secara mandiri di Buyle.id. Nikmati penerbitan e-tiket otomatis via WhatsApp/Email, sistem Gate Scanner panitia live kamera, serta penarikan dana cepat.
                     </p>
                 </div>
-                <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; flex-shrink:0;">
-                    <a href="{{ url('/creator/products?from=ticketing') }}" style="display:inline-flex; align-items:center; gap:0.45rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; font-size:0.85rem; font-weight:800; padding:0.75rem 1.45rem; border-radius:999px; text-decoration:none; box-shadow:0 6px 20px rgba(30,179,73,0.35); white-space:nowrap;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; flex-shrink: 0;">
+                    <a href="{{ url('/creator/products?from=ticketing') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; font-size: 0.85rem; font-weight: 800; padding: 0.75rem 1.45rem; border-radius: 999px; text-decoration: none; box-shadow: 0 6px 20px rgba(30, 179, 73, 0.35); white-space: nowrap;">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span>Buat Tiket Event</span>
                     </a>
-                    <a href="{{ route('ticketing') }}" style="display:inline-flex; align-items:center; gap:0.45rem; background:rgba(255,255,255,0.08); border:1.5px solid rgba(255,255,255,0.2); color:#ffffff; font-size:0.85rem; font-weight:700; padding:0.75rem 1.25rem; border-radius:999px; text-decoration:none; white-space:nowrap;">
+                    <a href="{{ route('ticketing') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.2); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 999px; text-decoration: none; white-space: nowrap;">
                         <span>Pelajari Fitur</span>
                     </a>
                 </div>
@@ -1137,7 +561,7 @@
         </div>
     </div>
 
-    {{-- ══ JAVASCRIPT CAROUSEL CONTROLLER (SWIPE, AUTOPLAY & ARROWS) ══ --}}
+    {{-- ══ JAVASCRIPT CONTROLLERS: CAROUSEL, SKELETON TRANSITION, & INFINITE SCROLL ══ --}}
     <script>
         let currentTixSlide = 0;
         const tixSlideCount = {{ count($banners) }};
@@ -1179,7 +603,9 @@
         }
 
         function tixStartTimer() {
-            tixAutoPlayTimer = setInterval(tixNextSlide, 6000);
+            if (tixSlideCount > 1) {
+                tixAutoPlayTimer = setInterval(tixNextSlide, 5000);
+            }
         }
 
         function tixResetTimer() {
@@ -1187,10 +613,86 @@
             tixStartTimer();
         }
 
+        // Infinite Scroll Setup
+        let tixCurrentPage = 1;
+        let tixHasMore = {{ $hasMoreUpcoming ? 'true' : 'false' }};
+        let tixIsLoading = false;
+        const tixSearchQuery = @json($search);
+        const tixEventType = @json($type);
+
+        function tixLoadMore() {
+            if (!tixHasMore || tixIsLoading) return;
+            tixIsLoading = true;
+
+            const skeleton = document.getElementById('infiniteScrollSkeleton');
+            const statusBox = document.getElementById('infiniteScrollStatus');
+            const statusText = document.getElementById('infiniteScrollStatusText');
+
+            if (skeleton) skeleton.style.display = 'grid';
+            if (statusBox && statusText) {
+                statusText.textContent = 'Memuat lebih banyak event...';
+                statusBox.style.display = 'block';
+            }
+
+            const nextPage = tixCurrentPage + 1;
+            let url = new URL('{{ route("tix.index") }}', window.location.origin);
+            url.searchParams.set('page', nextPage);
+            if (tixSearchQuery) url.searchParams.set('q', tixSearchQuery);
+            if (tixEventType) url.searchParams.set('type', tixEventType);
+
+            fetch(url.toString(), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.html && data.html.trim().length > 0) {
+                    const grid = document.getElementById('upcomingGrid');
+                    if (grid) {
+                        grid.insertAdjacentHTML('beforeend', data.html);
+                    }
+                    tixCurrentPage = data.current_page;
+                    tixHasMore = data.has_more;
+                } else {
+                    tixHasMore = false;
+                }
+
+                if (!tixHasMore && statusBox && statusText) {
+                    statusText.textContent = 'Semua tiket event telah dimuat ✨';
+                    statusBox.style.display = 'block';
+                } else if (statusBox) {
+                    statusBox.style.display = 'none';
+                }
+            })
+            .catch(err => {
+                console.error('Error loading tix items:', err);
+                if (statusBox && statusText) {
+                    statusText.textContent = 'Gagal memuat tiket tambahan.';
+                }
+            })
+            .finally(() => {
+                tixIsLoading = false;
+                if (skeleton) skeleton.style.display = 'none';
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            // Smooth skeleton transition to real content
+            setTimeout(function() {
+                const skeleton = document.getElementById('tixInitialSkeleton');
+                const content = document.getElementById('tixRealContent');
+                if (skeleton && content) {
+                    skeleton.style.display = 'none';
+                    content.style.display = 'block';
+                    setTimeout(() => { content.style.opacity = '1'; }, 20);
+                }
+            }, 250);
+
+            // Start Carousel
             tixStartTimer();
 
-            // Pause on hover
             const carousel = document.getElementById('tixCarousel');
             if (carousel) {
                 carousel.addEventListener('mouseenter', () => clearInterval(tixAutoPlayTimer));
@@ -1212,8 +714,25 @@
                     }
                 }, { passive: true });
             }
+
+            // Setup IntersectionObserver for Infinite Scroll
+            if ('IntersectionObserver' in window) {
+                const sentinel = document.getElementById('infiniteScrollSentinel');
+                if (sentinel) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && tixHasMore && !tixIsLoading) {
+                                tixLoadMore();
+                            }
+                        });
+                    }, {
+                        rootMargin: '250px',
+                        threshold: 0.1
+                    });
+                    observer.observe(sentinel);
+                }
+            }
         });
     </script>
 
 @endsection
-

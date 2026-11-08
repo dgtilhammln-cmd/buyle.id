@@ -1,116 +1,480 @@
 @extends('layouts.admin')
-@section('title', 'Hero Slides')
-@section('page-title', 'Manajemen Banner')
+@section('title', 'Manajemen Banner')
+@section('page-title', 'Manajemen Banner & Slider')
 @section('content')
 
-@if(session('success'))
-<div style="background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;padding:.875rem 1.25rem;border-radius:10px;margin-bottom:1.5rem;font-size:.875rem;">
-    {{ session('success') }}
-</div>
-@endif
+    <style>
+        .banner-admin-container {
+            font-family: 'Montserrat', sans-serif;
+            color: #1e293b;
+        }
 
-@if($errors->any())
-<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.875rem 1.25rem;border-radius:10px;margin-bottom:1.5rem;font-size:.875rem;">
-    {{ $errors->first() }}
-</div>
-@endif
+        .banner-admin-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+            margin-bottom: 1.25rem;
+            box-sizing: border-box;
+        }
 
-<div class="admin-card" style="margin-bottom: 1.5rem;">
-    <h3 style="font-size:.7rem;font-weight:700;color:#a5cf37;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1rem;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:.4rem;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        Warna Background Oval (Hero Slider)
-    </h3>
-    <p style="font-size:.75rem;color:rgba(255,255,255,.35);margin:0 0 1rem;">Warna ini akan digunakan sebagai latar belakang oval di belakang hero slider. Anda bisa pilih warna solid atau isi manual dengan gradient CSS.</p>
-    <form action="{{ route('admin.settings.update') }}" method="POST" style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;">
-        @csrf
-        <div style="flex:1;min-width:200px;">
-            <label style="font-size:.7rem;font-weight:600;color:rgba(255,255,255,.5);display:block;margin-bottom:.5rem;">Warna / Gradient CSS</label>
-            <div style="display:flex;gap:.5rem;align-items:center;">
-                <input type="color" id="colorPicker" value="#1e3a8a" style="width:42px;height:42px;border-radius:8px;border:none;cursor:pointer;padding:2px;background:transparent;" title="Pilih warna solid" onchange="document.getElementById('gradientInput').value = this.value;">
-                <input type="text" name="hero_oval_gradient" id="gradientInput" class="form-input" value="{{ \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #1eb349 100%)') }}" placeholder="linear-gradient(180deg, #1e3a8a 0%, #1eb349 100%)" style="flex:1;">
+        .banner-card-head-title {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #16a34a;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .banner-card-desc {
+            font-size: 0.78rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin: 0 0 1rem 0;
+        }
+
+        .banner-filter-tabs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .banner-tab-btn {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            color: #475569;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.15s ease;
+        }
+
+        .banner-tab-btn:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .banner-tab-btn.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.28);
+        }
+
+        .banner-item-row {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.25rem;
+            margin-bottom: 0.85rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+
+        .banner-item-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            border-color: #cbd5e1;
+        }
+
+        @media (max-width: 860px) {
+            .banner-item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .banner-item-actions {
+                width: 100%;
+                justify-content: flex-end;
+                border-top: 1px dashed #f1f5f9;
+                padding-top: 0.75rem;
+            }
+        }
+
+        .banner-thumb-wrap {
+            width: 120px;
+            height: 65px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #0f172a;
+            flex-shrink: 0;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .banner-thumb-wrap.tix-thumb {
+            width: 150px;
+            height: 50px; /* 1920 x 600 aspect ratio ~3:1 */
+        }
+
+        .banner-thumb-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-thumb-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #94a3b8;
+            background: #f1f5f9;
+        }
+
+        .banner-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .banner-item-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 0.25rem 0;
+            line-height: 1.3;
+        }
+
+        .banner-item-desc {
+            font-size: 0.76rem;
+            color: #64748b;
+            line-height: 1.45;
+            margin: 0 0 0.45rem 0;
+        }
+
+        .banner-item-tags {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pos-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .pos-badge.hero {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+
+        .pos-badge.utama {
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .pos-badge.samping {
+            background: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+        }
+
+        .pos-badge.tix {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            color: #047857;
+            border: 1.5px solid #a7f3d0;
+            font-weight: 800;
+        }
+
+        .btn-action-edit {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            color: #334155;
+            padding: 0.45rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.15s ease;
+        }
+
+        .btn-action-edit:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+
+        .btn-action-delete {
+            background: #fef2f2;
+            border: 1.5px solid #fecaca;
+            color: #dc2626;
+            padding: 0.45rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.15s ease;
+        }
+
+        .btn-action-delete:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        .btn-add-banner {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 0.65rem 1.45rem;
+            border-radius: 999px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-add-banner:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.45);
+            color: #ffffff;
+        }
+    </style>
+
+    <div class="banner-admin-container">
+
+        {{-- Session Success & Error Banners --}}
+        @if(session('success'))
+            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.9rem 1.25rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:0.5rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span>{{ session('success') }}</span>
             </div>
-            <p style="font-size:.68rem;color:rgba(255,255,255,.25);margin:.35rem 0 0;">Klik picker untuk warna solid, atau ketik manual untuk gradient. Contoh: <code style="color:#a5cf37;">linear-gradient(135deg, #1e3a8a, #1eb349)</code></p>
-        </div>
-        <button type="submit" class="btn-primary" style="height:42px;padding:0 1.5rem;white-space:nowrap;flex-shrink:0;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:.35rem;"><polyline points="20 6 9 17 4 12"/></svg>
-            Simpan Warna
-        </button>
-    </form>
-</div>
+        @endif
 
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-    <p style="font-size:.875rem;color:rgba(255,255,255,.45);margin:0;">Total Banner: {{ $slides->count() }}</p>
-    <a href="{{ route('admin.hero_slides.create') }}" class="btn-primary">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-        Tambah Banner
-    </a>
-</div>
-
-@if($slides->isEmpty())
-<div class="admin-card" style="text-align:center;padding:3rem;">
-    <p style="color:rgba(255,255,255,.3);font-size:.9rem;">Belum ada slide. Klik "Tambah Slide" untuk membuat yang pertama.</p>
-</div>
-@else
-<div style="display:flex;flex-direction:column;gap:1rem;">
-    @foreach($slides as $slide)
-    <div class="admin-card" style="display:flex;align-items:center;gap:1.5rem;">
-        {{-- Thumbnail --}}
-        <div style="width:100px;height:70px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#1a1a1f;">
-            @if($slide->image)
-                <img src="{{ asset('storage/'.$slide->image) }}" style="width:100%;height:100%;object-fit:cover;" alt="{{ $slide->title }}">
-            @else
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:.7rem;">No Image</div>
-            @endif
-        </div>
-        {{-- Info --}}
-        <div style="flex:1;">
-            <div style="font-size:.875rem;font-weight:600;color:#fff;margin-bottom:.25rem;">{{ $slide->title }}</div>
-            <div style="font-size:.75rem;color:rgba(255,255,255,.4);line-height:1.4;">{{ Str::limit($slide->description, 80) }}</div>
-            <div style="display:flex;gap:.75rem;margin-top:.5rem;align-items:center;">
-                @if($slide->button_text)
-                    <span style="font-size:.7rem;background:rgba(165,207,55,.1);color:#a5cf37;padding:.2rem .6rem;border-radius:4px;">{{ $slide->button_text }}</span>
-                @endif
-                @if($slide->button_url)
-                    <span style="font-size:.7rem;color:rgba(255,255,255,.3);">→ {{ Str::limit($slide->button_url, 40) }}</span>
-                @endif
+        @if($errors->any())
+            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.9rem 1.25rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.85rem; font-weight:700;">
+                {{ $errors->first() }}
             </div>
-        </div>
-        {{-- Order --}}
-        <div style="text-align:center;flex-shrink:0;">
-            <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:.25rem;">Urutan</div>
-            <div style="font-size:1.25rem;font-weight:700;color:#fff;">{{ $slide->order }}</div>
-        </div>
-        {{-- Position --}}
-        <div style="flex-shrink:0; width:130px; text-align:center;">
-            <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:.35rem;">Posisi</div>
-            @php
-                $posLabel = match($slide->position ?? 'hero') {
-                    'hero'    => ['label'=>'Hero Slider', 'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>', 'color'=>'rgba(165,207,55,.15)', 'text'=>'#a5cf37'],
-                    'utama'   => ['label'=>'Kanan Atas',  'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>', 'color'=>'rgba(16,185,129,.15)',  'text'=>'#34d399'],
-                    'samping' => ['label'=>'Kanan Bawah', 'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="7" x2="17" y2="17"></line><polyline points="17 7 17 17 7 17"></polyline></svg>', 'color'=>'rgba(245,158,11,.15)', 'text'=>'#fbbf24'],
-                    default   => ['label'=>$slide->position,'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>','color'=>'rgba(255,255,255,.07)','text'=>'#999'],
-                };
-            @endphp
-            <span style="font-size:.7rem;padding:.3rem .6rem;border-radius:6px;background:{{ $posLabel['color'] }};color:{{ $posLabel['text'] }};font-weight:600;display:inline-flex;align-items:center;gap:.3rem;">
-                {!! $posLabel['icon'] !!} {{ $posLabel['label'] }}
-            </span>
-        </div>
-        {{-- Status --}}
-        <div style="flex-shrink:0;">
-            <span style="font-size:.7rem;padding:.3rem .75rem;border-radius:20px;{{ $slide->is_active ? 'background:rgba(16,185,129,.15);color:#34d399;' : 'background:rgba(255,255,255,.05);color:rgba(255,255,255,.3);' }}">
-                {{ $slide->is_active ? 'Aktif' : 'Nonaktif' }}
-            </span>
-        </div>
-        {{-- Actions --}}
-        <div style="display:flex;gap:.5rem;flex-shrink:0;">
-            <a href="{{ route('admin.hero_slides.edit', $slide) }}" style="background:rgba(165,207,55,.1);color:#a5cf37;padding:.5rem .875rem;border-radius:6px;font-size:.8rem;text-decoration:none;transition:all .2s;">Edit</a>
-            <form method="POST" action="{{ route('admin.hero_slides.destroy', $slide) }}" onsubmit="return confirm('Hapus slide ini?')">
-                @csrf @method('DELETE')
-                <button type="submit" style="background:rgba(239,68,68,.1);color:#f87171;padding:.5rem .875rem;border-radius:6px;font-size:.8rem;border:none;cursor:pointer;">Hapus</button>
+        @endif
+
+        {{-- 1. WARNA BACKGROUND OVAL (HERO SLIDER) --}}
+        <div class="banner-admin-card">
+            <h3 class="banner-card-head-title">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4l3 3"/>
+                </svg>
+                Warna Background Oval (Hero Slider Home)
+            </h3>
+            <p class="banner-card-desc">
+                Warna ini digunakan sebagai latar belakang oval di belakang hero slider halaman depan. Anda bisa memilih warna gradasi solid atau gradient CSS.
+            </p>
+            <form action="{{ route('admin.settings.update') }}" method="POST" style="display:flex; gap:0.85rem; align-items:flex-end; flex-wrap:wrap;">
+                @csrf
+                @php
+                    $currentGradient = \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1db349 10%, #a4ff01 100%)');
+                @endphp
+                <div style="flex:1; min-width:240px;">
+                    <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.4rem;">
+                        Warna / Gradient CSS
+                    </label>
+                    <div style="display:flex; gap:0.6rem; align-items:center;">
+                        <input type="color" id="colorPicker" value="#1eb349" style="width:42px; height:42px; border-radius:10px; border:1.5px solid #e2e8f0; cursor:pointer; padding:2px; background:#fff;" title="Pilih warna solid" onchange="document.getElementById('gradientInput').value = this.value; updateGradientPreview(this.value);">
+                        <input type="text" name="hero_oval_gradient" id="gradientInput" class="form-input" value="{{ $currentGradient }}" placeholder="linear-gradient(180deg, #1db349 10%, #a4ff01 100%)" style="flex:1; height:42px; padding:0 0.85rem; border:1.5px solid #e2e8f0; border-radius:10px; font-size:0.82rem; font-family:monospace; color:#0f172a; outline:none;" oninput="updateGradientPreview(this.value)">
+                        <div id="gradientPreviewBadge" style="width:42px; height:42px; border-radius:10px; border:1.5px solid #e2e8f0; background: {{ $currentGradient }}; flex-shrink:0;" title="Preview Latar"></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="height:42px; padding:0 1.35rem; border-radius:10px; font-weight:800; font-size:0.82rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; cursor:pointer; display:flex; align-items:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.3);">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Simpan Warna</span>
+                </button>
             </form>
         </div>
+
+        {{-- 2. HEADER TOP ROW: TOTAL & TAMBAH BANNER --}}
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
+            <div>
+                <h3 style="font-size:1.1rem; font-weight:800; color:#0f172a; margin:0 0 2px 0;">Daftar Banner Aktif</h3>
+                <p style="font-size:0.78rem; color:#64748b; margin:0;">Total Banner Terdaftar: <strong>{{ $slides->count() }}</strong></p>
+            </div>
+            <a href="{{ route('admin.hero_slides.create') }}" class="btn-add-banner">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                <span>+ Tambah Banner</span>
+            </a>
+        </div>
+
+        {{-- 3. FILTER TABS (Semua, Hero Home, Kanan, Buyle TIX) --}}
+        @php
+            $countTix = $slides->where('position', 'tix')->count();
+            $countHero = $slides->where('position', 'hero')->count();
+            $countKanan = $slides->whereIn('position', ['utama', 'samping'])->count();
+        @endphp
+        <div class="banner-filter-tabs">
+            <button type="button" class="banner-tab-btn active" onclick="filterBanners('all', this)">
+                <span>Semua Banner</span>
+                <span style="background:rgba(0,0,0,0.08); padding:1px 6px; border-radius:999px; font-size:0.7rem;">{{ $slides->count() }}</span>
+            </button>
+            <button type="button" class="banner-tab-btn" onclick="filterBanners('tix', this)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+                <span>Buyle TIX (1920x600)</span>
+                <span style="background:rgba(0,0,0,0.08); padding:1px 6px; border-radius:999px; font-size:0.7rem;">{{ $countTix }}</span>
+            </button>
+            <button type="button" class="banner-tab-btn" onclick="filterBanners('hero', this)">
+                <span>Hero Slider (Home)</span>
+                <span style="background:rgba(0,0,0,0.08); padding:1px 6px; border-radius:999px; font-size:0.7rem;">{{ $countHero }}</span>
+            </button>
+            <button type="button" class="banner-tab-btn" onclick="filterBanners('kanan', this)">
+                <span>Banner Kanan (Atas & Bawah)</span>
+                <span style="background:rgba(0,0,0,0.08); padding:1px 6px; border-radius:999px; font-size:0.7rem;">{{ $countKanan }}</span>
+            </button>
+        </div>
+
+        {{-- 4. BANNER LIST --}}
+        @if($slides->isEmpty())
+            <div class="banner-admin-card" style="text-align:center; padding:3rem 1.5rem;">
+                <div style="width:52px; height:52px; border-radius:50%; background:#f1f5f9; display:inline-flex; align-items:center; justify-content:center; color:#94a3b8; margin-bottom:0.75rem;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </div>
+                <h4 style="margin:0 0 0.25rem 0; font-size:0.95rem; font-weight:700; color:#0f172a;">Belum Ada Banner</h4>
+                <p style="margin:0; font-size:0.78rem; color:#64748b;">Klik tombol "+ Tambah Banner" di atas untuk menambahkan slide hero atau banner tiket baru.</p>
+            </div>
+        @else
+            <div id="bannerListContainer">
+                @foreach($slides as $slide)
+                    @php
+                        $pos = $slide->position ?? 'hero';
+                        $isTix = ($pos === 'tix');
+                        $posGroup = $isTix ? 'tix' : ($pos === 'hero' ? 'hero' : 'kanan');
+                        $badgeClass = match($pos) {
+                            'tix'     => 'tix',
+                            'hero'    => 'hero',
+                            'utama'   => 'utama',
+                            'samping' => 'samping',
+                            default   => 'hero'
+                        };
+                        $posLabel = match($pos) {
+                            'tix'     => '🎟️ Buyle TIX (1920 x 600)',
+                            'hero'    => '🖼️ Hero Slider',
+                            'utama'   => '↗️ Kanan Atas',
+                            'samping' => '↘️ Kanan Bawah',
+                            default   => ucfirst($pos)
+                        };
+                    @endphp
+                    <div class="banner-item-row" data-pos-group="{{ $posGroup }}">
+                        {{-- Left: Thumbnail --}}
+                        <div class="banner-thumb-wrap {{ $isTix ? 'tix-thumb' : '' }}">
+                            @if($slide->image)
+                                <img src="{{ asset('storage/'.$slide->image) }}" alt="{{ $slide->title }}">
+                            @else
+                                <div class="banner-thumb-placeholder">NO IMAGE</div>
+                            @endif
+                        </div>
+
+                        {{-- Center: Info & Tags --}}
+                        <div class="banner-item-info">
+                            <h4 class="banner-item-title">{{ $slide->title }}</h4>
+                            @if($slide->description)
+                                <p class="banner-item-desc">{{ Str::limit($slide->description, 95) }}</p>
+                            @endif
+                            <div class="banner-item-tags">
+                                <span class="pos-badge {{ $badgeClass }}">
+                                    {{ $posLabel }}
+                                </span>
+                                @if($slide->button_text)
+                                    <span style="font-size:0.7rem; background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-weight:600;">
+                                        Btn: {{ $slide->button_text }}
+                                    </span>
+                                @endif
+                                @if($slide->button_url)
+                                    <span style="font-size:0.7rem; color:#94a3b8; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        → {{ $slide->button_url }}
+                                    </span>
+                                @endif
+                                <span style="font-size:0.7rem; background:#f8fafc; border:1px solid #e2e8f0; color:#64748b; padding:2px 8px; border-radius:4px; font-weight:700;">
+                                    Urutan: #{{ $slide->order }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Right: Status & Action Buttons --}}
+                        <div class="banner-item-actions" style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
+                            @if($slide->is_active)
+                                <span style="font-size:0.72rem; font-weight:800; background:#dcfce7; color:#166534; padding:3px 10px; border-radius:999px;">
+                                    Aktif
+                                </span>
+                            @else
+                                <span style="font-size:0.72rem; font-weight:700; background:#f1f5f9; color:#94a3b8; padding:3px 10px; border-radius:999px;">
+                                    Nonaktif
+                                </span>
+                            @endif
+
+                            <a href="{{ route('admin.hero_slides.edit', $slide) }}" class="btn-action-edit" title="Edit Banner">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                <span>Edit</span>
+                            </a>
+
+                            <form action="{{ route('admin.hero_slides.destroy', $slide) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus banner ini?');" style="margin:0;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-action-delete" title="Hapus Banner">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <span>Hapus</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
     </div>
-    @endforeach
-</div>
-@endif
+
+    <script>
+        function updateGradientPreview(val) {
+            const badge = document.getElementById('gradientPreviewBadge');
+            if (badge) badge.style.background = val;
+        }
+
+        function filterBanners(group, btn) {
+            document.querySelectorAll('.banner-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const rows = document.querySelectorAll('.banner-item-row');
+            rows.forEach(row => {
+                if (group === 'all' || row.dataset.posGroup === group) {
+                    row.style.display = 'flex';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
 @endsection
