@@ -5,14 +5,14 @@
     <style>
         /* ══════════════════════════════════════════════════════════════════════
            BUYLE TIX — DEDICATED TICKETING MARKETPLACE
-           Theme: Montserrat, Modern Clean White + Emerald Green (#1eb349 / #16a34a)
-           Exact Match to Homepage "Tiket Event & Konser" Section & Hero Image 2
+           Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
+           100% Exact Match to Creative Agency Reference (Image 2)
         ══════════════════════════════════════════════════════════════════════ */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap');
 
         .buyle-tix-page {
-            font-family: 'Montserrat', sans-serif !important;
-            background: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif !important;
+            background: #ffffff;
             min-height: 100vh;
             padding-top: 5.5rem;
             padding-bottom: 5rem;
@@ -20,7 +20,7 @@
         }
 
         .buyle-tix-page * {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
             box-sizing: border-box;
         }
 
@@ -32,45 +32,45 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           1. HERO SECTION (100% IDENTICAL TO REFERENSI IMAGE 2)
-           Deep Dark Forest Green Gradient, Geometric Typography,
-           Stats Row, Nested 1920x600 Banner Frame, & 3 Center Logos
+           1. HERO DARK CARD (EXACT MATCH TO REFERENCE IMAGE 2)
+           Deep Dark Forest Green Ambient Gradient, Non-Bold Sleek Typography,
+           Nested 1920x600 Banner Frame
         ══════════════════════════════════════════════════════════════════════ */
-        .tix-hero-wrapper {
-            background: radial-gradient(circle at 85% 15%, rgba(164, 255, 1, 0.12) 0%, transparent 45%),
-                        radial-gradient(circle at 15% 25%, rgba(29, 179, 73, 0.18) 0%, transparent 50%),
-                        linear-gradient(160deg, #051a11 0%, #09281b 50%, #03130d 100%);
-            border-radius: 28px;
-            padding: 3rem 2.75rem 2.25rem;
-            margin-bottom: 2.5rem;
+        .tix-hero-dark-card {
+            background: radial-gradient(circle at 85% 15%, rgba(45, 212, 191, 0.16) 0%, transparent 45%),
+                        radial-gradient(circle at 15% 25%, rgba(29, 179, 73, 0.14) 0%, transparent 50%),
+                        linear-gradient(165deg, #071412 0%, #0d241f 42%, #05100e 100%);
+            border-radius: 32px;
+            padding: 3.25rem 3rem 2.75rem;
+            margin-bottom: 0;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
             color: #ffffff;
             position: relative;
             overflow: hidden;
         }
 
         @media (max-width: 900px) {
-            .tix-hero-wrapper {
-                padding: 2rem 1.5rem 1.75rem;
-                border-radius: 22px;
+            .tix-hero-dark-card {
+                padding: 2rem 1.4rem 1.75rem;
+                border-radius: 24px;
             }
         }
 
         @media (max-width: 600px) {
-            .tix-hero-wrapper {
+            .tix-hero-dark-card {
                 padding: 1.5rem 1rem 1.25rem;
                 border-radius: 18px;
             }
         }
 
-        /* Hero Top Row (Headline vs Desc & Stats) */
+        /* Top Row: Left Headline vs Right Desc & Stats */
         .tix-hero-top-row {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 2rem;
-            margin-bottom: 2.25rem;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
         }
 
         @media (max-width: 900px) {
@@ -86,32 +86,31 @@
             min-width: 0;
         }
 
+        /* Headline: Clean Regular/Medium Weight, NOT Heavy Bold */
         .tix-hero-heading {
             margin: 0;
-            line-height: 1.08;
-            font-weight: 800;
+            line-height: 1.12;
             color: #ffffff;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.015em;
         }
 
         .tix-hero-line1 {
-            font-size: clamp(2rem, 4.5vw, 3.4rem);
-            font-weight: 800;
+            font-size: clamp(2rem, 4.2vw, 3.5rem);
+            font-weight: 400; /* Regular weight matching Image 2 */
             display: block;
             margin-bottom: 0.35rem;
+            color: #ffffff;
         }
 
         .tix-highlight-text {
-            color: #34d399;
-            background: linear-gradient(135deg, #2dd4bf 0%, #a4ff01 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #2dd4bf;
+            font-weight: 500;
         }
 
         .tix-hero-line2 {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.1rem;
             flex-wrap: wrap;
         }
 
@@ -120,31 +119,37 @@
             flex-direction: column;
             line-height: 1.1;
             color: #94A3B8;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
+            font-size: 0.68rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
         }
 
         .tix-hero-badge-est strong {
             font-size: 1.15rem;
             color: #ffffff;
-            font-weight: 900;
-            letter-spacing: -0.01em;
+            font-weight: 700;
+            letter-spacing: 0;
         }
 
         .tix-hero-agency-txt {
-            font-size: clamp(1.8rem, 4vw, 3.2rem);
-            font-weight: 800;
+            font-size: clamp(1.75rem, 3.8vw, 3.2rem);
+            font-weight: 600; /* Medium-semi weight, not heavy bold */
             color: #ffffff;
             letter-spacing: -0.02em;
         }
 
+        @media (max-width: 600px) {
+            .tix-hero-line1 { font-size: 1.75rem; }
+            .tix-hero-agency-txt { font-size: 1.55rem; }
+            .tix-hero-badge-est strong { font-size: 0.95rem; }
+        }
+
+        /* Right Description & Stats (Clean & Light) */
         .tix-hero-right {
             max-width: 440px;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1.35rem;
         }
 
         @media (max-width: 900px) {
@@ -156,19 +161,25 @@
 
         .tix-hero-desc {
             font-size: 0.88rem;
-            line-height: 1.55;
+            line-height: 1.6;
             color: #cbd5e1;
             margin: 0;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .tix-hero-stats-wrap {
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 1.75rem;
             padding-top: 0.75rem;
             border-top: 1px solid rgba(255, 255, 255, 0.12);
-            flex-wrap: wrap;
+        }
+
+        @media (max-width: 600px) {
+            .tix-hero-stats-wrap {
+                gap: 1rem;
+                justify-content: space-between;
+            }
         }
 
         .tix-hero-stat-item {
@@ -179,30 +190,39 @@
 
         .tix-stat-num {
             font-size: 1.25rem;
-            font-weight: 900;
+            font-weight: 600;
             color: #ffffff;
             letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .tix-stat-plus {
+            color: #2dd4bf;
+            font-size: 0.95rem;
+            font-weight: 400;
         }
 
         .tix-stat-lbl {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: #94A3B8;
-            font-weight: 600;
+            font-weight: 400;
             white-space: nowrap;
         }
 
         .tix-hero-stat-sep {
             width: 1px;
             height: 28px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
         }
 
-        /* Banner Card Inside Hero (Exact Frame in Image 2) */
+        /* Banner Frame Inside Hero Card (Image 2 Video/Banner Frame) */
         .tix-hero-banner-frame {
-            border-radius: 22px;
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             background: #0f172a;
         }
@@ -257,11 +277,11 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: #ffffff;
-            border: 1.5px solid #E2E8F0;
+            border: 1px solid #E2E8F0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -297,7 +317,6 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 0.85rem;
             position: absolute;
             bottom: 12px;
             left: 0;
@@ -309,7 +328,7 @@
             height: 4px;
             width: 16px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
             cursor: pointer;
             border: none;
@@ -317,9 +336,9 @@
         }
 
         .tix-dot.active {
-            width: 34px;
-            background: #a4ff01;
-            box-shadow: 0 0 10px rgba(164, 255, 1, 0.6);
+            width: 32px;
+            background: #2dd4bf;
+            box-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
         }
 
         /* Clean Banner Placeholder Box */
@@ -330,7 +349,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #071f15 0%, #0d3623 50%, #05160e 100%);
+            background: linear-gradient(135deg, #071a17 0%, #0d2823 50%, #051412 100%);
             color: #ffffff;
             text-align: center;
             padding: 1.5rem;
@@ -338,40 +357,41 @@
         }
 
         .tix-ph-icon {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: rgba(164, 255, 1, 0.15);
-            border: 1.5px solid rgba(164, 255, 1, 0.4);
+            background: rgba(45, 212, 191, 0.15);
+            border: 1.5px solid rgba(45, 212, 191, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 0.65rem;
-            color: #a4ff01;
+            color: #2dd4bf;
         }
 
         .tix-ph-badge {
             font-size: 0.72rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            color: #a4ff01;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #2dd4bf;
             text-transform: uppercase;
             margin-bottom: 0.25rem;
         }
 
         .tix-ph-title {
-            font-size: clamp(1rem, 2vw, 1.35rem);
-            font-weight: 800;
+            font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+            font-weight: 600;
             margin: 0 0 0.35rem;
             color: #ffffff;
         }
 
         .tix-ph-sub {
-            font-size: 0.8rem;
-            color: #cbd5e1;
+            font-size: 0.78rem;
+            color: #94a3b8;
             margin: 0 0 0.75rem;
-            max-width: 480px;
+            max-width: 460px;
             line-height: 1.4;
+            font-weight: 400;
         }
 
         .tix-ph-hint {
@@ -379,36 +399,42 @@
             align-items: center;
             gap: 0.35rem;
             font-size: 0.72rem;
-            font-weight: 700;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.08);
             padding: 0.35rem 0.85rem;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        /* 3 Center Media Partner Logos Bar (Image 2 Footer) */
-        .tix-media-partners-bar {
-            margin-top: 2rem;
+        /* ══════════════════════════════════════════════════════════════════════
+           2. MEDIA PARTNERS BAR (ON CLEAN WHITE BACKGROUND — 100% IMAGE 2)
+           White background, Centered, Gray Logos, Mobile Friendly
+        ══════════════════════════════════════════════════════════════════════ */
+        .tix-partners-white-section {
+            background: #ffffff;
+            padding: 2.25rem 1rem 2.25rem;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            gap: 0.75rem;
+            align-items: center;
         }
 
         .tix-partners-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 3.5rem;
+            gap: 4rem;
             flex-wrap: wrap;
             width: 100%;
+            max-width: 900px;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .tix-partners-row {
-                gap: 1.5rem;
+                gap: 2rem;
+            }
+            .tix-partners-white-section {
+                padding: 1.5rem 0.75rem 1.75rem;
             }
         }
 
@@ -416,43 +442,52 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.75;
+            opacity: 0.7;
             transition: opacity 0.2s ease, transform 0.2s ease;
             text-decoration: none;
-            color: #ffffff;
+            color: #64748B;
             max-height: 32px;
         }
 
         .tix-partner-item:hover {
             opacity: 1;
             transform: translateY(-2px);
-            color: #a4ff01;
+            color: #0F172A;
         }
 
         .tix-partner-logo-img {
             max-height: 28px;
             max-width: 120px;
             object-fit: contain;
-            filter: brightness(0) invert(1);
+            filter: grayscale(100%);
+            transition: filter 0.2s ease;
+        }
+
+        .tix-partner-item:hover .tix-partner-logo-img {
+            filter: grayscale(0%);
         }
 
         .tix-partner-text-brand {
             font-size: 1.15rem;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: -0.01em;
-            color: #ffffff;
+            color: #64748B;
             text-transform: capitalize;
         }
 
+        .tix-partner-item:hover .tix-partner-text-brand {
+            color: #0F172A;
+        }
+
         /* ══════════════════════════════════════════════════════════════════════
-           2. SEARCH & QUICK FILTER BAR
+           3. SEARCH & QUICK FILTER BAR
         ══════════════════════════════════════════════════════════════════════ */
         .tix-search-bar-wrap {
             background: #ffffff;
             border: 1.5px solid #E2E8F0;
             border-radius: 16px;
             padding: 0.65rem 0.85rem;
-            margin-bottom: 2.25rem;
+            margin-bottom: 2.5rem;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.025);
             display: flex;
             align-items: center;
@@ -475,13 +510,13 @@
             outline: none;
             font-size: 0.88rem;
             color: #0F172A;
-            font-weight: 600;
+            font-weight: 500;
             background: transparent;
         }
 
         .tix-search-input::placeholder {
             color: #94A3B8;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .tix-filter-chips {
@@ -495,10 +530,10 @@
             padding: 0.35rem 0.85rem;
             border-radius: 999px;
             font-size: 0.76rem;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             color: #475569;
-            background: #F1F5F9;
+            background: #F8FAFC;
             border: 1px solid #E2E8F0;
             transition: all 0.15s ease;
         }
@@ -516,7 +551,7 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           3. RESPONSIVE EVENT CARDS GRID (EXACT HOMEPAGE CARD STYLES)
+           4. RESPONSIVE EVENT CARDS GRID (100% HOMEPAGE STYLE)
         ══════════════════════════════════════════════════════════════════════ */
         .tix-grid {
             display: grid;
@@ -568,7 +603,7 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           4. SKELETON SHIMMER & LAZY LOAD STYLES
+           5. SKELETON SHIMMER & LAZY LOAD STYLES
         ══════════════════════════════════════════════════════════════════════ */
         @keyframes tixShimmer {
             0% { background-position: -200% 0; }
@@ -622,7 +657,14 @@
         {{-- ══ SKELETON SHIMMER OVERLAY (Smooth Initial Render) ══ --}}
         <div id="tixInitialSkeleton" class="tix-container">
             {{-- Hero Skeleton Box --}}
-            <div class="tix-skeleton" style="width: 100%; height: 420px; border-radius: 28px; margin-bottom: 2.25rem;"></div>
+            <div class="tix-skeleton" style="width: 100%; height: 420px; border-radius: 32px; margin-bottom: 2rem;"></div>
+
+            {{-- 3 Logo Skeleton Bar --}}
+            <div style="display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem;">
+                <div class="tix-skeleton" style="width: 100px; height: 24px; border-radius: 6px;"></div>
+                <div class="tix-skeleton" style="width: 100px; height: 24px; border-radius: 6px;"></div>
+                <div class="tix-skeleton" style="width: 100px; height: 24px; border-radius: 6px;"></div>
+            </div>
 
             {{-- Search Bar Skeleton --}}
             <div class="tix-skeleton" style="width: 100%; height: 56px; border-radius: 16px; margin-bottom: 2.25rem;"></div>
@@ -658,8 +700,8 @@
         {{-- ══ REAL CONTENT CONTAINER ══ --}}
         <div id="tixRealContent" class="tix-container" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
 
-            {{-- ══ 1. HERO SECTION (100% IDENTICAL STYLE REFERENSI IMAGE 2) ══ --}}
-            <section class="tix-hero-wrapper">
+            {{-- ══ 1. HERO DARK CARD (100% IDENTICAL STYLE REFERENSI IMAGE 2) ══ --}}
+            <section class="tix-hero-dark-card">
 
                 {{-- Top Row: Heading on Left & Description / Stats on Right --}}
                 <div class="tix-hero-top-row">
@@ -684,17 +726,26 @@
                         </p>
                         <div class="tix-hero-stats-wrap">
                             <div class="tix-hero-stat-item">
-                                <div class="tix-stat-num">100%</div>
+                                <div class="tix-stat-num">
+                                    <span>100%</span>
+                                    <span class="tix-stat-plus">+</span>
+                                </div>
                                 <div class="tix-stat-lbl">Official E-Tickets</div>
                             </div>
                             <div class="tix-hero-stat-sep"></div>
                             <div class="tix-hero-stat-item">
-                                <div class="tix-stat-num">24/7</div>
+                                <div class="tix-stat-num">
+                                    <span>24/7</span>
+                                    <span class="tix-stat-plus">+</span>
+                                </div>
                                 <div class="tix-stat-lbl">Gate Scanner Live</div>
                             </div>
                             <div class="tix-hero-stat-sep"></div>
                             <div class="tix-hero-stat-item">
-                                <div class="tix-stat-num">0%</div>
+                                <div class="tix-stat-num">
+                                    <span>0%</span>
+                                    <span class="tix-stat-plus">+</span>
+                                </div>
                                 <div class="tix-stat-lbl">Hidden Fees</div>
                             </div>
                         </div>
@@ -715,7 +766,7 @@
                                             {{-- Clean Modern SVG Landscape Placeholder --}}
                                             <div class="tix-banner-placeholder-box">
                                                 <div class="tix-ph-icon">
-                                                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+                                                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
                                                 </div>
                                                 <span class="tix-ph-badge">BANNER BUYLE TIX (1920 X 600)</span>
                                                 <h3 class="tix-ph-title">{{ $banner['title'] }}</h3>
@@ -749,60 +800,60 @@
                     </div>
                 </div>
 
-                {{-- Bottom: 3 Media Partner Logos (Wajib Center & Mobile Friendly) --}}
-                @php
-                    $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
-                    $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
-                    $partner1Url  = \App\Models\Setting::get('tix_partner_1_url', '#');
-
-                    $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
-                    $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
-                    $partner2Url  = \App\Models\Setting::get('tix_partner_2_url', '#');
-
-                    $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
-                    $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
-                    $partner3Url  = \App\Models\Setting::get('tix_partner_3_url', '#');
-
-                    $partners = [
-                        ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
-                        ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
-                        ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
-                    ];
-                @endphp
-
-                <div class="tix-media-partners-bar">
-                    <div class="tix-partners-row">
-                        @foreach($partners as $p)
-                            <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}" class="tix-partner-item" title="{{ $p['name'] }}">
-                                @if(!empty($p['logo']))
-                                    <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}" class="tix-partner-logo-img">
-                                @else
-                                    @if(stripos($p['name'], 'spotify') !== false)
-                                        <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
-                                            <path d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z"/>
-                                            <text x="44" y="25" font-family="'Montserrat', sans-serif" font-weight="800" font-size="20" fill="currentColor">Spotify</text>
-                                        </svg>
-                                    @elseif(stripos($p['name'], 'google') !== false)
-                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
-                                            <text x="0" y="24" font-family="'Montserrat', sans-serif" font-weight="800" font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
-                                        </svg>
-                                    @elseif(stripos($p['name'], 'youtube') !== false)
-                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
-                                            <path d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z"/>
-                                            <text x="38" y="22" font-family="'Montserrat', sans-serif" font-weight="800" font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
-                                        </svg>
-                                    @else
-                                        <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
-                                    @endif
-                                @endif
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-
             </section>
 
-            {{-- ══ 2. SEARCH & QUICK FILTER BAR ══ --}}
+            {{-- ══ 2. 3 MEDIA PARTNER LOGOS (ON WHITE BACKGROUND — EXACT MATCH IMAGE 2) ══ --}}
+            @php
+                $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
+                $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
+                $partner1Url  = \App\Models\Setting::get('tix_partner_1_url', '#');
+
+                $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
+                $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
+                $partner2Url  = \App\Models\Setting::get('tix_partner_2_url', '#');
+
+                $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
+                $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
+                $partner3Url  = \App\Models\Setting::get('tix_partner_3_url', '#');
+
+                $partners = [
+                    ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
+                    ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
+                    ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
+                ];
+            @endphp
+
+            <div class="tix-partners-white-section">
+                <div class="tix-partners-row">
+                    @foreach($partners as $p)
+                        <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}" class="tix-partner-item" title="{{ $p['name'] }}">
+                            @if(!empty($p['logo']))
+                                <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}" class="tix-partner-logo-img">
+                            @else
+                                @if(stripos($p['name'], 'spotify') !== false)
+                                    <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
+                                        <path d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z"/>
+                                        <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="20" fill="currentColor">Spotify</text>
+                                    </svg>
+                                @elseif(stripos($p['name'], 'google') !== false)
+                                    <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
+                                        <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
+                                    </svg>
+                                @elseif(stripos($p['name'], 'youtube') !== false)
+                                    <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
+                                        <path d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z"/>
+                                        <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
+                                    </svg>
+                                @else
+                                    <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                @endif
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- ══ 3. SEARCH & QUICK FILTER BAR ══ --}}
             <div class="tix-search-bar-wrap">
                 <form action="{{ route('tix.index') }}" method="GET" class="tix-search-form">
                     <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2.2" viewBox="0 0 24 24">
@@ -828,7 +879,7 @@
                 </div>
             </div>
 
-            {{-- ══ 3. SECTION: TIKET EVENT & KONSER (EXACT MATCH HOMEPAGE SECTION) ══ --}}
+            {{-- ══ 4. SECTION: TIKET EVENT & KONSER (EXACT MATCH HOMEPAGE SECTION) ══ --}}
             <section style="margin-bottom: 2.75rem;" id="event-terdekat">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
                     <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
@@ -885,7 +936,7 @@
                 </div>
             </section>
 
-            {{-- ══ 4. SECTION: EVENT BERAKHIR ══ --}}
+            {{-- ══ 5. SECTION: EVENT BERAKHIR ══ --}}
             <section style="margin-bottom: 2.75rem;" id="event-berakhir">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
                     <div>
@@ -913,13 +964,13 @@
                 </div>
             </section>
 
-            {{-- ══ 5. PROMOTER & CREATOR CTA BANNER ══ --}}
+            {{-- ══ 6. PROMOTER & CREATOR CTA BANNER ══ --}}
             <div class="tix-cta-box">
                 <div>
-                    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 800; background: rgba(30, 179, 73, 0.18); color: #4ADE80; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; margin-bottom: 0.75rem;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; background: rgba(30, 179, 73, 0.18); color: #4ADE80; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; margin-bottom: 0.75rem;">
                         Penyelenggara Event Official
                     </span>
-                    <h3 style="font-size: clamp(1.15rem, 2.5vw, 1.55rem); font-weight: 800; color: #ffffff; margin: 0 0 0.5rem;">
+                    <h3 style="font-size: clamp(1.15rem, 2.5vw, 1.55rem); font-weight: 700; color: #ffffff; margin: 0 0 0.5rem;">
                         Punya Konser, Seminar, atau Event Sendiri?
                     </h3>
                     <p style="font-size: 0.85rem; color: #CBD5E1; margin: 0; line-height: 1.5; max-width: 640px;">
@@ -927,11 +978,11 @@
                     </p>
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; flex-shrink: 0;">
-                    <a href="{{ url('/creator/products?from=ticketing') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; font-size: 0.85rem; font-weight: 800; padding: 0.75rem 1.45rem; border-radius: 999px; text-decoration: none; box-shadow: 0 6px 20px rgba(30, 179, 73, 0.35); white-space: nowrap;">
+                    <a href="{{ url('/creator/products?from=ticketing') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 0.75rem 1.45rem; border-radius: 999px; text-decoration: none; box-shadow: 0 6px 20px rgba(30, 179, 73, 0.35); white-space: nowrap;">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span>Buat Tiket Event</span>
                     </a>
-                    <a href="{{ route('ticketing') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.2); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 999px; text-decoration: none; white-space: nowrap;">
+                    <a href="{{ route('ticketing') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.2); color: #ffffff; font-size: 0.85rem; font-weight: 600; padding: 0.75rem 1.25rem; border-radius: 999px; text-decoration: none; white-space: nowrap;">
                         <span>Pelajari Fitur</span>
                     </a>
                 </div>
