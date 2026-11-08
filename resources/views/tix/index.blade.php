@@ -14,9 +14,10 @@
             font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif !important;
             background: #ffffff;
             min-height: 100vh;
-            padding-top: 4.5rem;
+            padding-top: 5.75rem;
             padding-bottom: 5rem;
             color: #0F172A;
+            overflow-x: hidden;
         }
 
         @media (max-width: 991px) {
@@ -60,15 +61,16 @@
         ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-banner-section {
             width: 100%;
-            margin-top: 0.75rem;
-            margin-bottom: 0.5rem;
+            margin-top: 1.25rem;
+            margin-bottom: 2rem;
+            position: relative;
         }
 
         .tix-orbit-carousel-wrap {
             position: relative;
             width: 100%;
             overflow: hidden;
-            padding: 0.75rem 0 0.25rem;
+            padding: 0.75rem 0 0.5rem;
         }
 
         .tix-orbit-viewport {
@@ -80,15 +82,15 @@
         .tix-orbit-stage {
             position: relative;
             width: 100%;
-            aspect-ratio: 1920 / 600;
-            min-height: 160px;
+            aspect-ratio: 1920 / 580;
+            min-height: 180px;
             perspective: 1200px;
         }
 
         @media (max-width: 768px) {
             .tix-orbit-stage {
-                aspect-ratio: 1920 / 650;
-                min-height: 130px;
+                aspect-ratio: 1920 / 700;
+                min-height: 140px;
             }
         }
 
@@ -96,7 +98,8 @@
             position: absolute;
             top: 0;
             left: 50%;
-            width: 84%;
+            width: 78%;
+            max-width: 1080px;
             height: 100%;
             border-radius: 20px;
             overflow: hidden;
@@ -121,23 +124,23 @@
             z-index: 10;
             opacity: 1;
             filter: none;
-            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-prev {
-            transform: translateX(calc(-50% - 54%)) scale(0.9);
+            transform: translateX(calc(-50% - 58%)) scale(0.88);
             z-index: 3;
-            opacity: 0.65;
+            opacity: 0.6;
             filter: brightness(0.85);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-next {
-            transform: translateX(calc(-50% + 54%)) scale(0.9);
+            transform: translateX(calc(-50% + 58%)) scale(0.88);
             z-index: 3;
-            opacity: 0.65;
+            opacity: 0.6;
             filter: brightness(0.85);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             pointer-events: auto;
@@ -150,13 +153,42 @@
             pointer-events: none;
         }
 
-        /* Single Banner Mode (When count <= 1: Polosan, No Stack, No Peeking) */
+        /* Single Banner Mode (When count <= 1: Polosan, Balanced & Centered, NOT mepet) */
+        .tix-orbit-carousel-wrap.single-banner {
+            padding: 0;
+        }
+
+        .tix-orbit-carousel-wrap.single-banner .tix-orbit-stage {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+            aspect-ratio: 1920 / 580;
+            perspective: none;
+        }
+
         .tix-orbit-carousel-wrap.single-banner .tix-orbit-card {
             width: 100% !important;
-            left: 50% !important;
-            transform: translateX(-50%) scale(1) !important;
+            max-width: 100% !important;
             position: relative !important;
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.14) !important;
+            left: 0 !important;
+            top: 0 !important;
+            transform: none !important;
+            border-radius: 20px;
+            box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12) !important;
+            opacity: 1 !important;
+            filter: none !important;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .tix-orbit-carousel-wrap.single-banner .tix-orbit-stage {
+                padding: 0 1rem;
+                aspect-ratio: 1920 / 700;
+            }
+
+            .tix-orbit-carousel-wrap.single-banner .tix-orbit-card {
+                border-radius: 14px;
+            }
         }
 
         .tix-orbit-card-inner {
@@ -180,8 +212,8 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: #ffffff;
             border: 1px solid rgba(0, 0, 0, 0.08);
@@ -190,7 +222,7 @@
             justify-content: center;
             color: #0f172a;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
             z-index: 20;
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;
             outline: none;
@@ -200,29 +232,29 @@
         .tix-orbit-btn:hover {
             background: #f8fafc;
             transform: translateY(-50%) scale(1.08);
-            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.24);
         }
 
         .tix-orbit-btn.prev {
-            left: calc(8% + 14px);
+            left: calc(50% - (min(78vw, 1080px) / 2) + 16px);
         }
 
         .tix-orbit-btn.next {
-            right: calc(8% + 14px);
+            right: calc(50% - (min(78vw, 1080px) / 2) + 16px);
         }
 
         @media (max-width: 768px) {
             .tix-orbit-btn {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
             }
 
             .tix-orbit-btn.prev {
-                left: calc(7% + 8px);
+                left: calc(50% - 43% + 8px);
             }
 
             .tix-orbit-btn.next {
-                right: calc(7% + 8px);
+                right: calc(50% - 43% + 8px);
             }
         }
 
@@ -232,7 +264,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 14px;
+            margin-top: 16px;
             margin-bottom: 0.25rem;
         }
 
@@ -327,8 +359,8 @@
         .tix-partners-white-section {
             background: transparent;
             border: none;
-            padding-top: 2.25rem;
-            padding-bottom: 2rem;
+            padding-top: 1.75rem;
+            padding-bottom: 2.25rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -703,20 +735,20 @@
             position: relative;
             width: 100%;
             overflow: hidden;
-            padding: 0.75rem 0 0.25rem;
+            padding: 0.75rem 0 0.5rem;
         }
 
         .tix-orbit-skel-stage {
             position: relative;
             width: 100%;
-            aspect-ratio: 1920 / 600;
-            min-height: 160px;
+            aspect-ratio: 1920 / 580;
+            min-height: 180px;
         }
 
         @media (max-width: 768px) {
             .tix-orbit-skel-stage {
-                aspect-ratio: 1920 / 650;
-                min-height: 130px;
+                aspect-ratio: 1920 / 700;
+                min-height: 140px;
             }
         }
 
@@ -724,7 +756,8 @@
             position: absolute;
             top: 0;
             left: 50%;
-            width: 84%;
+            width: 78%;
+            max-width: 1080px;
             height: 100%;
             border-radius: 20px;
         }
@@ -743,15 +776,15 @@
         }
 
         .tix-orbit-skel-card.prev {
-            transform: translateX(calc(-50% - 54%)) scale(0.9);
+            transform: translateX(calc(-50% - 58%)) scale(0.88);
             z-index: 1;
-            opacity: 0.45;
+            opacity: 0.4;
         }
 
         .tix-orbit-skel-card.next {
-            transform: translateX(calc(-50% + 54%)) scale(0.9);
+            transform: translateX(calc(-50% + 58%)) scale(0.88);
             z-index: 1;
-            opacity: 0.45;
+            opacity: 0.4;
         }
 
         .tix-orbit-skel-dots {
@@ -759,7 +792,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 14px;
+            margin-top: 16px;
             margin-bottom: 0.25rem;
         }
 
@@ -799,7 +832,7 @@
     <div class="buyle-tix-page">
 
         {{-- ══ SKELETON SHIMMER OVERLAY (Smooth Initial Render) ══ --}}
-        <div id="tixInitialSkeleton" class="tix-container">
+        <div id="tixInitialSkeleton">
             {{-- 3D Carousel Orbit Skeleton (Center card + Left & Right peek cards) --}}
             <div class="tix-orbit-skel-wrap">
                 <div class="tix-orbit-skel-stage">
@@ -816,7 +849,8 @@
                 </div>
             </div>
 
-            {{-- Media Partner Skeleton --}}
+            <div class="tix-container">
+                {{-- Media Partner Skeleton --}}
             <div style="display: flex; justify-content: center; align-items: center; gap: 2rem; margin: 1.5rem 0 2rem; flex-wrap: wrap;">
                 <div class="tix-skeleton" style="width: 140px; height: 16px; border-radius: 6px;"></div>
                 <div style="display: flex; gap: 2rem; align-items: center;">
@@ -861,10 +895,11 @@
                     </div>
                 @endfor
             </div>
+            </div>
         </div>
 
         {{-- ══ REAL CONTENT CONTAINER ══ --}}
-        <div id="tixRealContent" class="tix-container" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
+        <div id="tixRealContent" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
 
             {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (EXACT IMAGE 2 STYLE) ══ --}}
             <div class="tix-hero-banner-section">
@@ -925,7 +960,8 @@
                 </div>
             </div>
 
-            {{-- ══ 2. OFFICIAL MEDIA PARTNERS ROW (Directly follows Banner) ══ --}}
+            <div class="tix-container">
+                {{-- ══ 2. OFFICIAL MEDIA PARTNERS ROW (Directly follows Banner) ══ --}}
             @php
                 $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
                 $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
