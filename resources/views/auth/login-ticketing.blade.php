@@ -1,3 +1,6 @@
+@php
+    $logo = \App\Models\Setting::get('logo');
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
@@ -8,7 +11,7 @@
     <title>Portal Tiket & Gatekeeper · Buyle.id</title>
     <meta name="description"
         content="Platform e-ticketing modern untuk konser, webinar, dan festival. Masuk sebagai penyelenggara event atau petugas gate scanner.">
-    <meta name="theme-color" content="#030704">
+    <meta name="theme-color" content="#020704">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" href="/favicon.png">
@@ -16,7 +19,7 @@
     <!-- Fonts: Montserrat (Official Buyle.id Font) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap"
         rel="stylesheet">
 
     <style>
@@ -26,9 +29,9 @@
             --buyle-emerald: #10b981;
             --buyle-gradient: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             --buyle-gradient-hover: linear-gradient(135deg, #18983e 0%, #95bd30 100%);
-            --bg-dark: #030704;
+            --bg-dark: #020704;
             --text-pure: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.72);
+            --text-secondary: rgba(255, 255, 255, 0.75);
             --text-muted: rgba(255, 255, 255, 0.45);
         }
 
@@ -78,17 +81,15 @@
             max-width: 420px;
             height: 100dvh;
             max-height: 860px;
-            background: linear-gradient(180deg, #041c0e 0%, #030f07 35%, #020704 100%);
+            background: #020704;
             border-radius: 46px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
             box-shadow:
                 0 30px 90px rgba(0, 0, 0, 0.85),
-                0 0 60px rgba(30, 179, 73, 0.18),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                0 0 60px rgba(30, 179, 73, 0.18);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 1.25rem 1.65rem 1.5rem;
             overflow: hidden;
             box-sizing: border-box;
         }
@@ -101,22 +102,43 @@
                 border-radius: 0;
                 border: none;
                 box-shadow: none;
-                padding: max(env(safe-area-inset-top, 0px), 1rem) 1.45rem max(env(safe-area-inset-bottom, 0px), 1.25rem);
             }
         }
 
-        /* ── INNER LUSH MESH LIGHTING (UPPER HALF) ── */
-        .canvas-ambient-light {
+        /* ── CONCERT HERO IMAGES (SLIDE BACKGROUND PICTURES) ── */
+        .concert-hero-wrap {
             position: absolute;
-            top: -20%;
-            left: -10%;
-            right: -10%;
-            height: 65%;
-            background: radial-gradient(circle at 60% 35%, rgba(30, 179, 73, 0.58) 0%, rgba(165, 207, 55, 0.28) 42%, rgba(2, 7, 4, 0) 75%);
-            filter: blur(28px);
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 55%;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .concert-hero-img {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center top;
+            opacity: 0;
+            transform: scale(1.05);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: contrast(1.05) saturate(1.1);
+        }
+
+        .concert-hero-img.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .concert-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(2, 7, 4, 0.15) 0%, rgba(2, 7, 4, 0.45) 45%, #020704 100%),
+                radial-gradient(circle at 50% 20%, rgba(30, 179, 73, 0.25) 0%, transparent 65%);
             pointer-events: none;
-            z-index: 1;
-            transform: translateZ(0);
         }
 
         .canvas-content-wrap {
@@ -126,82 +148,54 @@
             flex-direction: column;
             height: 100%;
             justify-content: space-between;
+            padding: 1.5rem 1.65rem 1.5rem;
+            box-sizing: border-box;
         }
 
-        /* ── 1. PHONE STATUS BAR ── */
-        .status-bar {
+        @media (max-width: 480px) {
+            .canvas-content-wrap {
+                padding: max(env(safe-area-inset-top, 0px), 1.25rem) 1.45rem max(env(safe-area-inset-bottom, 0px), 1.25rem);
+            }
+        }
+
+        /* ── BRAND LOGO PILL (Exact Logo in Header Buyle.id) ── */
+        .brand-header-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-            padding: 0.25rem 0.35rem 0.75rem;
+            justify-content: flex-start;
+            margin-bottom: auto;
             user-select: none;
         }
 
-        .status-icons {
-            display: flex;
+        .brand-logo-pill {
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        /* ── 2. BRAND LOGO (Replaces Zentra) ── */
-        .brand-badge-row {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            margin-top: auto;
-            margin-bottom: 1.25rem;
-            user-select: none;
-        }
-
-        .brand-icon-mark {
-            width: 30px;
-            height: 30px;
-            border-radius: 9px;
-            background: var(--buyle-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.4);
-            flex-shrink: 0;
-        }
-
-        .brand-text-label {
-            font-size: 1.15rem;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: -0.03em;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .brand-text-label .dot-accent {
-            color: #a5cf37;
-        }
-
-        .brand-tag-pill {
-            font-size: 0.62rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            background: rgba(30, 179, 73, 0.2);
-            color: #4ade80;
-            border: 1px solid rgba(34, 197, 94, 0.35);
-            padding: 2px 7px;
+            background: #ffffff;
+            padding: 7px 15px;
             border-radius: 999px;
-            margin-left: 2px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+            text-decoration: none;
+            transition: transform 0.18s ease;
         }
 
-        /* ── 3. CAROUSEL SLIDES WRAPPER ── */
+        .brand-logo-pill:hover {
+            transform: scale(1.03);
+        }
+
+        .brand-logo-img {
+            height: 25px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* ── CAROUSEL SLIDES WRAPPER ── */
         .slider-viewport {
             position: relative;
             overflow: hidden;
             touch-action: pan-y;
             user-select: none;
+            margin-top: auto;
         }
 
         .slides-container {
@@ -218,17 +212,17 @@
         }
 
         .slide-headline {
-            font-size: 1.95rem;
-            font-weight: 900;
-            line-height: 1.2;
-            letter-spacing: -0.03em;
+            font-size: 1.85rem;
+            font-weight: 700;
+            line-height: 1.22;
+            letter-spacing: -0.02em;
             color: #ffffff;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.65rem;
         }
 
         @media (max-width: 380px) {
             .slide-headline {
-                font-size: 1.75rem;
+                font-size: 1.65rem;
             }
         }
 
@@ -240,20 +234,20 @@
         }
 
         .slide-subtitle {
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             line-height: 1.55;
             color: var(--text-secondary);
             font-weight: 500;
             min-height: 48px;
         }
 
-        /* ── 4. SLIDE DOT INDICATORS (Pill shape like reference) ── */
+        /* ── SLIDE DOT INDICATORS (Pill shape) ── */
         .slide-indicators-row {
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-top: 1.25rem;
-            margin-bottom: 2rem;
+            margin-top: 1.15rem;
+            margin-bottom: 1.85rem;
         }
 
         .indicator-dot {
@@ -273,23 +267,23 @@
             box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
         }
 
-        /* ── 5. THREE ACTION BUTTONS ── */
+        /* ── THREE ACTION BUTTONS ── */
         .actions-group {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         /* Button 1: Daftar Penyelenggara (Primary Green Curved Button) */
         .btn-register-organizer {
             width: 100%;
-            height: 54px;
+            height: 52px;
             border-radius: 999px;
             background: var(--buyle-gradient);
             color: #ffffff;
-            font-size: 0.96rem;
-            font-weight: 800;
+            font-size: 0.95rem;
+            font-weight: 700;
             letter-spacing: -0.01em;
             display: flex;
             align-items: center;
@@ -300,8 +294,6 @@
             cursor: pointer;
             box-shadow: 0 10px 25px rgba(30, 179, 73, 0.42), 0 2px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
         }
 
         .btn-register-organizer:hover {
@@ -317,14 +309,14 @@
         /* Button 2: Login Penyelenggara (Frosted Dark Glass Button) */
         .btn-login-organizer {
             width: 100%;
-            height: 50px;
+            height: 48px;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.08);
             border: 1.5px solid rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #ffffff;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             font-weight: 700;
             letter-spacing: -0.01em;
             display: flex;
@@ -361,7 +353,7 @@
             padding: 0.4rem;
             text-decoration: none;
             transition: color 0.18s ease;
-            margin-top: 0.25rem;
+            margin-top: 0.15rem;
         }
 
         .btn-login-scanner strong {
@@ -373,21 +365,7 @@
             color: #ffffff;
         }
 
-        /* ── 6. BOTTOM HOME INDICATOR (iOS Bar) ── */
-        .home-indicator-wrap {
-            display: flex;
-            justify-content: center;
-            padding-top: 0.5rem;
-        }
-
-        .home-indicator-bar {
-            width: 134px;
-            height: 4.5px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.35);
-        }
-
-        /* ── 7. SCANNER STAFF LOGIN MODAL / BOTTOM SHEET ── */
+        /* ── SCANNER STAFF LOGIN MODAL / BOTTOM SHEET ── */
         .scanner-modal-backdrop {
             position: fixed;
             inset: 0;
@@ -481,7 +459,7 @@
 
         .sheet-title {
             font-size: 1.05rem;
-            font-weight: 800;
+            font-weight: 700;
             color: #ffffff;
             margin: 0;
             line-height: 1.25;
@@ -590,7 +568,7 @@
             background: var(--buyle-gradient);
             color: #ffffff;
             font-size: 0.92rem;
-            font-weight: 800;
+            font-weight: 700;
             border: none;
             cursor: pointer;
             display: flex;
@@ -630,49 +608,29 @@
 
     {{-- Main Smartphone Canvas --}}
     <main class="phone-canvas">
-        <div class="canvas-ambient-light"></div>
+
+        {{-- 3 Concert Hero Images (Top Visual Anchor) --}}
+        <div class="concert-hero-wrap">
+            <div class="concert-hero-img slide-img-0 active" style="background-image: url('{{ asset('images/ticketing/concert1.jpg') }}');"></div>
+            <div class="concert-hero-img slide-img-1" style="background-image: url('{{ asset('images/ticketing/concert2.jpg') }}');"></div>
+            <div class="concert-hero-img slide-img-2" style="background-image: url('{{ asset('images/ticketing/concert3.jpg') }}');"></div>
+            <div class="concert-hero-overlay"></div>
+        </div>
 
         <div class="canvas-content-wrap">
 
-            {{-- 1. Status Bar Header --}}
-            <header class="status-bar">
-                <span id="statusBarTime">9:41</span>
-                <div class="status-icons">
-                    {{-- Cellular --}}
-                    <svg width="15" height="11" viewBox="0 0 17 11" fill="currentColor">
-                        <rect x="0" y="8" width="2.5" height="3" rx="0.5"/>
-                        <rect x="4.5" y="5.5" width="2.5" height="5.5" rx="0.5"/>
-                        <rect x="9" y="3" width="2.5" height="8" rx="0.5"/>
-                        <rect x="13.5" y="0" width="2.5" height="11" rx="0.5"/>
-                    </svg>
-                    {{-- Wi-Fi --}}
-                    <svg width="14" height="11" viewBox="0 0 16 12" fill="currentColor">
-                        <path d="M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4.95-3.34a7 7 0 019.9 0l-.7.7a6 6 0 00-8.5 0l-.7-.7zm-2.12-2.12a10 10 0 0114.14 0l-.7.7a9 9 0 00-12.74 0l-.7-.7z"/>
-                    </svg>
-                    {{-- Battery --}}
-                    <svg width="22" height="11" viewBox="0 0 24 12" fill="none">
-                        <rect x="0.5" y="0.5" width="20" height="11" rx="3.5" stroke="currentColor"/>
-                        <rect x="2" y="2" width="13" height="8" rx="2" fill="currentColor"/>
-                        <path d="M22 4v4" stroke="currentColor" stroke-linecap="round"/>
-                    </svg>
-                </div>
-            </header>
-
-            {{-- 2. Buyle Brand Logo Row (Replaces Zentra) --}}
-            <div class="brand-badge-row">
-                <div class="brand-icon-mark">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <path d="M4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
-                        <path d="M9 12c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3" fill="#ffffff"/>
-                    </svg>
-                </div>
-                <div class="brand-text-label">
-                    buyle<span class="dot-accent">.id</span>
-                    <span class="brand-tag-pill">TIX</span>
-                </div>
+            {{-- 1. Official Buyle.id Header Logo (Replacing text) --}}
+            <div class="brand-header-row">
+                <a href="{{ route('ticketing') }}" class="brand-logo-pill" title="Buyle.id">
+                    @if($logo)
+                        <img src="{{ asset('storage/' . $logo) }}" alt="Buyle.id" class="brand-logo-img">
+                    @else
+                        <img src="{{ asset('images/buyle-logo.png') }}" alt="Buyle.id" class="brand-logo-img">
+                    @endif
+                </a>
             </div>
 
-            {{-- 3. Carousel: 3 Slide Informasi Copywriting Indonesia To-The-Point & Bervalue --}}
+            {{-- 2. Carousel: 3 Slide Informasi Copywriting Indonesia To-The-Point & Bervalue --}}
             <div class="slider-viewport" id="sliderViewport">
                 <div class="slides-container" id="slidesContainer">
 
@@ -719,7 +677,7 @@
                 </div>
             </div>
 
-            {{-- 4. Three Action Buttons (Replaces Next & Skip) --}}
+            {{-- 3. Three Action Buttons --}}
             <div class="actions-group">
 
                 {{-- BUTTON 1: DAFTAR PENYELENGGARA (Direct Google OAuth -> Dashboard Ticketing) --}}
@@ -746,11 +704,6 @@
                     Petugas Gate? <strong>Login Scanner &rarr;</strong>
                 </button>
 
-            </div>
-
-            {{-- 5. Bottom iOS Home Indicator --}}
-            <div class="home-indicator-wrap">
-                <div class="home-indicator-bar"></div>
             </div>
 
         </div>
@@ -839,24 +792,12 @@
 
     {{-- Interactive Carousel & Modal Logic --}}
     <script>
-        // Update live time on status bar mock
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            if (hours < 10) hours = '0' + hours;
-            if (minutes < 10) minutes = '0' + minutes;
-            const el = document.getElementById('statusBarTime');
-            if (el) el.textContent = hours + ':' + minutes;
-        }
-        updateClock();
-        setInterval(updateClock, 30000);
-
-        // 3-Slide Carousel Logic
+        // 3-Slide Carousel Logic with Syncing Concert Hero Images
         let currentSlide = 0;
         const totalSlides = 3;
         const slidesContainer = document.getElementById('slidesContainer');
         const dots = document.querySelectorAll('.indicator-dot');
+        const heroImages = document.querySelectorAll('.concert-hero-img');
         let autoSlideTimer = null;
 
         function goToSlide(index) {
@@ -866,6 +807,9 @@
             }
             dots.forEach((dot, idx) => {
                 dot.classList.toggle('active', idx === currentSlide);
+            });
+            heroImages.forEach((img, idx) => {
+                img.classList.toggle('active', idx === currentSlide);
             });
             resetAutoSlide();
         }
@@ -897,10 +841,8 @@
         function handleSwipeGesture() {
             const threshold = 40;
             if (touchEndX < touchStartX - threshold) {
-                // Swipe Left -> Next Slide
                 goToSlide(currentSlide + 1);
             } else if (touchEndX > touchStartX + threshold) {
-                // Swipe Right -> Prev Slide
                 goToSlide(currentSlide - 1);
             }
         }
