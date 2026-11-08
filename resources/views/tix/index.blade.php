@@ -38,11 +38,10 @@
         ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-outer-wrap {
             position: relative;
-            margin-bottom: 2.25rem;
-            background: #ffffff;
-            border-radius: 32px;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            margin-bottom: 2rem;
+            background: transparent;
+            border: none;
+            box-shadow: none;
             overflow: visible;
         }
 
@@ -52,16 +51,13 @@
                         linear-gradient(165deg, #071412 0%, #0d241f 42%, #05100e 100%);
             border-radius: 32px 32px 0 0; /* Flat bottom border: stops right at the banner midline */
             padding: 3.25rem 3rem 0; /* No bottom padding: banner sits on lower edge and overlaps */
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-bottom: none;
+            border: none;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
             color: #ffffff;
             position: relative;
         }
 
         @media (max-width: 900px) {
-            .tix-hero-outer-wrap {
-                border-radius: 24px;
-            }
             .tix-hero-dark-card {
                 padding: 2rem 1.4rem 0;
                 border-radius: 24px 24px 0 0;
@@ -70,8 +66,7 @@
 
         @media (max-width: 600px) {
             .tix-hero-outer-wrap {
-                border-radius: 18px;
-                margin-bottom: 1.5rem;
+                margin-bottom: 1.25rem;
             }
             .tix-hero-dark-card {
                 padding: 1.4rem 1rem 0;
@@ -236,25 +231,27 @@
         .tix-hero-banner-frame {
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 24px 55px rgba(0, 0, 0, 0.28);
+            border: none;
             position: relative;
             background: #0f172a;
             z-index: 10;
-            margin-bottom: -150px; /* Overlaps outside across the red line into the white section */
+            margin-bottom: -210px; /* Overlaps far into the white section so the cutoff line is high up on the banner */
         }
 
         @media (max-width: 900px) {
             .tix-hero-banner-frame {
-                margin-bottom: -90px;
+                margin-bottom: -140px;
                 border-radius: 16px;
+                box-shadow: 0 16px 35px rgba(0, 0, 0, 0.22);
             }
         }
 
         @media (max-width: 600px) {
             .tix-hero-banner-frame {
-                margin-bottom: -65px;
-                border-radius: 12px;
+                margin-bottom: -95px;
+                border-radius: 14px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             }
         }
 
@@ -443,10 +440,10 @@
            White background, Centered, Gray Logos, Mobile Friendly
         ══════════════════════════════════════════════════════════════════════ */
         .tix-partners-white-section {
-            background: #ffffff;
-            border-radius: 0 0 32px 32px;
-            padding-top: 185px; /* Leaves clear space for the bottom half of the overlapping banner */
-            padding-bottom: 2.5rem;
+            background: transparent;
+            border: none;
+            padding-top: 250px; /* Leaves clear space for the bottom half of the overlapping banner */
+            padding-bottom: 2.25rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -454,17 +451,15 @@
 
         @media (max-width: 900px) {
             .tix-partners-white-section {
-                border-radius: 0 0 24px 24px;
-                padding-top: 120px;
-                padding-bottom: 2rem;
+                padding-top: 175px;
+                padding-bottom: 1.75rem;
             }
         }
 
         @media (max-width: 600px) {
             .tix-partners-white-section {
-                border-radius: 0 0 18px 18px;
-                padding-top: 85px;
-                padding-bottom: 1.5rem;
+                padding-top: 115px;
+                padding-bottom: 1.25rem;
             }
         }
 
