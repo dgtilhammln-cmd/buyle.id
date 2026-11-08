@@ -54,425 +54,204 @@
                    Top Half: Dark Forest Green Card
                    Bottom Half: Pure White Background with Overlapping Banner & Logos
                 ══════════════════════════════════════════════════════════════════════ */
-        .tix-hero-outer-wrap {
+        /* ══════════════════════════════════════════════════════════════════════
+           1. 3D ORBIT / STACKED BANNER CAROUSEL (EXACT IMAGE 2 STYLE)
+           Centered active card + peeking sibling cards on left & right
+        ══════════════════════════════════════════════════════════════════════ */
+        .tix-hero-banner-section {
+            width: 100%;
+            margin-top: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tix-orbit-carousel-wrap {
             position: relative;
-            margin-bottom: 2rem;
-            background: transparent;
-            border: none;
-            box-shadow: none;
+            width: 100%;
+            overflow: hidden;
+            padding: 0.75rem 0 0.25rem;
+        }
+
+        .tix-orbit-viewport {
+            position: relative;
+            width: 100%;
             overflow: visible;
         }
 
-        .tix-hero-dark-card {
-            background: linear-gradient(180deg, #1db349 10%, #a4ff01 100%);
-            border-radius: 32px;
-            /* Beautiful curved corners on all 4 sides */
-            padding: 2.25rem 3rem 165px;
-            /* 165px bottom space exactly matches the red line */
-            border: none;
-            box-shadow: 0 16px 40px rgba(29, 179, 73, 0.18);
-            color: #ffffff;
+        .tix-orbit-stage {
             position: relative;
-        }
-
-        @media (max-width: 900px) {
-            .tix-hero-dark-card {
-                padding: 1.6rem 1.4rem 110px;
-                border-radius: 24px;
-            }
+            width: 100%;
+            aspect-ratio: 1920 / 600;
+            min-height: 160px;
+            perspective: 1200px;
         }
 
         @media (max-width: 768px) {
-            .tix-hero-dark-card {
-                display: none !important;
-            }
-
-            .tix-hero-outer-wrap {
-                margin-top: 0.25rem;
-                margin-bottom: 1.25rem;
+            .tix-orbit-stage {
+                aspect-ratio: 1920 / 650;
+                min-height: 130px;
             }
         }
 
-        /* Top Row: Left Headline vs Right Desc & Stats */
-        .tix-hero-top-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2.5rem;
-            margin-bottom: 1.35rem;
-        }
-
-        @media (max-width: 900px) {
-            .tix-hero-top-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1.1rem;
-                margin-bottom: 1.25rem;
-            }
-        }
-
-        .tix-hero-left {
-            flex: 1;
-            min-width: 0;
-        }
-
-        /* Headline: Same Font Size on Both Lines, Strictly 2 Lines */
-        .tix-hero-heading {
-            margin: 0;
-            line-height: 1.18;
-            color: #ffffff;
-            font-size: clamp(1.4rem, 2.7vw, 2.35rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .tix-hero-line1 {
-            font-size: inherit;
-            font-weight: inherit;
-            display: block;
-            white-space: nowrap;
-            margin-bottom: 0.35rem;
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        }
-
-        .tix-highlight-text {
-            color: #ffffff;
-            font-weight: inherit;
-        }
-
-        .tix-hero-line2 {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.85rem;
-            white-space: nowrap;
-            font-size: inherit;
-            font-weight: inherit;
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        }
-
-        .tix-hero-btn-daftar {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: #ffffff;
-            color: #15803d;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.32rem 0.85rem;
-            border-radius: 999px;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            vertical-align: middle;
-            white-space: nowrap;
-            text-shadow: none;
-            letter-spacing: 0;
-            line-height: 1;
-        }
-
-        .tix-hero-btn-daftar:hover {
-            color: #15803d;
-            background: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
-        }
-
-        .tix-hero-btn-daftar svg {
-            transition: transform 0.2s ease;
-        }
-
-        .tix-hero-btn-daftar:hover svg {
-            transform: translateX(2px);
-        }
-
-        .tix-hero-agency-txt {
-            font-size: inherit;
-            font-weight: inherit;
-            color: #ffffff;
-            letter-spacing: inherit;
-        }
-
-        @media (max-width: 600px) {
-            .tix-hero-heading {
-                font-size: clamp(1.15rem, 5vw, 1.75rem);
-            }
-
-            .tix-hero-line1 {
-                font-size: inherit;
-            }
-
-            .tix-hero-agency-txt {
-                font-size: inherit;
-            }
-
-            .tix-hero-line2 {
-                gap: 0.5rem;
-            }
-
-            .tix-hero-btn-daftar {
-                font-size: 0.68rem;
-                padding: 0.25rem 0.65rem;
-            }
-        }
-
-        /* Right Description & Stats (Clean & Light) */
-        .tix-hero-right {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 900px) {
-            .tix-hero-right {
-                max-width: 100%;
-                width: 100%;
-            }
-        }
-
-        .tix-hero-desc {
-            display: none !important;
-        }
-
-        .tix-hero-stats-wrap {
-            display: flex;
-            align-items: center;
-            gap: 1.75rem;
-            padding-top: 0;
-            border-top: none;
-        }
-
-        @media (max-width: 600px) {
-            .tix-hero-stats-wrap {
-                gap: 0.25rem;
-                justify-content: space-between;
-                width: 100%;
-            }
-
-            .tix-hero-stat-item {
-                flex: 1;
-                min-width: 0;
-            }
-
-            .tix-stat-num {
-                font-size: 0.95rem;
-                gap: 4px;
-            }
-
-            .tix-stat-num svg {
-                width: 14px;
-                height: 14px;
-            }
-
-            .tix-stat-lbl {
-                font-size: 0.62rem;
-                white-space: normal;
-                line-height: 1.15;
-            }
-
-            .tix-hero-stat-sep {
-                height: 22px;
-                margin: 0 2px;
-            }
-        }
-
-        .tix-hero-stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .tix-stat-num {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .tix-stat-num svg {
-            flex-shrink: 0;
-            color: #ffffff;
-        }
-
-        .tix-stat-lbl {
-            font-size: 0.72rem;
-            color: rgba(255, 255, 255, 0.92);
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .tix-hero-stat-sep {
-            width: 1px;
-            height: 28px;
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Banner Frame Protruding Out of Dark Card (Image 2 Red-Line Overlap) */
-        .tix-hero-banner-frame {
+        .tix-orbit-card {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 84%;
+            height: 100%;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 24px 55px rgba(0, 0, 0, 0.28);
-            border: none;
-            position: relative;
             background: #0f172a;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            will-change: transform, opacity;
+        }
+
+        @media (max-width: 768px) {
+            .tix-orbit-card {
+                width: 86%;
+                border-radius: 14px;
+            }
+        }
+
+        /* Card States (Image 2 Stack Effect) */
+        .tix-orbit-card.is-active {
+            transform: translateX(-50%) scale(1);
             z-index: 10;
-            width: calc(100% - 6rem);
-            max-width: calc(100% - 6rem);
-            margin: -165px auto 0;
-            /* Sits 165px inside the green card, remainder in pure white! */
+            opacity: 1;
+            filter: none;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+            pointer-events: auto;
         }
 
-        @media (max-width: 900px) {
-            .tix-hero-banner-frame {
-                width: calc(100% - 2.8rem);
-                max-width: calc(100% - 2.8rem);
-                margin: -110px auto 0;
-                border-radius: 16px;
-                box-shadow: 0 16px 35px rgba(0, 0, 0, 0.22);
-            }
+        .tix-orbit-card.is-prev {
+            transform: translateX(calc(-50% - 54%)) scale(0.9);
+            z-index: 3;
+            opacity: 0.65;
+            filter: brightness(0.85);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            pointer-events: auto;
         }
 
-        @media (max-width: 768px) {
-            .tix-hero-banner-frame {
-                width: 100% !important;
-                max-width: 100% !important;
-                margin: 0 auto !important;
-                border-radius: 16px;
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-            }
+        .tix-orbit-card.is-next {
+            transform: translateX(calc(-50% + 54%)) scale(0.9);
+            z-index: 3;
+            opacity: 0.65;
+            filter: brightness(0.85);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            pointer-events: auto;
         }
 
-        .tix-carousel-container {
-            position: relative;
-            width: 100%;
+        .tix-orbit-card.is-hidden {
+            transform: translateX(-50%) scale(0.75);
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .tix-carousel-viewport {
-            overflow: hidden;
-            position: relative;
-            width: 100%;
+        /* Single Banner Mode (When count <= 1: Polosan, No Stack, No Peeking) */
+        .tix-orbit-carousel-wrap.single-banner .tix-orbit-card {
+            width: 100% !important;
+            left: 50% !important;
+            transform: translateX(-50%) scale(1) !important;
+            position: relative !important;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.14) !important;
         }
 
-        .tix-carousel-track {
-            display: flex;
-            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            width: 100%;
-        }
-
-        .tix-slide {
-            flex: 0 0 100%;
-            width: 100%;
-            position: relative;
-            aspect-ratio: 1920 / 600;
-            min-height: 0;
-            max-height: none;
-            overflow: hidden;
-            text-decoration: none;
-            color: #ffffff;
+        .tix-orbit-card-inner {
             display: block;
-            background: #0F172A;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
         }
 
-        @media (max-width: 768px) {
-            .tix-slide {
-                aspect-ratio: 1920 / 600 !important;
-                min-height: 0 !important;
-                max-height: none !important;
-            }
-        }
-
-        .tix-slide-img {
+        .tix-orbit-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
 
-        /* Nav Prev / Next Circular Buttons */
-        .tix-nav-btn {
+        /* Nav Circular Prev / Next Buttons */
+        .tix-orbit-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: #ffffff;
-            border: 1px solid #E2E8F0;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0F172A;
+            color: #0f172a;
             cursor: pointer;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+            z-index: 20;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;
             outline: none;
+            padding: 0;
         }
 
-        .tix-nav-btn:hover {
-            background: #F8FAFC;
+        .tix-orbit-btn:hover {
+            background: #f8fafc;
             transform: translateY(-50%) scale(1.08);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
         }
 
-        .tix-nav-btn.prev {
-            left: 14px;
+        .tix-orbit-btn.prev {
+            left: calc(8% + 14px);
         }
 
-        .tix-nav-btn.next {
-            right: 14px;
+        .tix-orbit-btn.next {
+            right: calc(8% + 14px);
         }
 
         @media (max-width: 768px) {
-            .tix-nav-btn {
+            .tix-orbit-btn {
                 width: 32px;
                 height: 32px;
             }
 
-            .tix-nav-btn.prev {
-                left: 8px;
+            .tix-orbit-btn.prev {
+                left: calc(7% + 8px);
             }
 
-            .tix-nav-btn.next {
-                right: 8px;
+            .tix-orbit-btn.next {
+                right: calc(7% + 8px);
             }
         }
 
-        /* Carousel Dash Indicators */
-        .tix-carousel-dots {
+        /* Orbit Dots Indicator */
+        .tix-orbit-dots {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            position: absolute;
-            bottom: 12px;
-            left: 0;
-            right: 0;
-            z-index: 5;
+            margin-top: 14px;
+            margin-bottom: 0.25rem;
         }
 
-        .tix-dot {
-            height: 4px;
-            width: 16px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease;
+        .tix-orbit-dot {
+            height: 7px;
+            width: 7px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
             border: none;
             padding: 0;
         }
 
-        .tix-dot.active {
-            width: 32px;
-            background: #2dd4bf;
-            box-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
+        .tix-orbit-dot.active {
+            width: 26px;
+            border-radius: 999px;
+            background: #1eb349;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.35);
         }
 
         /* Clean Banner Placeholder Box */
@@ -903,20 +682,85 @@
         }
 
         .tix-skeleton {
-            background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 37%, #F1F5F9 63%);
-            background-size: 400% 100%;
-            animation: tixShimmer 1.4s ease infinite;
+            background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+            background-size: 200% 100%;
+            animation: tixShimmer 1.5s infinite;
             border-radius: 10px;
         }
 
         .tix-skeleton-card {
             background: #ffffff;
-            border: 1.5px solid #E2E8F0;
+            border: 1.5px solid #e2e8f0;
             border-radius: 16px;
             padding: 0.75rem;
             display: flex;
             flex-direction: column;
             pointer-events: none;
+        }
+
+        /* 3D Orbit Carousel Skeleton (Matching Latest Coverflow Layout) */
+        .tix-orbit-skel-wrap {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 0.75rem 0 0.25rem;
+        }
+
+        .tix-orbit-skel-stage {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1920 / 600;
+            min-height: 160px;
+        }
+
+        @media (max-width: 768px) {
+            .tix-orbit-skel-stage {
+                aspect-ratio: 1920 / 650;
+                min-height: 130px;
+            }
+        }
+
+        .tix-orbit-skel-card {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 84%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .tix-orbit-skel-card {
+                width: 86%;
+                border-radius: 14px;
+            }
+        }
+
+        .tix-orbit-skel-card.active {
+            transform: translateX(-50%) scale(1);
+            z-index: 2;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .tix-orbit-skel-card.prev {
+            transform: translateX(calc(-50% - 54%)) scale(0.9);
+            z-index: 1;
+            opacity: 0.45;
+        }
+
+        .tix-orbit-skel-card.next {
+            transform: translateX(calc(-50% + 54%)) scale(0.9);
+            z-index: 1;
+            opacity: 0.45;
+        }
+
+        .tix-orbit-skel-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 14px;
+            margin-bottom: 0.25rem;
         }
 
         /* Promoter Footer Box */
@@ -956,14 +800,30 @@
 
         {{-- ══ SKELETON SHIMMER OVERLAY (Smooth Initial Render) ══ --}}
         <div id="tixInitialSkeleton" class="tix-container">
-            {{-- Hero Skeleton Box --}}
-            <div id="tixHeroSkel" class="tix-skeleton" style="width: 100%; height: 380px; border-radius: 32px; margin-bottom: 2rem;"></div>
+            {{-- 3D Carousel Orbit Skeleton (Center card + Left & Right peek cards) --}}
+            <div class="tix-orbit-skel-wrap">
+                <div class="tix-orbit-skel-stage">
+                    <div class="tix-orbit-skel-card prev tix-skeleton"></div>
+                    <div class="tix-orbit-skel-card active tix-skeleton"></div>
+                    <div class="tix-orbit-skel-card next tix-skeleton"></div>
+                </div>
+                {{-- Skeleton Dots --}}
+                <div class="tix-orbit-skel-dots">
+                    <div class="tix-skeleton" style="width: 24px; height: 7px; border-radius: 999px;"></div>
+                    <div class="tix-skeleton" style="width: 7px; height: 7px; border-radius: 50%;"></div>
+                    <div class="tix-skeleton" style="width: 7px; height: 7px; border-radius: 50%;"></div>
+                    <div class="tix-skeleton" style="width: 7px; height: 7px; border-radius: 50%;"></div>
+                </div>
+            </div>
 
-            {{-- 3 Logo Skeleton Bar --}}
-            <div style="display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem;">
-                <div class="tix-skeleton" style="width: 100px; height: 24px; border-radius: 6px;"></div>
-                <div class="tix-skeleton" style="width: 100px; height: 24px; border-radius: 6px;"></div>
-                <div class="tix-skeleton" style="width: 100px; height: 24px; border-radius: 6px;"></div>
+            {{-- Media Partner Skeleton --}}
+            <div style="display: flex; justify-content: center; align-items: center; gap: 2rem; margin: 1.5rem 0 2rem; flex-wrap: wrap;">
+                <div class="tix-skeleton" style="width: 140px; height: 16px; border-radius: 6px;"></div>
+                <div style="display: flex; gap: 2rem; align-items: center;">
+                    <div class="tix-skeleton" style="width: 90px; height: 26px; border-radius: 6px;"></div>
+                    <div class="tix-skeleton" style="width: 80px; height: 24px; border-radius: 6px;"></div>
+                    <div class="tix-skeleton" style="width: 95px; height: 24px; border-radius: 6px;"></div>
+                </div>
             </div>
 
             {{-- Search Bar Skeleton --}}
@@ -1006,95 +866,23 @@
         {{-- ══ REAL CONTENT CONTAINER ══ --}}
         <div id="tixRealContent" class="tix-container" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
 
-            {{-- ══ 1. HERO SPLIT SECTION (EXACT IMAGE 2 OVERLAP) ══ --}}
-            <div class="tix-hero-outer-wrap">
-
-                {{-- Green Card (Ends at the red line, behind the top half of the banner) --}}
-                <div class="tix-hero-dark-card">
-                    {{-- Top Row: Heading on Left & Description / Stats on Right --}}
-                    <div class="tix-hero-top-row">
-                        <div class="tix-hero-left">
-                            <h1 class="tix-hero-heading">
-                                <span class="tix-hero-line1">
-                                    Solusi <span class="tix-highlight-text">Smart E-Ticketing</span>
-                                </span>
-                                <span class="tix-hero-line2">
-                                    <span class="tix-hero-agency-txt">Event & Konser</span>
-                                    <a href="https://buyle.id/ticketing" class="tix-hero-btn-daftar" title="Pelajari lebih lanjut">
-                                        <span>Pelajari lebih lanjut</span>
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                        </svg>
-                                    </a>
-                                </span>
-                            </h1>
-                        </div>
-
-                        <div class="tix-hero-right">
-                            <p class="tix-hero-desc" style="display: none;">
-                                Beli tiket event & konser favorit dengan kemudahan checkout instan. Dilengkapi sistem Smart
-                                E-Ticketing 100% anti tiket palsu serta Scanner kilat 0,1 detik anti-loading tanpa antre
-                                panjang.
-                            </p>
-                            <div class="tix-hero-stats-wrap">
-                                <div class="tix-hero-stat-item">
-                                    <div class="tix-stat-num">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                                        </svg>
-                                        <span>0,1s</span>
-                                    </div>
-                                    <div class="tix-stat-lbl">Scan Kilat Anti Loading</div>
-                                </div>
-                                <div class="tix-hero-stat-sep"></div>
-                                <div class="tix-hero-stat-item">
-                                    <div class="tix-stat-num">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3"
-                                            viewBox="0 0 24 24">
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                            <polyline points="9 12 11 14 15 10"></polyline>
-                                        </svg>
-                                        <span>100%</span>
-                                    </div>
-                                    <div class="tix-stat-lbl">Bebas Tiket Palsu</div>
-                                </div>
-                                <div class="tix-hero-stat-sep"></div>
-                                <div class="tix-hero-stat-item">
-                                    <div class="tix-stat-num">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3"
-                                            viewBox="0 0 24 24">
-                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="9" cy="7" r="4"></circle>
-                                            <polyline points="16 11 18 13 22 9"></polyline>
-                                        </svg>
-                                        <span>Cepat</span>
-                                    </div>
-                                    <div class="tix-stat-lbl">Bebas Antre</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Center: Nested 1920x600 Banner Frame Protruding Down into the White Area --}}
-                <div class="tix-hero-banner-frame">
-                    <div class="tix-carousel-container" id="tixCarousel">
-                        <div class="tix-carousel-viewport">
-                            <div class="tix-carousel-track" id="tixCarouselTrack">
-                                @foreach($banners as $index => $banner)
-                                    <a href="{{ $banner['url'] }}" class="tix-slide">
+            {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (EXACT IMAGE 2 STYLE) ══ --}}
+            <div class="tix-hero-banner-section">
+                <div class="tix-orbit-carousel-wrap {{ count($banners) <= 1 ? 'single-banner' : '' }}" id="tixOrbitCarousel">
+                    <div class="tix-orbit-viewport">
+                        <div class="tix-orbit-stage" id="tixOrbitStage">
+                            @foreach($banners as $index => $banner)
+                                <div class="tix-orbit-card {{ $index === 0 ? 'is-active' : ($index === 1 ? 'is-next' : ($index === count($banners) - 1 ? 'is-prev' : 'is-hidden')) }}" data-index="{{ $index }}">
+                                    <a href="{{ $banner['url'] }}" class="tix-orbit-card-inner">
                                         @if(!empty($banner['image']))
-                                            {{-- Clean Pure 1920x600 Image (No Crop, No Text Overlaid on Faces) --}}
-                                            <img src="{{ $banner['image'] }}" alt="{{ $banner['title'] }}" class="tix-slide-img">
+                                            {{-- Clean Pure 1920x600 Image (No Text Overlaid on Faces) --}}
+                                            <img src="{{ $banner['image'] }}" alt="{{ $banner['title'] }}" class="tix-orbit-img" loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
                                         @else
                                             {{-- Clean Modern SVG Landscape Placeholder --}}
                                             <div class="tix-banner-placeholder-box">
                                                 <div class="tix-ph-icon">
-                                                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"
-                                                        viewBox="0 0 24 24">
-                                                        <path
-                                                            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                                                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
                                                     </svg>
                                                 </div>
                                                 <span class="tix-ph-badge">BANNER BUYLE TIX (1920 X 600)</span>
@@ -1106,96 +894,97 @@
                                             </div>
                                         @endif
                                     </a>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
+                        </div>
 
-                            {{-- Prev & Next Nav Buttons --}}
-                            <button type="button" class="tix-nav-btn prev" onclick="tixPrevSlide()"
-                                aria-label="Slide Sebelumnya">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
+                        @if(count($banners) > 1)
+                            {{-- Circular Navigation Buttons (Only shown if banners > 1) --}}
+                            <button type="button" class="tix-orbit-btn prev" onclick="tixPrevOrbitSlide()" aria-label="Slide Sebelumnya">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <polyline points="15 18 9 12 15 6"></polyline>
                                 </svg>
                             </button>
-                            <button type="button" class="tix-nav-btn next" onclick="tixNextSlide()"
-                                aria-label="Slide Selanjutnya">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
+                            <button type="button" class="tix-orbit-btn next" onclick="tixNextOrbitSlide()" aria-label="Slide Selanjutnya">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </button>
-
-                            {{-- Bottom Pill Dash Indicators --}}
-                            <div class="tix-carousel-dots" id="tixCarouselDots">
-                                @foreach($banners as $index => $banner)
-                                    <button type="button" class="tix-dot {{ $index === 0 ? 'active' : '' }}"
-                                        onclick="tixGoToSlide({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
-                                @endforeach
-                            </div>
-                        </div>
+                        @endif
                     </div>
-                </div>
 
-                {{-- White Section Below Dark Card (Holds the protruding lower half of banner + 3 Media Partner Logos) --}}
-                @php
-                    $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
-                    $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
-                    $partner1Url = \App\Models\Setting::get('tix_partner_1_url', '#');
-
-                    $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
-                    $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
-                    $partner2Url = \App\Models\Setting::get('tix_partner_2_url', '#');
-
-                    $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
-                    $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
-                    $partner3Url = \App\Models\Setting::get('tix_partner_3_url', '#');
-
-                    $partners = [
-                        ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
-                        ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
-                        ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
-                    ];
-                @endphp
-
-                <div class="tix-partners-white-section">
-                    <div class="tix-partners-row">
-                        <span class="tix-partners-label">Official Media Partner:</span>
-                        <div class="tix-partners-logos">
-                            @foreach($partners as $p)
-                                <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}"
-                                    class="tix-partner-item" title="{{ $p['name'] }}">
-                                    @if(!empty($p['logo']))
-                                        <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}"
-                                            class="tix-partner-logo-img">
-                                    @else
-                                        @if(stripos($p['name'], 'spotify') !== false)
-                                            <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
-                                                <path
-                                                    d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z" />
-                                                <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                    font-size="20" fill="currentColor">Spotify</text>
-                                            </svg>
-                                        @elseif(stripos($p['name'], 'google') !== false)
-                                            <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
-                                                <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                    font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
-                                            </svg>
-                                        @elseif(stripos($p['name'], 'youtube') !== false)
-                                            <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
-                                                <path
-                                                    d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z" />
-                                                <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                    font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
-                                            </svg>
-                                        @else
-                                            <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
-                                        @endif
-                                    @endif
-                                </a>
+                    @if(count($banners) > 1)
+                        {{-- Orbit Dots Indicator (Only shown if banners > 1) --}}
+                        <div class="tix-orbit-dots" id="tixOrbitDots">
+                            @foreach($banners as $index => $banner)
+                                <button type="button" class="tix-orbit-dot {{ $index === 0 ? 'active' : '' }}"
+                                    onclick="tixGoToOrbitSlide({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
                             @endforeach
                         </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- ══ 2. OFFICIAL MEDIA PARTNERS ROW (Directly follows Banner) ══ --}}
+            @php
+                $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
+                $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
+                $partner1Url = \App\Models\Setting::get('tix_partner_1_url', '#');
+
+                $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
+                $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
+                $partner2Url = \App\Models\Setting::get('tix_partner_2_url', '#');
+
+                $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
+                $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
+                $partner3Url = \App\Models\Setting::get('tix_partner_3_url', '#');
+
+                $partners = [
+                    ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
+                    ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
+                    ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
+                ];
+            @endphp
+
+            <div class="tix-partners-white-section">
+                <div class="tix-partners-row">
+                    <span class="tix-partners-label">Official Media Partner:</span>
+                    <div class="tix-partners-logos">
+                        @foreach($partners as $p)
+                            <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}"
+                                class="tix-partner-item" title="{{ $p['name'] }}">
+                                @if(!empty($p['logo']))
+                                    <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}"
+                                        class="tix-partner-logo-img">
+                                @else
+                                    @if(stripos($p['name'], 'spotify') !== false)
+                                        <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
+                                            <path
+                                                d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z" />
+                                            <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                font-size="20" fill="currentColor">Spotify</text>
+                                        </svg>
+                                    @elseif(stripos($p['name'], 'google') !== false)
+                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
+                                            <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
+                                        </svg>
+                                    @elseif(stripos($p['name'], 'youtube') !== false)
+                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
+                                            <path
+                                                d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z" />
+                                            <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
+                                        </svg>
+                                    @else
+                                        <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                    @endif
+                                @endif
+                            </a>
+                        @endforeach
                     </div>
                 </div>
+            </div>
 
             </div>
 
@@ -1386,18 +1175,35 @@
 
     {{-- ══ JAVASCRIPT CONTROLLERS: CAROUSEL, SKELETON TRANSITION, & INFINITE SCROLL ══ --}}
     <script>
-        let currentTixSlide = 0;
-        const tixSlideCount = {{ count($banners) }};
-        let tixAutoPlayTimer = null;
+        let currentOrbitSlide = 0;
+        const orbitSlideCount = {{ count($banners) }};
+        let orbitAutoPlayTimer = null;
 
-        function tixUpdateCarousel() {
-            const track = document.getElementById('tixCarouselTrack');
-            if (track) {
-                track.style.transform = `translateX(-${currentTixSlide * 100}%)`;
+        function tixUpdateOrbitCarousel() {
+            const cards = document.querySelectorAll('.tix-orbit-card');
+            if (!cards.length) return;
+
+            if (orbitSlideCount <= 1) {
+                cards[0]?.classList.add('is-active');
+                return;
             }
-            const dots = document.querySelectorAll('#tixCarouselDots .tix-dot');
+
+            cards.forEach((card, idx) => {
+                card.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden');
+                if (idx === currentOrbitSlide) {
+                    card.classList.add('is-active');
+                } else if (idx === (currentOrbitSlide - 1 + orbitSlideCount) % orbitSlideCount) {
+                    card.classList.add('is-prev');
+                } else if (idx === (currentOrbitSlide + 1) % orbitSlideCount) {
+                    card.classList.add('is-next');
+                } else {
+                    card.classList.add('is-hidden');
+                }
+            });
+
+            const dots = document.querySelectorAll('#tixOrbitDots .tix-orbit-dot');
             dots.forEach((dot, idx) => {
-                if (idx === currentTixSlide) {
+                if (idx === currentOrbitSlide) {
                     dot.classList.add('active');
                 } else {
                     dot.classList.remove('active');
@@ -1405,35 +1211,35 @@
             });
         }
 
-        function tixNextSlide() {
-            if (tixSlideCount <= 1) return;
-            currentTixSlide = (currentTixSlide + 1) % tixSlideCount;
-            tixUpdateCarousel();
-            tixResetTimer();
+        function tixNextOrbitSlide() {
+            if (orbitSlideCount <= 1) return;
+            currentOrbitSlide = (currentOrbitSlide + 1) % orbitSlideCount;
+            tixUpdateOrbitCarousel();
+            tixResetOrbitTimer();
         }
 
-        function tixPrevSlide() {
-            if (tixSlideCount <= 1) return;
-            currentTixSlide = (currentTixSlide - 1 + tixSlideCount) % tixSlideCount;
-            tixUpdateCarousel();
-            tixResetTimer();
+        function tixPrevOrbitSlide() {
+            if (orbitSlideCount <= 1) return;
+            currentOrbitSlide = (currentOrbitSlide - 1 + orbitSlideCount) % orbitSlideCount;
+            tixUpdateOrbitCarousel();
+            tixResetOrbitTimer();
         }
 
-        function tixGoToSlide(index) {
-            currentTixSlide = index;
-            tixUpdateCarousel();
-            tixResetTimer();
+        function tixGoToOrbitSlide(index) {
+            currentOrbitSlide = index;
+            tixUpdateOrbitCarousel();
+            tixResetOrbitTimer();
         }
 
-        function tixStartTimer() {
-            if (tixSlideCount > 1) {
-                tixAutoPlayTimer = setInterval(tixNextSlide, 5000);
+        function tixStartOrbitTimer() {
+            if (orbitSlideCount > 1) {
+                orbitAutoPlayTimer = setInterval(tixNextOrbitSlide, 5000);
             }
         }
 
-        function tixResetTimer() {
-            clearInterval(tixAutoPlayTimer);
-            tixStartTimer();
+        function tixResetOrbitTimer() {
+            clearInterval(orbitAutoPlayTimer);
+            tixStartOrbitTimer();
         }
 
         // Infinite Scroll & Realtime Search Setup
@@ -1658,53 +1464,46 @@
                 }
             }, 250);
 
-            // Start Carousel
-            tixStartTimer();
+            // Start 3D Orbit Carousel
+            tixUpdateOrbitCarousel();
+            tixStartOrbitTimer();
 
-            const carousel = document.getElementById('tixCarousel');
-            if (carousel) {
-                carousel.addEventListener('mouseenter', () => clearInterval(tixAutoPlayTimer));
-                carousel.addEventListener('mouseleave', () => tixStartTimer());
+            const carousel = document.getElementById('tixOrbitCarousel');
+            if (carousel && orbitSlideCount > 1) {
+                carousel.addEventListener('mouseenter', () => clearInterval(orbitAutoPlayTimer));
+                carousel.addEventListener('mouseleave', () => tixStartOrbitTimer());
+            }
 
-                // Touch swipe support on mobile
+            // Click on peeking prev/next card to slide it to center
+            document.querySelectorAll('.tix-orbit-card').forEach((card) => {
+                card.addEventListener('click', function(e) {
+                    if (this.classList.contains('is-prev')) {
+                        e.preventDefault();
+                        tixPrevOrbitSlide();
+                    } else if (this.classList.contains('is-next')) {
+                        e.preventDefault();
+                        tixNextOrbitSlide();
+                    }
+                });
+            });
+
+            // Touch swipe gesture support on mobile
+            const orbitStage = document.getElementById('tixOrbitStage');
+            if (orbitStage && orbitSlideCount > 1) {
                 let touchStartX = 0;
                 let touchEndX = 0;
-                carousel.addEventListener('touchstart', (e) => {
+                orbitStage.addEventListener('touchstart', (e) => {
                     touchStartX = e.changedTouches[0].screenX;
                 }, { passive: true });
-
-                carousel.addEventListener('touchend', (e) => {
+                orbitStage.addEventListener('touchend', (e) => {
                     touchEndX = e.changedTouches[0].screenX;
-                    if (touchStartX - touchEndX > 50) {
-                        tixNextSlide();
-                    } else if (touchEndX - touchStartX > 50) {
-                        tixPrevSlide();
+                    if (touchStartX - touchEndX > 45) {
+                        tixNextOrbitSlide();
+                    } else if (touchEndX - touchStartX > 45) {
+                        tixPrevOrbitSlide();
                     }
                 }, { passive: true });
             }
-
-            // Bind Realtime Search Input (Debounced 250ms)
-            const searchInput = document.getElementById('tixSearchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function () {
-                    clearTimeout(tixSearchTimeout);
-                    tixSearchQuery = this.value.trim();
-                    tixSearchTimeout = setTimeout(() => {
-                        tixTriggerSearch(true);
-                    }, 250);
-                });
-            }
-
-            // Setup IntersectionObserver for Infinite Scroll
-            if ('IntersectionObserver' in window) {
-                const sentinel = document.getElementById('infiniteScrollSentinel');
-                if (sentinel) {
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting && tixHasMore && !tixIsLoading) {
-                                tixLoadMore();
-                            }
-                        });
                     }, {
                         rootMargin: '250px',
                         threshold: 0.1
