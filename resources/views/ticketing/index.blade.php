@@ -4,8 +4,8 @@
 
     <style>
         /* ══════════════════════════════════════════════
-                                           BUYLE TICKETING PLATFORM & VENUE SYSTEM
-                                           ══════════════════════════════════════════════ */
+                                                       BUYLE TICKETING PLATFORM & VENUE SYSTEM
+                                                       ══════════════════════════════════════════════ */
         :root {
             --tk-accent: #1eb349;
             --tk-accent-light: #a5cf37;
@@ -358,8 +358,8 @@
         }
 
         /* ══════════════════════════════════════════════
-                                           SIMULASI PERHITUNGAN BIAYA TIKET (CALCULATOR)
-                                           ══════════════════════════════════════════════ */
+                                                       SIMULASI PERHITUNGAN BIAYA TIKET (CALCULATOR)
+                                                       ══════════════════════════════════════════════ */
         .ticket-calc-wrap {
             margin-top: 5.5rem;
             background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
@@ -750,9 +750,9 @@
         }
 
         /* ══════════════════════════════════════════════
-                                           SECTION BARU: MULTI-GATE SCANNER & VENUE PLAN
-                                           (TEMA UNIFORM BUYLE — CLEAN LIGHT & GRADIENT)
-                                           ══════════════════════════════════════════════ */
+                                                       SECTION BARU: MULTI-GATE SCANNER & VENUE PLAN
+                                                       (TEMA UNIFORM BUYLE — CLEAN LIGHT & GRADIENT)
+                                                       ══════════════════════════════════════════════ */
         .buyle-venue-section {
             padding: 6.5rem 1.5rem 7.5rem;
             background: #FFFFFF;
@@ -1206,41 +1206,41 @@
 
     {{-- SEO Schema JSON-LD --}}
     <script type="application/ld+json">
-                                    {
-                                      "@context": "https://schema.org",
-                                      "@graph": [
-                                        {
-                                          "@type": "BreadcrumbList",
-                                          "itemListElement": [
-                                            {
-                                              "@type": "ListItem",
-                                              "position": 1,
-                                              "name": "Beranda",
-                                              "item": "{{ route_locale('home') }}"
-                                            },
-                                            {
-                                              "@type": "ListItem",
-                                              "position": 2,
-                                              "name": "Ticketing",
-                                              "item": "{{ route('ticketing') }}"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "@type": "SoftwareApplication",
-                                          "name": "Buyle.id E-Ticketing Platform",
-                                          "applicationCategory": "BusinessApplication",
-                                          "operatingSystem": "All Web Browsers",
-                                          "description": "Platform e-ticketing terlengkap di Indonesia untuk konser, webinar, seminar, dan event. Dilengkapi QR code E-Tiket PDF, sistem pembayaran aman escrow, dan scanner gate panitia.",
-                                          "offers": {
-                                            "@type": "Offer",
-                                            "price": "0",
-                                            "priceCurrency": "IDR"
-                                          }
-                                        }
-                                      ]
-                                    }
-                                    </script>
+                                                {
+                                                  "@context": "https://schema.org",
+                                                  "@graph": [
+                                                    {
+                                                      "@type": "BreadcrumbList",
+                                                      "itemListElement": [
+                                                        {
+                                                          "@type": "ListItem",
+                                                          "position": 1,
+                                                          "name": "Beranda",
+                                                          "item": "{{ route_locale('home') }}"
+                                                        },
+                                                        {
+                                                          "@type": "ListItem",
+                                                          "position": 2,
+                                                          "name": "Ticketing",
+                                                          "item": "{{ route('ticketing') }}"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "@type": "SoftwareApplication",
+                                                      "name": "Buyle.id E-Ticketing Platform",
+                                                      "applicationCategory": "BusinessApplication",
+                                                      "operatingSystem": "All Web Browsers",
+                                                      "description": "Platform e-ticketing terlengkap di Indonesia untuk konser, webinar, seminar, dan event. Dilengkapi QR code E-Tiket PDF, sistem pembayaran aman escrow, dan scanner gate panitia.",
+                                                      "offers": {
+                                                        "@type": "Offer",
+                                                        "price": "0",
+                                                        "priceCurrency": "IDR"
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                                </script>
 
     {{-- ════ 1. TICKETING MASTER OVERVIEW SECTION ════ --}}
     <section class="buyle-ticketing-section" id="ticketing-platform">
@@ -1256,11 +1256,11 @@
             {{-- Header Intro (Badge Dihapus Sesuai Permintaan) --}}
             <div class="ticket-header" data-aos="fade-up">
                 <h1 class="ticket-title">
-                    Solusi Tiket Event &amp; Konser Digital Terlengkap<span class="accent-dot">.</span>
+                    Solusi Manajemen Event &amp; Konser Digital Terbaru<span class="accent-dot">.</span>
                 </h1>
                 <p class="ticket-desc">
-                    Platform e-ticketing all-in-one untuk kreator, promotor, dan event organizer. Dari tiket
-                    online, pembayaran instan Digital, E-Tiket QR otomatis,
+                    Platform ticket management system untuk kreator, promotor, dan event organizer. Dari tiket
+                    online, pembayaran Digital, E-Tiket,
                     validasi check-in kru multi gate secara realtime, Hingga Dapatkan 0% Potongan Platform.
                 </p>
 
