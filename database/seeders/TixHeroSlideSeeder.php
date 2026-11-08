@@ -50,3 +50,4 @@ class TixHeroSlideSeeder extends Seeder
         }
     }
 }
+
