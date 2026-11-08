@@ -236,12 +236,12 @@
             position: relative;
             background: #0f172a;
             z-index: 10;
-            margin-bottom: -210px; /* Overlaps far into the white section so the cutoff line is high up on the banner */
+            margin-bottom: -270px; /* White background rises exactly to the red line */
         }
 
         @media (max-width: 900px) {
             .tix-hero-banner-frame {
-                margin-bottom: -140px;
+                margin-bottom: -180px;
                 border-radius: 16px;
                 box-shadow: 0 16px 35px rgba(0, 0, 0, 0.22);
             }
@@ -249,7 +249,7 @@
 
         @media (max-width: 600px) {
             .tix-hero-banner-frame {
-                margin-bottom: -95px;
+                margin-bottom: -120px;
                 border-radius: 14px;
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             }
@@ -442,7 +442,7 @@
         .tix-partners-white-section {
             background: transparent;
             border: none;
-            padding-top: 250px; /* Leaves clear space for the bottom half of the overlapping banner */
+            padding-top: 305px; /* Leaves clear space for the bottom half of the overlapping banner */
             padding-bottom: 2.25rem;
             display: flex;
             justify-content: center;
@@ -451,14 +451,14 @@
 
         @media (max-width: 900px) {
             .tix-partners-white-section {
-                padding-top: 175px;
+                padding-top: 215px;
                 padding-bottom: 1.75rem;
             }
         }
 
         @media (max-width: 600px) {
             .tix-partners-white-section {
-                padding-top: 115px;
+                padding-top: 145px;
                 padding-bottom: 1.25rem;
             }
         }
@@ -751,45 +751,45 @@
                         <div class="tix-hero-left">
                             <h1 class="tix-hero-heading">
                                 <span class="tix-hero-line1">
-                                    We Are <span class="tix-highlight-text">Creative</span>
+                                    Solusi <span class="tix-highlight-text">Smart E-Ticketing</span>
                                 </span>
                                 <span class="tix-hero-line2">
                                     <span class="tix-hero-badge-est">
-                                        <span>Establish</span>
+                                        <span>RESMI</span>
                                         <strong>2026</strong>
                                     </span>
-                                    <span class="tix-hero-agency-txt">Digital Ticketing</span>
+                                    <span class="tix-hero-agency-txt">Event & Konser</span>
                                 </span>
                             </h1>
                         </div>
 
                         <div class="tix-hero-right">
                             <p class="tix-hero-desc">
-                                we are a premier ticketing marketplace with verified organizers, instant QR code check-in gate, and secure e-tickets for top concerts and events
+                                Beli tiket event & konser favorit dengan kemudahan checkout instan. Dilengkapi sistem Smart E-Ticketing 100% anti tiket palsu serta Gatekeeper Scanner kilat 0,1 detik anti-loading — penonton masuk nyaman tanpa antre panjang.
                             </p>
                             <div class="tix-hero-stats-wrap">
                                 <div class="tix-hero-stat-item">
                                     <div class="tix-stat-num">
+                                        <span>0,1s</span>
+                                        <span class="tix-stat-plus">⚡</span>
+                                    </div>
+                                    <div class="tix-stat-lbl">Scan Kilat Anti Loading</div>
+                                </div>
+                                <div class="tix-hero-stat-sep"></div>
+                                <div class="tix-hero-stat-item">
+                                    <div class="tix-stat-num">
                                         <span>100%</span>
-                                        <span class="tix-stat-plus">+</span>
+                                        <span class="tix-stat-plus">✓</span>
                                     </div>
-                                    <div class="tix-stat-lbl">Official E-Tickets</div>
+                                    <div class="tix-stat-lbl">Bebas Tiket Palsu</div>
                                 </div>
                                 <div class="tix-hero-stat-sep"></div>
                                 <div class="tix-hero-stat-item">
                                     <div class="tix-stat-num">
-                                        <span>24/7</span>
-                                        <span class="tix-stat-plus">+</span>
+                                        <span>Bebas</span>
+                                        <span class="tix-stat-plus">Antre</span>
                                     </div>
-                                    <div class="tix-stat-lbl">Gate Scanner Live</div>
-                                </div>
-                                <div class="tix-hero-stat-sep"></div>
-                                <div class="tix-hero-stat-item">
-                                    <div class="tix-stat-num">
-                                        <span>0%</span>
-                                        <span class="tix-stat-plus">+</span>
-                                    </div>
-                                    <div class="tix-stat-lbl">Hidden Fees</div>
+                                    <div class="tix-stat-lbl">Gate Masuk & CO Cepat</div>
                                 </div>
                             </div>
                         </div>
