@@ -477,18 +477,42 @@
         }
 
         .tix-partners-row {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 4rem;
+            gap: 2.25rem;
             flex-wrap: wrap;
-            width: 100%;
-            max-width: 900px;
+            max-width: 100%;
+        }
+
+        .tix-partners-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .tix-partners-logos {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3.5rem;
+            flex-wrap: wrap;
         }
 
         @media (max-width: 768px) {
             .tix-partners-row {
+                gap: 1.25rem;
+            }
+
+            .tix-partners-logos {
                 gap: 2rem;
+            }
+
+            .tix-partners-label {
+                font-size: 0.7rem;
             }
         }
 
@@ -926,38 +950,41 @@
 
                 <div class="tix-partners-white-section">
                     <div class="tix-partners-row">
-                        @foreach($partners as $p)
-                            <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}"
-                                class="tix-partner-item" title="{{ $p['name'] }}">
-                                @if(!empty($p['logo']))
-                                    <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}"
-                                        class="tix-partner-logo-img">
-                                @else
-                                    @if(stripos($p['name'], 'spotify') !== false)
-                                        <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
-                                            <path
-                                                d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z" />
-                                            <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                font-size="20" fill="currentColor">Spotify</text>
-                                        </svg>
-                                    @elseif(stripos($p['name'], 'google') !== false)
-                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
-                                            <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
-                                        </svg>
-                                    @elseif(stripos($p['name'], 'youtube') !== false)
-                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
-                                            <path
-                                                d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z" />
-                                            <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
-                                        </svg>
+                        <span class="tix-partners-label">Official Media Partner:</span>
+                        <div class="tix-partners-logos">
+                            @foreach($partners as $p)
+                                <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}"
+                                    class="tix-partner-item" title="{{ $p['name'] }}">
+                                    @if(!empty($p['logo']))
+                                        <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}"
+                                            class="tix-partner-logo-img">
                                     @else
-                                        <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                        @if(stripos($p['name'], 'spotify') !== false)
+                                            <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
+                                                <path
+                                                    d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z" />
+                                                <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                    font-size="20" fill="currentColor">Spotify</text>
+                                            </svg>
+                                        @elseif(stripos($p['name'], 'google') !== false)
+                                            <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
+                                                <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                    font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
+                                            </svg>
+                                        @elseif(stripos($p['name'], 'youtube') !== false)
+                                            <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
+                                                <path
+                                                    d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z" />
+                                                <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                    font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
+                                            </svg>
+                                        @else
+                                            <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                        @endif
                                     @endif
-                                @endif
-                            </a>
-                        @endforeach
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
