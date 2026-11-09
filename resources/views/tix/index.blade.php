@@ -796,35 +796,129 @@
             margin-bottom: 0.25rem;
         }
 
-        /* Promoter Footer Box */
+        /* Promoter Footer Box (Light Theme, Montserrat Not Gendut, Mobile Friendly) */
         .tix-cta-box {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-            border-radius: 20px;
-            padding: 2.25rem;
+            background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 45%, #F8FAFC 100%);
+            border: 1.5px solid #E2E8F0;
+            border-radius: 24px;
+            padding: 2.25rem 2.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1.5rem;
-            color: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-top: 1.5rem;
+            gap: 2rem;
+            color: #0F172A;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(30, 179, 73, 0.04);
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
             position: relative;
             overflow: hidden;
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+        .tix-cta-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tix-cta-title {
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+            font-weight: 600 !important;
+            letter-spacing: -0.015em;
+            color: #0F172A;
+            margin: 0 0 0.45rem;
+            line-height: 1.35;
+        }
+
+        .tix-cta-desc {
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 0.85rem;
+            font-weight: 400 !important;
+            color: #64748B;
+            margin: 0;
+            line-height: 1.6;
+            max-width: 650px;
+        }
+
+        .tix-cta-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .tix-btn-join {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+            color: #ffffff !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 0.85rem;
+            font-weight: 600 !important;
+            padding: 0.78rem 1.65rem;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(30, 179, 73, 0.32);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .tix-btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42);
+            color: #ffffff !important;
+        }
+
+        .tix-btn-learn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            background: #ffffff;
+            border: 1.5px solid #CBD5E1;
+            color: #334155 !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 0.85rem;
+            font-weight: 500 !important;
+            padding: 0.75rem 1.35rem;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .tix-btn-learn:hover {
+            border-color: #1eb349;
+            color: #1eb349 !important;
+            background: #F0FDF4;
+            transform: translateY(-1px);
         }
 
         @media (max-width: 768px) {
             .tix-cta-box {
                 flex-direction: column;
                 align-items: flex-start;
-                padding: 1.5rem;
+                padding: 1.5rem 1.25rem;
+                gap: 1.25rem;
+                border-radius: 18px;
             }
 
-            #tixHeroSkel {
-                aspect-ratio: 1920 / 600 !important;
-                height: auto !important;
-                border-radius: 16px !important;
-                margin-top: 0.25rem !important;
-                margin-bottom: 1.25rem !important;
+            .tix-cta-actions {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.65rem;
+            }
+
+            .tix-btn-join,
+            .tix-btn-learn {
+                width: 100%;
+                padding: 0.75rem 1.25rem;
+                text-align: center;
             }
         }
     </style>
@@ -1175,30 +1269,26 @@
                 </div>
             </section>
 
-            {{-- ══ 6. PROMOTER & CREATOR CTA BANNER ══ --}}
+            {{-- ══ 6. PROMOTER & CREATOR CTA BANNER (LIGHT THEME) ══ --}}
             <div class="tix-cta-box">
-                <div>
-                    <h3
-                        style="font-size: clamp(1.15rem, 2.5vw, 1.55rem); font-weight: 700; color: #ffffff; margin: 0 0 0.5rem;">
+                <div class="tix-cta-content">
+                    <h3 class="tix-cta-title">
                         Punya Konser, Seminar, atau Event Sendiri?
                     </h3>
-                    <p style="font-size: 0.85rem; color: #CBD5E1; margin: 0; line-height: 1.5; max-width: 640px;">
+                    <p class="tix-cta-desc">
                         Jual tiket gratis maupun berbayar secara mandiri di Buyle.id. Nikmati penerbitan e-tiket otomatis
                         via WhatsApp/Email, sistem Gate Scanner panitia live kamera, serta penarikan dana cepat.
                     </p>
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; flex-shrink: 0;">
-                    <a href="{{ url('/creator/products?from=ticketing') }}"
-                        style="display: inline-flex; align-items: center; gap: 0.45rem; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 0.75rem 1.45rem; border-radius: 999px; text-decoration: none; box-shadow: 0 6px 20px rgba(30, 179, 73, 0.35); white-space: nowrap;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                <div class="tix-cta-actions">
+                    <a href="{{ url('/register') }}" class="tix-btn-join">
+                        <span>Join Now</span>
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
-                        <span>Buat Tiket Event</span>
                     </a>
-                    <a href="{{ route('ticketing') }}"
-                        style="display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.2); color: #ffffff; font-size: 0.85rem; font-weight: 600; padding: 0.75rem 1.25rem; border-radius: 999px; text-decoration: none; white-space: nowrap;">
+                    <a href="{{ route('ticketing') }}" class="tix-btn-learn">
                         <span>Pelajari Fitur</span>
                     </a>
                 </div>
