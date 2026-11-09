@@ -1235,39 +1235,22 @@
                 </div>
             </section>
 
-            {{-- ══ 5. SECTION: EVENT BERAKHIR ══ --}}
-            <section style="margin-bottom: 2.75rem;" id="event-berakhir">
-                <div class="tix-section-header">
-                    <div>
-                        <h2 class="tix-section-title">
-                            Event Berakhir
-                        </h2>
-                    </div>
-                    <span class="tix-section-sub">
-                        Arsip Kegiatan & Dokumentasi
-                    </span>
-                </div>
-
-                <div class="tix-grid">
-                    @if(count($pastEvents) > 0)
-                        @include('tix.partials.event_cards', ['events' => $pastEvents, 'is_past' => true])
-                    @else
-                        <div class="tix-empty-card">
-                            <div
-                                style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Belum Ada Arsip
-                                Event Berakhir</h4>
-                            <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Semua tiket event yang terdaftar saat ini
-                                masih berstatus aktif dan siap dipesan.</p>
+            {{-- ══ 5. SECTION: EVENT BERAKHIR (Hanya tampil jika ada event berakhir) ══ --}}
+            @if(count($pastEvents) > 0)
+                <section style="margin-bottom: 2.75rem;" id="event-berakhir">
+                    <div class="tix-section-header">
+                        <div>
+                            <h2 class="tix-section-title">
+                                Event Berakhir
+                            </h2>
                         </div>
-                    @endif
-                </div>
-            </section>
+                    </div>
+
+                    <div class="tix-grid">
+                        @include('tix.partials.event_cards', ['events' => $pastEvents, 'is_past' => true])
+                    </div>
+                </section>
+            @endif
 
             {{-- ══ 6. PROMOTER & CREATOR CTA BANNER (LIGHT THEME) ══ --}}
             <div class="tix-cta-box">
