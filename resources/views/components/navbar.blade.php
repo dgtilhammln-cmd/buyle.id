@@ -202,7 +202,8 @@
     #shortcutDropdown {
         position: absolute;
         top: calc(100% + 14px);
-        left: -12px;
+        right: -10px;
+        left: auto;
         background: #fff;
         border: 1px solid #E2E8F0;
         border-radius: 14px;
@@ -230,7 +231,8 @@
     .shortcut-caret {
         position: absolute;
         top: -6px;
-        left: 20px;
+        right: 20px;
+        left: auto;
         width: 12px;
         height: 12px;
         background: #fff;
@@ -956,9 +958,28 @@
         .cart-dropdown-wrap,
         .auth-text-btn,
         .auth-divider,
-        .nav-article-btn,
-        #shortcut-menu-wrap {
+        .nav-article-btn {
             display: none !important;
+        }
+
+        #shortcut-menu-wrap {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #shortcutDropdown {
+            left: auto !important;
+            right: -10px !important;
+            width: 220px !important;
+            min-width: 220px !important;
+            max-width: calc(100vw - 32px) !important;
+        }
+
+        .shortcut-caret {
+            left: auto !important;
+            right: 20px !important;
         }
 
         /* Hide cart dropdown, shortcut menu, and login text on mobile header since cart has direct mobile icon button */
@@ -1059,115 +1080,6 @@
 
         {{-- ── CTA Actions & Auth ── --}}
         <div class="nav-pill-box nav-pill-actions">
-
-            {{-- Shortcut Dropdown (Tentang Buyle, Ticketing, FAQ, Tips & Blog) --}}
-            <div id="shortcut-menu-wrap">
-                <button type="button" class="pill-icon-btn nav-shortcut-btn" title="Menu Pintas"
-                    aria-label="Menu Pintas"
-                    onclick="document.getElementById('shortcut-menu-wrap').classList.toggle('open'); document.getElementById('shortcutDropdown').classList.toggle('open');"
-                    style="background:none;border:none;cursor:pointer;padding:0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
-                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-                    </svg>
-                </button>
-
-                <div id="shortcutDropdown">
-                    <div class="shortcut-caret"></div>
-
-                    <div
-                        style="padding: 0.4rem 0.875rem 0.2rem; font-size: 0.65rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">
-                        Menu Pintas</div>
-
-                    <a href="{{ route('about') }}" class="shortcut-menu-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                        <span>Profil Buyle</span>
-                    </a>
-
-                    <div class="shortcut-submenu-wrap">
-                        <div class="shortcut-menu-item shortcut-parent-item" onclick="this.parentElement.classList.toggle('active')" style="cursor: pointer; justify-content: space-between;">
-                            <div style="display: flex; align-items: center; gap: 0.65rem;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                                </svg>
-                                <span>Tools</span>
-                            </div>
-                            <svg class="shortcut-arrow" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </div>
-                        <div class="shortcut-submenu-list">
-                            <a href="{{ route('tools.convert_file') }}" class="shortcut-sub-item">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                                <span>Convert File</span>
-                            </a>
-                            <a href="{{ route('tools.social_downloader') }}" class="shortcut-sub-item">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                <span>Social Downloader</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <a href="{{ route('tix.index') }}" class="shortcut-menu-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path
-                                d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z">
-                            </path>
-                        </svg>
-                        <span>Buyle TIX</span>
-                    </a>
-
-                    <a href="{{ route('ticketing') }}" class="shortcut-menu-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path
-                                d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z">
-                            </path>
-                            <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2"></line>
-                        </svg>
-                        <span>Ticketing</span>
-                    </a>
-
-                    <a href="{{ route('faqs') }}" class="shortcut-item shortcut-menu-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                        <span>FAQ</span>
-                    </a>
-
-                    <a href="{{ route('articles') }}" class="shortcut-item shortcut-menu-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                        </svg>
-                        <span>Tips &amp; Blog</span>
-                    </a>
-                </div>
-            </div>
 
             {{-- Mobile Cart Icon (Shown on mobile header instead of article icon) --}}
             <a href="{{ route('cart.index') }}" class="pill-icon-btn nav-mobile-cart-btn" title="Keranjang"
@@ -1318,92 +1230,114 @@
                 </div>
             </div>
 
-            {{-- Share Dropdown --}}
-            <div style="position:relative; display:inline-block;" class="share-dropdown-wrap">
-                <button class="pill-icon-btn share-trigger" title="Bagikan"
-                    style="background:none;border:none;cursor:pointer;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
-                        viewBox="0 0 24 24">
-                        <circle cx="18" cy="5" r="3"></circle>
-                        <circle cx="6" cy="12" r="3"></circle>
-                        <circle cx="18" cy="19" r="3"></circle>
-                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            {{-- Shortcut Dropdown (Tentang Buyle, Ticketing, FAQ, Tips & Blog) --}}
+            <div id="shortcut-menu-wrap">
+                <button type="button" class="pill-icon-btn nav-shortcut-btn" title="Menu Pintas"
+                    aria-label="Menu Pintas"
+                    onclick="document.getElementById('shortcut-menu-wrap').classList.toggle('open'); document.getElementById('shortcutDropdown').classList.toggle('open'); event.stopPropagation();"
+                    style="background:none;border:none;cursor:pointer;padding:0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
                     </svg>
                 </button>
-                {{-- Share Dropdown Content --}}
-                <div class="share-dropdown-content"
-                    style="position:absolute; top:calc(100% + 15px); right:-10px; background:#fff; border:1px solid #E2E8F0; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.08); padding:0.75rem; z-index:999; opacity:0; visibility:hidden; transform:translateY(10px); transition:all 0.3s; display:flex; gap:0.5rem;">
-                    {{-- Caret --}}
+
+                <div id="shortcutDropdown">
+                    <div class="shortcut-caret"></div>
+
                     <div
-                        style="position:absolute; top:-6px; right:20px; width:12px; height:12px; background:#fff; border-left:1px solid #E2E8F0; border-top:1px solid #E2E8F0; transform:rotate(45deg);">
+                        style="padding: 0.4rem 0.875rem 0.2rem; font-size: 0.65rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">
+                        Menu Pintas</div>
+
+                    <a href="{{ route('about') }}" class="shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>Profil Buyle</span>
+                    </a>
+
+                    <div class="shortcut-submenu-wrap">
+                        <div class="shortcut-menu-item shortcut-parent-item" onclick="this.parentElement.classList.toggle('active')" style="cursor: pointer; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 0.65rem;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                </svg>
+                                <span>Tools</span>
+                            </div>
+                            <svg class="shortcut-arrow" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="shortcut-submenu-list">
+                            <a href="{{ route('tools.convert_file') }}" class="shortcut-sub-item">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <span>Convert File</span>
+                            </a>
+                            <a href="{{ route('tools.social_downloader') }}" class="shortcut-sub-item">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <span>Social Downloader</span>
+                            </a>
+                        </div>
                     </div>
-                    <a href="#" onclick="shareWa()"
-                        style="width:32px;height:32px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:transform 0.2s;"
-                        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
-                        title="WhatsApp">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+
+                    <a href="{{ route('tix.index') }}" class="shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path
-                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                                d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z">
+                            </path>
                         </svg>
+                        <span>Buyle TIX</span>
                     </a>
-                    <a href="#" onclick="shareIg()"
-                        style="width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:transform 0.2s;"
-                        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
-                        title="Instagram">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <rect x="2" y="2" width="20" height="20" rx="5" />
-                            <circle cx="12" cy="12" r="5" />
-                            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-                        </svg>
-                    </a>
-                    <a href="#" onclick="shareFb()"
-                        style="width:32px;height:32px;border-radius:50%;background:#1877F2;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:transform 0.2s;"
-                        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
-                        title="Facebook">
-                        <svg width="10" height="18" viewBox="0 0 10 18" fill="currentColor">
+
+                    <a href="{{ route('ticketing') }}" class="shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path
-                                d="M6.5 18V10h2.7l.4-3H6.5V5.1c0-.9.2-1.5 1.5-1.5H9.7V.1C9.4.1 8.4 0 7.3 0 4.7 0 3 1.5 3 4.4V7H.3v3H3v8h3.5z" />
+                                d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z">
+                            </path>
+                            <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2"></line>
                         </svg>
+                        <span>Ticketing</span>
                     </a>
-                    <a href="#" onclick="shareX()"
-                        style="width:32px;height:32px;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:transform 0.2s;"
-                        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
-                        title="X (Twitter)">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.261 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+
+                    <a href="{{ route('faqs') }}" class="shortcut-item shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
                         </svg>
+                        <span>FAQ</span>
                     </a>
-                    <button onclick="copyLink()"
-                        style="width:32px;height:32px;border-radius:50%;background:#F1F5F9;border:none;display:flex;align-items:center;justify-content:center;color:#475569;cursor:pointer;transition:transform 0.2s, background 0.2s;"
-                        onmouseover="this.style.transform='scale(1.1)'; this.style.background='#E2E8F0';"
-                        onmouseout="this.style.transform='scale(1)'; this.style.background='#F1F5F9';"
-                        title="Salin Tautan">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+
+                    <a href="{{ route('articles') }}" class="shortcut-item shortcut-menu-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                         </svg>
-                    </button>
+                        <span>Tips &amp; Blog</span>
+                    </a>
                 </div>
             </div>
-            <script>
-                (function () {
-                    const wrap = document.querySelector('.share-dropdown-wrap');
-                    const dd = wrap ? wrap.querySelector('.share-dropdown-content') : null;
-                    if (wrap && dd) {
-                        wrap.addEventListener('mouseenter', () => { dd.style.opacity = '1'; dd.style.visibility = 'visible'; dd.style.transform = 'translateY(0)'; });
-                        wrap.addEventListener('mouseleave', () => { dd.style.opacity = '0'; dd.style.visibility = 'hidden'; dd.style.transform = 'translateY(10px)'; });
-                    }
-                })();
-                function shareWa() { window.open('https://wa.me/?text=' + encodeURIComponent(document.title + ' ' + location.href), '_blank'); }
-                function shareIg() { navigator.clipboard.writeText(location.href).then(() => alert('Link disalin! Paste di Instagram Story atau Bio.')); }
-                function shareFb() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(location.href), '_blank', 'width=600,height=400'); }
-                function shareX() { window.open('https://x.com/intent/tweet?url=' + encodeURIComponent(location.href) + '&text=' + encodeURIComponent(document.title), '_blank', 'width=600,height=400'); }
-                function copyLink() { navigator.clipboard.writeText(location.href).then(() => { const t = document.getElementById('copyLinkText'); if (t) { t.textContent = 'Tersalin!'; setTimeout(() => t.textContent = 'Salin Tautan', 2000); } }); }
-            </script>
 
             <div class="auth-divider"></div>
 
