@@ -114,8 +114,8 @@
             position: absolute;
             top: 0;
             left: 50%;
-            width: 78%;
-            max-width: 1080px;
+            width: 90%;
+            max-width: 1200px;
             height: 100%;
             border-radius: 20px;
             overflow: hidden;
@@ -129,7 +129,7 @@
 
         @media (max-width: 768px) {
             .tix-orbit-card {
-                width: 86%;
+                width: 92%;
                 border-radius: 14px;
             }
         }
@@ -145,19 +145,19 @@
         }
 
         .tix-orbit-card.is-prev {
-            transform: translateX(calc(-50% - 58%)) scale(0.88);
+            transform: translateX(calc(-50% - 72%)) scale(0.85);
             z-index: 3;
-            opacity: 0.6;
-            filter: brightness(0.85);
+            opacity: 0.5;
+            filter: brightness(0.8);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-next {
-            transform: translateX(calc(-50% + 58%)) scale(0.88);
+            transform: translateX(calc(-50% + 72%)) scale(0.85);
             z-index: 3;
-            opacity: 0.6;
-            filter: brightness(0.85);
+            opacity: 0.5;
+            filter: brightness(0.8);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             pointer-events: auto;
         }
@@ -220,6 +220,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center center;
             display: block;
         }
 
