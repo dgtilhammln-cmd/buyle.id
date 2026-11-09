@@ -22,13 +22,31 @@
 
         @media (max-width: 991px) {
             .buyle-tix-page {
-                padding-top: 6.75rem;
+                padding-top: 7.75rem;
+            }
+
+            .tix-hero-banner-section {
+                margin-top: 0.25rem !important;
+                margin-bottom: 1.25rem !important;
+            }
+
+            .tix-orbit-carousel-wrap {
+                padding: 0 !important;
             }
         }
 
         @media (max-width: 600px) {
             .buyle-tix-page {
-                padding-top: 6.5rem;
+                padding-top: 7.5rem;
+            }
+
+            .tix-hero-banner-section {
+                margin-top: 0.25rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .tix-orbit-carousel-wrap {
+                padding: 0 !important;
             }
         }
 
@@ -82,15 +100,13 @@
         .tix-orbit-stage {
             position: relative;
             width: 100%;
-            aspect-ratio: 1920 / 580;
-            min-height: 180px;
+            aspect-ratio: 1920 / 600;
             perspective: 1200px;
         }
 
         @media (max-width: 768px) {
             .tix-orbit-stage {
-                aspect-ratio: 1920 / 700;
-                min-height: 140px;
+                aspect-ratio: 1920 / 600;
             }
         }
 
@@ -153,7 +169,7 @@
             pointer-events: none;
         }
 
-        /* Single Banner Mode (When count <= 1: Polosan, Balanced & Centered, NOT mepet) */
+        /* Single Banner Mode (When count <= 1: Polosan, Balanced & Centered, Exact 1920x600 Ratio) */
         .tix-orbit-carousel-wrap.single-banner {
             padding: 0;
         }
@@ -162,7 +178,7 @@
             max-width: 1080px;
             margin: 0 auto;
             padding: 0 1.25rem;
-            aspect-ratio: 1920 / 580;
+            aspect-ratio: 1920 / 600;
             perspective: none;
         }
 
@@ -183,7 +199,7 @@
         @media (max-width: 768px) {
             .tix-orbit-carousel-wrap.single-banner .tix-orbit-stage {
                 padding: 0 1rem;
-                aspect-ratio: 1920 / 700;
+                aspect-ratio: 1920 / 600;
             }
 
             .tix-orbit-carousel-wrap.single-banner .tix-orbit-card {
@@ -741,14 +757,12 @@
         .tix-orbit-skel-stage {
             position: relative;
             width: 100%;
-            aspect-ratio: 1920 / 580;
-            min-height: 180px;
+            aspect-ratio: 1920 / 600;
         }
 
         @media (max-width: 768px) {
             .tix-orbit-skel-stage {
-                aspect-ratio: 1920 / 700;
-                min-height: 140px;
+                aspect-ratio: 1920 / 600;
             }
         }
 
