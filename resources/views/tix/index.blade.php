@@ -22,11 +22,11 @@
 
         @media (max-width: 991px) {
             .buyle-tix-page {
-                padding-top: 7.75rem;
+                padding-top: 0.35rem !important; /* Body already has padding-top: 130px !important from mobile navbar */
             }
 
             .tix-hero-banner-section {
-                margin-top: 0.25rem !important;
+                margin-top: 0 !important;
                 margin-bottom: 1.25rem !important;
             }
 
@@ -37,11 +37,11 @@
 
         @media (max-width: 600px) {
             .buyle-tix-page {
-                padding-top: 7.5rem;
+                padding-top: 0.25rem !important;
             }
 
             .tix-hero-banner-section {
-                margin-top: 0.25rem !important;
+                margin-top: 0 !important;
                 margin-bottom: 1rem !important;
             }
 
