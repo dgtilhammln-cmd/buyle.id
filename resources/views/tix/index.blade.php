@@ -22,11 +22,11 @@
 
         @media (max-width: 991px) {
             .buyle-tix-page {
-                padding-top: 0.35rem !important; /* Body already has padding-top: 130px !important from mobile navbar */
+                padding-top: 0.75rem !important; /* Body already has padding-top: 130px !important from mobile navbar */
             }
 
             .tix-hero-banner-section {
-                margin-top: 0 !important;
+                margin-top: 0.5rem !important;
                 margin-bottom: 1.25rem !important;
             }
 
@@ -37,11 +37,11 @@
 
         @media (max-width: 600px) {
             .buyle-tix-page {
-                padding-top: 0.25rem !important;
+                padding-top: 0.75rem !important;
             }
 
             .tix-hero-banner-section {
-                margin-top: 0 !important;
+                margin-top: 0.5rem !important;
                 margin-bottom: 1rem !important;
             }
 
@@ -253,11 +253,11 @@
         }
 
         .tix-orbit-btn.prev {
-            left: calc(50% - (min(78vw, 1080px) / 2) + 16px);
+            left: calc(50% - 45% + 12px);
         }
 
         .tix-orbit-btn.next {
-            right: calc(50% - (min(78vw, 1080px) / 2) + 16px);
+            right: calc(50% - 45% + 12px);
         }
 
         @media (max-width: 768px) {
@@ -267,11 +267,11 @@
             }
 
             .tix-orbit-btn.prev {
-                left: calc(50% - 43% + 8px);
+                left: calc(50% - 46% + 10px);
             }
 
             .tix-orbit-btn.next {
-                right: calc(50% - 43% + 8px);
+                right: calc(50% - 46% + 10px);
             }
         }
 
@@ -771,15 +771,15 @@
             position: absolute;
             top: 0;
             left: 50%;
-            width: 78%;
-            max-width: 1080px;
+            width: 90%;
+            max-width: 1200px;
             height: 100%;
             border-radius: 20px;
         }
 
         @media (max-width: 768px) {
             .tix-orbit-skel-card {
-                width: 86%;
+                width: 92%;
                 border-radius: 14px;
             }
         }
@@ -791,13 +791,13 @@
         }
 
         .tix-orbit-skel-card.prev {
-            transform: translateX(calc(-50% - 58%)) scale(0.88);
+            transform: translateX(calc(-50% - 72%)) scale(0.85);
             z-index: 1;
             opacity: 0.4;
         }
 
         .tix-orbit-skel-card.next {
-            transform: translateX(calc(-50% + 58%)) scale(0.88);
+            transform: translateX(calc(-50% + 72%)) scale(0.85);
             z-index: 1;
             opacity: 0.4;
         }
