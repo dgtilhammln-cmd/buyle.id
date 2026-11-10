@@ -2085,8 +2085,12 @@
                                     @endphp
                                     <div id="pd-variant-section" style="margin-bottom:1.5rem;">
                                         @foreach($service->variantOptions as $option)
+                                            @php
+                                                $bvmGroupTitle = $isTicket ? 'Kategori Tiket' : $option->name;
+                                                $bvmOptPrefix = $isTicket ? 'Kategori' : $option->name;
+                                            @endphp
                                             <div class="pd-attr-row" style="align-items:flex-start;">
-                                                <div class="pd-attr-label" style="padding-top:4px;">{{ $option->name }}</div>
+                                                <div class="pd-attr-label" style="padding-top:4px;">{{ $bvmGroupTitle }}</div>
                                                 <div class="pd-attr-content" style="flex-wrap:wrap; gap:0.5rem;">
                                                     @foreach($option->values as $val)
                                                         @php
@@ -2096,7 +2100,7 @@
                                                             data-price="{{ $val->finalPrice() }}" 
                                                             data-price-formatted="Rp{{ number_format($val->finalPrice(), 0, ',', '.') }}"
                                                             data-stock="{{ $val->stock }}"
-                                                            data-label="{{ $option->name }}: {{ $val->value }}" 
+                                                            data-label="{{ $bvmOptPrefix }}: {{ $val->value }}" 
                                                             data-img="{{ $vImg ?: $defaultProductImage }}"
                                                             data-has-custom-img="{{ $vImg ? '1' : '0' }}"
                                                             @if($val->stock !== null && $val->stock <= 0) disabled style="opacity:0.4;cursor:not-allowed;" @endif
@@ -2120,7 +2124,7 @@
                                         @endforeach
                                         <div id="pd-variant-error"
                                             style="display:none; color:#EF4444; font-size:0.82rem; margin-top:0.25rem; padding:0.4rem 0.75rem; background:#FEF2F2; border-radius:8px; border:1px solid #FCA5A5;">
-                                            ⚠ Silakan pilih varian terlebih dahulu sebelum melanjutkan.
+                                            ⚠ Silakan pilih {{ $isTicket ? 'kategori tiket' : 'varian' }} terlebih dahulu sebelum melanjutkan.
                                         </div>
                                         <div id="pd-variant-info"
                                             style="display:none; font-size:0.82rem; color:#1eb349; margin-top:0.35rem; font-weight:600;">
@@ -2174,18 +2178,20 @@
                                             <button type="button" class="pd-qty-btn"
                                                 onclick="stepPdQty(1)">+</button>
                                         </div>
-                                        <div class="pd-stock" id="pd-stock-info">
-                                            @if($service->type === 'service')
-                                                Jasa / Layanan
-                                            @elseif(is_null($service->stock))
-                                                <span style="color:#10B981;">Stok Tersedia</span>
-                                            @elseif($service->stock > 0)
-                                                Sisa {{ $service->stock }} buah
-                                            @else
-                                                <span style="color:#EE4D2D;">Habis</span>
-                                            @endif
-                                            @if($maxOrderLimit)
-                                                <span style="font-size:0.75rem; color:#64748b; margin-left:6px;">(Maks. {{ $maxOrderLimit }} per transaksi)</span>
+                                        <div class="pd-stock" id="pd-stock-info" @if($isTicket) style="display:none;" @endif>
+                                            @if(!$isTicket)
+                                                @if($service->type === 'service')
+                                                    Jasa / Layanan
+                                                @elseif(is_null($service->stock))
+                                                    <span style="color:#10B981;">Stok Tersedia</span>
+                                                @elseif($service->stock > 0)
+                                                    Sisa {{ $service->stock }} buah
+                                                @else
+                                                    <span style="color:#EE4D2D;">Habis</span>
+                                                @endif
+                                                @if($maxOrderLimit)
+                                                    <span style="font-size:0.75rem; color:#64748b; margin-left:6px;">(Maks. {{ $maxOrderLimit }} per transaksi)</span>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -2743,6 +2749,7 @@
                                         </div>
                                         <div class="bvm-header-info">
                                             <div class="bvm-price" id="bvm-price-display">Rp{{ number_format($basePrice, 0, ',', '.') }}</div>
+                                            @if(!$isTicket)
                                             <div class="bvm-stock" id="bvm-stock-display">
                                                 @if(is_null($service->stock))
                                                     <span style="color:#10b981;">• Stok Tersedia</span>
@@ -2752,8 +2759,11 @@
                                                     <span style="color:#ef4444;">• Stok Habis</span>
                                                 @endif
                                             </div>
+                                            @else
+                                            <div class="bvm-stock" id="bvm-stock-display" style="display:none;"></div>
+                                            @endif
                                             <div class="bvm-selected-label" id="bvm-selected-label">
-                                                Silakan pilih opsi variasi
+                                                {{ $isTicket ? 'Silakan pilih kategori tiket' : 'Silakan pilih opsi variasi' }}
                                             </div>
                                         </div>
                                         <button type="button" class="bvm-close-btn" onclick="closePdVariantModal()" aria-label="Tutup">
@@ -2767,8 +2777,12 @@
                                     {{-- Body: List Grup Variasi & Kuantitas --}}
                                     <div class="bvm-body">
                                         @foreach($service->variantOptions as $option)
+                                            @php
+                                                $bvmGroupTitle = $isTicket ? 'KATEGORI TIKET' : $option->name;
+                                                $bvmOptPrefix = $isTicket ? 'Kategori' : $option->name;
+                                            @endphp
                                             <div class="bvm-group">
-                                                <div class="bvm-group-title">{{ $option->name }}</div>
+                                                <div class="bvm-group-title">{{ $bvmGroupTitle }}</div>
                                                 <div class="bvm-pills">
                                                     @foreach($option->values as $val)
                                                         @php
@@ -2782,7 +2796,7 @@
                                                             data-price="{{ $valFinalPrice }}"
                                                             data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
                                                             data-stock="{{ $val->stock }}"
-                                                            data-label="{{ $option->name }}: {{ $val->value }}"
+                                                            data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
                                                             data-img="{{ $valImg ?: $defaultProductImage }}"
                                                             data-has-custom-img="{{ $valImg ? '1' : '0' }}"
                                                             @if($isValOutOfStock) disabled @endif
@@ -2810,7 +2824,7 @@
                                                 <div class="bvm-qty-label">Kuantitas</div>
                                                 <div class="bvm-qty-sub" id="bvm-qty-sub">
                                                     Jumlah yang akan dipesan
-                                                    @if($maxOrderLimit)
+                                                    @if($maxOrderLimit && !$isTicket)
                                                         <span style="color:#16a34a; font-weight:600;">(Maks. {{ $maxOrderLimit }} per order)</span>
                                                     @endif
                                                 </div>
@@ -2823,7 +2837,7 @@
                                         </div>
 
                                         <div id="bvm-error" class="bvm-error" style="display:none;">
-                                            ⚠ Silakan pilih salah satu variasi terlebih dahulu.
+                                            ⚠ Silakan pilih salah satu {{ $isTicket ? 'kategori tiket' : 'variasi' }} terlebih dahulu.
                                         </div>
                                     </div>
 
@@ -3161,6 +3175,7 @@
                             <script>
                                 (function () {
                                     var hasVariants = {{ ($service->variantOptions && $service->variantOptions->count() > 0) ? 'true' : 'false' }};
+                                    var isTicketProduct = {{ $isTicket ? 'true' : 'false' }};
                                     window._pdCurrentAction = 'buy';
 
                                     window.stepPdQty = function(delta) {
@@ -3267,7 +3282,10 @@
                                         // Update modal stock info
                                         var stockDisplay = document.getElementById('bvm-stock-display');
                                         if (stockDisplay) {
-                                            if (stock === '' || stock === null) {
+                                            if (isTicketProduct) {
+                                                stockDisplay.innerHTML = '';
+                                                stockDisplay.style.display = 'none';
+                                            } else if (stock === '' || stock === null) {
                                                 stockDisplay.innerHTML = '<span style="color:#10b981;">• Stok Tersedia</span>';
                                             } else {
                                                 var sNum = parseInt(stock);
@@ -3310,7 +3328,10 @@
 
                                             var pageStockEl = document.getElementById('pd-stock-info');
                                             if (pageStockEl) {
-                                                if (stock === '' || stock === null) {
+                                                if (isTicketProduct) {
+                                                    pageStockEl.innerHTML = '';
+                                                    pageStockEl.style.display = 'none';
+                                                } else if (stock === '' || stock === null) {
                                                     pageStockEl.innerHTML = '<span style="color:#10B981;">Stok Tersedia</span>';
                                                 } else {
                                                     var sNum = parseInt(stock);
