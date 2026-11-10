@@ -595,6 +595,22 @@ class Product extends Model
     }
 
     /**
+     * Apakah produk ini memiliki jadwal War Tiket aktif
+     */
+    public function isTicketWar(): bool
+    {
+        return $this->isTicketProduct() && !empty($this->ticket_war_start);
+    }
+
+    /**
+     * Apakah sesi war tiket sudah dibuka
+     */
+    public function isTicketWarOpen(): bool
+    {
+        return $this->isTicketWar() && now()->gte($this->ticket_war_start);
+    }
+
+    /**
      * Rating dan ulasan produk.
      */
     public function ratings()

@@ -226,6 +226,26 @@ Saat event tiket besar (seperti Sabiphoria) akan berlangsung:
 - [ ] Pertimbangkan **upgrade sementara** ke paket Cloud Hosting atau VPS saat event
 - [ ] **Jangan aktifkan SSE/WebSocket** di shared hosting — koneksi panjang menghabiskan worker
 
+#### G. Sistem Virtual Waiting Room & Traffic Jitter Staggering (Anti-Server Down saat War Tiket)
+
+**Konsep:**  
+Saat jadwal penjualan tiket (Live Drop / Ticket War) tiba, ribuan calon pembeli akan menekan tombol "Beli Sekarang" pada detik yang sama (*Thundering Herd Problem*). Pada shared hosting dengan batas 60 PHP worker, lonjakan 1.000 concurrent POST request akan menghabiskan worker dalam 1 detik dan memicu error `504 Gateway Timeout`.
+
+**Solusi & Cara Kerja di Buyle:**
+1. **Otomatis Aktif Tanpa Perlu Setting Ulang**:  
+   Ketika creator mengisi kolom **"Jadwal Mulai Penjualan (Ticket War / Live Drop)"** (`ticket_war_start`), sistem otomatis mengaktifkan fitur Virtual Waiting Room pada halaman detail produk tiket tersebut. Tidak diperlukan konfigurasi toggle tambahan.
+2. **Client-Side Randomized Jitter Delay (15–35 Detik)**:  
+   Saat tombol "Beli Sekarang" atau "Tambah Keranjang" ditekan, alih-alih langsung menembak POST request ke server, pembeli dimasukkan ke modal interaktif **Ruang Antrean Tiket**. Setiap perangkat pembeli mendapatkan timer countdown acak (misal: Pembeli A 17s, Pembeli B 29s, Pembeli C 22s).
+3. **Penyebaran Beban Trafik (Traffic Staggering)**:  
+   Lonjakan 1.000 transaksi seketika dipecah menjadi aliran merata ~25–35 request per 10 detik. Server hanya melayani antrean yang masuk bergiliran, sehingga konsumsi PHP worker tetap berada di kisaran 15–25 slot (jauh di bawah batas 60).
+4. **Session Cleared Bypass (Anti-Antre Berulang)**:  
+   Setelah pembeli berhasil menyelesaikan antrean satu kali, sesi disimpan di `sessionStorage` (`buyle_war_cleared_{id}`) selama 10 menit. Jika pembeli berpindah ke halaman keranjang/checkout lalu kembali lagi, mereka tidak perlu mengantre ulang.
+5. **UI & UX Sesuai Tema Buyle**:  
+   - 100% Mobile friendly (responsive dialog, centered, anti-nabrak di semua ukuran layar smartphone).
+   - Animasi pulsating green badge, visual progress bar gradasi `#1eb349` ke `#a5cf37`.
+   - Nomor tiket antrean visual (`#WR-XXXX`).
+   - Peringatan edukatif agar pembeli tidak me-refresh browser.
+
 ---
 
 ## ⚠️ Catatan Keamanan & Batasan Penting
@@ -277,19 +297,82 @@ Cache key `pos_notif_{seller_id}_{bucket}` aman karena:
 
 ---
 
+## 🎟️ Arsitektur Ticketing High-Traffic (War Tiket & Event Live)
+
+Ketika event live atau tiket konser/seminar dibuka ("War Tiket"), lonjakan hingga 1.000+ pengguna dalam hitungan detik dapat menghabiskan limit **60 worker PHP** Hostinger. Untuk mencegah server timeout (504 Gateway Timeout) dan overbooking, diterapkan arsitektur **5 Pilar Proteksi**:
+
+```mermaid
+flowchart TD
+    A["1.000+ Pengunjung War Tiket"] --> B["Halaman Produk Tiket (/produk/{slug})"]
+    B --> C["Klik 'Beli Tiket'"]
+    C --> D{"Slot Checkout Aktif < 20?"}
+    
+    D -- "Penuh (>= 20)" --> E["Virtual Waiting Room Modal<br/>(Jitter 10-20 Detik Acak)"]
+    E -->|Polling /api/ticket-war/status| F["TicketWarQueueService<br/>(Zero DB Write, 100% Cache)"]
+    F --> D
+    
+    D -- "Ada Slot (< 20)" --> G["Terbitkan Cryptographic Admission Token<br/>(HMAC-SHA256, TTL 10 Menit)"]
+    G --> H["Lolos ke Keranjang & Checkout"]
+    H --> I["Kunci Idempotency & Concurrency Lock<br/>Cache::lock(checkout_lock, 15s)"]
+    I --> J["Atomic Row Lock & Conditional Decrement<br/>lockForUpdate + where stock >= qty"]
+    J --> K["Order Berhasil Dibuat"]
+    K --> L["Konsumsi Admission Token (Single-Use)<br/>Bebaskan 1 Slot untuk Antrean Berikutnya"]
+    
+    H -.->|Order Tidak Dibayar > 15 Menit| M["Scheduler: tickets:expire-unpaid<br/>(Batal Otomatis & Kembalikan Stok)"]
+```
+
+### 1. Virtual Waiting Room & Traffic Jitter Staggering
+- **Zero Database Write**: Seluruh kalkulasi antrean, posisi antrean (`war_pos_*`), dan kuota aktif (`war_active_*`) dijalankan **100% di Cache (In-Memory/File)** tanpa query ke tabel database.
+- **Traffic Jitter (10–20 Detik Acak)**: Polling browser tidak menembak server serentak, melainkan menggunakan jeda acak 10–20 detik. Beban 1.000 user terdistribusi rata menjadi ~50-80 request cache ringan per detik.
+- **Rate Limiter Endpoint**: Route `POST /api/ticket-war/status` diproteksi `throttle:ticket-war-queue` (maksimal 10 request/menit per IP).
+
+### 2. Cryptographic Admission Token (HMAC-SHA256)
+- **Token Server-Signed**: Server menandatangani token menggunakan `hash_hmac('sha256', "{$productId}|{$queueId}|{$expiresAt}", config('app.key'))`. Token tidak bisa dimanipulasi atau di-bypass dari inspect element / curl.
+- **Kapasitas Terkontrol**: Maksimal 20 sesi checkout aktif bersamaan (`war_max_concurrent_checkout = 20`), sehingga beban PHP worker stabil di kisaran 15–20 worker saja. Sisa pengunjung tetap berada di waiting room.
+- **Single-Use Enforcement**: Begitu order berhasil diamankan, token langsung dikonsumsi (`consumeToken()`). Token yang sama **tidak dapat digunakan untuk membuat dua pesanan**.
+- **Validasi Ganda**: Token divalidasi di `CartController::add` saat masuk keranjang dan di `CheckoutService::processCheckout` saat pembayaran.
+
+### 3. Atomic Stock Locking (Anti-Overselling & Anti-Race Condition)
+- **Row-Level Lock**: Query item menggunakan `Product::where('id', ...)->lockForUpdate()->first()` dan `ProductVariantValue::lockForUpdate()->first()`.
+- **Conditional Atomic Decrement**:
+  ```php
+  $affected = Product::where('id', $product->id)
+      ->where('stock', '>=', $cartItem->qty)
+      ->decrement('stock', $cartItem->qty);
+  if ($affected === 0) {
+      throw new Exception("Maaf, kuota tiket \"{$product->name}\" baru saja habis terjual!");
+  }
+  ```
+  Jika stok tersisa 1 dan ada 2 transaksi bersamaan, database menjamin hanya 1 transaksi yang mengubah baris (`affected = 1`), sedangkan transaksi kedua mendapatkan `affected = 0` dan di-rollback seketika.
+
+### 4. Checkout Idempotency (Anti-Double Order)
+- **Client Idempotency Key**: Hidden input UUID unik `<input type="hidden" name="idempotency_key" value="{{ Str::uuid() }}">`.
+- **Atomic Concurrency Lock**: `Cache::lock("checkout_lock_{$idempotencyKey}", 15)`. Mencegah dua request checkout berjalan bersamaan untuk keranjang yang sama.
+- **Idempotent Replay**: Jika koneksi pengunjung lambat atau pembeli menekan tombol berkali-kali, sistem mendeteksi key yang sama dan langsung mengembalikan order yang sudah jadi tanpa memotong stok dua kali.
+- **Client-Side Disable**: Tombol pembayaran langsung di-disable dan diberi opacity 60% seketika tombol diklik.
+
+### 5. Automatic Order Expiry & Stock Return (Reservasi Terbatas)
+- **Batas Waktu Pembayaran**: Order tiket yang belum dibayar diberi batas waktu reservasi (default: 15 menit).
+- **Scheduler Background**: Artisan Command `tickets:expire-unpaid --minutes=15` didaftarkan di `routes/console.php` dan berjalan otomatis setiap 5 menit via `Schedule::command('tickets:expire-unpaid')->everyFiveMinutes()`.
+- **Proses Non-Blocking**: Pembatalan dan pengembalian stok dikerjakan secara background oleh server, tidak membebani request pembeli lain.
+
+---
+
 ## 🛠️ File yang Dimodifikasi
 
 | File | Perubahan |
 |------|-----------|
-| `resources/views/creator/pos/index.blade.php` | Polling 3s→15s/60s + Page Visibility API |
-| `app/Http/Controllers/Creator/PosController.php` | Hapus DB write di getLiveOrders, cache 10s di checkNewNotifications |
-| `app/Http/Controllers/Webhook/InstagramWebhookController.php` | `dispatchSync` → `dispatch` async |
-| `app/Http/Controllers/PaymentWebhookController.php` | `dispatchSync` → `dispatch` async (Midtrans webhook) |
-| `app/Http/Controllers/CheckoutController.php` | `dispatchSync` → `dispatch` async (finish page) |
-| `app/Services/CheckoutService.php` | `dispatchSync` → `dispatch` async (free order checkout) |
-| `app/Http/Controllers/TixController.php` | Cache halaman /tix 60 detik (non-search) / 10 detik (filter) |
-| `public/.htaccess` | Static asset cache 7d → 1 tahun + immutable header |
-| `database/migrations/2026_11_10_231225_add_perf_indexes_...php` | DB indexes: products (type+active, event_date, slug, seller+active), orders (seller+source+id, user+source, created_at+source), creator_profiles (user_id) |
+| `app/Services/TicketWarQueueService.php` | Service antrean war tiket: zero DB write, kalkulasi slot aktif (20), HMAC-SHA256 admission token, dan token consumption |
+| `app/Http/Controllers/TicketWarQueueController.php` | Controller polling status antrean `/api/ticket-war/status` dengan proteksi throttle |
+| `app/Console/Commands/ExpireUnpaidTicketOrders.php` | Artisan command untuk membatalkan order pending tiket >15 menit dan mengembalikan stok |
+| `routes/console.php` | Penjadwalan `tickets:expire-unpaid` setiap 5 menit |
+| `app/Providers/AppServiceProvider.php` | Registrasi RateLimiter `ticket-war-queue` (10 req/menit per IP) |
+| `resources/views/services/show.blade.php` | Integrasi Virtual Waiting Room UI & script polling dengan jitter acak 10-20s dan injection admission token |
+| `resources/views/ecommerce/checkout.blade.php` | Hidden input `idempotency_key` (UUID) & `admission_token`, sinkronisasi sessionStorage, dan disable button on submit |
+| `app/Http/Controllers/CartController.php` | Validasi server-side admission token untuk produk tiket war sebelum ditambahkan ke keranjang |
+| `app/Http/Requests/CheckoutRequest.php` | Rule validasi untuk `idempotency_key` dan `admission_token` |
+| `app/Services/CheckoutService.php` | Idempotency lock, atomic variant decrement, konsumsi token tiket war, dan perbaikan restore stok tiket di `markOrderCancelled()` |
+| `app/Models/Product.php` | Helper method `isTicketWar()` dan `isTicketWarOpen()` |
 
 ---
 

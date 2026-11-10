@@ -152,6 +152,9 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/api/coupons', [\App\Http\Controllers\CouponApiController::class, 'index'])->name('api.coupons.index');
     Route::post('/api/coupons/validate', [\App\Http\Controllers\CouponApiController::class, 'validate'])->name('api.coupons.validate');
 
+    // Virtual Waiting Room & Ticket War Queue API
+    Route::post('/api/ticket-war/status', [\App\Http\Controllers\TicketWarQueueController::class, 'check'])->name('api.ticket-war.status')->middleware('throttle:ticket-war-queue');
+
     // Smart Retargeting & Recommendations Engine API
     Route::match(['get', 'post'], '/api/retargeting/recommendations', [\App\Http\Controllers\RecommendationController::class, 'getRetargetedProducts'])->name('api.retargeting.recommendations');
 

@@ -173,6 +173,226 @@
             display: flex;
             align-items: center;
             gap: 0.35rem;
+        }
+
+        /* ── VIRTUAL WAITING ROOM (TICKET WAR TRAFFIC JITTER & STAGGERING) ── */
+        .bwr-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            box-sizing: border-box;
+            animation: bwrFadeIn 0.25s ease-out;
+        }
+
+        .bwr-dialog {
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 24px;
+            padding: 2rem 1.75rem;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+            text-align: center;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            position: relative;
+            box-sizing: border-box;
+            animation: bwrSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bwr-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(30, 179, 73, 0.1);
+            color: #16a34a;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 0.32rem 0.85rem;
+            border-radius: 99px;
+            letter-spacing: 0.3px;
+        }
+
+        .bwr-badge-pulse {
+            width: 7px;
+            height: 7px;
+            background: #1eb349;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.7);
+            animation: bwrPulse 1.6s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+
+        .bwr-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #0F172A;
+            margin: 0.85rem 0 0.35rem;
+            line-height: 1.3;
+        }
+
+        .bwr-desc {
+            font-size: 0.8rem;
+            color: #64748B;
+            line-height: 1.55;
+            margin: 0 0 1.25rem;
+        }
+
+        .bwr-ticket-box {
+            background: #F8FAFC;
+            border: 1px dashed #CBD5E1;
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .bwr-ticket-col {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .bwr-ticket-col:last-child {
+            text-align: right;
+        }
+
+        .bwr-ticket-lbl {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 0.15rem;
+        }
+
+        .bwr-ticket-val {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #0F172A;
+            letter-spacing: 0.5px;
+        }
+
+        .bwr-ticket-status {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #D97706;
+        }
+
+        .bwr-timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+
+        .bwr-timer-val {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: #1eb349;
+            line-height: 1;
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.5px;
+        }
+
+        .bwr-timer-lbl {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.35rem;
+        }
+
+        .bwr-progress-track {
+            height: 9px;
+            background: #E2E8F0;
+            border-radius: 99px;
+            overflow: hidden;
+            margin: 1.15rem 0 1.25rem;
+        }
+
+        .bwr-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            border-radius: 99px;
+            transition: width 0.3s ease;
+        }
+
+        .bwr-alert-box {
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            border-radius: 12px;
+            padding: 0.75rem 0.85rem;
+            font-size: 0.72rem;
+            color: #92400E;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            text-align: left;
+        }
+
+        .bwr-cancel-btn {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            padding: 0.35rem;
+            transition: color 0.2s;
+            display: inline-block;
+        }
+
+        .bwr-cancel-btn:hover {
+            color: #EF4444;
+        }
+
+        @keyframes bwrFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bwrSlideUp {
+            from { opacity: 0; transform: translateY(16px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes bwrPulse {
+            0% { box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(30, 179, 73, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(30, 179, 73, 0); }
+        }
+
+        @media (max-width: 640px) {
+            .bwr-dialog {
+                padding: 1.6rem 1.25rem;
+                border-radius: 20px;
+            }
+            .bwr-title {
+                font-size: 1.1rem;
+            }
+            .bwr-timer-val {
+                font-size: 2.2rem;
+            }
+        }
             flex-wrap: nowrap;
         }
 
@@ -1511,7 +1731,8 @@
             {{-- MAIN COLUMN (Kiri & Tengah) --}}
             @php
                 $isTicket = ($service->product_type ?? '') === 'ticket';
-                $isWarActive = $isTicket && !empty($service->ticket_war_start) && now()->lt($service->ticket_war_start);
+                $hasWarFeature = $isTicket && !empty($service->ticket_war_start);
+                $isWarActive = $hasWarFeature && now()->lt($service->ticket_war_start);
                 $warTimestamp = $isWarActive ? $service->ticket_war_start->timestamp * 1000 : 0;
 
                 // Deteksi event expired — khusus tipe ticket
@@ -1850,6 +2071,8 @@
                                 <input type="hidden" name="action" id="pd_action_input" value="buy">
                                 <input type="hidden" name="product_id" value="{{ $service->id }}">
                                 <input type="hidden" name="variant_value_id" id="pd_selected_variant_id" value="">
+                                {{-- Admission token disisipkan oleh JS saat giliran antrean war tiket tiba --}}
+                                <input type="hidden" name="admission_token" id="war_admission_token_input" value="">
 
                                 {{-- VARIANT SELECTOR (tampil jika ada varian) --}}
                                 @if($service->variantOptions && $service->variantOptions->count() > 0)
@@ -3157,6 +3380,11 @@
                                         }
 
                                         var action = window._pdCurrentAction || 'buy';
+                                        closePdVariantModal();
+                                        triggerCartSubmissionWithQueue(action);
+                                    };
+
+                                    function executeFinalCartSubmit(action) {
                                         var actionInput = document.getElementById('pd_action_input');
                                         if (actionInput) {
                                             actionInput.value = action;
@@ -3168,9 +3396,198 @@
                                             actEl.value = action;
                                             document.getElementById('pd-cart-form').appendChild(actEl);
                                         }
-
-                                        closePdVariantModal();
                                         document.getElementById('pd-cart-form').submit();
+                                    }
+
+                                    var _bwrInterval = null;
+                                    var _bwrAction = null;
+
+                                    // ══ TICKET WAR QUEUE — Queue ID unik per browser session ══
+                                    var _bwrQueueId = sessionStorage.getItem('buyle_war_queue_id_{{ $service->id }}');
+                                    if (!_bwrQueueId) {
+                                        _bwrQueueId = 'q_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+                                        sessionStorage.setItem('buyle_war_queue_id_{{ $service->id }}', _bwrQueueId);
+                                    }
+                                    var _bwrAdmissionToken = sessionStorage.getItem('buyle_war_token_{{ $service->id }}') || null;
+                                    var _bwrPollTimer = null;
+
+                                    function triggerCartSubmissionWithQueue(action) {
+                                        var hasWar = {{ ($hasWarFeature ?? false) ? 'true' : 'false' }};
+                                        if (!hasWar) {
+                                            executeFinalCartSubmit(action);
+                                            return;
+                                        }
+
+                                        // Cek admission token yang masih valid di sessionStorage (10 menit)
+                                        var warKey = 'buyle_war_cleared_{{ $service->id }}';
+                                        var lastCleared = parseInt(sessionStorage.getItem(warKey) || '0', 10);
+                                        var isCleared = (Date.now() - lastCleared) < (10 * 60 * 1000);
+
+                                        if (isCleared && _bwrAdmissionToken) {
+                                            injectAdmissionToken(_bwrAdmissionToken);
+                                            executeFinalCartSubmit(action);
+                                            return;
+                                        }
+
+                                        // Buka Waiting Room dan mulai polling server
+                                        openBuyleWaitingRoom(action);
+                                    }
+
+                                    function injectAdmissionToken(token) {
+                                        var existingInput = document.getElementById('war_admission_token_input');
+                                        if (existingInput) {
+                                            existingInput.value = token || '';
+                                        } else {
+                                            var el = document.createElement('input');
+                                            el.type = 'hidden';
+                                            el.name = 'admission_token';
+                                            el.id = 'war_admission_token_input';
+                                            el.value = token || '';
+                                            var form = document.getElementById('pd-cart-form');
+                                            if (form) form.appendChild(el);
+                                        }
+                                    }
+
+                                    window.openBuyleWaitingRoom = function(action) {
+                                        _bwrAction = action || 'buy';
+                                        var modal = document.getElementById('buyleWaitingRoomModal');
+                                        if (!modal) {
+                                            executeFinalCartSubmit(action);
+                                            return;
+                                        }
+
+                                        var queueCode = '#WR-' + Math.floor(1000 + Math.random() * 9000);
+                                        var qEl = document.getElementById('bwrQueueNum');
+                                        if (qEl) qEl.textContent = queueCode;
+
+                                        var statusEl = document.getElementById('bwrStatusText');
+                                        if (statusEl) {
+                                            statusEl.textContent = 'Menghubungi Server...';
+                                            statusEl.style.color = '#D97706';
+                                        }
+
+                                        var timerEl = document.getElementById('bwrCountdownText');
+                                        if (timerEl) { timerEl.textContent = '...'; timerEl.style.color = '#1eb349'; }
+
+                                        var progressEl = document.getElementById('bwrProgressBar');
+                                        if (progressEl) progressEl.style.width = '5%';
+
+                                        var titleEl = document.getElementById('bwrTitleText');
+                                        if (titleEl) titleEl.textContent = 'Menyiapkan Sesi Pembelian Anda';
+
+                                        var descEl = document.getElementById('bwrDescText');
+                                        if (descEl) descEl.textContent = 'Tingginya antrean pemesan tiket sedang diproses secara bertahap & adil. Mohon tunggu, sistem akan otomatis membuka sesi checkout Anda.';
+
+                                        modal.style.display = 'flex';
+                                        document.body.style.overflow = 'hidden';
+
+                                        if (_bwrInterval) clearInterval(_bwrInterval);
+                                        if (_bwrPollTimer) clearTimeout(_bwrPollTimer);
+
+                                        // Mulai polling server dengan jitter acak (10-20 detik) untuk meratakan beban
+                                        var jitterDelay = (Math.floor(Math.random() * 10) + 10) * 1000; // 10-19 detik awal
+                                        var localCount = 0;
+
+                                        // Countdown display (simulasi visual) selama menunggu polling
+                                        var displaySeconds = Math.round(jitterDelay / 1000);
+                                        var totalDisplay = displaySeconds;
+                                        _bwrInterval = setInterval(function() {
+                                            displaySeconds--;
+                                            if (timerEl) timerEl.textContent = Math.max(0, displaySeconds) + 's';
+                                            var pct = Math.min(90, Math.round(((totalDisplay - displaySeconds) / totalDisplay) * 90));
+                                            if (progressEl) progressEl.style.width = pct + '%';
+                                        }, 1000);
+
+                                        function doPoll() {
+                                            fetch('{{ route('api.ticket-war.status') }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                                                },
+                                                body: JSON.stringify({
+                                                    product_id: {{ $service->id }},
+                                                    queue_id: _bwrQueueId,
+                                                    current_token: _bwrAdmissionToken
+                                                })
+                                            })
+                                            .then(function(res) { return res.json(); })
+                                            .then(function(data) {
+                                                if (data.status === 'admitted') {
+                                                    // ✅ Dapat slot! Simpan token & lanjutkan checkout
+                                                    if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
+                                                    _bwrAdmissionToken = data.token || null;
+                                                    if (_bwrAdmissionToken) {
+                                                        sessionStorage.setItem('buyle_war_token_{{ $service->id }}', _bwrAdmissionToken);
+                                                    }
+                                                    var warKey = 'buyle_war_cleared_{{ $service->id }}';
+                                                    sessionStorage.setItem(warKey, Date.now());
+
+                                                    if (timerEl) { timerEl.textContent = 'Siap!'; timerEl.style.color = '#16a34a'; }
+                                                    if (progressEl) progressEl.style.width = '100%';
+                                                    if (statusEl) { statusEl.textContent = 'Giliran Anda!'; statusEl.style.color = '#16a34a'; }
+                                                    if (titleEl) titleEl.textContent = '✅ Mengalihkan ke Pembayaran...';
+                                                    if (descEl) descEl.textContent = 'Giliran Anda tiba! Sesi pemesanan tiket Anda sedang dibuka...';
+
+                                                    setTimeout(function() {
+                                                        injectAdmissionToken(_bwrAdmissionToken);
+                                                        executeFinalCartSubmit(_bwrAction);
+                                                    }, 700);
+
+                                                } else if (data.status === 'waiting') {
+                                                    // 🕒 Masih antre — update display & jadwalkan poll berikutnya
+                                                    if (statusEl) { statusEl.textContent = 'Antrean #' + (data.position || '...'); statusEl.style.color = '#D97706'; }
+                                                    if (descEl) descEl.textContent = 'Tingginya antrean: Anda di posisi ' + (data.position || '...') + '. Mohon tunggu giliran Anda...';
+
+                                                    // Reset countdown untuk polling berikutnya (jitter 10-20 detik)
+                                                    var nextDelay = (data.retry_after || 15) * 1000;
+                                                    displaySeconds = Math.round(nextDelay / 1000);
+                                                    totalDisplay = displaySeconds;
+                                                    if (timerEl) timerEl.textContent = displaySeconds + 's';
+                                                    if (progressEl) progressEl.style.width = '10%';
+
+                                                    if (_bwrInterval) { clearInterval(_bwrInterval); }
+                                                    _bwrInterval = setInterval(function() {
+                                                        displaySeconds--;
+                                                        if (timerEl) timerEl.textContent = Math.max(0, displaySeconds) + 's';
+                                                        var pct = Math.min(90, Math.round(((totalDisplay - displaySeconds) / totalDisplay) * 80) + 10);
+                                                        if (progressEl) progressEl.style.width = pct + '%';
+                                                    }, 1000);
+
+                                                    _bwrPollTimer = setTimeout(doPoll, nextDelay);
+
+                                                } else if (data.status === 'not_started') {
+                                                    // ⏳ Jadwal war belum dimulai
+                                                    if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
+                                                    if (statusEl) { statusEl.textContent = 'Belum Dibuka'; statusEl.style.color = '#6B7280'; }
+                                                    if (titleEl) titleEl.textContent = '⏳ Penjualan Belum Dimulai';
+                                                    if (descEl) descEl.textContent = 'War tiket belum dibuka. Halaman akan otomatis refresh saat jadwal tiba.';
+                                                    if (timerEl) { timerEl.textContent = '-'; timerEl.style.color = '#6B7280'; }
+                                                } else {
+                                                    // Error / produk tidak ditemukan — bypass langsung
+                                                    if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
+                                                    executeFinalCartSubmit(_bwrAction);
+                                                }
+                                            })
+                                            .catch(function() {
+                                                // Jika fetch gagal (koneksi putus, dll) — bypass untuk tidak menghambat pembeli
+                                                if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
+                                                executeFinalCartSubmit(_bwrAction);
+                                            });
+                                        }
+
+                                        // Polling pertama setelah jitter delay awal
+                                        _bwrPollTimer = setTimeout(doPoll, jitterDelay);
+                                    };
+
+                                    window.cancelWaitingRoom = function() {
+                                        if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
+                                        if (_bwrPollTimer) { clearTimeout(_bwrPollTimer); _bwrPollTimer = null; }
+                                        var modal = document.getElementById('buyleWaitingRoomModal');
+                                        if (modal) {
+                                            modal.style.display = 'none';
+                                            document.body.style.overflow = '';
+                                        }
                                     };
 
                                     window.selectPdVariant = function (btn) {
@@ -3194,11 +3611,7 @@
                                             openPdVariantModal(action);
                                             return false;
                                         }
-                                        var actionInput = document.getElementById('pd_action_input');
-                                        if (actionInput) {
-                                            actionInput.value = action;
-                                        }
-                                        document.getElementById('pd-cart-form').submit();
+                                        triggerCartSubmissionWithQueue(action);
                                     };
 
                                     document.addEventListener('keydown', function(e) {
@@ -5051,5 +5464,54 @@
                 </button>
             </div>
         </div>
+        </div>
+
+        {{-- ══ VIRTUAL WAITING ROOM MODAL (TICKET WAR TRAFFIC JITTER & STAGGERING) ══ --}}
+        <div id="buyleWaitingRoomModal" class="bwr-backdrop" style="display:none;" aria-modal="true" role="dialog">
+            <div class="bwr-dialog">
+                <div class="bwr-header">
+                    <span class="bwr-badge">
+                        <span class="bwr-badge-pulse"></span>
+                        RUANG ANTREAN TIKET AKTIF
+                    </span>
+                    <h3 class="bwr-title" id="bwrTitleText">Menyiapkan Sesi Pembelian Anda</h3>
+                    <p class="bwr-desc" id="bwrDescText">
+                        Tingginya antrean pemesan tiket sedang diproses secara bertahap & adil. Mohon tunggu sejenak, sistem akan otomatis membuka sesi checkout Anda.
+                    </p>
+                </div>
+
+                <div class="bwr-ticket-box">
+                    <div class="bwr-ticket-col">
+                        <span class="bwr-ticket-lbl">Nomor Antrean</span>
+                        <span id="bwrQueueNum" class="bwr-ticket-val">#WR-8492</span>
+                    </div>
+                    <div class="bwr-ticket-col">
+                        <span class="bwr-ticket-lbl">Status Alokasi</span>
+                        <span id="bwrStatusText" class="bwr-ticket-status">Dalam Antrean...</span>
+                    </div>
+                </div>
+
+                <div class="bwr-timer-container">
+                    <div class="bwr-timer-val" id="bwrCountdownText">24s</div>
+                    <span class="bwr-timer-lbl">Estimasi Giliran Anda</span>
+                </div>
+
+                <div class="bwr-progress-track">
+                    <div class="bwr-progress-fill" id="bwrProgressBar"></div>
+                </div>
+
+                <div class="bwr-alert-box">
+                    <svg width="18" height="18" fill="none" stroke="#D97706" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                        <strong>Pemberitahuan Penting:</strong> Mohon <strong>jangan refresh</strong> atau tutup browser agar posisi antrean Anda tidak tereset.
+                    </div>
+                </div>
+
+                <button type="button" class="bwr-cancel-btn" onclick="cancelWaitingRoom()">
+                    Batal & Kembali ke Halaman
+                </button>
+            </div>
         </div>
 @endsection

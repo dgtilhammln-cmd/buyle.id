@@ -60,5 +60,18 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('public-api', function (Request $request) {
             return Limit::perMinute(60)->by($request->ip());
         });
+
+        // Rate limiter khusus Ticket War Queue polling
+        // Polling minimal 10 detik (dipaksa dari JS), izinkan maks 10 request/menit per IP
+        RateLimiter::for('ticket-war-queue', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip())->response(function () {
+                return response()->json([
+                    'status'      => 'waiting',
+                    'position'    => 999,
+                    'retry_after' => 20,
+                    'message'     => 'Terlalu banyak permintaan. Mohon tunggu sebelum memeriksa status antrean kembali.',
+                ], 429);
+            });
+        });
     }
 }

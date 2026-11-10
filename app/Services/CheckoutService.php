@@ -39,19 +39,40 @@ class CheckoutService
             throw new Exception('Keranjang belanja Anda kosong.');
         }
 
-        // Proteksi: Creator tidak boleh melakukan checkout / membeli produk milik sendiri
-        if ($user) {
-            foreach ($items as $cartItem) {
-                if ($cartItem->product) {
-                    $sellerId = $cartItem->product->seller_id;
-                    if ($sellerId && (int)$sellerId === (int)$user->id) {
-                        throw new Exception('Sistem mendeteksi Anda mencoba membeli produk Anda sendiri ("' . $cartItem->product->name . '"). Creator tidak diperbolehkan melakukan checkout produk milik sendiri.');
-                    }
-                }
+        // Idempotency Key & Concurrent Lock Setup
+        $userIdentifier = $user ? "u_{$user->id}" : 'g_' . md5($data['guest_email'] ?? session()->getId());
+        $cartFingerprint = md5($items->map(fn($i) => "{$i->product_id}_{$i->variant_value_id}_{$i->qty}")->implode('|'));
+        $rawIdem = !empty($data['idempotency_key']) ? trim($data['idempotency_key']) : "{$userIdentifier}_{$cartFingerprint}";
+        $idempotencyKey = 'order_idem_' . md5($rawIdem);
+
+        // 1. Cek apakah request checkout ini sudah pernah sukses diproses (Idempotent Replay)
+        if ($cachedOrderId = \Illuminate\Support\Facades\Cache::get("order_done_{$idempotencyKey}")) {
+            $existingOrder = Order::find($cachedOrderId);
+            if ($existingOrder) {
+                return $existingOrder;
             }
         }
 
-        // Kalkulasi harga
+        // 2. Kunci proses dengan atomic lock (maksimal 15 detik) untuk mencegah double click / concurrent request
+        $checkoutLock = \Illuminate\Support\Facades\Cache::lock("checkout_lock_{$idempotencyKey}", 15);
+        if (!$checkoutLock->get()) {
+            throw new Exception('Pesanan Anda sedang diproses oleh sistem. Mohon tunggu beberapa detik.');
+        }
+
+        try {
+            // Proteksi: Creator tidak boleh melakukan checkout / membeli produk milik sendiri
+            if ($user) {
+                foreach ($items as $cartItem) {
+                    if ($cartItem->product) {
+                        $sellerId = $cartItem->product->seller_id;
+                        if ($sellerId && (int)$sellerId === (int)$user->id) {
+                            throw new Exception('Sistem mendeteksi Anda mencoba membeli produk Anda sendiri ("' . $cartItem->product->name . '"). Creator tidak diperbolehkan melakukan checkout produk milik sendiri.');
+                        }
+                    }
+                }
+            }
+
+            // Kalkulasi harga
         $subtotal = $summary['subtotal'];
         $shippingCost = $data['shipping_cost'] ?? 0;
         $discount = 0;
@@ -272,6 +293,14 @@ class CheckoutService
                     if (now()->lt($product->ticket_war_start)) {
                         throw new Exception("Penjualan tiket \"{$product->name}\" baru akan dibuka pada " . $product->ticket_war_start->format('d M Y, H:i') . " WIB.");
                     }
+
+                    // Validasi Server-Side Admission Token jika jadwal war tiket aktif
+                    $warService = app(\App\Services\TicketWarQueueService::class);
+                    $admToken = $data['admission_token'] 
+                        ?? session('war_admission_token_' . $product->id);
+                    if (!$warService->validateToken($admToken, $product->id)) {
+                        throw new Exception("Sesi antrean war tiket \"{$product->name}\" tidak valid atau telah kedaluwarsa. Mohon antre kembali melalui tombol Beli Tiket.");
+                    }
                 }
 
                 // Proteksi Anti-Bot & Calo: Batasan maksimal tiket per transaksi
@@ -300,14 +329,28 @@ class CheckoutService
                     }
                 }
                 
-                // Proteksi race condition pada stok variasi jika dipilih
+                // Proteksi race condition pada stok variasi jika dipilih (Atomic Safe Decrement)
                 if ($cartItem->variant_value_id) {
                     $variantVal = \App\Models\ProductVariantValue::where('id', $cartItem->variant_value_id)->lockForUpdate()->first();
                     if ($variantVal && $variantVal->stock !== null) {
-                        if ((int)$variantVal->stock < $cartItem->qty) {
-                            throw new Exception("Stok variasi \"{$variantVal->value}\" tidak mencukupi (Sisa: {$variantVal->stock}).");
+                        $vAffected = \App\Models\ProductVariantValue::where('id', $variantVal->id)
+                            ->where('stock', '>=', $cartItem->qty)
+                            ->decrement('stock', $cartItem->qty);
+                        if ($vAffected === 0) {
+                            $latestVStock = (int) \App\Models\ProductVariantValue::where('id', $variantVal->id)->value('stock');
+                            throw new Exception("Stok kategori / variasi \"{$variantVal->value}\" tidak mencukupi (Sisa: {$latestVStock}).");
                         }
-                        $variantVal->decrement('stock', $cartItem->qty);
+                    }
+                }
+
+                // Konsumsi Admission Token saat order item berhasil diamankan (Single-Use Token)
+                if ($product->product_type === 'ticket' && !empty($product->ticket_war_start)) {
+                    $warService = app(\App\Services\TicketWarQueueService::class);
+                    $admToken = $data['admission_token'] 
+                        ?? session('war_admission_token_' . $product->id);
+                    if (!empty($admToken)) {
+                        $warService->consumeToken($admToken, $product->id);
+                        session()->forget('war_admission_token_' . $product->id);
                     }
                 }
 
@@ -425,6 +468,7 @@ class CheckoutService
                 $this->markOrderConfirmed($order);
 
                 DB::commit();
+                \Illuminate\Support\Facades\Cache::put("order_done_{$idempotencyKey}", $order->id, 300);
 
                 // Kirim email notifikasi ke buyer
                 $buyerEmail = $user?->email ?? $order->customer_email ?? ($data['guest_email'] ?? null);
@@ -468,13 +512,17 @@ class CheckoutService
             ]);
 
             DB::commit();
+            \Illuminate\Support\Facades\Cache::put("order_done_{$idempotencyKey}", $order->id, 300);
 
             return $order;
 
-        } catch (Exception $e) {
-            DB::rollBack();
-            \Log::error('Checkout Error: ' . $e->getMessage());
-            throw $e;
+            } catch (Exception $e) {
+                DB::rollBack();
+                \Log::error('Checkout Error: ' . $e->getMessage());
+                throw $e;
+            }
+        } finally {
+            $checkoutLock->release();
         }
     }
 
@@ -618,18 +666,25 @@ class CheckoutService
     }
 
     /**
-     * Set order menjadi Cancelled dan kembalikan stok.
+     * Set order menjadi Cancelled dan kembalikan stok tiket / produk.
      */
-    protected function markOrderCancelled(Order $order): void
+    public function markOrderCancelled(Order $order): void
     {
         if ($order->canBeCancelled()) {
             $order->update(['status' => OrderStatus::Cancelled]);
             
-            // Kembalikan stok
+            // Kembalikan stok produk & tiket
             foreach ($order->items as $item) {
-                if ($item->product && $item->product->type === 'product') {
+                if ($item->product && $item->product->stock !== null) {
                     $item->product->increment('stock', $item->qty);
                     $item->product->decrement('sold_count', $item->qty);
+                }
+
+                if ($item->variant_value_id) {
+                    $variantVal = \App\Models\ProductVariantValue::find($item->variant_value_id);
+                    if ($variantVal && $variantVal->stock !== null) {
+                        $variantVal->increment('stock', $item->qty);
+                    }
                 }
             }
 

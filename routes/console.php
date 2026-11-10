@@ -14,4 +14,7 @@ Schedule::command('instagram:refresh-tokens')->dailyAt('02:00');
 // Pembersihan otomatis berkas gambar konversi dan temp yang berusia lebih dari 14 hari (2 minggu)
 Schedule::command('tools:clean-temp-images --days=14')->dailyAt('03:30');
 
+// Batalkan order tiket yang belum dibayar lebih dari 15 menit — kembalikan stok & bebaskan slot war queue
+Schedule::command('tickets:expire-unpaid --minutes=15')->everyFiveMinutes();
+
 

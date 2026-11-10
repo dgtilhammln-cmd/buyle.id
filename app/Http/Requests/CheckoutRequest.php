@@ -42,6 +42,8 @@ class CheckoutRequest extends FormRequest
             'ticket_niks'          => 'nullable|array',
             'ticket_niks.*'        => 'nullable|array',
             'ticket_niks.*.*'      => 'nullable|string|min:3|max:50',
+            'idempotency_key'      => 'nullable|string|max:100',
+            'admission_token'      => 'nullable|string',
         ];
 
         if (!auth()->check()) {

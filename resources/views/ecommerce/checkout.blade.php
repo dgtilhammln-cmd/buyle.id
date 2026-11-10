@@ -654,6 +654,19 @@
 
         <form action="{{ route('checkout.store') }}" method="POST" id="checkoutForm">
             @csrf
+            {{-- Idempotency Key: mencegah double order akibat double-click atau koneksi lambat --}}
+            <input type="hidden" name="idempotency_key" value="{{ (string) \Illuminate\Support\Str::uuid() }}">
+            {{-- Admission Token untuk Tiket War (Single-Use Server Token) --}}
+            @php
+                $checkoutWarToken = '';
+                foreach ($summary['items'] as $itemWarCheck) {
+                    if ($itemWarCheck->product && $itemWarCheck->product->isTicketProduct() && !empty($itemWarCheck->product->ticket_war_start)) {
+                        $checkoutWarToken = session('war_admission_token_' . $itemWarCheck->product_id, '');
+                        break;
+                    }
+                }
+            @endphp
+            <input type="hidden" name="admission_token" id="checkout_admission_token_input" value="{{ $checkoutWarToken }}">
             <div class="co-grid">
                 <div class="co-left">
 
@@ -1821,6 +1834,20 @@
         // INIT
         // ────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', function () {
+            // Sinkronisasi admission_token dari sessionStorage jika ada produk war tiket
+            const admInput = document.getElementById('checkout_admission_token_input');
+            if (admInput && !admInput.value) {
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key && key.startsWith('buyle_war_token_')) {
+                        const tokenVal = sessionStorage.getItem(key);
+                        if (tokenVal) {
+                            admInput.value = tokenVal;
+                            break;
+                        }
+                    }
+                }
+            }
             toggleNewAddress();
             loadProvincesAll();
         });
@@ -2600,6 +2627,13 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Disable semua tombol bayar/submit untuk proteksi anti double-click di browser
+                    document.querySelectorAll('.btn-pay, #btn-claim-free').forEach(b => {
+                        b.disabled = true;
+                        b.style.opacity = '0.6';
+                        b.style.pointerEvents = 'none';
+                    });
+
                     // Show loading state
                     Swal.fire({
                         title: 'Memproses Pesanan...',

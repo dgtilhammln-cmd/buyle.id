@@ -31,12 +31,27 @@ class CartController extends Controller
             'qty'              => 'required|integer|min:1',
             'affiliate_id'     => 'nullable|exists:users,id',
             'custom_price'     => 'nullable|integer|min:0', // Untuk traktir/PWYW
+            'admission_token'  => 'nullable|string',
         ]);
 
         try {
             // Resolve custom_price untuk traktir / PWYW
             $customPrice = null;
             $product = \App\Models\Product::findOrFail($request->product_id);
+
+            // Validasi Server-Side Admission Token jika produk mengaktifkan jadwal War Tiket
+            if ($product->isTicketWar() && $product->isTicketWarOpen()) {
+                $warService = app(\App\Services\TicketWarQueueService::class);
+                $admissionToken = $request->input('admission_token') 
+                    ?? session('war_admission_token_' . $product->id);
+
+                if (!$warService->validateToken($admissionToken, $product->id)) {
+                    throw new \Exception('Sesi antrean tiket tidak valid atau telah kedaluwarsa. Mohon antre kembali melalui tombol Beli Tiket.');
+                }
+
+                // Simpan token di session agar berlanjut ke tahap checkout
+                session(['war_admission_token_' . $product->id => $admissionToken]);
+            }
             if ($product->isTraktir()) {
                 // Hitung: jumlah kopi × harga per kopi
                 $unitPrice = (float)($product->traktir_unit_price ?? 10000);
