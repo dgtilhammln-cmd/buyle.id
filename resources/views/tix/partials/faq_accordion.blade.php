@@ -85,6 +85,7 @@
         .tix-faq-wrapper {
             width: 100%;
             box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .tix-faq-container {

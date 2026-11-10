@@ -149,7 +149,7 @@
                                     Rp{{ number_format($tOrigPrice, 0, ',', '.') }}
                                 </span>
                             @endif
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: {{ $tIsExpired ? '#94A3B8' : '#16a34a' }}; white-space: nowrap; display: block;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 700; color: {{ $tIsExpired ? '#94A3B8' : '#16a34a' }}; white-space: nowrap; display: block;">
                                 @if($tIsExpired)
                                     Selesai
                                 @elseif($tPrice > 0)
