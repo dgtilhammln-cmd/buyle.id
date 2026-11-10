@@ -22,12 +22,12 @@
 
         @media (max-width: 991px) {
             .buyle-tix-page {
-                padding-top: 0.75rem !important; /* Body already has padding-top: 130px !important from mobile navbar */
+                padding-top: 1.5rem !important; /* Generous breathing room so banner never touches mobile header/search */
             }
 
             .tix-hero-banner-section {
-                margin-top: 0.5rem !important;
-                margin-bottom: 1.25rem !important;
+                margin-top: 0.75rem !important;
+                margin-bottom: 1.5rem !important;
             }
 
             .tix-orbit-carousel-wrap {
@@ -37,12 +37,12 @@
 
         @media (max-width: 600px) {
             .buyle-tix-page {
-                padding-top: 0.75rem !important;
+                padding-top: 1.5rem !important;
             }
 
             .tix-hero-banner-section {
-                margin-top: 0.5rem !important;
-                margin-bottom: 1rem !important;
+                margin-top: 0.75rem !important;
+                margin-bottom: 1.25rem !important;
             }
 
             .tix-orbit-carousel-wrap {
@@ -253,25 +253,25 @@
         }
 
         .tix-orbit-btn.prev {
-            left: calc(50% - 45% + 12px);
+            left: max(0.75rem, calc(50% - min(45vw, 600px) - 22px));
         }
 
         .tix-orbit-btn.next {
-            right: calc(50% - 45% + 12px);
+            right: max(0.75rem, calc(50% - min(45vw, 600px) - 22px));
         }
 
         @media (max-width: 768px) {
             .tix-orbit-btn {
-                width: 34px;
-                height: 34px;
+                width: 32px;
+                height: 32px;
             }
 
             .tix-orbit-btn.prev {
-                left: calc(50% - 46% + 10px);
+                left: 8px;
             }
 
             .tix-orbit-btn.next {
-                right: calc(50% - 46% + 10px);
+                right: 8px;
             }
         }
 
@@ -940,70 +940,93 @@
 
     <div class="buyle-tix-page">
 
-        {{-- ══ SKELETON SHIMMER OVERLAY (Smooth Initial Render) ══ --}}
+        {{-- ══ SKELETON SHIMMER — struktur 1:1 sama layout asli ══ --}}
         <div id="tixInitialSkeleton">
-            {{-- 3D Carousel Orbit Skeleton (Center card + Left & Right peek cards) --}}
-            <div class="tix-orbit-skel-wrap">
-                <div class="tix-orbit-skel-stage">
-                    <div class="tix-orbit-skel-card prev tix-skeleton"></div>
-                    <div class="tix-orbit-skel-card active tix-skeleton"></div>
-                    <div class="tix-orbit-skel-card next tix-skeleton"></div>
+
+            {{-- 1. Banner Carousel Skeleton —— full-width shimmer box, rasio 1920/600 --}}
+            <div style="width:100%; padding: 0.75rem 0 0.5rem; overflow:hidden;">
+                <div style="position:relative; width:100%; aspect-ratio:1920/600;">
+                    {{-- Card prev (kiri, mengintip) --}}
+                    <div class="tix-skeleton" style="
+                        position:absolute; top:0; left:50%;
+                        transform: translateX(calc(-50% - 72%)) scale(0.85);
+                        width:90%; max-width:1200px; height:100%;
+                        border-radius:20px; opacity:0.35;
+                    "></div>
+                    {{-- Card aktif (tengah) --}}
+                    <div class="tix-skeleton" style="
+                        position:absolute; top:0; left:50%;
+                        transform: translateX(-50%) scale(1);
+                        width:90%; max-width:1200px; height:100%;
+                        border-radius:20px; z-index:2;
+                        box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+                    "></div>
+                    {{-- Card next (kanan, mengintip) --}}
+                    <div class="tix-skeleton" style="
+                        position:absolute; top:0; left:50%;
+                        transform: translateX(calc(-50% + 72%)) scale(0.85);
+                        width:90%; max-width:1200px; height:100%;
+                        border-radius:20px; opacity:0.35;
+                    "></div>
                 </div>
-                {{-- Skeleton Dots --}}
-                <div class="tix-orbit-skel-dots">
-                    <div class="tix-skeleton" style="width: 24px; height: 7px; border-radius: 999px;"></div>
-                    <div class="tix-skeleton" style="width: 7px; height: 7px; border-radius: 50%;"></div>
-                    <div class="tix-skeleton" style="width: 7px; height: 7px; border-radius: 50%;"></div>
-                    <div class="tix-skeleton" style="width: 7px; height: 7px; border-radius: 50%;"></div>
+                {{-- Dots --}}
+                <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin-top:14px;">
+                    <div class="tix-skeleton" style="width:26px; height:7px; border-radius:999px;"></div>
+                    <div class="tix-skeleton" style="width:7px; height:7px; border-radius:50%;"></div>
+                    <div class="tix-skeleton" style="width:7px; height:7px; border-radius:50%;"></div>
                 </div>
             </div>
 
+            {{-- 2. Media Partners Skeleton --}}
             <div class="tix-container">
-                {{-- Media Partner Skeleton --}}
-            <div style="display: flex; justify-content: center; align-items: center; gap: 2rem; margin: 1.5rem 0 2rem; flex-wrap: wrap;">
-                <div class="tix-skeleton" style="width: 140px; height: 16px; border-radius: 6px;"></div>
-                <div style="display: flex; gap: 2rem; align-items: center;">
-                    <div class="tix-skeleton" style="width: 90px; height: 26px; border-radius: 6px;"></div>
-                    <div class="tix-skeleton" style="width: 80px; height: 24px; border-radius: 6px;"></div>
-                    <div class="tix-skeleton" style="width: 95px; height: 24px; border-radius: 6px;"></div>
-                </div>
-            </div>
-
-            {{-- Search Bar Skeleton --}}
-            <div class="tix-skeleton" style="width: 100%; height: 56px; border-radius: 16px; margin-bottom: 2.25rem;"></div>
-
-            {{-- Section Title Skeleton --}}
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <div class="tix-skeleton" style="width: 220px; height: 26px; border-radius: 8px;"></div>
-                <div class="tix-skeleton" style="width: 130px; height: 20px; border-radius: 8px;"></div>
-            </div>
-
-            {{-- 4 Responsive Card Skeletons --}}
-            <div class="tix-grid">
-                @for($i = 0; $i < 4; $i++)
-                    <div class="tix-skeleton-card">
-                        <div class="tix-skeleton"
-                            style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 0.85rem;"></div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <div class="tix-skeleton" style="width: 45px; height: 16px; border-radius: 4px;"></div>
-                            <div class="tix-skeleton" style="width: 65px; height: 16px; border-radius: 4px;"></div>
-                        </div>
-                        <div class="tix-skeleton" style="width: 88%; height: 18px; margin-bottom: 0.35rem; border-radius: 6px;">
-                        </div>
-                        <div class="tix-skeleton" style="width: 60%; height: 16px; margin-bottom: 0.6rem; border-radius: 6px;">
-                        </div>
-                        <div class="tix-skeleton"
-                            style="width: 110px; height: 14px; margin-bottom: 0.3rem; border-radius: 4px;"></div>
-                        <div class="tix-skeleton" style="width: 90px; height: 14px; margin-bottom: 0.8rem; border-radius: 4px;">
-                        </div>
-                        <div
-                            style="border-top: 1px solid #F1F5F9; padding-top: 0.65rem; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                            <div class="tix-skeleton" style="width: 70px; height: 20px; border-radius: 6px;"></div>
-                            <div class="tix-skeleton" style="width: 75px; height: 28px; border-radius: 99px;"></div>
-                        </div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:2rem; padding: 1.5rem 0 2rem; flex-wrap:wrap;">
+                    <div class="tix-skeleton" style="width:120px; height:14px; border-radius:6px;"></div>
+                    <div style="display:flex; gap:2rem; align-items:center;">
+                        <div class="tix-skeleton" style="width:80px; height:24px; border-radius:6px;"></div>
+                        <div class="tix-skeleton" style="width:70px; height:22px; border-radius:6px;"></div>
+                        <div class="tix-skeleton" style="width:85px; height:22px; border-radius:6px;"></div>
                     </div>
-                @endfor
-            </div>
+                </div>
+
+                {{-- 3. Search + Filter Skeleton --}}
+                <div class="tix-skeleton" style="width:100%; height:54px; border-radius:16px; margin-bottom:2rem;"></div>
+
+                {{-- 4. Section Title Skeleton --}}
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+                    <div class="tix-skeleton" style="width:200px; height:24px; border-radius:8px;"></div>
+                    <div class="tix-skeleton" style="width:110px; height:18px; border-radius:8px;"></div>
+                </div>
+
+                {{-- 5. Event Card Grid Skeleton — 4 col desktop, 2 col mobile --}}
+                <div class="tix-grid">
+                    @for($i = 0; $i < 8; $i++)
+                        <div class="tix-skeleton-card">
+                            {{-- Thumbnail --}}
+                            <div class="tix-skeleton" style="width:100%; aspect-ratio:16/9; border-radius:12px; margin-bottom:0.75rem;"></div>
+                            {{-- Badge + verified row --}}
+                            <div style="display:flex; justify-content:space-between; margin-bottom:0.45rem;">
+                                <div class="tix-skeleton" style="width:48px; height:15px; border-radius:4px;"></div>
+                                <div class="tix-skeleton" style="width:68px; height:15px; border-radius:4px;"></div>
+                            </div>
+                            {{-- Title lines --}}
+                            <div class="tix-skeleton" style="width:90%; height:17px; border-radius:5px; margin-bottom:0.3rem;"></div>
+                            <div class="tix-skeleton" style="width:65%; height:15px; border-radius:5px; margin-bottom:0.6rem;"></div>
+                            {{-- Organizer --}}
+                            <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.3rem;">
+                                <div class="tix-skeleton" style="width:18px; height:18px; border-radius:50%;"></div>
+                                <div class="tix-skeleton" style="width:90px; height:13px; border-radius:4px;"></div>
+                            </div>
+                            {{-- Date & location --}}
+                            <div class="tix-skeleton" style="width:80px; height:13px; border-radius:4px; margin-bottom:0.25rem;"></div>
+                            <div class="tix-skeleton" style="width:70px; height:13px; border-radius:4px; margin-bottom:0.75rem;"></div>
+                            {{-- Price + button --}}
+                            <div style="border-top:1px solid #F1F5F9; padding-top:0.6rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div class="tix-skeleton" style="width:65px; height:20px; border-radius:5px;"></div>
+                                <div class="tix-skeleton" style="width:72px; height:28px; border-radius:99px;"></div>
+                            </div>
+                        </div>
+                    @endfor
+                </div>
             </div>
         </div>
 

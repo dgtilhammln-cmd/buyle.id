@@ -871,6 +871,80 @@
                         </div>
                     </div>
                 </div>
+            @elseif(request()->routeIs('tix*') || request()->is('tix*'))
+                {{-- ── Buyle TIX Page Skeleton (100% Sesuai Layout Halaman TIX) ── --}}
+                <style>
+                    .skel-tix-stage { position: relative; width: 100%; aspect-ratio: 1920 / 600; margin-bottom: 0.85rem; overflow: hidden; }
+                    .skel-tix-card { position: absolute; top: 0; left: 50%; width: 90%; max-width: 1200px; height: 100%; border-radius: 20px; }
+                    @media (max-width: 768px) { .skel-tix-card { width: 92%; border-radius: 14px; } }
+                    .skel-tix-card.prev { transform: translateX(calc(-50% - 72%)) scale(0.85); opacity: 0.35; }
+                    .skel-tix-card.active { transform: translateX(-50%) scale(1); z-index: 2; box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+                    .skel-tix-card.next { transform: translateX(calc(-50% + 72%)) scale(0.85); opacity: 0.35; }
+                    .skel-tix-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+                    @media (max-width: 1140px) { .skel-tix-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+                    @media (max-width: 780px) { .skel-tix-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; } }
+                    @media (max-width: 500px) { .skel-tix-grid { grid-template-columns: 1fr; gap: 0.85rem; } }
+                    .skel-tix-event-card { background: #fff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; }
+                </style>
+
+                {{-- 1. Orbit Banner Carousel Skeleton (1920x600, center 90% card + 2 peeking cards) --}}
+                <div style="width: 100%; padding: 0.5rem 0; overflow: hidden;">
+                    <div class="skel-tix-stage">
+                        <div class="skel-shimmer skel-tix-card prev"></div>
+                        <div class="skel-shimmer skel-tix-card active"></div>
+                        <div class="skel-shimmer skel-tix-card next"></div>
+                    </div>
+                    {{-- Dots Indicator --}}
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 1.5rem;">
+                        <div class="skel-shimmer" style="width: 26px; height: 7px; border-radius: 999px;"></div>
+                        <div class="skel-shimmer" style="width: 7px; height: 7px; border-radius: 50%;"></div>
+                        <div class="skel-shimmer" style="width: 7px; height: 7px; border-radius: 50%;"></div>
+                    </div>
+                </div>
+
+                {{-- 2. Official Media Partner Skeleton --}}
+                <div style="display: flex; justify-content: center; align-items: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <div class="skel-shimmer" style="width: 130px; height: 14px; border-radius: 6px;"></div>
+                    <div style="display: flex; gap: 2rem; align-items: center;">
+                        <div class="skel-shimmer" style="width: 80px; height: 24px; border-radius: 6px;"></div>
+                        <div class="skel-shimmer" style="width: 70px; height: 22px; border-radius: 6px;"></div>
+                        <div class="skel-shimmer" style="width: 85px; height: 22px; border-radius: 6px;"></div>
+                    </div>
+                </div>
+
+                {{-- 3. Search & Filter Bar Skeleton --}}
+                <div class="skel-shimmer" style="width: 100%; height: 54px; border-radius: 16px; margin-bottom: 2rem;"></div>
+
+                {{-- 4. Section Title Skeleton --}}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <div class="skel-shimmer" style="width: 200px; height: 24px; border-radius: 8px;"></div>
+                    <div class="skel-shimmer" style="width: 110px; height: 18px; border-radius: 8px;"></div>
+                </div>
+
+                {{-- 5. Event Cards Grid Skeleton (4 col desktop, 1 col mobile < 500px) --}}
+                <div class="skel-tix-grid">
+                    @for($i = 0; $i < 8; $i++)
+                        <div class="skel-tix-event-card {{ $i > 3 ? 'hide-on-mobile' : '' }}">
+                            <div class="skel-shimmer" style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 0.75rem;"></div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.45rem;">
+                                <div class="skel-shimmer" style="width: 48px; height: 15px; border-radius: 4px;"></div>
+                                <div class="skel-shimmer" style="width: 68px; height: 15px; border-radius: 4px;"></div>
+                            </div>
+                            <div class="skel-shimmer" style="width: 90%; height: 17px; border-radius: 5px; margin-bottom: 0.35rem;"></div>
+                            <div class="skel-shimmer" style="width: 65%; height: 15px; border-radius: 5px; margin-bottom: 0.6rem;"></div>
+                            <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.35rem;">
+                                <div class="skel-shimmer" style="width: 18px; height: 18px; border-radius: 50%;"></div>
+                                <div class="skel-shimmer" style="width: 90px; height: 13px; border-radius: 4px;"></div>
+                            </div>
+                            <div class="skel-shimmer" style="width: 85px; height: 13px; border-radius: 4px; margin-bottom: 0.25rem;"></div>
+                            <div class="skel-shimmer" style="width: 75px; height: 13px; border-radius: 4px; margin-bottom: 0.75rem;"></div>
+                            <div style="border-top: 1px solid #F1F5F9; padding-top: 0.6rem; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                                <div class="skel-shimmer" style="width: 65px; height: 20px; border-radius: 5px;"></div>
+                                <div class="skel-shimmer" style="width: 72px; height: 28px; border-radius: 99px;"></div>
+                            </div>
+                        </div>
+                    @endfor
+                </div>
             @elseif(request()->routeIs('ticketing*') || request()->is('ticketing*'))
                 {{-- Ticketing Landing Page Skeleton (100% Sesuai Halaman Ticketing) --}}
                 <div class="skel-ticketing-wrapper">
