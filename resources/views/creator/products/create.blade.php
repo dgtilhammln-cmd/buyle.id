@@ -910,6 +910,53 @@
                                             <span class="form-hint">Mencegah bot atau calo memborong tiket sekaligus.
                                                 Default 4 tiket per order.</span>
                                         </div>
+
+                                        <div class="form-group" style="margin-top:0.5rem;">
+                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                                <svg width="15" height="15" fill="none" stroke="#E1306C" stroke-width="2" viewBox="0 0 24 24">
+                                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                                </svg>
+                                                Username Instagram Resmi Event / EO <span>*</span>
+                                            </label>
+                                            <div style="position:relative;">
+                                                <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
+                                                <input type="text" name="instagram_username" value="{{ old('instagram_username') }}"
+                                                    class="form-input" style="padding-left:30px;" placeholder="username.event">
+                                            </div>
+                                            <span class="form-hint">Wajib diisi. Icon Instagram akan tampil di atas waktu pelaksanaan pada halaman produk tiket.</span>
+                                        </div>
+
+                                        <div class="form-group" style="margin-top:0.5rem;">
+                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                                <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z"/>
+                                                </svg>
+                                                Username TikTok Resmi Event / EO <span>*</span>
+                                            </label>
+                                            <div style="position:relative;">
+                                                <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
+                                                <input type="text" name="tiktok_username" value="{{ old('tiktok_username') }}"
+                                                    class="form-input" style="padding-left:30px;" placeholder="username.event">
+                                            </div>
+                                            <span class="form-hint">Wajib diisi. Icon TikTok akan tampil di atas waktu pelaksanaan pada halaman produk tiket.</span>
+                                        </div>
+
+                                        <div class="form-group full" style="margin-top:0.5rem;">
+                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                                <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                                </svg>
+                                                Syarat & Ketentuan Event (Terms & Conditions / T&C) <span>*</span>
+                                            </label>
+                                            <textarea name="terms_conditions" rows="6" class="form-input" style="height:auto; min-height:130px; line-height:1.6;"
+                                                placeholder="Contoh:&#10;1. Tiket yang sudah dibeli bersifat non-refundable (tidak dapat dikembalikan/ditukar).&#10;2. Pengunjung wajib menunjukkan e-tiket dengan QR Code yang jelas pada saat check-in di gate.&#10;3. Dilarang membawa senjata tajam, obat-obatan terlarang, flare, dan kamera profesional tanpa izin penyelenggara.">{{ old('terms_conditions') }}</textarea>
+                                            <span class="form-hint">Wajib diisi. Syarat & ketentuan ini akan tampil pada tab 'T&C' khusus tiket event di halaman produk.</span>
+                                        </div>
                                     </div>
                                 </div>
 

@@ -26,6 +26,7 @@ class Product extends Model
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
         'event_date', 'event_time', 'event_location', 'event_type', 'event_platform',
+        'terms_conditions', 'instagram_username', 'tiktok_username',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
         'ticket_war_start', 'max_tickets_per_order',
@@ -581,6 +582,16 @@ class Product extends Model
     public function getIsServiceAttribute(): bool
     {
         return $this->type === 'service';
+    }
+
+    /**
+     * Apakah produk ini bertipe Tiket Event
+     */
+    public function isTicketProduct(): bool
+    {
+        return $this->product_type === 'ticket' 
+            || in_array($this->product_type, ['ticket', 'event', 'webinar', 'workshop', 'wisata'])
+            || !empty($this->event_date);
     }
 
     /**

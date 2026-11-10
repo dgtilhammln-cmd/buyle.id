@@ -52,6 +52,9 @@ class UpdateProductRequest extends FormRequest
             'event_location'      => ['nullable', 'string', 'max:1000'],
             'event_type'          => ['nullable', 'string', 'in:online,offline'],
             'event_platform'      => ['nullable', 'string', 'max:100'],
+            'terms_conditions'    => ['nullable', 'string'],
+            'instagram_username'  => ['nullable', 'string', 'max:100'],
+            'tiktok_username'     => ['nullable', 'string', 'max:100'],
             'ticket_war_start'      => ['nullable', 'date'],
             'max_tickets_per_order' => ['nullable', 'integer', 'min:1', 'max:20'],
 
@@ -126,6 +129,18 @@ class UpdateProductRequest extends FormRequest
                     $v->errors()->add('require_follow_join', 'Karena syarat klaim gratis diaktifkan, mohon isi minimal salah satu platform sosmed atau komunitas.');
                 }
             }
+
+            if ($this->input('product_type') === 'ticket') {
+                if (empty(trim((string)$this->input('terms_conditions')))) {
+                    $v->errors()->add('terms_conditions', 'Syarat & Ketentuan (T&C) event wajib diisi untuk produk tipe tiket.');
+                }
+                if (empty(trim((string)$this->input('instagram_username')))) {
+                    $v->errors()->add('instagram_username', 'Username Instagram event/penyelenggara wajib diisi.');
+                }
+                if (empty(trim((string)$this->input('tiktok_username')))) {
+                    $v->errors()->add('tiktok_username', 'Username TikTok event/penyelenggara wajib diisi.');
+                }
+            }
         });
     }
 
@@ -194,6 +209,13 @@ class UpdateProductRequest extends FormRequest
                 $merge['event_location'] = $this->input('event_location_online') ?: $this->input('event_location');
             } else {
                 $merge['event_location'] = $this->input('event_location_offline') ?: $this->input('event_location');
+            }
+
+            if ($this->has('instagram_username')) {
+                $merge['instagram_username'] = ltrim(trim((string)$this->input('instagram_username')), '@') ?: null;
+            }
+            if ($this->has('tiktok_username')) {
+                $merge['tiktok_username'] = ltrim(trim((string)$this->input('tiktok_username')), '@') ?: null;
             }
         }
 

@@ -1664,6 +1664,48 @@
 
                             @if($service->product_type === 'ticket')
                                 {{-- INFORMASI EVENT (KHUSUS TIKET) --}}
+                                @php
+                                    $rawIg = trim((string)($service->instagram_username ?? ''));
+                                    $igUser = ltrim($rawIg, '@');
+                                    $rawTt = trim((string)($service->tiktok_username ?? ''));
+                                    $ttUser = ltrim($rawTt, '@');
+                                @endphp
+                                @if(!empty($igUser) || !empty($ttUser))
+                                    <div class="pd-attr-row" style="margin-bottom:0.75rem; align-items:center;">
+                                        <div class="pd-attr-label">Media Sosial</div>
+                                        <div class="pd-attr-content">
+                                            <div style="display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                @if(!empty($igUser))
+                                                    <a href="https://instagram.com/{{ $igUser }}" target="_blank" rel="noopener noreferrer"
+                                                        style="display:inline-flex; align-items:center; gap:6px; padding:0.35rem 0.75rem; border-radius:999px; background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border:1px solid #FECDD3; color:#E11D48; text-decoration:none; font-size:0.8rem; font-weight:700; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.03);"
+                                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(225,29,72,0.15)';"
+                                                        onmouseout="this.style.transform='none'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';"
+                                                        title="Buka Instagram {{ '@' . $igUser }}">
+                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                                        </svg>
+                                                        <span>{{ '@' . $igUser }}</span>
+                                                    </a>
+                                                @endif
+                                                @if(!empty($ttUser))
+                                                    <a href="https://www.tiktok.com/@{{ $ttUser }}" target="_blank" rel="noopener noreferrer"
+                                                        style="display:inline-flex; align-items:center; gap:6px; padding:0.35rem 0.75rem; border-radius:999px; background:#F8FAFC; border:1px solid #E2E8F0; color:#0F172A; text-decoration:none; font-size:0.8rem; font-weight:700; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.03);"
+                                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)';"
+                                                        onmouseout="this.style.transform='none'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';"
+                                                        title="Buka TikTok {{ '@' . $ttUser }}">
+                                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z"/>
+                                                        </svg>
+                                                        <span>{{ '@' . $ttUser }}</span>
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 @if($service->event_date)
                                     <div class="pd-attr-row">
                                         <div class="pd-attr-label">Pelaksanaan</div>
@@ -1728,17 +1770,32 @@
                                                 <div
                                                     style="display:flex; align-items:center; flex-wrap:wrap; gap:6px; color:var(--text-main);">
                                                     <svg width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.2"
-                                                        viewBox="0 0 24 24">
+                                                        viewBox="0 0 24 24" style="flex-shrink:0;">
                                                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                                         <circle cx="12" cy="10" r="3" />
                                                     </svg>
-                                                    <b
-                                                        style="font-size:0.92rem;">{{ $service->event_location ?: 'Lokasi diumumkan oleh penyelenggara' }}</b>
-                                                    <span
-                                                        style="font-size:0.75rem; background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; padding:2px 8px; border-radius:999px; font-weight:600;">Offline
-                                                        Event</span>
+                                                    @if(!empty($service->event_location))
+                                                        @php
+                                                            $locQuery = str_starts_with($service->event_location, 'http://') || str_starts_with($service->event_location, 'https://')
+                                                                ? $service->event_location
+                                                                : 'https://www.google.com/maps/search/?api=1&query=' . urlencode($service->event_location);
+                                                        @endphp
+                                                        <a href="{{ $locQuery }}" target="_blank" rel="noopener noreferrer"
+                                                            style="font-size:0.92rem; font-weight:700; color:#1eb349; text-decoration:none; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;"
+                                                            onmouseover="this.style.textDecoration='underline'"
+                                                            onmouseout="this.style.textDecoration='none'"
+                                                            title="Buka lokasi di Google Maps">
+                                                            <span>{{ $service->event_location }}</span>
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                                                <polyline points="15 3 21 3 21 9"></polyline>
+                                                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                                                            </svg>
+                                                        </a>
+                                                    @else
+                                                        <b style="font-size:0.92rem; color:var(--text-muted);">Lokasi diumumkan oleh penyelenggara</b>
+                                                    @endif
                                                 </div>
-
                                             @endif
                                         </div>
                                     </div>
@@ -3253,11 +3310,16 @@
                 <div class="pd-container pd-tabs-block" style="padding:0;">
                     <div class="pd-tabs-header">
                         <button id="tabBtn-desc" class="pd-tab-btn active" onclick="switchTab('desc')">Deskripsi</button>
-                        <button id="tabBtn-reviews" class="pd-tab-btn" onclick="switchTab('reviews')">
-                            Ulasan
-                            <span id="tabReviewsBadge" class="pd-tab-badge">{{ $realReviewsCount }}</span>
-                        </button>
-                        <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')">Creator</button>
+                        @if($service->isTicketProduct())
+                            <button id="tabBtn-tnc" class="pd-tab-btn" onclick="switchTab('tnc')">T&C</button>
+                            <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')">EO</button>
+                        @else
+                            <button id="tabBtn-reviews" class="pd-tab-btn" onclick="switchTab('reviews')">
+                                Ulasan
+                                <span id="tabReviewsBadge" class="pd-tab-badge">{{ $realReviewsCount }}</span>
+                            </button>
+                            <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')">Creator</button>
+                        @endif
                     </div>
                     <div class="pd-tab-body">
                         <div id="tab-desc" class="pd-tab-content" style="display:block;">
@@ -3314,8 +3376,29 @@
                             </div>
                         </div>
 
-                        {{-- TAB RATING & ULASAN --}}
-                        <div id="tab-reviews" class="pd-tab-content" style="display:none;">
+                        @if($service->isTicketProduct())
+                            {{-- TAB SYARAT & KETENTUAN (T&C) --}}
+                            <div id="tab-tnc" class="pd-tab-content" style="display:none;">
+                                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.75rem; margin-bottom:1.5rem;">
+                                    <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid #e2e8f0;">
+                                        <div style="width:38px; height:38px; border-radius:10px; background:rgba(30,179,73,0.12); display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#0f172a;">Syarat & Ketentuan Acara (T&C)</h3>
+                                            <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Harap membaca dengan seksama sebelum melakukan pemesanan tiket.</p>
+                                        </div>
+                                    </div>
+                                    <div style="font-size:0.95rem; color:#334155; line-height:1.75; white-space:pre-line;">
+                                        {!! nl2br(e($service->terms_conditions ?? 'Tidak ada syarat dan ketentuan khusus dari penyelenggara.')) !!}
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            {{-- TAB RATING & ULASAN --}}
+                            <div id="tab-reviews" class="pd-tab-content" style="display:none;">
 
                             {{-- SUMMARY CARD --}}
                             @php
@@ -3578,6 +3661,7 @@
                             <div id="reviewsScrollSentinel" style="height:10px;"></div>
 
                         </div>
+                        @endif
                         <div id="tab-creator" class="pd-tab-content" style="display:none;">
                             @if(isset($service->seller) && $service->seller)
                                 @php $seller = $service->seller;
@@ -3598,11 +3682,10 @@
                                         </h3>
                                         <p
                                             style="margin:0 0 1rem; color:var(--text-muted); font-size:0.95rem; line-height:1.6;">
-                                            {{ optional($cp)->store_description ?: 'Creator ini belum menuliskan deskripsi profilnya.' }}
+                                            {{ optional($cp)->store_description ?: ($service->isTicketProduct() ? 'Event Organizer (EO) ini belum menuliskan deskripsi profilnya.' : 'Creator ini belum menuliskan deskripsi profilnya.') }}
                                         </p>
                                         <a href="{{ route('store.show', optional($cp)->store_slug ?? '#') }}"
-                                            class="pd-btn pd-btn-outline" style="height:38px;font-size:0.85rem;">Kunjungi Profil
-                                            Lengkap</a>
+                                            class="pd-btn pd-btn-outline" style="height:38px;font-size:0.85rem;">{{ $service->isTicketProduct() ? 'Kunjungi Profil EO' : 'Kunjungi Profil Lengkap' }}</a>
                                     </div>
                                 </div>
                             @endif
@@ -3638,7 +3721,7 @@
                                     <path
                                         d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
                                 </svg>
-                                <span>Verified Creator</span>
+                                <span>Verified {{ $service->isTicketProduct() ? 'EO' : 'Creator' }}</span>
                             </div>
                         @endif
                         <div
@@ -3678,7 +3761,7 @@
                             style="font-size:1.25rem; font-weight:800; color:var(--text-main); margin-bottom:0.25rem; font-family: var(--font, 'Montserrat', sans-serif); display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;">
                             <span>{{ $displaySellerName }}</span>
                             @if($isVerified)
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="#0D9488" title="Verified Creator">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="#0D9488" title="Verified {{ $service->isTicketProduct() ? 'EO' : 'Creator' }}">
                                     <path
                                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                                 </svg>
@@ -3688,7 +3771,7 @@
                         {{-- Bio / Deskripsi Creator --}}
                         <div
                             style="font-size:0.85rem; color:var(--text-muted); line-height:1.4; margin-bottom:0.75rem; text-align:center;">
-                            {{ optional($cp)->store_description ?: 'Digital Agency Pengusaha Indonesia' }}
+                            {{ optional($cp)->store_description ?: ($service->isTicketProduct() ? 'Event Organizer Resmi Indonesia' : 'Digital Agency Pengusaha Indonesia') }}
                         </div>
 
                         {{-- Status Keaktifan Realtime --}}
@@ -3711,7 +3794,7 @@
                         <a href="{{ $cp?->store_slug ? route('store.show', $cp->store_slug) : (isset($sellerUrl) ? $sellerUrl : '#') }}"
                             class="pd-btn pd-btn-primary"
                             style="width:100%; height:44px; border-radius:99px; font-size:0.85rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
-                            Lihat Profil Creator
+                            Lihat Profil {{ $service->isTicketProduct() ? 'EO' : 'Creator' }}
                         </a>
                     </div>
                 </div>
@@ -4090,18 +4173,21 @@
         function switchTab(tab) {
             const descTab = document.getElementById('tab-desc');
             const reviewsTab = document.getElementById('tab-reviews');
+            const tncTab = document.getElementById('tab-tnc');
             const creatorTab = document.getElementById('tab-creator');
 
             const btnDesc = document.getElementById('tabBtn-desc');
             const btnReviews = document.getElementById('tabBtn-reviews');
+            const btnTnc = document.getElementById('tabBtn-tnc');
             const btnCreator = document.getElementById('tabBtn-creator');
 
             // Reset all tabs
             if (descTab) descTab.style.display = 'none';
             if (reviewsTab) reviewsTab.style.display = 'none';
+            if (tncTab) tncTab.style.display = 'none';
             if (creatorTab) creatorTab.style.display = 'none';
 
-            [btnDesc, btnReviews, btnCreator].forEach(btn => {
+            [btnDesc, btnReviews, btnTnc, btnCreator].forEach(btn => {
                 if (btn) {
                     btn.classList.remove('active');
                     btn.style.color = '';
@@ -4113,10 +4199,13 @@
             if (tab === 'desc') {
                 if (descTab) descTab.style.display = 'block';
                 if (btnDesc) btnDesc.classList.add('active');
+            } else if (tab === 'tnc') {
+                if (tncTab) tncTab.style.display = 'block';
+                if (btnTnc) btnTnc.classList.add('active');
             } else if (tab === 'reviews') {
                 if (reviewsTab) reviewsTab.style.display = 'block';
                 if (btnReviews) btnReviews.classList.add('active');
-                if (!reviewsInitialized) {
+                if (!reviewsInitialized && typeof fetchReviews === 'function') {
                     fetchReviews(1, 'all', false);
                 }
             } else if (tab === 'creator') {
@@ -4126,10 +4215,14 @@
         }
 
         function goToReviewsTab() {
-            switchTab('reviews');
-            const tabEl = document.getElementById('tabBtn-reviews');
-            if (tabEl) {
-                tabEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const btnReviews = document.getElementById('tabBtn-reviews');
+            if (btnReviews) {
+                switchTab('reviews');
+                btnReviews.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                switchTab('tnc');
+                const btnTnc = document.getElementById('tabBtn-tnc');
+                if (btnTnc) btnTnc.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
