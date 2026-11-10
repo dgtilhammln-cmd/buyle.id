@@ -2743,8 +2743,16 @@
 
                                     {{-- Header: Gambar Variasi / Produk + Harga + Stok + Tombol Tutup --}}
                                     <div class="bvm-header">
-                                        <div class="bvm-thumb-wrap">
+                                        <div class="bvm-thumb-wrap" onclick="openBvmLightbox()" title="Klik untuk memperbesar denah / foto" style="cursor: zoom-in; position: relative;">
                                             <img id="bvm-thumb-img" src="{{ $defaultProductImage }}" alt="{{ $service->name }}" class="bvm-thumb">
+                                            <span class="bvm-thumb-zoom-badge" title="Perbesar Denah / Foto">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <circle cx="11" cy="11" r="8"></circle>
+                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                                </svg>
+                                            </span>
                                             <span id="bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto Variasi</span>
                                         </div>
                                         <div class="bvm-header-info">
@@ -2792,7 +2800,7 @@
                                                             $bvmValDiff = ($val->price > 0 && $val->price != $basePrice) ? ($val->price - $basePrice) : 0;
                                                         @endphp
                                                         @if($isTicket)
-                                                            {{-- CARD BERBENTUK TIKET FISIK (TICKET VOUCHER CARD DENGAN NOTCH & DIVIDER) --}}
+                                                            {{-- CARD BERBENTUK TIKET MINIMALIS (CATEGORY & HARGA TERPISAH DIVIDER DASHED) --}}
                                                             <button type="button" 
                                                                 class="bvm-pill bvm-ticket-card" 
                                                                 data-variant-id="{{ $val->id }}"
@@ -2804,17 +2812,7 @@
                                                                 data-has-custom-img="{{ $valImg ? '1' : '0' }}"
                                                                 @if($isValOutOfStock) disabled @endif
                                                                 onclick="selectBvmVariant(this)">
-                                                                <span class="bvm-tix-notch-l"></span>
-                                                                <span class="bvm-tix-notch-r"></span>
                                                                 <div class="bvm-tix-main">
-                                                                    <div class="bvm-tix-head">
-                                                                        <svg class="bvm-tix-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                                                            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
-                                                                            <line x1="13" y1="5" x2="13" y2="7"></line>
-                                                                            <line x1="13" y1="17" x2="13" y2="19"></line>
-                                                                        </svg>
-                                                                        <span>TIKET RESMI</span>
-                                                                    </div>
                                                                     <div class="bvm-tix-name">{{ $val->value }}</div>
                                                                 </div>
                                                                 <div class="bvm-tix-divider"></div>
@@ -2826,8 +2824,6 @@
                                                                     @endif
                                                                     @if($isValOutOfStock)
                                                                         <span class="bvm-tix-status habis">Habis</span>
-                                                                    @else
-                                                                        <span class="bvm-tix-status ready">Tersedia</span>
                                                                     @endif
                                                                 </div>
                                                             </button>
@@ -2891,6 +2887,20 @@
                                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                                             </svg>
                                         </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Lightbox Preview Denah / Foto Panggung --}}
+                            <div id="bvmLightboxModal" class="bvm-lightbox-modal" style="display:none;">
+                                <div class="bvm-lightbox-dialog" onclick="event.stopPropagation()">
+                                    <button type="button" class="bvm-lightbox-close" onclick="closeBvmLightbox()" aria-label="Tutup Preview">&times;</button>
+                                    <div class="bvm-lightbox-header">
+                                        <span class="bvm-lightbox-tag">PREVIEW DENAH / EVENT</span>
+                                        <span class="bvm-lightbox-sub">Klik di luar gambar atau tekan Esc untuk menutup</span>
+                                    </div>
+                                    <div class="bvm-lightbox-body">
+                                        <img id="bvmLightboxImage" src="" alt="Denah / Event Preview" class="bvm-lightbox-img">
                                     </div>
                                 </div>
                             </div>
@@ -3117,7 +3127,7 @@
                                     opacity: 0.8;
                                 }
 
-                                /* ── AUTHENTIC TICKET VOUCHER CARD STYLING (BUYLE TIKET) ── */
+                                /* ── CLEAN TICKET CATEGORY CARD STYLING (BUYLE TIKET) ── */
                                 .bvm-ticket-grid {
                                     display: grid !important;
                                     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
@@ -3136,36 +3146,17 @@
                                     align-items: center !important;
                                     justify-content: space-between !important;
                                     width: 100% !important;
-                                    padding: 0.75rem 1.15rem 0.75rem 1.15rem !important;
-                                    border-radius: 12px !important;
+                                    padding: 0.72rem 1rem !important;
+                                    min-height: 52px !important;
+                                    border-radius: 10px !important;
                                     border: 1.5px solid #E2E8F0 !important;
                                     background: #FFFFFF !important;
                                     color: #1e293b !important;
                                     cursor: pointer !important;
                                     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
                                     text-align: left !important;
-                                    overflow: hidden !important;
-                                    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
-                                }
-                                .bvm-ticket-card .bvm-tix-notch-l,
-                                .bvm-ticket-card .bvm-tix-notch-r {
-                                    position: absolute;
-                                    top: 50%;
-                                    width: 14px;
-                                    height: 14px;
-                                    background: #FFFFFF;
-                                    border: 1.5px solid #E2E8F0;
-                                    border-radius: 50%;
-                                    transform: translateY(-50%);
-                                    z-index: 3;
-                                    pointer-events: none;
-                                    transition: all 0.2s ease;
-                                }
-                                .bvm-ticket-card .bvm-tix-notch-l {
-                                    left: -8px;
-                                }
-                                .bvm-ticket-card .bvm-tix-notch-r {
-                                    right: -8px;
+                                    overflow: visible !important;
+                                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
                                 }
                                 .bvm-ticket-card:hover:not(:disabled) {
                                     border-color: #1eb349 !important;
@@ -3173,26 +3164,14 @@
                                     transform: translateY(-2px) !important;
                                     box-shadow: 0 4px 14px rgba(30, 179, 73, 0.12) !important;
                                 }
-                                .bvm-ticket-card:hover:not(:disabled) .bvm-tix-notch-l,
-                                .bvm-ticket-card:hover:not(:disabled) .bvm-tix-notch-r {
-                                    border-color: #1eb349;
-                                }
                                 .bvm-ticket-card.selected {
                                     border-color: #1eb349 !important;
                                     background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 50%, #F0FDF4 100%) !important;
                                     box-shadow: 0 4px 18px rgba(30, 179, 73, 0.22) !important;
                                     transform: translateY(-1px) !important;
                                 }
-                                .bvm-ticket-card.selected .bvm-tix-notch-l,
-                                .bvm-ticket-card.selected .bvm-tix-notch-r {
-                                    border-color: #1eb349;
-                                    background: #FFFFFF;
-                                }
                                 .bvm-ticket-card.selected .bvm-tix-name {
                                     color: #15803d !important;
-                                }
-                                .bvm-ticket-card.selected .bvm-tix-head {
-                                    color: #16a34a !important;
                                 }
                                 .bvm-ticket-card.selected .bvm-tix-divider {
                                     border-left-color: #86EFAC !important;
@@ -3211,16 +3190,6 @@
                                 .bvm-ticket-card .bvm-tix-main {
                                     flex: 1;
                                     min-width: 0;
-                                }
-                                .bvm-ticket-card .bvm-tix-head {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 4px;
-                                    font-size: 0.65rem;
-                                    font-weight: 700;
-                                    color: #64748B;
-                                    letter-spacing: 0.05em;
-                                    margin-bottom: 2px;
                                 }
                                 .bvm-ticket-card .bvm-tix-name {
                                     font-size: 1rem;
@@ -3245,19 +3214,118 @@
                                     color: #16a34a;
                                     line-height: 1.2;
                                 }
-                                .bvm-ticket-card .bvm-tix-status {
+                                .bvm-ticket-card .bvm-tix-status.habis {
                                     display: inline-block;
                                     font-size: 0.62rem;
                                     font-weight: 700;
                                     text-transform: uppercase;
                                     letter-spacing: 0.04em;
                                     margin-top: 2px;
-                                }
-                                .bvm-ticket-card .bvm-tix-status.ready {
-                                    color: #16a34a;
-                                }
-                                .bvm-ticket-card .bvm-tix-status.habis {
                                     color: #EF4444;
+                                }
+
+                                /* ── THUMBNAIL ZOOM BADGE ── */
+                                .bvm-thumb-wrap {
+                                    position: relative;
+                                }
+                                .bvm-thumb-zoom-badge {
+                                    position: absolute;
+                                    bottom: 4px;
+                                    right: 4px;
+                                    width: 22px;
+                                    height: 22px;
+                                    border-radius: 50%;
+                                    background: rgba(15, 23, 42, 0.65);
+                                    color: #fff;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    pointer-events: none;
+                                    backdrop-filter: blur(2px);
+                                    transition: opacity 0.2s ease;
+                                }
+                                .bvm-thumb-wrap:hover .bvm-thumb-zoom-badge {
+                                    opacity: 0.75;
+                                }
+
+                                /* ── LIGHTBOX MODAL ── */
+                                .bvm-lightbox-modal {
+                                    position: fixed;
+                                    inset: 0;
+                                    z-index: 9999999;
+                                    background: rgba(0, 0, 0, 0.88);
+                                    backdrop-filter: blur(6px);
+                                    -webkit-backdrop-filter: blur(6px);
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    padding: 1.5rem;
+                                    animation: bvmLbFadeIn 0.2s ease;
+                                }
+                                @keyframes bvmLbFadeIn {
+                                    from { opacity: 0; }
+                                    to   { opacity: 1; }
+                                }
+                                .bvm-lightbox-dialog {
+                                    position: relative;
+                                    max-width: 92vw;
+                                    max-height: 92vh;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    gap: 0.75rem;
+                                }
+                                .bvm-lightbox-close {
+                                    position: absolute;
+                                    top: -14px;
+                                    right: -14px;
+                                    width: 36px;
+                                    height: 36px;
+                                    border-radius: 50%;
+                                    background: rgba(255,255,255,0.18);
+                                    border: 1.5px solid rgba(255,255,255,0.3);
+                                    color: #fff;
+                                    font-size: 1.3rem;
+                                    line-height: 1;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    z-index: 2;
+                                    transition: background 0.2s ease;
+                                }
+                                .bvm-lightbox-close:hover {
+                                    background: rgba(255,255,255,0.3);
+                                }
+                                .bvm-lightbox-header {
+                                    text-align: center;
+                                }
+                                .bvm-lightbox-tag {
+                                    font-size: 0.65rem;
+                                    font-weight: 700;
+                                    letter-spacing: 0.08em;
+                                    color: rgba(255,255,255,0.6);
+                                    text-transform: uppercase;
+                                    display: block;
+                                }
+                                .bvm-lightbox-sub {
+                                    font-size: 0.7rem;
+                                    color: rgba(255,255,255,0.4);
+                                    display: block;
+                                    margin-top: 2px;
+                                }
+                                .bvm-lightbox-body {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                }
+                                .bvm-lightbox-img {
+                                    max-width: 88vw;
+                                    max-height: 78vh;
+                                    border-radius: 12px;
+                                    object-fit: contain;
+                                    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+                                    display: block;
                                 }
 
                                 .bvm-qty-row {
@@ -3824,6 +3892,32 @@
 
                                     document.addEventListener('keydown', function(e) {
                                         if (e.key === 'Escape') closePdVariantModal();
+                                    });
+
+                                    // ── LIGHTBOX: Preview Denah / Foto Produk ──
+                                    window.openBvmLightbox = function() {
+                                        var thumbImg = document.getElementById('bvm-thumb-img');
+                                        var lightbox = document.getElementById('bvmLightboxModal');
+                                        var lbImg    = document.getElementById('bvmLightboxImage');
+                                        if (!thumbImg || !lightbox || !lbImg) return;
+                                        lbImg.src = thumbImg.src;
+                                        lightbox.style.display = 'flex';
+                                        document.body.style.overflow = 'hidden';
+                                    };
+                                    window.closeBvmLightbox = function(e) {
+                                        var lightbox = document.getElementById('bvmLightboxModal');
+                                        if (!lightbox) return;
+                                        lightbox.style.display = 'none';
+                                        document.body.style.overflow = '';
+                                    };
+                                    document.addEventListener('keydown', function(e) {
+                                        if (e.key === 'Escape') {
+                                            var lightbox = document.getElementById('bvmLightboxModal');
+                                            if (lightbox && lightbox.style.display !== 'none') {
+                                                lightbox.style.display = 'none';
+                                                document.body.style.overflow = '';
+                                            }
+                                        }
                                     });
                                 })();
                             </script>

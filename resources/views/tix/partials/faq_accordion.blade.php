@@ -220,7 +220,7 @@
         }
 
         .tix-faq-answer-inner {
-            padding: 0 1.25rem 1.25rem 1.25rem;
+            padding: 0 1.25rem 1.75rem 1.25rem;
             font-size: 0.88rem;
             color: #334155;
             line-height: 1.7;
@@ -388,6 +388,7 @@
                     card.classList.remove('is-open');
                     if (trigger) trigger.setAttribute('aria-expanded', 'false');
                     if (answer) {
+                        answer.style.overflow = 'hidden';
                         answer.style.maxHeight = answer.scrollHeight + 'px';
                         requestAnimationFrame(() => {
                             answer.style.maxHeight = '0px';
@@ -397,7 +398,14 @@
                     card.classList.add('is-open');
                     if (trigger) trigger.setAttribute('aria-expanded', 'true');
                     if (answer) {
-                        answer.style.maxHeight = (answer.scrollHeight + 40) + 'px';
+                        answer.style.overflow = 'hidden';
+                        answer.style.maxHeight = (answer.scrollHeight + 100) + 'px';
+                        setTimeout(() => {
+                            if (card.classList.contains('is-open')) {
+                                answer.style.maxHeight = 'none';
+                                answer.style.overflow = 'visible';
+                            }
+                        }, 360);
                     }
                 }
             };
