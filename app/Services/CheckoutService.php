@@ -344,12 +344,17 @@ class CheckoutService
                 }
 
                 // Konsumsi Admission Token saat order item berhasil diamankan (Single-Use Token)
+                // Pertahankan slot checkout tetap terisi sampai pembayaran sukses / batal
                 if ($product->product_type === 'ticket' && !empty($product->ticket_war_start)) {
                     $warService = app(\App\Services\TicketWarQueueService::class);
                     $admToken = $data['admission_token'] 
                         ?? session('war_admission_token_' . $product->id);
                     if (!empty($admToken)) {
-                        $warService->consumeToken($admToken, $product->id);
+                        $parsedToken = $warService->parseToken($admToken);
+                        if ($parsedToken && !empty($parsedToken['queue_id'])) {
+                            \Illuminate\Support\Facades\Cache::put("order_war_queue_{$order->id}_{$product->id}", $parsedToken['queue_id'], 86400);
+                        }
+                        $warService->consumeTokenOnly($admToken);
                         session()->forget('war_admission_token_' . $product->id);
                     }
                 }
@@ -661,6 +666,15 @@ class CheckoutService
                 }
             }
 
+            // Bebaskan slot antrean war tiket jika ada produk bertipe tiket war
+            $warService = app(\App\Services\TicketWarQueueService::class);
+            foreach ($order->items as $item) {
+                if ($item->product && !empty($item->product->ticket_war_start)) {
+                    $qId = \Illuminate\Support\Facades\Cache::pull("order_war_queue_{$order->id}_{$item->product_id}");
+                    $warService->releaseSlot($item->product_id, $qId);
+                }
+            }
+
             event(new \App\Events\OrderStatusUpdated($order));
         }
     }
@@ -685,6 +699,15 @@ class CheckoutService
                     if ($variantVal && $variantVal->stock !== null) {
                         $variantVal->increment('stock', $item->qty);
                     }
+                }
+            }
+
+            // Bebaskan slot antrean war tiket jika ada
+            $warService = app(\App\Services\TicketWarQueueService::class);
+            foreach ($order->items as $item) {
+                if ($item->product && !empty($item->product->ticket_war_start)) {
+                    $qId = \Illuminate\Support\Facades\Cache::pull("order_war_queue_{$order->id}_{$item->product_id}");
+                    $warService->releaseSlot($item->product_id, $qId);
                 }
             }
 

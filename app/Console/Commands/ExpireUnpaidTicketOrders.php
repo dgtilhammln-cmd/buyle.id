@@ -63,13 +63,8 @@ class ExpireUnpaidTicketOrders extends Command
 
                     // Bebaskan slot war queue per produk tiket
                     if ($item->product && !empty($item->product->ticket_war_start)) {
-                        $currentActive = (int) \Illuminate\Support\Facades\Cache::get(
-                            "war_active_{$item->product->id}", 0
-                        );
-                        if ($currentActive > 0) {
-                            \Illuminate\Support\Facades\Cache::decrement("war_active_{$item->product->id}");
-                        }
-                        \Illuminate\Support\Facades\Cache::increment("war_served_seq_{$item->product->id}");
+                        $qId = \Illuminate\Support\Facades\Cache::pull("order_war_queue_{$order->id}_{$item->product_id}");
+                        $warService->releaseSlot($item->product->id, $qId);
                     }
                 }
 

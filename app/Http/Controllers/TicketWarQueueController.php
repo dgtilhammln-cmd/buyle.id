@@ -59,6 +59,16 @@ class TicketWarQueueController extends Controller
             ]);
         }
 
+        // Opportunistic auto-cleanup fallback: jalankan pengecekan order expired tiket maksimal 1x per 60 detik.
+        // Menjamin tiket pending yang hangus otomatis dibatalkan & stok kembali meskipun cronjob cPanel/hPanel mati.
+        if (\Illuminate\Support\Facades\Cache::add("war_auto_clean_tick_{$productId}", 1, 60)) {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('tickets:expire-unpaid', ['--minutes' => 15]);
+            } catch (\Throwable $e) {
+                // Ignore silently agar latensi antrean tetap ultra-cepat
+            }
+        }
+
         // Evaluasi alokasi slot melalui TicketWarQueueService
         $result = $this->queueService->getQueueStatus($productId, $queueId, $currentToken);
 

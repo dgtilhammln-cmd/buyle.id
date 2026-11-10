@@ -15,63 +15,87 @@ class TicketWarQueueService
     /**
      * Periksa status antrean untuk produk tiket war tertentu.
      * ZERO DATABASE WRITE — seluruh kalkulasi dilakukan di Cache untuk menjaga performa server.
+     * Strict Atomic Lock & Active Lease Registry mencegah race condition pada lonjakan 1.000+ request.
      */
     public function getQueueStatus(int $productId, string $queueId, ?string $currentToken = null): array
     {
+        $now = time();
+
         // 1. Cek apakah token yang dikirim client saat ini masih valid
         if ($currentToken && $this->validateToken($currentToken, $productId)) {
             $data = Cache::get("war_valid_token_{$currentToken}");
-            $expiresAt = $data['expires_at'] ?? (time() + self::TOKEN_TTL);
+            $expiresAt = $data['expires_at'] ?? ($now + self::TOKEN_TTL);
             return [
                 'status'      => 'admitted',
                 'token'       => $currentToken,
                 'expires_at'  => $expiresAt,
-                'expires_in'  => max(0, $expiresAt - time()),
+                'expires_in'  => max(0, $expiresAt - $now),
                 'message'     => 'Sesi checkout tiket Anda aktif.',
             ];
         }
 
-        // 2. Cek apakah queueId ini sudah pernah diizinkan dan tokennya tersimpan di cache
+        // 2. Cek apakah queueId ini sudah pernah dialokasikan slot aktif
         $cachedToken = Cache::get("war_tok_by_queue_{$productId}_{$queueId}");
         if ($cachedToken && $this->validateToken($cachedToken, $productId)) {
             $data = Cache::get("war_valid_token_{$cachedToken}");
-            $expiresAt = $data['expires_at'] ?? (time() + self::TOKEN_TTL);
+            $expiresAt = $data['expires_at'] ?? ($now + self::TOKEN_TTL);
             return [
                 'status'      => 'admitted',
                 'token'       => $cachedToken,
                 'expires_at'  => $expiresAt,
-                'expires_in'  => max(0, $expiresAt - time()),
+                'expires_in'  => max(0, $expiresAt - $now),
                 'message'     => 'Sesi checkout tiket Anda aktif.',
             ];
         }
 
-        // 3. Cek slot checkout aktif saat ini
-        $activeSlots = (int) Cache::get("war_active_{$productId}", 0);
         $maxConcurrent = (int) Setting::get('war_max_concurrent_checkout', self::DEFAULT_MAX_CONCURRENT_CHECKOUT);
         if ($maxConcurrent <= 0) {
             $maxConcurrent = self::DEFAULT_MAX_CONCURRENT_CHECKOUT;
         }
 
-        // 4. Jika masih ada slot kosong, terbitkan Admission Token bertandatangan kriptografi (HMAC)
-        if ($activeSlots < $maxConcurrent) {
-            $expiresAt = time() + self::TOKEN_TTL;
-            $payload = "{$productId}|{$queueId}|{$expiresAt}";
-            $signature = hash_hmac('sha256', $payload, (string) config('app.key'));
-            $admissionToken = base64_encode("{$payload}|{$signature}");
+        // 3. ATOMIC LOCK untuk alokasi slot (Mencegah race condition read-then-write pada 1.000 request bersamaan)
+        $allocLock = Cache::lock("war_alloc_lock_{$productId}", 3);
+        $admitted = false;
+        $admissionToken = null;
+        $expiresAt = $now + self::TOKEN_TTL;
 
-            // Simpan validitas token di cache
-            Cache::put("war_valid_token_{$admissionToken}", [
-                'product_id' => $productId,
-                'queue_id'   => $queueId,
-                'expires_at' => $expiresAt,
-            ], self::TOKEN_TTL);
+        if ($allocLock->get()) {
+            try {
+                // Baca dan bersihkan lease yang sudah kedaluwarsa (misal user tutup browser atau batal)
+                $leases = Cache::get("war_active_leases_{$productId}", []);
+                $validLeases = [];
+                foreach ($leases as $qId => $expTime) {
+                    if ($expTime > $now) {
+                        $validLeases[$qId] = $expTime;
+                    }
+                }
 
-            // Tautkan token ke queue ID
-            Cache::put("war_tok_by_queue_{$productId}_{$queueId}", $admissionToken, self::TOKEN_TTL);
+                // Cek apakah kuota slot aktif masih di bawah batas maksimal
+                if (count($validLeases) < $maxConcurrent) {
+                    // Daftarkan lease untuk queueId ini
+                    $validLeases[$queueId] = $expiresAt;
+                    Cache::put("war_active_leases_{$productId}", $validLeases, self::TOKEN_TTL + 300);
 
-            // Increment kuota aktif
-            Cache::increment("war_active_{$productId}");
+                    // Terbitkan Cryptographic HMAC Admission Token (Single-Use Token)
+                    $payload = "{$productId}|{$queueId}|{$expiresAt}";
+                    $signature = hash_hmac('sha256', $payload, (string) config('app.key'));
+                    $admissionToken = base64_encode("{$payload}|{$signature}");
 
+                    Cache::put("war_valid_token_{$admissionToken}", [
+                        'product_id' => $productId,
+                        'queue_id'   => $queueId,
+                        'expires_at' => $expiresAt,
+                    ], self::TOKEN_TTL);
+
+                    Cache::put("war_tok_by_queue_{$productId}_{$queueId}", $admissionToken, self::TOKEN_TTL);
+                    $admitted = true;
+                }
+            } finally {
+                $allocLock->release();
+            }
+        }
+
+        if ($admitted && $admissionToken) {
             return [
                 'status'      => 'admitted',
                 'token'       => $admissionToken,
@@ -81,7 +105,7 @@ class TicketWarQueueService
             ];
         }
 
-        // 5. Jika slot penuh, tempatkan pengunjung ke antrean terurut (Sequenced Queue)
+        // 4. Jika slot penuh, tempatkan pengunjung ke antrean terurut (Sequenced Queue)
         $position = (int) Cache::remember("war_pos_{$productId}_{$queueId}", 1800, function () use ($productId) {
             return (int) Cache::increment("war_seq_{$productId}");
         });
@@ -143,35 +167,59 @@ class TicketWarQueueService
     }
 
     /**
-     * Konsumsi Admission Token saat order berhasil dibuat (Single-Use Token).
-     * Membebaskan slot checkout aktif agar pengguna berikutnya dalam antrean bisa segera masuk.
+     * Ambil data dari dalam token tanpa merusaknya
      */
-    public function consumeToken(?string $token, int $productId): void
+    public function parseToken(?string $token): ?array
+    {
+        if (empty($token)) return null;
+        $decoded = base64_decode($token, true);
+        if (!$decoded) return null;
+        $parts = explode('|', $decoded);
+        if (count($parts) !== 4) return null;
+        return [
+            'product_id' => (int) $parts[0],
+            'queue_id'   => $parts[1],
+            'expires_at' => (int) $parts[2],
+        ];
+    }
+
+    /**
+     * Konsumsi Admission Token saat order berhasil dibuat (Single-Use Token).
+     * Mencegah token yang sama digunakan untuk membuat pesanan kedua.
+     * CATATAN: Slot checkout TIDAK langsung dilepas saat order dibuat, melainkan tetap
+     * dipertahankan sampai pembayaran Midtrans berhasil / kedaluwarsa.
+     */
+    public function consumeTokenOnly(?string $token): void
     {
         if (empty($token)) {
             return;
         }
-
         Cache::forget("war_valid_token_{$token}");
-
-        // Kurangi counter active checkout
-        $currentActive = (int) Cache::get("war_active_{$productId}", 0);
-        if ($currentActive > 0) {
-            Cache::decrement("war_active_{$productId}");
-        } else {
-            Cache::put("war_active_{$productId}", 0, 3600);
-        }
-
-        // Majukan nomor antrean yang terlayani
-        Cache::increment("war_served_seq_{$productId}");
     }
 
     /**
-     * Bebaskan slot jika pengguna membatalkan antrean atau keluar dari sesi.
+     * Lepaskan slot checkout saat order selesai dibayar atau kedaluwarsa/dibatalkan.
+     * Memajukan antrean sehingga pengguna berikutnya dapat masuk.
      */
-    public function releaseToken(?string $token, int $productId): void
+    public function releaseSlot(int $productId, ?string $queueId = null): void
     {
-        $this->consumeToken($token, $productId);
+        $allocLock = Cache::lock("war_alloc_lock_{$productId}", 3);
+        if ($allocLock->get()) {
+            try {
+                $leases = Cache::get("war_active_leases_{$productId}", []);
+                if ($queueId && isset($leases[$queueId])) {
+                    unset($leases[$queueId]);
+                } else if (!empty($leases)) {
+                    // Lepas 1 lease tertua
+                    array_shift($leases);
+                }
+                Cache::put("war_active_leases_{$productId}", $leases, self::TOKEN_TTL + 300);
+
+                // Majukan nomor antrean yang terlayani
+                Cache::increment("war_served_seq_{$productId}");
+            } finally {
+                $allocLock->release();
+            }
+        }
     }
 }
-

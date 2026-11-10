@@ -322,15 +322,20 @@ flowchart TD
 ```
 
 ### 1. Virtual Waiting Room & Traffic Jitter Staggering
-- **Zero Database Write**: Seluruh kalkulasi antrean, posisi antrean (`war_pos_*`), dan kuota aktif (`war_active_*`) dijalankan **100% di Cache (In-Memory/File)** tanpa query ke tabel database.
+- **Zero Database Write**: Seluruh kalkulasi antrean, posisi antrean (`war_pos_*`), dan alokasi slot aktif dijalankan **100% di Cache (In-Memory/File)** tanpa query ke tabel database.
+- **Strict Atomic Slot Lease Registry**: Menggunakan `Cache::lock("war_alloc_lock_{$productId}", 3)` dan array lease berbatas waktu (`war_active_leases_{$productId}`). Menghilangkan celah *read-then-write race condition* sehingga dijamin maksimal tepat 20 orang yang mendapat slot aktif.
 - **Traffic Jitter (10–20 Detik Acak)**: Polling browser tidak menembak server serentak, melainkan menggunakan jeda acak 10–20 detik. Beban 1.000 user terdistribusi rata menjadi ~50-80 request cache ringan per detik.
+- **Refresh & Tab Persistent**: `queue_id` dan token disimpan di kombinasi `localStorage` dan `sessionStorage`. Pengunjung yang me-refresh browser tidak akan kehilangan token atau nomor urut antreannya.
 - **Rate Limiter Endpoint**: Route `POST /api/ticket-war/status` diproteksi `throttle:ticket-war-queue` (maksimal 10 request/menit per IP).
 
-### 2. Cryptographic Admission Token (HMAC-SHA256)
+### 2. Cryptographic Admission Token & Slot Retention Lifecycle
 - **Token Server-Signed**: Server menandatangani token menggunakan `hash_hmac('sha256', "{$productId}|{$queueId}|{$expiresAt}", config('app.key'))`. Token tidak bisa dimanipulasi atau di-bypass dari inspect element / curl.
-- **Kapasitas Terkontrol**: Maksimal 20 sesi checkout aktif bersamaan (`war_max_concurrent_checkout = 20`), sehingga beban PHP worker stabil di kisaran 15–20 worker saja. Sisa pengunjung tetap berada di waiting room.
-- **Single-Use Enforcement**: Begitu order berhasil diamankan, token langsung dikonsumsi (`consumeToken()`). Token yang sama **tidak dapat digunakan untuk membuat dua pesanan**.
-- **Validasi Ganda**: Token divalidasi di `CartController::add` saat masuk keranjang dan di `CheckoutService::processCheckout` saat pembayaran.
+- **Slot Retention (Tidak Dilepas Terlalu Cepat)**: Slot checkout **TETAP TERKUNCI** saat order dibuat berstatus `Pending` (saat pembeli sedang mengisi form Midtrans / scan QRIS).
+- **Slot Dilepas Tepat Satu Kali**:
+  1. Saat pembayaran sukses (`PaymentStatus::Success` / `markOrderConfirmed`).
+  2. Saat order dibatalkan atau kedaluwarsa (`markOrderCancelled` / `tickets:expire-unpaid`).
+  3. Saat lease kedaluwarsa otomatis (TTL 10 menit jika pembeli menutup tab sebelum checkout).
+- **Single-Use Token**: Token di-hanguskan (`consumeTokenOnly()`) begitu order terbentuk agar tidak bisa dipakai membuat order kedua.
 
 ### 3. Atomic Stock Locking (Anti-Overselling & Anti-Race Condition)
 - **Row-Level Lock**: Query item menggunakan `Product::where('id', ...)->lockForUpdate()->first()` dan `ProductVariantValue::lockForUpdate()->first()`.
@@ -351,10 +356,26 @@ flowchart TD
 - **Idempotent Replay**: Jika koneksi pengunjung lambat atau pembeli menekan tombol berkali-kali, sistem mendeteksi key yang sama dan langsung mengembalikan order yang sudah jadi tanpa memotong stok dua kali.
 - **Client-Side Disable**: Tombol pembayaran langsung di-disable dan diberi opacity 60% seketika tombol diklik.
 
-### 5. Automatic Order Expiry & Stock Return (Reservasi Terbatas)
+### 5. Automatic Order Expiry & Self-Healing Fallback
 - **Batas Waktu Pembayaran**: Order tiket yang belum dibayar diberi batas waktu reservasi (default: 15 menit).
 - **Scheduler Background**: Artisan Command `tickets:expire-unpaid --minutes=15` didaftarkan di `routes/console.php` dan berjalan otomatis setiap 5 menit via `Schedule::command('tickets:expire-unpaid')->everyFiveMinutes()`.
-- **Proses Non-Blocking**: Pembatalan dan pengembalian stok dikerjakan secara background oleh server, tidak membebani request pembeli lain.
+- **Opportunistic Auto-Cleanup Fallback**: Pada controller antrean `TicketWarQueueController`, disematkan auto-cleanup yang berjalan maksimal 1x per 60 detik (`Cache::add("war_auto_clean_tick_{$id}", 1, 60)`). Menjamin tiket pending yang hangus **PASTI dibatalkan & stoknya kembali** meskipun Cron Job server hosting belum diatur atau mati!
+
+---
+
+## ⚙️ Panduan Setup Cron Job Hostinger (Wajib Diperiksa)
+
+Agar Laravel Scheduler berjalan di Hostinger:
+1. Login ke **hPanel Hostinger** $\rightarrow$ Pilih Hosting `buyle.id`.
+2. Buka menu **Tingkat Lanjut (Advanced)** $\rightarrow$ **Cron Jobs**.
+3. Pilih tipe: **Kustom (Custom)**.
+4. Pada kolom **Perintah (Command)**, masukkan:
+   ```bash
+   /usr/bin/php /home/uXXXXX/domains/buyle.id/public_html/artisan schedule:run >> /dev/null 2>&1
+   ```
+   *(Ganti `uXXXXX` sesuai path username hosting Anda yang tertera di hPanel).*
+5. Pada jadwal waktu, pilih: **Setiap Menit (`* * * * *`)**.
+6. Klik **Simpan**.
 
 ---
 

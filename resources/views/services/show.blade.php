@@ -3402,13 +3402,14 @@
                                     var _bwrInterval = null;
                                     var _bwrAction = null;
 
-                                    // ══ TICKET WAR QUEUE — Queue ID unik per browser session ══
-                                    var _bwrQueueId = sessionStorage.getItem('buyle_war_queue_id_{{ $service->id }}');
+                                    // ══ TICKET WAR QUEUE — Queue ID unik per browser session (Tahan Refresh & Tab Baru) ══
+                                    var _bwrQueueId = localStorage.getItem('buyle_war_queue_id_{{ $service->id }}') || sessionStorage.getItem('buyle_war_queue_id_{{ $service->id }}');
                                     if (!_bwrQueueId) {
                                         _bwrQueueId = 'q_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+                                        localStorage.setItem('buyle_war_queue_id_{{ $service->id }}', _bwrQueueId);
                                         sessionStorage.setItem('buyle_war_queue_id_{{ $service->id }}', _bwrQueueId);
                                     }
-                                    var _bwrAdmissionToken = sessionStorage.getItem('buyle_war_token_{{ $service->id }}') || null;
+                                    var _bwrAdmissionToken = localStorage.getItem('buyle_war_token_{{ $service->id }}') || sessionStorage.getItem('buyle_war_token_{{ $service->id }}') || null;
                                     var _bwrPollTimer = null;
 
                                     function triggerCartSubmissionWithQueue(action) {
@@ -3518,6 +3519,7 @@
                                                     if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
                                                     _bwrAdmissionToken = data.token || null;
                                                     if (_bwrAdmissionToken) {
+                                                        localStorage.setItem('buyle_war_token_{{ $service->id }}', _bwrAdmissionToken);
                                                         sessionStorage.setItem('buyle_war_token_{{ $service->id }}', _bwrAdmissionToken);
                                                     }
                                                     var warKey = 'buyle_war_cleared_{{ $service->id }}';
