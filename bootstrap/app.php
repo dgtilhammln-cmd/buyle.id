@@ -23,6 +23,7 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
             'track-bio',
             'api/webhooks/instagram',
             'webhooks/instagram',
+            'api/ticket-war/status',
         ]);
 
         // Register custom middleware aliases
