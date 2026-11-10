@@ -39,16 +39,12 @@ class AdminHeroSlideController extends Controller
         $validated['is_active'] = $request->boolean('is_active', true);
 
         if ($request->filled('image_base64')) {
-            $base64 = $request->input('image_base64');
-            $image_parts = explode(";base64,", $base64);
-            if (count($image_parts) == 2) {
-                $image_data = base64_decode($image_parts[1]);
-                $filename = uniqid('banner_') . '.webp';
-                \Illuminate\Support\Facades\Storage::disk('public')->put('hero_slides/' . $filename, $image_data);
-                $validated['image'] = 'hero_slides/' . $filename;
+            $stored = $this->storeBase64WebP($request->input('image_base64'), 'hero_slides', 1280, 640, 78);
+            if ($stored) {
+                $validated['image'] = $stored;
             }
         } elseif ($request->hasFile('image')) {
-            $validated['image'] = $this->storeWebP($request->file('image'), 'hero_slides', 1200);
+            $validated['image'] = $this->storeWebP($request->file('image'), 'hero_slides', 1280, 640, 78);
         }
 
         HeroSlide::create($validated);
@@ -81,17 +77,13 @@ class AdminHeroSlideController extends Controller
             if ($heroSlide->image) {
                 $this->deleteStorageFile($heroSlide->image);
             }
-            $base64 = $request->input('image_base64');
-            $image_parts = explode(";base64,", $base64);
-            if (count($image_parts) == 2) {
-                $image_data = base64_decode($image_parts[1]);
-                $filename = uniqid('banner_') . '.webp';
-                \Illuminate\Support\Facades\Storage::disk('public')->put('hero_slides/' . $filename, $image_data);
-                $validated['image'] = 'hero_slides/' . $filename;
+            $stored = $this->storeBase64WebP($request->input('image_base64'), 'hero_slides', 1280, 640, 78);
+            if ($stored) {
+                $validated['image'] = $stored;
             }
         } elseif ($request->hasFile('image')) {
             $this->deleteStorageFile($heroSlide->image);
-            $validated['image'] = $this->storeWebP($request->file('image'), 'hero_slides', 1200);
+            $validated['image'] = $this->storeWebP($request->file('image'), 'hero_slides', 1280, 640, 78);
         }
 
         $heroSlide->update($validated);

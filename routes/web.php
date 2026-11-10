@@ -684,7 +684,20 @@ Route::get('/deploy-hostinger', function () {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'TixHeroSlideSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('bio:cache-video-thumbs');
-        return 'SUKSES! Sync Git & Clear Cache Berhasil.<br><pre>' . $gitOutput . '</pre>';
+        \Illuminate\Support\Facades\Artisan::call('hero:compress', ['--quality' => 76, '--max-width' => 1280]);
+        $heroLog = \Illuminate\Support\Facades\Artisan::output();
+        return 'SUKSES! Sync Git & Clear Cache Berhasil.<br><pre>' . $gitOutput . "\n\nHero Compress:\n" . $heroLog . '</pre>';
+    } catch (\Exception $e) {
+        return 'ERROR: ' . $e->getMessage();
+    }
+});
+
+Route::get('/optimize-hero-banners', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('hero:compress', ['--quality' => 76, '--max-width' => 1280]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        return '<pre>' . $output . '</pre>';
     } catch (\Exception $e) {
         return 'ERROR: ' . $e->getMessage();
     }

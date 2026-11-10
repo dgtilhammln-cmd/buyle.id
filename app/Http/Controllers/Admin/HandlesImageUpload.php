@@ -133,6 +133,37 @@ trait HandlesImageUpload
     }
 
     /**
+     * Store base64 encoded image as optimized WebP (scaled down and compressed)
+     */
+    protected function storeBase64WebP(string $base64, string $folder, int $maxW = 1280, int $maxH = 640, int $quality = 78): ?string
+    {
+        try {
+            $image_parts = explode(";base64,", $base64);
+            $raw = count($image_parts) == 2 ? base64_decode($image_parts[1]) : base64_decode($base64);
+            if (!$raw) return null;
+
+            @ini_set('memory_limit', '512M');
+            @set_time_limit(120);
+
+            $img = @imagecreatefromstring($raw);
+            if (!$img) {
+                $filename = $folder . '/' . uniqid('banner_') . '.webp';
+                Storage::disk('public')->put($filename, $raw);
+                return $filename;
+            }
+
+            $img  = $this->gdScaleDown($img, $maxW, $maxH);
+            $webp = $this->gdEncodeWebP($img, $quality);
+            $filename = $folder . '/' . uniqid('banner_') . '.webp';
+            Storage::disk('public')->put($filename, $webp);
+            return $filename;
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Base64 WebP Error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Store uploaded image as WebP (scaled down, or exact crop if both maxW & maxH given strictly)
      * Hero banners: maxW=1280, maxH=640, quality=76
      * Product covers: maxW=800, maxH=800, quality=80

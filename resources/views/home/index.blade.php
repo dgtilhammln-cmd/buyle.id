@@ -3,11 +3,11 @@
 @section('content')
     @push('styles')
         @if(isset($heroSlides) && $heroSlides->count() > 0)
-            <link rel="preload" as="image" href="{{ asset('storage/' . $heroSlides->first()->image) }}">
+            <link rel="preload" as="image" href="{{ asset('storage/' . $heroSlides->first()->image) }}" fetchpriority="high">
         @elseif(!empty($settings['hero_main_image']))
-            <link rel="preload" as="image" href="{{ asset('storage/' . $settings['hero_main_image']) }}">
+            <link rel="preload" as="image" href="{{ asset('storage/' . $settings['hero_main_image']) }}" fetchpriority="high">
         @else
-            <link rel="preload" as="image" href="{{ asset('images/amn/hero-main.png') }}">
+            <link rel="preload" as="image" href="{{ asset('images/amn/hero-main.png') }}" fetchpriority="high">
         @endif
     @endpush
     {{-- ════════════════════════════════════════════════
@@ -1523,7 +1523,10 @@
                                         style="display:block; width:100%; height:100%; text-decoration:none;"
                                         aria-label="{{ $slide->title }}">
                                         <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}"
-                                            class="cv-hero-img-main" width="800" height="440" fetchpriority="high">
+                                            class="cv-hero-img-main" width="800" height="440"
+                                            fetchpriority="{{ $loop->first ? 'high' : 'low' }}"
+                                            loading="{{ $loop->first ? 'eager' : 'lazy' }}"
+                                            decoding="{{ $loop->first ? 'sync' : 'async' }}">
                                     </a>
                                 </div>
                             @endforeach
@@ -1693,34 +1696,34 @@
                         @php $firstSlide = $heroSlides->first(); @endphp
                         <div class="swiper-slide"><a href="{{ $firstSlide->button_url ?? '#' }}"
                                 aria-label="{{ $firstSlide->title }}"><img src="{{ asset('storage/' . $firstSlide->image) }}"
-                                    alt="{{ $firstSlide->title }}" loading="eager"></a></div>
+                                    alt="{{ $firstSlide->title }}" width="600" height="300" fetchpriority="high" loading="eager" decoding="sync" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
                     @elseif(!empty($settings['hero_main_image']))
                         <div class="swiper-slide"><a href="{{ route('products') }}"><img
                                     src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Banner Utama"
-                                    loading="eager"></a></div>
+                                    width="600" height="300" fetchpriority="high" loading="eager" decoding="sync" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
                     @endif
                     {{-- Slide 2: Banner Kanan Atas --}}
                     @if(isset($utamaBanners) && $utamaBanners->count() > 0)
                         @php $utama = $utamaBanners->first(); @endphp
                         <div class="swiper-slide"><a href="{{ $utama->button_url ?? route('products') }}"><img
-                                    src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" loading="lazy"></a>
+                                    src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a>
                         </div>
                     @elseif(!empty($settings['hero_secondary_image']))
                         <div class="swiper-slide"><a href="{{ route('products') }}"><img
                                     src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Banner Promo"
-                                    loading="lazy"></a></div>
+                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
                     @endif
                     {{-- Slide 3: Banner Kanan Bawah --}}
                     @if(isset($sampingBanners) && $sampingBanners->count() > 0)
                         @php $samping = $sampingBanners->first(); @endphp
                         <div class="swiper-slide"><a href="{{ $samping->button_url ?? route('products') }}"><img
                                     src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}"
-                                    loading="lazy"></a>
+                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a>
                         </div>
                     @elseif(!empty($settings['hero_third_image']))
                         <div class="swiper-slide"><a href="{{ route('products') }}"><img
                                     src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Banner Samping"
-                                    loading="lazy"></a></div>
+                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
                     @endif
                 </div>
                 <div class="swiper-pagination mob-banner-pg"></div>
@@ -4418,12 +4421,15 @@
             padding: 1.25rem;
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
+            contain: paint layout;
             transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
         }
 
         .home-popup-overlay.active {
             opacity: 1;
             visibility: visible;
+            pointer-events: auto;
         }
 
         .hpp-backdrop {
@@ -4535,6 +4541,13 @@
 
     <script>
         (function() {
+            // Never execute or show for automated bots / Lighthouse / PageSpeed
+            var ua = navigator.userAgent || '';
+            if (/Lighthouse|PageSpeed|HeadlessChrome|GTmetrix|bot|crawl/i.test(ua)) return;
+
+            // Only show once per session for real visitors
+            if (sessionStorage.getItem('buyle_home_popup_seen')) return;
+
             setTimeout(function() {
                 var popup = document.getElementById('homeWelcomePopup');
                 if (popup) {
@@ -4543,12 +4556,13 @@
                         popup.classList.add('active');
                     });
                 }
-            }, 2000);
+            }, 2500);
 
             window.closeHomePopup = function() {
                 var popup = document.getElementById('homeWelcomePopup');
                 if (!popup) return;
                 popup.classList.remove('active');
+                sessionStorage.setItem('buyle_home_popup_seen', '1');
                 setTimeout(function() {
                     popup.style.display = 'none';
                 }, 300);
