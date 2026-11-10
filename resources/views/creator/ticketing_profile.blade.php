@@ -856,7 +856,7 @@
             </div>
 
             {{-- Lihat Storefront E-Ticketing Publik --}}
-            <a href="{{ route('ticketing') }}" class="menu-group-item" target="_blank">
+            <a href="{{ route('tix.info') }}" class="menu-group-item" target="_blank">
                 <div class="menu-item-left">
                     <div class="menu-item-icon">
                         <svg width="16" height="16" fill="none" stroke="#059669" stroke-width="2" viewBox="0 0 24 24">

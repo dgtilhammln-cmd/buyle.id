@@ -621,7 +621,7 @@
 
             {{-- 1. Official Buyle.id Header Logo (Replacing text) --}}
             <div class="brand-header-row">
-                <a href="{{ route('ticketing') }}" class="brand-logo-pill" title="Buyle.id">
+                <a href="{{ route('tix.info') }}" class="brand-logo-pill" title="Buyle.id">
                     @if($logo)
                         <img src="{{ asset('storage/' . $logo) }}" alt="Buyle.id" class="brand-logo-img">
                     @else

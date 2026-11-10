@@ -107,7 +107,7 @@ class TixController extends Controller
         $banners = $this->buildBanners();
 
         $seo = [
-            'title'       => 'Buyle TIX – Marketplace Tiket Event, Konser & Webinar Online | ' . $siteName,
+            'title'       => 'Buyle TIX - Platform Tiket Event, Konser & Webinar Online | ' . $siteName,
             'description' => 'Eksplorasi dan dapatkan tiket konser musik, festival, seminar, workshop, dan event seru di Buyle TIX. E-Tiket instan QR code, pembayaran mudah & aman.',
             'keywords'    => 'buyle tix, tiket konser, beli tiket event, tiket seminar online, tiket webinar, jadwal konser indonesia, tiket murah buyle',
             'og_image'    => $banners[0]['image'] ?? asset('images/buyle-og.png'),

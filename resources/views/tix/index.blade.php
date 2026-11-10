@@ -879,11 +879,11 @@
             align-items: center;
             justify-content: center;
             gap: 0.45rem;
-            background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #ffffff !important;
             font-family: 'Montserrat', sans-serif !important;
             font-size: 0.85rem;
-            font-weight: 600 !important;
+            font-weight: 700 !important;
             padding: 0.78rem 1.65rem;
             border-radius: 999px;
             text-decoration: none;
@@ -895,6 +895,7 @@
 
         .tix-btn-join:hover {
             transform: translateY(-2px);
+            background: linear-gradient(135deg, #16a34a 0%, #84cc16 100%);
             box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42);
             color: #ffffff !important;
         }
@@ -1328,13 +1329,13 @@
                 </div>
                 <div class="tix-cta-actions">
                     <a href="{{ url('/register') }}" class="tix-btn-join">
-                        <span>Join Now</span>
+                        <span>Register</span>
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
                     </a>
-                    <a href="{{ route('ticketing') }}" class="tix-btn-learn">
+                    <a href="{{ route('tix.info') }}" class="tix-btn-learn">
                         <span>Pelajari Fitur</span>
                     </a>
                 </div>

@@ -352,29 +352,6 @@
         @endforeach
     </div>
 
-    {{-- Help Box --}}
-    <div class="tix-faq-help-box">
-        <div style="display:flex; align-items:center; gap:0.75rem;">
-            <div style="width:38px; height:38px; border-radius:10px; background:#dcfce7; color:#1eb349; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-            </div>
-            <div>
-                <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Punya Pertanyaan Lain Seputar Buyle TIX?</div>
-                <div style="font-size:0.78rem; color:#64748b;">Tim Support & Marketing kami siap membantu kendala tiket & kemitraan EO.</div>
-            </div>
-        </div>
-        <a href="https://wa.me/6285179982373?text=Halo%20Buyle%20TIX,%20saya%20ingin%20bertanya%20seputar%20tiket" target="_blank" class="tix-faq-help-btn">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 16.72c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.03 8.03 0 0 1-1.23-4.25c0-4.46 3.63-8.09 8.09-8.09 2.16 0 4.19.84 5.72 2.37a8.04 8.04 0 0 1 2.37 5.72c-.01 4.46-3.64 8.09-8.1 8.09zm4.43-6.07c-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.21-1.44-1.35-1.68-.14-.24-.02-.37.1-.49.11-.11.24-.28.37-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.76-1.82-.2-.48-.41-.41-.56-.42h-.48c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34 1 2.5c.12.16 1.72 2.62 4.17 3.67.58.25 1.04.4 1.39.51.59.19 1.12.16 1.54.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28z"/>
-            </svg>
-            <span>Hubungi Kami</span>
-        </a>
-    </div>
-
     <script>
         if (typeof window.tixToggleFaq === 'undefined') {
             window.tixToggleFaq = function(cardId) {

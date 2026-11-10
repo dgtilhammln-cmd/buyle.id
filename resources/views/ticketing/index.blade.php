@@ -1221,8 +1221,14 @@
                                                                     {
                                                                       "@type": "ListItem",
                                                                       "position": 2,
-                                                                      "name": "Ticketing",
-                                                                      "item": "{{ route('ticketing') }}"
+                                                                      "name": "Buyle TIX",
+                                                                      "item": "{{ route('tix.index') }}"
+                                                                    },
+                                                                    {
+                                                                      "@type": "ListItem",
+                                                                      "position": 3,
+                                                                      "name": "Info Ticketing",
+                                                                      "item": "{{ route('tix.info') }}"
                                                                     }
                                                                   ]
                                                                 },
@@ -1250,7 +1256,9 @@
             <nav class="sv-breadcrumb" aria-label="Breadcrumb">
                 <a href="{{ route_locale('home') }}">Beranda</a>
                 <span class="sv-breadcrumb-sep">/</span>
-                <span class="sv-breadcrumb-current">Ticketing</span>
+                <a href="{{ route('tix.index') }}">Buyle TIX</a>
+                <span class="sv-breadcrumb-sep">/</span>
+                <span class="sv-breadcrumb-current">Info Ticketing</span>
             </nav>
 
             {{-- Header Intro (Badge Dihapus Sesuai Permintaan) --}}
