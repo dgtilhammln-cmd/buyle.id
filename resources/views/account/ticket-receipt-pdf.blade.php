@@ -536,7 +536,7 @@
                                     <div class="field-value-strong">{{ $pass->holder_name }}</div>
                                 </div>
                                 <div class="field-cell">
-                                    <div class="field-label">Nomor Identitas (NIK)</div>
+                                    <div class="field-label">Nomor Identitas</div>
                                     <div class="field-value-nik">{{ \App\Models\TicketPass::maskNik($pass->holder_nik) }}</div>
                                 </div>
                             </div>

@@ -178,6 +178,91 @@
             background-size: 1em;
         }
 
+        /* ══ PREMIUM TICKET IDENTITY INPUT & SELECT ══ */
+        .ticket-identity-grid {
+            display: grid;
+            grid-template-columns: 155px 1fr;
+            gap: 8px;
+            align-items: stretch;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .ticket-id-type-select {
+            width: 100%;
+            min-height: 42px;
+            background-color: #F8FAFC;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231eb349' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 0.9em;
+            border: 1px solid #CBD5E1;
+            border-radius: 10px;
+            padding: 0.6rem 2.2rem 0.6rem 0.85rem;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: #1E293B;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .ticket-id-type-select:hover {
+            border-color: #94A3B8;
+            background-color: #fff;
+        }
+
+        .ticket-id-type-select:focus {
+            border-color: #1eb349;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(30,179,73,0.15);
+        }
+
+        .ticket-id-number-input {
+            width: 100%;
+            min-height: 42px;
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            border-radius: 10px;
+            padding: 0.6rem 0.85rem;
+            font-size: 0.86rem;
+            font-weight: 500;
+            color: #0F172A;
+            outline: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .ticket-id-number-input:hover {
+            border-color: #94A3B8;
+            background-color: #fff;
+        }
+
+        .ticket-id-number-input:focus {
+            border-color: #1eb349;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(30,179,73,0.15);
+        }
+
+        @media (max-width: 540px) {
+            .ticket-identity-grid {
+                grid-template-columns: 1fr !important;
+                gap: 6px !important;
+            }
+            .ticket-id-type-select,
+            .ticket-id-number-input {
+                min-height: 42px !important;
+                font-size: 0.86rem !important;
+                padding: 0.6rem 0.85rem !important;
+            }
+            .ticket-id-type-select {
+                padding-right: 2.1rem !important;
+            }
+        }
+
         .summary-item {
             display: flex;
             gap: 1rem;
@@ -1055,8 +1140,8 @@
                                         <line x1="12" y1="16" x2="12.01" y2="16" />
                                     </svg>
                                     <span style="font-size:0.78rem;color:#1D4ED8;line-height:1.5;">
-                                        Isi nama <strong>setiap pemegang tiket</strong> sesuai identitas (KTP/SIM).
-                                        @if(auth()->check()) Tiket pertama diisi otomatis dari akun Anda. @endif
+                                        Isi nama lengkap &amp; identitas resmi (KTP, SIM, Paspor, atau Kartu Pelajar) <strong>setiap pemegang tiket</strong> untuk validasi di pintu masuk.
+                                        @if(auth()->check()) Tiket pertama diisi otomatis dari profil akun Anda. @endif
                                     </span>
                                 </div>
 
@@ -1067,6 +1152,8 @@
                                         $pname = $item->product->name ?? 'Produk';
                                         $qty = (int) ($item->qty ?? 1);
                                         $oldVals = old("ticket_holders.{$pid}", []);
+                                        $oldIdTypes = old("ticket_id_types.{$pid}", []);
+                                        $oldNiks = old("ticket_niks.{$pid}", []);
                                     @endphp
 
                                     @for($ticketIdx = 0; $ticketIdx < $qty; $ticketIdx++)
@@ -1076,7 +1163,11 @@
                                                 ? "{$pname} — Tiket #" . ($ticketIdx + 1)
                                                 : "Pemegang Tiket";
                                             $defaultVal = $isFirstSlot && auth()->check() ? $authUserName : ($oldVals[$ticketIdx] ?? '');
+                                            $defaultIdType = $oldIdTypes[$ticketIdx] ?? 'KTP';
+                                            $defaultNik = $oldNiks[$ticketIdx] ?? '';
                                             $inputId = "ticket_holder_{$pid}_{$ticketIdx}";
+                                            $typeId = "ticket_id_type_{$pid}_{$ticketIdx}";
+                                            $nikId = "ticket_nik_{$pid}_{$ticketIdx}";
                                             $ticketSlotCounter++;
                                         @endphp
 
@@ -1120,39 +1211,53 @@
                                                 {{ $isFirstSlot && auth()->check() ? 'data-auth-name="' . e($authUserName) . '"' : '' }}
                                                 style="{{ $isFirstSlot && auth()->check() ? 'background:#F8FAFC;' : '' }}">
 
-                                            {{-- Field NIK (wajib untuk produk tiket) --}}
-                                            @php $nikId = "ticket_nik_{$pid}_{$ticketIdx}"; @endphp
+                                            {{-- Field Identitas Resmi (Dropdown Premium + Input Nomor) --}}
                                             <div style="margin-top:0.65rem;">
-                                                <label for="{{ $nikId }}"
-                                                    style="font-size:0.78rem;font-weight:700;color:#334155;display:flex;align-items:center;gap:0.35rem;margin-bottom:0.35rem;">
+                                                <label style="font-size:0.78rem;font-weight:700;color:#334155;display:flex;align-items:center;gap:0.35rem;margin-bottom:0.35rem;">
                                                     <svg width="13" height="13" fill="none" stroke="#1eb349" stroke-width="2.5"
                                                         viewBox="0 0 24 24">
                                                         <rect x="3" y="4" width="18" height="16" rx="2" />
-                                                        <path d="M8 9h.01M8 13h.01M12 9h4M12 13h4" />
+                                                        <path d="M7 8h10M7 12h6M7 16h4" />
                                                     </svg>
-                                                    NIK / Nomor KTP
+                                                    Identitas Resmi Pemegang Tiket
                                                     <span style="color:#EF4444;">*</span>
-                                                    <span style="font-weight:400;color:#94A3B8;font-size:0.72rem;">(16 digit)</span>
                                                 </label>
-                                                <input type="text" id="{{ $nikId }}" name="ticket_niks[{{ $pid }}][]" class="form-input"
-                                                    inputmode="numeric" maxlength="16" pattern="\d{16}" required
-                                                    placeholder="Contoh: 3273082504980003"
-                                                    style="letter-spacing:0.08em; font-family:monospace;"
-                                                    oninput="this.value=this.value.replace(/\D/g,'').slice(0,16)"
-                                                    title="NIK harus tepat 16 digit angka sesuai KTP/SIM Anda">
-                                                <div
-                                                    style="font-size:0.71rem;color:#94A3B8;margin-top:0.25rem;display:flex;align-items:center;gap:0.3rem;">
-                                                    <svg width="11" height="11" fill="none" stroke="#94A3B8" stroke-width="2"
-                                                        viewBox="0 0 24 24">
+
+                                                <div class="ticket-identity-grid">
+                                                    {{-- Dropdown Jenis Identitas --}}
+                                                    <div>
+                                                        <select id="{{ $typeId }}" name="ticket_id_types[{{ $pid }}][]" class="ticket-id-type-select"
+                                                            onchange="updateIdentitySlot('{{ $pid }}_{{ $ticketIdx }}')">
+                                                            <option value="KTP" {{ $defaultIdType === 'KTP' ? 'selected' : '' }}>KTP (NIK)</option>
+                                                            <option value="SIM" {{ $defaultIdType === 'SIM' ? 'selected' : '' }}>SIM</option>
+                                                            <option value="Paspor" {{ $defaultIdType === 'Paspor' ? 'selected' : '' }}>Paspor</option>
+                                                            <option value="Kartu Pelajar" {{ $defaultIdType === 'Kartu Pelajar' ? 'selected' : '' }}>Kartu Pelajar / KTM</option>
+                                                            <option value="Lainnya" {{ $defaultIdType === 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                                        </select>
+                                                    </div>
+
+                                                    {{-- Input Nomor Identitas --}}
+                                                    <div>
+                                                        <input type="text" id="{{ $nikId }}" name="ticket_niks[{{ $pid }}][]" class="ticket-id-number-input"
+                                                            value="{{ $defaultNik }}" required
+                                                            placeholder="{{ $defaultIdType === 'KTP' ? 'Nomor KTP (16 digit angka)...' : ($defaultIdType === 'SIM' ? 'Nomor SIM...' : ($defaultIdType === 'Paspor' ? 'Nomor Paspor (Passport No)...' : ($defaultIdType === 'Kartu Pelajar' ? 'Nomor Kartu Pelajar / KTM...' : 'Nomor identitas resmi...'))) }}"
+                                                            {{ $defaultIdType === 'KTP' ? 'inputmode="numeric"' : '' }}
+                                                            autocomplete="off"
+                                                            oninput="if(document.getElementById('{{ $typeId }}')?.value === 'KTP'){ this.value=this.value.replace(/\D/g,'').slice(0,16); }">
+                                                    </div>
+                                                </div>
+
+                                                <div style="font-size:0.71rem;color:#94A3B8;margin-top:0.35rem;display:flex;align-items:center;gap:0.35rem;line-height:1.35;">
+                                                    <svg width="11" height="11" fill="none" stroke="#1eb349" stroke-width="2"
+                                                        viewBox="0 0 24 24" style="flex-shrink:0;">
                                                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                                     </svg>
-                                                    NIK dienkripsi & disimpan aman. Ditampilkan dalam format tersensor kepada panitia.
+                                                    <span>Data identitas dienkripsi &amp; disimpan aman untuk verifikasi e-tiket saat masuk ke venue.</span>
                                                 </div>
                                             </div>
 
                                             @if(!$isFirstSlot)
-                                                <div style="font-size:0.72rem;color:#94A3B8;margin-top:0.3rem;">Nama sesuai identitas
-                                                    (KTP/SIM/Paspor) pemegang tiket ini.</div>
+                                                <div style="font-size:0.72rem;color:#94A3B8;margin-top:0.3rem;">Nama sesuai identitas resmi pemegang tiket ini.</div>
                                             @endif
                                         </div>
                                     @endfor
@@ -2860,6 +2965,32 @@
         document.querySelectorAll('input[data-auth-name]').forEach(function (input) {
             input.dataset.mode = 'akun';
         });
+
+        // ── Identitas Resmi Tiket: Dropdown jenis identitas & placeholder dinamis
+        window.updateIdentitySlot = function(key) {
+            const sel = document.getElementById('ticket_id_type_' + key);
+            const inp = document.getElementById('ticket_nik_' + key);
+            if (!sel || !inp) return;
+
+            const val = sel.value;
+            if (val === 'KTP') {
+                inp.placeholder = 'Nomor KTP (16 digit angka)...';
+                inp.inputMode = 'numeric';
+                inp.value = inp.value.replace(/\D/g, '').slice(0, 16);
+            } else if (val === 'SIM') {
+                inp.placeholder = 'Nomor SIM...';
+                inp.inputMode = 'text';
+            } else if (val === 'Paspor') {
+                inp.placeholder = 'Nomor Paspor (Passport No)...';
+                inp.inputMode = 'text';
+            } else if (val === 'Kartu Pelajar') {
+                inp.placeholder = 'Nomor Kartu Pelajar / KTM...';
+                inp.inputMode = 'text';
+            } else {
+                inp.placeholder = 'Nomor identitas resmi...';
+                inp.inputMode = 'text';
+            }
+        };
 
         // ──────────────────────────────────────────────────────────
         // FREE CLAIM REQUIREMENTS — Verification Timer (5 detik)

@@ -220,6 +220,12 @@ class CheckoutService
             $shippingAddressArray['ticket_niks'] = $ticketNiksInput;
         }
 
+        // Simpan input Jenis Identitas pemegang tiket (ticket_id_types) ke snapshot order
+        $ticketIdTypesInput = $data['ticket_id_types'] ?? request()->input('ticket_id_types', []);
+        if (!empty($ticketIdTypesInput)) {
+            $shippingAddressArray['ticket_id_types'] = $ticketIdTypesInput;
+        }
+
         // Simpan input Nomor Meja jika dipesan dari Link in Bio / QR Meja
         $tableNumberInput = $data['table_number'] ?? ($data['fnb_table_number'] ?? request()->input('table_number', request()->input('fnb_table_number')));
         if (!empty($tableNumberInput)) {
@@ -568,15 +574,23 @@ class CheckoutService
             // Generate TicketPass jika terdapat produk bertipe ticket
             $ticketHoldersSnapshot = $order->shipping_address['ticket_holders'] ?? [];
             $ticketNiksSnapshot    = $order->shipping_address['ticket_niks'] ?? [];
+            $ticketIdTypesSnapshot = $order->shipping_address['ticket_id_types'] ?? [];
 
             foreach ($order->items as $item) {
                 if ($item->product && $item->product->product_type === 'ticket') {
                     $holdersForProduct = $ticketHoldersSnapshot[$item->product_id] ?? [];
                     $niksForProduct    = $ticketNiksSnapshot[$item->product_id] ?? [];
+                    $idTypesForProduct = $ticketIdTypesSnapshot[$item->product_id] ?? [];
 
                     for ($i = 0; $i < $item->qty; $i++) {
                         $customHolder = !empty($holdersForProduct[$i]) ? trim($holdersForProduct[$i]) : null;
                         $customNik    = !empty($niksForProduct[$i]) ? trim($niksForProduct[$i]) : null;
+                        $customIdType = !empty($idTypesForProduct[$i]) ? trim($idTypesForProduct[$i]) : null;
+
+                        $finalNik = $customNik;
+                        if ($customNik && $customIdType && !str_starts_with(strtolower($customNik), strtolower($customIdType))) {
+                            $finalNik = "{$customIdType}: {$customNik}";
+                        }
 
                         \App\Models\TicketPass::create([
                             'order_id'      => $order->id,
@@ -587,7 +601,7 @@ class CheckoutService
                             'holder_name'   => $customHolder ?: ($order->user?->name ?? ($order->shipping_address['receiver_name'] ?? 'Pemegang Tiket')),
                             'holder_email'  => $order->user?->email ?? $order->customer_email,
                             'holder_phone'  => $order->user?->phone ?? ($order->shipping_address['phone'] ?? null),
-                            'holder_nik'    => $customNik,
+                            'holder_nik'    => $finalNik,
                             'status'        => 'valid',
                         ]);
                     }

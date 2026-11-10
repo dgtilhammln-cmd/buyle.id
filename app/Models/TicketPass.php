@@ -35,15 +35,34 @@ class TicketPass extends Model
     ];
 
     /**
-     * Mask NIK 16 digit: tampilkan 4 awal + 8 sensor tengah + 4 akhir.
+     * Mask nomor identitas: tampilkan prefix, sebagian awal, sensor tengah, dan akhir.
      * Contoh: "3273082504980003" → "3273████████0003"
+     * Contoh: "Paspor: A1234567" → "Paspor: A1████67"
      */
     public static function maskNik(?string $nik): string
     {
-        if (!$nik || strlen($nik) < 8) {
-            return '████████████████';
+        if (!$nik) {
+            return '—';
         }
-        return substr($nik, 0, 4) . '████████' . substr($nik, -4);
+
+        $clean = trim($nik);
+        $prefix = '';
+        if (str_contains($clean, ': ')) {
+            [$prefix, $clean] = explode(': ', $clean, 2);
+            $prefix = $prefix . ': ';
+        } elseif (str_contains($clean, ':')) {
+            [$prefix, $clean] = explode(':', $clean, 2);
+            $prefix = trim($prefix) . ': ';
+        }
+
+        $len = strlen($clean);
+        if ($len <= 4) {
+            return $prefix . str_repeat('█', max(1, $len));
+        }
+        if ($len <= 8) {
+            return $prefix . substr($clean, 0, 2) . str_repeat('█', max(1, $len - 4)) . substr($clean, -2);
+        }
+        return $prefix . substr($clean, 0, 4) . str_repeat('█', max(4, $len - 8)) . substr($clean, -4);
     }
 
     protected static function boot()
@@ -71,6 +90,7 @@ class TicketPass extends Model
 
         $allHolders = $order->shipping_address['ticket_holders'] ?? [];
         $allNiks    = $order->shipping_address['ticket_niks'] ?? [];
+        $allIdTypes = $order->shipping_address['ticket_id_types'] ?? [];
 
         foreach ($order->items as $item) {
             if ($item->product && $item->product->product_type === 'ticket') {
@@ -81,11 +101,18 @@ class TicketPass extends Model
                 $qtyNeeded = $item->qty - $existingCount;
                 $holdersForProduct = $allHolders[$item->product_id] ?? [];
                 $niksForProduct    = $allNiks[$item->product_id] ?? [];
+                $idTypesForProduct = $allIdTypes[$item->product_id] ?? [];
 
                 for ($i = 0; $i < $qtyNeeded; $i++) {
                     $slotIndex = $existingCount + $i;
                     $customHolder = !empty($holdersForProduct[$slotIndex]) ? trim($holdersForProduct[$slotIndex]) : null;
                     $customNik    = !empty($niksForProduct[$slotIndex]) ? trim($niksForProduct[$slotIndex]) : null;
+                    $customIdType = !empty($idTypesForProduct[$slotIndex]) ? trim($idTypesForProduct[$slotIndex]) : null;
+
+                    $finalNik = $customNik;
+                    if ($customNik && $customIdType && !str_starts_with(strtolower($customNik), strtolower($customIdType))) {
+                        $finalNik = "{$customIdType}: {$customNik}";
+                    }
 
                     static::create([
                         'order_id'      => $order->id,
@@ -96,7 +123,7 @@ class TicketPass extends Model
                         'holder_name'   => $customHolder ?: ($order->user?->name ?? 'Pemegang Tiket'),
                         'holder_email'  => $order->user?->email,
                         'holder_phone'  => $order->user?->phone,
-                        'holder_nik'    => $customNik,
+                        'holder_nik'    => $finalNik,
                         'status'        => 'valid',
                     ]);
                 }
