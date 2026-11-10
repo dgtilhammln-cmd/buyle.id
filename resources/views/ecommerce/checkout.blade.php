@@ -1082,7 +1082,7 @@
 
                                         <div class="ticket-holder-row"
                                             style="margin-bottom:{{ $ticketIdx < $qty - 1 ? '1rem' : '0' }};
-                                                                                                                                                                                                                                                                                                                                                                        {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
+                                                                                                                                                                                                                                                                                                                                                                                            {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
 
                                             {{-- Slot label dengan nomor tiket --}}
                                             <div
@@ -1304,6 +1304,113 @@
                 </div>
 
                 <div class="co-right">
+
+                    {{-- ══ COUNTDOWN TIMER CARD ══ --}}
+                    <div id="checkout-countdown-card" style="
+                        background: linear-gradient(135deg, #1eb349 0%, #17963d 60%, #0f7a30 100%);
+                        border-radius: 14px;
+                        padding: 0;
+                        margin-bottom: 14px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 18px rgba(30,179,73,0.22);
+                    ">
+                        <div style="display:flex;align-items:center;gap:0;height:52px;">
+                            {{-- Time block --}}
+                            <div style="
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                padding: 0 20px;
+                                height:100%;
+                                border-right: 1px solid rgba(255,255,255,0.22);
+                                min-width: 90px;
+                            ">
+                                <span id="checkout-timer-display" style="
+                                    font-size: 1.35rem;
+                                    font-weight: 700;
+                                    color: #fff;
+                                    letter-spacing: 2px;
+                                    font-variant-numeric: tabular-nums;
+                                    font-family: 'Courier New', monospace;
+                                ">10:00</span>
+                            </div>
+                            {{-- Label block --}}
+                            <div style="
+                                display:flex;
+                                align-items:center;
+                                gap: 8px;
+                                padding: 0 18px;
+                                flex:1;
+                            ">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span style="font-size:0.875rem;color:rgba(255,255,255,0.92);font-weight:500;">Batas Waktu Tersisa</span>
+                            </div>
+                        </div>
+                        {{-- Progress bar --}}
+                        <div style="height:3px;background:rgba(255,255,255,0.18);position:relative;">
+                            <div id="checkout-timer-bar" style="
+                                height:100%;
+                                width:100%;
+                                background:rgba(255,255,255,0.65);
+                                transition: width 1s linear;
+                                border-radius:0 0 14px 14px;
+                            "></div>
+                        </div>
+                    </div>
+                    <script>
+                    (function() {
+                        var TOTAL = 10 * 60; // 10 minutes in seconds
+                        var storageKey = 'buyle_checkout_timer_end';
+                        var now = Math.floor(Date.now() / 1000);
+                        var endTime;
+
+                        // If timer exists and hasn't expired, resume it
+                        var stored = sessionStorage.getItem(storageKey);
+                        if (stored && parseInt(stored) > now) {
+                            endTime = parseInt(stored);
+                        } else {
+                            endTime = now + TOTAL;
+                            sessionStorage.setItem(storageKey, endTime);
+                        }
+
+                        var display = document.getElementById('checkout-timer-display');
+                        var bar = document.getElementById('checkout-timer-bar');
+                        var card = document.getElementById('checkout-countdown-card');
+
+                        function update() {
+                            var remaining = Math.max(0, endTime - Math.floor(Date.now() / 1000));
+                            var pct = (remaining / TOTAL) * 100;
+                            var m = Math.floor(remaining / 60);
+                            var s = remaining % 60;
+                            display.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                            bar.style.width = pct + '%';
+
+                            // Turn warning style when < 2 min
+                            if (remaining <= 120) {
+                                card.style.background = 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)';
+                                card.style.boxShadow = '0 4px 18px rgba(229,62,62,0.28)';
+                            }
+
+                            if (remaining <= 0) {
+                                display.textContent = '00:00';
+                                bar.style.width = '0%';
+                                sessionStorage.removeItem(storageKey);
+                                clearInterval(timerInterval);
+                                // Redirect to cart after short delay
+                                setTimeout(function() {
+                                    window.location.href = '{{ route("cart.index") }}';
+                                }, 1500);
+                            }
+                        }
+
+                        update();
+                        var timerInterval = setInterval(update, 1000);
+                    })();
+                    </script>
+                    {{-- ══ END COUNTDOWN ══ --}}
+
                     <div class="co-section" style="position:sticky;top:100px;">
                         <div class="co-section-title">Ringkasan Pesanan</div>
 
@@ -1844,11 +1951,11 @@
             const serviceContainer = document.getElementById('courier_service_container');
             if (serviceContainer) {
                 serviceContainer.innerHTML = `
-                                <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #64748B; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    Pilih kota dan kurir terlebih dahulu untuk melihat opsi pengiriman.
-                                </div>
-                            `;
+                                    <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #64748B; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        Pilih kota dan kurir terlebih dahulu untuk melihat opsi pengiriman.
+                                    </div>
+                                `;
             }
             const hiddenInput = document.getElementById('courier_service_hidden');
             if (hiddenInput) hiddenInput.value = '';
@@ -1867,11 +1974,11 @@
 
             if (loadingEl) loadingEl.style.display = 'flex';
             serviceContainer.innerHTML = `
-                            <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #1eb349; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight:600;">
-                                <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
-                                Menghitung ongkir...
-                            </div>
-                        `;
+                                <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #1eb349; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight:600;">
+                                    <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                                    Menghitung ongkir...
+                                </div>
+                            `;
             hiddenInput.value = '';
 
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
@@ -1902,15 +2009,15 @@
                     if (data.manual) {
                         console.warn('[ONGKIR] Fallback manual. Debug:', data.debug_error);
                         serviceContainer.innerHTML = `
-                                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
-                                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                                        <div style="flex:1;">
-                                            <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
-                                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
-                                        </div>
-                                        <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
-                                    </label>
-                                `;
+                                        <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                                            <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                            <div style="flex:1;">
+                                                <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                                                <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                                            </div>
+                                            <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
+                                        </label>
+                                    `;
                         hiddenInput.value = 'manual';
                         hiddenInput.removeAttribute('required');
                         selectedCost = 0;
@@ -1923,11 +2030,11 @@
                     if (data.error) {
                         console.warn('[ONGKIR] API error:', data.error);
                         serviceContainer.innerHTML = `
-                                    <div style="padding: 1rem; border: 1px dashed #FCA5A5; border-radius: 10px; background: #FEF2F2; color: #B91C1C; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"></path></svg>
-                                        ${data.error}
-                                    </div>
-                                `;
+                                        <div style="padding: 1rem; border: 1px dashed #FCA5A5; border-radius: 10px; background: #FEF2F2; color: #B91C1C; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"></path></svg>
+                                            ${data.error}
+                                        </div>
+                                    `;
                         hiddenInput.value = '';
                         hiddenInput.removeAttribute('required');
                         return;
@@ -1937,15 +2044,15 @@
                     if (!Array.isArray(data) || data.length === 0) {
                         console.warn('[ONGKIR] Data kosong atau bukan array:', data);
                         serviceContainer.innerHTML = `
-                                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
-                                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                                        <div style="flex:1;">
-                                            <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
-                                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
-                                        </div>
-                                        <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
-                                    </label>
-                                `;
+                                        <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                                            <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                            <div style="flex:1;">
+                                                <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                                                <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                                            </div>
+                                            <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
+                                        </label>
+                                    `;
                         hiddenInput.value = 'manual';
                         hiddenInput.removeAttribute('required');
                         selectedCost = 0;
@@ -1974,22 +2081,22 @@
                         const cardStyle = (idx === 0) ? 'border-color:#1eb349; background:#F0F9FF;' : 'border-color:#E2E8F0; background:#fff;';
 
                         html += `
-                                    <label class="service-card ${idx === 0 ? 'selected' : ''}" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid; ${cardStyle} border-radius:10px; transition:all 0.2s;">
-                                        <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" ${isChecked} style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                                        <div style="flex:1;">
-                                            <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
-                                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                                                ${desc}
+                                        <label class="service-card ${idx === 0 ? 'selected' : ''}" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid; ${cardStyle} border-radius:10px; transition:all 0.2s;">
+                                            <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" ${isChecked} style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                            <div style="flex:1;">
+                                                <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
+                                                <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                                    ${desc}
+                                                </div>
+                                                <div style="font-size:0.8rem; color:#15803d; font-weight:600; margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+                                                    ${etd}
+                                                </div>
                                             </div>
-                                            <div style="font-size:0.8rem; color:#15803d; font-weight:600; margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
-                                                ${etd}
-                                            </div>
-                                        </div>
-                                        <div style="font-weight:800; color:#1eb349; font-size:1.1rem;">Rp ${fmt}</div>
-                                    </label>
-                                `;
+                                            <div style="font-weight:800; color:#1eb349; font-size:1.1rem;">Rp ${fmt}</div>
+                                        </label>
+                                    `;
                     });
                     serviceContainer.innerHTML = html;
                     attachRadioListeners();
@@ -2008,15 +2115,15 @@
                     if (loadingEl) loadingEl.style.display = 'none';
                     console.error('[ONGKIR] Fetch/jaringan error:', err);
                     serviceContainer.innerHTML = `
-                                <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
-                                    <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
-                                    <div style="flex:1;">
-                                        <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
-                                        <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
-                                    </div>
-                                    <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
-                                </label>
-                            `;
+                                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                                        <div style="flex:1;">
+                                            <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                                        </div>
+                                        <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
+                                    </label>
+                                `;
                     hiddenInput.value = 'manual';
                     hiddenInput.removeAttribute('required');
                     selectedCost = 0;
@@ -2330,39 +2437,39 @@
             const totalCost = document.getElementById('total-row-val')?.innerText || '';
 
             const htmlSummary = `
-                            <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#334155; margin-top:1rem;">
-                                <div style="margin-bottom:0.75rem;">
-                                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pembeli & Kontak Akses</strong>
-                                    <div><strong>${receiverName}</strong></div>
-                                    <div style="color:#166534; font-weight:600;">Email: ${receiverEmail}</div>
-                                    ${receiverPhone ? `<div>WhatsApp: ${receiverPhone}</div>` : ''}
+                                <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#334155; margin-top:1rem;">
+                                    <div style="margin-bottom:0.75rem;">
+                                        <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pembeli & Kontak Akses</strong>
+                                        <div><strong>${receiverName}</strong></div>
+                                        <div style="color:#166534; font-weight:600;">Email: ${receiverEmail}</div>
+                                        ${receiverPhone ? `<div>WhatsApp: ${receiverPhone}</div>` : ''}
+                                    </div>
+                                    ${hasPhysicalProduct ? `
+                                    <div style="margin-bottom:0.75rem;">
+                                        <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Alamat Pengiriman</strong>
+                                        <div>${addressText}</div>
+                                    </div>
+                                    <div style="margin-bottom:0.75rem;">
+                                        <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Kurir</strong>
+                                        <div>${courierText}</div>
+                                    </div>
+                                    ` : `
+                                    <div style="margin-bottom:0.75rem;">
+                                        <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pengiriman</strong>
+                                        <div style="color:#166534; font-weight:600;">Instan / Otomatis dikirim ke Email & WhatsApp</div>
+                                    </div>
+                                    `}
+                                    ${notesText && notesText !== '-' ? `
+                                    <div style="margin-bottom:0.75rem;">
+                                        <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Catatan</strong>
+                                        <div style="font-style:italic;">"${notesText}"</div>
+                                    </div>
+                                    ` : ''}
+                                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#1eb349; font-weight:800; font-size:1.15rem; text-align:right;">
+                                        ${totalCost}
+                                    </div>
                                 </div>
-                                ${hasPhysicalProduct ? `
-                                <div style="margin-bottom:0.75rem;">
-                                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Alamat Pengiriman</strong>
-                                    <div>${addressText}</div>
-                                </div>
-                                <div style="margin-bottom:0.75rem;">
-                                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Kurir</strong>
-                                    <div>${courierText}</div>
-                                </div>
-                                ` : `
-                                <div style="margin-bottom:0.75rem;">
-                                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pengiriman</strong>
-                                    <div style="color:#166534; font-weight:600;">Instan / Otomatis dikirim ke Email & WhatsApp</div>
-                                </div>
-                                `}
-                                ${notesText && notesText !== '-' ? `
-                                <div style="margin-bottom:0.75rem;">
-                                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Catatan</strong>
-                                    <div style="font-style:italic;">"${notesText}"</div>
-                                </div>
-                                ` : ''}
-                                <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#1eb349; font-weight:800; font-size:1.15rem; text-align:right;">
-                                    ${totalCost}
-                                </div>
-                            </div>
-                        `;
+                            `;
 
             Swal.fire({
                 title: 'Konfirmasi Pesanan',
@@ -2530,34 +2637,34 @@
                 const hint = v.already_used ? '⚠️ Sudah digunakan' : (!v.eligible ? '⚠️ Belum memenuhi syarat' : '');
 
                 html += `
-                            <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"
-                                 style="position:relative;border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:12px;padding:0.875rem 1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;"
-                                 ${v.eligible ? 'onmouseover="this.style.borderColor=\'#1eb349\';this.style.boxShadow=\'0 4px 12px rgba(30,179,73,0.1)\'"' : ''}
-                                 ${v.eligible ? 'onmouseout="this.style.borderColor=\'#E2E8F0\';this.style.boxShadow=\'none\'"' : ''}>
+                                <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"
+                                     style="position:relative;border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:12px;padding:0.875rem 1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;"
+                                     ${v.eligible ? 'onmouseover="this.style.borderColor=\'#1eb349\';this.style.boxShadow=\'0 4px 12px rgba(30,179,73,0.1)\'"' : ''}
+                                     ${v.eligible ? 'onmouseout="this.style.borderColor=\'#E2E8F0\';this.style.boxShadow=\'none\'"' : ''}>
 
-                                <!-- Ticket cutouts left & right -->
-                                <div style="position:absolute;left:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-right:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
-                                <div style="position:absolute;right:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-left:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
+                                    <!-- Ticket cutouts left & right -->
+                                    <div style="position:absolute;left:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-right:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
+                                    <div style="position:absolute;right:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-left:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
 
-                                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.25rem;">
-                                    <div>
-                                        <span style="display:inline-block;background:#F0F9FF;color:#1eb349;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.15rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
-                                        <div style="font-size:0.9rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
+                                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.25rem;">
+                                        <div>
+                                            <span style="display:inline-block;background:#F0F9FF;color:#1eb349;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.15rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
+                                            <div style="font-size:0.9rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
+                                        </div>
+                                        <div style="text-align:right;flex-shrink:0;">
+                                            <div style="font-size:1rem;font-weight:900;color:#1eb349;">${v.value}</div>
+                                            ${v.estimated_discount_fmt ? `<div style="font-size:0.65rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
+                                        </div>
                                     </div>
-                                    <div style="text-align:right;flex-shrink:0;">
-                                        <div style="font-size:1rem;font-weight:900;color:#1eb349;">${v.value}</div>
-                                        ${v.estimated_discount_fmt ? `<div style="font-size:0.65rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
+                                    <div style="font-size:0.75rem;color:#64748B;margin-bottom:0.35rem;line-height:1.2;">${v.description || ''}</div>
+                                    <div style="display:flex;flex-wrap:wrap;gap:0.3rem;font-size:0.65rem;">
+                                        <span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.min_purchase}</span>
+                                        ${v.max_discount ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.max_discount}</span>` : ''}
+                                        ${v.expired_label ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">⏰ ${v.expired_label}</span>` : ''}
+                                        ${v.remaining !== null ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">Sisa ${v.remaining}x</span>` : ''}
+                                        ${hint ? `<span style="background:#FEF2F2;color:#DC2626;padding:0.1rem 0.4rem;border-radius:99px;">${hint}</span>` : ''}
                                     </div>
-                                </div>
-                                <div style="font-size:0.75rem;color:#64748B;margin-bottom:0.35rem;line-height:1.2;">${v.description || ''}</div>
-                                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;font-size:0.65rem;">
-                                    <span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.min_purchase}</span>
-                                    ${v.max_discount ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.max_discount}</span>` : ''}
-                                    ${v.expired_label ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">⏰ ${v.expired_label}</span>` : ''}
-                                    ${v.remaining !== null ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">Sisa ${v.remaining}x</span>` : ''}
-                                    ${hint ? `<span style="background:#FEF2F2;color:#DC2626;padding:0.1rem 0.4rem;border-radius:99px;">${hint}</span>` : ''}
-                                </div>
-                            </div>`;
+                                </div>`;
             });
             container.innerHTML = html;
         }
@@ -2881,22 +2988,22 @@
                             notice.id = 'checkoutTableNotice';
                             notice.style.cssText = 'background:#ffffff; border:1px solid #86efac; border-radius:12px; padding:0.85rem 1.15rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 1px 4px rgba(30,179,73,0.06);';
                             notice.innerHTML = `
-                                                    <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-                                                        <div style="width:34px; height:34px; border-radius:8px; background:#1eb349; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                                <path d="M3 9h18M9 21V9" />
-                                                            </svg>
-                                                        </div>
-                                                        <div style="min-width:0;">
-                                                            <div style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Pesanan</div>
-                                                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${decodedMeja}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div style="font-size:0.7rem; color:#15803d; font-weight:700; background:#dcfce7; padding:4px 10px; border-radius:99px; flex-shrink:0; border:1px solid #bbf7d0;">
-                                                        Auto Diantar ke Meja
-                                                    </div>
-                                                `;
+                                                            <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                                                                <div style="width:34px; height:34px; border-radius:8px; background:#1eb349; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                                        <path d="M3 9h18M9 21V9" />
+                                                                    </svg>
+                                                                </div>
+                                                                <div style="min-width:0;">
+                                                                    <div style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Pesanan</div>
+                                                                    <div style="font-size:0.92rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${decodedMeja}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style="font-size:0.7rem; color:#15803d; font-weight:700; background:#dcfce7; padding:4px 10px; border-radius:99px; flex-shrink:0; border:1px solid #bbf7d0;">
+                                                                Auto Diantar ke Meja
+                                                            </div>
+                                                        `;
                             coLeft.insertBefore(notice, coLeft.firstChild);
                         }
                     }
@@ -2904,7 +3011,7 @@
                     // Bukan produk makanan: Bersihkan sesi meja agar tidak terbawa
                     try { sessionStorage.removeItem('buyle_table_number'); } catch (e) { }
                 @endif
-                        })();
+                            })();
         });
     </script>
 @endsection
