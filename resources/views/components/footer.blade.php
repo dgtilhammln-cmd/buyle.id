@@ -281,7 +281,7 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
                             </svg>
                         </a>
                     @else
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $s['whatsapp'] ?? '6281234567890') }}"
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $s['whatsapp'] ?? '6285179982373') }}"
                             target="_blank" rel="noopener" class="cv-footer-social-btn" title="WhatsApp">
                             <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -364,7 +364,7 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
                             @if($wa)
                                 <a href="javascript:void(0)" onclick="openOrderModal('Footer Help')">Customer Service</a>
                             @else
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $s['whatsapp'] ?? '6281234567890') }}"
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $s['whatsapp'] ?? '6285179982373') }}"
                                     target="_blank" rel="noopener">WhatsApp CS</a>
                             @endif
                         </li>

@@ -745,7 +745,7 @@
 
                 let waNum = sellerWa.replace(/[^0-9]/g, '');
                 if (waNum.startsWith('0')) waNum = '62' + waNum.substring(1);
-                if (!waNum) waNum = '6281234567890'; // fallback
+                if (!waNum) waNum = '6285179982373'; // fallback
 
                 const msg = `Halo *${@json($bioName)}*,\n\nNama: *${name}*\nNo. WhatsApp: ${phone}\nPerusahaan / Kota: *${city}*\n\n*Pesan / Kebutuhan:*\n${kebutuhan}`;
                 const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`;
