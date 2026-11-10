@@ -354,7 +354,7 @@
             /* Clean Capsule Tab Bar on mobile */
             .sidebar-settings-box,
             .sidebar-action-btns,
-            .prof-sidebar > div:nth-child(n+4) {
+            .prof-sidebar>div:nth-child(n+4) {
                 display: none !important;
             }
 
@@ -443,7 +443,7 @@
                 border-radius: 0;
                 border-top: 1px solid #e2e8f0;
                 padding: 0.85rem 1rem;
-                box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+                box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
                 gap: 0.6rem;
                 justify-content: stretch;
             }
@@ -465,7 +465,8 @@
 
             /* Input & select touch-friendly */
             .form-input {
-                font-size: 16px; /* Prevent iOS zoom */
+                font-size: 16px;
+                /* Prevent iOS zoom */
                 min-height: 44px;
                 height: 44px;
                 padding: 0 0.85rem;
@@ -566,23 +567,26 @@
 
             {{-- ACTION BUTTONS DESKTOP (Di bawah pengaturan form sesuai request) --}}
             <div class="sidebar-action-btns">
-                <button type="submit" form="productForm" class="btn-submit" style="width:100%; justify-content:center; box-sizing:border-box;">
+                <button type="submit" form="productForm" class="btn-submit"
+                    style="width:100%; justify-content:center; box-sizing:border-box;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                        <polyline points="17 21 17 13 7 13 7 21"/>
-                        <polyline points="7 3 7 8 15 8"/>
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
                     </svg>
                     Simpan Perubahan
                 </button>
-                <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}" class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
+                <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
+                    class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
                     Batal
                 </a>
             </div>
         </div>
 
         <div class="prof-content">
-            <form action="{{ route('creator.products.update', array_merge(['product' => $product->id], request('from') ? ['from' => request('from')] : [])) }}" method="POST" enctype="multipart/form-data"
-                id="productForm">
+            <form
+                action="{{ route('creator.products.update', array_merge(['product' => $product->id], request('from') ? ['from' => request('from')] : [])) }}"
+                method="POST" enctype="multipart/form-data" id="productForm">
                 @csrf
                 @method('PUT')
                 @if(request('from'))
@@ -630,14 +634,19 @@
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="handleProductTypeSelectChange(this)" required>
                                         <option value="external_link" {{ $selectedType == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
-                                        <option value="ticket" {{ $selectedType == 'ticket' ? 'selected' : '' }}>Tiket Event / Webinar</option>
-                                        <option value="service" {{ $selectedType == 'service' ? 'selected' : '' }}>Jasa / Layanan</option>
-                                        <option value="physical" {{ $selectedType == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang
+                                        <option value="ticket" {{ $selectedType == 'ticket' ? 'selected' : '' }}>Tiket Event /
+                                            Webinar</option>
+                                        <option value="service" {{ $selectedType == 'service' ? 'selected' : '' }}>Jasa /
+                                            Layanan</option>
+                                        <option value="physical" {{ $selectedType == 'physical' ? 'selected' : '' }}>Produk
+                                            Fisik / Barang
                                         </option>
-                                        <option value="makanan" {{ $selectedType == 'makanan' ? 'selected' : '' }}>Makanan & Minuman (POS)
+                                        <option value="makanan" {{ $selectedType == 'makanan' ? 'selected' : '' }}>Makanan &
+                                            Minuman (POS)
                                         </option>
                                     </select>
-                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">* Produk Digital & Tiket tampil di Marketplace, tipe lainnya di Bio Link.</span>
+                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">*
+                                        Produk Digital & Tiket tampil di Marketplace, tipe lainnya di Bio Link.</span>
                                 </div>
 
                                 <div class="form-group full" id="buyleCheckoutToggleWrap"
@@ -900,51 +909,63 @@
 
                                         <div class="form-group" style="margin-top:0.5rem;">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#E1306C" stroke-width="2" viewBox="0 0 24 24">
+                                                <svg width="15" height="15" fill="none" stroke="#E1306C" stroke-width="2"
+                                                    viewBox="0 0 24 24">
                                                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                                                 </svg>
-                                                Username Instagram Resmi Event / EO <span>*</span>
+                                                Instagram Event / EO <span>*</span>
                                             </label>
                                             <div style="position:relative;">
-                                                <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
+                                                <span
+                                                    style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
                                                 <input type="text" name="instagram_username"
                                                     value="{{ old('instagram_username', $product->instagram_username) }}"
-                                                    class="form-input" style="padding-left:30px;" placeholder="username.event">
+                                                    class="form-input" style="padding-left:30px;"
+                                                    placeholder="username.event">
                                             </div>
-                                            <span class="form-hint">Wajib diisi. Icon Instagram akan tampil di atas waktu pelaksanaan pada halaman produk tiket.</span>
+                                            <span class="form-hint">Wajib diisi. Icon Instagram akan tampil di atas waktu
+                                                pelaksanaan pada halaman produk tiket.</span>
                                         </div>
 
                                         <div class="form-group" style="margin-top:0.5rem;">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
                                                 <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z"/>
+                                                    <path
+                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z" />
                                                 </svg>
                                                 Username TikTok Resmi Event / EO <span>*</span>
                                             </label>
                                             <div style="position:relative;">
-                                                <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
+                                                <span
+                                                    style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
                                                 <input type="text" name="tiktok_username"
                                                     value="{{ old('tiktok_username', $product->tiktok_username) }}"
-                                                    class="form-input" style="padding-left:30px;" placeholder="username.event">
+                                                    class="form-input" style="padding-left:30px;"
+                                                    placeholder="username.event">
                                             </div>
-                                            <span class="form-hint">Wajib diisi. Icon TikTok akan tampil di atas waktu pelaksanaan pada halaman produk tiket.</span>
+                                            <span class="form-hint">Wajib diisi. Icon TikTok akan tampil di atas waktu
+                                                pelaksanaan pada halaman produk tiket.</span>
                                         </div>
 
                                         <div class="form-group full" style="margin-top:0.5rem;">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24">
-                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                                <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
+                                                    </path>
                                                     <polyline points="14 2 14 8 20 8"></polyline>
                                                     <line x1="16" y1="13" x2="8" y2="13"></line>
                                                     <line x1="16" y1="17" x2="8" y2="17"></line>
                                                 </svg>
                                                 Syarat & Ketentuan Event (Terms & Conditions / T&C) <span>*</span>
                                             </label>
-                                            <textarea name="terms_conditions" rows="6" class="form-input" style="height:auto; min-height:130px; line-height:1.6;"
+                                            <textarea name="terms_conditions" rows="6" class="form-input"
+                                                style="height:auto; min-height:130px; line-height:1.6;"
                                                 placeholder="Contoh:&#10;1. Tiket yang sudah dibeli bersifat non-refundable (tidak dapat dikembalikan/ditukar).&#10;2. Pengunjung wajib menunjukkan e-tiket dengan QR Code yang jelas pada saat check-in di gate.&#10;3. Dilarang membawa senjata tajam, obat-obatan terlarang, flare, dan kamera profesional tanpa izin penyelenggara.">{{ old('terms_conditions', $product->terms_conditions) }}</textarea>
-                                            <span class="form-hint">Wajib diisi. Syarat & ketentuan ini akan tampil pada tab 'T&C' khusus tiket event di halaman produk.</span>
+                                            <span class="form-hint">Wajib diisi. Syarat & ketentuan ini akan tampil pada tab
+                                                'T&C' khusus tiket event di halaman produk.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1053,40 +1074,54 @@
                                 {{-- STOK PRODUK MAKANAN --}}
                                 <div class="form-group" id="foodStockWrap" style="display:none;">
                                     <label class="form-label">Stok Produk</label>
-                                    <input type="number" name="stock" id="input_stock" value="{{ old('stock', $product->stock) }}"
-                                        class="form-input" placeholder="Kosongkan = Unlimited" min="0">
-                                    <span class="form-hint">Kosongkan = stok tidak terbatas. Isi <strong>0</strong> = habis. Berkurang otomatis saat ada pesanan.</span>
+                                    <input type="number" name="stock" id="input_stock"
+                                        value="{{ old('stock', $product->stock) }}" class="form-input"
+                                        placeholder="Kosongkan = Unlimited" min="0">
+                                    <span class="form-hint">Kosongkan = stok tidak terbatas. Isi <strong>0</strong> = habis.
+                                        Berkurang otomatis saat ada pesanan.</span>
                                 </div>
 
                                 @include('creator.products.partials.free-product-requirements', ['product' => $product])
 
                                 @include('creator.products.partials.variants-manager', ['product' => $product])
 
-                                <div id="commissionWrap" class="form-group full" style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
-                                    @php $currentCommRate = old('affiliate_commission_rate', $product->affiliate_commission_rate ?? 10); $affOn = ($currentCommRate > 0); @endphp
-                                    <label style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+                                <div id="commissionWrap" class="form-group full"
+                                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
+                                    @php $currentCommRate = old('affiliate_commission_rate', $product->affiliate_commission_rate ?? 10);
+                                    $affOn = ($currentCommRate > 0); @endphp
+                                    <label
+                                        style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
                                         <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
-                                            <input type="checkbox" id="affiliateCommissionToggle" {{ $affOn ? 'checked' : '' }}
-                                                style="opacity:0; width:0; height:0;"
+                                            <input type="checkbox" id="affiliateCommissionToggle" {{ $affOn ? 'checked' : '' }} style="opacity:0; width:0; height:0;"
                                                 onchange="handleAffiliateToggle(this.checked)">
                                             <span class="toggle-slider-s"></span>
                                         </div>
                                         <div style="flex:1;">
-                                            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Aktifkan Komisi Affiliate</div>
-                                            <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Produk ini bisa dipromosikan oleh affiliate dan mereka mendapat komisi.</div>
+                                            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Aktifkan Komisi
+                                                Affiliate</div>
+                                            <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Produk ini bisa
+                                                dipromosikan oleh affiliate dan mereka mendapat komisi.</div>
                                         </div>
                                     </label>
-                                    <div id="affiliateRateWrap" style="{{ !$affOn ? 'display:none;' : '' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+                                    <div id="affiliateRateWrap"
+                                        style="{{ !$affOn ? 'display:none;' : '' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
                                         <label class="form-label">Besaran Komisi Affiliate (%)</label>
                                         <div style="position:relative; display:flex; align-items:center;">
-                                            <input type="number" name="affiliate_commission_rate" id="affiliate_commission_rate"
-                                                value="{{ $currentCommRate }}"
+                                            <input type="number" name="affiliate_commission_rate"
+                                                id="affiliate_commission_rate" value="{{ $currentCommRate }}"
                                                 class="form-input" min="5" max="100" step="0.5" placeholder="10"
                                                 style="padding-right:2.5rem;">
-                                            <span style="position:absolute; right:1rem; font-weight:700; color:#64748B;">%</span>
+                                            <span
+                                                style="position:absolute; right:1rem; font-weight:700; color:#64748B;">%</span>
                                         </div>
-                                        <span class="form-hint" style="color:#0284C7; font-weight:600; margin-top:0.35rem; display:inline-flex; align-items:center; gap:0.35rem;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
+                                        <span class="form-hint"
+                                            style="color:#0284C7; font-weight:600; margin-top:0.35rem; display:inline-flex; align-items:center; gap:0.35rem;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" y1="16" x2="12" y2="12" />
+                                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                                            </svg>
                                             Minimum 5%, rekomendasi 10% untuk mendorong penjualan.
                                         </span>
                                     </div>
@@ -1153,73 +1188,109 @@
                                     $tt3 = $pVideoUrls[2] ?? '';
                                 @endphp
                                 <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
-                                    <div style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
-                                        <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;" onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
-                                            <div style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                                <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                    <div
+                                        style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
+                                        <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;"
+                                            onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
+                                            <div
+                                                style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                                <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24">
+                                                    <polygon points="5 3 19 12 5 21 5 3" />
+                                                </svg>
                                             </div>
                                             <div style="flex:1;">
-                                                <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link Video <span style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span></div>
-                                                <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok (hingga 3 video)</div>
+                                                <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link Video
+                                                    <span
+                                                        style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span>
+                                                </div>
+                                                <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok
+                                                    (hingga 3 video)</div>
                                             </div>
-                                            <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;"><path d="m6 9 6 6 6-6"/></svg>
+                                            <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8"
+                                                stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;">
+                                                <path d="m6 9 6 6 6-6" />
+                                            </svg>
                                         </div>
                                         <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
                                             {{-- Platform Selection Tabs --}}
-                                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
-                                                <button type="button" id="btnPlatformYt" onclick="setVideoPlatform('youtube')"
+                                            <div
+                                                style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
+                                                <button type="button" id="btnPlatformYt"
+                                                    onclick="setVideoPlatform('youtube')"
                                                     style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'youtube' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
-                                                    <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                                                    <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                                    </svg>
                                                     YouTube
                                                 </button>
-                                                <button type="button" id="btnPlatformTt" onclick="setVideoPlatform('tiktok')"
+                                                <button type="button" id="btnPlatformTt"
+                                                    onclick="setVideoPlatform('tiktok')"
                                                     style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'tiktok' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
-                                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+                                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
+                                                    </svg>
                                                     TikTok (Hingga 3 Video)
                                                 </button>
                                             </div>
-                                            <input type="hidden" name="video_platform" id="videoPlatformInput" value="{{ $curPlatform }}">
+                                            <input type="hidden" name="video_platform" id="videoPlatformInput"
+                                                value="{{ $curPlatform }}">
 
                                             {{-- YOUTUBE INPUT (1 Link) --}}
-                                            <div id="youtubeInputWrap" style="{{ $curPlatform === 'youtube' ? 'display:block;' : 'display:none;' }}">
+                                            <div id="youtubeInputWrap"
+                                                style="{{ $curPlatform === 'youtube' ? 'display:block;' : 'display:none;' }}">
                                                 <input type="url" name="youtube_video_url" id="videoUrlInput"
-                                                    value="{{ $ytPrefill }}"
-                                                    class="form-input" placeholder="Paste link YouTube atau YouTube Shorts di sini..."
+                                                    value="{{ $ytPrefill }}" class="form-input"
+                                                    placeholder="Paste link YouTube atau YouTube Shorts di sini..."
                                                     oninput="debounceVideoPreview(this.value)"
                                                     style="margin-bottom:0.5rem;">
-                                                <span class="form-hint" style="display:block; margin-bottom:0.75rem;">Mendukung link video YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
+                                                <span class="form-hint"
+                                                    style="display:block; margin-bottom:0.75rem;">Mendukung link video
+                                                    YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
                                             </div>
 
                                             {{-- TIKTOK INPUTS (Up to 3 Links) --}}
-                                            <div id="tiktokInputsWrap" style="{{ $curPlatform === 'tiktok' ? 'display:block;' : 'display:none;' }} margin-bottom:0.75rem;">
+                                            <div id="tiktokInputsWrap"
+                                                style="{{ $curPlatform === 'tiktok' ? 'display:block;' : 'display:none;' }} margin-bottom:0.75rem;">
                                                 <div style="display:flex; flex-direction:column; gap:0.65rem;">
                                                     <div>
-                                                        <label style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link TikTok 1 <span style="color:#ef4444;">*</span></label>
-                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1" class="form-input tiktok-url-inp"
-                                                            value="{{ $tt1 }}"
+                                                        <label
+                                                            style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link
+                                                            TikTok 1 <span style="color:#ef4444;">*</span></label>
+                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1"
+                                                            class="form-input tiktok-url-inp" value="{{ $tt1 }}"
                                                             placeholder="https://www.tiktok.com/@username/video/..."
                                                             oninput="debounceTiktokPreviews()">
                                                     </div>
                                                     <div>
-                                                        <label style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link TikTok 2 (Opsional)</label>
-                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2" class="form-input tiktok-url-inp"
-                                                            value="{{ $tt2 }}"
+                                                        <label
+                                                            style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                            TikTok 2 (Opsional)</label>
+                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2"
+                                                            class="form-input tiktok-url-inp" value="{{ $tt2 }}"
                                                             placeholder="https://www.tiktok.com/@username/video/..."
                                                             oninput="debounceTiktokPreviews()">
                                                     </div>
                                                     <div>
-                                                        <label style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link TikTok 3 (Opsional)</label>
-                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3" class="form-input tiktok-url-inp"
-                                                            value="{{ $tt3 }}"
+                                                        <label
+                                                            style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                            TikTok 3 (Opsional)</label>
+                                                        <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3"
+                                                            class="form-input tiktok-url-inp" value="{{ $tt3 }}"
                                                             placeholder="https://www.tiktok.com/@username/video/..."
                                                             oninput="debounceTiktokPreviews()">
                                                     </div>
                                                 </div>
-                                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Di halaman produk pembeli, video akan tampil jejer horizontal rapi dan pas di dalam box deskripsi.</span>
+                                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Di halaman
+                                                    produk pembeli, video akan tampil jejer horizontal rapi dan pas di dalam
+                                                    box deskripsi.</span>
                                             </div>
 
                                             {{-- VIDEO PREVIEW BOX --}}
-                                            <div id="videoPreviewBox" style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;"></div>
+                                            <div id="videoPreviewBox"
+                                                style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1261,20 +1332,27 @@
                                         style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:{{ $product->image ? 'none' : 'flex' }}; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
                                         onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
                                         onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8" viewBox="0 0 24 24">
+                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8"
+                                            viewBox="0 0 24 24">
                                             <rect x="3" y="3" width="18" height="18" rx="2" />
                                             <circle cx="8.5" cy="8.5" r="1.5" />
                                             <polyline points="21 15 16 10 5 21" />
                                         </svg>
-                                        <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">Ganti Foto</div>
+                                        <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">
+                                            Ganti Foto</div>
                                         <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
                                     </div>
 
                                     <div id="thumbPreviewWrap" style="display:{{ $product->image ? 'block' : 'none' }};">
-                                        <div style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
-                                            <img id="thumbPreviewImg" src="{{ $product->image ? asset('storage/' . $product->image) : '' }}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                            <div style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
-                                                <button type="button" onclick="document.getElementById('thumb-input').click()"
+                                        <div
+                                            style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
+                                            <img id="thumbPreviewImg"
+                                                src="{{ $product->image ? asset('storage/' . $product->image) : '' }}"
+                                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                                            <div
+                                                style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                                <button type="button"
+                                                    onclick="document.getElementById('thumb-input').click()"
                                                     style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
                                                     title="Ganti Foto">✎</button>
                                                 <button type="button" onclick="removeThumbnail()"
@@ -1287,7 +1365,8 @@
                                 <input type="file" name="image" id="thumb-input" accept="image/*"
                                     onchange="previewSingleThumb(event)" style="display:none;">
                                 <input type="hidden" name="remove_image" id="remove_image_input" value="0">
-                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan: Persegi (1:1), minimal 600x600 px. Biarkan kosong jika tidak ingin mengubah thumbnail.</span>
+                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan: Persegi
+                                    (1:1), minimal 600x600 px. Biarkan kosong jika tidak ingin mengubah thumbnail.</span>
                             </div>
 
                             <div class="form-group" id="posterUploadWrap"
@@ -1347,7 +1426,8 @@
                                 <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
                                 <input type="hidden" name="existing_gallery_submitted" value="1">
                                 <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
-                                    <div id="galleryPreview" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                                    <div id="galleryPreview"
+                                        style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
                                         @if(!empty($product->gallery) && is_array($product->gallery))
                                             @foreach($product->gallery as $idx => $gal)
                                                 <div class="existing-gallery-item"
@@ -1355,11 +1435,13 @@
                                                     <input type="hidden" name="existing_gallery[]" value="{{ $gal }}">
                                                     <img src="{{ asset('storage/' . $gal) }}"
                                                         style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                    <button type="button" onclick="removeExistingGallery(this)" title="Hapus Foto Ini"
+                                                    <button type="button" onclick="removeExistingGallery(this)"
+                                                        title="Hapus Foto Ini"
                                                         style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:transform 0.15s ease;"
                                                         onmouseover="this.style.transform='scale(1.15)'"
                                                         onmouseout="this.style.transform='scale(1)'">✕</button>
-                                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(15,23,42,0.7); color:#fff; font-size:9px; font-weight:600; text-align:center; padding:2px 0;">
+                                                    <div
+                                                        style="position:absolute; bottom:0; left:0; right:0; background:rgba(15,23,42,0.7); color:#fff; font-size:9px; font-weight:600; text-align:center; padding:2px 0;">
                                                         Lama #{{$idx + 1}}</div>
                                                 </div>
                                             @endforeach
@@ -1370,14 +1452,21 @@
                                         style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
                                         onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
                                         onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                        <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">+ Foto</div>
-                                        <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">({{ count($product->gallery ?? []) }}/6)</div>
+                                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                        <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">+
+                                            Foto</div>
+                                        <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">
+                                            ({{ count($product->gallery ?? []) }}/6)</div>
                                     </div>
                                 </div>
                                 <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
                                     onchange="previewGalleryList(event)" style="display:none;">
-                                <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto galeri pendukung (proporsional 1:1).</span>
+                                <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
+                                    galeri pendukung (proporsional 1:1).</span>
                             </div>
 
                             {{-- Link Video sudah dipindahkan ke section Deskripsi di tab Informasi Dasar --}}
@@ -1584,7 +1673,8 @@
                 </div>
 
                 <div class="form-footer">
-                    <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}" class="btn-cancel">Batal</a>
+                    <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
+                        class="btn-cancel">Batal</a>
                     <button type="submit" class="btn-submit">Simpan Perubahan</button>
                 </div>
             </form>
@@ -1595,7 +1685,7 @@
 @section('scripts')
     <script>
         // Tab switching
-        
+
         // Auto-switch tab if an invalid element exists in a hidden tab
         const prodForm = document.getElementById('productForm');
         if (prodForm) {
@@ -1674,17 +1764,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                    <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                        <div class="form-group">
-                            <label class="form-label">Pertanyaan</label>
-                            <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Jawaban</label>
-                            <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                        </div>
-                        <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                    </div>`;
+                        <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                            <div class="form-group">
+                                <label class="form-label">Pertanyaan</label>
+                                <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Jawaban</label>
+                                <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                            </div>
+                            <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                        </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -1880,10 +1970,10 @@
                 delBtn.title = 'Hapus Foto';
                 delBtn.innerHTML = '✕';
                 delBtn.style.cssText = 'position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);';
-                delBtn.onmouseover = function() { this.style.transform = 'scale(1.15)'; };
-                delBtn.onmouseout = function() { this.style.transform = 'scale(1)'; };
-                delBtn.onclick = (function(idx) {
-                    return function(e) {
+                delBtn.onmouseover = function () { this.style.transform = 'scale(1.15)'; };
+                delBtn.onmouseout = function () { this.style.transform = 'scale(1)'; };
+                delBtn.onclick = (function (idx) {
+                    return function (e) {
                         e.stopPropagation();
                         removeNewGalleryFile(idx);
                     };
@@ -2181,7 +2271,7 @@
                     switchPricingTab('fixed');
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
 
         // ── Video Link Panel Toggle & Preview ──
         function toggleVideoLinkPanel() {
@@ -2303,18 +2393,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                style="width:100%; height:100%; border:none; display:block;"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen loading="lazy"></iframe>
-                        </div>`;
+                            <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                    style="width:100%; height:100%; border:none; display:block;"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen loading="lazy"></iframe>
+                            </div>`;
                 } else {
                     html += `
-                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                        </div>`;
+                            <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                            </div>`;
                 }
             });
             html += '</div>';
@@ -2324,7 +2414,7 @@
         }
 
         // Auto-open video panel if value exists on page load (for edit page)
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const platformInp = document.getElementById('videoPlatformInput');
             const curPlatform = platformInp ? platformInp.value : 'youtube';
             const vidInp = document.getElementById('videoUrlInput');
