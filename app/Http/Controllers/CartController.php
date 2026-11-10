@@ -67,7 +67,7 @@ class CartController extends Controller
                 $customPrice = $rawCustom > 0 ? $rawCustom : null;
             }
 
-            $this->cartService->add(
+            $cartItem = $this->cartService->add(
                 (int) $request->product_id,
                 $request->variant_value_id ? (int) $request->variant_value_id : null,
                 $product->isTraktir() ? 1 : (int) $request->qty, // Traktir qty selalu 1 (custom_price yg berubah)
@@ -75,29 +75,39 @@ class CartController extends Controller
                 $customPrice
             );
 
-            $summary = $this->cartService->getSummary();
-            $totalItems = (int)($summary['total_items'] ?? 1);
-
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Produk berhasil ditambahkan ke keranjang.',
-                    'total_items' => $totalItems,
-                ]);
-            }
-
             if ($request->input('action') === 'cart') {
+                session()->forget('buy_now_cart_id');
+                $summary = $this->cartService->getSummary();
+                $totalItems = (int)($summary['total_items'] ?? 1);
+
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Produk berhasil ditambahkan ke keranjang.',
+                        'total_items' => $totalItems,
+                    ]);
+                }
+
                 return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
             }
 
-            // action === 'buy' — simpan cart_id di session agar checkout hanya proses produk ini
-            // (produk lain di keranjang TIDAK ikut checkout)
-            $cartItem = $this->cartService->getLatestCartItem((int) $request->product_id, $request->variant_value_id ? (int) $request->variant_value_id : null);
+            // action === 'buy' (Beli Sekarang):
+            // Pastikan qty sesuai yang dipilih saat Beli Sekarang jika produk sudah ada di keranjang sebelumnya
+            if ($cartItem && !$product->isTraktir()) {
+                $cartItem->update(['qty' => (int) $request->qty]);
+            }
+
+            // Simpan cart_id di session agar checkout HANYA memproses produk ini
+            // (produk lain yang sebelumnya ada di keranjang TIDAK IKUT checkout)
             if ($cartItem) {
                 session(['buy_now_cart_id' => $cartItem->id]);
+                session()->save();
             }
 
             $checkoutParams = [];
+            if ($cartItem) {
+                $checkoutParams['buy_now'] = $cartItem->id;
+            }
             $mejaVal = $request->input('table_number') ?: $request->input('meja');
             $pTypeLower = strtolower($product->product_type ?? '');
             $catLower   = strtolower($product->category?->name ?? '');

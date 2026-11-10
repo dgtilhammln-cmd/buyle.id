@@ -448,7 +448,7 @@ class CheckoutService
 
             // 5. Kosongkan Cart
             // Jika Buy Now mode, hanya hapus item yang di-checkout, lalu clear session-nya
-            $buyNowCartId = session('buy_now_cart_id');
+            $buyNowCartId = request('buy_now') ?: session('buy_now_cart_id');
             if ($buyNowCartId) {
                 \App\Models\Cart::where('id', $buyNowCartId)->delete();
                 session()->forget('buy_now_cart_id');

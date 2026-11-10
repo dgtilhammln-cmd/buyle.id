@@ -19,21 +19,32 @@ class CartService
         $query = Cart::with(['product.category', 'variantValue.variantOption']);
 
         // Buy Now mode: hanya tampilkan 1 item spesifik yang diklik "Beli Sekarang"
-        $buyNowCartId = session('buy_now_cart_id');
+        // Mendukung parameter URL ?buy_now={cart_id} dan session('buy_now_cart_id')
+        $buyNowCartId = request('buy_now') ?: session('buy_now_cart_id');
         if ($buyNowCartId) {
-            $query->where('id', $buyNowCartId);
-            // Validasi bahwa item memang milik user/session ini
+            $buyQuery = clone $query;
+            $buyQuery->where('id', $buyNowCartId);
             if (auth()->check()) {
-                $query->forUser(auth()->id());
+                $buyQuery->forUser(auth()->id());
             } else {
-                $query->forSession(Session::getId());
+                $buyQuery->where(function($q) {
+                    $q->forSession(Session::getId())
+                      ->orWhereNull('user_id');
+                });
             }
+            $buyItems = $buyQuery->get();
+            if ($buyItems->isNotEmpty()) {
+                if (!session('buy_now_cart_id')) {
+                    session(['buy_now_cart_id' => $buyNowCartId]);
+                }
+                return $buyItems;
+            }
+        }
+
+        if (auth()->check()) {
+            $query->forUser(auth()->id());
         } else {
-            if (auth()->check()) {
-                $query->forUser(auth()->id());
-            } else {
-                $query->forSession(Session::getId());
-            }
+            $query->forSession(Session::getId());
         }
 
         return $query->get();

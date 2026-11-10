@@ -654,6 +654,10 @@
 
         <form action="{{ route('checkout.store') }}" method="POST" id="checkoutForm">
             @csrf
+            {{-- Mode Beli Sekarang (Direct Single Product Checkout) --}}
+            @if(request('buy_now') || session('buy_now_cart_id'))
+                <input type="hidden" name="buy_now" value="{{ request('buy_now') ?: session('buy_now_cart_id') }}">
+            @endif
             {{-- Idempotency Key: mencegah double order akibat double-click atau koneksi lambat --}}
             <input type="hidden" name="idempotency_key" value="{{ (string) \Illuminate\Support\Str::uuid() }}">
             {{-- Admission Token untuk Tiket War (Single-Use Server Token) --}}
