@@ -172,6 +172,18 @@
             font-weight: 600 !important;
         }
 
+        /* ── Product Card CTA: hide "Lihat" text on mobile, show arrow only ── */
+        @media (max-width: 640px) {
+            .retarget-btn-cta {
+                padding: 0.4rem 0.5rem !important;
+                min-width: 32px;
+                justify-content: center;
+            }
+            .retarget-btn-text {
+                display: none !important;
+            }
+        }
+
         @if($tAccent || $tMain || $tText)
             :root {
                 @if($tAccent)

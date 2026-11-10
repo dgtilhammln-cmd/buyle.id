@@ -1996,7 +1996,7 @@
                                             <span
                                                 style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                 class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
                                                     stroke-width="2.5" viewBox="0 0 24 24">
                                                     <path d="M5 12h14m-7-7l7 7-7 7" />
                                                 </svg>
@@ -2105,7 +2105,7 @@
                             '</span>' +
                             '</div>' +
                             '<span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">' +
-                            'Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>' +
+                            '<span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>' +
                             '</span>' +
                             '</div>' +
                             '</div>' +
@@ -2258,7 +2258,7 @@
                                             <span
                                                 style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                 class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
                                                     stroke-width="2.5" viewBox="0 0 24 24">
                                                     <path d="M5 12h14m-7-7l7 7-7 7" />
                                                 </svg>
@@ -2394,7 +2394,7 @@
                                             <span
                                                 style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                 class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
                                                     stroke-width="2.5" viewBox="0 0 24 24">
                                                     <path d="M5 12h14m-7-7l7 7-7 7" />
                                                 </svg>
@@ -3741,7 +3741,7 @@
                                                 <span
                                                     style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                     class="retarget-btn-cta">
-                                                    Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                    <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
                                                         stroke-width="2.5" viewBox="0 0 24 24">
                                                         <path d="M5 12h14m-7-7l7 7-7 7" />
                                                     </svg>
@@ -3829,7 +3829,7 @@
                                             <span
                                                 style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); flex-shrink: 0; white-space: nowrap;"
                                                 class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
                                                     stroke-width="2.5" viewBox="0 0 24 24">
                                                     <path d="M5 12h14m-7-7l7 7-7 7" />
                                                 </svg>
