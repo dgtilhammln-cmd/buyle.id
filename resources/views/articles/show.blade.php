@@ -679,60 +679,6 @@ a { text-decoration: none; color: inherit; }
 
 </section>
 
-{{-- ════ KEUNGGULAN buyle.id ════ --}}
-<style>
-.ar-why { background:#fff; padding:5rem 0; }
-.ar-why-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
-.ar-why-header { text-align:center; margin-bottom:3rem; }
-.ar-why-label { font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#1eb349; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.75rem; }
-.ar-why-title { font-size:clamp(1.75rem,3.5vw,2.75rem); font-weight:600; color:#0F172A; line-height:1.2; letter-spacing:-0.025em; }
-.ar-why-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
-.ar-why-card { background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.75rem; display:flex; flex-direction:column; gap:0.75rem; transition:all 0.3s; }
-.ar-why-card:hover { border-color:#1eb349; transform:translateY(-5px); box-shadow:0 16px 40px rgba(30,179,73,0.09); }
-.ar-why-icon { width:46px; height:46px; background:#f0fdf4; border-radius:13px; display:flex; align-items:center; justify-content:center; color:#1eb349; }
-.ar-why-card-title { font-size:0.9375rem; font-weight:700; color:#0F172A; }
-.ar-why-card-desc { font-size:0.8125rem; color:#64748B; line-height:1.65; }
-.ar-why-cta { text-align:center; margin-top:2.5rem; }
-@media(max-width:768px) { .ar-why-grid { grid-template-columns:repeat(2,1fr); } }
-@media(max-width:480px) { .ar-why-grid { grid-template-columns:1fr; } }
-</style>
-<section class="ar-why">
-    <div class="ar-why-inner">
-        <div class="ar-why-header">
-            <div class="ar-why-label">Mengapa buyle.id</div>
-            <h2 class="ar-why-title">Platform Produk Digital<br>Terpercaya di Indonesia</h2>
-        </div>
-        <div class="ar-why-grid">
-            <div class="ar-why-card" data-aos="fade-up">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-                <div class="ar-why-card-title">Produk Terkurasi</div>
-                <div class="ar-why-card-desc">Setiap produk digital yang dipublikasikan telah dipastikan orisinalitas dan standar kualitas terbaiknya.</div>
-            </div>
-            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="80">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-                <div class="ar-why-card-title">Akses Instan</div>
-                <div class="ar-why-card-desc">Akses dan unduh produk secara instan dan otomatis tepat setelah pembayaran Anda berhasil.</div>
-            </div>
-            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="160">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-                <div class="ar-why-card-title">Karya Kreator Pilihan</div>
-                <div class="ar-why-card-desc">Dukung para kreator lokal dengan karya terbaik. Harga transparan dan langsung mendanai pembuatnya.</div>
-            </div>
-            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="240">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-                <div class="ar-why-card-title">Layanan CS Responsif</div>
-                <div class="ar-why-card-desc">Tim customer service kami siap membantu via WhatsApp, cepat dan ramah setiap hari.</div>
-            </div>
-        </div>
-        <div class="ar-why-cta">
-            <a href="{{ route_locale('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;background:#1eb349;color:#fff;padding:0.8rem 2rem;border-radius:50px;font-weight:700;font-size:0.9rem;text-decoration:none;box-shadow:0 4px 12px rgba(30,179,73,0.2);transition:all 0.3s;" onmouseover="this.style.background='#16a34a';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#1eb349';this.style.transform='translateY(0)'">
-                Belanja Sekarang
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-        </div>
-    </div>
-</section>
-
 {{-- ════ RELATED ARTICLES ════ --}}
 @if($related->count())
 <section class="ar-related">

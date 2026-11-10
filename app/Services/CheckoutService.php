@@ -390,7 +390,14 @@ class CheckoutService
             }
 
             // 5. Kosongkan Cart
-            $this->cartService->emptyCart();
+            // Jika Buy Now mode, hanya hapus item yang di-checkout, lalu clear session-nya
+            $buyNowCartId = session('buy_now_cart_id');
+            if ($buyNowCartId) {
+                \App\Models\Cart::where('id', $buyNowCartId)->delete();
+                session()->forget('buy_now_cart_id');
+            } else {
+                $this->cartService->emptyCart();
+            }
 
             // =========================================================
             // GRATIS / Rp 0 → Bypass Midtrans, langsung Confirmed

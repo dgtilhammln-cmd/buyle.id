@@ -654,12 +654,8 @@
                         }
                     }
                     $estimatedTotal = $summary['subtotal'] + $platformFeeCart + $adminFeeCart;
-                    $pfLabelCart = $hasTicketItemC && !$hasNonTicketItemC
-                        ? 'Platform Fee'
-                        : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int) $pfRate : $pfRate) . '%)';
-                    $afLabelCart = $hasTicketItemC && !$hasNonTicketItemC
-                        ? 'Admin Fee'
-                        : 'Admin Fee (' . ($afRate % 1 == 0 ? (int) $afRate : $afRate) . '%)';
+                    $pfLabelCart = 'Platform Fee';
+                    $afLabelCart = 'Admin Fee';
                 @endphp
                 <div class="footer-row">
                     <span class="footer-row-label">{{ $summary['count'] }} produk dipilih</span>

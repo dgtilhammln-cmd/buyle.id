@@ -1672,33 +1672,31 @@
                                 @endphp
                                 @if(!empty($igUser) || !empty($ttUser))
                                     <div class="pd-attr-row" style="margin-bottom:0.75rem; align-items:center;">
-                                        <div class="pd-attr-label">Media Sosial</div>
+                                        <div class="pd-attr-label">Sosial Media</div>
                                         <div class="pd-attr-content">
-                                            <div style="display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                            <div style="display:inline-flex; align-items:center; gap:6px;">
                                                 @if(!empty($igUser))
                                                     <a href="https://instagram.com/{{ $igUser }}" target="_blank" rel="noopener noreferrer"
-                                                        style="display:inline-flex; align-items:center; gap:6px; padding:0.35rem 0.75rem; border-radius:999px; background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border:1px solid #FECDD3; color:#E11D48; text-decoration:none; font-size:0.8rem; font-weight:700; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.03);"
-                                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(225,29,72,0.15)';"
-                                                        onmouseout="this.style.transform='none'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';"
-                                                        title="Buka Instagram {{ '@' . $igUser }}">
-                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border:1px solid #FECDD3; color:#E11D48; text-decoration:none; flex-shrink:0; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.05);"
+                                                        onmouseover="this.style.transform='scale(1.12)'; this.style.boxShadow='0 4px 10px rgba(225,29,72,0.2)';"
+                                                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)';"
+                                                        title="Instagram: {{ '@' . $igUser }}">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                                             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                                                         </svg>
-                                                        <span>{{ '@' . $igUser }}</span>
                                                     </a>
                                                 @endif
                                                 @if(!empty($ttUser))
                                                     <a href="https://www.tiktok.com/@{{ $ttUser }}" target="_blank" rel="noopener noreferrer"
-                                                        style="display:inline-flex; align-items:center; gap:6px; padding:0.35rem 0.75rem; border-radius:999px; background:#F8FAFC; border:1px solid #E2E8F0; color:#0F172A; text-decoration:none; font-size:0.8rem; font-weight:700; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.03);"
-                                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)';"
-                                                        onmouseout="this.style.transform='none'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';"
-                                                        title="Buka TikTok {{ '@' . $ttUser }}">
-                                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                                        style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:#F1F5F9; border:1px solid #E2E8F0; color:#0F172A; text-decoration:none; flex-shrink:0; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.05);"
+                                                        onmouseover="this.style.transform='scale(1.12)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)';"
+                                                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)';"
+                                                        title="TikTok: {{ '@' . $ttUser }}">
+                                                        <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
                                                             <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z"/>
                                                         </svg>
-                                                        <span>{{ '@' . $ttUser }}</span>
                                                     </a>
                                                 @endif
                                             </div>
@@ -1767,34 +1765,35 @@
                                                         berhasil.</span>
                                                 </div>
                                             @else
-                                                <div
-                                                    style="display:flex; align-items:center; flex-wrap:wrap; gap:6px; color:var(--text-main);">
+                                                <div style="display:flex; align-items:flex-start; gap:7px; color:var(--text-main);">
                                                     <svg width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.2"
-                                                        viewBox="0 0 24 24" style="flex-shrink:0;">
+                                                        viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
                                                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                                         <circle cx="12" cy="10" r="3" />
                                                     </svg>
-                                                    @if(!empty($service->event_location))
-                                                        @php
-                                                            $locQuery = str_starts_with($service->event_location, 'http://') || str_starts_with($service->event_location, 'https://')
-                                                                ? $service->event_location
-                                                                : 'https://www.google.com/maps/search/?api=1&query=' . urlencode($service->event_location);
-                                                        @endphp
-                                                        <a href="{{ $locQuery }}" target="_blank" rel="noopener noreferrer"
-                                                            style="font-size:0.92rem; font-weight:700; color:#1eb349; text-decoration:none; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;"
-                                                            onmouseover="this.style.textDecoration='underline'"
-                                                            onmouseout="this.style.textDecoration='none'"
-                                                            title="Buka lokasi di Google Maps">
-                                                            <span>{{ $service->event_location }}</span>
-                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
-                                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                                                <polyline points="15 3 21 3 21 9"></polyline>
-                                                                <line x1="10" y1="14" x2="21" y2="3"></line>
-                                                            </svg>
-                                                        </a>
-                                                    @else
-                                                        <b style="font-size:0.92rem; color:var(--text-muted);">Lokasi diumumkan oleh penyelenggara</b>
-                                                    @endif
+                                                    <div style="min-width:0; flex:1;">
+                                                        @if(!empty($service->event_location))
+                                                            @php
+                                                                $locQuery = str_starts_with($service->event_location, 'http://') || str_starts_with($service->event_location, 'https://')
+                                                                    ? $service->event_location
+                                                                    : 'https://www.google.com/maps/search/?api=1&query=' . urlencode($service->event_location);
+                                                            @endphp
+                                                            <a href="{{ $locQuery }}" target="_blank" rel="noopener noreferrer"
+                                                                style="font-size:0.92rem; font-weight:700; color:#1eb349; text-decoration:none; display:inline-flex; align-items:center; gap:5px; word-break:break-word; transition:all 0.2s;"
+                                                                onmouseover="this.style.textDecoration='underline'"
+                                                                onmouseout="this.style.textDecoration='none'"
+                                                                title="Buka lokasi di Google Maps">
+                                                                <span>{{ $service->event_location }}</span>
+                                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                                                </svg>
+                                                            </a>
+                                                        @else
+                                                            <b style="font-size:0.92rem; color:var(--text-muted);">Lokasi diumumkan oleh penyelenggara</b>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             @endif
                                         </div>

@@ -16,6 +16,8 @@ class CartController extends Controller
 
     public function index()
     {
+        // Clear buy_now isolation when user visits cart page normally
+        session()->forget('buy_now_cart_id');
         $summary = $this->cartService->getSummary();
         $seo = ['title' => 'Keranjang Belanja', 'robots' => 'noindex, nofollow', 'canonical' => route('cart.index')];
         return view('ecommerce.cart', compact('summary', 'seo'));
@@ -73,7 +75,13 @@ class CartController extends Controller
                 return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
             }
 
-            // action === 'buy' — skip keranjang, langsung ke checkout
+            // action === 'buy' — simpan cart_id di session agar checkout hanya proses produk ini
+            // (produk lain di keranjang TIDAK ikut checkout)
+            $cartItem = $this->cartService->getLatestCartItem((int) $request->product_id, $request->variant_value_id ? (int) $request->variant_value_id : null);
+            if ($cartItem) {
+                session(['buy_now_cart_id' => $cartItem->id]);
+            }
+
             $checkoutParams = [];
             $mejaVal = $request->input('table_number') ?: $request->input('meja');
             $pTypeLower = strtolower($product->product_type ?? '');

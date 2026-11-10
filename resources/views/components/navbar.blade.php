@@ -751,6 +751,13 @@
         margin: 0 0.25rem;
     }
 
+    .auth-mobile-icon-btn {
+        display: none !important;
+    }
+
+    .auth-solid-btn-icon { display: none !important; }
+    .auth-solid-btn-text { display: inline !important; }
+
     /* ── Mobile ── */
     .mobile-menu-btn {
         display: none;
@@ -956,10 +963,70 @@
         }
 
         .cart-dropdown-wrap,
+        .auth-desktop-only,
+        .auth-solid-btn,
         .auth-text-btn,
         .auth-divider,
         .nav-article-btn {
             display: none !important;
+        }
+
+        .auth-mobile-icon-btn {
+            display: inline-flex !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-decoration: none !important;
+            flex-shrink: 0 !important;
+            transition: transform 0.15s ease !important;
+        }
+
+        .auth-mobile-icon-btn:active {
+            transform: scale(0.92) !important;
+        }
+
+        .auth-mobile-login {
+            background: #ffffff !important;
+            border: 1px solid #E2E8F0 !important;
+            color: #475569 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .auth-mobile-login svg {
+            color: #475569 !important;
+        }
+
+        .auth-mobile-register {
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            border: none !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.35) !important;
+        }
+
+        .auth-mobile-register svg {
+            color: #ffffff !important;
+        }
+
+        /* On mobile: auth-solid-btn becomes a small icon-only circle (register icon) */
+        .auth-solid-btn {
+            display: inline-flex !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+        }
+
+        .auth-solid-btn-text {
+            display: none !important;
+        }
+
+        .auth-solid-btn-icon {
+            display: block !important;
         }
 
         #shortcut-menu-wrap {
@@ -1543,11 +1610,28 @@
                     });
                 </script>
             @else
-                {{-- Text Button Masuk --}}
+                {{-- Desktop buttons: Masuk text + Daftar solid --}}
                 <a href="{{ route('login') }}" class="auth-text-btn">Masuk</a>
 
-                {{-- Solid Button Daftar --}}
-                <a href="{{ route('register') }}" class="auth-solid-btn">Daftar</a>
+                {{-- Mobile icon-only: Login --}}
+                <a href="{{ route('login') }}" class="auth-mobile-icon-btn auth-mobile-login" title="Masuk" aria-label="Masuk">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                </a>
+
+                {{-- Desktop solid + Mobile icon-only: Register --}}
+                <a href="{{ route('register') }}" class="auth-solid-btn" title="Daftar" aria-label="Daftar">
+                    <span class="auth-solid-btn-text">Daftar</span>
+                    <svg class="auth-solid-btn-icon" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <line x1="19" y1="8" x2="19" y2="14"/>
+                        <line x1="22" y1="11" x2="16" y2="11"/>
+                    </svg>
+                </a>
             @endauth
         </div>
 

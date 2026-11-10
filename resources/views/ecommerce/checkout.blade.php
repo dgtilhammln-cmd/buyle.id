@@ -1397,12 +1397,8 @@
                                 }
                             }
                             // Label tampil
-                            $pfLabel = $hasTicketItem && !$hasNonTicketItem
-                                ? 'Platform Fee'
-                                : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int) $pfRate : $pfRate) . '%)';
-                            $afLabel = $hasTicketItem && !$hasNonTicketItem
-                                ? 'Admin Fee'
-                                : 'Admin Fee (' . ($afRate % 1 == 0 ? (int) $afRate : $afRate) . '%)';
+                            $pfLabel = 'Platform Fee';
+                            $afLabel = 'Admin Fee';
                         @endphp
 
                         <div class="summary-row" id="platform-fee-row">

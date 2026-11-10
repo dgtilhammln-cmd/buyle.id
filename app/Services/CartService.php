@@ -12,15 +12,28 @@ class CartService
 {
     /**
      * Dapatkan semua item cart milik user (atau session jika guest).
+     * Jika ada buy_now_cart_id di session, hanya kembalikan item tersebut.
      */
     public function getItems(): Collection
     {
         $query = Cart::with(['product.category', 'variantValue.variantOption']);
 
-        if (auth()->check()) {
-            $query->forUser(auth()->id());
+        // Buy Now mode: hanya tampilkan 1 item spesifik yang diklik "Beli Sekarang"
+        $buyNowCartId = session('buy_now_cart_id');
+        if ($buyNowCartId) {
+            $query->where('id', $buyNowCartId);
+            // Validasi bahwa item memang milik user/session ini
+            if (auth()->check()) {
+                $query->forUser(auth()->id());
+            } else {
+                $query->forSession(Session::getId());
+            }
         } else {
-            $query->forSession(Session::getId());
+            if (auth()->check()) {
+                $query->forUser(auth()->id());
+            } else {
+                $query->forSession(Session::getId());
+            }
         }
 
         return $query->get();
@@ -193,6 +206,24 @@ class CartService
             $query->forSession(Session::getId());
         }
         $query->delete();
+    }
+
+    /**
+     * Dapatkan cart item spesifik berdasarkan product_id & variant_value_id.
+     * Digunakan untuk "Beli Sekarang" agar hanya 1 produk yang masuk checkout.
+     */
+    public function getLatestCartItem(int $productId, ?int $variantValueId = null): ?Cart
+    {
+        $query = Cart::where('product_id', $productId)
+                     ->where('variant_value_id', $variantValueId);
+
+        if (auth()->check()) {
+            $query->forUser(auth()->id());
+        } else {
+            $query->forSession(Session::getId());
+        }
+
+        return $query->latest()->first();
     }
 
     /**
