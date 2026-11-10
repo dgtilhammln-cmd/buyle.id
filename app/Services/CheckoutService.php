@@ -429,7 +429,9 @@ class CheckoutService
                 $buyerPhone = $user?->phone ?? ($order->shipping_address['phone'] ?? ($data['guest_phone'] ?? ''));
                 if ($buyerEmail) {
                     try {
-                        \App\Jobs\ProcessSuccessfulOrderJob::dispatchSync(
+                        // dispatch() async — job sudah ShouldQueue dengan retry 3x.
+                        // Email & ticket pass dikirim background, tidak menahan PHP worker.
+                        \App\Jobs\ProcessSuccessfulOrderJob::dispatch(
                             orderId:    $order->id,
                             buyerEmail: $buyerEmail,
                             buyerName:  $buyerName,

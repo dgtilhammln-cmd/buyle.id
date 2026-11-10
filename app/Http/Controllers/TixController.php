@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Setting;
 use App\Models\HeroSlide;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class TixController extends Controller
@@ -73,24 +74,34 @@ class TixController extends Controller
             ]);
         }
 
-        // 1. Event Terdekat (Upcoming Events: paginated 8 per page)
-        $upcomingPaginated = (clone $baseQuery)
-            ->where(function ($q) use ($today) {
-                $q->whereNull('event_date')
-                  ->orWhere('event_date', '>=', $today);
-            })
-            ->orderByRaw('CASE WHEN event_date IS NULL THEN 1 ELSE 0 END, event_date ASC')
-            ->paginate(8);
+        // Cache halaman utama TIX (tanpa filter/search) selama 60 detik.
+        // Saat event besar dibuka bersamaan ribuan orang, DB tidak dihantam tiap request.
+        $cacheKey = 'tix_index_' . ($search ?: 'all') . '_' . ($type ?: 'all') . '_' . $today->format('Ymd');
+        $cacheSeconds = ($search || $type) ? 10 : 60; // filter/search: 10s; default: 60s
 
-        $upcomingEvents = $upcomingPaginated->items();
-        $hasMoreUpcoming = $upcomingPaginated->hasMorePages();
+        [$upcomingEvents, $hasMoreUpcoming, $pastEvents] = Cache::remember($cacheKey, $cacheSeconds, function () use ($baseQuery, $today) {
+            // 1. Event Terdekat
+            $upcomingPaginated = (clone $baseQuery)
+                ->where(function ($q) use ($today) {
+                    $q->whereNull('event_date')
+                      ->orWhere('event_date', '>=', $today);
+                })
+                ->orderByRaw('CASE WHEN event_date IS NULL THEN 1 ELSE 0 END, event_date ASC')
+                ->paginate(8);
 
-        // 2. Event Berakhir (Past Events: event_date < today)
-        $pastEvents = (clone $baseQuery)
-            ->whereNotNull('event_date')
-            ->where('event_date', '<', $today)
-            ->orderBy('event_date', 'desc')
-            ->get();
+            // 2. Event Berakhir
+            $pastEvents = (clone $baseQuery)
+                ->whereNotNull('event_date')
+                ->where('event_date', '<', $today)
+                ->orderBy('event_date', 'desc')
+                ->get();
+
+            return [
+                $upcomingPaginated->items(),
+                $upcomingPaginated->hasMorePages(),
+                $pastEvents,
+            ];
+        });
 
         // 3. Carousel Banners (1920 x 600 clean image slides from Admin / Seeder)
         $banners = $this->buildBanners();
