@@ -339,7 +339,6 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
                     <ul class="cv-footer-links">
                         <li><a href="{{ route_locale('tools.convert_file') }}">File Converter</a></li>
                         <li><a href="{{ route_locale('tools.social_downloader') }}">Video Downloader</a></li>
-                        <li><a href="{{ url('/qr-code') }}">QR Code Generator</a></li>
                         <li><a href="{{ route('register') }}">Gabung Jadi Kreator</a></li>
                     </ul>
                 </div>

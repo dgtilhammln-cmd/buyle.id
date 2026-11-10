@@ -486,9 +486,16 @@ class Product extends Model
     {
         return $v ?: Str::limit(strip_tags($this->short_desc ?? $this->description ?? ''), 155);
     }
+
+    /**
+     * Dapatkan URL detail produk (otomatis rute /tix/{slug} jika produk tiket, atau /produk/{slug} jika produk umum).
+     */
     public function getUrlAttribute(): string
     {
-        return route('services.show', $this->slug);
+        if ($this->isTicketProduct()) {
+            return route('tix.show', ['slug' => $this->slug]);
+        }
+        return route('products.show', ['slug' => $this->slug]);
     }
 
     // =========================================================================

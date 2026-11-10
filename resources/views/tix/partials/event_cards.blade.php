@@ -40,7 +40,7 @@
         $sellerAvatarUrl = $sellerAvatar ? asset('storage/' . $sellerAvatar) : null;
     @endphp
 
-    <a href="{{ route('products.show', $tProd->slug) }}"
+    <a href="{{ route('tix.show', $tProd->slug) }}"
         style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
         class="ticket-card-swipe-item">
         <div style="background: {{ $tIsExpired ? '#F8FAFC' : '#ffffff' }}; border: 1.5px solid {{ $tIsExpired ? '#CBD5E1' : '#E2E8F0' }}; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); {{ $tIsExpired ? 'opacity:0.72;' : '' }}"

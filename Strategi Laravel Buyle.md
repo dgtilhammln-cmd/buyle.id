@@ -393,7 +393,9 @@ Agar Laravel Scheduler berjalan di Hostinger:
 | `app/Http/Controllers/CartController.php` | Validasi server-side admission token untuk produk tiket war sebelum ditambahkan ke keranjang |
 | `app/Http/Requests/CheckoutRequest.php` | Rule validasi untuk `idempotency_key` dan `admission_token` |
 | `app/Services/CheckoutService.php` | Idempotency lock, atomic variant decrement, konsumsi token tiket war, dan perbaikan restore stok tiket di `markOrderCancelled()` |
-| `app/Models/Product.php` | Helper method `isTicketWar()` dan `isTicketWarOpen()` |
+| `app/Models/Product.php` | Helper method `isTicketWar()`, `isTicketWarOpen()`, dan accessor `url` (otomatis rute `/tix/{slug}`) |
+| `routes/web.php` | Route dedicated tiket `/tix/{slug}` (`tix.show`) |
+| `app/Http/Controllers/ServiceController.php` | Auto 301 Canonical Redirect (`/produk/{slug}` ↔ `/tix/{slug}`) & Auto Meta Generator (Title auto-detect awalan Tiket & Deskripsi EO, jadwal, venue, kota, harga) |
 
 ---
 

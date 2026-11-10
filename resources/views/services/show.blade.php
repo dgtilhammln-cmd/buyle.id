@@ -1740,10 +1740,19 @@
     <div class="pd-page">
 
         {{-- Breadcrumb --}}
+        @php
+            $isTicket = method_exists($service, 'isTicketProduct') 
+                ? $service->isTicketProduct() 
+                : (($service->product_type ?? '') === 'ticket' || !empty($service->event_date));
+        @endphp
         <div class="pd-breadcrumb">
             <a href="{{ route_locale('home') }}">Beranda</a>
             <span>></span>
-            <a href="{{ route_locale('products') }}">Produk</a>
+            @if($isTicket)
+                <a href="{{ route('tix.index') }}">Buyle TIX</a>
+            @else
+                <a href="{{ route_locale('products') }}">Produk</a>
+            @endif
             <span>></span>
             <span class="cur">{{ Str::limit($service->name, 40) }}</span>
         </div>
@@ -1753,7 +1762,6 @@
 
             {{-- MAIN COLUMN (Kiri & Tengah) --}}
             @php
-                $isTicket = ($service->product_type ?? '') === 'ticket';
                 $hasWarFeature = $isTicket && !empty($service->ticket_war_start);
                 $isWarActive = $hasWarFeature && now()->lt($service->ticket_war_start);
                 $warTimestamp = $isWarActive ? $service->ticket_war_start->timestamp * 1000 : 0;

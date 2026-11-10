@@ -444,8 +444,23 @@ class ServiceController extends Controller
                             ? $appUrl . '/storage/' . $seller->creatorProfile->avatar
                             : null;
 
+        // ── Deteksi Tipe Tiket & 301 Canonical URL Enforcement (TIX vs PRODUK) ──
+        $isTicket = method_exists($service, 'isTicketProduct')
+            ? $service->isTicketProduct()
+            : (($service->product_type ?? '') === 'ticket' || !empty($service->event_date));
+
+        if ($isTicket && !request()->routeIs('tix.show')) {
+            return redirect()->route('tix.show', array_merge(['slug' => $slug], request()->query()), 301);
+        }
+        if (!$isTicket && request()->routeIs('tix.show')) {
+            return redirect()->route('products.show', array_merge(['slug' => $slug], request()->query()), 301);
+        }
+
+        $productUrl = $isTicket
+            ? route('tix.show', ['slug' => $slug])
+            : route('products.show', ['slug' => $slug]);
+
         // ── Product images (all gallery for rich snippet) ──
-        $productUrl    = route('products.show', ['slug' => $slug]);
         $productImages = [];
         if (!empty($service->image)) {
             $productImages[] = $appUrl . '/storage/' . ltrim($service->image, '/');
@@ -462,26 +477,111 @@ class ServiceController extends Controller
         }
         $ogImage = $productImages[0];
 
-        // ── SEO meta (canonical per-product, og:type=product) ──
+        // ── SEO meta (canonical per-product, auto detection untuk tiket vs produk) ──
         $finalPrice = $service->sale_price > 0 && $service->sale_price < $service->price
                         ? $service->sale_price
                         : $service->price;
 
-        $seo = [
-            'title'       => $service->meta_title ?: ($service->name . ' Terbaik & Terlengkap — ' . $sellerName . ' | ' . $siteName),
-            'description' => $service->meta_desc  ?: (
-                'Cari berbagai macam dari pilihan terlengkap ' . ($service->subCategory?->name ?? $service->name) . '. '
-                . ($service->short_desc
-                    ? trim($service->short_desc) . ' '
-                    : '')
-                . 'Dapatkan ' . $service->name . ' terbaik, termurah, dan berkualitas dari ' . $sellerName . ' hanya di BUYLE.ID — marketplace produk & jasa digital terpercaya Indonesia.'
-            ),
-            'keywords'    => $service->meta_keywords ?: ($service->name . ', beli ' . $service->name . ', harga ' . $service->name . ', ' . $sellerName . ', produk digital, ' . $siteName),
-            'og_image'    => $ogImage,
-            'og_type'     => 'product',
-            'canonical'   => $productUrl,
-            'robots'      => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
-        ];
+        if ($isTicket) {
+            // ── AUTO META TITLE BUYLE TIX ──
+            // Formula: Tiket [nama_event] | BuyleTIX
+            // Deteksi jika judul sudah diawali kata "tiket" (case-insensitive) maka auto-prefix tidak aktif
+            $rawEventName = trim($service->name);
+            $hasTicketPrefix = (bool) preg_match('/^tiket\s+/i', $rawEventName);
+            $cleanEventTitle = $hasTicketPrefix ? $rawEventName : ('Tiket ' . $rawEventName);
+            $ticketMetaTitle = $cleanEventTitle . ' | BuyleTIX';
+
+            // ── AUTO META DESKRIPSI BUYLE TIX ──
+            // Formula: Tiket [nama_event] oleh [nama_eo], [tanggal_singkat] di [venue], [kota]. Harga mulai Rp[harga_terendah]. Beli Tiketnya di BuyleTIX!
+            $eventNameWithoutTiket = trim(preg_replace('/^tiket\s+/i', '', $rawEventName));
+            $sellerCp = $seller?->creatorProfile;
+            $eoName = $sellerCp?->display_name ?: ($sellerCp?->store_name ?: ($seller?->name ?: 'Buyle TIX'));
+
+            $eventRaw = $service->event_date ?: ($service->data_json['event_date'] ?? null);
+            if (!empty($eventRaw)) {
+                try {
+                    $dateCarbon = \Carbon\Carbon::parse($eventRaw)->locale('id');
+                    $tanggalSingkat = $dateCarbon->isoFormat('D MMM Y');
+                } catch (\Throwable $e) {
+                    $tanggalSingkat = 'Jadwal Segera Diumumkan';
+                }
+            } else {
+                $tanggalSingkat = 'Jadwal Segera Diumumkan';
+            }
+
+            $rawLocation = trim((string)($service->event_location ?: ($service->location ?: ($service->data_json['event_location'] ?? ''))));
+            $creatorCity = trim((string)($sellerCp?->city ?: ($sellerCp?->store_location ?: '')));
+
+            if (!empty($rawLocation)) {
+                if (str_contains($rawLocation, ',')) {
+                    $parts = array_map('trim', explode(',', $rawLocation));
+                    $venue = $parts[0] ?: 'Venue Event';
+                    $city = end($parts) ?: (!empty($creatorCity) ? $creatorCity : 'Indonesia');
+                } else {
+                    $venue = $rawLocation;
+                    $city = !empty($creatorCity) ? $creatorCity : 'Indonesia';
+                }
+            } elseif (!empty($creatorCity)) {
+                $venue = 'Venue Event';
+                $city = $creatorCity;
+            } else {
+                $venue = ($service->event_type === 'online') ? 'Online' : 'Venue Event';
+                $city = ($service->event_type === 'online') ? 'Webinar / Stream' : 'Indonesia';
+            }
+
+            // Hitung harga terendah tiket (dari variant opsi atau base/sale price)
+            $baseFinalPrice = ($service->sale_price > 0 && $service->sale_price < $service->price)
+                ? (float)$service->sale_price
+                : (float)$service->price;
+
+            $lowestPrice = $baseFinalPrice;
+            if ($service->relationLoaded('variantOptions') && $service->variantOptions->isNotEmpty()) {
+                $variantPrices = [];
+                foreach ($service->variantOptions as $opt) {
+                    foreach ($opt->values as $val) {
+                        $vPrice = method_exists($val, 'finalPrice') ? $val->finalPrice() : ($val->price ?? 0);
+                        if ($vPrice > 0) {
+                            $variantPrices[] = (float)$vPrice;
+                        }
+                    }
+                }
+                if (!empty($variantPrices)) {
+                    $minVariant = min($variantPrices);
+                    if ($baseFinalPrice <= 0 || $minVariant < $baseFinalPrice) {
+                        $lowestPrice = $minVariant;
+                    }
+                }
+            }
+            $formattedLowestPrice = number_format($lowestPrice, 0, ',', '.');
+
+            $ticketMetaDesc = "Tiket {$eventNameWithoutTiket} oleh {$eoName}, {$tanggalSingkat} di {$venue}, {$city}. Harga mulai Rp{$formattedLowestPrice}. Beli Tiketnya di BuyleTIX!";
+
+            $seo = [
+                'title'       => $ticketMetaTitle,
+                'description' => $ticketMetaDesc,
+                'keywords'    => $service->meta_keywords ?: ($cleanEventTitle . ', tiket konser, tiket event, ' . $eoName . ', beli tiket, jadwal event, BuyleTIX'),
+                'og_image'    => $ogImage,
+                'og_type'     => 'website',
+                'canonical'   => $productUrl,
+                'robots'      => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+            ];
+        } else {
+            $seo = [
+                'title'       => $service->meta_title ?: ($service->name . ' Terbaik & Terlengkap — ' . $sellerName . ' | ' . $siteName),
+                'description' => $service->meta_desc  ?: (
+                    'Cari berbagai macam dari pilihan terlengkap ' . ($service->subCategory?->name ?? $service->name) . '. '
+                    . ($service->short_desc
+                        ? trim($service->short_desc) . ' '
+                        : '')
+                    . 'Dapatkan ' . $service->name . ' terbaik, termurah, dan berkualitas dari ' . $sellerName . ' hanya di BUYLE.ID — marketplace produk & jasa digital terpercaya Indonesia.'
+                ),
+                'keywords'    => $service->meta_keywords ?: ($service->name . ', beli ' . $service->name . ', harga ' . $service->name . ', ' . $sellerName . ', produk digital, ' . $siteName),
+                'og_image'    => $ogImage,
+                'og_type'     => 'product',
+                'canonical'   => $productUrl,
+                'robots'      => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+            ];
+        }
 
         // ── FAQ ──
         $faq = is_array($service->faqs) ? $service->faqs : [];
@@ -572,11 +672,19 @@ class ServiceController extends Controller
 
         $schema = json_encode([$productSchema, $faqSchema], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-        $breadcrumbs = [
-            ['name' => 'Beranda',          'url' => route('home')],
-            ['name' => 'Produk & Layanan', 'url' => route('products')],
-            ['name' => $service->name,     'url' => $productUrl],
-        ];
+        if ($isTicket) {
+            $breadcrumbs = [
+                ['name' => 'Beranda',   'url' => route('home')],
+                ['name' => 'Buyle TIX', 'url' => route('tix.index')],
+                ['name' => $service->name, 'url' => $productUrl],
+            ];
+        } else {
+            $breadcrumbs = [
+                ['name' => 'Beranda',          'url' => route('home')],
+                ['name' => 'Produk & Layanan', 'url' => route('products')],
+                ['name' => $service->name,     'url' => $productUrl],
+            ];
+        }
 
         // ── Rating & Reviews Data for Tab ──
         $realReviewsCount = \App\Models\ProductRating::where('product_id', $service->id)->approved()->count();

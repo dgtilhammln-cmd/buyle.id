@@ -755,8 +755,13 @@
         display: none !important;
     }
 
-    .auth-solid-btn-icon { display: none !important; }
-    .auth-solid-btn-text { display: inline !important; }
+    .auth-solid-btn-icon {
+        display: none !important;
+    }
+
+    .auth-solid-btn-text {
+        display: inline !important;
+    }
 
     /* ── Mobile ── */
     .mobile-menu-btn {
@@ -1277,7 +1282,8 @@
                                     <div style="flex:1; min-width:0;">
                                         <div
                                             style="font-size:0.825rem; font-weight:600; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                            {{ $cartItem->product->name ?? 'Produk Dihapus' }}</div>
+                                            {{ $cartItem->product->name ?? 'Produk Dihapus' }}
+                                        </div>
                                         <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">{{ $cartItem->qty }} x
                                             Rp {{ number_format($cartItem->unit_price, 0, ',', '.') }}</div>
                                     </div>
@@ -1330,15 +1336,20 @@
                     </a>
 
                     <div class="shortcut-submenu-wrap">
-                        <div class="shortcut-menu-item shortcut-parent-item" onclick="this.parentElement.classList.toggle('active')" style="cursor: pointer; justify-content: space-between;">
+                        <div class="shortcut-menu-item shortcut-parent-item"
+                            onclick="this.parentElement.classList.toggle('active')"
+                            style="cursor: pointer; justify-content: space-between;">
                             <div style="display: flex; align-items: center; gap: 0.65rem;">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                    <path
+                                        d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
+                                    </path>
                                 </svg>
                                 <span>Tools</span>
                             </div>
-                            <svg class="shortcut-arrow" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <svg class="shortcut-arrow" width="12" height="12" fill="none" stroke="currentColor"
+                                stroke-width="2.5" viewBox="0 0 24 24">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                         </div>
@@ -1382,7 +1393,7 @@
                             </path>
                             <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2"></line>
                         </svg>
-                        <span>Ticketing</span>
+                        <span>Profile Buyle TIX</span>
                     </a>
 
                     <a href="{{ route('faqs') }}" class="shortcut-item shortcut-menu-item">
@@ -1524,8 +1535,8 @@
                                         onclick="event.preventDefault(); event.stopPropagation(); this.closest('.creator-submenu-wrap').classList.toggle('open');"
                                         title="Buka Menu Kreator"
                                         style="background:none;border:none;padding:0.65rem 0.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#94A3B8;border-radius:8px;">
-                                        <svg class="creator-submenu-arrow" width="12" height="12" fill="none" stroke="currentColor"
-                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                        <svg class="creator-submenu-arrow" width="12" height="12" fill="none"
+                                            stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                             <polyline points="15 18 9 12 15 6" />
                                         </svg>
                                     </button>
@@ -1614,22 +1625,24 @@
                 <a href="{{ route('login') }}" class="auth-text-btn">Masuk</a>
 
                 {{-- Mobile icon-only: Login --}}
-                <a href="{{ route('login') }}" class="auth-mobile-icon-btn auth-mobile-login" title="Masuk" aria-label="Masuk">
+                <a href="{{ route('login') }}" class="auth-mobile-icon-btn auth-mobile-login" title="Masuk"
+                    aria-label="Masuk">
                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                        <polyline points="10 17 15 12 10 7"/>
-                        <line x1="15" y1="12" x2="3" y2="12"/>
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
                     </svg>
                 </a>
 
                 {{-- Desktop solid + Mobile icon-only: Register --}}
                 <a href="{{ route('register') }}" class="auth-solid-btn" title="Daftar" aria-label="Daftar">
                     <span class="auth-solid-btn-text">Daftar</span>
-                    <svg class="auth-solid-btn-icon" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <line x1="19" y1="8" x2="19" y2="14"/>
-                        <line x1="22" y1="11" x2="16" y2="11"/>
+                    <svg class="auth-solid-btn-icon" width="17" height="17" fill="none" stroke="currentColor"
+                        stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <line x1="19" y1="8" x2="19" y2="14" />
+                        <line x1="22" y1="11" x2="16" y2="11" />
                     </svg>
                 </a>
             @endauth
