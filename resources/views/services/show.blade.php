@@ -6,9 +6,9 @@
 
     <style>
         /* ══════════════════════════════════════
-                                       PRODUCT SHOW — buyle.id (Shopee Style)
-                                       Font: Montserrat
-                                    ══════════════════════════════════════ */
+                                           PRODUCT SHOW — buyle.id (Shopee Style)
+                                           Font: Montserrat
+                                        ══════════════════════════════════════ */
 
         *,
         *::before,
@@ -366,19 +366,39 @@
         }
 
         @keyframes bwrFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes bwrSlideUp {
-            from { opacity: 0; transform: translateY(16px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         @keyframes bwrPulse {
-            0% { box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(30, 179, 73, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(30, 179, 73, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(30, 179, 73, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(30, 179, 73, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(30, 179, 73, 0);
+            }
         }
 
         @media (max-width: 640px) {
@@ -386,14 +406,17 @@
                 padding: 1.6rem 1.25rem;
                 border-radius: 20px;
             }
+
             .bwr-title {
                 font-size: 1.1rem;
             }
+
             .bwr-timer-val {
                 font-size: 2.2rem;
             }
         }
-            flex-wrap: nowrap;
+
+        flex-wrap: nowrap;
         }
 
         .tw-light-box {
@@ -1840,55 +1863,60 @@
 
                         {{-- PRICE --}}
                         @if($service->isTraktir() || $service->isPayWhatYouWant() || $service->price > 0 || $service->sale_price !== null)
-                        <div class="pd-price-box">
-                            @if($service->isTraktir())
-                                <div>
-                                    <div class="pd-price-main" style="color:#d97706; display:flex; align-items:center; gap:6px;">
-                                        <span>{{ $service->traktir_unit_icon ?? '☕' }}</span>
-                                        <span>Rp{{ number_format($service->traktir_unit_price ?? 10000, 0, ',', '.') }}</span>
-                                        <span style="font-size:0.9rem; color:#64748b; font-weight:600;">/ {{ $service->traktir_unit_name ?? 'kopi' }}</span>
+                            <div class="pd-price-box">
+                                @if($service->isTraktir())
+                                    <div>
+                                        <div class="pd-price-main"
+                                            style="color:#d97706; display:flex; align-items:center; gap:6px;">
+                                            <span>{{ $service->traktir_unit_icon ?? '☕' }}</span>
+                                            <span>Rp{{ number_format($service->traktir_unit_price ?? 10000, 0, ',', '.') }}</span>
+                                            <span style="font-size:0.9rem; color:#64748b; font-weight:600;">/
+                                                {{ $service->traktir_unit_name ?? 'kopi' }}</span>
+                                        </div>
+                                        <div style="font-size:0.8rem; color:#92400e; font-weight:600; margin-top:3px;">
+                                            Pilih jumlah {{ $service->traktir_unit_name ?? 'kopi' }} untuk mentraktir creator
+                                        </div>
                                     </div>
-                                    <div style="font-size:0.8rem; color:#92400e; font-weight:600; margin-top:3px;">
-                                        Pilih jumlah {{ $service->traktir_unit_name ?? 'kopi' }} untuk mentraktir creator
+                                @elseif($service->isPayWhatYouWant())
+                                    <div>
+                                        <div class="pd-price-main"
+                                            style="color:#0284c7; display:flex; align-items:center; gap:6px;">
+                                            <span>💛</span>
+                                            <span>Bayar Seikhlasnya</span>
+                                        </div>
+                                        <div style="font-size:0.8rem; color:#64748b; font-weight:600; margin-top:3px;">
+                                            Minimum donasi: Rp{{ number_format($service->pwyw_min_price ?? 0, 0, ',', '.') }}
+                                        </div>
                                     </div>
-                                </div>
-                            @elseif($service->isPayWhatYouWant())
-                                <div>
-                                    <div class="pd-price-main" style="color:#0284c7; display:flex; align-items:center; gap:6px;">
-                                        <span>💛</span>
-                                        <span>Bayar Seikhlasnya</span>
-                                    </div>
-                                    <div style="font-size:0.8rem; color:#64748b; font-weight:600; margin-top:3px;">
-                                        Minimum donasi: Rp{{ number_format($service->pwyw_min_price ?? 0, 0, ',', '.') }}
-                                    </div>
-                                </div>
-                            @elseif($service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0))
-                                {{-- GRATIS: harga normal dicoret, lalu GRATIS --}}
-                                @if($service->price > 0)
-                                    <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
-                                @endif
-                                <div class="pd-price-main" style="color:#16a34a;">GRATIS</div>
-                                <span class="pd-discount">100% OFF</span>
-                            @else
-                                @php
-                                    $hasDiscount = $service->sale_price !== null && (float) $service->sale_price > 0 && (float) $service->sale_price < (float) $service->price;
-                                @endphp
-                                @if($hasDiscount)
-                                    <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
-                                    <div class="pd-price-main">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
-                                    <span class="pd-discount">{{ round((($service->price - $service->sale_price) / $service->price) * 100) }}% OFF</span>
+                                @elseif($service->isFree() || ($service->sale_price !== null && (float) $service->sale_price <= 0))
+                                    {{-- GRATIS: harga normal dicoret, lalu GRATIS --}}
+                                    @if($service->price > 0)
+                                        <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                                    @endif
+                                    <div class="pd-price-main" style="color:#16a34a;">GRATIS</div>
+                                    <span class="pd-discount">100% OFF</span>
                                 @else
-                                    <div class="pd-price-main">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                                    @php
+                                        $hasDiscount = $service->sale_price !== null && (float) $service->sale_price > 0 && (float) $service->sale_price < (float) $service->price;
+                                    @endphp
+                                    @if($hasDiscount)
+                                        <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                                        <div class="pd-price-main">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
+                                        <span
+                                            class="pd-discount">{{ round((($service->price - $service->sale_price) / $service->price) * 100) }}%
+                                            OFF</span>
+                                    @else
+                                        <div class="pd-price-main">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                                    @endif
                                 @endif
-                            @endif
-                        </div>
+                            </div>
 
                             @if($service->product_type === 'ticket')
                                 {{-- INFORMASI EVENT (KHUSUS TIKET) --}}
                                 @php
-                                    $rawIg = trim((string)($service->instagram_username ?? ''));
+                                    $rawIg = trim((string) ($service->instagram_username ?? ''));
                                     $igUser = ltrim($rawIg, '@');
-                                    $rawTt = trim((string)($service->tiktok_username ?? ''));
+                                    $rawTt = trim((string) ($service->tiktok_username ?? ''));
                                     $ttUser = ltrim($rawTt, '@');
                                 @endphp
                                 @if(!empty($igUser) || !empty($ttUser))
@@ -1902,7 +1930,8 @@
                                                         onmouseover="this.style.transform='scale(1.12)'; this.style.boxShadow='0 4px 10px rgba(225,29,72,0.2)';"
                                                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)';"
                                                         title="Instagram: {{ '@' . $igUser }}">
-                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                            viewBox="0 0 24 24">
                                                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                                             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
@@ -1910,13 +1939,15 @@
                                                     </a>
                                                 @endif
                                                 @if(!empty($ttUser))
-                                                    <a href="https://www.tiktok.com/@{{ $ttUser }}" target="_blank" rel="noopener noreferrer"
+                                                    <a href="https://www.tiktok.com/@{{ $ttUser }}" target="_blank"
+                                                        rel="noopener noreferrer"
                                                         style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:#F1F5F9; border:1px solid #E2E8F0; color:#0F172A; text-decoration:none; flex-shrink:0; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.05);"
                                                         onmouseover="this.style.transform='scale(1.12)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)';"
                                                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)';"
                                                         title="TikTok: {{ '@' . $ttUser }}">
                                                         <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                                                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z"/>
+                                                            <path
+                                                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z" />
                                                         </svg>
                                                     </a>
                                                 @endif
@@ -1939,11 +1970,13 @@
                                                         <line x1="3" y1="10" x2="21" y2="10" />
                                                     </svg>
                                                     <div>
-                                                        <div style="color:var(--text-main); font-weight:700; font-size:0.92rem; line-height:1.35;">
+                                                        <div
+                                                            style="color:var(--text-main); font-weight:700; font-size:0.92rem; line-height:1.35;">
                                                             {{ \Carbon\Carbon::parse($service->event_date)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                                                         </div>
                                                         @if($service->event_time)
-                                                            <div style="color:var(--text-main); font-weight:700; font-size:0.92rem; margin-top:2px;">
+                                                            <div
+                                                                style="color:var(--text-main); font-weight:700; font-size:0.92rem; margin-top:2px;">
                                                                 {{ $service->event_time }}
                                                             </div>
                                                         @endif
@@ -2005,14 +2038,17 @@
                                                                 onmouseout="this.style.textDecoration='none'"
                                                                 title="Buka lokasi di Google Maps">
                                                                 <span>{{ $service->event_location }}</span>
-                                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
-                                                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                                                <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                                    stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6">
+                                                                    </path>
                                                                     <polyline points="15 3 21 3 21 9"></polyline>
                                                                     <line x1="10" y1="14" x2="21" y2="3"></line>
                                                                 </svg>
                                                             </a>
                                                         @else
-                                                            <b style="font-size:0.92rem; color:var(--text-muted);">Lokasi diumumkan oleh penyelenggara</b>
+                                                            <b style="font-size:0.92rem; color:var(--text-muted);">Lokasi diumumkan oleh
+                                                                penyelenggara</b>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -2053,14 +2089,24 @@
 
                             {{-- FLASH MESSAGE ALERTS --}}
                             @if(session('error'))
-                                <div style="background:#fef2f2; border:1px solid #f87171; color:#991b1b; padding:0.75rem 1rem; border-radius:12px; margin-bottom:1rem; font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                <div
+                                    style="background:#fef2f2; border:1px solid #f87171; color:#991b1b; padding:0.75rem 1rem; border-radius:12px; margin-bottom:1rem; font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
                                     <span>{{ session('error') }}</span>
                                 </div>
                             @endif
                             @if(session('success'))
-                                <div style="background:#f0fdf4; border:1px solid #4ade80; color:#166534; padding:0.75rem 1rem; border-radius:12px; margin-bottom:1rem; font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                <div
+                                    style="background:#f0fdf4; border:1px solid #4ade80; color:#166534; padding:0.75rem 1rem; border-radius:12px; margin-bottom:1rem; font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
                                     <span>{{ session('success') }}</span>
                                 </div>
                             @endif
@@ -2097,16 +2143,16 @@
                                                             $vImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
                                                         @endphp
                                                         <button type="button" class="pd-variant-pill" data-variant-id="{{ $val->id }}"
-                                                            data-price="{{ $val->finalPrice() }}" 
+                                                            data-price="{{ $val->finalPrice() }}"
                                                             data-price-formatted="Rp{{ number_format($val->finalPrice(), 0, ',', '.') }}"
                                                             data-stock="{{ $val->stock }}"
-                                                            data-label="{{ $bvmOptPrefix }}: {{ $val->value }}" 
+                                                            data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
                                                             data-img="{{ $vImg ?: $defaultProductImage }}"
-                                                            data-has-custom-img="{{ $vImg ? '1' : '0' }}"
-                                                            @if($val->stock !== null && $val->stock <= 0) disabled style="opacity:0.4;cursor:not-allowed;" @endif
+                                                            data-has-custom-img="{{ $vImg ? '1' : '0' }}" @if($val->stock !== null && $val->stock <= 0) disabled style="opacity:0.4;cursor:not-allowed;" @endif
                                                             onclick="selectPdVariant(this)">
                                                             @if($vImg)
-                                                                <img src="{{ $vImg }}" alt="{{ $val->value }}" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px;">
+                                                                <img src="{{ $vImg }}" alt="{{ $val->value }}"
+                                                                    style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px;">
                                                             @endif
                                                             {{ $val->value }}
                                                             @if($val->price > 0 && $val->price != $basePrice)
@@ -2124,7 +2170,8 @@
                                         @endforeach
                                         <div id="pd-variant-error"
                                             style="display:none; color:#EF4444; font-size:0.82rem; margin-top:0.25rem; padding:0.4rem 0.75rem; background:#FEF2F2; border-radius:8px; border:1px solid #FCA5A5;">
-                                            ⚠ Silakan pilih {{ $isTicket ? 'kategori tiket' : 'varian' }} terlebih dahulu sebelum melanjutkan.
+                                            ⚠ Silakan pilih {{ $isTicket ? 'kategori tiket' : 'varian' }} terlebih dahulu sebelum
+                                            melanjutkan.
                                         </div>
                                         <div id="pd-variant-info"
                                             style="display:none; font-size:0.82rem; color:#1eb349; margin-top:0.35rem; font-weight:600;">
@@ -2163,39 +2210,37 @@
                                 @endif
 
                                 @if(!$service->isTraktir() && !$service->isPayWhatYouWant())
-                                <div class="pd-attr-row" style="align-items:center;">
-                                    <div class="pd-attr-label">Kuantitas</div>
-                                    <div class="pd-attr-content">
-                                        <div class="pd-qty-ctrl">
-                                            <button type="button" class="pd-qty-btn"
-                                                onclick="stepPdQty(-1)">−</button>
-                                            <input type="number" id="qty_input" class="pd-qty-input" name="qty"
-                                                value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}"
-                                                data-max-limit="{{ $maxOrderLimit ?? '' }}"
-                                                @if($maxOrderLimit) max="{{ $maxOrderLimit }}"
-                                                @elseif($service->type !== 'service' && !is_null($service->stock) && $service->stock > 0) max="{{ $service->stock }}" @endif
-                                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
-                                            <button type="button" class="pd-qty-btn"
-                                                onclick="stepPdQty(1)">+</button>
-                                        </div>
-                                        <div class="pd-stock" id="pd-stock-info" @if($isTicket) style="display:none;" @endif>
-                                            @if(!$isTicket)
-                                                @if($service->type === 'service')
-                                                    Jasa / Layanan
-                                                @elseif(is_null($service->stock))
-                                                    <span style="color:#10B981;">Stok Tersedia</span>
-                                                @elseif($service->stock > 0)
-                                                    Sisa {{ $service->stock }} buah
-                                                @else
-                                                    <span style="color:#EE4D2D;">Habis</span>
+                                    <div class="pd-attr-row" style="align-items:center;">
+                                        <div class="pd-attr-label">Kuantitas</div>
+                                        <div class="pd-attr-content">
+                                            <div class="pd-qty-ctrl">
+                                                <button type="button" class="pd-qty-btn" onclick="stepPdQty(-1)">−</button>
+                                                <input type="number" id="qty_input" class="pd-qty-input" name="qty"
+                                                    value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}"
+                                                    data-max-limit="{{ $maxOrderLimit ?? '' }}" @if($maxOrderLimit)
+                                                    max="{{ $maxOrderLimit }}" @elseif($service->type !== 'service' && !is_null($service->stock) && $service->stock > 0) max="{{ $service->stock }}"
+                                                    @endif @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                                                <button type="button" class="pd-qty-btn" onclick="stepPdQty(1)">+</button>
+                                            </div>
+                                            <div class="pd-stock" id="pd-stock-info" @if($isTicket) style="display:none;" @endif>
+                                                @if(!$isTicket)
+                                                    @if($service->type === 'service')
+                                                        Jasa / Layanan
+                                                    @elseif(is_null($service->stock))
+                                                        <span style="color:#10B981;">Stok Tersedia</span>
+                                                    @elseif($service->stock > 0)
+                                                        Sisa {{ $service->stock }} buah
+                                                    @else
+                                                        <span style="color:#EE4D2D;">Habis</span>
+                                                    @endif
+                                                    @if($maxOrderLimit)
+                                                        <span style="font-size:0.75rem; color:#64748b; margin-left:6px;">(Maks.
+                                                            {{ $maxOrderLimit }} per transaksi)</span>
+                                                    @endif
                                                 @endif
-                                                @if($maxOrderLimit)
-                                                    <span style="font-size:0.75rem; color:#64748b; margin-left:6px;">(Maks. {{ $maxOrderLimit }} per transaksi)</span>
-                                                @endif
-                                            @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 @else
                                     <input type="hidden" id="qty_input" name="qty" value="1">
                                 @endif
@@ -2261,7 +2306,7 @@
                                             <span id="warBtnLabel">Penjualan Dibuka
                                                 {{ $service->ticket_war_start->isoFormat('D MMMM Y, HH:mm') }} WIB</span>
                                         </button>
-                                    <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
+                                        <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
                                             <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
                                                 onclick="submitPdCart('cart')">
                                                 Tambah Keranjang
@@ -2274,9 +2319,9 @@
                                     </div>
                                 @elseif($service->isTraktir())
                                     @php
-                                        $unitPrice = (float)($service->traktir_unit_price ?? 10000);
-                                        $unitName  = $service->traktir_unit_name ?? 'kopi';
-                                        $unitIcon  = $service->traktir_unit_icon ?? '☕';
+                                        $unitPrice = (float) ($service->traktir_unit_price ?? 10000);
+                                        $unitName = $service->traktir_unit_name ?? 'kopi';
+                                        $unitIcon = $service->traktir_unit_icon ?? '☕';
                                     @endphp
                                     <style>
                                         .by-pricing-card {
@@ -2288,6 +2333,7 @@
                                             box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
                                             font-family: 'Montserrat', sans-serif;
                                         }
+
                                         .by-pricing-header {
                                             display: flex;
                                             align-items: center;
@@ -2295,6 +2341,7 @@
                                             margin-bottom: 1rem;
                                             gap: 0.75rem;
                                         }
+
                                         .by-pricing-badge-icon {
                                             width: 44px;
                                             height: 44px;
@@ -2306,22 +2353,26 @@
                                             font-size: 1.35rem;
                                             flex-shrink: 0;
                                         }
+
                                         .by-pricing-title {
                                             font-size: 0.95rem;
                                             font-weight: 800;
                                             color: #0f172a;
                                             line-height: 1.25;
                                         }
+
                                         .by-pricing-sub {
                                             font-size: 0.76rem;
                                             color: #64748b;
                                             font-weight: 600;
                                             margin-top: 2px;
                                         }
+
                                         .by-pricing-total-box {
                                             text-align: right;
                                             flex-shrink: 0;
                                         }
+
                                         .by-pricing-total-label {
                                             font-size: 0.7rem;
                                             color: #64748b;
@@ -2329,6 +2380,7 @@
                                             text-transform: uppercase;
                                             letter-spacing: 0.04em;
                                         }
+
                                         .by-pricing-total-val {
                                             font-size: 1.15rem;
                                             font-weight: 800;
@@ -2336,21 +2388,25 @@
                                             line-height: 1.2;
                                             margin-top: 2px;
                                         }
+
                                         .by-pill-grid {
                                             display: grid;
                                             grid-template-columns: repeat(5, 1fr);
                                             gap: 0.45rem;
                                             margin-bottom: 0.9rem;
                                         }
+
                                         @media (max-width: 480px) {
                                             .by-pill-grid {
                                                 grid-template-columns: repeat(5, 1fr);
                                                 gap: 0.35rem;
                                             }
+
                                             .by-pricing-card {
                                                 padding: 1rem;
                                             }
                                         }
+
                                         .by-amount-pill {
                                             padding: 0.55rem 0.35rem;
                                             background: #f8fafc;
@@ -2365,16 +2421,19 @@
                                             text-align: center;
                                             user-select: none;
                                         }
+
                                         .by-amount-pill:hover {
                                             border-color: #cbd5e1;
                                             background: #f1f5f9;
                                         }
+
                                         .by-amount-pill.active {
                                             background: #1eb349;
                                             color: #ffffff;
                                             border-color: #1eb349;
                                             box-shadow: 0 4px 12px rgba(30, 179, 73, 0.28);
                                         }
+
                                         .by-counter-box {
                                             display: flex;
                                             align-items: center;
@@ -2384,16 +2443,19 @@
                                             border-radius: 12px;
                                             padding: 0.45rem 0.85rem;
                                         }
+
                                         .by-counter-label {
                                             font-size: 0.82rem;
                                             font-weight: 700;
                                             color: #334155;
                                         }
+
                                         .by-counter-ctrl {
                                             display: flex;
                                             align-items: center;
                                             gap: 0.4rem;
                                         }
+
                                         .by-counter-btn {
                                             width: 32px;
                                             height: 32px;
@@ -2409,10 +2471,12 @@
                                             justify-content: center;
                                             transition: all 0.15s;
                                         }
+
                                         .by-counter-btn:hover {
                                             background: #f1f5f9;
                                             border-color: #94a3b8;
                                         }
+
                                         .by-counter-input {
                                             width: 48px;
                                             text-align: center;
@@ -2424,6 +2488,7 @@
                                             background: transparent;
                                             font-family: 'Montserrat', sans-serif;
                                         }
+
                                         .by-btn-primary-action {
                                             width: 100%;
                                             padding: 0.95rem 1.5rem;
@@ -2443,6 +2508,7 @@
                                             gap: 0.6rem;
                                             letter-spacing: 0.01em;
                                         }
+
                                         .by-btn-primary-action:hover {
                                             transform: translateY(-2px);
                                             box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42);
@@ -2457,19 +2523,23 @@
                                                 </div>
                                                 <div>
                                                     <div class="by-pricing-title">Traktir {{ ucfirst($unitName) }}</div>
-                                                    <div class="by-pricing-sub">Rp {{ number_format($unitPrice, 0, ',', '.') }} / {{ $unitName }}</div>
+                                                    <div class="by-pricing-sub">Rp {{ number_format($unitPrice, 0, ',', '.') }} /
+                                                        {{ $unitName }}</div>
                                                 </div>
                                             </div>
                                             <div class="by-pricing-total-box">
                                                 <div class="by-pricing-total-label">Total</div>
-                                                <div class="by-pricing-total-val" id="service-traktir-total">Rp {{ number_format($unitPrice, 0, ',', '.') }}</div>
+                                                <div class="by-pricing-total-val" id="service-traktir-total">Rp
+                                                    {{ number_format($unitPrice, 0, ',', '.') }}</div>
                                             </div>
                                         </div>
 
                                         {{-- Preset Qty --}}
                                         <div class="by-pill-grid">
                                             @foreach([1, 2, 3, 5, 10] as $presetQty)
-                                                <button type="button" onclick="setServiceTraktirQty({{ $presetQty }})" class="by-amount-pill service-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}" data-qty="{{ $presetQty }}">
+                                                <button type="button" onclick="setServiceTraktirQty({{ $presetQty }})"
+                                                    class="by-amount-pill service-traktir-pill {{ $presetQty === 1 ? 'active' : '' }}"
+                                                    data-qty="{{ $presetQty }}">
                                                     {{ $presetQty }}x
                                                 </button>
                                             @endforeach
@@ -2479,9 +2549,12 @@
                                         <div class="by-counter-box">
                                             <span class="by-counter-label">Jumlah {{ ucfirst($unitName) }}</span>
                                             <div class="by-counter-ctrl">
-                                                <button type="button" class="by-counter-btn" onclick="stepServiceTraktirQty(-1)">−</button>
-                                                <input type="number" id="service-traktir-qty-val" class="by-counter-input" value="1" min="1" max="1000" oninput="updateServiceTraktirTotal(this.value)">
-                                                <button type="button" class="by-counter-btn" onclick="stepServiceTraktirQty(1)">+</button>
+                                                <button type="button" class="by-counter-btn"
+                                                    onclick="stepServiceTraktirQty(-1)">−</button>
+                                                <input type="number" id="service-traktir-qty-val" class="by-counter-input" value="1"
+                                                    min="1" max="1000" oninput="updateServiceTraktirTotal(this.value)">
+                                                <button type="button" class="by-counter-btn"
+                                                    onclick="stepServiceTraktirQty(1)">+</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2489,26 +2562,27 @@
                                     <div class="pd-actions" style="margin-top:1.25rem;">
                                         <button type="button" onclick="submitPdCart('buy')" class="by-btn-primary-action">
                                             <span>{{ $unitIcon }}</span>
-                                            <span id="service-traktir-btn-text">Traktir Sekarang (Rp {{ number_format($unitPrice, 0, ',', '.') }})</span>
+                                            <span id="service-traktir-btn-text">Traktir Sekarang (Rp
+                                                {{ number_format($unitPrice, 0, ',', '.') }})</span>
                                         </button>
                                     </div>
 
                                     <script>
-                                        (function() {
+                                        (function () {
                                             var unitPrice = {{ $unitPrice }};
-                                            window.setServiceTraktirQty = function(q) {
+                                            window.setServiceTraktirQty = function (q) {
                                                 q = parseInt(q) || 1;
                                                 document.getElementById('service-traktir-qty-val').value = q;
                                                 updateServiceTraktirTotal(q);
                                             };
-                                            window.stepServiceTraktirQty = function(d) {
+                                            window.stepServiceTraktirQty = function (d) {
                                                 var el = document.getElementById('service-traktir-qty-val');
                                                 var current = parseInt(el.value) || 1;
                                                 var next = Math.max(1, current + d);
                                                 el.value = next;
                                                 updateServiceTraktirTotal(next);
                                             };
-                                            window.updateServiceTraktirTotal = function(q) {
+                                            window.updateServiceTraktirTotal = function (q) {
                                                 q = Math.max(1, parseInt(q) || 1);
                                                 var total = q * unitPrice;
                                                 var formatted = 'Rp ' + total.toLocaleString('id-ID');
@@ -2518,7 +2592,7 @@
                                                 var btnText = document.getElementById('service-traktir-btn-text');
                                                 if (btnText) btnText.textContent = 'Traktir Sekarang (' + formatted + ')';
 
-                                                document.querySelectorAll('.service-traktir-pill').forEach(function(p) {
+                                                document.querySelectorAll('.service-traktir-pill').forEach(function (p) {
                                                     if (parseInt(p.dataset.qty) === q) {
                                                         p.classList.add('active');
                                                     } else {
@@ -2531,12 +2605,13 @@
 
                                 @elseif($service->isPayWhatYouWant())
                                     @php
-                                        $minPrice = (float)($service->pwyw_min_price ?? 0);
-                                        $suggestedPrice = (float)($service->pwyw_suggested_price ?? 0);
+                                        $minPrice = (float) ($service->pwyw_min_price ?? 0);
+                                        $suggestedPrice = (float) ($service->pwyw_suggested_price ?? 0);
                                         $initialPrice = $suggestedPrice > 0 ? $suggestedPrice : ($minPrice > 0 ? $minPrice : 10000);
                                     @endphp
-                                    <input type="hidden" name="custom_price" id="service_pwyw_custom_price" value="{{ (int)$initialPrice }}">
-                                    
+                                    <input type="hidden" name="custom_price" id="service_pwyw_custom_price"
+                                        value="{{ (int) $initialPrice }}">
+
                                     <style>
                                         .by-pricing-card {
                                             background: #ffffff;
@@ -2547,6 +2622,7 @@
                                             box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
                                             font-family: 'Montserrat', sans-serif;
                                         }
+
                                         .by-pricing-badge-icon {
                                             width: 44px;
                                             height: 44px;
@@ -2558,23 +2634,27 @@
                                             color: #1eb349;
                                             flex-shrink: 0;
                                         }
+
                                         .by-pill-grid-pwyw {
                                             display: grid;
                                             grid-template-columns: repeat(4, 1fr);
                                             gap: 0.5rem;
                                             margin-bottom: 0.9rem;
                                         }
+
                                         @media (max-width: 480px) {
                                             .by-pill-grid-pwyw {
                                                 grid-template-columns: repeat(4, 1fr);
                                                 gap: 0.35rem;
                                             }
                                         }
+
                                         .by-input-wrapper {
                                             position: relative;
                                             display: flex;
                                             align-items: center;
                                         }
+
                                         .by-input-prefix {
                                             position: absolute;
                                             left: 1rem;
@@ -2583,6 +2663,7 @@
                                             color: #64748b;
                                             pointer-events: none;
                                         }
+
                                         .by-pwyw-input-field {
                                             width: 100%;
                                             box-sizing: border-box;
@@ -2597,6 +2678,7 @@
                                             font-family: 'Montserrat', sans-serif;
                                             transition: all 0.15s;
                                         }
+
                                         .by-pwyw-input-field:focus {
                                             border-color: #1eb349;
                                             background: #ffffff;
@@ -2605,16 +2687,21 @@
                                     </style>
 
                                     <div class="by-pricing-card">
-                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 0.75rem;">
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 0.75rem;">
                                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                                 <div class="by-pricing-badge-icon">
-                                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                        viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                                     </svg>
                                                 </div>
                                                 <div>
-                                                    <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Bayar Seikhlasnya</div>
-                                                    <div style="font-size: 0.76rem; color: #64748b; font-weight: 600; margin-top:2px;">
+                                                    <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Bayar
+                                                        Seikhlasnya</div>
+                                                    <div
+                                                        style="font-size: 0.76rem; color: #64748b; font-weight: 600; margin-top:2px;">
                                                         @if($minPrice > 0)
                                                             Minimum: Rp {{ number_format($minPrice, 0, ',', '.') }}
                                                         @else
@@ -2629,17 +2716,19 @@
                                         @php
                                             $presets = [10000, 25000, 50000, 100000];
                                             if ($minPrice > 0 && !in_array($minPrice, $presets)) {
-                                                array_unshift($presets, (int)$minPrice);
+                                                array_unshift($presets, (int) $minPrice);
                                                 sort($presets);
                                             }
                                             if ($suggestedPrice > 0 && !in_array($suggestedPrice, $presets)) {
-                                                $presets[] = (int)$suggestedPrice;
+                                                $presets[] = (int) $suggestedPrice;
                                                 sort($presets);
                                             }
                                         @endphp
                                         <div class="by-pill-grid-pwyw">
                                             @foreach(array_slice($presets, 0, 4) as $presetNominal)
-                                                <button type="button" onclick="setServicePwywNominal({{ $presetNominal }})" class="by-amount-pill service-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}" data-nominal="{{ $presetNominal }}">
+                                                <button type="button" onclick="setServicePwywNominal({{ $presetNominal }})"
+                                                    class="by-amount-pill service-pwyw-pill {{ $presetNominal == $initialPrice ? 'active' : '' }}"
+                                                    data-nominal="{{ $presetNominal }}">
                                                     {{ number_format($presetNominal / 1000, 0) }}k
                                                 </button>
                                             @endforeach
@@ -2648,24 +2737,31 @@
                                         {{-- Input Bebas --}}
                                         <div class="by-input-wrapper">
                                             <span class="by-input-prefix">Rp</span>
-                                            <input type="text" id="service-pwyw-input" class="by-pwyw-input-field" value="{{ number_format($initialPrice, 0, ',', '.') }}" oninput="formatServicePwywInput(this)" placeholder="0">
+                                            <input type="text" id="service-pwyw-input" class="by-pwyw-input-field"
+                                                value="{{ number_format($initialPrice, 0, ',', '.') }}"
+                                                oninput="formatServicePwywInput(this)" placeholder="0">
                                         </div>
-                                        <div id="service-pwyw-error" style="display: none; color: #ef4444; font-size: 0.78rem; font-weight: 600; margin-top: 0.45rem;"></div>
+                                        <div id="service-pwyw-error"
+                                            style="display: none; color: #ef4444; font-size: 0.78rem; font-weight: 600; margin-top: 0.45rem;">
+                                        </div>
                                     </div>
 
                                     <div class="pd-actions" style="margin-top:1.25rem;">
                                         <button type="button" onclick="submitServicePwyw()" class="by-btn-primary-action">
-                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                             </svg>
-                                            <span id="service-pwyw-btn-text">Dukung Sekarang (Rp {{ number_format($initialPrice, 0, ',', '.') }})</span>
+                                            <span id="service-pwyw-btn-text">Dukung Sekarang (Rp
+                                                {{ number_format($initialPrice, 0, ',', '.') }})</span>
                                         </button>
                                     </div>
 
                                     <script>
-                                        (function() {
+                                        (function () {
                                             var minPrice = {{ $minPrice }};
-                                            window.setServicePwywNominal = function(val) {
+                                            window.setServicePwywNominal = function (val) {
                                                 var num = parseInt(val) || 0;
                                                 var formatted = num.toLocaleString('id-ID');
                                                 document.getElementById('service-pwyw-input').value = formatted;
@@ -2674,7 +2770,7 @@
                                                 if (btnText) btnText.textContent = 'Dukung Sekarang (Rp ' + formatted + ')';
                                                 document.getElementById('service-pwyw-error').style.display = 'none';
 
-                                                document.querySelectorAll('.service-pwyw-pill').forEach(function(p) {
+                                                document.querySelectorAll('.service-pwyw-pill').forEach(function (p) {
                                                     if (parseInt(p.dataset.nominal) === num) {
                                                         p.classList.add('active');
                                                     } else {
@@ -2683,7 +2779,7 @@
                                                 });
                                             };
 
-                                            window.formatServicePwywInput = function(el) {
+                                            window.formatServicePwywInput = function (el) {
                                                 var raw = el.value.replace(/\D/g, '');
                                                 var num = parseInt(raw, 10) || 0;
                                                 el.value = num.toLocaleString('id-ID');
@@ -2700,7 +2796,7 @@
                                                 }
                                             };
 
-                                            window.submitServicePwyw = function() {
+                                            window.submitServicePwyw = function () {
                                                 var raw = (document.getElementById('service-pwyw-input').value || '').replace(/\D/g, '');
                                                 var num = parseInt(raw, 10) || 0;
                                                 if (minPrice > 0 && num < minPrice) {
@@ -2725,7 +2821,7 @@
                                         <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;"
                                             @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0)
                                             disabled @endif onclick="submitPdCart('buy')">
-                                            {{ $service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0) ? 'Klaim Gratis' : 'Beli Sekarang' }}
+                                            {{ $service->isFree() || ($service->sale_price !== null && (float) $service->sale_price <= 0) ? 'Klaim Gratis' : 'Beli Sekarang' }}
                                         </button>
                                     </div>
                                 @endif
@@ -2733,696 +2829,775 @@
 
                             {{-- POPUP INTERAKTIF PILIH VARIASI (COMPACT, MINIMALIS, MOBILE-FRIENDLY BOTTOM-SHEET) --}}
                             @if($service->variantOptions && $service->variantOptions->count() > 0)
-                            <div id="pd-variant-modal" class="buyle-variant-modal" style="display:none;" aria-hidden="true">
-                                <div class="bvm-backdrop" onclick="closePdVariantModal()"></div>
-                                <div class="bvm-sheet">
-                                    {{-- Drag handle pill (mobile) --}}
-                                    <div class="bvm-handle-bar">
-                                        <span class="bvm-handle"></span>
-                                    </div>
-
-                                    {{-- Header: Gambar Variasi / Produk + Harga + Stok + Tombol Tutup --}}
-                                    <div class="bvm-header">
-                                        <div class="bvm-thumb-wrap" onclick="openBvmLightbox()" title="Klik untuk memperbesar denah / foto" style="cursor: zoom-in; position: relative;">
-                                            <img id="bvm-thumb-img" src="{{ $defaultProductImage }}" alt="{{ $service->name }}" class="bvm-thumb">
-                                            <span class="bvm-thumb-zoom-badge" title="Perbesar Denah / Foto">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                    <circle cx="11" cy="11" r="8"></circle>
-                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                                    <line x1="11" y1="8" x2="11" y2="14"></line>
-                                                    <line x1="8" y1="11" x2="14" y2="11"></line>
-                                                </svg>
-                                            </span>
-                                            <span id="bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto Variasi</span>
+                                <div id="pd-variant-modal" class="buyle-variant-modal" style="display:none;" aria-hidden="true">
+                                    <div class="bvm-backdrop" onclick="closePdVariantModal()"></div>
+                                    <div class="bvm-sheet">
+                                        {{-- Drag handle pill (mobile) --}}
+                                        <div class="bvm-handle-bar">
+                                            <span class="bvm-handle"></span>
                                         </div>
-                                        <div class="bvm-header-info">
-                                            <div class="bvm-price" id="bvm-price-display">Rp{{ number_format($basePrice, 0, ',', '.') }}</div>
-                                            @if(!$isTicket)
-                                            <div class="bvm-stock" id="bvm-stock-display">
-                                                @if(is_null($service->stock))
-                                                    <span style="color:#10b981;">• Stok Tersedia</span>
-                                                @elseif($service->stock > 0)
-                                                    <span>• Sisa {{ $service->stock }} buah</span>
+
+                                        {{-- Header: Gambar Variasi / Produk + Harga + Stok + Tombol Tutup --}}
+                                        <div class="bvm-header">
+                                            <div class="bvm-thumb-wrap" onclick="openBvmLightbox()"
+                                                title="Klik untuk memperbesar denah / foto"
+                                                style="cursor: zoom-in; position: relative;">
+                                                <img id="bvm-thumb-img" src="{{ $defaultProductImage }}" alt="{{ $service->name }}"
+                                                    class="bvm-thumb">
+                                                <span class="bvm-thumb-zoom-badge" title="Perbesar Denah / Foto">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2.5">
+                                                        <circle cx="11" cy="11" r="8"></circle>
+                                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                        <line x1="11" y1="8" x2="11" y2="14"></line>
+                                                        <line x1="8" y1="11" x2="14" y2="11"></line>
+                                                    </svg>
+                                                </span>
+                                                <span id="bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto
+                                                    Variasi</span>
+                                            </div>
+                                            <div class="bvm-header-info">
+                                                <div class="bvm-price" id="bvm-price-display">
+                                                    Rp{{ number_format($basePrice, 0, ',', '.') }}</div>
+                                                @if(!$isTicket)
+                                                    <div class="bvm-stock" id="bvm-stock-display">
+                                                        @if(is_null($service->stock))
+                                                            <span style="color:#10b981;">• Stok Tersedia</span>
+                                                        @elseif($service->stock > 0)
+                                                            <span>• Sisa {{ $service->stock }} buah</span>
+                                                        @else
+                                                            <span style="color:#ef4444;">• Stok Habis</span>
+                                                        @endif
+                                                    </div>
                                                 @else
-                                                    <span style="color:#ef4444;">• Stok Habis</span>
+                                                    <div class="bvm-stock" id="bvm-stock-display" style="display:none;"></div>
                                                 @endif
+                                                <div class="bvm-selected-label" id="bvm-selected-label">
+                                                    {{ $isTicket ? 'Silakan pilih kategori tiket' : 'Silakan pilih opsi variasi' }}
+                                                </div>
                                             </div>
-                                            @else
-                                            <div class="bvm-stock" id="bvm-stock-display" style="display:none;"></div>
-                                            @endif
-                                            <div class="bvm-selected-label" id="bvm-selected-label">
-                                                {{ $isTicket ? 'Silakan pilih kategori tiket' : 'Silakan pilih opsi variasi' }}
-                                            </div>
+                                            <button type="button" class="bvm-close-btn" onclick="closePdVariantModal()"
+                                                aria-label="Tutup">
+                                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
                                         </div>
-                                        <button type="button" class="bvm-close-btn" onclick="closePdVariantModal()" aria-label="Tutup">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                                            </svg>
-                                        </button>
-                                    </div>
 
-                                    {{-- Body: List Grup Variasi & Kuantitas --}}
-                                    <div class="bvm-body">
-                                        @foreach($service->variantOptions as $option)
-                                            @php
-                                                $bvmGroupTitle = $isTicket ? 'KATEGORI TIKET' : $option->name;
-                                                $bvmOptPrefix = $isTicket ? 'Kategori' : $option->name;
-                                            @endphp
-                                            <div class="bvm-group">
-                                                <div class="bvm-group-title">{{ $bvmGroupTitle }}</div>
-                                                 <div class="bvm-pills {{ $isTicket ? 'bvm-ticket-grid' : '' }}">
-                                                    @foreach($option->values as $val)
-                                                        @php
-                                                            $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
-                                                            $valFinalPrice = $val->finalPrice();
-                                                            $isValOutOfStock = ($val->stock !== null && $val->stock <= 0);
-                                                            $bvmValDiff = ($val->price > 0 && $val->price != $basePrice) ? ($val->price - $basePrice) : 0;
-                                                        @endphp
-                                                        @if($isTicket)
-                                                            {{-- CARD BERBENTUK TIKET MINIMALIS (CATEGORY & HARGA TERPISAH DIVIDER DASHED) --}}
-                                                            <button type="button" 
-                                                                class="bvm-pill bvm-ticket-card" 
-                                                                data-variant-id="{{ $val->id }}"
-                                                                data-price="{{ $valFinalPrice }}"
-                                                                data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
-                                                                data-stock="{{ $val->stock }}"
-                                                                data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
-                                                                data-img="{{ $valImg ?: $defaultProductImage }}"
-                                                                data-has-custom-img="{{ $valImg ? '1' : '0' }}"
-                                                                @if($isValOutOfStock) disabled @endif
-                                                                onclick="selectBvmVariant(this)">
-                                                                <div class="bvm-tix-main">
-                                                                    <div class="bvm-tix-name">{{ $val->value }}</div>
-                                                                </div>
-                                                                <div class="bvm-tix-divider"></div>
-                                                                <div class="bvm-tix-stub">
+                                        {{-- Body: List Grup Variasi & Kuantitas --}}
+                                        <div class="bvm-body">
+                                            @foreach($service->variantOptions as $option)
+                                                @php
+                                                    $bvmGroupTitle = $isTicket ? 'KATEGORI TIKET' : $option->name;
+                                                    $bvmOptPrefix = $isTicket ? 'Kategori' : $option->name;
+                                                @endphp
+                                                <div class="bvm-group">
+                                                    <div class="bvm-group-title">{{ $bvmGroupTitle }}</div>
+                                                    <div class="bvm-pills {{ $isTicket ? 'bvm-ticket-grid' : '' }}">
+                                                        @foreach($option->values as $val)
+                                                            @php
+                                                                $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                                $valFinalPrice = $val->finalPrice();
+                                                                $isValOutOfStock = ($val->stock !== null && $val->stock <= 0);
+                                                                $bvmValDiff = ($val->price > 0 && $val->price != $basePrice) ? ($val->price - $basePrice) : 0;
+                                                            @endphp
+                                                            @if($isTicket)
+                                                                {{-- CARD BERBENTUK TIKET MINIMALIS (CATEGORY & HARGA TERPISAH DIVIDER DASHED)
+                                                                --}}
+                                                                <button type="button" class="bvm-pill bvm-ticket-card"
+                                                                    data-variant-id="{{ $val->id }}" data-price="{{ $valFinalPrice }}"
+                                                                    data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                                    data-stock="{{ $val->stock }}"
+                                                                    data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
+                                                                    data-img="{{ $valImg ?: $defaultProductImage }}"
+                                                                    data-has-custom-img="{{ $valImg ? '1' : '0' }}" @if($isValOutOfStock)
+                                                                    disabled @endif onclick="selectBvmVariant(this)">
+                                                                    <div class="bvm-tix-main">
+                                                                        <div class="bvm-tix-name">{{ $val->value }}</div>
+                                                                    </div>
+                                                                    <div class="bvm-tix-divider"></div>
+                                                                    <div class="bvm-tix-stub">
+                                                                        @if($val->price > 0 && $val->price != $basePrice)
+                                                                            <div class="bvm-tix-diff">
+                                                                                {{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}
+                                                                            </div>
+                                                                        @else
+                                                                            <div class="bvm-tix-diff">
+                                                                                Rp{{ number_format($valFinalPrice, 0, ',', '.') }}</div>
+                                                                        @endif
+                                                                        @if($isValOutOfStock)
+                                                                            <span class="bvm-tix-status habis">Habis</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </button>
+                                                            @else
+                                                                <button type="button" class="bvm-pill" data-variant-id="{{ $val->id }}"
+                                                                    data-price="{{ $valFinalPrice }}"
+                                                                    data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                                    data-stock="{{ $val->stock }}"
+                                                                    data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
+                                                                    data-img="{{ $valImg ?: $defaultProductImage }}"
+                                                                    data-has-custom-img="{{ $valImg ? '1' : '0' }}" @if($isValOutOfStock)
+                                                                    disabled @endif onclick="selectBvmVariant(this)">
+                                                                    @if($valImg)
+                                                                        <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
+                                                                    @endif
+                                                                    <span class="bvm-pill-text">{{ $val->value }}</span>
                                                                     @if($val->price > 0 && $val->price != $basePrice)
-                                                                        <div class="bvm-tix-diff">{{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}</div>
-                                                                    @else
-                                                                        <div class="bvm-tix-diff">Rp{{ number_format($valFinalPrice, 0, ',', '.') }}</div>
+                                                                        <span
+                                                                            class="bvm-pill-diff">{{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}</span>
                                                                     @endif
                                                                     @if($isValOutOfStock)
-                                                                        <span class="bvm-tix-status habis">Habis</span>
+                                                                        <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
                                                                     @endif
-                                                                </div>
-                                                            </button>
-                                                        @else
-                                                            <button type="button" 
-                                                                class="bvm-pill" 
-                                                                data-variant-id="{{ $val->id }}"
-                                                                data-price="{{ $valFinalPrice }}"
-                                                                data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
-                                                                data-stock="{{ $val->stock }}"
-                                                                data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
-                                                                data-img="{{ $valImg ?: $defaultProductImage }}"
-                                                                data-has-custom-img="{{ $valImg ? '1' : '0' }}"
-                                                                @if($isValOutOfStock) disabled @endif
-                                                                onclick="selectBvmVariant(this)">
-                                                                @if($valImg)
-                                                                    <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
-                                                                @endif
-                                                                <span class="bvm-pill-text">{{ $val->value }}</span>
-                                                                @if($val->price > 0 && $val->price != $basePrice)
-                                                                    <span class="bvm-pill-diff">{{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}</span>
-                                                                @endif
-                                                                @if($isValOutOfStock)
-                                                                    <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
-                                                                @endif
-                                                            </button>
+                                                                </button>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                            {{-- Selector Kuantitas di dalam Modal --}}
+                                            <div class="bvm-qty-row">
+                                                <div>
+                                                    <div class="bvm-qty-label">Kuantitas</div>
+                                                    <div class="bvm-qty-sub" id="bvm-qty-sub">
+                                                        Jumlah yang akan dipesan
+                                                        @if($maxOrderLimit && !$isTicket)
+                                                            <span style="color:#16a34a; font-weight:600;">(Maks. {{ $maxOrderLimit }}
+                                                                per order)</span>
                                                         @endif
-                                                    @endforeach
+                                                    </div>
+                                                </div>
+                                                <div class="bvm-qty-ctrl">
+                                                    <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(-1)">−</button>
+                                                    <input type="number" id="bvm-qty-input" class="bvm-qty-input" value="1" min="1"
+                                                        data-max-limit="{{ $maxOrderLimit ?? '' }}" readonly>
+                                                    <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(1)">+</button>
                                                 </div>
                                             </div>
-                                        @endforeach
 
-                                        {{-- Selector Kuantitas di dalam Modal --}}
-                                        <div class="bvm-qty-row">
-                                            <div>
-                                                <div class="bvm-qty-label">Kuantitas</div>
-                                                <div class="bvm-qty-sub" id="bvm-qty-sub">
-                                                    Jumlah yang akan dipesan
-                                                    @if($maxOrderLimit && !$isTicket)
-                                                        <span style="color:#16a34a; font-weight:600;">(Maks. {{ $maxOrderLimit }} per order)</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="bvm-qty-ctrl">
-                                                <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(-1)">−</button>
-                                                <input type="number" id="bvm-qty-input" class="bvm-qty-input" value="1" min="1" data-max-limit="{{ $maxOrderLimit ?? '' }}" readonly>
-                                                <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(1)">+</button>
+                                            <div id="bvm-error" class="bvm-error" style="display:none;">
+                                                ⚠ Silakan pilih salah satu {{ $isTicket ? 'kategori tiket' : 'variasi' }} terlebih
+                                                dahulu.
                                             </div>
                                         </div>
 
-                                        <div id="bvm-error" class="bvm-error" style="display:none;">
-                                            ⚠ Silakan pilih salah satu {{ $isTicket ? 'kategori tiket' : 'variasi' }} terlebih dahulu.
+                                        {{-- Footer Tombol Beli / Konfirmasi (Style sama persis Button Daftar Navbar) --}}
+                                        <div class="bvm-footer">
+                                            <button type="button" id="bvm-submit-btn" class="bvm-btn-primary"
+                                                onclick="confirmBvmSubmit()">
+                                                <span id="bvm-submit-label">Beli Sekarang</span>
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                                </svg>
+                                            </button>
                                         </div>
                                     </div>
+                                </div>
 
-                                    {{-- Footer Tombol Beli / Konfirmasi (Style sama persis Button Daftar Navbar) --}}
-                                    <div class="bvm-footer">
-                                        <button type="button" id="bvm-submit-btn" class="bvm-btn-primary" onclick="confirmBvmSubmit()">
-                                            <span id="bvm-submit-label">Beli Sekarang</span>
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                                            </svg>
-                                        </button>
+                                {{-- Lightbox Preview Denah / Foto Panggung --}}
+                                <div id="bvmLightboxModal" class="bvm-lightbox-modal" style="display:none;">
+                                    <div class="bvm-lightbox-dialog" onclick="event.stopPropagation()">
+                                        <button type="button" class="bvm-lightbox-close" onclick="closeBvmLightbox()"
+                                            aria-label="Tutup Preview">&times;</button>
+                                        <div class="bvm-lightbox-header">
+                                            <span class="bvm-lightbox-tag">PREVIEW DENAH / EVENT</span>
+                                            <span class="bvm-lightbox-sub">Klik di luar gambar atau tekan Esc untuk menutup</span>
+                                        </div>
+                                        <div class="bvm-lightbox-body">
+                                            <img id="bvmLightboxImage" src="" alt="Denah / Event Preview" class="bvm-lightbox-img">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {{-- Lightbox Preview Denah / Foto Panggung --}}
-                            <div id="bvmLightboxModal" class="bvm-lightbox-modal" style="display:none;">
-                                <div class="bvm-lightbox-dialog" onclick="event.stopPropagation()">
-                                    <button type="button" class="bvm-lightbox-close" onclick="closeBvmLightbox()" aria-label="Tutup Preview">&times;</button>
-                                    <div class="bvm-lightbox-header">
-                                        <span class="bvm-lightbox-tag">PREVIEW DENAH / EVENT</span>
-                                        <span class="bvm-lightbox-sub">Klik di luar gambar atau tekan Esc untuk menutup</span>
-                                    </div>
-                                    <div class="bvm-lightbox-body">
-                                        <img id="bvmLightboxImage" src="" alt="Denah / Event Preview" class="bvm-lightbox-img">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <style>
-                                /* ── COMPACT MINIMALIS & MOBILE FRIENDLY VARIANT MODAL ── */
-                                .buyle-variant-modal {
-                                    position: fixed;
-                                    inset: 0;
-                                    z-index: 999999;
-                                    display: flex;
-                                    align-items: flex-end;
-                                    justify-content: center;
-                                    visibility: hidden;
-                                    opacity: 0;
-                                    transition: opacity 0.24s ease, visibility 0.24s ease;
-                                }
-                                .buyle-variant-modal.active {
-                                    visibility: visible;
-                                    opacity: 1;
-                                }
-                                .bvm-backdrop {
-                                    position: absolute;
-                                    inset: 0;
-                                    background: rgba(15, 23, 42, 0.62);
-                                    backdrop-filter: blur(4px);
-                                    -webkit-backdrop-filter: blur(4px);
-                                }
-                                .bvm-sheet {
-                                    position: relative;
-                                    width: 100%;
-                                    max-width: 480px;
-                                    background: #ffffff;
-                                    border-radius: 24px 24px 0 0;
-                                    box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.22);
-                                    display: flex;
-                                    flex-direction: column;
-                                    max-height: 86vh;
-                                    transform: translateY(100%);
-                                    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-                                    z-index: 1;
-                                    overflow: hidden;
-                                }
-                                .buyle-variant-modal.active .bvm-sheet {
-                                    transform: translateY(0);
-                                }
-
-                                @media (min-width: 640px) {
+                                <style>
+                                    /* ── COMPACT MINIMALIS & MOBILE FRIENDLY VARIANT MODAL ── */
                                     .buyle-variant-modal {
-                                        align-items: center;
-                                        padding: 1.5rem;
+                                        position: fixed;
+                                        inset: 0;
+                                        z-index: 999999;
+                                        display: flex;
+                                        align-items: flex-end;
+                                        justify-content: center;
+                                        visibility: hidden;
+                                        opacity: 0;
+                                        transition: opacity 0.24s ease, visibility 0.24s ease;
                                     }
+
+                                    .buyle-variant-modal.active {
+                                        visibility: visible;
+                                        opacity: 1;
+                                    }
+
+                                    .bvm-backdrop {
+                                        position: absolute;
+                                        inset: 0;
+                                        background: rgba(15, 23, 42, 0.62);
+                                        backdrop-filter: blur(4px);
+                                        -webkit-backdrop-filter: blur(4px);
+                                    }
+
                                     .bvm-sheet {
-                                        border-radius: 20px;
-                                        transform: scale(0.95);
-                                        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+                                        position: relative;
+                                        width: 100%;
+                                        max-width: 480px;
+                                        background: #ffffff;
+                                        border-radius: 24px 24px 0 0;
+                                        box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.22);
+                                        display: flex;
+                                        flex-direction: column;
+                                        max-height: 86vh;
+                                        transform: translateY(100%);
+                                        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+                                        z-index: 1;
+                                        overflow: hidden;
                                     }
+
                                     .buyle-variant-modal.active .bvm-sheet {
-                                        transform: scale(1);
+                                        transform: translateY(0);
                                     }
+
+                                    @media (min-width: 640px) {
+                                        .buyle-variant-modal {
+                                            align-items: center;
+                                            padding: 1.5rem;
+                                        }
+
+                                        .bvm-sheet {
+                                            border-radius: 20px;
+                                            transform: scale(0.95);
+                                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+                                        }
+
+                                        .buyle-variant-modal.active .bvm-sheet {
+                                            transform: scale(1);
+                                        }
+
+                                        .bvm-handle-bar {
+                                            display: none !important;
+                                        }
+                                    }
+
                                     .bvm-handle-bar {
-                                        display: none !important;
+                                        display: flex;
+                                        justify-content: center;
+                                        padding-top: 10px;
+                                        padding-bottom: 4px;
                                     }
-                                }
 
-                                .bvm-handle-bar {
-                                    display: flex;
-                                    justify-content: center;
-                                    padding-top: 10px;
-                                    padding-bottom: 4px;
-                                }
-                                .bvm-handle {
-                                    width: 38px;
-                                    height: 4px;
-                                    background: #cbd5e1;
-                                    border-radius: 99px;
-                                }
+                                    .bvm-handle {
+                                        width: 38px;
+                                        height: 4px;
+                                        background: #cbd5e1;
+                                        border-radius: 99px;
+                                    }
 
-                                .bvm-header {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 0.85rem;
-                                    padding: 0.85rem 1.25rem;
-                                    border-bottom: 1px solid #f1f5f9;
-                                    position: relative;
-                                }
-                                .bvm-thumb-wrap {
-                                    width: 70px;
-                                    height: 70px;
-                                    border-radius: 12px;
-                                    overflow: hidden;
-                                    background: #f8fafc;
-                                    border: 1.5px solid #e2e8f0;
-                                    flex-shrink: 0;
-                                    position: relative;
-                                }
-                                .bvm-thumb {
-                                    width: 100%;
-                                    height: 100%;
-                                    object-fit: cover;
-                                    transition: opacity 0.2s ease;
-                                }
-                                .bvm-thumb-badge {
-                                    position: absolute;
-                                    bottom: 2px;
-                                    right: 2px;
-                                    background: rgba(15, 23, 42, 0.8);
-                                    color: #fff;
-                                    font-size: 0.58rem;
-                                    font-weight: 700;
-                                    padding: 1px 4px;
-                                    border-radius: 4px;
-                                    letter-spacing: 0.02em;
-                                }
-                                .bvm-header-info {
-                                    flex: 1;
-                                    min-width: 0;
-                                }
-                                .bvm-price {
-                                    font-family: 'Montserrat', sans-serif;
-                                    font-size: 1.25rem;
-                                    font-weight: 800;
-                                    color: #1eb349;
-                                    line-height: 1.2;
-                                }
-                                .bvm-stock {
-                                    font-size: 0.78rem;
-                                    font-weight: 600;
-                                    color: #64748b;
-                                    margin-top: 3px;
-                                }
-                                .bvm-selected-label {
-                                    font-size: 0.78rem;
-                                    color: #0f172a;
-                                    font-weight: 600;
-                                    margin-top: 3px;
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                }
-                                .bvm-close-btn {
-                                    width: 32px;
-                                    height: 32px;
-                                    border-radius: 50%;
-                                    border: none;
-                                    background: #f1f5f9;
-                                    color: #64748b;
-                                    cursor: pointer;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    transition: all 0.15s;
-                                    flex-shrink: 0;
-                                }
-                                .bvm-close-btn:hover {
-                                    background: #e2e8f0;
-                                    color: #0f172a;
-                                }
+                                    .bvm-header {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 0.85rem;
+                                        padding: 0.85rem 1.25rem;
+                                        border-bottom: 1px solid #f1f5f9;
+                                        position: relative;
+                                    }
 
-                                .bvm-body {
-                                    padding: 1rem 1.25rem;
-                                    overflow-y: auto;
-                                    -webkit-overflow-scrolling: touch;
-                                    max-height: calc(86vh - 180px);
-                                }
-                                .bvm-group {
-                                    margin-bottom: 1.1rem;
-                                }
-                                .bvm-group-title {
-                                    font-size: 0.78rem;
-                                    font-weight: 700;
-                                    color: #475569;
-                                    margin-bottom: 0.55rem;
-                                    text-transform: uppercase;
-                                    letter-spacing: 0.04em;
-                                }
-                                .bvm-pills {
-                                    display: flex;
-                                    flex-wrap: wrap;
-                                    gap: 0.5rem;
-                                }
-                                .bvm-pill {
-                                    display: inline-flex;
-                                    align-items: center;
-                                    gap: 0.45rem;
-                                    padding: 0.45rem 0.85rem;
-                                    border: 1.5px solid #e2e8f0;
-                                    border-radius: 12px;
-                                    background: #ffffff;
-                                    color: #0f172a;
-                                    font-size: 0.82rem;
-                                    font-weight: 600;
-                                    cursor: pointer;
-                                    transition: all 0.16s ease;
-                                    user-select: none;
-                                }
-                                .bvm-pill:hover:not(:disabled) {
-                                    border-color: #1eb349;
-                                    color: #1eb349;
-                                    background: rgba(30, 179, 73, 0.04);
-                                }
-                                .bvm-pill.selected {
-                                    border-color: #1eb349;
-                                    background: linear-gradient(135deg, rgba(30, 179, 73, 0.12), rgba(165, 207, 55, 0.08));
-                                    color: #15803d;
-                                    box-shadow: 0 2px 8px rgba(30, 179, 73, 0.2);
-                                }
-                                .bvm-pill:disabled {
-                                    opacity: 0.4;
-                                    cursor: not-allowed;
-                                    background: #f8fafc;
-                                    border-style: dashed;
-                                }
-                                .bvm-pill-img {
-                                    width: 22px;
-                                    height: 22px;
-                                    border-radius: 6px;
-                                    object-fit: cover;
-                                    border: 1px solid #e2e8f0;
-                                    flex-shrink: 0;
-                                }
-                                .bvm-pill-diff {
-                                    font-size: 0.7rem;
-                                    opacity: 0.8;
-                                }
+                                    .bvm-thumb-wrap {
+                                        width: 70px;
+                                        height: 70px;
+                                        border-radius: 12px;
+                                        overflow: hidden;
+                                        background: #f8fafc;
+                                        border: 1.5px solid #e2e8f0;
+                                        flex-shrink: 0;
+                                        position: relative;
+                                    }
 
-                                /* ── CLEAN TICKET CATEGORY CARD STYLING (BUYLE TIKET) ── */
-                                .bvm-ticket-grid {
-                                    display: grid !important;
-                                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
-                                    gap: 0.75rem !important;
-                                    width: 100% !important;
-                                }
-                                @media (max-width: 480px) {
+                                    .bvm-thumb {
+                                        width: 100%;
+                                        height: 100%;
+                                        object-fit: cover;
+                                        transition: opacity 0.2s ease;
+                                    }
+
+                                    .bvm-thumb-badge {
+                                        position: absolute;
+                                        bottom: 2px;
+                                        right: 2px;
+                                        background: rgba(15, 23, 42, 0.8);
+                                        color: #fff;
+                                        font-size: 0.58rem;
+                                        font-weight: 700;
+                                        padding: 1px 4px;
+                                        border-radius: 4px;
+                                        letter-spacing: 0.02em;
+                                    }
+
+                                    .bvm-header-info {
+                                        flex: 1;
+                                        min-width: 0;
+                                    }
+
+                                    .bvm-price {
+                                        font-family: 'Montserrat', sans-serif;
+                                        font-size: 1.25rem;
+                                        font-weight: 800;
+                                        color: #1eb349;
+                                        line-height: 1.2;
+                                    }
+
+                                    .bvm-stock {
+                                        font-size: 0.78rem;
+                                        font-weight: 600;
+                                        color: #64748b;
+                                        margin-top: 3px;
+                                    }
+
+                                    .bvm-selected-label {
+                                        font-size: 0.78rem;
+                                        color: #0f172a;
+                                        font-weight: 600;
+                                        margin-top: 3px;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                    }
+
+                                    .bvm-close-btn {
+                                        width: 32px;
+                                        height: 32px;
+                                        border-radius: 50%;
+                                        border: none;
+                                        background: #f1f5f9;
+                                        color: #64748b;
+                                        cursor: pointer;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        transition: all 0.15s;
+                                        flex-shrink: 0;
+                                    }
+
+                                    .bvm-close-btn:hover {
+                                        background: #e2e8f0;
+                                        color: #0f172a;
+                                    }
+
+                                    .bvm-body {
+                                        padding: 1rem 1.25rem;
+                                        overflow-y: auto;
+                                        -webkit-overflow-scrolling: touch;
+                                        max-height: calc(86vh - 180px);
+                                    }
+
+                                    .bvm-group {
+                                        margin-bottom: 1.1rem;
+                                    }
+
+                                    .bvm-group-title {
+                                        font-size: 0.78rem;
+                                        font-weight: 700;
+                                        color: #475569;
+                                        margin-bottom: 0.55rem;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.04em;
+                                    }
+
+                                    .bvm-pills {
+                                        display: flex;
+                                        flex-wrap: wrap;
+                                        gap: 0.5rem;
+                                    }
+
+                                    .bvm-pill {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 0.45rem;
+                                        padding: 0.45rem 0.85rem;
+                                        border: 1.5px solid #e2e8f0;
+                                        border-radius: 12px;
+                                        background: #ffffff;
+                                        color: #0f172a;
+                                        font-size: 0.82rem;
+                                        font-weight: 600;
+                                        cursor: pointer;
+                                        transition: all 0.16s ease;
+                                        user-select: none;
+                                    }
+
+                                    .bvm-pill:hover:not(:disabled) {
+                                        border-color: #1eb349;
+                                        color: #1eb349;
+                                        background: rgba(30, 179, 73, 0.04);
+                                    }
+
+                                    .bvm-pill.selected {
+                                        border-color: #1eb349;
+                                        background: linear-gradient(135deg, rgba(30, 179, 73, 0.12), rgba(165, 207, 55, 0.08));
+                                        color: #15803d;
+                                        box-shadow: 0 2px 8px rgba(30, 179, 73, 0.2);
+                                    }
+
+                                    .bvm-pill:disabled {
+                                        opacity: 0.4;
+                                        cursor: not-allowed;
+                                        background: #f8fafc;
+                                        border-style: dashed;
+                                    }
+
+                                    .bvm-pill-img {
+                                        width: 22px;
+                                        height: 22px;
+                                        border-radius: 6px;
+                                        object-fit: cover;
+                                        border: 1px solid #e2e8f0;
+                                        flex-shrink: 0;
+                                    }
+
+                                    .bvm-pill-diff {
+                                        font-size: 0.7rem;
+                                        opacity: 0.8;
+                                    }
+
+                                    /* ── CLEAN TICKET CATEGORY CARD STYLING (BUYLE TIKET) ── */
                                     .bvm-ticket-grid {
-                                        grid-template-columns: 1fr !important;
-                                        gap: 0.6rem !important;
+                                        display: grid !important;
+                                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+                                        gap: 0.75rem !important;
+                                        width: 100% !important;
                                     }
-                                }
-                                .bvm-ticket-card {
-                                    position: relative !important;
-                                    display: flex !important;
-                                    align-items: center !important;
-                                    justify-content: space-between !important;
-                                    width: 100% !important;
-                                    padding: 0.72rem 1rem !important;
-                                    min-height: 52px !important;
-                                    border-radius: 10px !important;
-                                    border: 1.5px solid #E2E8F0 !important;
-                                    background: #FFFFFF !important;
-                                    color: #1e293b !important;
-                                    cursor: pointer !important;
-                                    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-                                    text-align: left !important;
-                                    overflow: visible !important;
-                                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-                                }
-                                .bvm-ticket-card:hover:not(:disabled) {
-                                    border-color: #1eb349 !important;
-                                    background: #FAFCF9 !important;
-                                    transform: translateY(-2px) !important;
-                                    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.12) !important;
-                                }
-                                .bvm-ticket-card.selected {
-                                    border-color: #1eb349 !important;
-                                    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 50%, #F0FDF4 100%) !important;
-                                    box-shadow: 0 4px 18px rgba(30, 179, 73, 0.22) !important;
-                                    transform: translateY(-1px) !important;
-                                }
-                                .bvm-ticket-card.selected .bvm-tix-name {
-                                    color: #15803d !important;
-                                }
-                                .bvm-ticket-card.selected .bvm-tix-divider {
-                                    border-left-color: #86EFAC !important;
-                                }
-                                .bvm-ticket-card.selected .bvm-tix-diff {
-                                    color: #15803d !important;
-                                }
-                                .bvm-ticket-card:disabled {
-                                    opacity: 0.55 !important;
-                                    filter: grayscale(0.8) !important;
-                                    cursor: not-allowed !important;
-                                    background: #F8FAFC !important;
-                                    border-color: #CBD5E1 !important;
-                                    box-shadow: none !important;
-                                }
-                                .bvm-ticket-card .bvm-tix-main {
-                                    flex: 1;
-                                    min-width: 0;
-                                }
-                                .bvm-ticket-card .bvm-tix-name {
-                                    font-size: 1rem;
-                                    font-weight: 800;
-                                    color: #0F172A;
-                                    letter-spacing: -0.01em;
-                                    line-height: 1.2;
-                                }
-                                .bvm-ticket-card .bvm-tix-divider {
-                                    height: 34px;
-                                    margin: 0 0.85rem;
-                                    border-left: 1.5px dashed #CBD5E1;
-                                    flex-shrink: 0;
-                                }
-                                .bvm-ticket-card .bvm-tix-stub {
-                                    text-align: right;
-                                    flex-shrink: 0;
-                                }
-                                .bvm-ticket-card .bvm-tix-diff {
-                                    font-size: 0.92rem;
-                                    font-weight: 800;
-                                    color: #16a34a;
-                                    line-height: 1.2;
-                                }
-                                .bvm-ticket-card .bvm-tix-status.habis {
-                                    display: inline-block;
-                                    font-size: 0.62rem;
-                                    font-weight: 700;
-                                    text-transform: uppercase;
-                                    letter-spacing: 0.04em;
-                                    margin-top: 2px;
-                                    color: #EF4444;
-                                }
 
-                                /* ── THUMBNAIL ZOOM BADGE ── */
-                                .bvm-thumb-wrap {
-                                    position: relative;
-                                }
-                                .bvm-thumb-zoom-badge {
-                                    position: absolute;
-                                    bottom: 4px;
-                                    right: 4px;
-                                    width: 22px;
-                                    height: 22px;
-                                    border-radius: 50%;
-                                    background: rgba(15, 23, 42, 0.65);
-                                    color: #fff;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    pointer-events: none;
-                                    backdrop-filter: blur(2px);
-                                    transition: opacity 0.2s ease;
-                                }
-                                .bvm-thumb-wrap:hover .bvm-thumb-zoom-badge {
-                                    opacity: 0.75;
-                                }
+                                    @media (max-width: 480px) {
+                                        .bvm-ticket-grid {
+                                            grid-template-columns: 1fr !important;
+                                            gap: 0.6rem !important;
+                                        }
+                                    }
 
-                                /* ── LIGHTBOX MODAL ── */
-                                .bvm-lightbox-modal {
-                                    position: fixed;
-                                    inset: 0;
-                                    z-index: 9999999;
-                                    background: rgba(0, 0, 0, 0.88);
-                                    backdrop-filter: blur(6px);
-                                    -webkit-backdrop-filter: blur(6px);
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    padding: 1.5rem;
-                                    animation: bvmLbFadeIn 0.2s ease;
-                                }
-                                @keyframes bvmLbFadeIn {
-                                    from { opacity: 0; }
-                                    to   { opacity: 1; }
-                                }
-                                .bvm-lightbox-dialog {
-                                    position: relative;
-                                    max-width: 92vw;
-                                    max-height: 92vh;
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                    gap: 0.75rem;
-                                }
-                                .bvm-lightbox-close {
-                                    position: absolute;
-                                    top: -14px;
-                                    right: -14px;
-                                    width: 36px;
-                                    height: 36px;
-                                    border-radius: 50%;
-                                    background: rgba(255,255,255,0.18);
-                                    border: 1.5px solid rgba(255,255,255,0.3);
-                                    color: #fff;
-                                    font-size: 1.3rem;
-                                    line-height: 1;
-                                    cursor: pointer;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    z-index: 2;
-                                    transition: background 0.2s ease;
-                                }
-                                .bvm-lightbox-close:hover {
-                                    background: rgba(255,255,255,0.3);
-                                }
-                                .bvm-lightbox-header {
-                                    text-align: center;
-                                }
-                                .bvm-lightbox-tag {
-                                    font-size: 0.65rem;
-                                    font-weight: 700;
-                                    letter-spacing: 0.08em;
-                                    color: rgba(255,255,255,0.6);
-                                    text-transform: uppercase;
-                                    display: block;
-                                }
-                                .bvm-lightbox-sub {
-                                    font-size: 0.7rem;
-                                    color: rgba(255,255,255,0.4);
-                                    display: block;
-                                    margin-top: 2px;
-                                }
-                                .bvm-lightbox-body {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                }
-                                .bvm-lightbox-img {
-                                    max-width: 88vw;
-                                    max-height: 78vh;
-                                    border-radius: 12px;
-                                    object-fit: contain;
-                                    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
-                                    display: block;
-                                }
+                                    .bvm-ticket-card {
+                                        position: relative !important;
+                                        display: flex !important;
+                                        align-items: center !important;
+                                        justify-content: space-between !important;
+                                        width: 100% !important;
+                                        padding: 0.72rem 1rem !important;
+                                        min-height: 52px !important;
+                                        border-radius: 10px !important;
+                                        border: 1.5px solid #E2E8F0 !important;
+                                        background: #FFFFFF !important;
+                                        color: #1e293b !important;
+                                        cursor: pointer !important;
+                                        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                                        text-align: left !important;
+                                        overflow: visible !important;
+                                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+                                    }
 
-                                .bvm-qty-row {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: space-between;
-                                    padding-top: 0.85rem;
-                                    margin-top: 0.5rem;
-                                    border-top: 1px solid #f1f5f9;
-                                }
-                                .bvm-qty-label {
-                                    font-size: 0.82rem;
-                                    font-weight: 700;
-                                    color: #0f172a;
-                                }
-                                .bvm-qty-sub {
-                                    font-size: 0.72rem;
-                                    color: #94a3b8;
-                                }
-                                .bvm-qty-ctrl {
-                                    display: inline-flex;
-                                    align-items: center;
-                                    border: 1.5px solid #e2e8f0;
-                                    border-radius: 10px;
-                                    overflow: hidden;
-                                    background: #fff;
-                                }
-                                .bvm-qty-btn {
-                                    width: 32px;
-                                    height: 32px;
-                                    border: none;
-                                    background: #f8fafc;
-                                    color: #0f172a;
-                                    font-size: 1rem;
-                                    font-weight: 700;
-                                    cursor: pointer;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    transition: background 0.15s;
-                                }
-                                .bvm-qty-btn:hover {
-                                    background: #e2e8f0;
-                                }
-                                .bvm-qty-input {
-                                    width: 44px;
-                                    height: 32px;
-                                    border: none;
-                                    text-align: center;
-                                    font-size: 0.88rem;
-                                    font-weight: 700;
-                                    color: #0f172a;
-                                    background: #fff;
-                                    pointer-events: none;
-                                }
+                                    .bvm-ticket-card:hover:not(:disabled) {
+                                        border-color: #1eb349 !important;
+                                        background: #FAFCF9 !important;
+                                        transform: translateY(-2px) !important;
+                                        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.12) !important;
+                                    }
 
-                                .bvm-error {
-                                    color: #ef4444;
-                                    font-size: 0.78rem;
-                                    background: #fef2f2;
-                                    border: 1px solid #fca5a5;
-                                    border-radius: 8px;
-                                    padding: 0.45rem 0.75rem;
-                                    margin-top: 0.75rem;
-                                }
-                                .bvm-footer {
-                                    padding: 0.85rem 1.25rem 1.15rem;
-                                    border-top: 1px solid #f1f5f9;
-                                    background: #ffffff;
-                                }
-                                .bvm-btn-primary {
-                                    width: 100%;
-                                    padding: 0.8rem 1.5rem;
-                                    border-radius: 999px;
-                                    border: none;
-                                    background: linear-gradient(135deg, #1eb349, #a5cf37);
-                                    color: #ffffff;
-                                    font-family: 'Montserrat', sans-serif;
-                                    font-size: 0.92rem;
-                                    font-weight: 700;
-                                    cursor: pointer;
-                                    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
-                                    transition: all 0.2s ease;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    gap: 0.5rem;
-                                    letter-spacing: 0.02em;
-                                }
-                                .bvm-btn-primary:hover {
-                                    box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
-                                    transform: translateY(-1px);
-                                }
-                                .bvm-btn-primary:active {
-                                    transform: translateY(0);
-                                }
-                            </style>
+                                    .bvm-ticket-card.selected {
+                                        border-color: #1eb349 !important;
+                                        background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 50%, #F0FDF4 100%) !important;
+                                        box-shadow: 0 4px 18px rgba(30, 179, 73, 0.22) !important;
+                                        transform: translateY(-1px) !important;
+                                    }
+
+                                    .bvm-ticket-card.selected .bvm-tix-name {
+                                        color: #15803d !important;
+                                    }
+
+                                    .bvm-ticket-card.selected .bvm-tix-divider {
+                                        border-left-color: #86EFAC !important;
+                                    }
+
+                                    .bvm-ticket-card.selected .bvm-tix-diff {
+                                        color: #15803d !important;
+                                    }
+
+                                    .bvm-ticket-card:disabled {
+                                        opacity: 0.55 !important;
+                                        filter: grayscale(0.8) !important;
+                                        cursor: not-allowed !important;
+                                        background: #F8FAFC !important;
+                                        border-color: #CBD5E1 !important;
+                                        box-shadow: none !important;
+                                    }
+
+                                    .bvm-ticket-card .bvm-tix-main {
+                                        flex: 1;
+                                        min-width: 0;
+                                    }
+
+                                    .bvm-ticket-card .bvm-tix-name {
+                                        font-size: 1rem;
+                                        font-weight: 800;
+                                        color: #0F172A;
+                                        letter-spacing: -0.01em;
+                                        line-height: 1.2;
+                                    }
+
+                                    .bvm-ticket-card .bvm-tix-divider {
+                                        height: 34px;
+                                        margin: 0 0.85rem;
+                                        border-left: 1.5px dashed #CBD5E1;
+                                        flex-shrink: 0;
+                                    }
+
+                                    .bvm-ticket-card .bvm-tix-stub {
+                                        text-align: right;
+                                        flex-shrink: 0;
+                                    }
+
+                                    .bvm-ticket-card .bvm-tix-diff {
+                                        font-size: 0.92rem;
+                                        font-weight: 800;
+                                        color: #16a34a;
+                                        line-height: 1.2;
+                                    }
+
+                                    .bvm-ticket-card .bvm-tix-status.habis {
+                                        display: inline-block;
+                                        font-size: 0.62rem;
+                                        font-weight: 700;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.04em;
+                                        margin-top: 2px;
+                                        color: #EF4444;
+                                    }
+
+                                    /* ── THUMBNAIL ZOOM BADGE ── */
+                                    .bvm-thumb-wrap {
+                                        position: relative;
+                                    }
+
+                                    .bvm-thumb-zoom-badge {
+                                        position: absolute;
+                                        bottom: 4px;
+                                        right: 4px;
+                                        width: 22px;
+                                        height: 22px;
+                                        border-radius: 50%;
+                                        background: rgba(15, 23, 42, 0.65);
+                                        color: #fff;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        pointer-events: none;
+                                        backdrop-filter: blur(2px);
+                                        transition: opacity 0.2s ease;
+                                    }
+
+                                    .bvm-thumb-wrap:hover .bvm-thumb-zoom-badge {
+                                        opacity: 0.75;
+                                    }
+
+                                    /* ── LIGHTBOX MODAL ── */
+                                    .bvm-lightbox-modal {
+                                        position: fixed;
+                                        inset: 0;
+                                        z-index: 9999999;
+                                        background: rgba(0, 0, 0, 0.88);
+                                        backdrop-filter: blur(6px);
+                                        -webkit-backdrop-filter: blur(6px);
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        padding: 1.5rem;
+                                        animation: bvmLbFadeIn 0.2s ease;
+                                    }
+
+                                    @keyframes bvmLbFadeIn {
+                                        from {
+                                            opacity: 0;
+                                        }
+
+                                        to {
+                                            opacity: 1;
+                                        }
+                                    }
+
+                                    .bvm-lightbox-dialog {
+                                        position: relative;
+                                        max-width: 92vw;
+                                        max-height: 92vh;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        gap: 0.75rem;
+                                    }
+
+                                    .bvm-lightbox-close {
+                                        position: absolute;
+                                        top: -14px;
+                                        right: -14px;
+                                        width: 36px;
+                                        height: 36px;
+                                        border-radius: 50%;
+                                        background: rgba(255, 255, 255, 0.18);
+                                        border: 1.5px solid rgba(255, 255, 255, 0.3);
+                                        color: #fff;
+                                        font-size: 1.3rem;
+                                        line-height: 1;
+                                        cursor: pointer;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        z-index: 2;
+                                        transition: background 0.2s ease;
+                                    }
+
+                                    .bvm-lightbox-close:hover {
+                                        background: rgba(255, 255, 255, 0.3);
+                                    }
+
+                                    .bvm-lightbox-header {
+                                        text-align: center;
+                                    }
+
+                                    .bvm-lightbox-tag {
+                                        font-size: 0.65rem;
+                                        font-weight: 700;
+                                        letter-spacing: 0.08em;
+                                        color: rgba(255, 255, 255, 0.6);
+                                        text-transform: uppercase;
+                                        display: block;
+                                    }
+
+                                    .bvm-lightbox-sub {
+                                        font-size: 0.7rem;
+                                        color: rgba(255, 255, 255, 0.4);
+                                        display: block;
+                                        margin-top: 2px;
+                                    }
+
+                                    .bvm-lightbox-body {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                    }
+
+                                    .bvm-lightbox-img {
+                                        max-width: 88vw;
+                                        max-height: 78vh;
+                                        border-radius: 12px;
+                                        object-fit: contain;
+                                        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+                                        display: block;
+                                    }
+
+                                    .bvm-qty-row {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: space-between;
+                                        padding-top: 0.85rem;
+                                        margin-top: 0.5rem;
+                                        border-top: 1px solid #f1f5f9;
+                                    }
+
+                                    .bvm-qty-label {
+                                        font-size: 0.82rem;
+                                        font-weight: 700;
+                                        color: #0f172a;
+                                    }
+
+                                    .bvm-qty-sub {
+                                        font-size: 0.72rem;
+                                        color: #94a3b8;
+                                    }
+
+                                    .bvm-qty-ctrl {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        border: 1.5px solid #e2e8f0;
+                                        border-radius: 10px;
+                                        overflow: hidden;
+                                        background: #fff;
+                                    }
+
+                                    .bvm-qty-btn {
+                                        width: 32px;
+                                        height: 32px;
+                                        border: none;
+                                        background: #f8fafc;
+                                        color: #0f172a;
+                                        font-size: 1rem;
+                                        font-weight: 700;
+                                        cursor: pointer;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        transition: background 0.15s;
+                                    }
+
+                                    .bvm-qty-btn:hover {
+                                        background: #e2e8f0;
+                                    }
+
+                                    .bvm-qty-input {
+                                        width: 44px;
+                                        height: 32px;
+                                        border: none;
+                                        text-align: center;
+                                        font-size: 0.88rem;
+                                        font-weight: 700;
+                                        color: #0f172a;
+                                        background: #fff;
+                                        pointer-events: none;
+                                    }
+
+                                    .bvm-error {
+                                        color: #ef4444;
+                                        font-size: 0.78rem;
+                                        background: #fef2f2;
+                                        border: 1px solid #fca5a5;
+                                        border-radius: 8px;
+                                        padding: 0.45rem 0.75rem;
+                                        margin-top: 0.75rem;
+                                    }
+
+                                    .bvm-footer {
+                                        padding: 0.85rem 1.25rem 1.15rem;
+                                        border-top: 1px solid #f1f5f9;
+                                        background: #ffffff;
+                                    }
+
+                                    .bvm-btn-primary {
+                                        width: 100%;
+                                        padding: 0.8rem 1.5rem;
+                                        border-radius: 999px;
+                                        border: none;
+                                        background: linear-gradient(135deg, #1eb349, #a5cf37);
+                                        color: #ffffff;
+                                        font-family: 'Montserrat', sans-serif;
+                                        font-size: 0.92rem;
+                                        font-weight: 700;
+                                        cursor: pointer;
+                                        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+                                        transition: all 0.2s ease;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        gap: 0.5rem;
+                                        letter-spacing: 0.02em;
+                                    }
+
+                                    .bvm-btn-primary:hover {
+                                        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
+                                        transform: translateY(-1px);
+                                    }
+
+                                    .bvm-btn-primary:active {
+                                        transform: translateY(0);
+                                    }
+                                </style>
                             @endif
 
                             <script>
@@ -3431,7 +3606,7 @@
                                     var isTicketProduct = {{ $isTicket ? 'true' : 'false' }};
                                     window._pdCurrentAction = 'buy';
 
-                                    window.stepPdQty = function(delta) {
+                                    window.stepPdQty = function (delta) {
                                         var input = document.getElementById('qty_input');
                                         if (!input) return;
                                         var current = parseInt(input.value) || 1;
@@ -3449,7 +3624,7 @@
                                         if (bvmQty) bvmQty.value = next;
                                     };
 
-                                    window.openPdVariantModal = function(action) {
+                                    window.openPdVariantModal = function (action) {
                                         var modal = document.getElementById('pd-variant-modal');
                                         if (!modal) return;
                                         window._pdCurrentAction = action || 'buy';
@@ -3481,30 +3656,30 @@
                                         }
 
                                         modal.style.display = 'flex';
-                                        requestAnimationFrame(function() {
+                                        requestAnimationFrame(function () {
                                             modal.classList.add('active');
                                             document.body.style.overflow = 'hidden';
                                         });
                                     };
 
-                                    window.closePdVariantModal = function() {
+                                    window.closePdVariantModal = function () {
                                         var modal = document.getElementById('pd-variant-modal');
                                         if (!modal) return;
                                         modal.classList.remove('active');
                                         document.body.style.overflow = '';
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             if (!modal.classList.contains('active')) {
                                                 modal.style.display = 'none';
                                             }
                                         }, 280);
                                     };
 
-                                    window.selectBvmVariant = function(btn, syncToPage) {
+                                    window.selectBvmVariant = function (btn, syncToPage) {
                                         if (typeof syncToPage === 'undefined') syncToPage = true;
                                         if (btn.disabled) return;
                                         var group = btn.closest('.bvm-pills');
                                         if (group) {
-                                            group.querySelectorAll('.bvm-pill').forEach(function(p) { p.classList.remove('selected'); });
+                                            group.querySelectorAll('.bvm-pill').forEach(function (p) { p.classList.remove('selected'); });
                                         }
                                         btn.classList.add('selected');
 
@@ -3569,7 +3744,7 @@
                                             if (pagePill) {
                                                 var parent = pagePill.closest('.pd-attr-content');
                                                 if (parent) {
-                                                    parent.querySelectorAll('.pd-variant-pill').forEach(function(p) { p.classList.remove('selected'); });
+                                                    parent.querySelectorAll('.pd-variant-pill').forEach(function (p) { p.classList.remove('selected'); });
                                                 }
                                                 pagePill.classList.add('selected');
                                             }
@@ -3602,7 +3777,7 @@
                                         }
                                     };
 
-                                    window.stepBvmQty = function(delta) {
+                                    window.stepBvmQty = function (delta) {
                                         var input = document.getElementById('bvm-qty-input');
                                         var mainQty = document.getElementById('qty_input');
                                         if (!input) return;
@@ -3627,7 +3802,7 @@
                                         if (mainQty) mainQty.value = next;
                                     };
 
-                                    window.confirmBvmSubmit = function() {
+                                    window.confirmBvmSubmit = function () {
                                         var vidEl = document.getElementById('pd_selected_variant_id');
                                         var vid = vidEl ? vidEl.value : '';
                                         if (!vid) {
@@ -3679,7 +3854,7 @@
                                     // ══ TICKET WAR QUEUE — Queue ID unik per browser session (Tahan Refresh & Tab Baru) ══
                                     var _bwrQueueId = localStorage.getItem('buyle_war_queue_id_{{ $service->id }}') || sessionStorage.getItem('buyle_war_queue_id_{{ $service->id }}');
                                     if (!_bwrQueueId) {
-                                        _bwrQueueId = 'q_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+                                        _bwrQueueId = 'q_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                                         localStorage.setItem('buyle_war_queue_id_{{ $service->id }}', _bwrQueueId);
                                         sessionStorage.setItem('buyle_war_queue_id_{{ $service->id }}', _bwrQueueId);
                                     }
@@ -3723,7 +3898,7 @@
                                         }
                                     }
 
-                                    window.openBuyleWaitingRoom = function(action) {
+                                    window.openBuyleWaitingRoom = function (action) {
                                         _bwrAction = action || 'buy';
                                         var modal = document.getElementById('buyleWaitingRoomModal');
                                         if (!modal) {
@@ -3766,7 +3941,7 @@
                                         // Countdown display (simulasi visual) selama menunggu polling
                                         var displaySeconds = Math.round(jitterDelay / 1000);
                                         var totalDisplay = displaySeconds;
-                                        _bwrInterval = setInterval(function() {
+                                        _bwrInterval = setInterval(function () {
                                             displaySeconds--;
                                             if (timerEl) timerEl.textContent = Math.max(0, displaySeconds) + 's';
                                             var pct = Math.min(90, Math.round(((totalDisplay - displaySeconds) / totalDisplay) * 90));
@@ -3786,77 +3961,77 @@
                                                     current_token: _bwrAdmissionToken
                                                 })
                                             })
-                                            .then(function(res) { return res.json(); })
-                                            .then(function(data) {
-                                                if (data.status === 'admitted') {
-                                                    // ✅ Dapat slot! Simpan token & lanjutkan checkout
-                                                    if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
-                                                    _bwrAdmissionToken = data.token || null;
-                                                    if (_bwrAdmissionToken) {
-                                                        localStorage.setItem('buyle_war_token_{{ $service->id }}', _bwrAdmissionToken);
-                                                        sessionStorage.setItem('buyle_war_token_{{ $service->id }}', _bwrAdmissionToken);
-                                                    }
-                                                    var warKey = 'buyle_war_cleared_{{ $service->id }}';
-                                                    sessionStorage.setItem(warKey, Date.now());
+                                                .then(function (res) { return res.json(); })
+                                                .then(function (data) {
+                                                    if (data.status === 'admitted') {
+                                                        // ✅ Dapat slot! Simpan token & lanjutkan checkout
+                                                        if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
+                                                        _bwrAdmissionToken = data.token || null;
+                                                        if (_bwrAdmissionToken) {
+                                                            localStorage.setItem('buyle_war_token_{{ $service->id }}', _bwrAdmissionToken);
+                                                            sessionStorage.setItem('buyle_war_token_{{ $service->id }}', _bwrAdmissionToken);
+                                                        }
+                                                        var warKey = 'buyle_war_cleared_{{ $service->id }}';
+                                                        sessionStorage.setItem(warKey, Date.now());
 
-                                                    if (timerEl) { timerEl.textContent = 'Siap!'; timerEl.style.color = '#16a34a'; }
-                                                    if (progressEl) progressEl.style.width = '100%';
-                                                    if (statusEl) { statusEl.textContent = 'Giliran Anda!'; statusEl.style.color = '#16a34a'; }
-                                                    if (titleEl) titleEl.textContent = '✅ Mengalihkan ke Pembayaran...';
-                                                    if (descEl) descEl.textContent = 'Giliran Anda tiba! Sesi pemesanan tiket Anda sedang dibuka...';
+                                                        if (timerEl) { timerEl.textContent = 'Siap!'; timerEl.style.color = '#16a34a'; }
+                                                        if (progressEl) progressEl.style.width = '100%';
+                                                        if (statusEl) { statusEl.textContent = 'Giliran Anda!'; statusEl.style.color = '#16a34a'; }
+                                                        if (titleEl) titleEl.textContent = '✅ Mengalihkan ke Pembayaran...';
+                                                        if (descEl) descEl.textContent = 'Giliran Anda tiba! Sesi pemesanan tiket Anda sedang dibuka...';
 
-                                                    setTimeout(function() {
-                                                        injectAdmissionToken(_bwrAdmissionToken);
+                                                        setTimeout(function () {
+                                                            injectAdmissionToken(_bwrAdmissionToken);
+                                                            executeFinalCartSubmit(_bwrAction);
+                                                        }, 700);
+
+                                                    } else if (data.status === 'waiting') {
+                                                        // 🕒 Masih antre — update display & jadwalkan poll berikutnya
+                                                        if (statusEl) { statusEl.textContent = 'Antrean #' + (data.position || '...'); statusEl.style.color = '#D97706'; }
+                                                        if (descEl) descEl.textContent = 'Tingginya antrean: Anda di posisi ' + (data.position || '...') + '. Mohon tunggu giliran Anda...';
+
+                                                        // Reset countdown untuk polling berikutnya (jitter 10-20 detik)
+                                                        var nextDelay = (data.retry_after || 15) * 1000;
+                                                        displaySeconds = Math.round(nextDelay / 1000);
+                                                        totalDisplay = displaySeconds;
+                                                        if (timerEl) timerEl.textContent = displaySeconds + 's';
+                                                        if (progressEl) progressEl.style.width = '10%';
+
+                                                        if (_bwrInterval) { clearInterval(_bwrInterval); }
+                                                        _bwrInterval = setInterval(function () {
+                                                            displaySeconds--;
+                                                            if (timerEl) timerEl.textContent = Math.max(0, displaySeconds) + 's';
+                                                            var pct = Math.min(90, Math.round(((totalDisplay - displaySeconds) / totalDisplay) * 80) + 10);
+                                                            if (progressEl) progressEl.style.width = pct + '%';
+                                                        }, 1000);
+
+                                                        _bwrPollTimer = setTimeout(doPoll, nextDelay);
+
+                                                    } else if (data.status === 'not_started') {
+                                                        // ⏳ Jadwal war belum dimulai
+                                                        if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
+                                                        if (statusEl) { statusEl.textContent = 'Belum Dibuka'; statusEl.style.color = '#6B7280'; }
+                                                        if (titleEl) titleEl.textContent = '⏳ Penjualan Belum Dimulai';
+                                                        if (descEl) descEl.textContent = 'War tiket belum dibuka. Halaman akan otomatis refresh saat jadwal tiba.';
+                                                        if (timerEl) { timerEl.textContent = '-'; timerEl.style.color = '#6B7280'; }
+                                                    } else {
+                                                        // Error / produk tidak ditemukan — bypass langsung
+                                                        if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
                                                         executeFinalCartSubmit(_bwrAction);
-                                                    }, 700);
-
-                                                } else if (data.status === 'waiting') {
-                                                    // 🕒 Masih antre — update display & jadwalkan poll berikutnya
-                                                    if (statusEl) { statusEl.textContent = 'Antrean #' + (data.position || '...'); statusEl.style.color = '#D97706'; }
-                                                    if (descEl) descEl.textContent = 'Tingginya antrean: Anda di posisi ' + (data.position || '...') + '. Mohon tunggu giliran Anda...';
-
-                                                    // Reset countdown untuk polling berikutnya (jitter 10-20 detik)
-                                                    var nextDelay = (data.retry_after || 15) * 1000;
-                                                    displaySeconds = Math.round(nextDelay / 1000);
-                                                    totalDisplay = displaySeconds;
-                                                    if (timerEl) timerEl.textContent = displaySeconds + 's';
-                                                    if (progressEl) progressEl.style.width = '10%';
-
-                                                    if (_bwrInterval) { clearInterval(_bwrInterval); }
-                                                    _bwrInterval = setInterval(function() {
-                                                        displaySeconds--;
-                                                        if (timerEl) timerEl.textContent = Math.max(0, displaySeconds) + 's';
-                                                        var pct = Math.min(90, Math.round(((totalDisplay - displaySeconds) / totalDisplay) * 80) + 10);
-                                                        if (progressEl) progressEl.style.width = pct + '%';
-                                                    }, 1000);
-
-                                                    _bwrPollTimer = setTimeout(doPoll, nextDelay);
-
-                                                } else if (data.status === 'not_started') {
-                                                    // ⏳ Jadwal war belum dimulai
-                                                    if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
-                                                    if (statusEl) { statusEl.textContent = 'Belum Dibuka'; statusEl.style.color = '#6B7280'; }
-                                                    if (titleEl) titleEl.textContent = '⏳ Penjualan Belum Dimulai';
-                                                    if (descEl) descEl.textContent = 'War tiket belum dibuka. Halaman akan otomatis refresh saat jadwal tiba.';
-                                                    if (timerEl) { timerEl.textContent = '-'; timerEl.style.color = '#6B7280'; }
-                                                } else {
-                                                    // Error / produk tidak ditemukan — bypass langsung
+                                                    }
+                                                })
+                                                .catch(function () {
+                                                    // Jika fetch gagal (koneksi putus, dll) — bypass untuk tidak menghambat pembeli
                                                     if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
                                                     executeFinalCartSubmit(_bwrAction);
-                                                }
-                                            })
-                                            .catch(function() {
-                                                // Jika fetch gagal (koneksi putus, dll) — bypass untuk tidak menghambat pembeli
-                                                if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
-                                                executeFinalCartSubmit(_bwrAction);
-                                            });
+                                                });
                                         }
 
                                         // Polling pertama setelah jitter delay awal
                                         _bwrPollTimer = setTimeout(doPoll, jitterDelay);
                                     };
 
-                                    window.cancelWaitingRoom = function() {
+                                    window.cancelWaitingRoom = function () {
                                         if (_bwrInterval) { clearInterval(_bwrInterval); _bwrInterval = null; }
                                         if (_bwrPollTimer) { clearTimeout(_bwrPollTimer); _bwrPollTimer = null; }
                                         var modal = document.getElementById('buyleWaitingRoomModal');
@@ -3890,27 +4065,27 @@
                                         triggerCartSubmissionWithQueue(action);
                                     };
 
-                                    document.addEventListener('keydown', function(e) {
+                                    document.addEventListener('keydown', function (e) {
                                         if (e.key === 'Escape') closePdVariantModal();
                                     });
 
                                     // ── LIGHTBOX: Preview Denah / Foto Produk ──
-                                    window.openBvmLightbox = function() {
+                                    window.openBvmLightbox = function () {
                                         var thumbImg = document.getElementById('bvm-thumb-img');
                                         var lightbox = document.getElementById('bvmLightboxModal');
-                                        var lbImg    = document.getElementById('bvmLightboxImage');
+                                        var lbImg = document.getElementById('bvmLightboxImage');
                                         if (!thumbImg || !lightbox || !lbImg) return;
                                         lbImg.src = thumbImg.src;
                                         lightbox.style.display = 'flex';
                                         document.body.style.overflow = 'hidden';
                                     };
-                                    window.closeBvmLightbox = function(e) {
+                                    window.closeBvmLightbox = function (e) {
                                         var lightbox = document.getElementById('bvmLightboxModal');
                                         if (!lightbox) return;
                                         lightbox.style.display = 'none';
                                         document.body.style.overflow = '';
                                     };
-                                    document.addEventListener('keydown', function(e) {
+                                    document.addEventListener('keydown', function (e) {
                                         if (e.key === 'Escape') {
                                             var lightbox = document.getElementById('bvmLightboxModal');
                                             if (lightbox && lightbox.style.display !== 'none') {
@@ -4060,7 +4235,8 @@
                                     <a href="https://buyle.id" title="BUYLE.ID"><strong>BUYLE.ID</strong></a>.
                                 </div>
 
-                                {{-- Video Produk (Minimalist YouTube / TikTok Embed) - Tepat di bawah Callout sebelum isi deskripsi --}}
+                                {{-- Video Produk (Minimalist YouTube / TikTok Embed) - Tepat di bawah Callout sebelum isi
+                                deskripsi --}}
                                 @include('partials.product_video', ['videoUrl' => $service->tiktok_video_url])
 
                                 @if($service->short_desc)
@@ -4094,16 +4270,23 @@
                         @if($service->isTicketProduct())
                             {{-- TAB SYARAT & KETENTUAN (T&C) --}}
                             <div id="tab-tnc" class="pd-tab-content" style="display:none;">
-                                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.75rem; margin-bottom:1.5rem;">
-                                    <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid #e2e8f0;">
-                                        <div style="width:38px; height:38px; border-radius:10px; background:rgba(30,179,73,0.12); display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                <div
+                                    style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.75rem; margin-bottom:1.5rem;">
+                                    <div
+                                        style="display:flex; align-items:center; gap:0.65rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid #e2e8f0;">
+                                        <div
+                                            style="width:38px; height:38px; border-radius:10px; background:rgba(30,179,73,0.12); display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                             </svg>
                                         </div>
                                         <div>
-                                            <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#0f172a;">Syarat & Ketentuan Acara (T&C)</h3>
-                                            <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Harap membaca dengan seksama sebelum melakukan pemesanan tiket.</p>
+                                            <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#0f172a;">Syarat &
+                                                Ketentuan Acara (T&C)</h3>
+                                            <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Harap membaca dengan
+                                                seksama sebelum melakukan pemesanan tiket.</p>
                                         </div>
                                     </div>
                                     <div style="font-size:0.95rem; color:#334155; line-height:1.75; white-space:pre-line;">
@@ -4114,18 +4297,24 @@
 
                             {{-- TAB FAQ KHUSUS PRODUK TIKET --}}
                             <div id="tab-faq" class="pd-tab-content" style="display:none;">
-                                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.75rem; margin-bottom:1.5rem;">
-                                    <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid #e2e8f0;">
-                                        <div style="width:38px; height:38px; border-radius:10px; background:rgba(30,179,73,0.12); display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <div
+                                    style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.75rem; margin-bottom:1.5rem;">
+                                    <div
+                                        style="display:flex; align-items:center; gap:0.65rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid #e2e8f0;">
+                                        <div
+                                            style="width:38px; height:38px; border-radius:10px; background:rgba(30,179,73,0.12); display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
                                                 <circle cx="12" cy="12" r="10"></circle>
                                                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                                                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                             </svg>
                                         </div>
                                         <div>
-                                            <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#0f172a;">Frequently Asked Questions (FAQ)</h3>
-                                            <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Informasi penting seputar pemesanan tiket, check-in acara, dan penukaran e-tiket.</p>
+                                            <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#0f172a;">Frequently
+                                                Asked Questions (FAQ)</h3>
+                                            <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Informasi penting
+                                                seputar pemesanan tiket, check-in acara, dan penukaran e-tiket.</p>
                                         </div>
                                     </div>
                                     @include('tix.partials.faq_accordion', ['accordionPrefix' => 'prod_show_faq'])
@@ -4135,267 +4324,267 @@
                             {{-- TAB RATING & ULASAN --}}
                             <div id="tab-reviews" class="pd-tab-content" style="display:none;">
 
-                            {{-- SUMMARY CARD --}}
-                            @php
-                                $hasRealScore = ($realReviewsAvg !== null && $realReviewsAvg > 0);
-                            @endphp
-                            <div class="pd-reviews-summary-card">
-                                <div class="pd-score-big-box">
-                                    <div class="pd-score-big" id="reviewsSummaryScore">
-                                        {{ $hasRealScore ? number_format($realReviewsAvg, 1) : '0.0' }}
+                                {{-- SUMMARY CARD --}}
+                                @php
+                                    $hasRealScore = ($realReviewsAvg !== null && $realReviewsAvg > 0);
+                                @endphp
+                                <div class="pd-reviews-summary-card">
+                                    <div class="pd-score-big-box">
+                                        <div class="pd-score-big" id="reviewsSummaryScore">
+                                            {{ $hasRealScore ? number_format($realReviewsAvg, 1) : '0.0' }}
+                                        </div>
+                                        <div class="pd-stars-row" id="reviewsSummaryStars">
+                                            @if($hasRealScore)
+                                                @php
+                                                    $roundedStar = (int) round($realReviewsAvg);
+                                                @endphp
+                                                @for($s = 1; $s <= 5; $s++)
+                                                    @if($s <= $roundedStar)
+                                                        <span style="color:#F59E0B;">★</span>
+                                                    @else
+                                                        <span style="color:#CBD5E1;">★</span>
+                                                    @endif
+                                                @endfor
+                                            @else
+                                                <span style="color:#CBD5E1;">★★★★★</span>
+                                            @endif
+                                        </div>
+                                        <div class="pd-score-sub"><span id="reviewsSummaryTotal">{{ $realReviewsCount }}</span>
+                                            Ulasan Pembeli</div>
                                     </div>
-                                    <div class="pd-stars-row" id="reviewsSummaryStars">
-                                        @if($hasRealScore)
-                                            @php
-                                                $roundedStar = (int) round($realReviewsAvg);
-                                            @endphp
-                                            @for($s = 1; $s <= 5; $s++)
-                                                @if($s <= $roundedStar)
-                                                    <span style="color:#F59E0B;">★</span>
-                                                @else
-                                                    <span style="color:#CBD5E1;">★</span>
-                                                @endif
-                                            @endfor
-                                        @else
-                                            <span style="color:#CBD5E1;">★★★★★</span>
-                                        @endif
-                                    </div>
-                                    <div class="pd-score-sub"><span id="reviewsSummaryTotal">{{ $realReviewsCount }}</span>
-                                        Ulasan Pembeli</div>
-                                </div>
 
-                                <div class="pd-progress-bars">
-                                    @for($star = 5; $star >= 1; $star--)
-                                        <div class="pd-bar-row">
-                                            <div class="pd-bar-label">{{ $star }} ★</div>
-                                            <div class="pd-bar-track">
-                                                <div class="pd-bar-fill" id="barFill-{{ $star }}" style="width: 0%;"></div>
+                                    <div class="pd-progress-bars">
+                                        @for($star = 5; $star >= 1; $star--)
+                                            <div class="pd-bar-row">
+                                                <div class="pd-bar-label">{{ $star }} ★</div>
+                                                <div class="pd-bar-track">
+                                                    <div class="pd-bar-fill" id="barFill-{{ $star }}" style="width: 0%;"></div>
+                                                </div>
+                                                <div class="pd-bar-count" id="barCount-{{ $star }}">0</div>
                                             </div>
-                                            <div class="pd-bar-count" id="barCount-{{ $star }}">0</div>
-                                        </div>
-                                    @endfor
-                                </div>
-
-                                <div class="pd-reviews-action-box" id="pdReviewsActionBox">
-                                    @if($canReview)
-                                        <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
-                                            style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                                                viewBox="0 0 24 24">
-                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                            </svg>
-                                            <span>{{ $userReview ? 'Edit Ulasan' : 'Tulis Ulasan' }}</span>
-                                        </button>
-                                        @if($userReview)
-                                            <div
-                                                style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
-                                                <span>✓ Anda sudah mengulas ({{ $userReview->rating }}★)</span>
-                                                <span
-                                                    style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa
-                                                    1x edit</span>
-                                            </div>
-                                        @endif
-                                    @elseif($userReview)
-                                        <div
-                                            style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
-                                            <div
-                                                style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D">
-                                                    <path
-                                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                                                </svg>
-                                                <span>Ulasan Tersimpan ({{ $userReview->rating }}★)</span>
-                                            </div>
-                                            <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
-                                                Batas pengeditan ulasan tercapai (maksimal 1x edit).
-                                            </div>
-                                        </div>
-                                    @elseif(auth()->check())
-                                        <div
-                                            style="background:#F1F5F9;border-radius:12px;padding:0.75rem;font-size:0.78rem;color:#64748B;line-height:1.4;">
-                                            Hanya pembeli yang sudah menyelesaikan pesanan produk ini yang dapat memberikan
-                                            rating & ulasan.
-                                        </div>
-                                    @else
-                                        <a href="{{ route('login') }}" class="pd-btn pd-btn-outline"
-                                            style="width:100%;height:38px;font-size:0.82rem;border-radius:99px;">
-                                            Hanya pembeli yang sudah menyelesaikan pesanan produk ini yang dapat memberikan
-                                            rating & ulasan.
-
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-
-                            {{-- WRITE REVIEW FORM (COLLAPSIBLE FOR BUYERS) --}}
-                            @if($canReview)
-                                <div id="writeReviewCard" class="pd-write-review-card">
-                                    <div
-                                        style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;border-bottom:1px solid #DCFCE7;padding-bottom:0.75rem;">
-                                        <h4
-                                            style="margin:0;font-size:1.05rem;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:6px;">
-                                            <span style="color:#1EB349;">✍️</span>
-                                            {{ $userReview ? 'Edit Rating & Ulasan (Kesempatan Terakhir)' : 'Tulis Rating & Ulasan Produk' }}
-                                        </h4>
-                                        <button type="button" onclick="toggleWriteReviewForm()"
-                                            style="background:none;border:none;color:#64748B;font-size:1.25rem;cursor:pointer;">&times;</button>
+                                        @endfor
                                     </div>
 
-                                    {{-- Star Picker --}}
-                                    <div style="margin-bottom:1rem;text-align:center;">
-                                        <label
-                                            style="display:block;font-size:0.85rem;font-weight:700;color:#334155;margin-bottom:6px;">Berapa
-                                            bintang yang Anda berikan?</label>
-                                        <div style="display:flex;justify-content:center;gap:8px;" id="tabStarContainer">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                <button type="button" class="tab-star-btn" data-star="{{ $i }}"
-                                                    onclick="selectTabRating({{ $i }})" onmouseenter="previewTabRating({{ $i }})"
-                                                    onmouseleave="resetPreviewTabRating()"
-                                                    style="background:none;border:none;cursor:pointer;padding:4px;transition:transform 0.15s ease;">
-                                                    <svg width="36" height="36"
-                                                        fill="{{ ($userReview && $userReview->rating >= $i) ? '#f59e0b' : '#e2e8f0' }}"
-                                                        stroke="{{ ($userReview && $userReview->rating >= $i) ? '#f59e0b' : '#cbd5e1' }}"
-                                                        stroke-width="1.5" viewBox="0 0 24 24" class="tab-star-svg-{{ $i }}"
-                                                        style="transition:all 0.2s ease;">
-                                                        <polygon
-                                                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                                    </svg>
-                                                </button>
-                                            @endfor
-                                        </div>
-                                        <div id="tabRatingLabel"
-                                            style="font-size:0.88rem;font-weight:700;color:#f59e0b;min-height:22px;margin-top:4px;">
-                                            {{ $userReview ? ($userReview->rating . ' Bintang') : 'Pilih Bintang (1 - 5)' }}
-                                        </div>
-                                        <input type="hidden" id="tabSelectedRatingValue"
-                                            value="{{ $userReview ? $userReview->rating : 0 }}">
-                                    </div>
-
-                                    {{-- Review Textarea --}}
-                                    <div style="margin-bottom:1rem;">
-                                        <label
-                                            style="display:block;font-size:0.82rem;font-weight:700;color:#334155;margin-bottom:4px;">Ulasan
-                                            Anda:</label>
-                                        <textarea id="tabReviewText" rows="3"
-                                            placeholder="Ceritakan kepuasan Anda mengenai produk, kecepatan pengerjaan, atau keramahan creator..."
-                                            style="width:100%;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:12px;padding:0.8rem;font-size:0.88rem;font-family:inherit;color:#0F172A;resize:none;outline:none;background:#fff;transition:border-color .2s;"
-                                            onfocus="this.style.borderColor='#1EB349'"
-                                            onblur="this.style.borderColor='#CBD5E1'">{{ $userReview?->review_text ?? '' }}</textarea>
-                                    </div>
-
-                                    {{-- Single Photo Upload with Max Compression (Max 1 Image) --}}
-                                    <div style="margin-bottom:1.25rem;">
-                                        <div
-                                            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                                            <label style="font-size:0.82rem;font-weight:700;color:#334155;">Upload Foto (Maks 1
-                                                Foto):</label>
-                                            <span
-                                                style="font-size:0.74rem;color:#15803D;background:#DCFCE7;padding:2px 8px;border-radius:99px;font-weight:600;">⚡
-                                                Otomatis Kompres Maksimal</span>
-                                        </div>
-
-                                        <div id="tabReviewUploadTrigger"
-                                            onclick="document.getElementById('tabReviewPhotoInput').click()"
-                                            style="border:2px dashed #CBD5E1;border-radius:12px;padding:0.85rem;text-align:center;cursor:pointer;background:#fff;transition:all .2s;"
-                                            onmouseover="this.style.borderColor='#1EB349';this.style.background='#F0FDF4'"
-                                            onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#fff'">
-                                            <div
-                                                style="display:flex;align-items:center;justify-content:center;gap:6px;color:#475569;font-size:0.84rem;font-weight:600;">
-                                                <svg width="20" height="20" fill="none" stroke="#1EB349" stroke-width="2"
+                                    <div class="pd-reviews-action-box" id="pdReviewsActionBox">
+                                        @if($canReview)
+                                            <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
+                                                style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
                                                     viewBox="0 0 24 24">
-                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                                    <polyline points="21 15 16 10 5 21" />
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                                 </svg>
-                                                <span>Pilih 1 Foto Bukti/Review</span>
+                                                <span>{{ $userReview ? 'Edit Ulasan' : 'Tulis Ulasan' }}</span>
+                                            </button>
+                                            @if($userReview)
+                                                <div
+                                                    style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
+                                                    <span>✓ Anda sudah mengulas ({{ $userReview->rating }}★)</span>
+                                                    <span
+                                                        style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa
+                                                        1x edit</span>
+                                                </div>
+                                            @endif
+                                        @elseif($userReview)
+                                            <div
+                                                style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
+                                                <div
+                                                    style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D">
+                                                        <path
+                                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                                    </svg>
+                                                    <span>Ulasan Tersimpan ({{ $userReview->rating }}★)</span>
+                                                </div>
+                                                <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
+                                                    Batas pengeditan ulasan tercapai (maksimal 1x edit).
+                                                </div>
                                             </div>
-                                            <div style="font-size:0.74rem;color:#94A3B8;margin-top:2px;">Format JPG, PNG, atau
-                                                WebP (akan langsung dikompresi)</div>
+                                        @elseif(auth()->check())
+                                            <div
+                                                style="background:#F1F5F9;border-radius:12px;padding:0.75rem;font-size:0.78rem;color:#64748B;line-height:1.4;">
+                                                Hanya pembeli yang sudah menyelesaikan pesanan produk ini yang dapat memberikan
+                                                rating & ulasan.
+                                            </div>
+                                        @else
+                                            <a href="{{ route('login') }}" class="pd-btn pd-btn-outline"
+                                                style="width:100%;height:38px;font-size:0.82rem;border-radius:99px;">
+                                                Hanya pembeli yang sudah menyelesaikan pesanan produk ini yang dapat memberikan
+                                                rating & ulasan.
+
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- WRITE REVIEW FORM (COLLAPSIBLE FOR BUYERS) --}}
+                                @if($canReview)
+                                    <div id="writeReviewCard" class="pd-write-review-card">
+                                        <div
+                                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;border-bottom:1px solid #DCFCE7;padding-bottom:0.75rem;">
+                                            <h4
+                                                style="margin:0;font-size:1.05rem;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:6px;">
+                                                <span style="color:#1EB349;">✍️</span>
+                                                {{ $userReview ? 'Edit Rating & Ulasan (Kesempatan Terakhir)' : 'Tulis Rating & Ulasan Produk' }}
+                                            </h4>
+                                            <button type="button" onclick="toggleWriteReviewForm()"
+                                                style="background:none;border:none;color:#64748B;font-size:1.25rem;cursor:pointer;">&times;</button>
                                         </div>
-                                        <input type="file" id="tabReviewPhotoInput" accept="image/*" style="display:none;"
-                                            onchange="handleTabReviewPhoto(this)">
 
-                                        {{-- Photo Preview Box --}}
-                                        <div id="tabReviewPhotoPreviewWrap"
-                                            style="{{ ($userReview && !empty($userReview->review_images)) ? 'display:block;' : 'display:none;' }}margin-top:10px;position:relative;width:90px;height:90px;border-radius:12px;overflow:hidden;border:1px solid #CBD5E1;">
-                                            <img id="tabReviewPhotoPreview"
-                                                src="{{ ($userReview && !empty($userReview->review_images)) ? asset('storage/' . $userReview->review_images[0]) : '' }}"
-                                                alt="preview" style="width:100%;height:100%;object-fit:cover;">
-                                            <button type="button" onclick="removeTabReviewPhoto()"
-                                                style="position:absolute;top:3px;right:3px;background:rgba(220,38,38,0.85);color:#fff;border:none;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;line-height:1;">&times;</button>
+                                        {{-- Star Picker --}}
+                                        <div style="margin-bottom:1rem;text-align:center;">
+                                            <label
+                                                style="display:block;font-size:0.85rem;font-weight:700;color:#334155;margin-bottom:6px;">Berapa
+                                                bintang yang Anda berikan?</label>
+                                            <div style="display:flex;justify-content:center;gap:8px;" id="tabStarContainer">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <button type="button" class="tab-star-btn" data-star="{{ $i }}"
+                                                        onclick="selectTabRating({{ $i }})" onmouseenter="previewTabRating({{ $i }})"
+                                                        onmouseleave="resetPreviewTabRating()"
+                                                        style="background:none;border:none;cursor:pointer;padding:4px;transition:transform 0.15s ease;">
+                                                        <svg width="36" height="36"
+                                                            fill="{{ ($userReview && $userReview->rating >= $i) ? '#f59e0b' : '#e2e8f0' }}"
+                                                            stroke="{{ ($userReview && $userReview->rating >= $i) ? '#f59e0b' : '#cbd5e1' }}"
+                                                            stroke-width="1.5" viewBox="0 0 24 24" class="tab-star-svg-{{ $i }}"
+                                                            style="transition:all 0.2s ease;">
+                                                            <polygon
+                                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                                        </svg>
+                                                    </button>
+                                                @endfor
+                                            </div>
+                                            <div id="tabRatingLabel"
+                                                style="font-size:0.88rem;font-weight:700;color:#f59e0b;min-height:22px;margin-top:4px;">
+                                                {{ $userReview ? ($userReview->rating . ' Bintang') : 'Pilih Bintang (1 - 5)' }}
+                                            </div>
+                                            <input type="hidden" id="tabSelectedRatingValue"
+                                                value="{{ $userReview ? $userReview->rating : 0 }}">
+                                        </div>
+
+                                        {{-- Review Textarea --}}
+                                        <div style="margin-bottom:1rem;">
+                                            <label
+                                                style="display:block;font-size:0.82rem;font-weight:700;color:#334155;margin-bottom:4px;">Ulasan
+                                                Anda:</label>
+                                            <textarea id="tabReviewText" rows="3"
+                                                placeholder="Ceritakan kepuasan Anda mengenai produk, kecepatan pengerjaan, atau keramahan creator..."
+                                                style="width:100%;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:12px;padding:0.8rem;font-size:0.88rem;font-family:inherit;color:#0F172A;resize:none;outline:none;background:#fff;transition:border-color .2s;"
+                                                onfocus="this.style.borderColor='#1EB349'"
+                                                onblur="this.style.borderColor='#CBD5E1'">{{ $userReview?->review_text ?? '' }}</textarea>
+                                        </div>
+
+                                        {{-- Single Photo Upload with Max Compression (Max 1 Image) --}}
+                                        <div style="margin-bottom:1.25rem;">
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                                <label style="font-size:0.82rem;font-weight:700;color:#334155;">Upload Foto (Maks 1
+                                                    Foto):</label>
+                                                <span
+                                                    style="font-size:0.74rem;color:#15803D;background:#DCFCE7;padding:2px 8px;border-radius:99px;font-weight:600;">⚡
+                                                    Otomatis Kompres Maksimal</span>
+                                            </div>
+
+                                            <div id="tabReviewUploadTrigger"
+                                                onclick="document.getElementById('tabReviewPhotoInput').click()"
+                                                style="border:2px dashed #CBD5E1;border-radius:12px;padding:0.85rem;text-align:center;cursor:pointer;background:#fff;transition:all .2s;"
+                                                onmouseover="this.style.borderColor='#1EB349';this.style.background='#F0FDF4'"
+                                                onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#fff'">
+                                                <div
+                                                    style="display:flex;align-items:center;justify-content:center;gap:6px;color:#475569;font-size:0.84rem;font-weight:600;">
+                                                    <svg width="20" height="20" fill="none" stroke="#1EB349" stroke-width="2"
+                                                        viewBox="0 0 24 24">
+                                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                                        <polyline points="21 15 16 10 5 21" />
+                                                    </svg>
+                                                    <span>Pilih 1 Foto Bukti/Review</span>
+                                                </div>
+                                                <div style="font-size:0.74rem;color:#94A3B8;margin-top:2px;">Format JPG, PNG, atau
+                                                    WebP (akan langsung dikompresi)</div>
+                                            </div>
+                                            <input type="file" id="tabReviewPhotoInput" accept="image/*" style="display:none;"
+                                                onchange="handleTabReviewPhoto(this)">
+
+                                            {{-- Photo Preview Box --}}
+                                            <div id="tabReviewPhotoPreviewWrap"
+                                                style="{{ ($userReview && !empty($userReview->review_images)) ? 'display:block;' : 'display:none;' }}margin-top:10px;position:relative;width:90px;height:90px;border-radius:12px;overflow:hidden;border:1px solid #CBD5E1;">
+                                                <img id="tabReviewPhotoPreview"
+                                                    src="{{ ($userReview && !empty($userReview->review_images)) ? asset('storage/' . $userReview->review_images[0]) : '' }}"
+                                                    alt="preview" style="width:100%;height:100%;object-fit:cover;">
+                                                <button type="button" onclick="removeTabReviewPhoto()"
+                                                    style="position:absolute;top:3px;right:3px;background:rgba(220,38,38,0.85);color:#fff;border:none;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;line-height:1;">&times;</button>
+                                            </div>
+                                        </div>
+
+                                        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+                                            <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-outline"
+                                                style="height:40px;font-size:0.85rem;padding:0 1.25rem;">Batal</button>
+                                            <button type="button" id="btnSubmitTabReview" onclick="submitTabReview()"
+                                                class="pd-btn pd-btn-primary"
+                                                style="height:40px;font-size:0.85rem;padding:0 1.5rem;font-weight:700;">
+                                                {{ $userReview ? 'Simpan Perubahan' : 'Kirim Ulasan' }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- FILTER PILLS --}}
+                                <div class="pd-review-filter-group">
+                                    <button type="button" class="pd-filter-pill active"
+                                        onclick="applyReviewFilter('all', this)">Semua (<span
+                                            id="filterCountAll">{{ $realReviewsCount }}</span>)</button>
+                                    <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('media', this)">📷
+                                        Dengan Foto (<span id="filterCountMedia">0</span>)</button>
+                                    <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('5', this)">5
+                                        ★</button>
+                                    <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('4', this)">4
+                                        ★</button>
+                                    <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('3', this)">3
+                                        ★</button>
+                                    <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('2', this)">2
+                                        ★</button>
+                                    <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('1', this)">1
+                                        ★</button>
+                                </div>
+
+                                {{-- REVIEWS FEED CONTAINER --}}
+                                <div id="reviewsListContainer" class="pd-reviews-list">
+                                    {{-- Skeleton Loading --}}
+                                    <div id="reviewsLoadingSkeleton"
+                                        style="display:none;padding:2rem;text-align:center;color:#64748B;">
+                                        <div
+                                            style="display:inline-block;width:32px;height:32px;border:3px solid #E2E8F0;border-top-color:#1EB349;border-radius:50%;animation:spin 0.8s linear infinite;">
+                                        </div>
+                                        <div style="margin-top:0.75rem;font-size:0.85rem;font-weight:600;">Memuat ulasan...
                                         </div>
                                     </div>
 
-                                    <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
-                                        <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-outline"
-                                            style="height:40px;font-size:0.85rem;padding:0 1.25rem;">Batal</button>
-                                        <button type="button" id="btnSubmitTabReview" onclick="submitTabReview()"
-                                            class="pd-btn pd-btn-primary"
-                                            style="height:40px;font-size:0.85rem;padding:0 1.5rem;font-weight:700;">
-                                            {{ $userReview ? 'Simpan Perubahan' : 'Kirim Ulasan' }}
-                                        </button>
+                                    {{-- Empty state --}}
+                                    <div id="reviewsEmptyState"
+                                        style="display:none;text-align:center;padding:3rem 1.5rem;background:#F8FAFC;border-radius:16px;border:1px dashed #CBD5E1;">
+                                        <div style="font-size:2.5rem;margin-bottom:0.5rem;">💬</div>
+                                        <h4 style="margin:0 0 0.35rem;font-size:1.05rem;font-weight:700;color:#0F172A;">Belum
+                                            Ada Ulasan</h4>
+                                        <p style="margin:0;font-size:0.85rem;color:#64748B;">Belum ada ulasan yang sesuai dengan
+                                            filter ini.</p>
                                     </div>
-                                </div>
-                            @endif
 
-                            {{-- FILTER PILLS --}}
-                            <div class="pd-review-filter-group">
-                                <button type="button" class="pd-filter-pill active"
-                                    onclick="applyReviewFilter('all', this)">Semua (<span
-                                        id="filterCountAll">{{ $realReviewsCount }}</span>)</button>
-                                <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('media', this)">📷
-                                    Dengan Foto (<span id="filterCountMedia">0</span>)</button>
-                                <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('5', this)">5
-                                    ★</button>
-                                <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('4', this)">4
-                                    ★</button>
-                                <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('3', this)">3
-                                    ★</button>
-                                <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('2', this)">2
-                                    ★</button>
-                                <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('1', this)">1
-                                    ★</button>
-                            </div>
-
-                            {{-- REVIEWS FEED CONTAINER --}}
-                            <div id="reviewsListContainer" class="pd-reviews-list">
-                                {{-- Skeleton Loading --}}
-                                <div id="reviewsLoadingSkeleton"
-                                    style="display:none;padding:2rem;text-align:center;color:#64748B;">
-                                    <div
-                                        style="display:inline-block;width:32px;height:32px;border:3px solid #E2E8F0;border-top-color:#1EB349;border-radius:50%;animation:spin 0.8s linear infinite;">
-                                    </div>
-                                    <div style="margin-top:0.75rem;font-size:0.85rem;font-weight:600;">Memuat ulasan...
-                                    </div>
+                                    <div id="reviewsListFeed" class="pd-reviews-list"></div>
                                 </div>
 
-                                {{-- Empty state --}}
-                                <div id="reviewsEmptyState"
-                                    style="display:none;text-align:center;padding:3rem 1.5rem;background:#F8FAFC;border-radius:16px;border:1px dashed #CBD5E1;">
-                                    <div style="font-size:2.5rem;margin-bottom:0.5rem;">💬</div>
-                                    <h4 style="margin:0 0 0.35rem;font-size:1.05rem;font-weight:700;color:#0F172A;">Belum
-                                        Ada Ulasan</h4>
-                                    <p style="margin:0;font-size:0.85rem;color:#64748B;">Belum ada ulasan yang sesuai dengan
-                                        filter ini.</p>
+                                {{-- LOAD MORE BUTTON (PAGINATION LAZY LOAD) --}}
+                                <div id="reviewsLoadMoreWrap" style="text-align:center;margin-top:1.5rem;display:none;">
+                                    <button type="button" id="btnLoadMoreReviews" onclick="loadMoreReviews()"
+                                        class="pd-btn pd-btn-outline"
+                                        style="height:42px;font-size:0.88rem;padding:0 2rem;border-radius:99px;font-weight:600;">
+                                        Muat Lebih Banyak Ulasan
+                                    </button>
                                 </div>
 
-                                <div id="reviewsListFeed" class="pd-reviews-list"></div>
+                                {{-- Sentinel for Infinite Scroll / Lazy Load --}}
+                                <div id="reviewsScrollSentinel" style="height:10px;"></div>
+
                             </div>
-
-                            {{-- LOAD MORE BUTTON (PAGINATION LAZY LOAD) --}}
-                            <div id="reviewsLoadMoreWrap" style="text-align:center;margin-top:1.5rem;display:none;">
-                                <button type="button" id="btnLoadMoreReviews" onclick="loadMoreReviews()"
-                                    class="pd-btn pd-btn-outline"
-                                    style="height:42px;font-size:0.88rem;padding:0 2rem;border-radius:99px;font-weight:600;">
-                                    Muat Lebih Banyak Ulasan
-                                </button>
-                            </div>
-
-                            {{-- Sentinel for Infinite Scroll / Lazy Load --}}
-                            <div id="reviewsScrollSentinel" style="height:10px;"></div>
-
-                        </div>
                         @endif
                         <div id="tab-creator" class="pd-tab-content" style="display:none;">
                             @if(isset($service->seller) && $service->seller)
@@ -4420,7 +4609,8 @@
                                             {{ optional($cp)->store_description ?: ($service->isTicketProduct() ? 'Event Organizer (EO) ini belum menuliskan deskripsi profilnya.' : 'Creator ini belum menuliskan deskripsi profilnya.') }}
                                         </p>
                                         <a href="{{ route('store.show', optional($cp)->store_slug ?? '#') }}"
-                                            class="pd-btn pd-btn-outline" style="height:38px;font-size:0.85rem;">{{ $service->isTicketProduct() ? 'Kunjungi Profil EO' : 'Kunjungi Profil Lengkap' }}</a>
+                                            class="pd-btn pd-btn-outline"
+                                            style="height:38px;font-size:0.85rem;">{{ $service->isTicketProduct() ? 'Kunjungi Profil EO' : 'Kunjungi Profil Lengkap' }}</a>
                                     </div>
                                 </div>
                             @endif
@@ -4432,7 +4622,7 @@
             {{-- RIGHT COLUMN: Creator Card --}}
             <div class="pd-sidebar-col">
                 @php 
-                                                                                                                                                                                                        $seller = $service->seller;
+                                                                                                                                                                                                                            $seller = $service->seller;
                     $cp = $seller?->creatorProfile;
                     $displaySellerName = optional($cp)->store_name ?: ($seller?->name ?? ($settings['site_name'] ?? 'buyle.id Official'));
                     $displayPhone = $seller?->phone ?? ($wa?->phone_number ?? '');
@@ -4496,7 +4686,8 @@
                             style="font-size:1.25rem; font-weight:800; color:var(--text-main); margin-bottom:0.25rem; font-family: var(--font, 'Montserrat', sans-serif); display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;">
                             <span>{{ $displaySellerName }}</span>
                             @if($isVerified)
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="#0D9488" title="Verified {{ $service->isTicketProduct() ? 'EO' : 'Creator' }}">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="#0D9488"
+                                    title="Verified {{ $service->isTicketProduct() ? 'EO' : 'Creator' }}">
                                     <path
                                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                                 </svg>
@@ -4603,12 +4794,10 @@
         {{-- MOBILE STICKY BAR --}}
         @if($service->price > 0)
             <div class="pd-sticky-bar">
-                <button type="button" onclick="submitPdCart('cart')" class="pd-btn pd-btn-outline"
-                    @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                <button type="button" onclick="submitPdCart('cart')" class="pd-btn pd-btn-outline" @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                     Keranjang
                 </button>
-                <button type="button" onclick="submitPdCart('buy')" class="pd-btn pd-btn-primary"
-                    @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                <button type="button" onclick="submitPdCart('buy')" class="pd-btn pd-btn-primary" @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                     Beli Sekarang
                 </button>
             </div>
@@ -4654,7 +4843,8 @@
                                 {{-- Image 1:1 Aspect Ratio --}}
                                 <div
                                     style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $rImage }}" alt="{{ $r->name }}" onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';"
+                                    <img src="{{ $rImage }}" alt="{{ $r->name }}"
+                                        onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img">
 
@@ -4783,7 +4973,8 @@
                                 {{-- Image 1:1 Aspect Ratio --}}
                                 <div
                                     style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $rImage }}" alt="{{ $r->name }}" onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';"
+                                    <img src="{{ $rImage }}" alt="{{ $r->name }}"
+                                        onerror="this.onerror=null; this.src='{{ asset('images/service-default.jpg') }}';"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img">
 
@@ -5118,16 +5309,16 @@
             if (rev.review_images && rev.review_images.length > 0) {
                 const imgUrl = rev.review_images[0];
                 imageHtml = `
-                                                <div class="pd-review-media-wrap">
-                                                    <a href="${imgUrl}" class="pd-review-thumb-box review-lightbox-img" data-gallery="review-gallery" title="Foto dari ${rev.display_name}">
-                                                        <img src="${imgUrl}" alt="Foto ulasan" loading="lazy">
-                                                        <div class="pd-thumb-overlay-hint">
-                                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                                                            <span>Klik Perbesar</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            `;
+                                                    <div class="pd-review-media-wrap">
+                                                        <a href="${imgUrl}" class="pd-review-thumb-box review-lightbox-img" data-gallery="review-gallery" title="Foto dari ${rev.display_name}">
+                                                            <img src="${imgUrl}" alt="Foto ulasan" loading="lazy">
+                                                            <div class="pd-thumb-overlay-hint">
+                                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                                                                <span>Klik Perbesar</span>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                `;
             }
 
             const reviewText = rev.review_text ? `<div class="pd-review-text">${escapeHtml(rev.review_text)}</div>` : '';
@@ -5136,72 +5327,72 @@
             let replyBoxHtml = '';
             if (rev.seller_reply) {
                 replyBoxHtml = `
-                                                <div class="pd-seller-reply-box" id="sellerReplyWrap-${rev.id}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
-                                                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
-                                                        <div style="display:flex; align-items:center; gap:6px;">
-                                                            <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
-                                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
-                                                                Respon Penjual
-                                                            </span>
-                                                            <span style="font-size:0.72rem; color:#94A3B8;">${rev.seller_replied_at || ''}</span>
+                                                    <div class="pd-seller-reply-box" id="sellerReplyWrap-${rev.id}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                                                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                                <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                                                    Respon Penjual
+                                                                </span>
+                                                                <span style="font-size:0.72rem; color:#94A3B8;">${rev.seller_replied_at || ''}</span>
+                                                            </div>
+                                                            ${isCreatorOwner ? `<button type="button" onclick="openReplyForm(${rev.id})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>` : ''}
                                                         </div>
-                                                        ${isCreatorOwner ? `<button type="button" onclick="openReplyForm(${rev.id})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>` : ''}
+                                                        <div class="pd-seller-reply-text" id="sellerReplyText-${rev.id}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(rev.seller_reply)}</div>
                                                     </div>
-                                                    <div class="pd-seller-reply-text" id="sellerReplyText-${rev.id}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(rev.seller_reply)}</div>
-                                                </div>
-                                            `;
+                                                `;
             }
 
             // Tombol Balas (jika belum ada balasan & yang melihat adalah Creator pemilik produk)
             let actionBtnHtml = '';
             if (isCreatorOwner && !rev.seller_reply) {
                 actionBtnHtml = `
-                                                <div class="pd-creator-reply-action" id="replyActionBtnWrap-${rev.id}" style="margin-top:0.85rem;">
-                                                    <button type="button" onclick="openReplyForm(${rev.id})" style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; font-size:0.78rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;">
-                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                                        <span>Balas Ulasan</span>
-                                                    </button>
-                                                </div>
-                                            `;
+                                                    <div class="pd-creator-reply-action" id="replyActionBtnWrap-${rev.id}" style="margin-top:0.85rem;">
+                                                        <button type="button" onclick="openReplyForm(${rev.id})" style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; font-size:0.78rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;">
+                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                                            <span>Balas Ulasan</span>
+                                                        </button>
+                                                    </div>
+                                                `;
             }
 
             // Form Balas Ulasan (interaktif, max 200 kata)
             let replyFormHtml = '';
             if (isCreatorOwner) {
                 replyFormHtml = `
-                                                <div class="pd-reply-form-wrap" id="replyFormWrap-${rev.id}" style="display:none; margin-top:0.85rem; padding:1rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px;">
-                                                    <div style="font-size:0.82rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:space-between;">
-                                                        <span>Balas Ulasan sebagai Penjual</span>
-                                                        <span id="replyWordCount-${rev.id}" style="font-size:0.75rem; color:#64748B; font-weight:600;">0 / 200 kata</span>
+                                                    <div class="pd-reply-form-wrap" id="replyFormWrap-${rev.id}" style="display:none; margin-top:0.85rem; padding:1rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px;">
+                                                        <div style="font-size:0.82rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:space-between;">
+                                                            <span>Balas Ulasan sebagai Penjual</span>
+                                                            <span id="replyWordCount-${rev.id}" style="font-size:0.75rem; color:#64748B; font-weight:600;">0 / 200 kata</span>
+                                                        </div>
+                                                        <textarea id="replyTextarea-${rev.id}" rows="3" placeholder="Tulis balasan atau terima kasih untuk pembeli (maksimal 200 kata)..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem; font-size:0.85rem; font-family:inherit; resize:vertical; background:#fff; outline:none;" oninput="countReplyWords(${rev.id})">${rev.seller_reply ? escapeHtml(rev.seller_reply) : ''}</textarea>
+                                                        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
+                                                            <button type="button" onclick="closeReplyForm(${rev.id})" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:99px; border:1px solid #CBD5E1; background:#fff; color:#64748B; cursor:pointer;">Batal</button>
+                                                            <button type="button" id="btnSubmitReply-${rev.id}" onclick="submitReply(${rev.id})" style="padding:0.4rem 1rem; font-size:0.78rem; font-weight:700; border-radius:99px; border:none; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.3);">Kirim Balasan</button>
+                                                        </div>
                                                     </div>
-                                                    <textarea id="replyTextarea-${rev.id}" rows="3" placeholder="Tulis balasan atau terima kasih untuk pembeli (maksimal 200 kata)..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem; font-size:0.85rem; font-family:inherit; resize:vertical; background:#fff; outline:none;" oninput="countReplyWords(${rev.id})">${rev.seller_reply ? escapeHtml(rev.seller_reply) : ''}</textarea>
-                                                    <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
-                                                        <button type="button" onclick="closeReplyForm(${rev.id})" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:99px; border:1px solid #CBD5E1; background:#fff; color:#64748B; cursor:pointer;">Batal</button>
-                                                        <button type="button" id="btnSubmitReply-${rev.id}" onclick="submitReply(${rev.id})" style="padding:0.4rem 1rem; font-size:0.78rem; font-weight:700; border-radius:99px; border:none; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.3);">Kirim Balasan</button>
-                                                    </div>
-                                                </div>
-                                            `;
+                                                `;
             }
 
             return `
-                                            <div class="pd-review-card" id="review-item-${rev.id}">
-                                                <div class="pd-review-header">
-                                                    <div class="pd-reviewer-left">
-                                                        ${avatarHtml}
-                                                        <div>
-                                                            <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
+                                                <div class="pd-review-card" id="review-item-${rev.id}">
+                                                    <div class="pd-review-header">
+                                                        <div class="pd-reviewer-left">
+                                                            ${avatarHtml}
+                                                            <div>
+                                                                <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
+                                                            </div>
                                                         </div>
+                                                        <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
                                                     </div>
-                                                    <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
+                                                    <div class="pd-review-stars">${starsHtml}</div>
+                                                    ${reviewText}
+                                                    ${imageHtml}
+                                                    ${replyBoxHtml}
+                                                    ${actionBtnHtml}
+                                                    ${replyFormHtml}
                                                 </div>
-                                                <div class="pd-review-stars">${starsHtml}</div>
-                                                ${reviewText}
-                                                ${imageHtml}
-                                                ${replyBoxHtml}
-                                                ${actionBtnHtml}
-                                                ${replyFormHtml}
-                                            </div>
-                                        `;
+                                            `;
         }
 
         function countReplyWords(reviewId) {
@@ -5287,20 +5478,20 @@
                         } else {
                             const card = document.getElementById(`review-item-${reviewId}`);
                             const html = `
-                                                        <div class="pd-seller-reply-box" id="sellerReplyWrap-${reviewId}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
-                                                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
-                                                                <div style="display:flex; align-items:center; gap:6px;">
-                                                                    <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
-                                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
-                                                                        Respon Penjual
-                                                                    </span>
-                                                                    <span style="font-size:0.72rem; color:#94A3B8;">${data.seller_replied_at || 'Baru saja'}</span>
+                                                            <div class="pd-seller-reply-box" id="sellerReplyWrap-${reviewId}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                                                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                                                                    <div style="display:flex; align-items:center; gap:6px;">
+                                                                        <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                                                            Respon Penjual
+                                                                        </span>
+                                                                        <span style="font-size:0.72rem; color:#94A3B8;">${data.seller_replied_at || 'Baru saja'}</span>
+                                                                    </div>
+                                                                    <button type="button" onclick="openReplyForm(${reviewId})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>
                                                                 </div>
-                                                                <button type="button" onclick="openReplyForm(${reviewId})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>
+                                                                <div class="pd-seller-reply-text" id="sellerReplyText-${reviewId}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(data.seller_reply)}</div>
                                                             </div>
-                                                            <div class="pd-seller-reply-text" id="sellerReplyText-${reviewId}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(data.seller_reply)}</div>
-                                                        </div>
-                                                    `;
+                                                        `;
                             const formWrap = document.getElementById(`replyFormWrap-${reviewId}`);
                             if (formWrap) {
                                 formWrap.insertAdjacentHTML('beforebegin', html);
@@ -5578,33 +5769,33 @@
                         if (actionBox) {
                             @if($userReview)
                                 actionBox.innerHTML = `
-                                                                                        <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
-                                                                                            <div style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
-                                                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                                                                                <span>Ulasan Tersimpan (${val}★)</span>
-                                                                                            </div>
-                                                                                            <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
-                                                                                                Batas pengeditan ulasan tercapai (maksimal 1x edit).
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    `;
+                                                                                                <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
+                                                                                                    <div style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                                                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                                                                                        <span>Ulasan Tersimpan (${val}★)</span>
+                                                                                                    </div>
+                                                                                                    <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
+                                                                                                        Batas pengeditan ulasan tercapai (maksimal 1x edit).
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            `;
                             @else
                                 actionBox.innerHTML = `
-                                                                                        <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
-                                                                                            style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
-                                                                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                                                                            </svg>
-                                                                                            <span>Edit Ulasan</span>
-                                                                                        </button>
-                                                                                        <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
-                                                                                            <span>✓ Anda sudah mengulas (${val}★)</span>
-                                                                                            <span style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa 1x edit</span>
-                                                                                        </div>
-                                                                                    `;
+                                                                                                <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
+                                                                                                    style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
+                                                                                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                                                                    </svg>
+                                                                                                    <span>Edit Ulasan</span>
+                                                                                                </button>
+                                                                                                <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
+                                                                                                    <span>✓ Anda sudah mengulas (${val}★)</span>
+                                                                                                    <span style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa 1x edit</span>
+                                                                                                </div>
+                                                                                            `;
                             @endif
-                                                    }
+                                                        }
 
                         // Refresh feed
                         fetchReviews(1, 'all', false);
@@ -5766,54 +5957,58 @@
                 </button>
             </div>
         </div>
-        </div>
+    </div>
 
-        {{-- ══ VIRTUAL WAITING ROOM MODAL (TICKET WAR TRAFFIC JITTER & STAGGERING) ══ --}}
-        <div id="buyleWaitingRoomModal" class="bwr-backdrop" style="display:none;" aria-modal="true" role="dialog">
-            <div class="bwr-dialog">
-                <div class="bwr-header">
-                    <span class="bwr-badge">
-                        <span class="bwr-badge-pulse"></span>
-                        RUANG ANTREAN TIKET AKTIF
-                    </span>
-                    <h3 class="bwr-title" id="bwrTitleText">Menyiapkan Sesi Pembelian Anda</h3>
-                    <p class="bwr-desc" id="bwrDescText">
-                        Tingginya antrean pemesan tiket sedang diproses secara bertahap & adil. Mohon tunggu sejenak, sistem akan otomatis membuka sesi checkout Anda.
-                    </p>
-                </div>
-
-                <div class="bwr-ticket-box">
-                    <div class="bwr-ticket-col">
-                        <span class="bwr-ticket-lbl">Nomor Antrean</span>
-                        <span id="bwrQueueNum" class="bwr-ticket-val">#WR-8492</span>
-                    </div>
-                    <div class="bwr-ticket-col">
-                        <span class="bwr-ticket-lbl">Status Alokasi</span>
-                        <span id="bwrStatusText" class="bwr-ticket-status">Dalam Antrean...</span>
-                    </div>
-                </div>
-
-                <div class="bwr-timer-container">
-                    <div class="bwr-timer-val" id="bwrCountdownText">24s</div>
-                    <span class="bwr-timer-lbl">Estimasi Giliran Anda</span>
-                </div>
-
-                <div class="bwr-progress-track">
-                    <div class="bwr-progress-fill" id="bwrProgressBar"></div>
-                </div>
-
-                <div class="bwr-alert-box">
-                    <svg width="18" height="18" fill="none" stroke="#D97706" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <div>
-                        <strong>Pemberitahuan Penting:</strong> Mohon <strong>jangan refresh</strong> atau tutup browser agar posisi antrean Anda tidak tereset.
-                    </div>
-                </div>
-
-                <button type="button" class="bwr-cancel-btn" onclick="cancelWaitingRoom()">
-                    Batal & Kembali ke Halaman
-                </button>
+    {{-- ══ VIRTUAL WAITING ROOM MODAL (TICKET WAR TRAFFIC JITTER & STAGGERING) ══ --}}
+    <div id="buyleWaitingRoomModal" class="bwr-backdrop" style="display:none;" aria-modal="true" role="dialog">
+        <div class="bwr-dialog">
+            <div class="bwr-header">
+                <span class="bwr-badge">
+                    <span class="bwr-badge-pulse"></span>
+                    RUANG ANTREAN TIKET AKTIF
+                </span>
+                <h3 class="bwr-title" id="bwrTitleText">Menyiapkan Sesi Pembelian Anda</h3>
+                <p class="bwr-desc" id="bwrDescText">
+                    Tingginya antrean pemesan tiket sedang diproses secara bertahap & adil. Mohon tunggu sejenak, sistem
+                    akan otomatis membuka sesi checkout Anda.
+                </p>
             </div>
+
+            <div class="bwr-ticket-box">
+                <div class="bwr-ticket-col">
+                    <span class="bwr-ticket-lbl">Antrean</span>
+                    <span id="bwrQueueNum" class="bwr-ticket-val">#WR-8492</span>
+                </div>
+                <div class="bwr-ticket-col">
+                    <span class="bwr-ticket-lbl">Status</span>
+                    <span id="bwrStatusText" class="bwr-ticket-status">Dalam Antrean...</span>
+                </div>
+            </div>
+
+            <div class="bwr-timer-container">
+                <div class="bwr-timer-val" id="bwrCountdownText">24s</div>
+                <span class="bwr-timer-lbl">Estimasi Giliran Anda</span>
+            </div>
+
+            <div class="bwr-progress-track">
+                <div class="bwr-progress-fill" id="bwrProgressBar"></div>
+            </div>
+
+            <div class="bwr-alert-box">
+                <svg width="18" height="18" fill="none" stroke="#D97706" stroke-width="2" viewBox="0 0 24 24"
+                    style="flex-shrink:0;margin-top:2px;">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div>
+                    <strong>Pemberitahuan Penting:</strong> Mohon <strong>jangan refresh</strong> atau tutup browser agar
+                    posisi antrean Anda tidak tereset.
+                </div>
+            </div>
+
+            <button type="button" class="bwr-cancel-btn" onclick="cancelWaitingRoom()">
+                Batal & Kembali ke Halaman
+            </button>
         </div>
+    </div>
 @endsection
