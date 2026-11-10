@@ -2177,56 +2177,62 @@ class PosController extends Controller
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;
         $seller = $isStaff ? (\App\Models\User::find($user->parent_seller_id) ?? $user) : $user;
 
-        $lastCheck = $request->query('since', now()->subSeconds(30)->toDateTimeString());
-        $notifications = [];
+        // Cache notifikasi selama 10 detik per seller agar polling SW tidak membuang DB query berulang.
+        $cacheKey = 'pos_notif_' . $seller->id;
+        $notifications = \Illuminate\Support\Facades\Cache::remember($cacheKey, 10, function () use ($seller, $request) {
+            $lastCheck = $request->query('since', now()->subSeconds(30)->toDateTimeString());
+            $notifs = [];
 
-        // 1. Cek Pesanan POS & Self-Order Storefront Baru
-        $newOrders = \App\Models\Order::whereIn('source', ['pos', 'storefront'])
-            ->where(function($q) use ($seller) {
-                $q->where('seller_id', $seller->id)
-                  ->orWhere('user_id', $seller->id)
-                  ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
-            })
-            ->where('created_at', '>=', $lastCheck)
-            ->latest('id')
-            ->take(5)
-            ->get();
-
-        foreach ($newOrders as $ord) {
-            $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
-            $cName = $addr['name'] ?? 'Pelanggan Umum';
-            $isSelfOrder = ($ord->source === 'storefront') || !empty($addr['is_self_order']);
-            $tableStr = !empty($addr['table_number']) ? (' (Meja ' . $addr['table_number'] . ')') : '';
-
-            $notifications[] = [
-                'id'    => 'order_' . $ord->id,
-                'title' => $isSelfOrder ? ('Pesanan Self-Order Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id)) . $tableStr) : ('Transaksi Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id))),
-                'body'  => $isSelfOrder ? ('Pesanan masuk dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . '.') : ('Pesanan dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . ' berhasil diselesaikan.'),
-                'icon'  => '/buyle-logo.png',
-                'url'   => route('creator.pos.reports'),
-            ];
-        }
-
-        // 2. Cek Mutasi Deposit Baru (Top Up)
-        $profile = \App\Models\CreatorProfile::where('user_id', $seller->id)->first();
-        if ($profile) {
-            $newMutations = \App\Models\PosBalanceMutation::where('creator_id', $profile->id)
+            // 1. Cek Pesanan POS & Self-Order Storefront Baru
+            $newOrders = \App\Models\Order::whereIn('source', ['pos', 'storefront'])
+                ->where(function($q) use ($seller) {
+                    $q->where('seller_id', $seller->id)
+                      ->orWhere('user_id', $seller->id)
+                      ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
+                })
                 ->where('created_at', '>=', $lastCheck)
-                ->where('type', 'topup')
                 ->latest('id')
-                ->take(3)
+                ->take(5)
                 ->get();
 
-            foreach ($newMutations as $mut) {
-                $notifications[] = [
-                    'id'    => 'deposit_' . $mut->id,
-                    'title' => 'Top Up Saldo Deposit Masuk',
-                    'body'  => 'Saldo deposit bertambah Rp ' . number_format($mut->amount, 0, ',', '.') . ' (' . ($mut->description ?? 'Deposit POS') . ').',
+            foreach ($newOrders as $ord) {
+                $addr = is_array($ord->shipping_address) ? $ord->shipping_address : (json_decode($ord->shipping_address ?? '', true) ?? []);
+                $cName = $addr['name'] ?? 'Pelanggan Umum';
+                $isSelfOrder = ($ord->source === 'storefront') || !empty($addr['is_self_order']);
+                $tableStr = !empty($addr['table_number']) ? (' (Meja ' . $addr['table_number'] . ')') : '';
+
+                $notifs[] = [
+                    'id'    => 'order_' . $ord->id,
+                    'title' => $isSelfOrder ? ('Pesanan Self-Order Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id)) . $tableStr) : ('Transaksi Baru #' . ($ord->order_number ?? ('BYL-' . $ord->id))),
+                    'body'  => $isSelfOrder ? ('Pesanan masuk dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . '.') : ('Pesanan dari ' . $cName . ' senilai Rp ' . number_format($ord->total, 0, ',', '.') . ' berhasil diselesaikan.'),
                     'icon'  => '/buyle-logo.png',
-                    'url'   => route('creator.pos.index'),
+                    'url'   => route('creator.pos.reports'),
                 ];
             }
-        }
+
+            // 2. Cek Mutasi Deposit Baru (Top Up)
+            $profile = \App\Models\CreatorProfile::where('user_id', $seller->id)->first();
+            if ($profile) {
+                $newMutations = \App\Models\PosBalanceMutation::where('creator_id', $profile->id)
+                    ->where('created_at', '>=', $lastCheck)
+                    ->where('type', 'topup')
+                    ->latest('id')
+                    ->take(3)
+                    ->get();
+
+                foreach ($newMutations as $mut) {
+                    $notifs[] = [
+                        'id'    => 'deposit_' . $mut->id,
+                        'title' => 'Top Up Saldo Deposit Masuk',
+                        'body'  => 'Saldo deposit bertambah Rp ' . number_format($mut->amount, 0, ',', '.') . ' (' . ($mut->description ?? 'Deposit POS') . ').',
+                        'icon'  => '/buyle-logo.png',
+                        'url'   => route('creator.pos.index'),
+                    ];
+                }
+            }
+
+            return $notifs;
+        });
 
         return response()->json([
             'timestamp'     => now()->toDateTimeString(),
@@ -2341,10 +2347,8 @@ class PosController extends Controller
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;
         $sellerId = $isStaff ? $user->parent_seller_id : $user->id;
 
-        $profile = CreatorProfile::where('user_id', $sellerId)->first();
-        if ($profile) {
-            $profile->update(['pos_last_online_at' => now()]);
-        }
+        // pos_last_online_at diperbarui via endpoint heartbeat terpisah (tiap 60 detik),
+        // bukan di sini agar tidak membuang DB write tiap polling 15 detik.
 
         $lastId = (int) $request->query('last_id', 0);
 

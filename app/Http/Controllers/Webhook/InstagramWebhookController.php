@@ -155,7 +155,9 @@ class InstagramWebhookController extends Controller
                     ];
 
                     try {
-                        ProcessInstagramCommentJob::dispatchSync($jobPayload);
+                        // dispatch() async agar webhook langsung return 200 tanpa menahan PHP worker.
+                        // Job akan diproses oleh queue worker di background.
+                        ProcessInstagramCommentJob::dispatch($jobPayload);
                     } catch (\Exception $e) {
                         Log::error('[IG Webhook] Error processing comment job', [
                             'error'   => $e->getMessage(),

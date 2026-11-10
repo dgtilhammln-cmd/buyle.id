@@ -11037,12 +11037,19 @@
                 } catch(e) { /* silent – jaringan buruk, coba lagi 3 detik */ }
             }
 
+            // Polling interval: 15s saat tab aktif, 60s saat tab tersembunyi
+            // Mengurangi konsumsi PHP worker dari ~20 req/min → ~4 req/min per terminal
+            const POS_POLL_INTERVAL_ACTIVE = 15000;
+            const POS_POLL_INTERVAL_HIDDEN = 60000;
+
             function startLiveOrderPoller() {
                 if (liveOrderPollerActive) return;
                 liveOrderPollerActive = true;
                 (function loop() {
                     pollLiveOrders().finally(() => {
-                        if (liveOrderPollerActive) setTimeout(loop, 3000);
+                        if (!liveOrderPollerActive) return;
+                        const delay = document.hidden ? POS_POLL_INTERVAL_HIDDEN : POS_POLL_INTERVAL_ACTIVE;
+                        setTimeout(loop, delay);
                     });
                 })();
             }
