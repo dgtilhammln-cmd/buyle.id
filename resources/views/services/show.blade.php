@@ -2083,7 +2083,7 @@
                                             ? (float) $service->sale_price : (float) $service->price;
                                         $defaultProductImage = !empty($imgs[0]) ? $imgs[0] : ($service->image ? asset('storage/' . $service->image) : asset('images/service-default.jpg'));
                                     @endphp
-                                    <div id="pd-variant-section" style="margin-bottom:1.5rem;">
+                                    <div id="pd-variant-section" style="display:none;">
                                         @foreach($service->variantOptions as $option)
                                             @php
                                                 $bvmGroupTitle = $isTicket ? 'Kategori Tiket' : $option->name;
@@ -2783,36 +2783,78 @@
                                             @endphp
                                             <div class="bvm-group">
                                                 <div class="bvm-group-title">{{ $bvmGroupTitle }}</div>
-                                                <div class="bvm-pills">
+                                                 <div class="bvm-pills {{ $isTicket ? 'bvm-ticket-grid' : '' }}">
                                                     @foreach($option->values as $val)
                                                         @php
                                                             $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
                                                             $valFinalPrice = $val->finalPrice();
                                                             $isValOutOfStock = ($val->stock !== null && $val->stock <= 0);
+                                                            $bvmValDiff = ($val->price > 0 && $val->price != $basePrice) ? ($val->price - $basePrice) : 0;
                                                         @endphp
-                                                        <button type="button" 
-                                                            class="bvm-pill" 
-                                                            data-variant-id="{{ $val->id }}"
-                                                            data-price="{{ $valFinalPrice }}"
-                                                            data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
-                                                            data-stock="{{ $val->stock }}"
-                                                            data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
-                                                            data-img="{{ $valImg ?: $defaultProductImage }}"
-                                                            data-has-custom-img="{{ $valImg ? '1' : '0' }}"
-                                                            @if($isValOutOfStock) disabled @endif
-                                                            onclick="selectBvmVariant(this)">
-                                                            @if($valImg)
-                                                                <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
-                                                            @endif
-                                                            <span class="bvm-pill-text">{{ $val->value }}</span>
-                                                            @if($val->price > 0 && $val->price != $basePrice)
-                                                                @php $bvmValDiff = $val->price - $basePrice; @endphp
-                                                                <span class="bvm-pill-diff">{{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}</span>
-                                                            @endif
-                                                            @if($isValOutOfStock)
-                                                                <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
-                                                            @endif
-                                                        </button>
+                                                        @if($isTicket)
+                                                            {{-- CARD BERBENTUK TIKET FISIK (TICKET VOUCHER CARD DENGAN NOTCH & DIVIDER) --}}
+                                                            <button type="button" 
+                                                                class="bvm-pill bvm-ticket-card" 
+                                                                data-variant-id="{{ $val->id }}"
+                                                                data-price="{{ $valFinalPrice }}"
+                                                                data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                                data-stock="{{ $val->stock }}"
+                                                                data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
+                                                                data-img="{{ $valImg ?: $defaultProductImage }}"
+                                                                data-has-custom-img="{{ $valImg ? '1' : '0' }}"
+                                                                @if($isValOutOfStock) disabled @endif
+                                                                onclick="selectBvmVariant(this)">
+                                                                <span class="bvm-tix-notch-l"></span>
+                                                                <span class="bvm-tix-notch-r"></span>
+                                                                <div class="bvm-tix-main">
+                                                                    <div class="bvm-tix-head">
+                                                                        <svg class="bvm-tix-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                                            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
+                                                                            <line x1="13" y1="5" x2="13" y2="7"></line>
+                                                                            <line x1="13" y1="17" x2="13" y2="19"></line>
+                                                                        </svg>
+                                                                        <span>TIKET RESMI</span>
+                                                                    </div>
+                                                                    <div class="bvm-tix-name">{{ $val->value }}</div>
+                                                                </div>
+                                                                <div class="bvm-tix-divider"></div>
+                                                                <div class="bvm-tix-stub">
+                                                                    @if($val->price > 0 && $val->price != $basePrice)
+                                                                        <div class="bvm-tix-diff">{{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}</div>
+                                                                    @else
+                                                                        <div class="bvm-tix-diff">Rp{{ number_format($valFinalPrice, 0, ',', '.') }}</div>
+                                                                    @endif
+                                                                    @if($isValOutOfStock)
+                                                                        <span class="bvm-tix-status habis">Habis</span>
+                                                                    @else
+                                                                        <span class="bvm-tix-status ready">Tersedia</span>
+                                                                    @endif
+                                                                </div>
+                                                            </button>
+                                                        @else
+                                                            <button type="button" 
+                                                                class="bvm-pill" 
+                                                                data-variant-id="{{ $val->id }}"
+                                                                data-price="{{ $valFinalPrice }}"
+                                                                data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                                data-stock="{{ $val->stock }}"
+                                                                data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
+                                                                data-img="{{ $valImg ?: $defaultProductImage }}"
+                                                                data-has-custom-img="{{ $valImg ? '1' : '0' }}"
+                                                                @if($isValOutOfStock) disabled @endif
+                                                                onclick="selectBvmVariant(this)">
+                                                                @if($valImg)
+                                                                    <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
+                                                                @endif
+                                                                <span class="bvm-pill-text">{{ $val->value }}</span>
+                                                                @if($val->price > 0 && $val->price != $basePrice)
+                                                                    <span class="bvm-pill-diff">{{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}</span>
+                                                                @endif
+                                                                @if($isValOutOfStock)
+                                                                    <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
+                                                                @endif
+                                                            </button>
+                                                        @endif
                                                     @endforeach
                                                 </div>
                                             </div>
@@ -3073,6 +3115,149 @@
                                 .bvm-pill-diff {
                                     font-size: 0.7rem;
                                     opacity: 0.8;
+                                }
+
+                                /* ── AUTHENTIC TICKET VOUCHER CARD STYLING (BUYLE TIKET) ── */
+                                .bvm-ticket-grid {
+                                    display: grid !important;
+                                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+                                    gap: 0.75rem !important;
+                                    width: 100% !important;
+                                }
+                                @media (max-width: 480px) {
+                                    .bvm-ticket-grid {
+                                        grid-template-columns: 1fr !important;
+                                        gap: 0.6rem !important;
+                                    }
+                                }
+                                .bvm-ticket-card {
+                                    position: relative !important;
+                                    display: flex !important;
+                                    align-items: center !important;
+                                    justify-content: space-between !important;
+                                    width: 100% !important;
+                                    padding: 0.75rem 1.15rem 0.75rem 1.15rem !important;
+                                    border-radius: 12px !important;
+                                    border: 1.5px solid #E2E8F0 !important;
+                                    background: #FFFFFF !important;
+                                    color: #1e293b !important;
+                                    cursor: pointer !important;
+                                    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                                    text-align: left !important;
+                                    overflow: hidden !important;
+                                    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+                                }
+                                .bvm-ticket-card .bvm-tix-notch-l,
+                                .bvm-ticket-card .bvm-tix-notch-r {
+                                    position: absolute;
+                                    top: 50%;
+                                    width: 14px;
+                                    height: 14px;
+                                    background: #FFFFFF;
+                                    border: 1.5px solid #E2E8F0;
+                                    border-radius: 50%;
+                                    transform: translateY(-50%);
+                                    z-index: 3;
+                                    pointer-events: none;
+                                    transition: all 0.2s ease;
+                                }
+                                .bvm-ticket-card .bvm-tix-notch-l {
+                                    left: -8px;
+                                }
+                                .bvm-ticket-card .bvm-tix-notch-r {
+                                    right: -8px;
+                                }
+                                .bvm-ticket-card:hover:not(:disabled) {
+                                    border-color: #1eb349 !important;
+                                    background: #FAFCF9 !important;
+                                    transform: translateY(-2px) !important;
+                                    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.12) !important;
+                                }
+                                .bvm-ticket-card:hover:not(:disabled) .bvm-tix-notch-l,
+                                .bvm-ticket-card:hover:not(:disabled) .bvm-tix-notch-r {
+                                    border-color: #1eb349;
+                                }
+                                .bvm-ticket-card.selected {
+                                    border-color: #1eb349 !important;
+                                    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 50%, #F0FDF4 100%) !important;
+                                    box-shadow: 0 4px 18px rgba(30, 179, 73, 0.22) !important;
+                                    transform: translateY(-1px) !important;
+                                }
+                                .bvm-ticket-card.selected .bvm-tix-notch-l,
+                                .bvm-ticket-card.selected .bvm-tix-notch-r {
+                                    border-color: #1eb349;
+                                    background: #FFFFFF;
+                                }
+                                .bvm-ticket-card.selected .bvm-tix-name {
+                                    color: #15803d !important;
+                                }
+                                .bvm-ticket-card.selected .bvm-tix-head {
+                                    color: #16a34a !important;
+                                }
+                                .bvm-ticket-card.selected .bvm-tix-divider {
+                                    border-left-color: #86EFAC !important;
+                                }
+                                .bvm-ticket-card.selected .bvm-tix-diff {
+                                    color: #15803d !important;
+                                }
+                                .bvm-ticket-card:disabled {
+                                    opacity: 0.55 !important;
+                                    filter: grayscale(0.8) !important;
+                                    cursor: not-allowed !important;
+                                    background: #F8FAFC !important;
+                                    border-color: #CBD5E1 !important;
+                                    box-shadow: none !important;
+                                }
+                                .bvm-ticket-card .bvm-tix-main {
+                                    flex: 1;
+                                    min-width: 0;
+                                }
+                                .bvm-ticket-card .bvm-tix-head {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 4px;
+                                    font-size: 0.65rem;
+                                    font-weight: 700;
+                                    color: #64748B;
+                                    letter-spacing: 0.05em;
+                                    margin-bottom: 2px;
+                                }
+                                .bvm-ticket-card .bvm-tix-name {
+                                    font-size: 1rem;
+                                    font-weight: 800;
+                                    color: #0F172A;
+                                    letter-spacing: -0.01em;
+                                    line-height: 1.2;
+                                }
+                                .bvm-ticket-card .bvm-tix-divider {
+                                    height: 34px;
+                                    margin: 0 0.85rem;
+                                    border-left: 1.5px dashed #CBD5E1;
+                                    flex-shrink: 0;
+                                }
+                                .bvm-ticket-card .bvm-tix-stub {
+                                    text-align: right;
+                                    flex-shrink: 0;
+                                }
+                                .bvm-ticket-card .bvm-tix-diff {
+                                    font-size: 0.92rem;
+                                    font-weight: 800;
+                                    color: #16a34a;
+                                    line-height: 1.2;
+                                }
+                                .bvm-ticket-card .bvm-tix-status {
+                                    display: inline-block;
+                                    font-size: 0.62rem;
+                                    font-weight: 700;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.04em;
+                                    margin-top: 2px;
+                                }
+                                .bvm-ticket-card .bvm-tix-status.ready {
+                                    color: #16a34a;
+                                }
+                                .bvm-ticket-card .bvm-tix-status.habis {
+                                    color: #EF4444;
                                 }
 
                                 .bvm-qty-row {

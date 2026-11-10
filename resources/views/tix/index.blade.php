@@ -89,6 +89,13 @@
             width: 100%;
             overflow: hidden;
             padding: 0.75rem 0 0.5rem;
+            --tix-banner-w: min(88vw, 1200px);
+        }
+
+        @media (max-width: 768px) {
+            .tix-orbit-carousel-wrap {
+                --tix-banner-w: 92vw;
+            }
         }
 
         .tix-orbit-viewport {
@@ -100,13 +107,15 @@
         .tix-orbit-stage {
             position: relative;
             width: 100%;
-            aspect-ratio: 1920 / 600;
+            max-width: 1440px;
+            margin: 0 auto;
+            height: calc(var(--tix-banner-w) * (600 / 1920));
             perspective: 1200px;
         }
 
         @media (max-width: 768px) {
             .tix-orbit-stage {
-                aspect-ratio: 1920 / 600;
+                height: calc(var(--tix-banner-w) * (600 / 1920));
             }
         }
 
@@ -114,9 +123,9 @@
             position: absolute;
             top: 0;
             left: 50%;
-            width: 90%;
-            max-width: 1200px;
+            width: var(--tix-banner-w);
             height: 100%;
+            aspect-ratio: 1920 / 600;
             border-radius: 20px;
             overflow: hidden;
             background: #0f172a;
@@ -129,7 +138,6 @@
 
         @media (max-width: 768px) {
             .tix-orbit-card {
-                width: 92%;
                 border-radius: 14px;
             }
         }
@@ -175,9 +183,10 @@
         }
 
         .tix-orbit-carousel-wrap.single-banner .tix-orbit-stage {
-            max-width: 1080px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 1.25rem;
+            height: calc(min(calc(100vw - 2.5rem), 1200px) * (600 / 1920));
             aspect-ratio: 1920 / 600;
             perspective: none;
         }
@@ -253,11 +262,11 @@
         }
 
         .tix-orbit-btn.prev {
-            left: max(0.75rem, calc(50% - min(45vw, 600px) - 22px));
+            left: max(0.75rem, calc(50% - (var(--tix-banner-w) / 2) - 22px));
         }
 
         .tix-orbit-btn.next {
-            right: max(0.75rem, calc(50% - min(45vw, 600px) - 22px));
+            right: max(0.75rem, calc(50% - (var(--tix-banner-w) / 2) - 22px));
         }
 
         @media (max-width: 768px) {
@@ -758,12 +767,14 @@
         .tix-orbit-skel-stage {
             position: relative;
             width: 100%;
-            aspect-ratio: 1920 / 600;
+            max-width: 1440px;
+            margin: 0 auto;
+            height: calc(min(88vw, 1200px) * (600 / 1920));
         }
 
         @media (max-width: 768px) {
             .tix-orbit-skel-stage {
-                aspect-ratio: 1920 / 600;
+                height: calc(92vw * (600 / 1920));
             }
         }
 
@@ -771,15 +782,15 @@
             position: absolute;
             top: 0;
             left: 50%;
-            width: 90%;
-            max-width: 1200px;
+            width: min(88vw, 1200px);
             height: 100%;
+            aspect-ratio: 1920 / 600;
             border-radius: 20px;
         }
 
         @media (max-width: 768px) {
             .tix-orbit-skel-card {
-                width: 92%;
+                width: 92vw;
                 border-radius: 14px;
             }
         }
@@ -944,29 +955,23 @@
         <div id="tixInitialSkeleton">
 
             {{-- 1. Banner Carousel Skeleton —— full-width shimmer box, rasio 1920/600 --}}
-            <div style="width:100%; padding: 0.75rem 0 0.5rem; overflow:hidden;">
-                <div style="position:relative; width:100%; aspect-ratio:1920/600;">
+            <div class="tix-orbit-skel-wrap">
+                <div class="tix-orbit-skel-stage">
                     {{-- Card prev (kiri, mengintip) --}}
-                    <div class="tix-skeleton" style="
-                        position:absolute; top:0; left:50%;
+                    <div class="tix-skeleton tix-orbit-skel-card" style="
                         transform: translateX(calc(-50% - 72%)) scale(0.85);
-                        width:90%; max-width:1200px; height:100%;
-                        border-radius:20px; opacity:0.35;
+                        opacity:0.35;
                     "></div>
                     {{-- Card aktif (tengah) --}}
-                    <div class="tix-skeleton" style="
-                        position:absolute; top:0; left:50%;
+                    <div class="tix-skeleton tix-orbit-skel-card active" style="
                         transform: translateX(-50%) scale(1);
-                        width:90%; max-width:1200px; height:100%;
-                        border-radius:20px; z-index:2;
+                        z-index:2;
                         box-shadow: 0 16px 40px rgba(0,0,0,0.08);
                     "></div>
                     {{-- Card next (kanan, mengintip) --}}
-                    <div class="tix-skeleton" style="
-                        position:absolute; top:0; left:50%;
+                    <div class="tix-skeleton tix-orbit-skel-card" style="
                         transform: translateX(calc(-50% + 72%)) scale(0.85);
-                        width:90%; max-width:1200px; height:100%;
-                        border-radius:20px; opacity:0.35;
+                        opacity:0.35;
                     "></div>
                 </div>
                 {{-- Dots --}}
