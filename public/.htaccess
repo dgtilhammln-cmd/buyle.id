@@ -31,13 +31,14 @@
     ExpiresByType video/webm                  "access plus 30 days"
     ExpiresByType video/ogg                   "access plus 30 days"
 
-    # Images — ditingkatkan ke 1 tahun untuk /storage/icon/* & aset statis lain
-    ExpiresByType image/jpeg                  "access plus 1 year"
-    ExpiresByType image/png                   "access plus 1 year"
-    ExpiresByType image/webp                  "access plus 1 year"
-    ExpiresByType image/gif                   "access plus 1 year"
-    ExpiresByType image/svg+xml               "access plus 1 year"
-    ExpiresByType image/x-icon               "access plus 1 year"
+    # Images — 30 hari untuk /storage/ (filename tidak di-version, bisa berubah sewaktu-waktu).
+    # 1 tahun hanya aman untuk asset yang sudah di-hash oleh Vite/Mix (mis. app.a1b2c3.css).
+    ExpiresByType image/jpeg                  "access plus 30 days"
+    ExpiresByType image/png                   "access plus 30 days"
+    ExpiresByType image/webp                  "access plus 30 days"
+    ExpiresByType image/gif                   "access plus 30 days"
+    ExpiresByType image/svg+xml               "access plus 30 days"
+    ExpiresByType image/x-icon               "access plus 30 days"
 
     # Fonts
     ExpiresByType font/woff2                  "access plus 30 days"
@@ -59,8 +60,15 @@
         Header set Cache-Control "public, max-age=2592000, immutable"
     </FilesMatch>
 
-    # Cache-Control untuk gambar & font — 1 tahun + immutable untuk aset statis
+    # Cache-Control untuk gambar & font — 30 hari (tanpa immutable karena filename bisa berubah).
+    # Gunakan ETag + Last-Modified agar browser revalidasi saat file berubah.
+    # Upgrade ke immutable + 1 tahun hanya jika menggunakan asset hashing (Vite manifest).
     <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+
+    # Khusus asset Vite/Mix yang sudah di-hash namanya — aman 1 tahun + immutable
+    <FilesMatch "\.[a-f0-9]{8,}\.(js|css)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
 

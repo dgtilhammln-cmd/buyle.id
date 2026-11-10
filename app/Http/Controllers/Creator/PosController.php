@@ -2177,10 +2177,20 @@ class PosController extends Controller
         $isStaff = $user->isPosCashier() && $user->parent_seller_id;
         $seller = $isStaff ? (\App\Models\User::find($user->parent_seller_id) ?? $user) : $user;
 
-        // Cache notifikasi selama 10 detik per seller agar polling SW tidak membuang DB query berulang.
-        $cacheKey = 'pos_notif_' . $seller->id;
-        $notifications = \Illuminate\Support\Facades\Cache::remember($cacheKey, 10, function () use ($seller, $request) {
-            $lastCheck = $request->query('since', now()->subSeconds(30)->toDateTimeString());
+        // ── Cache Notifikasi POS ─────────────────────────────────────────────
+        // Cache key: seller_id + window 10 detik (dibulatkan) agar tidak bocor antar user/role.
+        // Window lookup TETAP 60 detik di dalam cache — TIDAK menggunakan param `since` dari request
+        // agar hasil cache valid untuk semua request dalam window yang sama.
+        // Stampede prevention: atomic lock — jika cache miss, hanya 1 proses yang query DB.
+        $windowSeconds = 60; // lookback window tetap
+        $cacheTtl = 10;
+        // Bulatkan ke kelipatan 10 detik agar cache key konsisten antar request dalam window
+        $windowBucket = (int) floor(now()->timestamp / $cacheTtl) * $cacheTtl;
+        $cacheKey = 'pos_notif_' . $seller->id . '_' . $windowBucket;
+
+        $notifications = \Illuminate\Support\Facades\Cache::remember($cacheKey, $cacheTtl, function () use ($seller, $windowSeconds) {
+            // Gunakan window tetap, bukan parameter `since` dari request (agar cache valid)
+            $since = now()->subSeconds($windowSeconds)->toDateTimeString();
             $notifs = [];
 
             // 1. Cek Pesanan POS & Self-Order Storefront Baru
@@ -2190,7 +2200,7 @@ class PosController extends Controller
                       ->orWhere('user_id', $seller->id)
                       ->orWhereHas('items.product', fn($pq) => $pq->where('seller_id', $seller->id));
                 })
-                ->where('created_at', '>=', $lastCheck)
+                ->where('created_at', '>=', $since)
                 ->latest('id')
                 ->take(5)
                 ->get();
@@ -2214,7 +2224,7 @@ class PosController extends Controller
             $profile = \App\Models\CreatorProfile::where('user_id', $seller->id)->first();
             if ($profile) {
                 $newMutations = \App\Models\PosBalanceMutation::where('creator_id', $profile->id)
-                    ->where('created_at', '>=', $lastCheck)
+                    ->where('created_at', '>=', $since)
                     ->where('type', 'topup')
                     ->latest('id')
                     ->take(3)

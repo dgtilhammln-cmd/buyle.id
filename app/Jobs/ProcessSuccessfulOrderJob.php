@@ -15,6 +15,20 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
+/**
+ * Job pasca-pembayaran berhasil.
+ *
+ * STRATEGI KEAMANAN:
+ * - Operasi KRITIS (status, tiket, stok, linking user) → selesai di dalam job ini secara atomik.
+ * - Job ini WAJIB dijalankan via dispatchSync() oleh PaymentWebhookController & CheckoutService
+ *   agar tidak bergantung pada ketersediaan queue worker.
+ * - Pengiriman EMAIL dikirim terakhir; jika gagal, hanya log warning (tidak memblokir proses utama).
+ *
+ * Jangan ubah dispatchSync → dispatch tanpa memastikan:
+ *   1. Queue worker aktif dan terpantau (supervisor/cron)
+ *   2. jobs & failed_jobs table kosong setelah deployment
+ *   3. Tiket & status order diverifikasi end-to-end di staging dulu
+ */
 class ProcessSuccessfulOrderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -38,6 +52,8 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             return;
         }
 
+        // ── BAGIAN KRITIS (tidak boleh gagal diam-diam) ──────────────────────
+
         // 1. Cari akun User yang sudah ada — JANGAN buat baru untuk guest
         $user = User::where('email', $this->buyerEmail)->first();
 
@@ -59,14 +75,15 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
         }
         $order->update($updateData);
 
-        // Generate E-Ticket Pass jika terdapat produk tipe ticket
+        // 3. Generate E-Ticket Pass — KRITIS: tiket harus ada sebelum email dikirim
         try {
             \App\Models\TicketPass::generateForOrder($order);
         } catch (\Throwable $e) {
-            Log::warning("Gagal generate TicketPass for order #{$order->id}: " . $e->getMessage());
+            Log::error("KRITIS: Gagal generate TicketPass for order #{$order->id}: " . $e->getMessage());
+            // Jangan lempar exception — agar job tidak retry dan tiket tidak terduplikasi
         }
 
-        // Catat konversi penjualan & omset untuk Automation Campaign Instagram (jika order berasal dari Auto DM)
+        // 4. Catat konversi AutomationCampaign Instagram (jika order dari Auto DM)
         try {
             $campaignId = null;
             if ($order->utm_campaign && str_starts_with($order->utm_campaign, 'ig_camp_')) {
@@ -89,7 +106,7 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             Log::warning("Gagal mencatat konversi AutomationCampaign: " . $e->getMessage());
         }
 
-        // 3. Generate Magic Login URL (hanya jika user punya akun)
+        // 5. Generate Magic Login URL (hanya jika user punya akun)
         $magicLoginUrl = route('account.orders');
         if ($user) {
             $loginToken = Str::random(64);
@@ -103,13 +120,13 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             ]);
         }
 
-        // 4. Kirim Email Notifikasi ke Buyer
+        // ── BAGIAN EMAIL (boleh gagal, tidak memblokir proses utama) ─────────
+
+        // 6. Kirim Email Notifikasi ke Buyer
         try {
             if ($user) {
-                // User terdaftar → kirim via User notifiable
                 $user->notify(new OrderPaidNotification($order, $magicLoginUrl, false));
             } else {
-                // Guest → kirim langsung ke email tanpa akun
                 $guestEmail = $order->customer_email ?? $this->buyerEmail;
                 if ($guestEmail) {
                     Notification::route('mail', $guestEmail)
@@ -120,7 +137,7 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             Log::warning("Gagal mengirim OrderPaidNotification ke {$this->buyerEmail}: " . $e->getMessage());
         }
 
-        // 5. Kirim Email Notifikasi Order Masuk ke Seller
+        // 7. Kirim Email Notifikasi Order Masuk ke Seller
         try {
             $sellerIds = [];
             foreach ($order->items as $item) {

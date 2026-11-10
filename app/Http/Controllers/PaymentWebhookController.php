@@ -118,18 +118,18 @@ class PaymentWebhookController extends Controller
 
             if (!$alreadyProcessed) {
 
-                // dispatch() async — Midtrans webhook wajib return 200 secepat mungkin.
-                // Job sudah ShouldQueue + retry 3x, aman untuk async.
-                // E-tiket, PDF, email dikirim background tanpa menahan PHP worker.
+                // dispatchSync: job ini menentukan status tiket, generate QR, link user_id.
+                // JANGAN ubah ke dispatch async tanpa memastikan queue worker aktif & terpantau.
+                // Referensi: Strategi Laravel Buyle.md — bagian "Keamanan Job Pembayaran"
                 try {
-                    ProcessSuccessfulOrderJob::dispatch(
+                    ProcessSuccessfulOrderJob::dispatchSync(
                         orderId:    $order->id,
                         buyerEmail: $payload['custom_field1'] ?? ($order->user?->email ?? ''),
                         buyerName:  $payload['custom_field2'] ?? ($order->user?->name ?? 'Pembeli'),
                         buyerPhone: $payload['custom_field3'] ?? ($order->user?->phone ?? ''),
                     );
                 } catch (\Throwable $e) {
-                    Log::error('[Webhook] ProcessSuccessfulOrderJob dispatch error: ' . $e->getMessage());
+                    Log::error('[Webhook] ProcessSuccessfulOrderJob sync error: ' . $e->getMessage());
                 }
 
                 // Untuk order POS QRIS: kirim E-Receipt otomatis ke customer jika email tersedia

@@ -211,15 +211,56 @@ Library yang bisa digunakan: **Laravel Reverb** (official, gratis) atau **Pusher
 ### Jangka Panjang (Event Tiket Besar)
 
 #### F. War-Ready Checklist untuk Event Tiket
+
+> [!WARNING]
+> **Maintenance mode (`artisan down`) BUKAN strategi kapasitas.** Itu hanya memblokir pengguna. Gunakan pendekatan di bawah.
+
 Saat event tiket besar (seperti Sabiphoria) akan berlangsung:
 
-- [ ] **Maintenance window** 30 menit sebelum event: `php artisan down --message="Persiapan event" --retry=60`
-- [ ] **Clear semua cache**: `php artisan cache:clear && php artisan view:clear`
-- [ ] **Warm up cache**: hit halaman produk tiket via curl
+- [ ] **Warm-up cache terukur**: hit halaman produk tiket via curl/script 5–10 menit sebelum buka
+- [ ] **Clear cache dulu**: `php artisan cache:clear && php artisan view:clear && php artisan optimize`
 - [ ] **Monitor PHP workers** via Hostinger hPanel tiap 5 menit saat peak
-- [ ] **Queue worker aktif**: pastikan cron queue:work berjalan
-- [ ] **Rate limit checkout**: tambah `throttle:10,1` pada route checkout untuk anti-spam bot
+- [ ] **Queue worker aktif**: pastikan cron `queue:work --stop-when-empty` berjalan & `failed_jobs` kosong
+- [ ] **Rate limit checkout**: tambah `throttle:30,1` pada route checkout untuk anti-spam bot
+- [ ] **Rencana rollback**: siapkan git revert ke commit stabil terakhir jika ada regresi
 - [ ] Pertimbangkan **upgrade sementara** ke paket Cloud Hosting atau VPS saat event
+- [ ] **Jangan aktifkan SSE/WebSocket** di shared hosting — koneksi panjang menghabiskan worker
+
+---
+
+## ⚠️ Catatan Keamanan & Batasan Penting
+
+### 1. `ProcessSuccessfulOrderJob` WAJIB `dispatchSync`
+
+Job ini menangani operasi **kritis non-email**: status order, generate tiket QR, link `user_id`. Jangan ubah ke `dispatch` async tanpa:
+- Queue worker aktif & dipantau supervisor/cron
+- Verifikasi end-to-end di staging: beli tiket → QR muncul → email diterima
+- Tabel `jobs` dan `failed_jobs` kosong setelah deployment
+- SLA monitoring: jika job gagal 3x, ada notifikasi ke developer
+
+### 2. Cache Notifikasi — Key Harus Deterministik
+
+Cache key `pos_notif_{seller_id}_{bucket}` aman karena:
+- Tidak bergantung pada request parameter `since` yang berubah tiap call
+- Window lookup tetap 60 detik (bukan dari request)
+- Bucket dibulatkan ke 10 detik — semua request dalam window sama dapat hasil konsisten
+- Stampede prevention via `Cache::remember` (atomic di file/database driver)
+
+### 3. Static Asset Cache — Hanya `immutable` untuk Hashed Filename
+
+| Path | TTL | `immutable`? | Alasan |
+|------|-----|--------------|--------|
+| `/storage/icon/popup1.png` | 30 hari | ❌ | Filename bisa berubah kontennya |
+| `/build/app.a1b2c3.js` (Vite hash) | 1 tahun | ✅ | Hash berubah saat konten berubah |
+| Font `/fonts/*.woff2` | 30 hari | ❌ | Tanpa versi eksplisit |
+
+### 4. Instagram Webhook — Tetap Async untuk Proses Komentar
+
+`ProcessInstagramCommentJob::dispatch()` aman async karena:
+- Webhook Instagram hanya butuh `200 OK` dalam < 5 detik
+- Pemrosesan komentar (auto DM, log campaign) bukan operasi blocking user
+- Jika queue tidak berjalan, komentar masuk ke `failed_jobs` → bisa di-retry manual
+- **Berbeda** dengan `ProcessSuccessfulOrderJob` yang menentukan tiket pembeli
 
 ---
 

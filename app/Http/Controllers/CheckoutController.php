@@ -141,14 +141,15 @@ class CheckoutController extends Controller
                             $buyerEmail = $order->user?->email ?? $order->customer_email ?? '';
                             $buyerName  = $order->user?->name ?? ($order->shipping_address['receiver_name'] ?? 'Pembeli');
                             $buyerPhone = $order->user?->phone ?? '';
-                            \App\Jobs\ProcessSuccessfulOrderJob::dispatch( // async - email dikirim background
+                            // dispatchSync: job menentukan status tiket, generate QR, link user_id.
+                            \App\Jobs\ProcessSuccessfulOrderJob::dispatchSync(
                                 orderId:    $order->id,
                                 buyerEmail: $buyerEmail,
                                 buyerName:  $buyerName,
                                 buyerPhone: $buyerPhone,
                             );
                         } catch (\Throwable $e) {
-                            \Log::error("ProcessSuccessfulOrderJob dispatchSync error: " . $e->getMessage());
+                            \Log::error("ProcessSuccessfulOrderJob error: " . $e->getMessage());
                         }
 
                         // Refresh model
