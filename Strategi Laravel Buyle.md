@@ -243,7 +243,12 @@ Saat event tiket besar (seperti Sabiphoria) akan berlangsung:
 | `resources/views/creator/pos/index.blade.php` | Polling 3s→15s/60s + Page Visibility API |
 | `app/Http/Controllers/Creator/PosController.php` | Hapus DB write di getLiveOrders, cache 10s di checkNewNotifications |
 | `app/Http/Controllers/Webhook/InstagramWebhookController.php` | `dispatchSync` → `dispatch` async |
+| `app/Http/Controllers/PaymentWebhookController.php` | `dispatchSync` → `dispatch` async (Midtrans webhook) |
+| `app/Http/Controllers/CheckoutController.php` | `dispatchSync` → `dispatch` async (finish page) |
+| `app/Services/CheckoutService.php` | `dispatchSync` → `dispatch` async (free order checkout) |
+| `app/Http/Controllers/TixController.php` | Cache halaman /tix 60 detik (non-search) / 10 detik (filter) |
 | `public/.htaccess` | Static asset cache 7d → 1 tahun + immutable header |
+| `database/migrations/2026_11_10_231225_add_perf_indexes_...php` | DB indexes: products (type+active, event_date, slug, seller+active), orders (seller+source+id, user+source, created_at+source), creator_profiles (user_id) |
 
 ---
 
