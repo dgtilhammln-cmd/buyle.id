@@ -626,8 +626,8 @@
 
             <div class="cart-sticky-footer">
                 @php
-                    $ticketAdminFeeFlat = 5000;
-                    $ticketPlatformFeeRate = 5.0;
+                    $ticketAdminFeeFlat = (float) (\App\Models\Setting::get('ticket_admin_fee_per_qty', 0));
+                    $ticketPlatformFeeRate = (float) (\App\Models\Setting::get('ticket_platform_fee_rate', 0));
                     $pfRate = (float) (\App\Models\Setting::get('platform_fee_rate', 5));
                     $afRate = (float) (\App\Models\Setting::get('admin_fee_rate', 5));
                     $platformFeeCart = 0;
@@ -636,7 +636,8 @@
                     $hasNonTicketItemC = false;
                     foreach ($summary['items'] as $ci) {
                         $pt = $ci->product->product_type ?? $ci->product->type ?? '';
-                        $sellerProfile = $ci->product->seller?->creatorProfile;
+                        $sellerProfile = $ci->product->seller?->creatorProfile 
+                            ?? \App\Models\CreatorProfile::where('user_id', $ci->product->seller_id)->first();
                         if ($pt === 'ticket') {
                             $hasTicketItemC = true;
                             if ($sellerProfile && $sellerProfile->has_custom_fee) {

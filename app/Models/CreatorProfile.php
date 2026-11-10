@@ -422,10 +422,14 @@ class CreatorProfile extends Model
 
     /**
      * Hitung Platform Fee & Admin Fee untuk Produk Tiket Event
-     * Default sistem: Platform fee 5% dari subtotal, Admin fee Rp 5.000 flat per tiket.
+     * Jika creator memiliki special deal (has_custom_fee = true), gunakan setting khusus.
+     * Jika tidak, baca dari Setting global (ticket_platform_fee_rate & ticket_admin_fee_per_qty).
      */
     public function calculateTicketFees(float $subtotal, int $qty): array
     {
+        $defaultPlatRate = (float) (\App\Models\Setting::get('ticket_platform_fee_rate', 0)) / 100;
+        $defaultAdminFlat = (float) (\App\Models\Setting::get('ticket_admin_fee_per_qty', 0));
+
         if ($this->has_custom_fee) {
             // 1. Platform Fee Tiket
             if ($this->custom_ticket_platform_fee_type === 'fixed') {
@@ -434,7 +438,7 @@ class CreatorProfile extends Model
                 $rate = (float) ($this->custom_ticket_platform_fee_value ?? 0) / 100;
                 $platformFee = round($subtotal * $rate, 2);
             } else {
-                $platformFee = round($subtotal * 0.05, 2); // default 5%
+                $platformFee = round($subtotal * $defaultPlatRate, 2);
             }
 
             // 2. Admin Fee Tiket
@@ -446,7 +450,7 @@ class CreatorProfile extends Model
                 $rate = (float) ($this->custom_ticket_admin_fee_value ?? 0) / 100;
                 $adminFee = round($subtotal * $rate, 2);
             } else {
-                $adminFee = 5000 * $qty; // default Rp 5.000 flat / tiket
+                $adminFee = $defaultAdminFlat * $qty;
             }
 
             return [
@@ -456,10 +460,10 @@ class CreatorProfile extends Model
             ];
         }
 
-        // Default sistem tiket
+        // Default sistem tiket — baca dari Setting (0 jika admin set 0)
         return [
-            'platform_fee' => round($subtotal * 0.05, 2),
-            'admin_fee'    => 5000 * $qty,
+            'platform_fee' => round($subtotal * $defaultPlatRate, 2),
+            'admin_fee'    => $defaultAdminFlat * $qty,
             'is_custom'    => false,
         ];
     }

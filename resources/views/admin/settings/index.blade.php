@@ -1049,7 +1049,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
           <div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:10px;padding:1.25rem;">
             <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
               <svg width="18" height="18" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-              <span style="font-size:.85rem;font-weight:700;color:#1E40AF;">Admin Fee</span>
+              <span style="font-size:.85rem;font-weight:700;color:#1E40AF;">Admin Fee (Produk Umum)</span>
             </div>
             <p style="font-size:.72rem;color:#1E40AF;margin-bottom:1rem;line-height:1.5;">Biaya administrasi layanan buyle.id, ditanggung oleh pembeli. Dihitung dari subtotal harga produk.</p>
             <label class="form-label" style="color:#1E40AF;">Persentase Admin Fee (%)</label>
@@ -1066,6 +1066,55 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
               <span style="font-size:1.25rem;font-weight:800;color:#1E40AF;">%</span>
             </div>
             <p style="font-size:.7rem;color:#1D4ED8;margin-top:.5rem;">Contoh: nilai <strong>5</strong> = Admin Fee 5% dari subtotal</p>
+          </div>
+        </div>
+
+        {{-- Section Khusus Fee Tiket & Event --}}
+        <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          {{-- Platform Fee Tiket --}}
+          <div style="background:#FAF5FF;border:1.5px solid #E9D5FF;border-radius:10px;padding:1.25rem;">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+              <span style="font-size:1.1rem;">🎟️</span>
+              <span style="font-size:.85rem;font-weight:700;color:#6B21A8;">Platform Fee Tiket (Default Global)</span>
+            </div>
+            <p style="font-size:.72rem;color:#6B21A8;margin-bottom:1rem;line-height:1.5;">Persentase platform fee khusus tiket jika creator tidak memiliki custom fee. Isi 0 jika gratis.</p>
+            <label class="form-label" style="color:#6B21A8;">Persentase Platform Fee Tiket (%)</label>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <input
+                type="number"
+                name="ticket_platform_fee_rate"
+                class="form-input"
+                style="max-width:120px;font-size:1.1rem;font-weight:700;text-align:center;"
+                value="{{ $settings['ticket_platform_fee_rate'] ?? 0 }}"
+                min="0" max="100" step="0.5"
+                placeholder="0"
+              >
+              <span style="font-size:1.25rem;font-weight:800;color:#6B21A8;">%</span>
+            </div>
+            <p style="font-size:.7rem;color:#7E22CE;margin-top:.5rem;">Default: <strong>0%</strong> (bisa diatur khusus per-creator di menu Creator Resources)</p>
+          </div>
+
+          {{-- Admin Fee Tiket --}}
+          <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:10px;padding:1.25rem;">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+              <span style="font-size:1.1rem;">🏷️</span>
+              <span style="font-size:.85rem;font-weight:700;color:#166534;">Admin Fee Tiket (Default Global)</span>
+            </div>
+            <p style="font-size:.72rem;color:#166534;margin-bottom:1rem;line-height:1.5;">Biaya admin flat per lembar tiket. Isi 0 untuk membebaskan biaya admin tiket.</p>
+            <label class="form-label" style="color:#166534;">Nominal Admin Fee Tiket (Rp / Tiket)</label>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <span style="font-size:.9rem;font-weight:800;color:#166534;">Rp</span>
+              <input
+                type="number"
+                name="ticket_admin_fee_per_qty"
+                class="form-input"
+                style="max-width:140px;font-size:1.1rem;font-weight:700;text-align:center;"
+                value="{{ $settings['ticket_admin_fee_per_qty'] ?? 0 }}"
+                min="0" step="500"
+                placeholder="0"
+              >
+            </div>
+            <p style="font-size:.7rem;color:#15803D;margin-top:.5rem;">Default: <strong>Rp 0</strong> flat per tiket</p>
           </div>
         </div>
 

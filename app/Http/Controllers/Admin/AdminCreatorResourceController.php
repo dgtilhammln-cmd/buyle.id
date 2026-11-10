@@ -804,24 +804,33 @@ class AdminCreatorResourceController extends Controller
         $user = User::findOrFail($id);
         $creatorProfile = CreatorProfile::getOrCreateForUser($user);
 
-        $hasCustomFee = $request->boolean('has_custom_fee');
+        // Ambil tipe & value untuk POS & Tiket
+        $ticketPlatType = $request->input('custom_ticket_platform_fee_type', 'default');
+        $ticketAdminType = $request->input('custom_ticket_admin_fee_type', 'default');
+        $posPlatType = $request->input('custom_pos_platform_fee_type', 'default');
+        $posAdminType = $request->input('custom_pos_admin_fee_type', 'default');
+
+        // Otomatis aktifkan custom deal jika admin memilih tipe selain 'default' atau mencentang checkbox
+        $hasNonDefault = ($ticketPlatType !== 'default')
+            || ($ticketAdminType !== 'default')
+            || ($posPlatType !== 'default')
+            || ($posAdminType !== 'default');
+
+        $hasCustomFee = $request->boolean('has_custom_fee') || $hasNonDefault;
 
         $creatorProfile->has_custom_fee = $hasCustomFee;
         $creatorProfile->custom_fee_notes = $request->input('custom_fee_notes');
 
-        if ($hasCustomFee) {
-            // POS Fees
-            $creatorProfile->custom_pos_platform_fee_type = $request->input('custom_pos_platform_fee_type', 'default');
-            $creatorProfile->custom_pos_platform_fee_value = $request->filled('custom_pos_platform_fee_value') ? (float) $request->input('custom_pos_platform_fee_value') : null;
-            $creatorProfile->custom_pos_admin_fee_type = $request->input('custom_pos_admin_fee_type', 'default');
-            $creatorProfile->custom_pos_admin_fee_value = $request->filled('custom_pos_admin_fee_value') ? (float) $request->input('custom_pos_admin_fee_value') : null;
+        // Selalu simpan nilai field agar tidak hilang / null saat disimpan
+        $creatorProfile->custom_pos_platform_fee_type = $posPlatType;
+        $creatorProfile->custom_pos_platform_fee_value = $request->filled('custom_pos_platform_fee_value') ? (float) $request->input('custom_pos_platform_fee_value') : 0;
+        $creatorProfile->custom_pos_admin_fee_type = $posAdminType;
+        $creatorProfile->custom_pos_admin_fee_value = $request->filled('custom_pos_admin_fee_value') ? (float) $request->input('custom_pos_admin_fee_value') : 0;
 
-            // Ticketing Fees
-            $creatorProfile->custom_ticket_platform_fee_type = $request->input('custom_ticket_platform_fee_type', 'default');
-            $creatorProfile->custom_ticket_platform_fee_value = $request->filled('custom_ticket_platform_fee_value') ? (float) $request->input('custom_ticket_platform_fee_value') : null;
-            $creatorProfile->custom_ticket_admin_fee_type = $request->input('custom_ticket_admin_fee_type', 'default');
-            $creatorProfile->custom_ticket_admin_fee_value = $request->filled('custom_ticket_admin_fee_value') ? (float) $request->input('custom_ticket_admin_fee_value') : null;
-        }
+        $creatorProfile->custom_ticket_platform_fee_type = $ticketPlatType;
+        $creatorProfile->custom_ticket_platform_fee_value = $request->filled('custom_ticket_platform_fee_value') ? (float) $request->input('custom_ticket_platform_fee_value') : 0;
+        $creatorProfile->custom_ticket_admin_fee_type = $ticketAdminType;
+        $creatorProfile->custom_ticket_admin_fee_value = $request->filled('custom_ticket_admin_fee_value') ? (float) $request->input('custom_ticket_admin_fee_value') : 0;
 
         $creatorProfile->save();
 

@@ -81,9 +81,11 @@ class CheckoutService
         $platformFeeRate = (float) (Setting::get('platform_fee_rate', 5)) / 100;
         $adminFeeRate    = (float) (Setting::get('admin_fee_rate', 5))    / 100;
 
-        // Konstanta fee khusus produk tipe tiket
-        $ticketAdminFeePerQty = 5000;   // Rp 5.000 flat per tiket
-        $ticketPlatformFeeRate = 0.05;  // 5% dari harga tiket
+        // Fee tiket default — baca dari Setting agar bisa di-override admin tanpa deploy ulang.
+        // Setting key: ticket_platform_fee_rate (%), ticket_admin_fee_per_qty (Rp flat/tiket)
+        // Jika Setting tidak ada, fallback ke nilai default lama (5% platform, 5000 admin).
+        $ticketPlatformFeeRate = (float) (Setting::get('ticket_platform_fee_rate', 5)) / 100;
+        $ticketAdminFeePerQty  = (float) (Setting::get('ticket_admin_fee_per_qty', 5000));
 
         // Hitung Platform Fee & Admin Fee — per item, berbeda skema untuk ticket vs produk lain
         $platformFee = 0;
@@ -94,13 +96,14 @@ class CheckoutService
             }
             $productType = $cartItem->product->product_type ?? $cartItem->product->type ?? '';
             if ($productType === 'ticket') {
-                $sellerProfile = $cartItem->product->seller?->creatorProfile;
+                $sellerProfile = $cartItem->product->seller?->creatorProfile 
+                    ?? \App\Models\CreatorProfile::where('user_id', $cartItem->product->seller_id)->first();
                 if ($sellerProfile && $sellerProfile->has_custom_fee) {
                     $tFee = $sellerProfile->calculateTicketFees($cartItem->subtotal, $cartItem->qty);
                     $platformFee += $tFee['platform_fee'];
                     $adminFee    += $tFee['admin_fee'];
                 } else {
-                    // Skema tiket default: admin fee Rp 5.000/tiket (flat), platform fee 5% dari subtotal
+                    // Skema tiket default: baca dari Setting global (bisa di-ubah admin tanpa deploy)
                     $platformFee += round($cartItem->subtotal * $ticketPlatformFeeRate, 2);
                     $adminFee    += $ticketAdminFeePerQty * $cartItem->qty;
                 }

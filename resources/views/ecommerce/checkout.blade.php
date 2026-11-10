@@ -1587,9 +1587,9 @@
                         </div>
 
                         @php
-                            // Fee khusus tiket: admin Rp 5.000/tiket (flat) + platform 5%
-                            $ticketAdminFeeFlat = 5000;
-                            $ticketPlatformFeeRate = 5.0;
+                            // Fee tiket: baca setting global (default 0 jika sudah diset 0 di admin)
+                            $ticketAdminFeeFlat = (float) (\App\Models\Setting::get('ticket_admin_fee_per_qty', 0));
+                            $ticketPlatformFeeRate = (float) (\App\Models\Setting::get('ticket_platform_fee_rate', 0));
                             $pfRate = (float) (\App\Models\Setting::get('platform_fee_rate', 5));
                             $afRate = (float) (\App\Models\Setting::get('admin_fee_rate', 5));
                             $pfAmt = 0;
@@ -1598,10 +1598,18 @@
                             $hasNonTicketItem = false;
                             foreach ($summary['items'] as $ci) {
                                 $pt = $ci->product->product_type ?? $ci->product->type ?? '';
+                                $sellerProfile = $ci->product->seller?->creatorProfile 
+                                    ?? \App\Models\CreatorProfile::where('user_id', $ci->product->seller_id)->first();
                                 if ($pt === 'ticket') {
                                     $hasTicketItem = true;
-                                    $pfAmt += round($ci->subtotal * $ticketPlatformFeeRate / 100);
-                                    $afAmt += $ticketAdminFeeFlat * $ci->qty;
+                                    if ($sellerProfile && $sellerProfile->has_custom_fee) {
+                                        $tFee = $sellerProfile->calculateTicketFees($ci->subtotal, $ci->qty);
+                                        $pfAmt += $tFee['platform_fee'];
+                                        $afAmt += $tFee['admin_fee'];
+                                    } else {
+                                        $pfAmt += round($ci->subtotal * $ticketPlatformFeeRate / 100);
+                                        $afAmt += $ticketAdminFeeFlat * $ci->qty;
+                                    }
                                 } else {
                                     $hasNonTicketItem = true;
                                     $pfAmt += round($ci->subtotal * $pfRate / 100);

@@ -819,7 +819,7 @@
             </div>
 
             {{-- Fee Setting Grid --}}
-            <div id="custom-fee-settings-panel" style="{{ ($creatorProfile && $creatorProfile->has_custom_fee) ? '' : 'opacity:0.6; pointer-events:none;' }} transition:opacity 0.2s ease;">
+            <div id="custom-fee-settings-panel" style="transition:opacity 0.2s ease;">
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.25rem; margin-bottom:1.25rem;">
                     
                     {{-- 1. POS Kasir Section --}}
@@ -918,14 +918,24 @@
         function toggleFeeInputs(checked) {
             const panel = document.getElementById('custom-fee-settings-panel');
             if (!panel) return;
-            if (checked) {
-                panel.style.opacity = '1';
-                panel.style.pointerEvents = 'auto';
-            } else {
-                panel.style.opacity = '0.6';
-                panel.style.pointerEvents = 'none';
-            }
+            panel.style.opacity = checked ? '1' : '0.85';
         }
+
+        // Auto-check checkbox jika input/select tarif diubah
+        document.addEventListener('DOMContentLoaded', function () {
+            const panel = document.getElementById('custom-fee-settings-panel');
+            const chk = document.querySelector('input[name="has_custom_fee"]');
+            if (panel && chk) {
+                panel.querySelectorAll('select, input').forEach(el => {
+                    el.addEventListener('change', function () {
+                        if (!chk.checked) {
+                            chk.checked = true;
+                            toggleFeeInputs(true);
+                        }
+                    });
+                });
+            }
+        });
     </script>
 
     {{-- ══ Location Intelligence Card ══ --}}
