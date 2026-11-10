@@ -3311,6 +3311,7 @@
                         <button id="tabBtn-desc" class="pd-tab-btn active" onclick="switchTab('desc')">Deskripsi</button>
                         @if($service->isTicketProduct())
                             <button id="tabBtn-tnc" class="pd-tab-btn" onclick="switchTab('tnc')">T&C</button>
+                            <button id="tabBtn-faq" class="pd-tab-btn" onclick="switchTab('faq')">FAQ</button>
                             <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')">EO</button>
                         @else
                             <button id="tabBtn-reviews" class="pd-tab-btn" onclick="switchTab('reviews')">
@@ -3393,6 +3394,26 @@
                                     <div style="font-size:0.95rem; color:#334155; line-height:1.75; white-space:pre-line;">
                                         {!! nl2br(e($service->terms_conditions ?? 'Tidak ada syarat dan ketentuan khusus dari penyelenggara.')) !!}
                                     </div>
+                                </div>
+                            </div>
+
+                            {{-- TAB FAQ KHUSUS PRODUK TIKET --}}
+                            <div id="tab-faq" class="pd-tab-content" style="display:none;">
+                                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.75rem; margin-bottom:1.5rem;">
+                                    <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid #e2e8f0;">
+                                        <div style="width:38px; height:38px; border-radius:10px; background:rgba(30,179,73,0.12); display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#0f172a;">Frequently Asked Questions (FAQ)</h3>
+                                            <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Informasi penting seputar pemesanan tiket, check-in acara, dan penukaran e-tiket.</p>
+                                        </div>
+                                    </div>
+                                    @include('tix.partials.faq_accordion', ['accordionPrefix' => 'prod_show_faq'])
                                 </div>
                             </div>
                         @else
@@ -4173,20 +4194,23 @@
             const descTab = document.getElementById('tab-desc');
             const reviewsTab = document.getElementById('tab-reviews');
             const tncTab = document.getElementById('tab-tnc');
+            const faqTab = document.getElementById('tab-faq');
             const creatorTab = document.getElementById('tab-creator');
 
             const btnDesc = document.getElementById('tabBtn-desc');
             const btnReviews = document.getElementById('tabBtn-reviews');
             const btnTnc = document.getElementById('tabBtn-tnc');
+            const btnFaq = document.getElementById('tabBtn-faq');
             const btnCreator = document.getElementById('tabBtn-creator');
 
             // Reset all tabs
             if (descTab) descTab.style.display = 'none';
             if (reviewsTab) reviewsTab.style.display = 'none';
             if (tncTab) tncTab.style.display = 'none';
+            if (faqTab) faqTab.style.display = 'none';
             if (creatorTab) creatorTab.style.display = 'none';
 
-            [btnDesc, btnReviews, btnTnc, btnCreator].forEach(btn => {
+            [btnDesc, btnReviews, btnTnc, btnFaq, btnCreator].forEach(btn => {
                 if (btn) {
                     btn.classList.remove('active');
                     btn.style.color = '';
@@ -4201,6 +4225,9 @@
             } else if (tab === 'tnc') {
                 if (tncTab) tncTab.style.display = 'block';
                 if (btnTnc) btnTnc.classList.add('active');
+            } else if (tab === 'faq') {
+                if (faqTab) faqTab.style.display = 'block';
+                if (btnFaq) btnFaq.classList.add('active');
             } else if (tab === 'reviews') {
                 if (reviewsTab) reviewsTab.style.display = 'block';
                 if (btnReviews) btnReviews.classList.add('active');

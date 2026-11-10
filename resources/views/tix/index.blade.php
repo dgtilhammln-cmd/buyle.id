@@ -1290,6 +1290,26 @@
                 </section>
             @endif
 
+            {{-- ══ 5. FAQ SECTION (FREQUENTLY ASKED QUESTIONS) ══ --}}
+            <section style="margin-bottom: 3rem;" id="faq-tix">
+                <div class="tix-section-header" style="margin-bottom: 1.5rem;">
+                    <div>
+                        <div style="font-size:0.75rem; font-weight:800; color:#1eb349; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#1eb349;"></span>
+                            FAQ Buyle TIX
+                        </div>
+                        <h2 class="tix-section-title" style="margin:0;">
+                            Pertanyaan Umum Seputar Tiket
+                        </h2>
+                        <p style="font-size:0.88rem; color:#64748b; margin:6px 0 0;">
+                            Temukan jawaban cepat seputar pemesanan tiket, mekanisme check-in di venue, hingga layanan untuk EO.
+                        </p>
+                    </div>
+                </div>
+
+                @include('tix.partials.faq_accordion', ['accordionPrefix' => 'tix_page_faq'])
+            </section>
+
             {{-- ══ 6. PROMOTER & CREATOR CTA BANNER (LIGHT THEME) ══ --}}
             <div class="tix-cta-box">
                 <div class="tix-cta-content">

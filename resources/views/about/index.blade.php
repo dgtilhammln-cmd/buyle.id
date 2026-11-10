@@ -5047,25 +5047,76 @@
             color: rgba(255, 255, 255, 0.75);
         }
 
+        .cv-adv-card-v2.span-2 {
+            grid-column: span 2;
+            flex-direction: row;
+            gap: 2rem;
+            align-items: center;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .cv-adv-cards {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            .cv-adv-card-v2.span-2 {
+                grid-column: span 2 !important;
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .cv-adv-premium {
-                padding: 3.5rem 0;
+                padding: 3rem 0 !important;
+            }
+
+            .cv-adv-inner {
+                padding: 0 1.25rem !important;
+            }
+
+            .cv-adv-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.75rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            .cv-adv-header p {
+                text-align: left !important;
+                max-width: 100% !important;
+                font-size: 0.85rem !important;
+            }
+
+            .cv-adv-section-title {
+                font-size: 1.85rem !important;
+                line-height: 1.2 !important;
             }
 
             .cv-adv-cards {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+                width: 100% !important;
             }
 
             .cv-adv-card-v2 {
-                min-height: 180px;
+                min-height: auto !important;
+                padding: 1.5rem !important;
+                border-radius: 18px !important;
+                grid-column: span 1 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .cv-adv-card-v2.span-2 {
+                grid-column: span 1 !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+                align-items: flex-start !important;
+            }
+
+            .cv-adv-card-num {
+                font-size: 2.25rem !important;
             }
         }
 
@@ -5265,8 +5316,7 @@
                 </div>
 
                 {{-- Card 7: Payment Gateway & Payout — spans 2 columns --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160"
-                    style="grid-column: span 2; flex-direction: row; gap: 2rem; align-items: center;">
+                <div class="cv-adv-card-v2 span-2" data-aos="fade-up" data-aos-delay="160">
                     <div class="cv-adv-card-icon-wrap blue-bg" style="flex-shrink:0; width:60px; height:60px;">
                         <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="1" y="4" width="22" height="16" rx="2" />
