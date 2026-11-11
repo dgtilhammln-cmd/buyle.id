@@ -193,6 +193,19 @@ class BioProductController extends Controller
             cookie()->queue('buyle_aff_' . $product->id, $affiliateUserId, 60 * 24 * 30);
         }
 
+        // ── REDIRECT KE SLUG ASLI BUYLE (/tix/{slug} atau /produk/{slug}) ──
+        // Mengarahkan ke core marketplace Buyle yang paling up-to-date
+        if ($product && !empty($product->slug)) {
+            $isTicket = method_exists($product, 'isTicketProduct')
+                ? $product->isTicketProduct()
+                : (($product->product_type ?? '') === 'ticket');
+
+            $targetRoute = $isTicket ? 'tix.show' : 'products.show';
+            $queryParams = request()->query();
+
+            return redirect()->route($targetRoute, array_merge(['slug' => $product->slug], $queryParams));
+        }
+
         $config = $profile->bio_config ?? [];
         $theme  = $profile->bio_theme ?? 'theme5';
         $blocks = $profile->bioBlocks;

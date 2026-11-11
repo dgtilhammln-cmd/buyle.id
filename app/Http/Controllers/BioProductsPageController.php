@@ -72,10 +72,15 @@ class BioProductsPageController extends Controller
                 $slug = Str::slug($name) ?: (string)$block->id;
             }
 
-            if (!empty($profile->custom_domain))
-                $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $slug;
-            else
-                $productUrl = route('bio.product.show', ['username' => $username, 'identifier' => $slug]);
+            $isTix = ($product && method_exists($product, 'isTicketProduct') && $product->isTicketProduct())
+                || (($product->product_type ?? ($data['category'] ?? '')) === 'ticket');
+
+            if ($product && !empty($product->slug)) {
+                $targetSlug = $product->slug;
+                $productUrl = $isTix ? route('tix.show', ['slug' => $targetSlug]) : route('products.show', ['slug' => $targetSlug]);
+            } else {
+                $productUrl = $isTix ? route('tix.show', ['slug' => $slug]) : route('products.show', ['slug' => $slug]);
+            }
 
             $ratingVal = $product ? $product->getEffectiveRating() : null;
 

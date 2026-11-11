@@ -115,10 +115,15 @@
                                 ? $product->slug
                                 : (\Illuminate\Support\Str::slug($product->title ?? ($product->name ?? '')) ?: $product->id)));
 
-                    if (!empty($profile->custom_domain)) {
-                        $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $prodIdentifier;
+                    $isTix = ($linkedProd && method_exists($linkedProd, 'isTicketProduct') && $linkedProd->isTicketProduct())
+                        || ($product && method_exists($product, 'isTicketProduct') && $product->isTicketProduct())
+                        || (($linkedProd->product_type ?? ($product->product_type ?? '')) === 'ticket');
+
+                    $targetSlug = !empty($linkedProd->slug) ? $linkedProd->slug : (!empty($product->slug) ? $product->slug : $prodIdentifier);
+                    if ($isTix) {
+                        $productUrl = route('tix.show', ['slug' => $targetSlug]);
                     } else {
-                        $productUrl = route('bio.product.show', ['username' => $username, 'identifier' => $prodIdentifier]);
+                        $productUrl = route('products.show', ['slug' => $targetSlug]);
                     }
                     $ratingVal = $product ? $product->getEffectiveRating() : null;
                 @endphp
