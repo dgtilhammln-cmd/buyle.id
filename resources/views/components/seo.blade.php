@@ -164,6 +164,10 @@ Variables (semua optional): $seo[], $schema, $breadcrumbs[]
             '@@type' => 'ImageObject',
             'url' => $defaultOg,
         ],
+        'sameAs' => [
+            $appUrl,
+            $appUrl . '/tix',
+        ],
         'priceRange' => '$$',
         'address' => [
             '@@type' => 'PostalAddress',

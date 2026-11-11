@@ -168,21 +168,14 @@ class TixController extends Controller
 
         $appUrl = rtrim(config('app.url'), '/');
 
+        // ── @graph: FAQPage + ItemList (Organization sudah dirender oleh seo.blade.php — tidak duplikat) ──
         $schemaGraph = [
-            // Organization — platform Buyle TIX
-            [
-                '@context' => 'https://schema.org',
-                '@type'    => 'Organization',
-                '@id'      => $appUrl . '/#organization',
-                'name'     => 'Buyle TIX',
-                'url'      => $appUrl . '/tix',
-                'logo'     => $appUrl . '/favicon.ico',
-                'sameAs'   => [$appUrl],
-            ],
-            // FAQPage
+            // FAQPage — 7 pertanyaan resmi Buyle TIX
             [
                 '@context'   => 'https://schema.org',
                 '@type'      => 'FAQPage',
+                '@id'        => $appUrl . '/tix#faqpage',
+                'url'        => $appUrl . '/tix',
                 'mainEntity' => array_map(fn($item) => [
                     '@type'          => 'Question',
                     'name'           => $item['q'],
@@ -191,11 +184,12 @@ class TixController extends Controller
             ],
         ];
 
-        // ItemList hanya jika ada event
+        // ItemList — hanya jika ada event terdekat
         if (!empty($itemListElements)) {
             $schemaGraph[] = [
                 '@context'        => 'https://schema.org',
                 '@type'           => 'ItemList',
+                '@id'             => $appUrl . '/tix#eventlist',
                 'name'            => 'Event & Tiket Terdekat — Buyle TIX',
                 'url'             => $appUrl . '/tix',
                 'numberOfItems'   => count($itemListElements),
