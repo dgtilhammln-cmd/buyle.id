@@ -318,69 +318,89 @@
             </form>
         </div>
 
-        {{-- 1.5 KELOLA MEDIA PARTNER BUYLE TIX (3 LOGO CENTER) --}}
+        {{-- 1.5 KELOLA MEDIA PARTNER BUYLE TIX (DINAMIS - UNLIMITED) --}}
         <div class="banner-admin-card" id="mediaPartnerCard">
-            <h3 class="banner-card-head-title">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-                Media Partner Buyle TIX (Maksimal 3 Logo Partner)
-            </h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                <h3 class="banner-card-head-title" style="margin:0;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Media Partner Buyle TIX
+                    <span style="font-size:0.65rem; background:#dcfce7; color:#166534; padding:2px 8px; border-radius:99px; font-weight:700; margin-left:0.25rem;">
+                        {{ $slides->where('position','partner')->count() }} Logo
+                    </span>
+                </h3>
+                <a href="{{ route('admin.hero_slides.create') }}?position=partner" class="btn-add-banner" style="font-size:0.78rem; padding:0.5rem 1rem;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>+ Tambah Logo Partner</span>
+                </a>
+            </div>
             <p class="banner-card-desc">
-                Kelola 3 logo media partner / sponsor resmi yang tampil di bagian bawah hero section Buyle TIX. Format transparan SVG atau PNG direkomendasikan.
+                Kelola logo media partner / sponsor resmi yang tampil di bawah hero banner Buyle TIX. Tambahkan sebanyak yang diperlukan. Format transparan SVG atau PNG direkomendasikan.
             </p>
 
-            <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
-                    @for($p = 1; $p <= 3; $p++)
-                        @php
-                            $defaultNames = [1 => 'Spotify', 2 => 'Google', 3 => 'YouTube'];
-                            $pName = \App\Models\Setting::get("tix_partner_{$p}_name", $defaultNames[$p]);
-                            $pLogo = \App\Models\Setting::get("tix_partner_{$p}_logo");
-                            $pUrl  = \App\Models\Setting::get("tix_partner_{$p}_url", '#');
-                        @endphp
-                        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem;">
-                            <div style="font-size: 0.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
-                                <span>Media Partner {{ $p }}</span>
-                                <span style="font-size: 0.65rem; background: #e2e8f0; color: #475569; padding: 2px 7px; border-radius: 99px;">Slot {{ $p }}/3</span>
+            @php $partnerSlides = $slides->where('position', 'partner'); @endphp
+            @if($partnerSlides->isEmpty())
+                <div style="text-align:center; padding:1.5rem; background:#f8fafc; border-radius:12px; border:1.5px dashed #e2e8f0;">
+                    <p style="margin:0; font-size:0.82rem; color:#94a3b8; font-weight:600;">Belum ada logo partner. Klik "+ Tambah Logo Partner" untuk menambahkan.</p>
+                </div>
+            @else
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;">
+                    @foreach($partnerSlides->sortBy('order') as $partner)
+                        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; position:relative;">
+                            {{-- Badge order & status --}}
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                                <span style="font-size:0.75rem; font-weight:800; color:#0f172a;">{{ $partner->title }}</span>
+                                <div style="display:flex; gap:0.35rem; align-items:center;">
+                                    <span style="font-size:0.62rem; background:#e2e8f0; color:#475569; padding:2px 6px; border-radius:99px;">#{{ $partner->order }}</span>
+                                    @if($partner->is_active)
+                                        <span style="font-size:0.62rem; background:#dcfce7; color:#166534; padding:2px 6px; border-radius:99px; font-weight:700;">Aktif</span>
+                                    @else
+                                        <span style="font-size:0.62rem; background:#f1f5f9; color:#94a3b8; padding:2px 6px; border-radius:99px;">Nonaktif</span>
+                                    @endif
+                                </div>
                             </div>
 
-                            {{-- Nama Partner --}}
-                            <div style="margin-bottom: 0.65rem;">
-                                <label style="font-size: 0.72rem; font-weight: 700; color: #475569; display: block; margin-bottom: 0.25rem;">Nama Brand / Partner</label>
-                                <input type="text" name="tix_partner_{{ $p }}_name" value="{{ $pName }}" class="form-input" style="width: 100%; height: 36px; padding: 0 0.75rem; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.8rem; color: #0f172a; outline: none; background: #fff;">
-                            </div>
+                            {{-- Logo Preview --}}
+                            @if($partner->image)
+                                <div style="background:#0f172a; border-radius:8px; padding:0.5rem 0.75rem; display:flex; align-items:center; justify-content:center; min-height:44px; margin-bottom:0.6rem;">
+                                    <img src="{{ asset('storage/'.$partner->image) }}" alt="{{ $partner->title }}" style="max-height:30px; max-width:140px; object-fit:contain; filter:brightness(0) invert(1);">
+                                </div>
+                            @else
+                                <div style="background:#f1f5f9; border-radius:8px; padding:0.5rem; display:flex; align-items:center; justify-content:center; min-height:44px; margin-bottom:0.6rem;">
+                                    <span style="font-size:0.72rem; color:#94a3b8; font-weight:700;">Belum Ada Logo</span>
+                                </div>
+                            @endif
 
-                            {{-- Logo Upload & Preview --}}
-                            <div style="margin-bottom: 0.65rem;">
-                                <label style="font-size: 0.72rem; font-weight: 700; color: #475569; display: block; margin-bottom: 0.25rem;">Upload Logo (SVG / PNG)</label>
-                                @if($pLogo)
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; padding: 0.4rem 0.6rem; background: #0f172a; border-radius: 8px;">
-                                        <img src="{{ asset('storage/' . $pLogo) }}" alt="{{ $pName }}" style="max-height: 22px; max-width: 90px; object-fit: contain; filter: brightness(0) invert(1);">
-                                        <span style="font-size: 0.65rem; color: #94a3b8;">(Logo Aktif)</span>
-                                    </div>
-                                @endif
-                                <input type="file" name="tix_partner_{{ $p }}_logo" accept="image/*,.svg" style="font-size: 0.72rem; width: 100%;">
-                            </div>
+                            {{-- Link --}}
+                            @if($partner->button_url)
+                                <p style="font-size:0.65rem; color:#64748b; margin:0 0 0.6rem 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    🔗 {{ $partner->button_url }}
+                                </p>
+                            @endif
 
-                            {{-- Link URL --}}
-                            <div>
-                                <label style="font-size: 0.72rem; font-weight: 700; color: #475569; display: block; margin-bottom: 0.25rem;">Link URL (Opsional)</label>
-                                <input type="text" name="tix_partner_{{ $p }}_url" value="{{ $pUrl }}" placeholder="https://..." class="form-input" style="width: 100%; height: 36px; padding: 0 0.75rem; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.8rem; color: #0f172a; outline: none; background: #fff;">
+                            {{-- Action Buttons --}}
+                            <div style="display:flex; gap:0.5rem;">
+                                <a href="{{ route('admin.hero_slides.edit', $partner) }}" class="btn-action-edit" style="flex:1; justify-content:center; font-size:0.72rem; padding:0.35rem 0.5rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    Edit
+                                </a>
+                                <form action="{{ route('admin.hero_slides.destroy', $partner) }}" method="POST" onsubmit="return confirm('Hapus logo partner ini?');" style="margin:0; flex:1;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action-delete" style="width:100%; justify-content:center; font-size:0.72rem; padding:0.35rem 0.5rem;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        Hapus
+                                    </button>
+                                </form>
                             </div>
                         </div>
-                    @endfor
+                    @endforeach
                 </div>
-
-                <button type="submit" class="btn-primary" style="height: 40px; padding: 0 1.25rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 3px 10px rgba(30,179,73,0.3);">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>Simpan Pengaturan Media Partner</span>
-                </button>
-            </form>
+            @endif
         </div>
 
         {{-- 2. HEADER TOP ROW: TOTAL & TAMBAH BANNER --}}
@@ -395,11 +415,12 @@
             </a>
         </div>
 
-        {{-- 3. FILTER TABS (Semua, Hero Home, Kanan, Buyle TIX) --}}
+        {{-- 3. FILTER TABS (Semua, Hero Home, Kanan, Buyle TIX, Partner) --}}
         @php
             $countTix = $slides->where('position', 'tix')->count();
             $countHero = $slides->where('position', 'hero')->count();
             $countKanan = $slides->whereIn('position', ['utama', 'samping'])->count();
+            $countPartner = $slides->where('position', 'partner')->count();
         @endphp
         <div class="banner-filter-tabs">
             <button type="button" class="banner-tab-btn active" onclick="filterBanners('all', this)">
@@ -419,6 +440,10 @@
                 <span>Banner Kanan (Atas & Bawah)</span>
                 <span style="background:rgba(0,0,0,0.08); padding:1px 6px; border-radius:999px; font-size:0.7rem;">{{ $countKanan }}</span>
             </button>
+            <button type="button" class="banner-tab-btn" onclick="filterBanners('partner', this)">
+                <span>🤝 Media Partner TIX</span>
+                <span style="background:rgba(0,0,0,0.08); padding:1px 6px; border-radius:999px; font-size:0.7rem;">{{ $countPartner }}</span>
+            </button>
         </div>
 
         {{-- 4. BANNER LIST --}}
@@ -436,12 +461,14 @@
                     @php
                         $pos = $slide->position ?? 'hero';
                         $isTix = ($pos === 'tix');
-                        $posGroup = $isTix ? 'tix' : ($pos === 'hero' ? 'hero' : 'kanan');
+                        $isPartner = ($pos === 'partner');
+                        $posGroup = $isTix ? 'tix' : ($pos === 'hero' ? 'hero' : ($isPartner ? 'partner' : 'kanan'));
                         $badgeClass = match($pos) {
                             'tix'     => 'tix',
                             'hero'    => 'hero',
                             'utama'   => 'utama',
                             'samping' => 'samping',
+                            'partner' => 'tix',
                             default   => 'hero'
                         };
                         $posLabel = match($pos) {
@@ -449,14 +476,15 @@
                             'hero'    => '🖼️ Hero Slider',
                             'utama'   => '↗️ Kanan Atas',
                             'samping' => '↘️ Kanan Bawah',
+                            'partner' => '🤝 Media Partner TIX',
                             default   => ucfirst($pos)
                         };
                     @endphp
                     <div class="banner-item-row" data-pos-group="{{ $posGroup }}">
                         {{-- Left: Thumbnail --}}
-                        <div class="banner-thumb-wrap {{ $isTix ? 'tix-thumb' : '' }}">
+                        <div class="banner-thumb-wrap {{ $isTix ? 'tix-thumb' : '' }}" {{ $isPartner ? 'style=background:#0f172a;' : '' }}>
                             @if($slide->image)
-                                <img src="{{ asset('storage/'.$slide->image) }}" alt="{{ $slide->title }}">
+                                <img src="{{ asset('storage/'.$slide->image) }}" alt="{{ $slide->title }}" {{ $isPartner ? 'style=filter:brightness(0) invert(1);object-fit:contain;padding:4px;' : '' }}>
                             @else
                                 <div class="banner-thumb-placeholder">NO IMAGE</div>
                             @endif

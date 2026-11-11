@@ -112,16 +112,20 @@
                             Posisi Penempatan Banner <span style="color:#dc2626;">*</span>
                         </label>
                         <select name="position" id="positionSelect" class="form-input-custom" required onchange="handlePositionChange(this.value)">
-                            <option value="hero" {{ old('position', $slide->position ?? 'hero') == 'hero' ? 'selected' : '' }}>
+                            @php $defaultPos = old('position', $slide->position ?? request()->get('position', 'hero')); @endphp
+                            <option value="hero" {{ $defaultPos == 'hero' ? 'selected' : '' }}>
                                 🖼️ Hero Slider (Halaman Utama / Homepage)
                             </option>
-                            <option value="tix" {{ old('position', $slide->position ?? '') == 'tix' ? 'selected' : '' }}>
+                            <option value="tix" {{ $defaultPos == 'tix' ? 'selected' : '' }}>
                                 🎟️ Buyle TIX Banner (Landscape 1920 x 600 di /tix)
                             </option>
-                            <option value="utama" {{ old('position', $slide->position ?? '') == 'utama' ? 'selected' : '' }}>
+                            <option value="partner" {{ $defaultPos == 'partner' ? 'selected' : '' }}>
+                                🤝 Media Partner Buyle TIX (Logo Sponsor/Mitra)
+                            </option>
+                            <option value="utama" {{ $defaultPos == 'utama' ? 'selected' : '' }}>
                                 ↗️ Banner Samping Kanan Atas (Home)
                             </option>
-                            <option value="samping" {{ old('position', $slide->position ?? '') == 'samping' ? 'selected' : '' }}>
+                            <option value="samping" {{ $defaultPos == 'samping' ? 'selected' : '' }}>
                                 ↘️ Banner Samping Kanan Bawah (Home)
                             </option>
                         </select>
@@ -273,6 +277,8 @@
                 hint.innerHTML = '🌟 <strong>Buyle TIX:</strong> Banner akan tampil di carousel 1920 x 600 di https://buyle.id/tix.';
             } else if (val === 'hero') {
                 hint.innerHTML = '🖼️ <strong>Hero Slider:</strong> Banner utama di slider tengah homepage.';
+            } else if (val === 'partner') {
+                hint.innerHTML = '🤝 <strong>Media Partner TIX:</strong> Logo sponsor/mitra akan tampil di baris bawah hero banner /tix. Upload logo transparan (SVG/PNG). Judul/title = Nama Brand.';
             } else {
                 hint.innerHTML = '📌 <strong>Banner Samping:</strong> Banner tetap di samping kanan hero slider.';
             }

@@ -4,10 +4,10 @@
 
     <style>
         /* ══════════════════════════════════════════════════════════════════════
-                   BUYLE TIX — DEDICATED TICKETING MARKETPLACE
-                   Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
-                   100% Exact Match to Creative Agency Reference (Image 2)
-                ══════════════════════════════════════════════════════════════════════ */
+                       BUYLE TIX — DEDICATED TICKETING MARKETPLACE
+                       Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
+                       100% Exact Match to Creative Agency Reference (Image 2)
+                    ══════════════════════════════════════════════════════════════════════ */
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap');
 
         .buyle-tix-page {
@@ -22,7 +22,8 @@
 
         @media (max-width: 991px) {
             .buyle-tix-page {
-                padding-top: 1.5rem !important; /* Generous breathing room so banner never touches mobile header/search */
+                padding-top: 1.5rem !important;
+                /* Generous breathing room so banner never touches mobile header/search */
             }
 
             .tix-hero-banner-section {
@@ -69,14 +70,14 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                   1. HERO SPLIT SECTION (EXACT MATCH TO REFERENCE IMAGE 2)
-                   Top Half: Dark Forest Green Card
-                   Bottom Half: Pure White Background with Overlapping Banner & Logos
-                ══════════════════════════════════════════════════════════════════════ */
+                       1. HERO SPLIT SECTION (EXACT MATCH TO REFERENCE IMAGE 2)
+                       Top Half: Dark Forest Green Card
+                       Bottom Half: Pure White Background with Overlapping Banner & Logos
+                    ══════════════════════════════════════════════════════════════════════ */
         /* ══════════════════════════════════════════════════════════════════════
-           1. 3D ORBIT / STACKED BANNER CAROUSEL (EXACT IMAGE 2 STYLE)
-           Centered active card + peeking sibling cards on left & right
-        ══════════════════════════════════════════════════════════════════════ */
+               1. 3D ORBIT / STACKED BANNER CAROUSEL (EXACT IMAGE 2 STYLE)
+               Centered active card + peeking sibling cards on left & right
+            ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-banner-section {
             width: 100%;
             margin-top: 1.25rem;
@@ -379,9 +380,9 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                   2. MEDIA PARTNERS BAR (ON CLEAN WHITE BACKGROUND — 100% IMAGE 2)
-                   White background, Centered, Gray Logos, Mobile Friendly
-                ══════════════════════════════════════════════════════════════════════ */
+                       2. MEDIA PARTNERS BAR (ON CLEAN WHITE BACKGROUND — 100% IMAGE 2)
+                       White background, Centered, Gray Logos, Mobile Friendly
+                    ══════════════════════════════════════════════════════════════════════ */
         .tix-partners-white-section {
             background: transparent;
             border: none;
@@ -488,8 +489,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                   3. SEARCH & QUICK FILTER BAR
-                ══════════════════════════════════════════════════════════════════════ */
+                       3. SEARCH & QUICK FILTER BAR
+                    ══════════════════════════════════════════════════════════════════════ */
         .tix-search-bar-wrap {
             background: #ffffff;
             border: 1.5px solid #E2E8F0;
@@ -675,8 +676,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                   4. RESPONSIVE EVENT CARDS GRID (100% HOMEPAGE STYLE)
-                ══════════════════════════════════════════════════════════════════════ */
+                       4. RESPONSIVE EVENT CARDS GRID (100% HOMEPAGE STYLE)
+                    ══════════════════════════════════════════════════════════════════════ */
         .tix-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -727,8 +728,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                   5. SKELETON SHIMMER & LAZY LOAD STYLES
-                ══════════════════════════════════════════════════════════════════════ */
+                       5. SKELETON SHIMMER & LAZY LOAD STYLES
+                    ══════════════════════════════════════════════════════════════════════ */
         @keyframes tixShimmer {
             0% {
                 background-position: -200% 0;
@@ -960,20 +961,20 @@
                 <div class="tix-orbit-skel-stage">
                     {{-- Card prev (kiri, mengintip) --}}
                     <div class="tix-skeleton tix-orbit-skel-card" style="
-                        transform: translateX(calc(-50% - 72%)) scale(0.85);
-                        opacity:0.35;
-                    "></div>
+                            transform: translateX(calc(-50% - 72%)) scale(0.85);
+                            opacity:0.35;
+                        "></div>
                     {{-- Card aktif (tengah) --}}
                     <div class="tix-skeleton tix-orbit-skel-card active" style="
-                        transform: translateX(-50%) scale(1);
-                        z-index:2;
-                        box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-                    "></div>
+                            transform: translateX(-50%) scale(1);
+                            z-index:2;
+                            box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+                        "></div>
                     {{-- Card next (kanan, mengintip) --}}
                     <div class="tix-skeleton tix-orbit-skel-card" style="
-                        transform: translateX(calc(-50% + 72%)) scale(0.85);
-                        opacity:0.35;
-                    "></div>
+                            transform: translateX(calc(-50% + 72%)) scale(0.85);
+                            opacity:0.35;
+                        "></div>
                 </div>
                 {{-- Dots --}}
                 <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin-top:14px;">
@@ -985,7 +986,8 @@
 
             {{-- 2. Media Partners Skeleton --}}
             <div class="tix-container">
-                <div style="display:flex; justify-content:center; align-items:center; gap:2rem; padding: 1.5rem 0 2rem; flex-wrap:wrap;">
+                <div
+                    style="display:flex; justify-content:center; align-items:center; gap:2rem; padding: 1.5rem 0 2rem; flex-wrap:wrap;">
                     <div class="tix-skeleton" style="width:120px; height:14px; border-radius:6px;"></div>
                     <div style="display:flex; gap:2rem; align-items:center;">
                         <div class="tix-skeleton" style="width:80px; height:24px; border-radius:6px;"></div>
@@ -1008,25 +1010,31 @@
                     @for($i = 0; $i < 8; $i++)
                         <div class="tix-skeleton-card">
                             {{-- Thumbnail --}}
-                            <div class="tix-skeleton" style="width:100%; aspect-ratio:16/9; border-radius:12px; margin-bottom:0.75rem;"></div>
+                            <div class="tix-skeleton"
+                                style="width:100%; aspect-ratio:16/9; border-radius:12px; margin-bottom:0.75rem;"></div>
                             {{-- Badge + verified row --}}
                             <div style="display:flex; justify-content:space-between; margin-bottom:0.45rem;">
                                 <div class="tix-skeleton" style="width:48px; height:15px; border-radius:4px;"></div>
                                 <div class="tix-skeleton" style="width:68px; height:15px; border-radius:4px;"></div>
                             </div>
                             {{-- Title lines --}}
-                            <div class="tix-skeleton" style="width:90%; height:17px; border-radius:5px; margin-bottom:0.3rem;"></div>
-                            <div class="tix-skeleton" style="width:65%; height:15px; border-radius:5px; margin-bottom:0.6rem;"></div>
+                            <div class="tix-skeleton" style="width:90%; height:17px; border-radius:5px; margin-bottom:0.3rem;">
+                            </div>
+                            <div class="tix-skeleton" style="width:65%; height:15px; border-radius:5px; margin-bottom:0.6rem;">
+                            </div>
                             {{-- Organizer --}}
                             <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.3rem;">
                                 <div class="tix-skeleton" style="width:18px; height:18px; border-radius:50%;"></div>
                                 <div class="tix-skeleton" style="width:90px; height:13px; border-radius:4px;"></div>
                             </div>
                             {{-- Date & location --}}
-                            <div class="tix-skeleton" style="width:80px; height:13px; border-radius:4px; margin-bottom:0.25rem;"></div>
-                            <div class="tix-skeleton" style="width:70px; height:13px; border-radius:4px; margin-bottom:0.75rem;"></div>
+                            <div class="tix-skeleton"
+                                style="width:80px; height:13px; border-radius:4px; margin-bottom:0.25rem;"></div>
+                            <div class="tix-skeleton"
+                                style="width:70px; height:13px; border-radius:4px; margin-bottom:0.75rem;"></div>
                             {{-- Price + button --}}
-                            <div style="border-top:1px solid #F1F5F9; padding-top:0.6rem; display:flex; justify-content:space-between; align-items:center;">
+                            <div
+                                style="border-top:1px solid #F1F5F9; padding-top:0.6rem; display:flex; justify-content:space-between; align-items:center;">
                                 <div class="tix-skeleton" style="width:65px; height:20px; border-radius:5px;"></div>
                                 <div class="tix-skeleton" style="width:72px; height:28px; border-radius:99px;"></div>
                             </div>
@@ -1041,21 +1049,26 @@
 
             {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (EXACT IMAGE 2 STYLE) ══ --}}
             <div class="tix-hero-banner-section">
-                <div class="tix-orbit-carousel-wrap {{ count($banners) <= 1 ? 'single-banner' : '' }}" id="tixOrbitCarousel">
+                <div class="tix-orbit-carousel-wrap {{ count($banners) <= 1 ? 'single-banner' : '' }}"
+                    id="tixOrbitCarousel">
                     <div class="tix-orbit-viewport">
                         <div class="tix-orbit-stage" id="tixOrbitStage">
                             @foreach($banners as $index => $banner)
-                                <div class="tix-orbit-card {{ $index === 0 ? 'is-active' : ($index === 1 ? 'is-next' : ($index === count($banners) - 1 ? 'is-prev' : 'is-hidden')) }}" data-index="{{ $index }}">
+                                <div class="tix-orbit-card {{ $index === 0 ? 'is-active' : ($index === 1 ? 'is-next' : ($index === count($banners) - 1 ? 'is-prev' : 'is-hidden')) }}"
+                                    data-index="{{ $index }}">
                                     <a href="{{ $banner['url'] }}" class="tix-orbit-card-inner">
                                         @if(!empty($banner['image']))
                                             {{-- Clean Pure 1920x600 Image (No Text Overlaid on Faces) --}}
-                                            <img src="{{ $banner['image'] }}" alt="{{ $banner['title'] }}" class="tix-orbit-img" loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
+                                            <img src="{{ $banner['image'] }}" alt="{{ $banner['title'] }}" class="tix-orbit-img"
+                                                loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
                                         @else
                                             {{-- Clean Modern SVG Landscape Placeholder --}}
                                             <div class="tix-banner-placeholder-box">
                                                 <div class="tix-ph-icon">
-                                                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                                                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"
+                                                        viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
                                                     </svg>
                                                 </div>
                                                 <span class="tix-ph-badge">BANNER BUYLE TIX (1920 X 600)</span>
@@ -1073,13 +1086,17 @@
 
                         @if(count($banners) > 1)
                             {{-- Circular Navigation Buttons (Only shown if banners > 1) --}}
-                            <button type="button" class="tix-orbit-btn prev" onclick="tixPrevOrbitSlide()" aria-label="Slide Sebelumnya">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <button type="button" class="tix-orbit-btn prev" onclick="tixPrevOrbitSlide()"
+                                aria-label="Slide Sebelumnya">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
                                     <polyline points="15 18 9 12 15 6"></polyline>
                                 </svg>
                             </button>
-                            <button type="button" class="tix-orbit-btn next" onclick="tixNextOrbitSlide()" aria-label="Slide Selanjutnya">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <button type="button" class="tix-orbit-btn next" onclick="tixNextOrbitSlide()"
+                                aria-label="Slide Selanjutnya">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </button>
@@ -1100,250 +1117,267 @@
 
             <div class="tix-container">
                 {{-- ══ 2. OFFICIAL MEDIA PARTNERS ROW (Directly follows Banner) ══ --}}
-            @php
-                $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
-                $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
-                $partner1Url = \App\Models\Setting::get('tix_partner_1_url', '#');
+                @php
+                    // Load media partner dari DB (HeroSlide position=partner), fallback ke Settings lama jika kosong
+                    $dbPartners = \App\Models\HeroSlide::where('position', 'partner')->where('is_active', true)->orderBy('order')->orderBy('id')->get();
+                    if ($dbPartners->isNotEmpty()) {
+                        $partners = $dbPartners->map(function($p) {
+                            return ['name' => $p->title, 'logo' => $p->image, 'url' => $p->button_url ?? '#'];
+                        })->toArray();
+                    } else {
+                        // Fallback ke Settings lama
+                        $partner1Name = \App\Models\Setting::get('tix_partner_1_name', 'Spotify');
+                        $partner1Logo = \App\Models\Setting::get('tix_partner_1_logo');
+                        $partner1Url = \App\Models\Setting::get('tix_partner_1_url', '#');
 
-                $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
-                $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
-                $partner2Url = \App\Models\Setting::get('tix_partner_2_url', '#');
+                        $partner2Name = \App\Models\Setting::get('tix_partner_2_name', 'Google');
+                        $partner2Logo = \App\Models\Setting::get('tix_partner_2_logo');
+                        $partner2Url = \App\Models\Setting::get('tix_partner_2_url', '#');
 
-                $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
-                $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
-                $partner3Url = \App\Models\Setting::get('tix_partner_3_url', '#');
+                        $partner3Name = \App\Models\Setting::get('tix_partner_3_name', 'YouTube');
+                        $partner3Logo = \App\Models\Setting::get('tix_partner_3_logo');
+                        $partner3Url = \App\Models\Setting::get('tix_partner_3_url', '#');
 
-                $partners = [
-                    ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
-                    ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
-                    ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
-                ];
-            @endphp
+                        $partners = [
+                            ['name' => $partner1Name, 'logo' => $partner1Logo, 'url' => $partner1Url],
+                            ['name' => $partner2Name, 'logo' => $partner2Logo, 'url' => $partner2Url],
+                            ['name' => $partner3Name, 'logo' => $partner3Logo, 'url' => $partner3Url],
+                        ];
+                    }
+                @endphp
 
-            <div class="tix-partners-white-section">
-                <div class="tix-partners-row">
-                    <span class="tix-partners-label">Official Media Partner:</span>
-                    <div class="tix-partners-logos">
-                        @foreach($partners as $p)
-                            <a href="{{ $p['url'] ?: '#' }}" target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}"
-                                class="tix-partner-item" title="{{ $p['name'] }}">
-                                @if(!empty($p['logo']))
-                                    <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}"
-                                        class="tix-partner-logo-img">
-                                @else
-                                    @if(stripos($p['name'], 'spotify') !== false)
-                                        <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
-                                            <path
-                                                d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z" />
-                                            <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                font-size="20" fill="currentColor">Spotify</text>
-                                        </svg>
-                                    @elseif(stripos($p['name'], 'google') !== false)
-                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
-                                            <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
-                                        </svg>
-                                    @elseif(stripos($p['name'], 'youtube') !== false)
-                                        <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
-                                            <path
-                                                d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z" />
-                                            <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
-                                                font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
-                                        </svg>
+                <div class="tix-partners-white-section">
+                    <div class="tix-partners-row">
+                        <span class="tix-partners-label">Official Media Partner:</span>
+                        <div class="tix-partners-logos">
+                            @foreach($partners as $p)
+                                <a href="{{ $p['url'] ?: '#' }}"
+                                    target="{{ $p['url'] && $p['url'] !== '#' ? '_blank' : '_self' }}" class="tix-partner-item"
+                                    title="{{ $p['name'] }}">
+                                    @if(!empty($p['logo']))
+                                        <img src="{{ asset('storage/' . $p['logo']) }}" alt="{{ $p['name'] }}"
+                                            class="tix-partner-logo-img">
                                     @else
-                                        <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                        @if(stripos($p['name'], 'spotify') !== false)
+                                            <svg class="tix-partner-svg" height="26" viewBox="0 0 120 36" fill="currentColor">
+                                                <path
+                                                    d="M18 0C8.06 0 0 8.06 0 18s8.06 18 18 18 18-8.06 18-18S27.94 0 18 0zm8.26 25.96c-.33.53-.99.7-1.52.37-4.17-2.54-9.42-3.12-15.6-1.71-.6.14-1.2-.24-1.34-.84-.14-.6.24-1.2.84-1.34 6.77-1.54 12.59-.88 17.25 1.99.53.33.7.99.37 1.53zm2.2-4.88c-.41.67-1.29.89-1.96.47-5.26-3.23-13.28-4.17-19.5-2.28-.75.23-1.55-.19-1.78-.94-.23-.75.19-1.55.94-1.78 7.1-2.15 15.93-1.1 21.83 2.57.67.41.89 1.29.47 1.96zm.19-5.12C22.42 12.23 12.16 11.89 6.27 13.68c-.96.29-1.99-.25-2.28-1.21-.29-.96.25-1.99 1.21-2.28 6.79-2.06 18.12-1.66 25.29 2.59.86.51 1.14 1.63.63 2.49-.51.86-1.63 1.14-2.47.69z" />
+                                                <text x="44" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                    font-size="20" fill="currentColor">Spotify</text>
+                                            </svg>
+                                        @elseif(stripos($p['name'], 'google') !== false)
+                                            <svg class="tix-partner-svg" height="24" viewBox="0 0 110 32" fill="currentColor">
+                                                <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                    font-size="24" letter-spacing="-0.03em" fill="currentColor">Google</text>
+                                            </svg>
+                                        @elseif(stripos($p['name'], 'youtube') !== false)
+                                            <svg class="tix-partner-svg" height="24" viewBox="0 0 130 32" fill="currentColor">
+                                                <path
+                                                    d="M31.2 3.5C30.8 2 29.6.8 28.1.4 25.6 0 16 0 16 0S6.4 0 3.9.4C2.4.8 1.2 2 .8 3.5 0 6 0 12.5 0 12.5s0 6.5.8 9c.4 1.5 1.6 2.7 3.1 3.1 2.5.4 12.1.4 12.1.4s9.6 0 12.1-.4c1.5-.4 2.7-1.6 3.1-3.1.8-2.5.8-9 .8-9s0-6.5-.8-9zM12.8 17.8V7.2l9.3 5.3-9.3 5.3z" />
+                                                <text x="38" y="22" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700"
+                                                    font-size="20" letter-spacing="-0.02em" fill="currentColor">YouTube</text>
+                                            </svg>
+                                        @else
+                                            <span class="tix-partner-text-brand">{{ $p['name'] }}</span>
+                                        @endif
                                     @endif
-                                @endif
-                            </a>
-                        @endforeach
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- ══ 3. SEARCH & QUICK FILTER BAR (REALTIME AJAX, NO URL PARAMS) ══ --}}
-            <div class="tix-search-bar-wrap">
-                <form id="tixSearchForm" action="javascript:void(0)" class="tix-search-form" onsubmit="return false;">
-                    <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2.2" viewBox="0 0 24 24"
-                        style="flex-shrink: 0;">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="tixSearchInput" name="q" value=""
-                        placeholder="Cari nama konser, seminar, festival, kota atau artis..." class="tix-search-input"
-                        autocomplete="off">
-                    <button type="button" id="tixSearchClearBtn"
-                        style="display: none; background: none; border: none; cursor: pointer; color: #94A3B8; padding: 4px; align-items: center;"
-                        onclick="tixClearSearch()" title="Hapus pencarian">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </form>
-
-                <div class="tix-filter-chips">
-                    <button type="button" class="tix-chip active" data-type="" onclick="tixFilterType('')">
-                        Semua Event
-                    </button>
-                    <button type="button" class="tix-chip" data-type="offline" onclick="tixFilterType('offline')">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"
+                {{-- ══ 3. SEARCH & QUICK FILTER BAR (REALTIME AJAX, NO URL PARAMS) ══ --}}
+                <div class="tix-search-bar-wrap">
+                    <form id="tixSearchForm" action="javascript:void(0)" class="tix-search-form" onsubmit="return false;">
+                        <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2.2" viewBox="0 0 24 24"
                             style="flex-shrink: 0;">
-                            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <span>Event Offline</span>
-                    </button>
-                    <button type="button" class="tix-chip" data-type="online" onclick="tixFilterType('online')">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"
-                            style="flex-shrink: 0;">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                            <line x1="8" y1="21" x2="16" y2="21"></line>
-                            <line x1="12" y1="17" x2="12" y2="21"></line>
-                        </svg>
-                        <span>Webinar / Online</span>
-                    </button>
-                </div>
-            </div>
+                        <input type="text" id="tixSearchInput" name="q" value=""
+                            placeholder="Cari nama konser, seminar, festival, kota atau artis..." class="tix-search-input"
+                            autocomplete="off">
+                        <button type="button" id="tixSearchClearBtn"
+                            style="display: none; background: none; border: none; cursor: pointer; color: #94A3B8; padding: 4px; align-items: center;"
+                            onclick="tixClearSearch()" title="Hapus pencarian">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </form>
 
-            {{-- ══ 4. SECTION: TIKET EVENT & KONSER (DYNAMIC REALTIME RESULTS) ══ --}}
-            <section style="margin-bottom: 2.75rem;" id="event-terdekat">
-                <div class="tix-section-header">
-                    <h2 id="tixSectionTitle" class="tix-section-title">
-                        Tiket Event & Konser
-                    </h2>
-                    <a href="javascript:void(0)" id="tixResetBtn" onclick="tixResetAll()" class="tix-reset-btn">
-                        <span id="tixResetBtnText">Lihat Semua Tiket</span>
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <path d="M5 12h14m-7-7l7 7-7 7" />
-                        </svg>
-                    </a>
-                </div>
-
-                {{-- Cards Grid Container --}}
-                <div class="tix-grid" id="upcomingGrid" style="transition: opacity 0.2s ease;">
-                    @if(count($upcomingEvents) > 0)
-                        @include('tix.partials.event_cards', ['events' => $upcomingEvents, 'is_past' => false])
-                    @else
-                        <div class="tix-empty-card">
-                            <div
-                                style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
-                                </svg>
-                            </div>
-                            <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Belum Ada Tiket
-                                Terdekat</h4>
-                            <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Nantikan pengumuman jadwal konser & event
-                                menarik lainnya segera!</p>
-                        </div>
-                    @endif
+                    <div class="tix-filter-chips">
+                        <button type="button" class="tix-chip active" data-type="" onclick="tixFilterType('')">
+                            Semua Event
+                        </button>
+                        <button type="button" class="tix-chip" data-type="offline" onclick="tixFilterType('offline')">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24" style="flex-shrink: 0;">
+                                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>Event Offline</span>
+                        </button>
+                        <button type="button" class="tix-chip" data-type="online" onclick="tixFilterType('online')">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24" style="flex-shrink: 0;">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>Event Online</span>
+                        </button>
+                    </div>
                 </div>
 
-                {{-- Infinite Scroll Skeleton Placeholders (4 cards matching grid) --}}
-                <div class="tix-grid" id="infiniteScrollSkeleton"
-                    style="display: none; margin-top: -1.75rem; margin-bottom: 1.5rem;">
-                    @for($i = 0; $i < 4; $i++)
-                        <div class="tix-skeleton-card">
-                            <div class="tix-skeleton"
-                                style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 0.85rem;"></div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                <div class="tix-skeleton" style="width: 45px; height: 16px; border-radius: 4px;"></div>
-                                <div class="tix-skeleton" style="width: 65px; height: 16px; border-radius: 4px;"></div>
-                            </div>
-                            <div class="tix-skeleton"
-                                style="width: 88%; height: 18px; margin-bottom: 0.35rem; border-radius: 6px;"></div>
-                            <div class="tix-skeleton"
-                                style="width: 60%; height: 16px; margin-bottom: 0.6rem; border-radius: 6px;"></div>
-                            <div class="tix-skeleton"
-                                style="width: 110px; height: 14px; margin-bottom: 0.3rem; border-radius: 4px;"></div>
-                            <div class="tix-skeleton"
-                                style="width: 90px; height: 14px; margin-bottom: 0.8rem; border-radius: 4px;"></div>
-                            <div
-                                style="border-top: 1px solid #F1F5F9; padding-top: 0.65rem; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                                <div class="tix-skeleton" style="width: 70px; height: 20px; border-radius: 6px;"></div>
-                                <div class="tix-skeleton" style="width: 75px; height: 28px; border-radius: 99px;"></div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-
-                {{-- Infinite Scroll Sentinel and Status Feedback --}}
-                <div id="infiniteScrollSentinel" style="height: 20px;"></div>
-                <div id="infiniteScrollStatus"
-                    style="text-align: center; padding: 0.5rem 0 1.5rem; font-size: 0.84rem; font-weight: 700; color: #94A3B8; display: none;">
-                    <span id="infiniteScrollStatusText"></span>
-                </div>
-            </section>
-
-            {{-- ══ 5. SECTION: EVENT BERAKHIR (Hanya tampil jika ada event berakhir) ══ --}}
-            @if(count($pastEvents) > 0)
-                <section style="margin-bottom: 2.75rem;" id="event-berakhir">
+                {{-- ══ 4. SECTION: TIKET EVENT & KONSER (DYNAMIC REALTIME RESULTS) ══ --}}
+                <section style="margin-bottom: 2.75rem;" id="event-terdekat">
                     <div class="tix-section-header">
-                        <div>
-                            <h2 class="tix-section-title">
-                                Event Berakhir
-                            </h2>
-                        </div>
+                        <h2 id="tixSectionTitle" class="tix-section-title">
+                            Tiket Event & Konser
+                        </h2>
+                        <a href="javascript:void(0)" id="tixResetBtn" onclick="tixResetAll()" class="tix-reset-btn">
+                            <span id="tixResetBtnText">Lihat Semua Tiket</span>
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <path d="M5 12h14m-7-7l7 7-7 7" />
+                            </svg>
+                        </a>
                     </div>
 
-                    <div class="tix-grid">
-                        @include('tix.partials.event_cards', ['events' => $pastEvents, 'is_past' => true])
+                    {{-- Cards Grid Container --}}
+                    <div class="tix-grid" id="upcomingGrid" style="transition: opacity 0.2s ease;">
+                        @if(count($upcomingEvents) > 0)
+                            @include('tix.partials.event_cards', ['events' => $upcomingEvents, 'is_past' => false])
+                        @else
+                            <div class="tix-empty-card">
+                                <div
+                                    style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                                    </svg>
+                                </div>
+                                <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Belum Ada
+                                    Tiket
+                                    Terdekat</h4>
+                                <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Nantikan pengumuman jadwal konser &
+                                    event
+                                    menarik lainnya segera!</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Infinite Scroll Skeleton Placeholders (4 cards matching grid) --}}
+                    <div class="tix-grid" id="infiniteScrollSkeleton"
+                        style="display: none; margin-top: -1.75rem; margin-bottom: 1.5rem;">
+                        @for($i = 0; $i < 4; $i++)
+                            <div class="tix-skeleton-card">
+                                <div class="tix-skeleton"
+                                    style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 0.85rem;"></div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <div class="tix-skeleton" style="width: 45px; height: 16px; border-radius: 4px;"></div>
+                                    <div class="tix-skeleton" style="width: 65px; height: 16px; border-radius: 4px;"></div>
+                                </div>
+                                <div class="tix-skeleton"
+                                    style="width: 88%; height: 18px; margin-bottom: 0.35rem; border-radius: 6px;"></div>
+                                <div class="tix-skeleton"
+                                    style="width: 60%; height: 16px; margin-bottom: 0.6rem; border-radius: 6px;"></div>
+                                <div class="tix-skeleton"
+                                    style="width: 110px; height: 14px; margin-bottom: 0.3rem; border-radius: 4px;"></div>
+                                <div class="tix-skeleton"
+                                    style="width: 90px; height: 14px; margin-bottom: 0.8rem; border-radius: 4px;"></div>
+                                <div
+                                    style="border-top: 1px solid #F1F5F9; padding-top: 0.65rem; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                                    <div class="tix-skeleton" style="width: 70px; height: 20px; border-radius: 6px;"></div>
+                                    <div class="tix-skeleton" style="width: 75px; height: 28px; border-radius: 99px;"></div>
+                                </div>
+                            </div>
+                        @endfor
+                    </div>
+
+                    {{-- Infinite Scroll Sentinel and Status Feedback --}}
+                    <div id="infiniteScrollSentinel" style="height: 20px;"></div>
+                    <div id="infiniteScrollStatus"
+                        style="text-align: center; padding: 0.5rem 0 1.5rem; font-size: 0.84rem; font-weight: 700; color: #94A3B8; display: none;">
+                        <span id="infiniteScrollStatusText"></span>
                     </div>
                 </section>
-            @endif
 
-            {{-- ══ 5. FAQ SECTION (FREQUENTLY ASKED QUESTIONS) ══ --}}
-            <section style="margin-bottom: 3rem;" id="faq-tix">
-                <div class="tix-section-header" style="margin-bottom: 1.5rem;">
-                    <div>
-                        <div style="font-size:0.75rem; font-weight:800; color:#1eb349; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-                            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#1eb349;"></span>
-                            FAQ Buyle TIX
+                {{-- ══ 5. SECTION: EVENT BERAKHIR (Hanya tampil jika ada event berakhir) ══ --}}
+                @if(count($pastEvents) > 0)
+                    <section style="margin-bottom: 2.75rem;" id="event-berakhir">
+                        <div class="tix-section-header">
+                            <div>
+                                <h2 class="tix-section-title">
+                                    Event Berakhir
+                                </h2>
+                            </div>
                         </div>
-                        <h2 class="tix-section-title" style="margin:0;">
-                            Pertanyaan Umum Seputar Tiket
-                        </h2>
-                        <p style="font-size:0.88rem; color:#64748b; margin:6px 0 0;">
-                            Temukan jawaban cepat seputar pemesanan tiket, mekanisme check-in di venue, hingga layanan untuk EO.
+
+                        <div class="tix-grid">
+                            @include('tix.partials.event_cards', ['events' => $pastEvents, 'is_past' => true])
+                        </div>
+                    </section>
+                @endif
+
+                {{-- ══ 5. FAQ SECTION (FREQUENTLY ASKED QUESTIONS) ══ --}}
+                <section style="margin-bottom: 3rem;" id="faq-tix">
+                    <div class="tix-section-header" style="margin-bottom: 1.5rem;">
+                        <div>
+                            <div
+                                style="font-size:0.75rem; font-weight:800; color:#1eb349; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                                <span
+                                    style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#1eb349;"></span>
+                                FAQ Buyle TIX
+                            </div>
+                            <h2 class="tix-section-title" style="margin:0;">
+                                Pertanyaan Umum Seputar Tiket
+                            </h2>
+                            <p style="font-size:0.88rem; color:#64748b; margin:6px 0 0;">
+                                Temukan jawaban cepat seputar pemesanan tiket, mekanisme check-in di venue, hingga layanan
+                                untuk EO.
+                            </p>
+                        </div>
+                    </div>
+
+                    @include('tix.partials.faq_accordion', ['accordionPrefix' => 'tix_page_faq'])
+                </section>
+
+                {{-- ══ 6. PROMOTER & CREATOR CTA BANNER (LIGHT THEME) ══ --}}
+                <div class="tix-cta-box">
+                    <div class="tix-cta-content">
+                        <h3 class="tix-cta-title">
+                            Punya Konser, Seminar, atau Event Sendiri?
+                        </h3>
+                        <p class="tix-cta-desc">
+                            Jual tiket gratis maupun berbayar secara mandiri di Buyle.id. Nikmati penerbitan e-tiket
+                            otomatis
+                            via WhatsApp/Email, sistem Gate Scanner panitia live kamera, serta penarikan dana cepat.
                         </p>
+                    </div>
+                    <div class="tix-cta-actions">
+                        <a href="{{ url('/register') }}" class="tix-btn-join">
+                            <span>Register</span>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                        <a href="{{ route('tix.info') }}" class="tix-btn-learn">
+                            <span>Pelajari Fitur</span>
+                        </a>
                     </div>
                 </div>
 
-                @include('tix.partials.faq_accordion', ['accordionPrefix' => 'tix_page_faq'])
-            </section>
-
-            {{-- ══ 6. PROMOTER & CREATOR CTA BANNER (LIGHT THEME) ══ --}}
-            <div class="tix-cta-box">
-                <div class="tix-cta-content">
-                    <h3 class="tix-cta-title">
-                        Punya Konser, Seminar, atau Event Sendiri?
-                    </h3>
-                    <p class="tix-cta-desc">
-                        Jual tiket gratis maupun berbayar secara mandiri di Buyle.id. Nikmati penerbitan e-tiket otomatis
-                        via WhatsApp/Email, sistem Gate Scanner panitia live kamera, serta penarikan dana cepat.
-                    </p>
-                </div>
-                <div class="tix-cta-actions">
-                    <a href="{{ url('/register') }}" class="tix-btn-join">
-                        <span>Register</span>
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                    <a href="{{ route('tix.info') }}" class="tix-btn-learn">
-                        <span>Pelajari Fitur</span>
-                    </a>
-                </div>
             </div>
-
         </div>
     </div>
-</div>
 
     {{-- ══ JAVASCRIPT CONTROLLERS: CAROUSEL, SKELETON TRANSITION, & INFINITE SCROLL ══ --}}
     <script>
@@ -1502,14 +1536,14 @@
                         tixHasMore = false;
                         if (grid) {
                             grid.innerHTML = `
-                                    <div class="tix-empty-card">
-                                        <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
-                                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                        <div class="tix-empty-card">
+                                            <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
+                                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                            </div>
+                                            <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Tidak Ada Tiket Ditemukan</h4>
+                                            <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Coba kata kunci lain atau klik kategori Semua Event.</p>
                                         </div>
-                                        <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Tidak Ada Tiket Ditemukan</h4>
-                                        <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Coba kata kunci lain atau klik kategori Semua Event.</p>
-                                    </div>
-                                `;
+                                    `;
                         }
                     } else {
                         tixHasMore = false;
@@ -1648,7 +1682,7 @@
 
             // Click on peeking prev/next card to slide it to center
             document.querySelectorAll('.tix-orbit-card').forEach((card) => {
-                card.addEventListener('click', function(e) {
+                card.addEventListener('click', function (e) {
                     if (this.classList.contains('is-prev')) {
                         e.preventDefault();
                         tixPrevOrbitSlide();
