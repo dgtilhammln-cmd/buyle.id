@@ -121,7 +121,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             padding: 1.1rem 1.25rem;
             text-align: left;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             gap: 1rem;
             cursor: pointer;
@@ -135,10 +135,11 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
 
         .tix-faq-q-left {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.85rem;
             min-width: 0;
             flex: 1;
+            overflow: hidden;
         }
 
         .tix-faq-num {
@@ -153,6 +154,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            margin-top: 2px;
             transition: all 0.2s ease;
         }
 
@@ -167,6 +169,8 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             color: #0F172A;
             line-height: 1.45;
             margin: 0;
+            word-break: break-word;
+            overflow-wrap: break-word;
             transition: color 0.2s ease;
         }
 
@@ -333,11 +337,11 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
                     aria-expanded="{{ $isFirst ? 'true' : 'false' }}">
                     <div class="tix-faq-q-left">
                         <span class="tix-faq-num">{{ $idx + 1 }}</span>
-                        <div>
+                        <div style="min-width:0;flex:1;">
                             <h3 class="tix-faq-q-text">{{ $item['q'] }}</h3>
                         </div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0; align-self:flex-start; padding-top:2px;">
                         <span class="tix-faq-tag">{{ $item['badge'] }}</span>
                         <div class="tix-faq-icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"

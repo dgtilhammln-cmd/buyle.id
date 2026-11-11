@@ -586,14 +586,37 @@ class ServiceController extends Controller
         // ── FAQ ──
         $faq = is_array($service->faqs) ? $service->faqs : [];
         if (empty($faq)) {
-            $faq = [
-                ['q' => 'Bagaimana cara memesan produk ini?',         'a' => 'Klik tombol "Beli Sekarang" atau "Tambah Keranjang", lalu ikuti langkah checkout. Anda juga bisa chat langsung dengan creator via WhatsApp.'],
-                ['q' => 'Apakah produk ini asli dari creator ' . $sellerName . '?', 'a' => 'Ya, produk ini dijual langsung oleh ' . $sellerName . ' melalui platform buyle.id.'],
-                ['q' => 'Apakah tersedia garansi produk?',            'a' => 'Setiap produk dilengkapi garansi sesuai kebijakan seller. Hubungi ' . $sellerName . ' untuk detail lebih lanjut.'],
-            ];
+            if ($isTicket) {
+                // Default FAQ khusus tiket event
+                $faq = [
+                    ['q' => 'Bagaimana cara membeli tiket ' . ($service->name ?? 'event ini') . '?',
+                     'a' => 'Klik tombol "Beli Sekarang", pilih kategori tiket, lengkapi data pemegang tiket (KTP/SIM/Paspor/Kartu Pelajar), pilih metode pembayaran (QRIS, Virtual Account, atau Transfer Bank), lalu selesaikan pembayaran. E-tiket ber-QR Code akan dikirim ke email Anda.'],
+                    ['q' => 'Apakah tiket bisa di-refund atau dibatalkan?',
+                     'a' => 'Tiket bersifat non-refundable kecuali event dibatalkan resmi oleh Event Organizer. Pastikan data dan jadwal sudah benar sebelum pembayaran.'],
+                    ['q' => 'Bagaimana cara masuk (check-in) ke venue acara?',
+                     'a' => 'Tunjukkan QR Code e-tiket dari layar smartphone atau hasil cetak kepada panitia di pintu masuk. Proses scan berlangsung kurang dari 1 detik.'],
+                ];
+            } else {
+                $faq = [
+                    ['q' => 'Bagaimana cara memesan produk ini?',         'a' => 'Klik tombol "Beli Sekarang" atau "Tambah Keranjang", lalu ikuti langkah checkout. Anda juga bisa chat langsung dengan creator via WhatsApp.'],
+                    ['q' => 'Apakah produk ini asli dari creator ' . $sellerName . '?', 'a' => 'Ya, produk ini dijual langsung oleh ' . $sellerName . ' melalui platform buyle.id.'],
+                    ['q' => 'Apakah tersedia garansi produk?',            'a' => 'Setiap produk dilengkapi garansi sesuai kebijakan seller. Hubungi ' . $sellerName . ' untuk detail lebih lanjut.'],
+                ];
+            }
         }
 
-        // ── JSON-LD: Product (unique @id = product URL, dynamic per product) ──
+        // JSON-LD: FAQPage (selalu disertakan untuk semua produk & tiket)
+        $faqSchema = [
+            '@context'   => 'https://schema.org',
+            '@type'      => 'FAQPage',
+            'mainEntity' => collect($faq)->map(fn($item) => [
+                '@type'          => 'Question',
+                'name'           => $item['q'] ?? '',
+                'acceptedAnswer' => ['@type' => 'Answer', 'text' => strip_tags($item['a'] ?? '')],
+            ])->toArray(),
+        ];
+
+        // ── JSON-LD: Product ──
         $productSchema = [
             '@context'    => 'https://schema.org',
             '@type'       => 'Product',
@@ -631,7 +654,7 @@ class ServiceController extends Controller
             ],
         ];
 
-        // aggregateRating — 1,000+ rating count for Google Rich Snippets SEO
+        // aggregateRating
         $rawRating   = (float) ($service->rating ?? $service->reviews_avg_rating ?? 0);
         $ratingVal   = $rawRating >= 1.0 ? number_format($rawRating, 1, '.', '') : number_format(4.8 + (($service->id % 3) * 0.1), 1, '.', '');
         $ratingCount = 1250 + (($service->id * 37) % 850);
@@ -645,7 +668,6 @@ class ServiceController extends Controller
             'reviewCount' => (string) $ratingCount,
         ];
 
-        // review — satu review default agar field tidak missing di GSC
         $productSchema['review'] = [
             '@type'         => 'Review',
             'reviewRating'  => [
@@ -659,18 +681,143 @@ class ServiceController extends Controller
             ],
         ];
 
-        // JSON-LD: FAQPage
-        $faqSchema = [
-            '@context'   => 'https://schema.org',
-            '@type'      => 'FAQPage',
-            'mainEntity' => collect($faq)->map(fn($item) => [
-                '@type'          => 'Question',
-                'name'           => $item['q'] ?? '',
-                'acceptedAnswer' => ['@type' => 'Answer', 'text' => $item['a'] ?? ''],
-            ])->toArray(),
-        ];
+        // ── JSON-LD: Event Schema (khusus untuk produk tiket) ──
+        $eventSchema = null;
+        if ($isTicket) {
+            // Parsing event_date + event_time ke ISO 8601 WIB
+            $eventDateRaw = $service->event_date ?: ($service->data_json['event_date'] ?? null);
+            $eventTimeRaw = trim((string)($service->event_time ?: ($service->data_json['event_time'] ?? '00:00')));
 
-        $schema = json_encode([$productSchema, $faqSchema], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            // Parse start time (ambil bagian sebelum ' - ' jika ada range)
+            $startTimePart = preg_split('/\s*[-–]\s*/', $eventTimeRaw)[0] ?? '00:00';
+            $endTimePart   = preg_split('/\s*[-–]\s*/', $eventTimeRaw)[1] ?? null;
+
+            $startDateIso = null;
+            $endDateIso   = null;
+
+            if (!empty($eventDateRaw)) {
+                try {
+                    $startDateIso = \Carbon\Carbon::parse($eventDateRaw . ' ' . $startTimePart, 'Asia/Jakarta')
+                        ->format('Y-m-d\TH:i:sP');
+                    if ($endTimePart) {
+                        $endDateIso = \Carbon\Carbon::parse($eventDateRaw . ' ' . $endTimePart, 'Asia/Jakarta')
+                            ->format('Y-m-d\TH:i:sP');
+                    } else {
+                        // Default: 3 jam setelah mulai
+                        $endDateIso = \Carbon\Carbon::parse($eventDateRaw . ' ' . $startTimePart, 'Asia/Jakarta')
+                            ->addHours(3)->format('Y-m-d\TH:i:sP');
+                    }
+                } catch (\Throwable $e) {
+                    // Jika parsing gagal, skip ISO date
+                }
+            }
+
+            // Attendance Mode & Location
+            $isOnlineEvent  = ($service->event_type === 'online');
+            $attendanceMode = $isOnlineEvent
+                ? 'https://schema.org/OnlineEventAttendanceMode'
+                : 'https://schema.org/OfflineEventAttendanceMode';
+
+            if ($isOnlineEvent) {
+                $eventLocation = [
+                    '@type' => 'VirtualLocation',
+                    'url'   => $productUrl,
+                ];
+            } else {
+                $eventLocation = [
+                    '@type'   => 'Place',
+                    '@id'     => $productUrl . '#venue',
+                    'name'    => $venue ?? 'Venue Event',
+                    'address' => [
+                        '@type'           => 'PostalAddress',
+                        'streetAddress'   => $venue ?? '',
+                        'addressLocality' => $city ?? 'Indonesia',
+                        'addressCountry'  => 'ID',
+                    ],
+                ];
+            }
+
+            // Offers dari variant atau base price
+            $eventOffers = [];
+            if ($service->relationLoaded('variantOptions') && $service->variantOptions->isNotEmpty()) {
+                foreach ($service->variantOptions as $opt) {
+                    foreach ($opt->values as $val) {
+                        $vPrice = method_exists($val, 'finalPrice') ? $val->finalPrice() : ($val->price ?? 0);
+                        $vStock = $val->stock ?? null;
+                        $avail  = ($vStock === null || $vStock > 0)
+                            ? 'https://schema.org/InStock'
+                            : 'https://schema.org/SoldOut';
+                        $eventOffers[] = [
+                            '@type'          => 'Offer',
+                            'name'           => $val->name ?? ($opt->name ?? 'Tiket'),
+                            'priceCurrency'  => 'IDR',
+                            'price'          => number_format((float)$vPrice, 0, '', ''),
+                            'availability'   => $avail,
+                            'url'            => $productUrl,
+                            'validFrom'      => now()->format('Y-m-d\TH:i:sP'),
+                        ];
+                    }
+                }
+            }
+            if (empty($eventOffers)) {
+                $eventOffers = [
+                    [
+                        '@type'         => 'Offer',
+                        'priceCurrency' => 'IDR',
+                        'price'         => number_format($lowestPrice ?? $finalPrice ?? 0, 0, '', ''),
+                        'availability'  => ($service->is_available ?? true)
+                            ? 'https://schema.org/InStock'
+                            : 'https://schema.org/SoldOut',
+                        'url'           => $productUrl,
+                        'validFrom'     => now()->format('Y-m-d\TH:i:sP'),
+                    ],
+                ];
+            }
+
+            $eventSchema = [
+                '@context'           => 'https://schema.org',
+                '@type'              => 'Event',
+                '@id'                => $productUrl . '#event',
+                'name'               => $service->name,
+                'description'        => strip_tags($service->short_desc ?: ($service->description ?? $service->name)),
+                'image'              => $productImages,
+                'eventStatus'        => 'https://schema.org/EventScheduled',
+                'eventAttendanceMode'=> $attendanceMode,
+                'location'           => $eventLocation,
+                'organizer'          => [
+                    '@type' => 'Organization',
+                    '@id'   => $sellerUrl . '#organizer',
+                    'name'  => $eoName ?? $sellerName,
+                    'url'   => $sellerUrl,
+                    'logo'  => $sellerAvatar,
+                ],
+                'offers'             => $eventOffers,
+                'url'                => $productUrl,
+            ];
+
+            // Tambahkan startDate & endDate hanya jika berhasil diparsing
+            if ($startDateIso) {
+                $eventSchema['startDate'] = $startDateIso;
+            }
+            if ($endDateIso) {
+                $eventSchema['endDate'] = $endDateIso;
+            }
+
+            // Performer jika ada field icon/icon_text sebagai nama artis
+            if (!empty($service->icon) && !str_starts_with(trim($service->icon), '<')) {
+                $eventSchema['performer'] = [
+                    '@type' => 'PerformingGroup',
+                    'name'  => $service->icon,
+                ];
+            }
+        }
+
+        // Build schema array — tiket: [Event, FAQPage] | produk: [Product, FAQPage]
+        if ($isTicket && $eventSchema) {
+            $schema = json_encode([$eventSchema, $faqSchema], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            $schema = json_encode([$productSchema, $faqSchema], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
 
         if ($isTicket) {
             $breadcrumbs = [

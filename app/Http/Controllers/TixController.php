@@ -114,6 +114,97 @@ class TixController extends Controller
             'canonical'   => route('tix.index'),
         ];
 
+        // ── BreadcrumbList ──
+        $breadcrumbs = [
+            ['name' => 'Beranda',   'url' => route('home')],
+            ['name' => 'Buyle TIX', 'url' => route('tix.index')],
+        ];
+
+        // ── FAQPage Schema (dari 7 FAQ Buyle TIX) ──
+        $faqSchemaItems = [
+            [
+                'q' => 'Bagaimana cara membeli tiket di Buyle TIX?',
+                'a' => 'Pilih event di buyle.id/tix, pilih kategori tiket dan jumlah, klik Beli Sekarang, lengkapi data pemegang tiket (KTP/SIM/Paspor/Kartu Pelajar), pilih metode pembayaran (QRIS, Virtual Account, atau Transfer Bank), selesaikan pembayaran sebelum countdown habis. E-tiket ber-QR Code akan dikirim ke email dan tersimpan di menu Tiket Saya pada Dashboard akun Buyle Anda.',
+            ],
+            [
+                'q' => 'Bagaimana mekanisme masuk (check-in) di hari H acara?',
+                'a' => 'Tunjukkan Barcode / QR Code E-Tiket dari layar smartphone (atau hasil cetak) kepada panitia di pintu masuk. Panitia akan memindai menggunakan Buyle Gate Scanner resmi — validasi berlangsung kurang dari 1 detik. Bawa kartu identitas asli yang sesuai data saat pemesanan.',
+            ],
+            [
+                'q' => 'Bagaimana kebijakan pembatalan dan pengembalian dana (refund)?',
+                'a' => 'Seluruh tiket yang telah berhasil dibeli dan dibayar bersifat non-refundable, kecuali acara resmi dibatalkan oleh Event Organizer. Pastikan jadwal, kategori tiket, dan data identitas sudah benar sebelum pembayaran.',
+            ],
+            [
+                'q' => 'Apakah e-tiket perlu ditukarkan menjadi tiket fisik atau gelang (wristband)?',
+                'a' => 'Untuk sebagian besar event di Buyle TIX tidak perlu tukar tiket fisik karena check-in sudah 100% digital via scan QR code. Jika EO mewajibkan penukaran gelang fisik, informasi jadwal dan lokasi penukaran akan diumumkan via deskripsi event dan media sosial penyelenggara.',
+            ],
+            [
+                'q' => 'Apakah Buyle TIX menyediakan pengadaan tiket gelang (wristband) untuk EO?',
+                'a' => 'Ya! Buyle TIX menyediakan layanan pengadaan tiket gelang premium: gelang kain woven, Tyvek anti-air, dan vinyl tahan sobek, dengan dukungan custom barcode, QR code, atau RFID chip yang terintegrasi langsung dengan gate scanner Buyle TIX. Hubungi tim marketing untuk pemesanan.',
+            ],
+            [
+                'q' => 'Apa saja metode pembayaran yang didukung di Buyle TIX?',
+                'a' => 'Buyle TIX mendukung QRIS Realtime (semua Mobile Banking dan e-wallet: GoPay, OVO, DANA, ShopeePay, LinkAja), Virtual Account (otomatis tanpa upload bukti), dan Transfer Bank dengan sistem escrow aman terenkripsi.',
+            ],
+            [
+                'q' => 'Bagaimana jika email e-tiket belum diterima setelah pembayaran?',
+                'a' => 'Periksa folder Spam/Junk atau tab Promotions di email Anda. Atau masuk ke akun Buyle di buyle.id, buka menu Tiket Saya — semua e-tiket lunas bisa diunduh (PDF) dan dilihat QR kodenya kapan saja. Hubungi Customer Support Buyle TIX jika masih butuh bantuan.',
+            ],
+        ];
+
+        // ── ItemList Schema (listing event terdekat) ──
+        $itemListElements = [];
+        foreach ($upcomingEvents as $idx => $event) {
+            $eventUrl = route('tix.show', ['slug' => $event->slug]);
+            $itemImg  = $event->image ? asset('storage/' . ltrim($event->image, '/')) : asset('images/buyle-og.png');
+            $itemListElements[] = [
+                '@type'    => 'ListItem',
+                'position' => $idx + 1,
+                'url'      => $eventUrl,
+                'name'     => $event->name,
+                'image'    => $itemImg,
+            ];
+        }
+
+        $appUrl = rtrim(config('app.url'), '/');
+
+        $schemaGraph = [
+            // Organization — platform Buyle TIX
+            [
+                '@context' => 'https://schema.org',
+                '@type'    => 'Organization',
+                '@id'      => $appUrl . '/#organization',
+                'name'     => 'Buyle TIX',
+                'url'      => $appUrl . '/tix',
+                'logo'     => $appUrl . '/favicon.ico',
+                'sameAs'   => [$appUrl],
+            ],
+            // FAQPage
+            [
+                '@context'   => 'https://schema.org',
+                '@type'      => 'FAQPage',
+                'mainEntity' => array_map(fn($item) => [
+                    '@type'          => 'Question',
+                    'name'           => $item['q'],
+                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $item['a']],
+                ], $faqSchemaItems),
+            ],
+        ];
+
+        // ItemList hanya jika ada event
+        if (!empty($itemListElements)) {
+            $schemaGraph[] = [
+                '@context'        => 'https://schema.org',
+                '@type'           => 'ItemList',
+                'name'            => 'Event & Tiket Terdekat — Buyle TIX',
+                'url'             => $appUrl . '/tix',
+                'numberOfItems'   => count($itemListElements),
+                'itemListElement' => $itemListElements,
+            ];
+        }
+
+        $schema = json_encode($schemaGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
         return view('tix.index', compact(
             'upcomingEvents',
             'hasMoreUpcoming',
@@ -122,7 +213,9 @@ class TixController extends Controller
             'settings',
             'seo',
             'search',
-            'type'
+            'type',
+            'schema',
+            'breadcrumbs'
         ));
     }
 
