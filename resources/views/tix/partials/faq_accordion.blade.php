@@ -139,7 +139,6 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             gap: 0.85rem;
             min-width: 0;
             flex: 1;
-            overflow: hidden;
         }
 
         .tix-faq-num {
