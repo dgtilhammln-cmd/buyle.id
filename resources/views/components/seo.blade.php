@@ -207,7 +207,7 @@ Variables (semua optional): $seo[], $schema, $breadcrumbs[]
 
     $lbSchemaJson = str_replace('"@@', '"@', json_encode($lbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
-    // WebSite Schema with SearchAction
+    // WebSite Schema with SearchAction (dual target: produk & tix)
     $websiteSchema = [
         '@@context' => 'https://schema.org',
         '@@type' => 'WebSite',
@@ -217,12 +217,22 @@ Variables (semua optional): $seo[], $schema, $breadcrumbs[]
         'description' => $shortDesc,
         'inLanguage' => 'id-ID',
         'potentialAction' => [
-            '@@type' => 'SearchAction',
-            'target' => [
-                '@@type' => 'EntryPoint',
-                'urlTemplate' => $appUrl . '/produk?q={search_term_string}',
+            [
+                '@@type' => 'SearchAction',
+                'target' => [
+                    '@@type' => 'EntryPoint',
+                    'urlTemplate' => $appUrl . '/tix?q={search_term_string}',
+                ],
+                'query-input' => 'required name=search_term_string',
             ],
-            'query-input' => 'required name=search_term_string',
+            [
+                '@@type' => 'SearchAction',
+                'target' => [
+                    '@@type' => 'EntryPoint',
+                    'urlTemplate' => $appUrl . '/produk?q={search_term_string}',
+                ],
+                'query-input' => 'required name=search_term_string',
+            ],
         ],
     ];
     $websiteSchemaJson = str_replace('"@@', '"@', json_encode($websiteSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
