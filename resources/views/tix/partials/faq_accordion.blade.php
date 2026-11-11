@@ -82,20 +82,28 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
 
 <div class="tix-faq-wrapper">
     <style>
-        .tix-faq-wrapper,
-        .tix-faq-wrapper * {
+        .tix-faq-wrapper {
             width: 100%;
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif !important;
         }
 
+        .tix-faq-wrapper *,
+        .tix-faq-wrapper *::before,
+        .tix-faq-wrapper *::after {
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
         .tix-faq-container {
+            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
         }
 
         .tix-faq-card {
+            width: 100%;
             background: #ffffff;
             border: 1px solid #E2E8F0;
             border-radius: 14px;
@@ -121,7 +129,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             padding: 1.1rem 1.25rem;
             text-align: left;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             gap: 1rem;
             cursor: pointer;
@@ -135,25 +143,27 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
 
         .tix-faq-q-left {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 0.85rem;
             min-width: 0;
-            flex: 1;
+            flex: 1 1 auto;
+            width: auto;
         }
 
         .tix-faq-num {
-            width: 28px;
-            height: 28px;
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px !important;
+            max-width: 28px !important;
+            flex: 0 0 28px !important;
             border-radius: 8px;
             background: #F1F5F9;
             color: #64748B;
             font-size: 0.75rem;
             font-weight: 700;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            margin-top: 2px;
             transition: all 0.2s ease;
         }
 
@@ -162,13 +172,20 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             color: #ffffff;
         }
 
+        .tix-faq-q-content {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: auto;
+        }
+
         .tix-faq-q-text {
             font-size: 0.95rem;
             font-weight: 700;
             color: #0F172A;
             line-height: 1.45;
             margin: 0;
-            overflow-wrap: break-word;
+            white-space: normal;
+            word-break: normal;
             transition: color 0.2s ease;
         }
 
@@ -176,16 +193,26 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             color: #15803D;
         }
 
+        .tix-faq-q-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 0 0 auto;
+            width: auto;
+        }
+
         .tix-faq-tag {
             font-size: 0.68rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 6px;
             background: #E2E8F0;
             color: #475569;
             white-space: nowrap;
+            width: auto !important;
+            display: inline-block;
         }
 
         .tix-faq-card.is-open .tix-faq-tag {
@@ -194,15 +221,17 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
         }
 
         .tix-faq-icon {
-            width: 28px;
-            height: 28px;
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px !important;
+            max-width: 28px !important;
+            flex: 0 0 28px !important;
             border-radius: 50%;
             background: #F8FAFC;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             color: #64748B;
-            flex-shrink: 0;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -213,6 +242,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
         }
 
         .tix-faq-answer {
+            width: 100%;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
@@ -224,6 +254,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
         }
 
         .tix-faq-answer-inner {
+            width: 100%;
             padding: 0 1.25rem 1.75rem 1.25rem;
             font-size: 0.88rem;
             color: #334155;
@@ -238,6 +269,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
 
         /* ── FOOTER HELP BOX ── */
         .tix-faq-help-box {
+            width: 100%;
             margin-top: 1.5rem;
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
@@ -283,8 +315,11 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             }
 
             .tix-faq-num {
-                width: 24px;
-                height: 24px;
+                width: 24px !important;
+                height: 24px !important;
+                min-width: 24px !important;
+                max-width: 24px !important;
+                flex: 0 0 24px !important;
                 font-size: 0.7rem;
                 border-radius: 6px;
             }
@@ -300,8 +335,11 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             }
 
             .tix-faq-icon {
-                width: 24px;
-                height: 24px;
+                width: 24px !important;
+                height: 24px !important;
+                min-width: 24px !important;
+                max-width: 24px !important;
+                flex: 0 0 24px !important;
             }
 
             .tix-faq-answer-inner {
@@ -335,11 +373,11 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
                     aria-expanded="{{ $isFirst ? 'true' : 'false' }}">
                     <div class="tix-faq-q-left">
                         <span class="tix-faq-num">{{ $idx + 1 }}</span>
-                        <div style="flex:1;min-width:0;">
+                        <div class="tix-faq-q-content">
                             <h3 class="tix-faq-q-text">{{ $item['q'] }}</h3>
                         </div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0; align-self:flex-start; padding-top:2px;">
+                    <div class="tix-faq-q-right">
                         <span class="tix-faq-tag">{{ $item['badge'] }}</span>
                         <div class="tix-faq-icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
