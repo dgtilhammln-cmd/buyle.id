@@ -2163,7 +2163,10 @@
                                                                     style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px;">
                                                             @endif
                                                             {{ $val->value }}
-                                                            @if($val->price > 0 && $val->price != $basePrice)
+                                                            @if($isTicket)
+                                                                <span
+                                                                    style="font-size:0.75rem; font-weight:600; opacity:0.85; margin-left:4px;">(Rp{{ number_format($val->finalPrice(), 0, ',', '.') }})</span>
+                                                            @elseif($val->price > 0 && $val->price != $basePrice)
                                                                 @php $vDiff = $val->price - $basePrice; @endphp
                                                                 <span
                                                                     style="font-size:0.7rem; opacity:0.75; margin-left:2px;">{{ $vDiff > 0 ? '+Rp' . number_format($vDiff, 0, ',', '.') : '-Rp' . number_format(abs($vDiff), 0, ',', '.') }}</span>
@@ -2927,14 +2930,13 @@
                                                                     </div>
                                                                     <div class="bvm-tix-divider"></div>
                                                                     <div class="bvm-tix-stub">
-                                                                        @if($val->price > 0 && $val->price != $basePrice)
-                                                                            <div class="bvm-tix-diff">
-                                                                                {{ $bvmValDiff > 0 ? '+Rp' . number_format($bvmValDiff, 0, ',', '.') : '-Rp' . number_format(abs($bvmValDiff), 0, ',', '.') }}
-                                                                            </div>
-                                                                        @else
-                                                                            <div class="bvm-tix-diff">
-                                                                                Rp{{ number_format($valFinalPrice, 0, ',', '.') }}</div>
-                                                                        @endif
+                                                                        <div class="bvm-tix-diff">
+                                                                            @if($valFinalPrice > 0)
+                                                                                Rp{{ number_format($valFinalPrice, 0, ',', '.') }}
+                                                                            @else
+                                                                                Gratis
+                                                                            @endif
+                                                                        </div>
                                                                         @if($isValOutOfStock)
                                                                             <span class="bvm-tix-status habis">Habis</span>
                                                                         @endif
