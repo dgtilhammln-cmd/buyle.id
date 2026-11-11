@@ -2434,6 +2434,16 @@
                             </style>
 
                             <div class="hp-subtab-bar">
+                                <button type="button" class="hp-subtab-btn" id="btn-hpsub-hero"
+                                    onclick="switchHomepageSubSubtab('hpsub-hero', this)">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                        <line x1="8" y1="21" x2="16" y2="21" />
+                                        <line x1="12" y1="17" x2="12" y2="21" />
+                                    </svg>
+                                    Hero Section
+                                </button>
                                 <button type="button" class="hp-subtab-btn" id="btn-hpsub-clients"
                                     onclick="switchHomepageSubSubtab('hpsub-clients', this)">
                                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -3272,6 +3282,132 @@
                                             </div>
                                         </div>
                                     </div> {{-- End #hpsub-tiktok --}}
+
+                                    {{-- SUB-SUBTAB: HERO SECTION (TEMA 5) --}}
+                                    <div class="hpsub-pane" id="hpsub-hero" style="display:none;">
+                                        {{-- 1. Info Banner Slider Notification --}}
+                                        <div class="prof-card" style="background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #bbf7d0; box-shadow:0 2px 8px rgba(16,185,129,0.06);">
+                                            <div class="card-body" style="display:flex; align-items:flex-start; gap:0.9rem; padding:1rem 1.25rem;">
+                                                <div style="width:38px; height:38px; border-radius:10px; background:#10b981; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 3px 8px rgba(16,185,129,0.25);">
+                                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                                        <polyline points="21 15 16 10 5 21" />
+                                                    </svg>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div style="font-weight:700; color:#065f46; font-size:0.92rem; margin-bottom:0.25rem;">Foto &amp; Slider Banner Hero</div>
+                                                    <p style="font-size:0.82rem; color:#047857; margin:0; line-height:1.45;">
+                                                        Upload atau ganti foto slider banner utama (hingga 5 slide foto) dilakukan di tab <strong>Informasi Profil &rarr; Banner / Cover &amp; Slider</strong>.
+                                                    </p>
+                                                </div>
+                                                <button type="button" onclick="document.getElementById('tab-btn-profile').click()" style="padding:0.45rem 0.85rem; border-radius:8px; border:1px solid #10b981; background:#ffffff; color:#047857; font-size:0.78rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.15s ease;"
+                                                    onmouseover="this.style.background='#10b981'; this.style.color='#fff';"
+                                                    onmouseout="this.style.background='#fff'; this.style.color='#047857';">
+                                                    Buka Tab Profil &rarr;
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {{-- 2. Judul & Sub-judul Hero --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head">1. Teks Headline &amp; Deskripsi Hero</div>
+                                            <div class="card-body">
+                                                <div class="form-group" style="margin-bottom:1.15rem;">
+                                                    <label class="form-label">Judul Utama H1 (Headline)</label>
+                                                    <input type="text" name="hero_title"
+                                                        value="{{ old('hero_title', $cfg['hero_title'] ?? '') }}"
+                                                        class="form-input"
+                                                        placeholder="Contoh: Selamat Datang di {{ $creator->brand_name ?? $creator->name ?? 'Toko Saya' }} (Kosongkan untuk otomatis)">
+                                                    <span style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:0.25rem;">
+                                                        Jika dikosongkan, otomatis menggunakan "Selamat Datang di [Nama Profil]".
+                                                    </span>
+                                                </div>
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <label class="form-label">Sub-judul / Deskripsi Singkat</label>
+                                                    <textarea name="hero_desc" rows="3" class="form-input" style="resize:vertical;"
+                                                        placeholder="Contoh: Digital Solution Pengusaha Indonesia! (Kosongkan untuk mengambil dari Bio Profil)">{{ old('hero_desc', $cfg['hero_desc'] ?? '') }}</textarea>
+                                                    <span style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:0.25rem;">
+                                                        Jika dikosongkan, otomatis menggunakan teks Bio Profil.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- 3. Tombol Utama (Primary CTA Button) --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head">2. Tombol Aksi Utama (Call to Action)</div>
+                                            <div class="card-body">
+                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.15rem;">
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Teks Tombol Utama</label>
+                                                        <input type="text" name="hero_cta_text"
+                                                            value="{{ old('hero_cta_text', $cfg['hero_cta_text'] ?? 'Jelajahi Katalog') }}"
+                                                            class="form-input" placeholder="Misal: Jelajahi Katalog">
+                                                    </div>
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Link Tujuan Tombol</label>
+                                                        <input type="text" name="hero_cta_link"
+                                                            value="{{ old('hero_cta_link', $cfg['hero_cta_link'] ?? '#products-section') }}"
+                                                            class="form-input" placeholder="Misal: #products-section atau https://...">
+                                                    </div>
+                                                </div>
+
+                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Tombol (Background)</label>
+                                                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                                                            <input type="color" name="hero_cta_bg" id="hero_cta_bg_picker"
+                                                                value="{{ $cfg['hero_cta_bg'] ?? '#1eb349' }}"
+                                                                style="width:38px; height:38px; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; padding:0; background:none;"
+                                                                oninput="document.getElementById('hero_cta_bg_val').value = this.value">
+                                                            <input type="text" id="hero_cta_bg_val"
+                                                                value="{{ $cfg['hero_cta_bg'] ?? '#1eb349' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="document.getElementById('hero_cta_bg_picker').value = this.value">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Teks Tombol</label>
+                                                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                                                            <input type="color" name="hero_cta_color" id="hero_cta_color_picker"
+                                                                value="{{ $cfg['hero_cta_color'] ?? '#ffffff' }}"
+                                                                style="width:38px; height:38px; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; padding:0; background:none;"
+                                                                oninput="document.getElementById('hero_cta_color_val').value = this.value">
+                                                            <input type="text" id="hero_cta_color_val"
+                                                                value="{{ $cfg['hero_cta_color'] ?? '#ffffff' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="document.getElementById('hero_cta_color_picker').value = this.value">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- 4. Tombol Sekunder (WhatsApp) --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                                <span>3. Tombol Sekunder (WhatsApp / Hubungi Kami)</span>
+                                                <input type="hidden" name="hero_cta2_enabled_present" value="1">
+                                                <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                                    <input type="checkbox" name="hero_cta2_enabled" value="1" {{ ($cfg['hero_cta2_enabled'] ?? 1) ? 'checked' : '' }}
+                                                        style="width:18px; height:18px; accent-color:#1eb349;">
+                                                    Tampilkan Tombol
+                                                </label>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <label class="form-label">Teks Tombol Sekunder</label>
+                                                    <input type="text" name="hero_cta2_text"
+                                                        value="{{ old('hero_cta2_text', $cfg['hero_cta2_text'] ?? 'Hubungi Kami!') }}"
+                                                        class="form-input" placeholder="Misal: Hubungi Kami!">
+                                                    <span style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:0.25rem;">
+                                                        Tombol ini akan otomatis membuka modal kirim pesan WhatsApp ke nomor yang tersimpan di tab Profil / Social Links.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> {{-- End #hpsub-hero --}}
 
                                     {{-- SUB-SUBTAB: SECTION CLIENT LOGOS / MITRA (TEMA 5) --}}
                                     <div class="hpsub-pane" id="hpsub-clients" style="display:none;">
@@ -5769,9 +5905,13 @@
             var savedHpSubsubtab = localStorage.getItem('bio_homepage_subsubtab');
             if (savedHpSubsubtab) {
                 var hpSubMap = {
+                    'hpsub-hero': 'btn-hpsub-hero',
+                    'hpsub-clients': 'btn-hpsub-clients',
                     'hpsub-about': 'btn-hpsub-about',
                     'hpsub-services': 'btn-hpsub-services',
                     'hpsub-gallery': 'btn-hpsub-gallery',
+                    'hpsub-tiktok': 'btn-hpsub-tiktok',
+                    'hpsub-teams': 'btn-hpsub-teams',
                     'hpsub-footer': 'btn-hpsub-footer'
                 };
                 var hpBtnEl = document.getElementById(hpSubMap[savedHpSubsubtab]);

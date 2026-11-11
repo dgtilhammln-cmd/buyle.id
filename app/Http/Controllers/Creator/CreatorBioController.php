@@ -347,6 +347,18 @@ class CreatorBioController extends Controller
             $config['embed_location'] = $request->embed_location;
         }
 
+        // Hero Section fields (Tema 5 - customizable text & CTA)
+        if ($request->has('hero_title'))     $config['hero_title']     = $request->hero_title;
+        if ($request->has('hero_desc'))      $config['hero_desc']      = $request->hero_desc;
+        if ($request->has('hero_cta_text'))  $config['hero_cta_text']  = $request->hero_cta_text;
+        if ($request->has('hero_cta_link'))  $config['hero_cta_link']  = $request->hero_cta_link;
+        if ($request->has('hero_cta_bg'))    $config['hero_cta_bg']    = $request->hero_cta_bg;
+        if ($request->has('hero_cta_color')) $config['hero_cta_color'] = $request->hero_cta_color;
+        if ($request->has('hero_cta2_enabled_present')) {
+            $config['hero_cta2_enabled'] = $request->has('hero_cta2_enabled') ? 1 : 0;
+        }
+        if ($request->has('hero_cta2_text')) $config['hero_cta2_text'] = $request->hero_cta2_text;
+
         // About Section fields
         if ($request->has('about_enabled_present')) {
             $config['about_enabled'] = $request->has('about_enabled') ? 1 : 0;
