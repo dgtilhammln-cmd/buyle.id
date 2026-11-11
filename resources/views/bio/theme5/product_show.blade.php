@@ -1411,9 +1411,41 @@
                         $tEventType = $product ? ($product->event_type ?? 'offline') : ($block->data_json['event_type'] ?? 'offline');
                         $tEventLoc = $product ? $product->event_location : ($block->data_json['event_location'] ?? null);
                         $tEventPlatform = $product ? $product->event_platform : ($block->data_json['event_platform'] ?? null);
+
+                        $rawIg = trim((string) ($product->instagram_username ?? ''));
+                        $igUser = ltrim($rawIg, '@');
+                        $rawTt = trim((string) ($product->tiktok_username ?? ''));
+                        $ttUser = ltrim($rawTt, '@');
                     @endphp
 
                     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1rem; margin:1rem 0; display:flex; flex-direction:column; gap:0.75rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                        @if(!empty($igUser) || !empty($ttUser))
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:0.65rem; border-bottom:1px dashed #e2e8f0;">
+                                <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; font-weight:700;">Sosial Media</span>
+                                <div style="display:inline-flex; align-items:center; gap:6px;">
+                                    @if(!empty($igUser))
+                                        <a href="https://instagram.com/{{ $igUser }}" target="_blank" rel="noopener noreferrer"
+                                            style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border:1px solid #FECDD3; color:#E11D48; text-decoration:none; transition:all 0.2s;"
+                                            title="Instagram: {{ '@' . $igUser }}">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                    @if(!empty($ttUser))
+                                        <a href="https://www.tiktok.com/{{ '@' . $ttUser }}" target="_blank" rel="noopener noreferrer"
+                                            style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:#F1F5F9; border:1px solid #E2E8F0; color:#0F172A; text-decoration:none; transition:all 0.2s;"
+                                            title="TikTok: {{ '@' . $ttUser }}">
+                                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
                         @if($tEventDate)
                             <div style="display:flex; align-items:flex-start; gap:0.65rem;">
                                 <div style="width:34px; height:34px; border-radius:10px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
@@ -1608,7 +1640,6 @@
                                 </svg>
                             </div>
                         </div>
-                    @endif
 
                         {{-- T5 INTERACTIVE VARIANT POPUP MODAL --}}
                         <div id="t5-variant-modal" class="buyle-variant-modal" style="display:none;" aria-hidden="true">
@@ -1667,6 +1698,9 @@
                                                             <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
                                                         @endif
                                                         <span class="bvm-pill-text">{{ $val->value }}</span>
+                                                        @if($valFinalPrice > 0)
+                                                            <span class="bvm-pill-price" style="font-size:0.75rem; font-weight:700; color:#16a34a; margin-left:4px;">(Rp {{ number_format($valFinalPrice, 0, ',', '.') }})</span>
+                                                        @endif
                                                         @if($isValOutOfStock)
                                                             <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
                                                         @endif

@@ -432,6 +432,9 @@
     $aboutOnClick   = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
     $contactOnClick = '';
 
+    // Check if About section is enabled
+    $aboutEnabled = !empty($config['about_enabled'] ?? 1);
+
     // Check if creator has any active products or services
     $hasProductsOrServices = false;
     if (isset($products) && is_iterable($products) && count($products) > 0) {
@@ -490,7 +493,9 @@
         {{-- Desktop Navigation Links --}}
         <nav class="t5-nav-desktop">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}" class="t5-nav-link {{ $isHome ? 'active' : '' }}">Beranda</a>
-            <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}" class="t5-nav-link">Profil</a>
+            @if($aboutEnabled)
+                <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}" class="t5-nav-link">Profil</a>
+            @endif
             
             @if($hasProductsOrServices)
                 <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">Produk / Layanan</a>
@@ -599,7 +604,9 @@
         </div>
         <nav class="t5-drawer-nav">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }} toggleT5Drawer();" class="t5-drawer-link">Beranda</a>
-            <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }} toggleT5Drawer();" class="t5-drawer-link">Profil</a>
+            @if($aboutEnabled)
+                <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }} toggleT5Drawer();" class="t5-drawer-link">Profil</a>
+            @endif
             
             @if($hasProductsOrServices)
                 <a href="{{ $productsUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>

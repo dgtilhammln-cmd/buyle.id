@@ -548,12 +548,39 @@
             $berandaOnClick = $isHome ? "t5ScrollTo('top'); return false;" : "";
             $aboutOnClick = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
             $contactOnClick = $isHome ? "t5ScrollTo('contact-section'); return false;" : "";
+
+            $aboutEnabled = !empty($config['about_enabled'] ?? 1);
+
+            // Check if creator has any active products or services
+            $hasProductsOrServices = false;
+            if (isset($products) && is_iterable($products) && count($products) > 0) {
+                $hasProductsOrServices = true;
+            } else {
+                $sellerIds = array_values(array_unique(array_filter([
+                    $profile->user_id ?? null,
+                    isset($profile->user) ? $profile->user->id : null,
+                    $profile->id ?? null,
+                ])));
+                if (!empty($sellerIds)) {
+                    try {
+                        $hasProductsOrServices = \App\Models\Product::whereIn('seller_id', $sellerIds)
+                            ->where(function($q) {
+                                $q->where('is_active', true)->orWhereNull('is_active');
+                            })
+                            ->exists();
+                    } catch (\Throwable $e) {}
+                }
+            }
         @endphp
         {{-- Navigation Links (Top Row) --}}
         <div class="t5-footer-nav">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}">Beranda</a>
-            <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}">Profil</a>
-            <a href="{{ $productsUrl }}">Produk / Layanan</a>
+            @if($aboutEnabled)
+                <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}">Profil</a>
+            @endif
+            @if($hasProductsOrServices)
+                <a href="{{ $productsUrl }}">Produk / Layanan</a>
+            @endif
             <a href="{{ $contactLink }}" onclick="{{ $contactOnClick }}">Kontak</a>
         </div>
 
