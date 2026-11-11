@@ -168,7 +168,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
             color: #0F172A;
             line-height: 1.45;
             margin: 0;
-            overflow-wrap: anywhere;
+            overflow-wrap: break-word;
             transition: color 0.2s ease;
         }
 
@@ -335,7 +335,7 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
                     aria-expanded="{{ $isFirst ? 'true' : 'false' }}">
                     <div class="tix-faq-q-left">
                         <span class="tix-faq-num">{{ $idx + 1 }}</span>
-                        <div>
+                        <div style="flex:1;min-width:0;">
                             <h3 class="tix-faq-q-text">{{ $item['q'] }}</h3>
                         </div>
                     </div>
