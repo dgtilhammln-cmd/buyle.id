@@ -963,7 +963,7 @@
                                                     <line x1="16" y1="13" x2="8" y2="13"></line>
                                                     <line x1="16" y1="17" x2="8" y2="17"></line>
                                                 </svg>
-                                                Syarat & Ketentuan Event (Terms & Conditions / T&C) <span>*</span>
+                                                Syarat & Ketentuan Event / T&C <span>*</span>
                                             </label>
                                             <textarea name="terms_conditions" rows="6" class="form-input"
                                                 style="height:auto; min-height:130px; line-height:1.6;"
@@ -1171,113 +1171,7 @@
                                 <div class="form-group full" style="margin-bottom:0;">
                                     <label class="form-label">Deskripsi Lengkap <span>*</span></label>
                                     @include('admin.partials.rich-editor', ['name' => 'description', 'value' => old('description'), 'height' => '280px'])
-                                    {{-- LINK VIDEO OPSIONAL - di dalam section deskripsi --}}
-                                    <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
-                                        <div
-                                            style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
-                                            <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;"
-                                                onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
-                                                <div
-                                                    style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                                    <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24">
-                                                        <polygon points="5 3 19 12 5 21 5 3" />
-                                                    </svg>
-                                                </div>
-                                                <div style="flex:1;">
-                                                    <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link
-                                                        Video <span
-                                                            style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span>
-                                                    </div>
-                                                    <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok
-                                                    </div>
-                                                </div>
-                                                <svg id="videoLinkChevron" width="16" height="16" fill="none"
-                                                    stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24"
-                                                    style="transition:transform 0.2s;">
-                                                    <path d="m6 9 6 6 6-6" />
-                                                </svg>
-                                            </div>
-                                            <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
-                                                {{-- Platform Selection Tabs --}}
-                                                <div
-                                                    style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
-                                                    <button type="button" id="btnPlatformYt"
-                                                        onclick="setVideoPlatform('youtube')"
-                                                        style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06); transition:all 0.15s;">
-                                                        <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
-                                                            <path
-                                                                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-                                                        </svg>
-                                                        YouTube
-                                                    </button>
-                                                    <button type="button" id="btnPlatformTt"
-                                                        onclick="setVideoPlatform('tiktok')"
-                                                        style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:transparent; color:#64748b; transition:all 0.15s;">
-                                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                                                            <path
-                                                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
-                                                        </svg>
-                                                        TikTok
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="video_platform" id="videoPlatformInput"
-                                                    value="youtube">
-
-                                                {{-- YOUTUBE INPUT (1 Link) --}}
-                                                <div id="youtubeInputWrap" style="display:block;">
-                                                    <input type="url" name="youtube_video_url" id="videoUrlInput"
-                                                        value="{{ old('youtube_video_url') }}" class="form-input"
-                                                        placeholder="Paste link YouTube atau YouTube Shorts di sini..."
-                                                        oninput="debounceVideoPreview(this.value)"
-                                                        style="margin-bottom:0.5rem;">
-                                                    <span class="form-hint"
-                                                        style="display:block; margin-bottom:0.75rem;">Mendukung link video
-                                                        YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
-                                                </div>
-
-                                                {{-- TIKTOK INPUTS (Up to 3 Links) --}}
-                                                <div id="tiktokInputsWrap" style="display:none; margin-bottom:0.75rem;">
-                                                    <div style="display:flex; flex-direction:column; gap:0.65rem;">
-                                                        <div>
-                                                            <label
-                                                                style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link
-                                                                TikTok 1 <span style="color:#ef4444;">*</span></label>
-                                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1"
-                                                                class="form-input tiktok-url-inp"
-                                                                placeholder="https://www.tiktok.com/@username/video/..."
-                                                                oninput="debounceTiktokPreviews()">
-                                                        </div>
-                                                        <div>
-                                                            <label
-                                                                style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
-                                                                TikTok 2 (Opsional)</label>
-                                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2"
-                                                                class="form-input tiktok-url-inp"
-                                                                placeholder="https://www.tiktok.com/@username/video/..."
-                                                                oninput="debounceTiktokPreviews()">
-                                                        </div>
-                                                        <div>
-                                                            <label
-                                                                style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
-                                                                TikTok 3 (Opsional)</label>
-                                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3"
-                                                                class="form-input tiktok-url-inp"
-                                                                placeholder="https://www.tiktok.com/@username/video/..."
-                                                                oninput="debounceTiktokPreviews()">
-                                                        </div>
-                                                    </div>
-                                                    <span class="form-hint" style="margin-top:0.5rem; display:block;">Di
-                                                        halaman produk pembeli, video akan tampil jejer horizontal rapi dan
-                                                        pas di dalam box deskripsi.</span>
-                                                </div>
-
-                                                {{-- VIDEO PREVIEW BOX --}}
-                                                <div id="videoPreviewBox"
-                                                    style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -1413,6 +1307,113 @@
                                     onchange="previewGalleryList(event)" style="display:none;">
                                 <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
                                     galeri pendukung (proporsional 1:1).</span>
+                            </div>
+
+                            {{-- LINK VIDEO OPSIONAL --}}
+                            <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
+                                <div
+                                    style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
+                                    <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;"
+                                        onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
+                                        <div
+                                            style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24">
+                                                <polygon points="5 3 19 12 5 21 5 3" />
+                                            </svg>
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link
+                                                Video <span
+                                                    style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span>
+                                            </div>
+                                            <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok (hingga 3 video)</div>
+                                        </div>
+                                        <svg id="videoLinkChevron" width="16" height="16" fill="none"
+                                            stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24"
+                                            style="transition:transform 0.2s;">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
+                                        {{-- Platform Selection Tabs --}}
+                                        <div
+                                            style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
+                                            <button type="button" id="btnPlatformYt"
+                                                onclick="setVideoPlatform('youtube')"
+                                                style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06); transition:all 0.15s;">
+                                                <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                                </svg>
+                                                YouTube
+                                            </button>
+                                            <button type="button" id="btnPlatformTt"
+                                                onclick="setVideoPlatform('tiktok')"
+                                                style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:transparent; color:#64748b; transition:all 0.15s;">
+                                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
+                                                </svg>
+                                                TikTok
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="video_platform" id="videoPlatformInput"
+                                            value="youtube">
+
+                                        {{-- YOUTUBE INPUT (1 Link) --}}
+                                        <div id="youtubeInputWrap" style="display:block;">
+                                            <input type="url" name="youtube_video_url" id="videoUrlInput"
+                                                value="{{ old('youtube_video_url') }}" class="form-input"
+                                                placeholder="Paste link YouTube atau YouTube Shorts di sini..."
+                                                oninput="debounceVideoPreview(this.value)"
+                                                style="margin-bottom:0.5rem;">
+                                            <span class="form-hint"
+                                                style="display:block; margin-bottom:0.75rem;">Mendukung link video
+                                                YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
+                                        </div>
+
+                                        {{-- TIKTOK INPUTS (Up to 3 Links) --}}
+                                        <div id="tiktokInputsWrap" style="display:none; margin-bottom:0.75rem;">
+                                            <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                                                <div>
+                                                    <label
+                                                        style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link
+                                                        TikTok 1 <span style="color:#ef4444;">*</span></label>
+                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1"
+                                                        class="form-input tiktok-url-inp"
+                                                        placeholder="https://www.tiktok.com/@username/video/..."
+                                                        oninput="debounceTiktokPreviews()">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                        TikTok 2 (Opsional)</label>
+                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2"
+                                                        class="form-input tiktok-url-inp"
+                                                        placeholder="https://www.tiktok.com/@username/video/..."
+                                                        oninput="debounceTiktokPreviews()">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                        TikTok 3 (Opsional)</label>
+                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3"
+                                                        class="form-input tiktok-url-inp"
+                                                        placeholder="https://www.tiktok.com/@username/video/..."
+                                                        oninput="debounceTiktokPreviews()">
+                                                </div>
+                                            </div>
+                                            <span class="form-hint" style="margin-top:0.5rem; display:block;">Di
+                                                halaman produk pembeli, video akan tampil jejer horizontal rapi dan
+                                                pas di dalam box deskripsi.</span>
+                                        </div>
+
+                                        {{-- VIDEO PREVIEW BOX --}}
+                                        <div id="videoPreviewBox"
+                                            style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1656,17 +1657,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                                                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                                                                <div class="form-group">
-                                                                                    <label class="form-label">Pertanyaan</label>
-                                                                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label class="form-label">Jawaban</label>
-                                                                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                                                                </div>
-                                                                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                                                            </div>`;
+                                                                                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                                                    <div class="form-group">
+                                                                                        <label class="form-label">Pertanyaan</label>
+                                                                                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                                                    </div>
+                                                                                    <div class="form-group">
+                                                                                        <label class="form-label">Jawaban</label>
+                                                                                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                                                    </div>
+                                                                                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                                                </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2040,13 +2041,13 @@
 
                 // Banner alert
                 const alertHtml = `
-                                                                                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-                                                                                        <div style="display:flex; align-items:center; gap:0.6rem;">
-                                                                                            <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                                                                            <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                                                                        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+                                                                                            <div style="display:flex; align-items:center; gap:0.6rem;">
+                                                                                                <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                                                                                <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                `;
+                                                                                    `;
                 const formBody = document.getElementById('productForm');
                 if (formBody) {
                     formBody.insertAdjacentHTML('afterbegin', alertHtml);
@@ -2179,9 +2180,9 @@
                             const imgBox = document.createElement('div');
                             imgBox.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06);';
                             imgBox.innerHTML = `
-                                                                                                <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                                                <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
-                                                                                            `;
+                                                                                                    <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                                                    <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
+                                                                                                `;
                             galleryContainer.appendChild(imgBox);
                         });
                     }
@@ -2336,18 +2337,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                                                                style="width:100%; height:100%; border:none; display:block;"
-                                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                                allowfullscreen loading="lazy"></iframe>
-                                                                        </div>`;
+                                                                            <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                                                <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                                    style="width:100%; height:100%; border:none; display:block;"
+                                                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                    allowfullscreen loading="lazy"></iframe>
+                                                                            </div>`;
                 } else {
                     html += `
-                                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                                                        </div>`;
+                                                                            <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                                                <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                                                <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                                            </div>`;
                 }
             });
             html += '</div>';
@@ -2385,11 +2386,11 @@
                     itemDiv.id = 'newGalItem_' + fileIndex;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                        <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
-                                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                                                                    `;
+                                                                            <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                            <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
+                                                                                style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                                            <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                                        `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };
@@ -2417,11 +2418,11 @@
                     itemDiv.id = 'newGalItem_' + idx;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                        <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
-                                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                                                                    `;
+                                                                            <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                            <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
+                                                                                style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                                            <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                                        `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };
