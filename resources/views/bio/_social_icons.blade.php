@@ -17,7 +17,31 @@
     $ig_url  = !empty($s_ig) ? (Str::startsWith($s_ig, 'http') ? $s_ig : 'https://instagram.com/' . ltrim(ltrim($s_ig, '@'), '/')) : null;
     $tt_url  = !empty($s_tt) ? (Str::startsWith($s_tt, 'http') ? $s_tt : 'https://tiktok.com/@' . ltrim(ltrim($s_tt, '@'), '/')) : null;
 
-    $hasStore = !empty($profile->store_slug) && $profile->isStoreActive();
+    // Check if creator has any active products uploaded (Tema 1-5 requirement)
+    $hasActiveProducts = false;
+    if (isset($products) && is_iterable($products) && count($products) > 0) {
+        $hasActiveProducts = true;
+    } elseif (!empty($profile)) {
+        $sellerIds = array_values(array_unique(array_filter([
+            $profile->user_id ?? null,
+            $profile->user?->id ?? null,
+            $profile->id ?? null,
+        ])));
+        if (!empty($sellerIds)) {
+            $hasActiveProducts = \App\Models\Product::whereIn('seller_id', $sellerIds)
+                ->where('is_active', true)
+                ->exists();
+        }
+        if (!$hasActiveProducts && !empty($profile->id)) {
+            $hasActiveProducts = \App\Models\CreatorBioBlock::where('creator_id', $profile->id)
+                ->where('is_active', true)
+                ->where('type', 'buyle_product')
+                ->whereNotNull('data_json->product_id')
+                ->exists();
+        }
+    }
+
+    $hasStore = !empty($profile->store_slug) && $profile->isStoreActive() && $hasActiveProducts;
     $hasAny  = $hasStore || $s_wa || $s_ig || $s_tt || $s_yt || $s_fb || $s_x || $s_li || $s_pin || $s_dsc || $s_thr || $s_tg || $s_sn || $s_web;
 
     $dbFavPath = \App\Models\Setting::get('favicon');
