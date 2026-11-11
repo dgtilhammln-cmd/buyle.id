@@ -4,10 +4,10 @@
 
     <style>
         /* ══════════════════════════════════════════════════════════════════════
-                       BUYLE TIX — DEDICATED TICKETING MARKETPLACE
-                       Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
-                       100% Exact Match to Creative Agency Reference (Image 2)
-                    ══════════════════════════════════════════════════════════════════════ */
+                           BUYLE TIX — DEDICATED TICKETING MARKETPLACE
+                           Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
+                           100% Exact Match to Creative Agency Reference (Image 2)
+                        ══════════════════════════════════════════════════════════════════════ */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
         .buyle-tix-page {
@@ -70,14 +70,14 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                       1. HERO SPLIT SECTION (EXACT MATCH TO REFERENCE IMAGE 2)
-                       Top Half: Dark Forest Green Card
-                       Bottom Half: Pure White Background with Overlapping Banner & Logos
-                    ══════════════════════════════════════════════════════════════════════ */
+                           1. HERO SPLIT SECTION (EXACT MATCH TO REFERENCE IMAGE 2)
+                           Top Half: Dark Forest Green Card
+                           Bottom Half: Pure White Background with Overlapping Banner & Logos
+                        ══════════════════════════════════════════════════════════════════════ */
         /* ══════════════════════════════════════════════════════════════════════
-               1. 3D ORBIT / STACKED BANNER CAROUSEL (EXACT IMAGE 2 STYLE)
-               Centered active card + peeking sibling cards on left & right
-            ══════════════════════════════════════════════════════════════════════ */
+                   1. 3D ORBIT / STACKED BANNER CAROUSEL (EXACT IMAGE 2 STYLE)
+                   Centered active card + peeking sibling cards on left & right
+                ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-banner-section {
             width: 100%;
             margin-top: 1.25rem;
@@ -380,9 +380,9 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                       2. MEDIA PARTNERS BAR (ON CLEAN WHITE BACKGROUND — 100% IMAGE 2)
-                       White background, Centered, Gray Logos, Mobile Friendly
-                    ══════════════════════════════════════════════════════════════════════ */
+                           2. MEDIA PARTNERS BAR (ON CLEAN WHITE BACKGROUND — 100% IMAGE 2)
+                           White background, Centered, Gray Logos, Mobile Friendly
+                        ══════════════════════════════════════════════════════════════════════ */
         .tix-partners-white-section {
             background: transparent;
             border: none;
@@ -489,8 +489,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                       3. SEARCH & QUICK FILTER BAR
-                    ══════════════════════════════════════════════════════════════════════ */
+                           3. SEARCH & QUICK FILTER BAR
+                        ══════════════════════════════════════════════════════════════════════ */
         .tix-search-bar-wrap {
             background: #ffffff;
             border: 1.5px solid #E2E8F0;
@@ -676,8 +676,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                       4. RESPONSIVE EVENT CARDS GRID (100% HOMEPAGE STYLE)
-                    ══════════════════════════════════════════════════════════════════════ */
+                           4. RESPONSIVE EVENT CARDS GRID (100% HOMEPAGE STYLE)
+                        ══════════════════════════════════════════════════════════════════════ */
         .tix-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -728,8 +728,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                       5. SKELETON SHIMMER & LAZY LOAD STYLES
-                    ══════════════════════════════════════════════════════════════════════ */
+                           5. SKELETON SHIMMER & LAZY LOAD STYLES
+                        ══════════════════════════════════════════════════════════════════════ */
         @keyframes tixShimmer {
             0% {
                 background-position: -200% 0;
@@ -961,20 +961,20 @@
                 <div class="tix-orbit-skel-stage">
                     {{-- Card prev (kiri, mengintip) --}}
                     <div class="tix-skeleton tix-orbit-skel-card" style="
-                            transform: translateX(calc(-50% - 72%)) scale(0.85);
-                            opacity:0.35;
-                        "></div>
+                                transform: translateX(calc(-50% - 72%)) scale(0.85);
+                                opacity:0.35;
+                            "></div>
                     {{-- Card aktif (tengah) --}}
                     <div class="tix-skeleton tix-orbit-skel-card active" style="
-                            transform: translateX(-50%) scale(1);
-                            z-index:2;
-                            box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-                        "></div>
+                                transform: translateX(-50%) scale(1);
+                                z-index:2;
+                                box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+                            "></div>
                     {{-- Card next (kanan, mengintip) --}}
                     <div class="tix-skeleton tix-orbit-skel-card" style="
-                            transform: translateX(calc(-50% + 72%)) scale(0.85);
-                            opacity:0.35;
-                        "></div>
+                                transform: translateX(calc(-50% + 72%)) scale(0.85);
+                                opacity:0.35;
+                            "></div>
                 </div>
                 {{-- Dots --}}
                 <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin-top:14px;">
@@ -1121,7 +1121,7 @@
                     // Load media partner dari DB (HeroSlide position=partner), fallback ke Settings lama jika kosong
                     $dbPartners = \App\Models\HeroSlide::where('position', 'partner')->where('is_active', true)->orderBy('order')->orderBy('id')->get();
                     if ($dbPartners->isNotEmpty()) {
-                        $partners = $dbPartners->map(function($p) {
+                        $partners = $dbPartners->map(function ($p) {
                             return ['name' => $p->title, 'logo' => $p->image, 'url' => $p->button_url ?? '#'];
                         })->toArray();
                     } else {
@@ -1355,9 +1355,9 @@
                             Punya Konser, Seminar, atau Event Sendiri?
                         </h3>
                         <p class="tix-cta-desc">
-                            Jual tiket gratis maupun berbayar secara mandiri di Buyle.id. Nikmati penerbitan e-tiket
+                            Jual tiket secara mandiri di Buyle.id. Nikmati penerbitan e-tiket
                             otomatis
-                            via WhatsApp/Email, sistem Gate Scanner panitia live kamera, serta penarikan dana cepat.
+                            via Email, sistem Gate Scanner panitia live kamera, serta penarikan dana cepat.
                         </p>
                     </div>
                     <div class="tix-cta-actions">
@@ -1536,14 +1536,14 @@
                         tixHasMore = false;
                         if (grid) {
                             grid.innerHTML = `
-                                        <div class="tix-empty-card">
-                                            <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
-                                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                            <div class="tix-empty-card">
+                                                <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
+                                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                                </div>
+                                                <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Tidak Ada Tiket Ditemukan</h4>
+                                                <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Coba kata kunci lain atau klik kategori Semua Event.</p>
                                             </div>
-                                            <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Tidak Ada Tiket Ditemukan</h4>
-                                            <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Coba kata kunci lain atau klik kategori Semua Event.</p>
-                                        </div>
-                                    `;
+                                        `;
                         }
                     } else {
                         tixHasMore = false;
