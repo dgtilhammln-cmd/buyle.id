@@ -27,9 +27,14 @@
     });
 
     $isProfileVerified = isset($profile) && $profile ? $profile->isVerified() : false;
+    $productsEnabled = $config['products_section_enabled'] ?? 1;
+    $headline = !empty($config['products_headline']) ? $config['products_headline'] : 'Produk Unggulan';
+    $subheadline = !empty($config['products_subheadline']) ? $config['products_subheadline'] : 'Katalog produk pilihan terbaik.';
+    $seeAllEnabled = $config['products_see_all_enabled'] ?? 1;
+    $seeAllText = !empty($config['products_see_all_text']) ? $config['products_see_all_text'] : 'Lihat Semua';
 @endphp
 
-@if($catalogProducts->count() > 0)
+@if($productsEnabled && $catalogProducts->count() > 0)
     <style>
         .t5-products-header {
             display: flex;
@@ -73,28 +78,50 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(30, 179, 73, 0.25);
         }
+        /* Rasio foto produk presisi 1:1 */
+        .t5-product-img-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1 !important;
+            background: #f1f5f9;
+            overflow: hidden;
+            display: block;
+        }
+        .t5-product-img {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1 / 1 !important;
+            object-fit: cover !important;
+            transition: transform 0.4s ease;
+        }
     </style>
     <section class="t5-products-section" id="products-section">
         <div class="t5-products-header">
             <div class="t5-section-title-wrap">
-                <h2 class="t5-section-title">Produk Unggulan</h2>
-                <p class="t5-section-sub">Katalog produk pilihan terbaik.</p>
+                <h2 class="t5-section-title">{{ $headline }}</h2>
+                @if(!empty($subheadline))
+                    <p class="t5-section-sub">{{ $subheadline }}</p>
+                @endif
             </div>
-            @php
-                $storeUsername = $profile->store_slug ?? ($username ?? 'creator');
-                if (!empty($profile->custom_domain)) {
-                    $allProductsUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk';
-                } else {
-                    $allProductsUrl = url($storeUsername . '/produk');
-                }
-            @endphp
-            <a href="{{ $allProductsUrl }}" class="t5-see-all-btn">
-                <span>Lihat Semua</span>
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                </svg>
-            </a>
+            @if($seeAllEnabled)
+                @php
+                    $storeUsername = $profile->store_slug ?? ($username ?? 'creator');
+                    if (!empty($config['products_see_all_link'])) {
+                        $allProductsUrl = $config['products_see_all_link'];
+                    } elseif (!empty($profile->custom_domain)) {
+                        $allProductsUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk';
+                    } else {
+                        $allProductsUrl = url($storeUsername . '/produk');
+                    }
+                @endphp
+                <a href="{{ $allProductsUrl }}" class="t5-see-all-btn">
+                    <span>{{ $seeAllText }}</span>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                </a>
+            @endif
         </div>
 
         <div class="t5-products-grid">

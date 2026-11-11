@@ -1,29 +1,29 @@
 {{-- ════════════════════════════════════════════════════════════════
-     THEME 5 — CLIENT LOGOS / BRAND PARTNERS SECTION (STRICTLY THEME 5)
-     buyle.id | HVM Digital
- ════════════════════════════════════════════════════════════════ --}}
+THEME 5 — CLIENT LOGOS / BRAND PARTNERS SECTION (STRICTLY THEME 5)
+buyle.id | HVM Digital
+════════════════════════════════════════════════════════════════ --}}
 @php
     $logosEnabled = $config['client_logos_enabled'] ?? 1;
 @endphp
 
 @if($logosEnabled)
     @php
-        $headline = !empty($config['client_logos_headline']) 
-            ? $config['client_logos_headline'] 
+        $headline = !empty($config['client_logos_headline'])
+            ? $config['client_logos_headline']
             : 'Dipercaya Oleh Brand & Mitra Terkemuka';
 
         $logos = [];
         for ($i = 1; $i <= 10; $i++) {
-            $img  = $config["client_logo_{$i}_image"] ?? null;
+            $img = $config["client_logo_{$i}_image"] ?? null;
             $name = $config["client_logo_{$i}_name"] ?? null;
             $link = $config["client_logo_{$i}_link"] ?? null;
 
             if (!empty($img) || !empty($name)) {
                 $logos[] = [
-                    'id'    => $i,
-                    'name'  => $name ?: "Client Partner #{$i}",
+                    'id' => $i,
+                    'name' => $name ?: "Client Partner #{$i}",
                     'image' => $img ? asset('storage/' . $img) : null,
-                    'link'  => $link ?: '#'
+                    'link' => $link ?: '#'
                 ];
             }
         }
@@ -58,8 +58,8 @@
     @if($totalLogos > 0)
         <style>
             /* ═════════════════════════════════════════
-               TEMA 5 — CLIENT LOGOS SECTION STYLES
-            ═════════════════════════════════════════ */
+                       TEMA 5 — CLIENT LOGOS SECTION STYLES
+                    ═════════════════════════════════════════ */
             .t5-logos-section {
                 max-width: 1200px;
                 margin: 2.5rem auto 3.5rem auto;
@@ -115,8 +115,13 @@
             }
 
             @keyframes t5LogosScroll {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(-50%); }
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
             }
 
             /* Centered Flex Grid Mode (Used when <= 4 logos) */
@@ -189,18 +194,22 @@
                 .t5-logos-section {
                     margin: 2rem auto 2.5rem auto;
                 }
+
                 .t5-logos-track.is-marquee {
                     gap: 1rem;
                     animation-duration: 20s;
                 }
+
                 .t5-logo-card {
                     padding: 0.6rem 1.1rem;
                     border-radius: 14px;
                 }
+
                 .t5-logo-img {
                     height: 28px;
                     max-width: 110px;
                 }
+
                 .t5-logo-name {
                     font-size: 0.82rem;
                 }
@@ -226,7 +235,8 @@
 
                             <{!! $tag !!} {!! $hrefAttr !!} class="t5-logo-card" title="{{ $logo['name'] }}">
                                 @if(!empty($logo['image']))
-                                    <img src="{{ $logo['image'] }}" alt="{{ $logo['name'] }}" class="t5-logo-img" loading="lazy" draggable="false">
+                                    <img src="{{ $logo['image'] }}" alt="{{ $logo['name'] }}" class="t5-logo-img" loading="lazy"
+                                        draggable="false">
                                 @elseif(!empty($logo['sample_icon']))
                                     <div class="t5-logo-icon-badge" style="background: {{ $logo['sample_bg'] }};">
                                         {{ $logo['sample_icon'] }}
@@ -255,7 +265,8 @@
 
                                     <{!! $tag !!} {!! $hrefAttr !!} class="t5-logo-card" title="{{ $logo['name'] }}">
                                         @if(!empty($logo['image']))
-                                            <img src="{{ $logo['image'] }}" alt="{{ $logo['name'] }}" class="t5-logo-img" loading="lazy" draggable="false">
+                                            <img src="{{ $logo['image'] }}" alt="{{ $logo['name'] }}" class="t5-logo-img" loading="lazy"
+                                                draggable="false">
                                         @elseif(!empty($logo['sample_icon']))
                                             <div class="t5-logo-icon-badge" style="background: {{ $logo['sample_bg'] }};">
                                                 {{ $logo['sample_icon'] }}

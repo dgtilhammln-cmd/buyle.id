@@ -596,7 +596,7 @@
         .t5-product-img-wrap {
             position: relative;
             width: 100%;
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 1 / 1;
             background: #f1f5f9;
             overflow: hidden;
             display: block;
@@ -604,6 +604,7 @@
         .t5-product-img {
             width: 100%;
             height: 100%;
+            aspect-ratio: 1 / 1;
             object-fit: cover;
             transition: transform 0.4s ease;
         }

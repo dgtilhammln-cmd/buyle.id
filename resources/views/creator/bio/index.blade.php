@@ -2464,6 +2464,16 @@
                                     </svg>
                                     About Us
                                 </button>
+                                <button type="button" class="hp-subtab-btn" id="btn-hpsub-products"
+                                    onclick="switchHomepageSubSubtab('hpsub-products', this)">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                        <line x1="3" y1="6" x2="21" y2="6" />
+                                        <path d="M16 10a4 4 0 0 1-8 0" />
+                                    </svg>
+                                    Produk
+                                </button>
                                 <button type="button" class="hp-subtab-btn" id="btn-hpsub-services"
                                     onclick="switchHomepageSubSubtab('hpsub-services', this)">
                                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -2791,6 +2801,112 @@
                                             </div>
                                         </div>
                                     </div> {{-- End #hpsub-about --}}
+
+                                    {{-- SUB-SUBTAB: HOMEPAGE / SECTION PRODUK (TEMA 5) --}}
+                                    <div class="hpsub-pane" id="hpsub-products" style="display:none;">
+                                        <input type="hidden" name="products_section_enabled_present" value="1">
+
+                                        {{-- Card Status Section --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head"
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <span>Status Section Produk Unggulan (Tema 5)</span>
+                                                <label
+                                                    style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                                    <input type="checkbox" name="products_section_enabled" value="1" {{ ($cfg['products_section_enabled'] ?? 1) ? 'checked' : '' }}
+                                                        style="width:18px; height:18px; accent-color:#1eb349;">
+                                                    Aktifkan Section Produk
+                                                </label>
+                                            </div>
+                                            <div class="card-body">
+                                                <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                                    Tampilkan etalase katalog produk unggulan pada homepage Tema 5. Jika dinonaktifkan, section produk dan menu navigasi terkait di header/footer otomatis disembunyikan.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {{-- Card Headline & Sub-headline --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head">1. Judul &amp; Sub-judul Section Produk</div>
+                                            <div class="card-body">
+                                                <div class="form-group" style="margin-bottom:1.15rem;">
+                                                    <label class="form-label">Judul Utama H2 (Headline)</label>
+                                                    <input type="text" name="products_headline"
+                                                        value="{{ old('products_headline', $cfg['products_headline'] ?? 'Produk Unggulan') }}"
+                                                        class="form-input" placeholder="Misal: Produk Unggulan">
+                                                </div>
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <label class="form-label">Sub-judul / Deskripsi Singkat</label>
+                                                    <input type="text" name="products_subheadline"
+                                                        value="{{ old('products_subheadline', $cfg['products_subheadline'] ?? 'Katalog produk pilihan terbaik.') }}"
+                                                        class="form-input" placeholder="Misal: Katalog produk pilihan terbaik.">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Card Tombol "Lihat Semua" --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head"
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <span>2. Tombol "Lihat Semua"</span>
+                                                <input type="hidden" name="products_see_all_enabled_present" value="1">
+                                                <label
+                                                    style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                                    <input type="checkbox" name="products_see_all_enabled" value="1" {{ ($cfg['products_see_all_enabled'] ?? 1) ? 'checked' : '' }}
+                                                        style="width:18px; height:18px; accent-color:#1eb349;">
+                                                    Tampilkan Tombol
+                                                </label>
+                                            </div>
+                                            <div class="card-body">
+                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Teks Tombol</label>
+                                                        <input type="text" name="products_see_all_text"
+                                                            value="{{ old('products_see_all_text', $cfg['products_see_all_text'] ?? 'Lihat Semua') }}"
+                                                            class="form-input" placeholder="Misal: Lihat Semua">
+                                                    </div>
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Link Tujuan (Opsional)</label>
+                                                        <input type="text" name="products_see_all_link"
+                                                            value="{{ old('products_see_all_link', $cfg['products_see_all_link'] ?? '') }}"
+                                                            class="form-input" placeholder="Default: Halaman Katalog Lengkap (/username/produk)">
+                                                    </div>
+                                                </div>
+                                                <span style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:0.5rem;">
+                                                    Jika link tujuan dikosongkan, tombol otomatis mengarahkan ke halaman katalog lengkap <code>/{{ $creator->store_slug ?? $creator->username ?? 'store' }}/produk</code>.
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {{-- Card Info Manajemen Produk --}}
+                                        <div class="prof-card" style="background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #bbf7d0;">
+                                            <div class="card-body" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.15rem 1.25rem;">
+                                                <div style="display:flex; align-items:center; gap:0.85rem;">
+                                                    <div style="width:38px; height:38px; border-radius:10px; background:#10b981; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                                            <line x1="3" y1="6" x2="21" y2="6"/>
+                                                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                                                        </svg>
+                                                    </div>
+                                                    <div>
+                                                        <div style="font-weight:700; color:#065f46; font-size:0.9rem;">Kelola Item Produk &amp; Stok</div>
+                                                        <div style="font-size:0.78rem; color:#047857; margin-top:2px;">
+                                                            Tambah produk baru, edit harga, diskon, foto, variasi tiket, dan stok di menu <strong>Produk Saya</strong>.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if(Route::has('creator.products.index'))
+                                                    <a href="{{ route('creator.products.index') }}" target="_blank"
+                                                        style="padding:0.5rem 1rem; border-radius:8px; border:1px solid #10b981; background:#ffffff; color:#047857; font-size:0.8rem; font-weight:700; text-decoration:none; white-space:nowrap; transition:all 0.15s ease;"
+                                                        onmouseover="this.style.background='#10b981'; this.style.color='#fff';"
+                                                        onmouseout="this.style.background='#fff'; this.style.color='#047857';">
+                                                        Buka Produk Saya &rarr;
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div> {{-- End #hpsub-products --}}
 
                                     {{-- SUB-SUBTAB 2: HOMEPAGE / JASA & LAYANAN (TEMA 5) --}}
                                     <div class="hpsub-pane" id="hpsub-services" style="display:none;">
@@ -5908,6 +6024,7 @@
                     'hpsub-hero': 'btn-hpsub-hero',
                     'hpsub-clients': 'btn-hpsub-clients',
                     'hpsub-about': 'btn-hpsub-about',
+                    'hpsub-products': 'btn-hpsub-products',
                     'hpsub-services': 'btn-hpsub-services',
                     'hpsub-gallery': 'btn-hpsub-gallery',
                     'hpsub-tiktok': 'btn-hpsub-tiktok',

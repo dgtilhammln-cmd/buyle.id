@@ -386,6 +386,18 @@ class CreatorBioController extends Controller
         if ($request->has('about_card3_btn_bg'))   $config['about_card3_btn_bg']   = $request->about_card3_btn_bg;
         if ($request->has('about_card3_btn_color'))$config['about_card3_btn_color']= $request->about_card3_btn_color;
 
+        // Products Section fields (Tema 5 - Etalase Produk Unggulan)
+        if ($request->has('products_section_enabled_present')) {
+            $config['products_section_enabled'] = $request->has('products_section_enabled') ? 1 : 0;
+        }
+        if ($request->has('products_headline'))    $config['products_headline']    = $request->products_headline;
+        if ($request->has('products_subheadline')) $config['products_subheadline'] = $request->products_subheadline;
+        if ($request->has('products_see_all_enabled_present')) {
+            $config['products_see_all_enabled'] = $request->has('products_see_all_enabled') ? 1 : 0;
+        }
+        if ($request->has('products_see_all_text')) $config['products_see_all_text'] = $request->products_see_all_text;
+        if ($request->has('products_see_all_link')) $config['products_see_all_link'] = $request->products_see_all_link;
+
         // Services Section fields (Tema 5)
         if ($request->has('services_enabled_present')) {
             $config['services_enabled'] = $request->has('services_enabled') ? 1 : 0;

@@ -434,25 +434,29 @@
 
     // Check if About section is enabled
     $aboutEnabled = !empty($config['about_enabled'] ?? 1);
+    $productsSectionEnabled = !empty($config['products_section_enabled'] ?? 1);
+    $servicesSectionEnabled = !empty($config['services_enabled'] ?? 1);
 
     // Check if creator has any active products or services
     $hasProductsOrServices = false;
-    if (isset($products) && is_iterable($products) && count($products) > 0) {
-        $hasProductsOrServices = true;
-    } else {
-        $sellerIds = array_values(array_unique(array_filter([
-            $profile->user_id ?? null,
-            isset($profile->user) ? $profile->user->id : null,
-            $profile->id ?? null,
-        ])));
-        if (!empty($sellerIds)) {
-            try {
-                $hasProductsOrServices = \App\Models\Product::whereIn('seller_id', $sellerIds)
-                    ->where(function($q) {
-                        $q->where('is_active', true)->orWhereNull('is_active');
-                    })
-                    ->exists();
-            } catch (\Throwable $e) {}
+    if ($productsSectionEnabled || $servicesSectionEnabled) {
+        if (isset($products) && is_iterable($products) && count($products) > 0) {
+            $hasProductsOrServices = true;
+        } else {
+            $sellerIds = array_values(array_unique(array_filter([
+                $profile->user_id ?? null,
+                isset($profile->user) ? $profile->user->id : null,
+                $profile->id ?? null,
+            ])));
+            if (!empty($sellerIds)) {
+                try {
+                    $hasProductsOrServices = \App\Models\Product::whereIn('seller_id', $sellerIds)
+                        ->where(function($q) {
+                            $q->where('is_active', true)->orWhereNull('is_active');
+                        })
+                        ->exists();
+                } catch (\Throwable $e) {}
+            }
         }
     }
 
