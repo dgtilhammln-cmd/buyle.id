@@ -8,10 +8,10 @@
                        Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
                        100% Exact Match to Creative Agency Reference (Image 2)
                     ══════════════════════════════════════════════════════════════════════ */
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
         .buyle-tix-page {
-            font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif !important;
+            font-family: 'Montserrat', sans-serif !important;
             background: #ffffff;
             min-height: 100vh;
             padding-top: 5.75rem;
@@ -52,7 +52,7 @@
         }
 
         .buyle-tix-page * {
-            font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             box-sizing: border-box;
         }
 

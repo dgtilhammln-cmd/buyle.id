@@ -82,10 +82,11 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
 
 <div class="tix-faq-wrapper">
     <style>
-        .tix-faq-wrapper {
+        .tix-faq-wrapper,
+        .tix-faq-wrapper * {
             width: 100%;
             box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Montserrat', sans-serif !important;
         }
 
         .tix-faq-container {
