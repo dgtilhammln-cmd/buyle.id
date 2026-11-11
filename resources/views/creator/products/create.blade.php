@@ -940,7 +940,7 @@
                                                     <path
                                                         d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z" />
                                                 </svg>
-                                                Username TikTok Resmi Event / EO <span>*</span>
+                                                Username TikTok Event / EO <span>*</span>
                                             </label>
                                             <div style="position:relative;">
                                                 <span
@@ -1656,17 +1656,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                                                        <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                                                            <div class="form-group">
-                                                                                <label class="form-label">Pertanyaan</label>
-                                                                                <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label class="form-label">Jawaban</label>
-                                                                                <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                                                            </div>
-                                                                            <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                                                        </div>`;
+                                                                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                                                <div class="form-group">
+                                                                                    <label class="form-label">Pertanyaan</label>
+                                                                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label class="form-label">Jawaban</label>
+                                                                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                                                </div>
+                                                                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                                            </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2040,13 +2040,13 @@
 
                 // Banner alert
                 const alertHtml = `
-                                                                                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-                                                                                    <div style="display:flex; align-items:center; gap:0.6rem;">
-                                                                                        <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                                                                        <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                                                                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+                                                                                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                                                                                            <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                                                                            <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
-                                                                            `;
+                                                                                `;
                 const formBody = document.getElementById('productForm');
                 if (formBody) {
                     formBody.insertAdjacentHTML('afterbegin', alertHtml);
@@ -2179,9 +2179,9 @@
                             const imgBox = document.createElement('div');
                             imgBox.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06);';
                             imgBox.innerHTML = `
-                                                                                            <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                                            <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
-                                                                                        `;
+                                                                                                <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                                                <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
+                                                                                            `;
                             galleryContainer.appendChild(imgBox);
                         });
                     }
@@ -2336,18 +2336,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                                                    <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                                                        <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                                                            style="width:100%; height:100%; border:none; display:block;"
-                                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                            allowfullscreen loading="lazy"></iframe>
-                                                                    </div>`;
+                                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                                style="width:100%; height:100%; border:none; display:block;"
+                                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                allowfullscreen loading="lazy"></iframe>
+                                                                        </div>`;
                 } else {
                     html += `
-                                                                    <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                                                        <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                                                        <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                                                    </div>`;
+                                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                                        </div>`;
                 }
             });
             html += '</div>';
@@ -2385,11 +2385,11 @@
                     itemDiv.id = 'newGalItem_' + fileIndex;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                                                    <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                    <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
-                                                                        style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                                                                `;
+                                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                        <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
+                                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                                    `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };
@@ -2417,11 +2417,11 @@
                     itemDiv.id = 'newGalItem_' + idx;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                                                    <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                    <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
-                                                                        style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                                                    <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                                                                `;
+                                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                        <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
+                                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                                    `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };

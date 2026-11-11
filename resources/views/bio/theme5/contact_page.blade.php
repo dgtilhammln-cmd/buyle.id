@@ -631,7 +631,7 @@
                         @endif
 
                         @if (!empty($config['tiktok']))
-                            <a href="https://tiktok.com/@{{ ltrim($config['tiktok'], '@') }}" target="_blank" class="social-pill">
+                            <a href="https://tiktok.com/{{ '@' . ltrim($config['tiktok'], '@') }}" target="_blank" class="social-pill">
                                 <i class="ph-bold ph-tiktok-logo" style="color: #000000;"></i> TikTok
                             </a>
                         @endif

@@ -1947,7 +1947,7 @@
                                                     </a>
                                                 @endif
                                                 @if(!empty($ttUser))
-                                                    <a href="https://www.tiktok.com/@{{ $ttUser }}" target="_blank"
+                                                    <a href="https://www.tiktok.com/{{ '@' . $ttUser }}" target="_blank"
                                                         rel="noopener noreferrer"
                                                         style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:#F1F5F9; border:1px solid #E2E8F0; color:#0F172A; text-decoration:none; flex-shrink:0; transition:all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow:0 1px 3px rgba(0,0,0,0.05);"
                                                         onmouseover="this.style.transform='scale(1.12)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)';"
