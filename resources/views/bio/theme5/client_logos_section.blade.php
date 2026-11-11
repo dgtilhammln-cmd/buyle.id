@@ -51,7 +51,8 @@
         }
 
         $totalLogos = count($logos);
-        $isCenterGrid = $totalLogos <= 4;
+        // Only 1 logo is centered; 2 or more logos ALWAYS marquee horizontally ("menyamping") across mobile & desktop
+        $isCenterGrid = ($totalLogos === 1);
     @endphp
 
     @if($totalLogos > 0)
@@ -105,10 +106,11 @@
                 align-items: center;
                 gap: 1.5rem;
                 width: max-content;
-                animation: t5LogosScroll 28s linear infinite;
+                animation: t5LogosScroll 26s linear infinite;
             }
 
-            .t5-logos-track.is-marquee:hover {
+            .t5-logos-track.is-marquee:hover,
+            .t5-logos-track.is-marquee:active {
                 animation-play-state: paused;
             }
 
@@ -212,7 +214,7 @@
             </div>
 
             @if($isCenterGrid)
-                {{-- Centered Flex Mode (1-4 Logos: Perfect Center, No Duplicate) --}}
+                {{-- Single Logo Centered --}}
                 <div class="t5-logos-container">
                     <div class="t5-logos-grid-center">
                         @foreach($logos as $logo)
@@ -236,28 +238,33 @@
                     </div>
                 </div>
             @else
-                {{-- Infinite Marquee Mode (> 4 Logos: Smooth Infinite Scroll) --}}
+                {{-- Infinite Marquee Mode: Always Horizontal / Side-by-Side ("Menyamping") --}}
                 <div class="t5-logos-container is-marquee">
                     <div class="t5-logos-track is-marquee">
-                        @for ($repeat = 0; $repeat < 2; $repeat++)
-                            @foreach($logos as $logo)
-                                @php
-                                    $hasUrl = !empty($logo['link']) && $logo['link'] !== '#';
-                                    $tag = $hasUrl ? 'a' : 'div';
-                                    $hrefAttr = $hasUrl ? "href='{$logo['link']}' target='_blank' rel='noopener'" : "";
-                                @endphp
+                        @php
+                            $repeatPerHalf = $totalLogos <= 2 ? 3 : ($totalLogos <= 4 ? 2 : 1);
+                        @endphp
+                        @for ($half = 0; $half < 2; $half++)
+                            @for ($r = 0; $r < $repeatPerHalf; $r++)
+                                @foreach($logos as $logo)
+                                    @php
+                                        $hasUrl = !empty($logo['link']) && $logo['link'] !== '#';
+                                        $tag = $hasUrl ? 'a' : 'div';
+                                        $hrefAttr = $hasUrl ? "href='{$logo['link']}' target='_blank' rel='noopener'" : "";
+                                    @endphp
 
-                                <{!! $tag !!} {!! $hrefAttr !!} class="t5-logo-card" title="{{ $logo['name'] }}">
-                                    @if(!empty($logo['image']))
-                                        <img src="{{ $logo['image'] }}" alt="{{ $logo['name'] }}" class="t5-logo-img" loading="lazy" draggable="false">
-                                    @elseif(!empty($logo['sample_icon']))
-                                        <div class="t5-logo-icon-badge" style="background: {{ $logo['sample_bg'] }};">
-                                            {{ $logo['sample_icon'] }}
-                                        </div>
-                                    @endif
-                                    <span class="t5-logo-name">{{ $logo['name'] }}</span>
-                                </{!! $tag !!}>
-                            @endforeach
+                                    <{!! $tag !!} {!! $hrefAttr !!} class="t5-logo-card" title="{{ $logo['name'] }}">
+                                        @if(!empty($logo['image']))
+                                            <img src="{{ $logo['image'] }}" alt="{{ $logo['name'] }}" class="t5-logo-img" loading="lazy" draggable="false">
+                                        @elseif(!empty($logo['sample_icon']))
+                                            <div class="t5-logo-icon-badge" style="background: {{ $logo['sample_bg'] }};">
+                                                {{ $logo['sample_icon'] }}
+                                            </div>
+                                        @endif
+                                        <span class="t5-logo-name">{{ $logo['name'] }}</span>
+                                    </{!! $tag !!}>
+                                @endforeach
+                            @endfor
                         @endfor
                     </div>
                 </div>
