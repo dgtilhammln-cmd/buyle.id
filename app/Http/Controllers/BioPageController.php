@@ -71,7 +71,7 @@ class BioPageController extends Controller
         foreach ($blocks->where('type', 'buyle_product') as $b) {
             if (!empty($b->data_json['product_id'])) $productIds[] = $b->data_json['product_id'];
         }
-        $blockProducts = !empty($productIds) ? Product::whereIn('id', $productIds)->get() : collect();
+        $blockProducts = !empty($productIds) ? Product::whereIn('id', $productIds)->where('is_active', true)->get() : collect();
 
         $products = $sellerProducts->concat($blockProducts)->unique('id')->keyBy('id');
 

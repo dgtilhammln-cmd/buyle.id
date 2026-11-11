@@ -145,44 +145,24 @@ class BioProductController extends Controller
             if ($product && !$product->is_active) {
                 abort(404, 'Produk ini sedang tidak tersedia atau diarsipkan.');
             }
-        }
-
-        // Auto-heal: If custom_product missing product_id or product model, create Product entry now
-        if (!$product && in_array($block->type, ['custom_product', 'buyle_product'])) {
-            $baseSlug = ($block->data_json['slug'] ?? Str::slug($block->title ?? '')) ?: 'produk';
-            $slug     = $baseSlug;
-            while (Product::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . Str::random(4);
+            if (!$product) {
+                // Produk pernah ditautkan namun sudah dihapus dari database oleh creator.
+                // Hapus blok bio terkait agar tidak menimbulkan inkonsistensi. JANGAN auto-recreate!
+                $block->delete();
+                abort(404, 'Produk ini telah dihapus oleh penjual.');
             }
-            $stock    = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : null;
-            $sellerId = $profile->user_id;
-            $catLower = strtolower($block->data_json['category'] ?? '');
-            $resolvedProductType = 'digital';
-            if (in_array($catLower, ['barang', 'physical', 'fisik'])) {
-                $resolvedProductType = 'physical';
-            } elseif (in_array($catLower, ['jasa', 'service', 'layanan'])) {
-                $resolvedProductType = 'service';
-            } elseif (in_array($catLower, ['makanan', 'fnb', 'kuliner', 'food'])) {
-                $resolvedProductType = 'makanan';
-            } elseif ($catLower === 'ticket' || $catLower === 'tiket') {
-                $resolvedProductType = 'ticket';
+        } else {
+            // Jika blok belum memiliki product_id di data_json
+            $pSlug = $block->data_json['slug'] ?? null;
+            if ($pSlug) {
+                $product = Product::where('seller_id', $profile->user_id)->where('slug', $pSlug)->first();
             }
-
-            $product  = Product::create([
-                'seller_id'    => $sellerId,
-                'name'         => $block->title,
-                'slug'         => $slug,
-                'price'        => $block->data_json['price'] ?? 0,
-                'stock'        => $stock,
-                'description'  => $block->data_json['description'] ?? '',
-                'image'        => !empty($block->data_json['images'][0]) ? $block->data_json['images'][0] : ($block->data_json['image'] ?? null),
-                'is_active'    => true,
-                'product_type' => $resolvedProductType,
-            ]);
-            $data = $block->data_json ?? [];
-            $data['product_id'] = $product->id;
-            $block->data_json = $data;
-            $block->save();
+            if (!$product) {
+                abort(404, 'Produk tidak ditemukan atau telah dihapus.');
+            }
+            if (!$product->is_active) {
+                abort(404, 'Produk ini sedang tidak tersedia atau diarsipkan.');
+            }
         }
 
         // ── AFFILIATE TRACKING: Rekam identitas affiliator ke Session & Cookie 30 hari ──

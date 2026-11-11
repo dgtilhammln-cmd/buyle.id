@@ -2490,6 +2490,45 @@
                 b.textContent = isActive ? 'Aktif' : 'Diarsipkan';
               }
             });
+
+            document.querySelectorAll(`.prod-item-chk[value="${pid}"]`).forEach(c => {
+              c.dataset.isActive = isActive ? '1' : '0';
+            });
+
+            // Update tab badge counters secara realtime
+            const tabActiveBadge = document.querySelector('a.status-tab-btn[href*="status=active"] .tab-badge');
+            const tabArchivedBadge = document.querySelector('a.status-tab-btn[href*="status=archived"] .tab-badge');
+            if (tabActiveBadge && tabArchivedBadge) {
+              let curActive = parseInt(tabActiveBadge.textContent) || 0;
+              let curArchived = parseInt(tabArchivedBadge.textContent) || 0;
+              if (isActive) {
+                tabActiveBadge.textContent = curActive + 1;
+                tabArchivedBadge.textContent = Math.max(0, curArchived - 1);
+              } else {
+                tabActiveBadge.textContent = Math.max(0, curActive - 1);
+                tabArchivedBadge.textContent = curArchived + 1;
+              }
+            }
+
+            // Jika sedang di filter tab spesifik, hapus baris yang statusnya berubah
+            const currentUrlParams = new URLSearchParams(window.location.search);
+            const currentStatusTab = currentUrlParams.get('status');
+            if ((currentStatusTab === 'active' && !isActive) || (currentStatusTab === 'archived' && isActive)) {
+              const row = document.getElementById(`prod-row-${pid}`);
+              const card = document.getElementById(`prod-card-${pid}`);
+              if (row) {
+                row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                row.style.opacity = '0';
+                row.style.transform = 'scale(0.95)';
+                setTimeout(() => row.remove(), 300);
+              }
+              if (card) {
+                card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => card.remove(), 300);
+              }
+            }
           } else {
             alert(data.message || 'Gagal memperbarui status produk.');
           }

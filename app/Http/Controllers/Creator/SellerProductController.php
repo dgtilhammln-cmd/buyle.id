@@ -408,6 +408,7 @@ class SellerProductController extends Controller
         foreach ($linkedBioBlocks as $bBlock) {
             $bData = $bBlock->data_json ?? [];
             $bBlock->title = $product->name;
+            $bBlock->is_active = (bool)$product->is_active;
             $bData['title'] = $product->name;
             $bData['price'] = (float)$product->price;
             if ($product->image) {
@@ -578,10 +579,11 @@ class SellerProductController extends Controller
             Storage::disk('public')->delete($product->image);
         }
 
-        // Clean up linked bio blocks
-        \App\Models\CreatorBioBlock::where('type', 'buyle_product')
-            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(data_json, '$.product_id')) = ?", [(string)$product->id])
-            ->delete();
+        // Clean up linked bio blocks (apapun tipenya: buyle_product, custom_product, buyle_affiliate)
+        \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+            $q->where('data_json->product_id', $product->id)
+              ->orWhere('data_json->product_id', (string)$product->id);
+        })->delete();
 
         $product->delete();
 
@@ -692,10 +694,11 @@ class SellerProductController extends Controller
             if ($product->image && !Str::startsWith($product->image, 'http')) {
                 Storage::disk('public')->delete($product->image);
             }
-            // Clean up linked bio blocks
-            \App\Models\CreatorBioBlock::where('type', 'buyle_product')
-                ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(data_json, '$.product_id')) = ?", [(string)$product->id])
-                ->delete();
+            // Clean up linked bio blocks (apapun tipenya: buyle_product, custom_product, buyle_affiliate)
+            \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+                $q->where('data_json->product_id', $product->id)
+                  ->orWhere('data_json->product_id', (string)$product->id);
+            })->delete();
 
             $product->delete();
         }
@@ -746,10 +749,11 @@ class SellerProductController extends Controller
                 if ($product->og_image && !Str::startsWith($product->og_image, 'http')) {
                     Storage::disk('public')->delete($product->og_image);
                 }
-                // Clean up linked bio blocks
-                \App\Models\CreatorBioBlock::where('type', 'buyle_product')
-                    ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(data_json, '$.product_id')) = ?", [(string)$product->id])
-                    ->delete();
+                // Clean up linked bio blocks (apapun tipenya: buyle_product, custom_product, buyle_affiliate)
+                \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+                    $q->where('data_json->product_id', $product->id)
+                      ->orWhere('data_json->product_id', (string)$product->id);
+                })->delete();
 
                 $product->delete();
                 Cache::forget("product_{$product->id}");

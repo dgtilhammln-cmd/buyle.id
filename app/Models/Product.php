@@ -234,6 +234,35 @@ class Product extends Model
                 $model->slug = Str::slug($model->name);
             }
         });
+
+        static::deleting(function ($product) {
+            // Bersihkan semua bio block yang menautkan produk ini (apapun tipenya: buyle_product, custom_product, buyle_affiliate)
+            \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+                $q->where('data_json->product_id', $product->id)
+                  ->orWhere('data_json->product_id', (string)$product->id);
+            })->delete();
+
+            // Bersihkan variant options
+            if (method_exists($product, 'variantOptions')) {
+                $product->variantOptions()->delete();
+            }
+
+            // Bersihkan cart & wishlist
+            if (method_exists($product, 'carts')) {
+                $product->carts()->delete();
+            }
+            if (method_exists($product, 'wishlists')) {
+                $product->wishlists()->delete();
+            }
+
+            // Hapus cache produk
+            \Illuminate\Support\Facades\Cache::forget('catalog_main');
+            \Illuminate\Support\Facades\Cache::forget('home_page_data_v3');
+            \Illuminate\Support\Facades\Cache::forget("product_{$product->id}");
+            if ($product->seller_id) {
+                \Illuminate\Support\Facades\Cache::forget("seller_products_{$product->seller_id}");
+            }
+        });
     }
 
     // =========================================================================

@@ -1,5 +1,8 @@
 @php
     $catalogProducts = $products->reject(function ($p) {
+        // Sembunyikan produk yang tidak aktif / diarsipkan
+        if (isset($p->is_active) && !$p->is_active) return true;
+
         $pType = strtolower($p->product_type ?? '');
         $pName = strtolower($p->name ?? $p->title ?? '');
         $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);

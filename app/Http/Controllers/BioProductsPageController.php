@@ -46,6 +46,18 @@ class BioProductsPageController extends Controller
             $product = null;
             if (!empty($data['product_id'])) {
                 $product = Product::find($data['product_id']);
+                // Jangan tampilkan jika produk diarsipkan atau sudah dihapus
+                if (!$product || !$product->is_active) {
+                    continue;
+                }
+            } else {
+                // Jika tidak ada product_id, cari via slug jika ada
+                if (!empty($data['slug'])) {
+                    $product = Product::where('seller_id', $profile->user_id)->where('slug', $data['slug'])->first();
+                    if ($product && !$product->is_active) {
+                        continue;
+                    }
+                }
             }
 
             $name  = $block->title ?? ($product->name ?? 'Produk');

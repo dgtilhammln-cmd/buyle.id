@@ -1183,13 +1183,14 @@
                                 style="flex-direction:row; align-items:center; gap:0.75rem; margin-top:2rem; padding-top:1rem; border-top:1px solid #f3f7f3;">
                                 <label class="toggle-switch"
                                     style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                    <input type="hidden" name="is_active" value="0">
                                     <input type="checkbox" name="is_active" value="1" {{ old('is_active', $product->is_active ?? true) ? 'checked' : '' }}
                                         style="opacity:0; width:0; height:0;">
                                     <span class="toggle-slider-s"></span>
                                 </label>
                                 <div>
-                                    <div class="form-label" style="font-size:0.9rem;">Status Aktif</div>
-                                    <div class="form-hint">Tampilkan produk ini.</div>
+                                    <div class="form-label" style="font-size:0.9rem;">Status Produk: Aktif</div>
+                                    <div class="form-hint">Nyalakan agar produk tampil dan dapat dibeli di etalase toko. Matikan untuk mengarsipkan (sembunyikan dari pembeli).</div>
                                 </div>
                             </div>
                         </div>

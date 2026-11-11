@@ -1172,6 +1172,21 @@
                                     <label class="form-label">Deskripsi Lengkap <span>*</span></label>
                                     @include('admin.partials.rich-editor', ['name' => 'description', 'value' => old('description'), 'height' => '280px'])
                                 </div>
+
+                                <div class="form-group"
+                                    style="flex-direction:row; align-items:center; gap:0.75rem; margin-top:2rem; padding-top:1rem; border-top:1px solid #f3f7f3;">
+                                    <label class="toggle-switch"
+                                        style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                        <input type="hidden" name="is_active" value="0">
+                                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', '1') == '1' ? 'checked' : '' }}
+                                            style="opacity:0; width:0; height:0;">
+                                        <span class="toggle-slider-s"></span>
+                                    </label>
+                                    <div>
+                                        <div class="form-label" style="font-size:0.9rem;">Status Produk: Langsung Aktif</div>
+                                        <div class="form-hint">Nyalakan agar produk langsung tampil di etalase toko setelah dibuat. Matikan untuk menyimpan sebagai Draf / Arsip (tidak tampil ke pembeli).</div>
+                                    </div>
+                                </div>
                                 </div>
                             </div>
                         </div>

@@ -177,7 +177,7 @@ class UpdateProductRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $merge = [
-            'is_active'          => $this->boolean('is_active', true),
+            'is_active'          => $this->boolean('is_active', false),
             'is_featured'        => $this->boolean('is_featured', false),
             'is_buyle_checkout' => $this->input('product_type') === 'makanan' ? true : $this->boolean('is_buyle_checkout', true),
             'require_follow_join' => $this->boolean('require_follow_join', false),
