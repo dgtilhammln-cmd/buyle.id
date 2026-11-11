@@ -1,79 +1,79 @@
 {{-- ══════════════════════════════════════════════════════════════
-     BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
-     ══════════════════════════════════════════════════════════════ --}}
+BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
+══════════════════════════════════════════════════════════════ --}}
 @php
     $faqItems = [
         [
             'q' => 'Bagaimana cara membeli tiket di Buyle TIX?',
             'badge' => 'Pembelian',
             'a' => '
-                <ol style="margin:0; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.45rem;">
-                    <li>Pilih event yang Anda inginkan di <strong>buyle.id/tix</strong> atau melalui link event langsung.</li>
-                    <li>Pilih kategori tiket dan tentukan jumlah tiket yang ingin dibeli.</li>
-                    <li>Klik <strong>Beli Sekarang</strong> lalu lengkapi data pemegang tiket (Nama lengkap & nomor identitas resmi seperti KTP, SIM, Paspor, atau Kartu Pelajar).</li>
-                    <li>Pilih metode pembayaran (QRIS instan, Virtual Account, atau Transfer Bank).</li>
-                    <li>Selesaikan pembayaran sebelum batas waktu countdown habis.</li>
-                    <li>E-tiket resmi ber-QR Code akan langsung dikirimkan ke email Anda dan tersimpan otomatis di menu <strong>Tiket Saya</strong> pada Dashboard akun Buyle Anda.</li>
-                </ol>'
+                    <ol style="margin:0; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.45rem;">
+                        <li>Pilih event yang Anda inginkan di <strong>buyle.id/tix</strong> atau melalui link event langsung.</li>
+                        <li>Pilih kategori tiket dan tentukan jumlah tiket yang ingin dibeli.</li>
+                        <li>Klik <strong>Beli Sekarang</strong> lalu lengkapi data pemegang tiket (Nama lengkap & nomor identitas resmi seperti KTP, SIM, Paspor, atau Kartu Pelajar).</li>
+                        <li>Pilih metode pembayaran (QRIS instan, Virtual Account, atau Transfer Bank).</li>
+                        <li>Selesaikan pembayaran sebelum batas waktu countdown habis.</li>
+                        <li>E-tiket resmi ber-QR Code akan langsung dikirimkan ke email Anda dan tersimpan otomatis di menu <strong>Tiket Saya</strong> pada Dashboard akun Buyle Anda.</li>
+                    </ol>'
         ],
         [
             'q' => 'Bagaimana mekanisme masuk (check-in) di hari H acara?',
             'badge' => 'Hari H Acara',
             'a' => '
-                <p style="margin:0 0 0.5rem;">Proses check-in di venue sangat cepat, modern, dan anti-ribet:</p>
-                <ul style="margin:0; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.45rem;">
-                    <li>Cukup tunjukkan <strong>Barcode / QR Code E-Tiket</strong> langsung dari layar smartphone Anda (atau hasil cetak) kepada panitia di pintu masuk (gate).</li>
-                    <li>Panitia akan memindai menggunakan <strong>Buyle Gate Scanner</strong> resmi. Proses validasi berlangsung kilat <strong>kurang dari 1 detik</strong> per tiket.</li>
-                    <li>Pastikan membawa kartu identitas asli (KTP/SIM/Paspor/Kartu Pelajar) yang sesuai dengan data saat pemesanan untuk pencocokan identitas jika diminta oleh panitia.</li>
-                </ul>'
+                    <p style="margin:0 0 0.5rem;">Proses check-in di venue sangat cepat, modern, dan anti-ribet:</p>
+                    <ul style="margin:0; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.45rem;">
+                        <li>Cukup tunjukkan <strong>Barcode / QR Code E-Tiket</strong> langsung dari layar smartphone Anda (atau hasil cetak) kepada panitia di pintu masuk (gate).</li>
+                        <li>Panitia akan memindai menggunakan <strong>Buyle Gate Scanner</strong> resmi. Proses validasi berlangsung kilat <strong>kurang dari 1 detik</strong> per tiket.</li>
+                        <li>Pastikan membawa kartu identitas asli (KTP/SIM/Paspor/Kartu Pelajar) yang sesuai dengan data saat pemesanan untuk pencocokan identitas jika diminta oleh panitia.</li>
+                    </ul>'
         ],
         [
             'q' => 'Bagaimana kebijakan pembatalan dan pengembalian dana (refund)?',
             'badge' => 'Kebijakan',
             'a' => '
-                <p style="margin:0 0 0.45rem;">Seluruh tiket yang telah berhasil dibeli dan dibayar bersifat <strong>non-refundable</strong> (tidak dapat dibatalkan, ditukar, atau diuangkan kembali), kecuali acara resmi dibatalkan secara sepihak oleh Event Organizer (EO) yang bersangkutan.</p>
-                <p style="margin:0;">Mohon pastikan jadwal acara, kategori tiket, dan data identitas pemegang tiket sudah benar sebelum Anda melakukan pembayaran.</p>'
+                    <p style="margin:0 0 0.45rem;">Seluruh tiket yang telah berhasil dibeli dan dibayar bersifat <strong>non-refundable</strong> (tidak dapat dibatalkan, ditukar, atau diuangkan kembali), kecuali acara resmi dibatalkan secara sepihak oleh Event Organizer (EO) yang bersangkutan.</p>
+                    <p style="margin:0;">Mohon pastikan jadwal acara, kategori tiket, dan data identitas pemegang tiket sudah benar sebelum Anda melakukan pembayaran.</p>'
         ],
         [
             'q' => 'Apakah e-tiket perlu ditukarkan menjadi tiket fisik atau gelang (wristband)?',
             'badge' => 'Penukaran Tiket',
             'a' => '
-                <p style="margin:0 0 0.45rem;">Untuk sebagian besar event di Buyle TIX, Anda <strong>tidak perlu menukar tiket fisik</strong> karena sistem check-in sudah 100% digital via scan QR code di pintu masuk.</p>
-                <p style="margin:0 0 0.45rem;">Namun, jika pihak Event Organizer (EO) mewajibkan penukaran gelang fisik (wristband) sebelum masuk, informasi jadwal dan lokasi penukaran akan diumumkan resmi via deskripsi event & akun media sosial penyelenggara.</p>
-                <p style="margin:0;"><strong>Syarat saat penukaran fisik:</strong> Bawa e-tiket asli (digital/print) dan kartu identitas pemegang tiket yang sesuai.</p>'
+                    <p style="margin:0 0 0.45rem;">Untuk sebagian besar event di Buyle TIX, Anda <strong>tidak perlu menukar tiket fisik</strong> karena sistem check-in sudah 100% digital via scan QR code di pintu masuk.</p>
+                    <p style="margin:0 0 0.45rem;">Namun, jika pihak Event Organizer (EO) mewajibkan penukaran gelang fisik (wristband) sebelum masuk, informasi jadwal dan lokasi penukaran akan diumumkan resmi via deskripsi event & akun media sosial penyelenggara.</p>
+                    <p style="margin:0;"><strong>Syarat saat penukaran fisik:</strong> Bawa e-tiket asli (digital/print) dan kartu identitas pemegang tiket yang sesuai.</p>'
         ],
         [
             'q' => 'Apakah Buyle TIX menyediakan pengadaan tiket gelang (wristband) untuk EO?',
             'badge' => 'Layanan EO',
             'a' => '
-                <p style="margin:0 0 0.45rem;"><strong>Ya, tentu!</strong> Buyle TIX menyediakan layanan lengkap pengadaan tiket gelang (wristband) premium untuk event organizer:</p>
-                <ul style="margin:0 0 0.5rem; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.35rem;">
-                    <li>Gelang kain woven, Tyvek anti-air (waterproof), dan material vinyl tahan sobek.</li>
-                    <li>Dukungan custom barcode unik, QR code, atau RFID chip yang terintegrasi langsung dengan gate scanner Buyle TIX.</li>
-                </ul>
-                <p style="margin:0;">Untuk pemesanan tiket gelang atau kerja sama kemitraan ticketing acara Anda, silakan hubungi tim marketing kami.</p>'
+                    <p style="margin:0 0 0.45rem;"><strong>Ya, tentu!</strong> Buyle TIX menyediakan layanan lengkap pengadaan tiket gelang (wristband) premium untuk event organizer:</p>
+                    <ul style="margin:0 0 0.5rem; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.35rem;">
+                        <li>Gelang kain woven, Tyvek anti-air (waterproof), dan material vinyl tahan sobek.</li>
+                        <li>Dukungan custom barcode unik, QR code, atau RFID chip yang terintegrasi langsung dengan gate scanner Buyle TIX.</li>
+                    </ul>
+                    <p style="margin:0;">Untuk pemesanan tiket gelang atau kerja sama kemitraan ticketing acara Anda, silakan hubungi tim marketing kami.</p>'
         ],
         [
             'q' => 'Apa saja metode pembayaran yang didukung di Buyle TIX?',
             'badge' => 'Pembayaran',
             'a' => '
-                <p style="margin:0 0 0.5rem;">Buyle TIX mendukung berbagai opsi pembayaran aman, instan, dan terverifikasi otomatis 24/7:</p>
-                <ul style="margin:0; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.35rem;">
-                    <li><strong>QRIS Realtime:</strong> Dapat dibayar menggunakan semua aplikasi Mobile Banking (BCA, Mandiri, BRI, BNI, CIMB, dll.) dan seluruh e-wallet (GoPay, OVO, DANA, ShopeePay, LinkAja).</li>
-                    <li><strong>Virtual Account (VA):</strong> Pembayaran otomatis tanpa perlu upload bukti transfer.</li>
-                    <li><strong>Transfer Bank & Escrow Aman:</strong> Transaksi Anda dilindungi sistem keamanan perbankan terenkripsi.</li>
-                </ul>'
+                    <p style="margin:0 0 0.5rem;">Buyle TIX mendukung berbagai opsi pembayaran aman, instan, dan terverifikasi otomatis 24/7:</p>
+                    <ul style="margin:0; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.35rem;">
+                        <li><strong>QRIS Realtime:</strong> Dapat dibayar menggunakan semua aplikasi Mobile Banking (BCA, Mandiri, BRI, BNI, CIMB, dll.) dan seluruh e-wallet (GoPay, OVO, DANA, ShopeePay, LinkAja).</li>
+                        <li><strong>Virtual Account (VA):</strong> Pembayaran otomatis tanpa perlu upload bukti transfer.</li>
+                        <li><strong>Transfer Bank & Escrow Aman:</strong> Transaksi Anda dilindungi sistem keamanan perbankan terenkripsi.</li>
+                    </ul>'
         ],
         [
             'q' => 'Bagaimana jika email e-tiket belum diterima setelah pembayaran?',
             'badge' => 'Bantuan',
             'a' => '
-                <p style="margin:0 0 0.45rem;">Jika email konfirmasi belum muncul di inbox utama Anda:</p>
-                <ol style="margin:0 0 0.5rem; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.35rem;">
-                    <li>Periksa folder <strong>Spam / Junk</strong> atau tab <strong>Promotions</strong> di akun email Anda.</li>
-                    <li>Masuk ke akun Buyle Anda di <strong>buyle.id</strong>, buka menu profil lalu pilih <strong>Tiket Saya</strong>. Semua e-tiket yang sudah lunas dapat diunduh (PDF) dan dilihat QR kodenya kapan saja.</li>
-                </ol>
-                <p style="margin:0;">Masih butuh bantuan? Tim Customer Support Buyle TIX siap membantu Anda dengan cepat.</p>'
+                    <p style="margin:0 0 0.45rem;">Jika email konfirmasi belum muncul di inbox utama Anda:</p>
+                    <ol style="margin:0 0 0.5rem; padding-left:1.25rem; display:flex; flex-direction:column; gap:0.35rem;">
+                        <li>Periksa folder <strong>Spam / Junk</strong> atau tab <strong>Promotions</strong> di akun email Anda.</li>
+                        <li>Masuk ke akun Buyle Anda di <strong>buyle.id</strong>, buka menu profil lalu pilih <strong>Tiket Saya</strong>. Semua e-tiket yang sudah lunas dapat diunduh (PDF) dan dilihat QR kodenya kapan saja.</li>
+                    </ol>
+                    <p style="margin:0;">Masih butuh bantuan? Tim Customer Support Buyle TIX siap membantu Anda dengan cepat.</p>'
         ],
     ];
 
@@ -292,7 +292,8 @@
             }
 
             .tix-faq-tag {
-                display: none; /* Hide tag on small mobile for clean anti-cramped display */
+                display: none;
+                /* Hide tag on small mobile for clean anti-cramped display */
             }
 
             .tix-faq-icon {
@@ -327,7 +328,8 @@
                 $cardId = $accordionPrefix . '_item_' . $idx;
             @endphp
             <div class="tix-faq-card {{ $isFirst ? 'is-open' : '' }}" id="{{ $cardId }}">
-                <button type="button" class="tix-faq-trigger" onclick="tixToggleFaq('{{ $cardId }}')" aria-expanded="{{ $isFirst ? 'true' : 'false' }}">
+                <button type="button" class="tix-faq-trigger" onclick="tixToggleFaq('{{ $cardId }}')"
+                    aria-expanded="{{ $isFirst ? 'true' : 'false' }}">
                     <div class="tix-faq-q-left">
                         <span class="tix-faq-num">{{ $idx + 1 }}</span>
                         <div>
@@ -337,7 +339,8 @@
                     <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
                         <span class="tix-faq-tag">{{ $item['badge'] }}</span>
                         <div class="tix-faq-icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                         </div>
@@ -354,7 +357,7 @@
 
     <script>
         if (typeof window.tixToggleFaq === 'undefined') {
-            window.tixToggleFaq = function(cardId) {
+            window.tixToggleFaq = function (cardId) {
                 const card = document.getElementById(cardId);
                 if (!card) return;
 
@@ -390,4 +393,3 @@
         }
     </script>
 </div>
-

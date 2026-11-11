@@ -52,7 +52,13 @@ Variables (semua optional): $seo[], $schema, $breadcrumbs[]
     $canonical = preg_replace('#^https?://[^/]+#', $appUrl, $rawCanonical);
 
     // OG Image — make absolute using app.url
-    $defaultOg = !empty($settings['logo']) ? $appUrl . '/storage/' . ltrim($settings['logo'], '/') : $appUrl . '/favicon.ico';
+    $defaultOg = !empty($settings['og_image_default'])
+        ? $appUrl . '/storage/' . ltrim($settings['og_image_default'], '/')
+        : (!empty($settings['hero_main_image'])
+            ? $appUrl . '/storage/' . ltrim($settings['hero_main_image'], '/')
+            : (!empty($settings['logo'])
+                ? $appUrl . '/storage/' . ltrim($settings['logo'], '/')
+                : $appUrl . '/images/amn/hero-main.png'));
     $rawOg = $seoData['og_image'] ?? $defaultOg;
     $ogImage = preg_match('#^https?://#', $rawOg)
         ? preg_replace('#^https?://[^/]+#', $appUrl, $rawOg)
@@ -89,6 +95,14 @@ Variables (semua optional): $seo[], $schema, $breadcrumbs[]
 <meta property="og:title" content="{{ $autoTitle }}">
 <meta property="og:description" content="{{ $autoDesc }}">
 <meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:secure_url" content="{{ $ogImage }}">
+@if(\Illuminate\Support\Str::endsWith($ogImage, ['.webp', '.WEBP']))
+<meta property="og:image:type" content="image/webp">
+@elseif(\Illuminate\Support\Str::endsWith($ogImage, ['.png', '.PNG']))
+<meta property="og:image:type" content="image/png">
+@elseif(\Illuminate\Support\Str::endsWith($ogImage, ['.jpg', '.jpeg', '.JPG', '.JPEG']))
+<meta property="og:image:type" content="image/jpeg">
+@endif
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="{{ $autoTitle }}">

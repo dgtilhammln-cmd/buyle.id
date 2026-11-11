@@ -185,11 +185,38 @@ class HomeController extends Controller
 
         $siteName = $settings['site_name'] ?? 'buyle.id';
 
+        // ── Resolve OG Image Beranda: Wajib Banner Utama (Hero Slide Pertama) ──
+        $ogBannerImage = null;
+        if (isset($heroSlides) && $heroSlides->isNotEmpty()) {
+            $firstHero = $heroSlides->first(fn($s) => !empty($s->image));
+            if ($firstHero) {
+                $ogBannerImage = asset('storage/' . ltrim($firstHero->image, '/'));
+            }
+        }
+        if (!$ogBannerImage && isset($utamaBanners) && $utamaBanners->isNotEmpty()) {
+            $firstUtama = $utamaBanners->first(fn($s) => !empty($s->image));
+            if ($firstUtama) {
+                $ogBannerImage = asset('storage/' . ltrim($firstUtama->image, '/'));
+            }
+        }
+        if (!$ogBannerImage && !empty($settings['hero_main_image'])) {
+            $ogBannerImage = asset('storage/' . ltrim($settings['hero_main_image'], '/'));
+        }
+        if (!$ogBannerImage && !empty($settings['og_image_default'])) {
+            $ogBannerImage = asset('storage/' . ltrim($settings['og_image_default'], '/'));
+        }
+        if (!$ogBannerImage && !empty($settings['logo'])) {
+            $ogBannerImage = asset('storage/' . ltrim($settings['logo'], '/'));
+        }
+        if (!$ogBannerImage) {
+            $ogBannerImage = asset('images/amn/hero-main.png');
+        }
+
         $seo = [
-            'title'       => $settings['meta_title_home'] ?? $siteName . ' - The Multi-Creator Marketplace',
-            'description' => $settings['meta_desc_home']  ?? 'Beli berbagai produk digital premium dengan mudah.',
-            'keywords'    => $settings['meta_keywords_home'] ?? 'produk digital, marketplace, buyle.id',
-            'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('favicon.ico')),
+            'title'       => $settings['meta_title_home'] ?? $siteName . ' - Digital Creator Marketplace Indonesia',
+            'description' => $settings['meta_desc_home']  ?? 'Belanja aset digital berkualitas di buyle.id. Produk lengkap, transaksi aman, akses instan, karya kreator Indonesia.',
+            'keywords'    => $settings['meta_keywords_home'] ?? 'produk digital, marketplace, buyle.id, creator marketplace, platform kreator indonesia',
+            'og_image'    => $ogBannerImage,
             'canonical'   => route('home'),
         ];
 
