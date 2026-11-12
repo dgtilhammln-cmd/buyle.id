@@ -30,7 +30,7 @@ class SitemapController extends Controller
             ['url' => route('about'),    'priority' => '0.8', 'changefreq' => 'monthly', 'lastmod' => now()->toDateString(), 'images' => []],
             ['url' => route('products'), 'priority' => '0.9', 'changefreq' => 'weekly',  'lastmod' => now()->toDateString(), 'images' => []],
             ['url' => route('articles'), 'priority' => '0.8', 'changefreq' => 'daily',   'lastmod' => now()->toDateString(), 'images' => []],
-            ['url' => route('contact'),  'priority' => '0.7', 'changefreq' => 'monthly', 'lastmod' => now()->toDateString(), 'images' => []],
+            // /kontak sengaja tidak dimasukkan sitemap (halaman form, diblokir robots.txt)
         ];
 
         $productUrls = $products->map(function($p) use ($appUrl) {

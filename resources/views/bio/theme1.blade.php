@@ -1086,6 +1086,7 @@
                                         {{ number_format($price, 0, ',', '.') }}</div>
                                 </div>
                             </a>
+                            @endif
                         @endif
                     @endforeach
                 </div>

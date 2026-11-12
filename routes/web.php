@@ -661,6 +661,8 @@ Route::get('/robots.txt', function () {
         'Disallow: /admin',
         'Disallow: /admin/',
         'Disallow: /akun/',
+        'Disallow: /kontak',
+        'Disallow: /kontak/',
         '',
         '# Parameter filter/sort menciptakan URL duplikat - biarkan canonical yang handle',
         'Disallow: /*?q=',
