@@ -568,6 +568,10 @@
                     !important;
                 border-color: transparent !important;
             }
+            /* ticket CTA ikut color_btn */
+            .ticket-lsc-cta:not(.ticket-lsc-cta--expired) {
+                background: {{ $config['color_btn'] }} !important;
+            }
 
         @endif
 
@@ -588,6 +592,12 @@
                     {{ $config['color_btn_text'] }}
                     !important;
                 opacity: 0.65 !important;
+            }
+            /* ticket CTA text ikut color_btn_text */
+            .ticket-lsc-cta:not(.ticket-lsc-cta--expired),
+            .ticket-lsc-cta:not(.ticket-lsc-cta--expired) svg {
+                color: {{ $config['color_btn_text'] }} !important;
+                stroke: {{ $config['color_btn_text'] }} !important;
             }
 
         @endif
