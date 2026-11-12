@@ -238,6 +238,37 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
 
+        .bio-search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.6rem;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .bio-search-input::placeholder {
+            color: rgba(15, 23, 42, 0.5);
+            opacity: 1;
+        }
+
+        .bio-search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.6;
+            font-size: 0.85rem;
+            color: var(--text);
+            pointer-events: none;
+            transition: color 0.2s, opacity 0.2s;
+        }
+
         .glass-btn:hover {
             border-color: var(--accent);
             transform: scale(1.01);
@@ -506,7 +537,7 @@
         @endif
 
         @if(!empty($config['color_btn']))
-            .glass-btn, .social-icon {
+            .glass-btn, .social-icon, #bioSearchInput, .bio-search-input {
                 background:
                     {{ $config['color_btn'] }}
                     !important;
@@ -520,10 +551,18 @@
             .glass-btn .btn-icon, .glass-btn .btn-icon i, .glass-btn .btn-icon svg, .glass-btn .btn-icon *,
             .glass-btn .btn-arrow, .glass-btn .btn-arrow i, .glass-btn .btn-arrow svg, .glass-btn .btn-arrow *,
             .glass-btn i, .glass-btn svg, .glass-btn svg *,
-            .social-icon i, .social-icon svg {
+            .social-icon i, .social-icon svg,
+            #bioSearchInput, .bio-search-input,
+            .bio-search-icon, .search-box-wrap i {
                 color:
                     {{ $config['color_btn_text'] }}
                     !important;
+            }
+            #bioSearchInput::placeholder, .bio-search-input::placeholder {
+                color:
+                    {{ $config['color_btn_text'] }}
+                    !important;
+                opacity: 0.65 !important;
             }
 
         @endif
@@ -597,10 +636,10 @@
         {{-- Realtime Global Search Box --}}
         <div class="search-box-wrap fade-up" style="animation-delay:0.22s; margin: 1.25rem var(--side, 1rem) 0.5rem;">
             <div style="position:relative; width:100%;">
-                <input type="text" id="bioSearchInput" placeholder="Cari produk {{ $config['name'] ?? $profile->store_name ?? $username }}" 
-                    onkeyup="filterBioItems(this.value)"
-                    style="width:100%; padding:0.75rem 1rem 0.75rem 2.6rem; border-radius:999px; background:var(--glass, rgba(255,255,255,0.08)); border:1px solid var(--glass-border, rgba(255,255,255,0.15)); color:var(--text, #fff); font-family:'Montserrat',sans-serif; font-size:0.82rem; outline:none; transition:all 0.2s;">
-                <i class="fas fa-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); opacity:0.5; font-size:0.85rem; color:var(--text, #fff);"></i>
+                <input type="text" id="bioSearchInput" class="bio-search-input"
+                    placeholder="Cari produk {{ $config['name'] ?? $profile->store_name ?? $username }}"
+                    onkeyup="filterBioItems(this.value)">
+                <i class="fas fa-search bio-search-icon"></i>
             </div>
         </div>
 
