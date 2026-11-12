@@ -939,12 +939,16 @@
         <div class="cat-panel" id="tab2-dig">
             <div class="product-grid">
                 @foreach($buyleBlocks as $i => $block)
-                    @php $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
+                    @php $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); $cardNum=$i+1; @endphp
                     @if($prod)
+                    @if($isTix)
+                        @include('bio._ticket_landscape_card')
+                    @else
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/fff/cbd5e1?text=Produk" alt="No Image">@endif</div>
                         <div class="prod-info"><h3 class="prod-title">{{ $displayTitle }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
+                    @endif
                     @endif
                 @endforeach
             </div>
