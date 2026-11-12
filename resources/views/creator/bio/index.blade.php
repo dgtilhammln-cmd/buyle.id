@@ -5053,7 +5053,10 @@
                                 </div>
                                 <div class="card-body">
                                     @forelse($myProducts as $product)
-                                        @php $alreadyAdded = $blocks->contains(function($b) use ($product) { return ($b->data_json['product_id'] ?? null) == $product->id; }); @endphp
+                                        @php
+                                            $alreadyAdded = $blocks->contains(function($b) use ($product) { return ($b->data_json['product_id'] ?? null) == $product->id; });
+                                            $existingBlock = $blocks->first(function($b) use ($product) { return ($b->data_json['product_id'] ?? null) == $product->id; });
+                                        @endphp
                                         <div
                                             style="display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0; border-bottom:1px solid #f3f7f3;">
                                             @if($product->image)
@@ -5069,9 +5072,19 @@
                                                     {{ number_format($product->price, 0, ',', '.') }}
                                                 </div>
                                             </div>
-                                            @if($alreadyAdded)
-                                                <span
-                                                    style="font-size:0.72rem; font-weight: 500; color:#1eb349; background:#f0fdf4; padding:0.25rem 0.6rem; border-radius:6px;">Ditampilkan</span>
+                                            @if($alreadyAdded && $existingBlock)
+                                                {{-- Sudah ditampilkan: tampilkan badge + tombol Sembunyikan --}}
+                                                <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
+                                                    <span style="font-size:0.72rem; font-weight:500; color:#1eb349; background:#f0fdf4; padding:0.25rem 0.6rem; border-radius:6px; white-space:nowrap;">✓ Ditampilkan</span>
+                                                    <form action="{{ route('creator.bio.blocks.destroy', $existingBlock->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tarik produk ini dari Bio?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" title="Tarik dari Bio" style="display:inline-flex; align-items:center; gap:3px; font-size:0.72rem; font-weight:600; color:#ef4444; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:0.22rem 0.55rem; cursor:pointer; white-space:nowrap; line-height:1.4;">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                                            Tarik
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             @else
                                                 <form action="{{ route('creator.bio.blocks.store') }}" method="POST"
                                                     style="display:inline;">
