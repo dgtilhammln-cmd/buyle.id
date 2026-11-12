@@ -358,15 +358,6 @@ Modern Clean Style (Inspired by Celestix Style with Buyle.id Green Theme)
                     <div class="cv-footer-col-title">Bantuan</div>
                     <ul class="cv-footer-links">
                         <li><a href="{{ route_locale('faqs') }}">FAQ & Panduan</a></li>
-                        <li><a href="{{ route_locale('contact') }}">Hubungi Kami</a></li>
-                        <li>
-                            @if($wa)
-                                <a href="javascript:void(0)" onclick="openOrderModal('Footer Help')">Customer Service</a>
-                            @else
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $s['whatsapp'] ?? '6285179982373') }}"
-                                    target="_blank" rel="noopener">WhatsApp CS</a>
-                            @endif
-                        </li>
                     </ul>
                 </div>
 
