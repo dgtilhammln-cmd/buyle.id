@@ -163,9 +163,18 @@
             padding: 0.25rem 0.75rem;
             font-size: 0.72rem;
             color: rgba(255, 255, 255, 0.7);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.3rem;
+            text-decoration: none !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .badge:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
         }
 
         /* Social Icons Row */
@@ -498,7 +507,8 @@
 
             .profile-bio,
             .btn-sub,
-            .section-label {
+            .section-label,
+            .badge {
                 color:
                     {{ $config['color_text'] }}
                     !important;
@@ -611,10 +621,12 @@
             @if(!empty($config['bio']))
                 <div class="profile-bio">{{ $config['bio'] }}</div>
             @endif
-                        @if(!empty($config['location']))
+            @if(!empty($config['location']))
                 <div class="badges">
-                    <div class="badge"><i class="fas fa-map-marker-alt" style="font-size:9px;"></i>
-                        {{ $config['location'] }}</div>
+                    <a href="https://maps.google.com/?q={{ urlencode($config['location']) }}" target="_blank" rel="noopener noreferrer" class="badge" title="Buka di Google Maps">
+                        <i class="fas fa-map-marker-alt" style="font-size:9px;"></i>
+                        <span>{{ $config['location'] }}</span>
+                    </a>
                 </div>
             @endif
         </div>
