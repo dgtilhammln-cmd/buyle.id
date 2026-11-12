@@ -386,6 +386,32 @@
             margin-top: auto;
         }
 
+        /* ── Ticket Landscape Card (Theme 3 - colorful/vibrant glass) ── */
+        .ticket-lsc { display:flex; flex-direction:column; grid-column:1/-1; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); border-radius:16px; overflow:hidden; text-decoration:none; color:#fff; transition:all 0.22s ease; box-shadow:0 4px 16px rgba(0,0,0,0.1); }
+        .ticket-lsc:hover { transform:translateY(-2px); background:rgba(255,255,255,0.22); }
+        .ticket-lsc-img-wrap { position:relative; width:100%; aspect-ratio:16/9; background:rgba(0,0,0,0.15); overflow:hidden; }
+        .ticket-lsc-img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.35s ease; }
+        .ticket-lsc:hover .ticket-lsc-img { transform:scale(1.03); }
+        .ticket-lsc-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.5) 100%); pointer-events:none; }
+        .ticket-lsc-num { position:absolute; top:8px; left:10px; font-family:'Montserrat',sans-serif; font-size:0.65rem; font-weight:800; color:rgba(255,255,255,0.8); text-shadow:0 1px 3px rgba(0,0,0,0.5); letter-spacing:0.04em; }
+        .ticket-lsc-badge { position:absolute; top:8px; right:10px; font-family:'Montserrat',sans-serif; font-size:0.65rem; font-weight:800; padding:0.2rem 0.5rem; border-radius:6px; letter-spacing:0.04em; }
+        .ticket-lsc-badge--discount { background:#EF4444; color:#fff; }
+        .ticket-lsc-badge--event { background:rgba(255,255,255,0.25); color:#fff; border:1px solid rgba(255,255,255,0.4); }
+        .ticket-lsc-badge--expired { background:rgba(20,20,30,0.75); color:#94A3B8; border:1px solid rgba(148,163,184,0.25); }
+        .ticket-lsc-type-pill { position:absolute; bottom:10px; right:10px; display:inline-flex; align-items:center; gap:4px; font-size:0.62rem; font-weight:700; background:rgba(255,255,255,0.2); backdrop-filter:blur(6px); color:#fff; padding:0.18rem 0.48rem; border-radius:999px; border:1px solid rgba(255,255,255,0.3); }
+        .ticket-lsc-info { padding:10px 14px 12px; display:flex; flex-direction:column; gap:4px; }
+        .ticket-lsc-title { font-family:'Montserrat',sans-serif; font-size:0.85rem; font-weight:800; line-height:1.4; margin:0 0 2px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; color:#fff; }
+        .ticket-lsc-meta { display:inline-flex; align-items:center; gap:5px; font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.7); }
+        .ticket-lsc-meta svg { flex-shrink:0; stroke:rgba(255,255,255,0.9); }
+        .ticket-lsc-loc { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .ticket-lsc-price-row { display:flex; align-items:center; justify-content:space-between; margin-top:6px; }
+        .ticket-lsc-price-wrap { display:flex; flex-direction:column; }
+        .ticket-lsc-orig-price { font-size:0.65rem; color:rgba(255,255,255,0.4); text-decoration:line-through; font-weight:500; }
+        .ticket-lsc-price { font-family:'Montserrat',sans-serif; font-size:0.9rem; font-weight:800; color:#fff; }
+        .ticket-lsc-price--expired { color:rgba(255,255,255,0.4); }
+        .ticket-lsc-cta { display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35); color:#fff; font-size:0.72rem; font-weight:700; padding:0.32rem 0.75rem; border-radius:99px; flex-shrink:0; }
+        .ticket-lsc-cta--expired { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.3); }
+
         /* TikTok Slider */
         .slider-wrap {
             display: flex;

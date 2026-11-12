@@ -393,6 +393,41 @@
             margin-top: auto;
         }
 
+        /* ── Ticket Landscape Card (Theme 2 - clean light) ── */
+        .ticket-lsc {
+            display: flex; flex-direction: column;
+            grid-column: 1 / -1;
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px; overflow: hidden;
+            text-decoration: none; color: var(--text);
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .ticket-lsc:hover { transform: translateY(-2px); border-color: var(--accent, #1eb349); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .ticket-lsc-img-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #f1f5f9; overflow: hidden; }
+        .ticket-lsc-img { width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.35s ease; }
+        .ticket-lsc:hover .ticket-lsc-img { transform: scale(1.03); }
+        .ticket-lsc-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.42) 100%); pointer-events: none; }
+        .ticket-lsc-num { position: absolute; top: 8px; left: 10px; font-family: 'Montserrat',sans-serif; font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.85); text-shadow: 0 1px 3px rgba(0,0,0,0.5); letter-spacing: 0.04em; }
+        .ticket-lsc-badge { position: absolute; top: 8px; right: 10px; font-family: 'Montserrat',sans-serif; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; letter-spacing: 0.04em; }
+        .ticket-lsc-badge--discount { background: #EF4444; color: #fff; }
+        .ticket-lsc-badge--event { background: var(--accent, #1eb349); color: #fff; }
+        .ticket-lsc-badge--expired { background: rgba(30,30,40,0.7); color: #94A3B8; border: 1px solid rgba(148,163,184,0.2); }
+        .ticket-lsc-type-pill { position: absolute; bottom: 10px; right: 10px; display: inline-flex; align-items: center; gap: 4px; font-size: 0.62rem; font-weight: 700; background: rgba(255,255,255,0.22); backdrop-filter: blur(6px); color: #fff; padding: 0.18rem 0.48rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); }
+        .ticket-lsc-info { padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 4px; }
+        .ticket-lsc-title { font-family: 'Montserrat',sans-serif; font-size: 0.85rem; font-weight: 800; line-height: 1.4; margin: 0 0 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text-main, #0f172a); }
+        .ticket-lsc-meta { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 600; color: #64748b; }
+        .ticket-lsc-meta svg { flex-shrink: 0; stroke: var(--accent, #1eb349); }
+        .ticket-lsc-loc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ticket-lsc-price-row { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+        .ticket-lsc-price-wrap { display: flex; flex-direction: column; }
+        .ticket-lsc-orig-price { font-size: 0.65rem; color: #94a3b8; text-decoration: line-through; font-weight: 500; }
+        .ticket-lsc-price { font-family: 'Montserrat',sans-serif; font-size: 0.9rem; font-weight: 800; color: var(--accent, #1eb349); }
+        .ticket-lsc-price--expired { color: #94a3b8; }
+        .ticket-lsc-cta { display: inline-flex; align-items: center; gap: 4px; background: var(--accent, #1eb349); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.32rem 0.75rem; border-radius: 99px; flex-shrink: 0; }
+        .ticket-lsc-cta--expired { background: #e2e8f0; color: #94a3b8; }
+
         /* TikTok Slider */
         .slider-wrap {
             display: flex;
@@ -839,20 +874,28 @@
                     </a>
                 @endforeach
                 @foreach($customProdBlocks as $block)
-                    @php $allNum++; $pid=$block->data_json['product_id']??0; $prod=$products[$pid]??null; $imgs=$block->data_json['images']??[]; $rawPath=!empty($imgs[0])?$imgs[0]:($block->data_json['image']??($prod->image??null)); $img=!empty($rawPath)?(Str::startsWith($rawPath,'http')?$rawPath:asset('storage/'.$rawPath)):'https://placehold.co/400x400/fff/cbd5e1?text=Produk'; $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
+                    @php $allNum++; $pid=$block->data_json['product_id']??0; $prod=$products[$pid]??null; $imgs=$block->data_json['images']??[]; $rawPath=!empty($imgs[0])?$imgs[0]:($block->data_json['image']??($prod->image??null)); $img=!empty($rawPath)?(Str::startsWith($rawPath,'http')?$rawPath:asset('storage/'.$rawPath)):'https://placehold.co/400x400/fff/cbd5e1?text=Produk'; $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); $cardNum=$allNum; @endphp
+                    @if($isTix && !empty($prod))
+                        @include('bio._ticket_landscape_card')
+                    @else
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$allNum) }}</div><img src="{{ $img }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Produk'"></div>
                         <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.5;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
+                    @endif
                 @endforeach
                 @foreach($buyleBlocks as $block)
-                    @php $allNum++; $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
+                    @php $allNum++; $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); $cardNum=$allNum; @endphp
                     @if($prod)
+                    @if($isTix)
+                        @include('bio._ticket_landscape_card')
+                    @else
                     @php $pImg = !empty($prod->image) ? (Str::startsWith($prod->image, 'http') ? $prod->image : asset('storage/'.$prod->image)) : 'https://placehold.co/400x400/fff/cbd5e1?text=Produk'; @endphp
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$allNum) }}</div><img src="{{ $pImg }}" alt="{{ $prod->name }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Produk'"></div>
                         <div class="prod-info"><h3 class="prod-title">{{ $displayTitle }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
+                    @endif
                     @endif
                 @endforeach
             </div>
@@ -877,11 +920,15 @@
         <div class="cat-panel" id="tab2-fis">
             <div class="product-grid">
                 @foreach($customProdBlocks as $i => $block)
-                    @php $pid=$block->data_json['product_id']??0; $prod=$products[$pid]??null; $imgs=$block->data_json['images']??[]; $rawPath=!empty($imgs[0])?$imgs[0]:($block->data_json['image']??($prod->image??null)); $img=!empty($rawPath)?(Str::startsWith($rawPath,'http')?$rawPath:asset('storage/'.$rawPath)):'https://placehold.co/400x400/fff/cbd5e1?text=Produk'; $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
+                    @php $pid=$block->data_json['product_id']??0; $prod=$products[$pid]??null; $imgs=$block->data_json['images']??[]; $rawPath=!empty($imgs[0])?$imgs[0]:($block->data_json['image']??($prod->image??null)); $img=!empty($rawPath)?(Str::startsWith($rawPath,'http')?$rawPath:asset('storage/'.$rawPath)):'https://placehold.co/400x400/fff/cbd5e1?text=Produk'; $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $isTix=(!empty($prod)&&method_exists($prod,'isTicketProduct')&&$prod->isTicketProduct())||(!empty($prod->product_type)&&$prod->product_type==='ticket')||(!empty($block->data_json['category'])&&$block->data_json['category']==='ticket');$prodTargetSlug=!empty($prod->slug)?$prod->slug:$blockSlug;$prodUrl=$isTix?route('tix.show',['slug'=>$prodTargetSlug]):route('products.show',['slug'=>$prodTargetSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); $cardNum=$i+1; @endphp
+                    @if($isTix && !empty($prod))
+                        @include('bio._ticket_landscape_card')
+                    @else
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div><img src="{{ $img }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Produk'"></div>
                         <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.5;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
+                    @endif
                 @endforeach
             </div>
         </div>
