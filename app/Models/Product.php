@@ -480,11 +480,10 @@ class Product extends Model
             if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
                 return $this->image;
             }
-            $storagePath = storage_path('app/public/' . ltrim($this->image, '/'));
-            $publicPath  = public_path('storage/' . ltrim($this->image, '/'));
-            if (file_exists($storagePath) || file_exists($publicPath)) {
-                return asset('storage/' . ltrim($this->image, '/'));
-            }
+            // Langsung kembalikan URL tanpa cek file_exists()
+            // karena Hostinger symlink/path bisa berbeda dari storage_path/public_path
+            // Fallback broken image ditangani oleh onerror di HTML
+            return asset('storage/' . ltrim($this->image, '/'));
         }
 
         return static::getPlaceholderUrl();
