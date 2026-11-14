@@ -1774,7 +1774,7 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                         <input type="text" id="tixSearchInput" name="q" value=""
-                            placeholder="Cari nama konser, seminar, festival, kota atau artis..." class="tix-search-input"
+                            placeholder="Cari event atau konser..." class="tix-search-input"
                             autocomplete="off">
                         <button type="button" id="tixSearchClearBtn"
                             style="display: none; background: none; border: none; cursor: pointer; color: #94A3B8; padding: 4px; align-items: center;"
