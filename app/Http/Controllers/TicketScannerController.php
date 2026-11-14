@@ -128,6 +128,14 @@ class TicketScannerController extends Controller
             $daysUntilEvent = max(0, (int) now()->startOfDay()->diffInDays($primaryEvent->event_date->startOfDay(), false));
         }
 
+        // Semua tanggal event (untuk dot marker di kalender)
+        $eventDates = $events
+            ->filter(fn($e) => !is_null($e->event_date))
+            ->map(fn($e) => $e->event_date->format('Y-m-d'))
+            ->unique()
+            ->values()
+            ->toArray();
+
         $seo = [
             'title'   => 'Ticket System Management · Creator Studio',
             'robots'  => 'noindex, nofollow',
@@ -151,7 +159,8 @@ class TicketScannerController extends Controller
             'kyc',
             'gateStaffList',
             'primaryEvent',
-            'daysUntilEvent'
+            'daysUntilEvent',
+            'eventDates'
         ));
     }
 

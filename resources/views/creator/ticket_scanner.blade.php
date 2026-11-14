@@ -2781,32 +2781,30 @@
                         @php
                             $startOfWeek = now()->startOfWeek(\Carbon\Carbon::SUNDAY);
                             $todayDateStr = now()->format('Y-m-d');
-                            $primaryEventDateStr = isset($primaryEvent) && $primaryEvent && $primaryEvent->event_date ? $primaryEvent->event_date->format('Y-m-d') : null;
+                            $allEventDatesSet = isset($eventDates) ? array_flip($eventDates) : [];
                         @endphp
                         @for($i = 0; $i < 7; $i++)
                             @php
                                 $curDay = $startOfWeek->copy()->addDays($i);
                                 $curDateStr = $curDay->format('Y-m-d');
                                 $isToday = $curDateStr === $todayDateStr;
-                                $isEventDay = $curDateStr === $primaryEventDateStr;
+                                $isEventDay = isset($allEventDatesSet[$curDateStr]);
                             @endphp
                             <div
-                                style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; {{ $isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;' }} font-family:'Montserrat',sans-serif;">
+                                style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; {{ $isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : ($isEventDay ? 'background:#f0fdf4;' : 'color:#64748b;') }} font-family:'Montserrat',sans-serif;">
                                 <span
-                                    style="font-size:0.75rem; font-weight:700; text-transform:uppercase; {{ $isToday ? 'color:#15803d;' : 'color:#64748b;' }}">
+                                    style="font-size:0.75rem; font-weight:700; text-transform:uppercase; {{ $isToday ? 'color:#15803d;' : ($isEventDay ? 'color:#15803d;' : 'color:#64748b;') }}">
                                     {{ substr($curDay->translatedFormat('l'), 0, 1) }}
                                 </span>
                                 <span
-                                    style="font-size:0.9rem; font-weight:{{ $isToday ? '700' : '600' }}; {{ $isToday ? 'color:#14532d;' : 'color:#0f172a;' }}">
+                                    style="font-size:0.9rem; font-weight:{{ ($isToday || $isEventDay) ? '700' : '600' }}; {{ $isToday ? 'color:#14532d;' : ($isEventDay ? 'color:#15803d;' : 'color:#0f172a;') }}">
                                     {{ $curDay->format('d') }}
                                 </span>
-                                @if($isEventDay)
-                                    <span style="width:4px; height:4px; background:#16a34a; border-radius:50%;"
-                                        title="Hari H Event"></span>
-                                @elseif($isToday)
-                                    <span style="width:4px; height:4px; background:#15803d; border-radius:50%;"></span>
+                                @if($isEventDay || $isToday)
+                                    <span style="width:5px; height:5px; background:{{ $isEventDay ? '#16a34a' : '#15803d' }}; border-radius:50%; display:block;"
+                                        title="{{ $isEventDay ? 'Ada Event' : 'Hari Ini' }}"></span>
                                 @else
-                                    <span style="width:4px; height:4px; opacity:0;"></span>
+                                    <span style="width:5px; height:5px; opacity:0; display:block;"></span>
                                 @endif
                             </div>
                         @endfor
@@ -4141,6 +4139,9 @@
         // ── Home Calendar Week Strip Navigation ──
         let currentCalendarShift = 0;
         const monthNamesIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        // Set tanggal event dari PHP (semua event creator)
+        const calEventDates = new Set({!! json_encode($eventDates ?? []) !!});
+
         function shiftHomeCalendar(days) {
             currentCalendarShift += days;
             const strip = document.getElementById('homeCalendarStrip');
@@ -4163,14 +4164,44 @@
                 const cur = new Date(startOfWeek);
                 cur.setDate(startOfWeek.getDate() + i);
                 const isToday = cur.toDateString() === today.toDateString();
+                // Format YYYY-MM-DD
+                const yy = cur.getFullYear();
+                const mm = String(cur.getMonth() + 1).padStart(2, '0');
+                const dd = String(cur.getDate()).padStart(2, '0');
+                const dateStr = `${yy}-${mm}-${dd}`;
+                const isEventDay = calEventDates.has(dateStr);
                 const dStr = String(cur.getDate()).padStart(2, '0');
+
+                let wrapStyle = `display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; font-family:'Montserrat',sans-serif;`;
+                let dayNameColor = '#64748b';
+                let dateColor = '#0f172a';
+                let dateFontWeight = '600';
+
+                if (isToday) {
+                    wrapStyle += 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);';
+                    dayNameColor = '#15803d';
+                    dateColor = '#14532d';
+                    dateFontWeight = '700';
+                } else if (isEventDay) {
+                    wrapStyle += 'background:#f0fdf4;';
+                    dayNameColor = '#15803d';
+                    dateColor = '#15803d';
+                    dateFontWeight = '700';
+                } else {
+                    wrapStyle += 'color:#64748b;';
+                }
+
+                const dotVisible = (isToday || isEventDay);
+                const dotColor = isEventDay ? '#16a34a' : '#15803d';
+                const dotTitle = isEventDay ? 'Ada Event' : 'Hari Ini';
+
                 html += `
-                                        <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; ${isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;'} font-family:'Montserrat',sans-serif;">
-                                            <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; ${isToday ? 'color:#15803d;' : 'color:#64748b;'}">${dayNames[i]}</span>
-                                            <span style="font-size:0.9rem; font-weight:${isToday ? '700' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
-                                            <span style="width:4px; height:4px; ${isToday ? 'background:#15803d;' : 'opacity:0;'} border-radius:50%;"></span>
-                                        </div>
-                                    `;
+                    <div style="${wrapStyle}">
+                        <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:${dayNameColor};">${dayNames[i]}</span>
+                        <span style="font-size:0.9rem; font-weight:${dateFontWeight}; color:${dateColor};">${dStr}</span>
+                        <span style="width:5px; height:5px; background:${dotColor}; border-radius:50%; display:block; ${dotVisible ? '' : 'opacity:0;'}" title="${dotTitle}"></span>
+                    </div>
+                `;
             }
             strip.innerHTML = html;
         }
