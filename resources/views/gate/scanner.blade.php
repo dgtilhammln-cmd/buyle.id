@@ -45,136 +45,219 @@
             font-size: 14px;
         }
 
-        /* ── Top Navbar ── */
-        .gate-nav {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border);
-            padding: 0.85rem 1.5rem;
+        /* ── Top Header Buyle TIX ── */
+        .gate-tix-header {
+            background: linear-gradient(135deg, #1db349 0%, #84ce00 100%);
+            box-shadow: 0 4px 20px rgba(29, 179, 73, 0.28);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 0.75rem 1.25rem;
             position: sticky;
             top: 0;
             z-index: 50;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
-        .brand-badge {
+        .gate-header-left {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
-            text-decoration: none;
+            gap: 0.85rem;
+            min-width: 0;
+            flex-shrink: 0;
         }
-        .brand-logo {
+
+        .gate-tix-logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .gate-tix-logo:hover {
+            transform: scale(1.02);
+        }
+
+        .gate-event-badge-strip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            max-width: 240px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 640px) {
+            .gate-event-badge-strip {
+                display: none !important;
+            }
+        }
+
+        .gate-header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .gate-staff-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #ffffff;
+            color: #166534;
+            padding: 0.32rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .gate-dot-online {
+            width: 7px;
+            height: 7px;
+            background: #16a34a;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .gate-staff-logout-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ef4444;
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding-left: 2px;
+            line-height: 1;
+        }
+
+        .gate-live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            padding: 0.32rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-fs-toggle {
             width: 36px;
             height: 36px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #1eb349, #15803d);
-            color: white;
-            display: flex;
+            border-radius: 50%;
+            background: #ffffff;
+            border: none;
+            color: #166534;
+            cursor: pointer;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 1.15rem;
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+            transition: all 0.2s ease;
         }
-        .brand-title {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--dark);
-            letter-spacing: -0.03em;
+        .btn-fs-toggle:hover {
+            transform: scale(1.05);
+            background: #f0fdf4;
+            color: #15803d;
         }
-        .brand-title span { color: var(--primary); }
 
         .pulse-dot {
             width: 8px;
             height: 8px;
-            background: #22c55e;
+            background: #ffffff;
             border-radius: 50%;
-            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
             animation: pulse-ring 1.8s infinite;
         }
         @keyframes pulse-ring {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
 
         /* ── Main Container ── */
         .main-container {
-            max-width: 1140px;
+            max-width: 1040px;
             width: 100%;
             margin: 0 auto;
-            padding: 1.25rem 1.25rem 2.5rem;
+            padding: 1rem 1.25rem 2.5rem;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1rem;
         }
 
-        /* ── Event Header ── */
-        .event-header {
+        /* ── Clean Event Strip (No Stats Cards) ── */
+        .event-clean-header {
             text-align: center;
-            padding: 0.5rem 0 0.25rem;
+            padding: 0.25rem 0 0.5rem;
         }
-        .event-title {
-            font-size: 1.35rem;
+        .event-clean-title {
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--dark);
             margin-bottom: 0.35rem;
             letter-spacing: -0.02em;
         }
-        .event-meta {
+        .event-clean-meta {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1.25rem;
+            gap: 1rem;
             flex-wrap: wrap;
-            font-size: 0.83rem;
+            font-size: 0.82rem;
             color: var(--muted);
             font-weight: 600;
         }
-        .meta-item {
+        .event-clean-meta span {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
         }
 
-        /* ── Stats Bar (Curved Cards) ── */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
+        /* ── Fullscreen Mode Styles ── */
+        :fullscreen,
+        :-webkit-full-screen,
+        body.fullscreen-mode {
+            background-color: #020617 !important;
         }
-        .stat-card {
-            background: #ffffff;
-            border: 1.5px solid var(--border);
-            border-radius: 16px;
-            padding: 0.9rem 1rem;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-            transition: all 0.2s ease;
+        body.fullscreen-mode .main-container {
+            max-width: 100% !important;
+            padding: 0.65rem !important;
+            gap: 0.65rem !important;
         }
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        body.fullscreen-mode .event-clean-header {
+            padding: 0 0 0.25rem !important;
         }
-        .stat-num {
-            font-size: 1.45rem;
-            font-weight: 900;
-            line-height: 1.2;
-            margin-bottom: 2px;
+        body.fullscreen-mode .event-clean-title {
+            color: #ffffff !important;
+            font-size: 1.05rem !important;
+            margin-bottom: 0.2rem !important;
         }
-        .stat-num.hadir { color: #16a34a; }
-        .stat-num.belum { color: #f59e0b; }
-        .stat-num.total { color: var(--dark); }
-        .stat-label {
-            font-size: 0.72rem;
-            font-weight: 800;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        body.fullscreen-mode .event-clean-meta {
+            color: #94a3b8 !important;
+            font-size: 0.74rem !important;
+        }
+        body.fullscreen-mode .prof-card {
+            border-color: #1e293b !important;
+            background: #0f172a !important;
+        }
+        body.fullscreen-mode .form-body {
+            background: #0f172a !important;
         }
 
         /* ── Scanner Outer Card (Image 2 Style) ── */
@@ -205,49 +288,68 @@
             padding: 1.5rem;
         }
 
-        /* ── Input Manual Top Bar ── */
-        .form-input-code {
-            height: 46px;
-            padding: 0 1rem;
-            border: 1.5px solid var(--border);
-            border-radius: 12px 0 0 12px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: #0f172a;
-            background: #ffffff;
-            outline: none;
-            flex: 1;
-            min-width: 0;
-            transition: all 0.2s;
-            box-sizing: border-box;
+        /* ── Clean Toolbar Above Camera ── */
+        .scanner-clean-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
-        .form-input-code:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
-        }
-        .btn-submit-scan {
-            height: 46px;
-            padding: 0 1.5rem;
-            border-radius: 0 12px 12px 0;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            border: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.88rem;
-            font-weight: 800;
-            color: #ffffff;
-            cursor: pointer;
-            transition: all 0.2s;
+        .scanner-status-tag {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: #166534;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.45rem;
-            flex-shrink: 0;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.25);
+            gap: 6px;
+            background: #f0fdf4;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid #bbf7d0;
         }
-        .btn-submit-scan:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
+        .scanner-ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+        .scanner-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #334155;
+            background: #f8fafc;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            border: 1.5px solid #e2e8f0;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .scanner-pill-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .scanner-pill-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #166534;
+            background: #f0fdf4;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            border: 1.5px solid #bbf7d0;
+            cursor: pointer;
+            user-select: none;
+        }
+        .manual-scan-wrap {
+            margin-top: 0.75rem;
         }
 
         /* ── 2-Column Responsive Workspace Grid ── */
@@ -515,154 +617,129 @@
         </div>
     </div>
 
-    <!-- Navigation Bar -->
-    <nav class="gate-nav">
-        <a href="{{ url('/') }}" class="brand-badge">
-            <div class="brand-logo">B</div>
-            <div class="brand-title">buyle<span>.id</span></div>
-        </a>
-        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+    <!-- Header Buyle TIX -->
+    <header class="gate-tix-header">
+        <div class="gate-header-left">
+            <a href="{{ route('tix.index') }}" class="gate-tix-logo" title="Buyle TIX — Platform Tiket Event">
+                <picture>
+                    <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" height="26" style="height:26px; width:auto; display:block;">
+                </picture>
+            </a>
+            <div class="gate-event-badge-strip">
+                <span>{{ $event->name }}</span>
+            </div>
+        </div>
+
+        <div class="gate-header-right">
             @if($staffSession)
-                <div id="staffActiveBadge" style="display:inline-flex; align-items:center; gap:0.4rem; background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.35rem 0.85rem; border-radius:999px; font-size:0.76rem; font-weight:700;">
-                    <span style="width:7px; height:7px; background:#16a34a; border-radius:50%; display:inline-block;"></span>
+                <div id="staffActiveBadge" class="gate-staff-pill" title="Petugas Aktif">
+                    <span class="gate-dot-online"></span>
                     <span>{{ $staffSession['name'] }} (Gate {{ $staffSession['gate'] }})</span>
-                    <button type="button" onclick="logoutStaff()" title="Keluar / Ganti Panitia" style="background:none; border:none; cursor:pointer; color:#15803d; font-size:0.8rem; font-weight:800; padding-left:4px; line-height:1;">✕</button>
+                    <button type="button" onclick="logoutStaff()" title="Keluar / Ganti Panitia" class="gate-staff-logout-btn">✕</button>
                 </div>
             @endif
-            <div style="display:inline-flex; align-items:center; gap:0.45rem; background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.35rem 0.85rem; border-radius:999px; font-size:0.76rem; font-weight:700;">
+
+            <div class="gate-live-pill" title="Status Gate Aktif">
                 <span class="pulse-dot"></span>
                 <span>Gate Live</span>
             </div>
+
+            <!-- Fullscreen Mode Button -->
+            <button type="button" onclick="toggleFullscreen()" class="btn-fs-toggle" id="btnFsToggle" title="Mode Layar Penuh (Fullscreen)">
+                <span id="fsIconWrap" style="display:flex; align-items:center; justify-content:center;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                    </svg>
+                </span>
+            </button>
         </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
     <main class="main-container">
 
-        <!-- Event Info Header -->
-        <section class="event-header">
-            <h1 class="event-title">{{ $event->name }}</h1>
-            <div class="event-meta">
+        <!-- Clean Event Info Header -->
+        <section class="event-clean-header">
+            <h1 class="event-clean-title">{{ $event->name }}</h1>
+            <div class="event-clean-meta">
                 @if($event->event_date)
-                    <div class="meta-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                        <span>{{ $event->event_date->format('d M Y') }}</span>
-                    </div>
+                    <span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        {{ $event->event_date->format('d M Y') }}
+                    </span>
                 @endif
                 @if($event->event_time)
-                    <div class="meta-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        <span>{{ $event->event_time }}</span>
-                    </div>
+                    <span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        {{ $event->event_time }}
+                    </span>
                 @endif
                 @if($event->event_location)
-                    <div class="meta-item">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        <span>{{ $event->event_location }}</span>
-                    </div>
+                    <span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        {{ $event->event_location }}
+                    </span>
                 @endif
             </div>
         </section>
 
-        <!-- Live Stats Grid (Curved Cards) -->
-        <section class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-num hadir" id="stat-checked">{{ $stats['checked_in'] }}</div>
-                <div class="stat-label">Hadir ({{ $stats['rate'] }}%)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num belum" id="stat-remain">{{ $stats['unchecked'] }}</div>
-                <div class="stat-label">Belum Hadir</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num total" id="stat-total">{{ $stats['total'] }}</div>
-                <div class="stat-label">Total Tiket</div>
-            </div>
-        </section>
-
-        <!-- Scanner Card Container (Image 2 Aesthetic) -->
+        <!-- Scanner Card Container -->
         <div class="prof-card">
-            
-            <!-- Card Header -->
-            <div class="prof-card-head">
-                <div class="prof-card-title">
-                    <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
-                    <span>Live Camera QR Ticket Scanner</span>
-                </div>
-            </div>
-
-            <div class="form-body">
-                
-                <!-- Input Manual (Full Width di Atas) -->
-                <form id="manualScanForm" style="margin-bottom: 1.25rem;" onsubmit="handleManualSubmit(event)">
-                    <label style="font-size:0.83rem; font-weight:700; color:#334155; margin-bottom:0.5rem; display:block;">Pemeriksaan Kode Tiket / Token (Manual)</label>
-                    <div style="display: flex;">
-                        <input type="text" id="manualCodeInput" class="form-input-code" placeholder="Ketik Kode Tiket (misal: TKT-20260905-XXXX)...">
-                        <button class="btn-submit-scan" type="submit">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                            Periksa
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Subheader Bar: Viewport Label + Fast Mode + Mirror Toggle -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
-                    
-                    <!-- Kiri: Viewport Status + Signal Widget -->
-                    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                        <div style="font-weight: 700; font-size: 0.85rem; color: #334155; display: flex; align-items: center; gap: 6px;">
-                            <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                            Viewport Live QR Scanner
-                        </div>
-                        <div id="signalWidget" title="Kekuatan Sinyal Internet" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fef3c7; border:1.5px solid #fde68a; cursor:default; user-select:none;">
-                            <div id="signalBars" style="display:flex; align-items:flex-end; gap:1.5px; height:13px;">
-                                <div style="width:2.5px; height:3px; border-radius:1.5px; background:#d97706;"></div>
-                                <div style="width:2.5px; height:5.5px; border-radius:1.5px; background:#d97706;"></div>
-                                <div style="width:2.5px; height:8px; border-radius:1.5px; background:#d97706;"></div>
-                                <div style="width:2.5px; height:10.5px; border-radius:1.5px; background:#cbd5e1;"></div>
-                                <div style="width:2.5px; height:13px; border-radius:1.5px; background:#cbd5e1;"></div>
-                            </div>
-                            <span style="color:#b45309;">Standar</span>
-                        </div>
-                    </div>
-
-                    <!-- Kanan: Fast Mode (Auto Next) + Mirror ON -->
-                    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                        <label style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none;" title="Scan cepat otomatis">
-                            <input type="checkbox" id="fast-mode" checked style="accent-color:#1eb349; width:16px; height:16px;">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                            <span>Fast Mode (Auto Next)</span>
-                        </label>
-                        <button type="button" id="btn-mirror" onclick="toggleMirror()" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none; transition: all 0.2s;" title="Cerminkan kamera">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/><path d="M8 12h-.01M16 12h.01"/></svg>
-                            <span id="mirror-lbl">Mirror: ON</span>
-                        </button>
-                    </div>
-
-                </div>
+            <div class="form-body" style="padding: 1.15rem 1.25rem;">
 
                 <!-- 2-Column Responsive Workspace Grid -->
-                <div class="scanner-workspace-grid">
+                <div class="scanner-workspace-grid" style="margin-top: 0;">
 
                     <!-- Kolom Kiri: Kamera Viewport -->
                     <div class="scanner-camera-col">
-                        <div id="smartGuideBanner" class="smart-guide-banner">
-                            <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                        <!-- Toolbar Ringkas -->
+                        <div class="scanner-clean-toolbar">
+                            <span class="scanner-status-tag">
+                                <span class="pulse-dot" style="background:#16a34a; width:7px; height:7px;"></span>
+                                Viewport Scanner
+                            </span>
+                            <div class="scanner-ctrl-group">
+                                <label class="scanner-pill-check" title="Scan cepat otomatis tanpa klik tombol">
+                                    <input type="checkbox" id="fast-mode" checked style="accent-color:#1eb349; width:15px; height:15px;">
+                                    <span>⚡ Auto Next</span>
+                                </label>
+                                <button type="button" id="btn-mirror" onclick="toggleMirror()" class="scanner-pill-btn" title="Cerminkan kamera">
+                                    <span id="mirror-lbl">Mirror: ON</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Guide Banner -->
+                        <div id="smartGuideBanner" class="smart-guide-banner" style="margin-bottom: 0.65rem;">
+                            <svg width="15" height="15" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" y1="16" x2="12" y2="12"></line>
                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                             </svg>
-                            <span id="smartGuideText" style="flex:1;">Pencahayaan Baik: Arahkan QR Code ke kamera</span>
+                            <span id="smartGuideText" style="flex:1;">Arahkan QR Code tiket pengunjung ke kamera</span>
                         </div>
+
+                        <!-- Viewport Box -->
                         <div id="reader"></div>
+
+                        <!-- Input Manual Ringkas -->
+                        <form id="manualScanForm" class="manual-scan-wrap" onsubmit="handleManualSubmit(event)" style="display:flex; margin-top:0.75rem;">
+                            <input type="text" id="manualCodeInput" placeholder="Ketik kode tiket manual jika QR bermasalah..." autocomplete="off"
+                                style="flex:1; height:40px; padding:0 0.85rem; border:1.5px solid #cbd5e1; border-radius:10px 0 0 10px; font-size:0.8rem; font-family:inherit; outline:none; background:#ffffff;">
+                            <button type="submit"
+                                style="height:40px; padding:0 1.25rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; border-radius:0 10px 10px 0; font-size:0.8rem; font-weight:700; cursor:pointer; flex-shrink:0; font-family:inherit;">
+                                Periksa
+                            </button>
+                        </form>
                     </div>
 
                     <!-- Kolom Kanan: Live Data Hasil Scan -->
                     <div class="scanner-data-col">
-                        <div id="scannerResultPanel" class="scanner-result-panel">
+                        <div id="scannerResultPanel" class="scanner-result-panel" style="min-height: 360px;">
                             
                             <!-- 1. State Idle (Menunggu Scan) -->
-                            <div id="resStateIdle" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:1.25rem 0.75rem;">
+                            <div id="resStateIdle" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:1.5rem 1rem;">
                                 <div style="width:64px; height:64px; border-radius:20px; background:#f0fdf4; border:1.5px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#1eb349; margin-bottom:1rem; box-shadow:0 8px 20px rgba(30,179,73,0.12);">
                                     <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>
                                 </div>
@@ -671,18 +748,9 @@
                                     Kamera Siap Memindai
                                 </div>
                                 <h4 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 0.35rem 0;">Menunggu Scan Tiket</h4>
-                                <p style="font-size:0.8rem; color:#64748b; line-height:1.5; margin:0 0 1.25rem 0; max-width:300px;">
-                                    Arahkan QR Code pengunjung ke kamera di sebelah kiri, atau ketik kode tiket pada kolom di atas.
+                                <p style="font-size:0.8rem; color:#64748b; line-height:1.5; margin:0; max-width:280px;">
+                                    Arahkan QR Code pengunjung ke kamera di sebelah kiri, atau ketik kode tiket pada kolom di bawah.
                                 </p>
-                                <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; padding:0.75rem 0.85rem; width:100%; box-sizing:border-box; text-align:left;">
-                                    <div style="font-size:0.74rem; font-weight:700; color:#334155; margin-bottom:0.25rem; display:flex; align-items:center; gap:5px;">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        Tips Verifikasi Cepat:
-                                    </div>
-                                    <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
-                                        Posisikan layar pengunjung lurus dengan kamera. Tiket valid akan langsung tercatat dan berbunyi lonceng sukses.
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- 2. State Loading -->
@@ -1283,6 +1351,7 @@
             const elChecked = document.getElementById('stat-checked');
             const elRemain = document.getElementById('stat-remain');
             const elTotal = document.getElementById('stat-total');
+            if (!elChecked || !elRemain || !elTotal) return;
 
             let checked = parseInt(elChecked.innerText) || 0;
             let remain = parseInt(elRemain.innerText) || 0;
@@ -1292,6 +1361,58 @@
             remain = Math.max(0, remain - 1);
             elChecked.innerText = checked;
             elRemain.innerText = remain;
+        }
+
+        // ── FULLSCREEN CONTROLLER ──
+        function toggleFullscreen() {
+            const doc = document;
+            const docEl = document.documentElement;
+
+            const requestFs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+            const exitFs = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+
+            const isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
+
+            if (!isFs) {
+                if (requestFs) {
+                    requestFs.call(docEl).catch(err => {
+                        console.log('Fullscreen error:', err);
+                    });
+                }
+            } else {
+                if (exitFs) {
+                    exitFs.call(doc);
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+        document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+        document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+
+        function updateFullscreenIcon() {
+            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            const iconWrap = document.getElementById('fsIconWrap');
+            if (!iconWrap) return;
+
+            if (isFs) {
+                // Compress icon
+                iconWrap.innerHTML = `
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M14 10V4m0 6h6m-6 0l7-7M10 10V4m0 6H4m0 0l7-7" />
+                    </svg>
+                `;
+                document.body.classList.add('fullscreen-mode');
+            } else {
+                // Expand icon
+                iconWrap.innerHTML = `
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                    </svg>
+                `;
+                document.body.classList.remove('fullscreen-mode');
+            }
         }
 
         async function submitGatePin(e) {
