@@ -1,10 +1,10 @@
 {{-- ══════════════════════════════════════════════════════════════════
-     BUYLE TIX — DEDICATED MODERN HEADER
-     Gradient: #1db349 to #84ce00
-     Inspired by Artatix / Creative Agency Reference
-     100% Mobile Friendly & Responsive
-     Fixed Sticky (Always Stays at Top on Scroll)
-     ══════════════════════════════════════════════════════════════════ --}}
+BUYLE TIX — DEDICATED MODERN HEADER
+Gradient: #1db349 to #84ce00
+Inspired by Artatix / Creative Agency Reference
+100% Mobile Friendly & Responsive
+Fixed Sticky (Always Stays at Top on Scroll)
+══════════════════════════════════════════════════════════════════ --}}
 @php
     $isHome = request()->routeIs('tix.index') && !request()->has('q');
     $isAbout = request()->routeIs('tix.info');
@@ -29,6 +29,7 @@
     .buyle-tix-page {
         padding-top: 1.5rem !important;
     }
+
     @media (max-width: 991px) {
         .buyle-tix-page {
             padding-top: 1rem !important;
@@ -73,6 +74,7 @@
     .buyle-ticketing-section {
         padding-top: 3.5rem !important;
     }
+
     @media (max-width: 991px) {
         .buyle-ticketing-section {
             padding-top: 2rem !important;
@@ -408,8 +410,15 @@
     }
 
     @keyframes tixDropIn {
-        from { opacity: 0; transform: translateY(-8px) scale(0.98); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+        from {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
     .tix-menu-header {
@@ -845,10 +854,11 @@
             line-height: 1 !important;
             vertical-align: middle !important;
         }
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
     }
 
     @media (max-width: 420px) {
@@ -877,11 +887,8 @@
             <a href="{{ route('tix.index') }}" class="tix-header-logo-link" title="Buyle TIX — Platform Tiket Event">
                 <picture>
                     <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/logobuyletix.png') }}"
-                         alt="Buyle TIX"
-                         class="tix-header-logo-img"
-                         width="160"
-                         height="30">
+                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" class="tix-header-logo-img"
+                        width="160" height="30">
                 </picture>
             </a>
         </div>
@@ -890,23 +897,18 @@
         <div class="tix-header-center">
             <nav class="tix-nav-capsule" aria-label="Menu Utama Buyle TIX">
                 {{-- Beranda --}}
-                <a href="{{ route('tix.index') }}"
-                   class="tix-nav-pill {{ $isHome ? 'is-active' : '' }}">
+                <a href="{{ route('tix.index') }}" class="tix-nav-pill {{ $isHome ? 'is-active' : '' }}">
                     Beranda
                 </a>
 
                 {{-- Tentang --}}
-                <a href="{{ route('tix.info') }}"
-                   class="tix-nav-pill {{ $isAbout ? 'is-active' : '' }}">
+                <a href="{{ route('tix.info') }}" class="tix-nav-pill {{ $isAbout ? 'is-active' : '' }}">
                     Tentang
                 </a>
 
                 {{-- Kerja Sama (Clean tanpa nomor di pill) --}}
-                <a href="{{ $waUrl }}"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="tix-nav-pill"
-                   title="Kerjasama Event Organizer / Penyelenggara: {{ $waNumber }}">
+                <a href="{{ $waUrl }}" target="_blank" rel="noopener noreferrer" class="tix-nav-pill"
+                    title="Kerjasama Event Organizer / Penyelenggara: {{ $waNumber }}">
                     Kerja Sama
                 </a>
             </nav>
@@ -935,7 +937,8 @@
                         @endphp
                         <img src="{{ $userAvatar }}" class="tix-user-avatar" alt="{{ Auth::user()->name }}">
                         <span class="tix-user-name">{{ Str::limit(Auth::user()->name, 12) }}</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
                             <polyline points="6 9 12 15 18 9" />
                         </svg>
                     </button>
@@ -949,10 +952,12 @@
                         </div>
 
                         {{-- Tiket Saya --}}
-                        <a href="{{ Route::has('account.orders') ? route('account.orders') : url('/akun/pesanan') }}" class="tix-menu-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        <a href="{{ Route::has('account.orders') ? route('account.orders') : url('/akun/pesanan') }}"
+                            class="tix-menu-item">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                             </svg>
                             <span>Tiket Saya</span>
                         </a>
@@ -960,33 +965,38 @@
                         @if(Auth::user()->role !== 'buyer')
                             {{-- Dashboard EO (event-attendance?tab=home) --}}
                             <a href="{{ url('/creator/event-attendance?tab=home') }}" class="tix-menu-item">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="7"/>
-                                    <rect x="14" y="3" width="7" height="7"/>
-                                    <rect x="14" y="14" width="7" height="7"/>
-                                    <rect x="3" y="14" width="7" height="7"/>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7" />
+                                    <rect x="14" y="3" width="7" height="7" />
+                                    <rect x="14" y="14" width="7" height="7" />
+                                    <rect x="3" y="14" width="7" height="7" />
                                 </svg>
                                 <span>Dashboard EO</span>
                             </a>
 
                             {{-- Scanner Tiket Gate --}}
-                            <a href="{{ Route::has('creator.ticket.scanner') ? route('creator.ticket.scanner') : url('/event-attendance') }}" class="tix-menu-item">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-                                    <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-                                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-                                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                                    <line x1="7" y1="12" x2="17" y2="12"/>
+                            <a href="{{ Route::has('creator.ticket.scanner') ? route('creator.ticket.scanner') : url('/event-attendance') }}"
+                                class="tix-menu-item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+                                    <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+                                    <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+                                    <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                                    <line x1="7" y1="12" x2="17" y2="12" />
                                 </svg>
                                 <span>Gate Scanner</span>
                             </a>
                         @endif
 
                         {{-- Akun Saya --}}
-                        <a href="{{ Route::has('account.overview') ? route('account.overview') : url('/akun') }}" class="tix-menu-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
+                        <a href="{{ Route::has('account.overview') ? route('account.overview') : url('/akun') }}"
+                            class="tix-menu-item">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
                             </svg>
                             <span>Pengaturan Akun</span>
                         </a>
@@ -995,10 +1005,11 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="tix-menu-logout-btn">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                                    <polyline points="16 17 21 12 16 7"/>
-                                    <line x1="21" y1="12" x2="9" y2="12"/>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
                                 </svg>
                                 <span>Keluar</span>
                             </button>
@@ -1014,9 +1025,9 @@
             {{-- Mobile Hamburger Toggle --}}
             <button type="button" class="tix-hamburger-btn" onclick="openTixDrawer()" aria-label="Buka Menu Mobile">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="3" y1="6" x2="21" y2="6"/>
-                    <line x1="3" y1="12" x2="21" y2="12"/>
-                    <line x1="3" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
                 </svg>
             </button>
 
@@ -1029,8 +1040,8 @@
 <div class="tix-header-spacer"></div>
 
 {{-- ══════════════════════════════════════════════════════════════
-     MOBILE OFFCANVAS DRAWER
-     ══════════════════════════════════════════════════════════════ --}}
+MOBILE OFFCANVAS DRAWER
+══════════════════════════════════════════════════════════════ --}}
 <div class="tix-drawer-backdrop" id="tixDrawerBackdrop" onclick="handleDrawerBackdropClick(event)">
     <div class="tix-mobile-drawer" id="tixMobileDrawer">
         {{-- Drawer Head --}}
@@ -1038,15 +1049,13 @@
             <a href="{{ route('tix.index') }}" onclick="closeTixDrawer()">
                 <picture>
                     <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/logobuyletix.png') }}"
-                         alt="Buyle TIX"
-                         class="tix-drawer-logo-img">
+                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" class="tix-drawer-logo-img">
                 </picture>
             </a>
             <button type="button" class="tix-drawer-close-btn" onclick="closeTixDrawer()" aria-label="Tutup Menu">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
             </button>
         </div>
@@ -1056,13 +1065,11 @@
 
             {{-- Quick Search Bar inside Drawer --}}
             <form action="{{ route('tix.index') }}" method="GET" style="position:relative; width:100%;">
-                <input type="text"
-                       name="q"
-                       class="form-control"
-                       placeholder="Cari event di Buyle TIX..."
-                       value="{{ request('q') }}"
-                       style="width:100%; height:42px; border-radius:12px; border:1.5px solid #E2E8F0; padding:0 1rem 0 2.4rem; font-size:0.85rem; font-weight:500;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" style="position:absolute; left:0.8rem; top:50%; transform:translateY(-50%); pointer-events:none;">
+                <input type="text" name="q" class="form-control" placeholder="Cari event di Buyle TIX..."
+                    value="{{ request('q') }}"
+                    style="width:100%; height:42px; border-radius:12px; border:1.5px solid #E2E8F0; padding:0 1rem 0 2.4rem; font-size:0.85rem; font-weight:500;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5"
+                    style="position:absolute; left:0.8rem; top:50%; transform:translateY(-50%); pointer-events:none;">
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="M21 21l-4.35-4.35"></path>
                 </svg>
@@ -1070,39 +1077,47 @@
 
             {{-- Navigation Links --}}
             <div class="tix-drawer-nav">
-                <a href="{{ route('tix.index') }}" class="tix-drawer-link {{ $isHome ? 'is-active' : '' }}" onclick="closeTixDrawer()">
-                    <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                        <polyline points="9 22 9 12 15 12 15 22"/>
+                <a href="{{ route('tix.index') }}" class="tix-drawer-link {{ $isHome ? 'is-active' : '' }}"
+                    onclick="closeTixDrawer()">
+                    <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
                     </svg>
                     <span>Beranda Buyle TIX</span>
                 </a>
 
-                <a href="{{ route('tix.info') }}" class="tix-drawer-link {{ $isAbout ? 'is-active' : '' }}" onclick="closeTixDrawer()">
-                    <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="12" y1="16" x2="12" y2="12"/>
-                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                <a href="{{ route('tix.info') }}" class="tix-drawer-link {{ $isAbout ? 'is-active' : '' }}"
+                    onclick="closeTixDrawer()">
+                    <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
                     </svg>
                     <span>Tentang Buyle TIX</span>
                 </a>
 
                 @auth
-                    <a href="{{ Route::has('account.orders') ? route('account.orders') : url('/akun/pesanan') }}" class="tix-drawer-link" onclick="closeTixDrawer()">
-                        <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    <a href="{{ Route::has('account.orders') ? route('account.orders') : url('/akun/pesanan') }}"
+                        class="tix-drawer-link" onclick="closeTixDrawer()">
+                        <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                         </svg>
                         <span>Tiket Saya</span>
                     </a>
 
                     @if(Auth::user()->role !== 'buyer')
-                        <a href="{{ url('/creator/event-attendance?tab=home') }}" class="tix-drawer-link" onclick="closeTixDrawer()">
-                            <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="7" height="7"/>
-                                <rect x="14" y="3" width="7" height="7"/>
-                                <rect x="14" y="14" width="7" height="7"/>
-                                <rect x="3" y="14" width="7" height="7"/>
+                        <a href="{{ url('/creator/event-attendance?tab=home') }}" class="tix-drawer-link"
+                            onclick="closeTixDrawer()">
+                            <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
                             </svg>
                             <span>Dashboard EO</span>
                         </a>
@@ -1113,14 +1128,24 @@
             {{-- WhatsApp Partnership Card (Kerja Sama) --}}
             <div class="tix-drawer-wa-card">
                 <div class="tix-drawer-wa-title">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
                     <span>Kerja Sama Event (EO)</span>
                 </div>
                 <p class="tix-drawer-wa-desc">
                     Kelola penjualan tiket event, gate scanner QR kilat, dan settlement otomatis bersama Buyle TIX.
                 </p>
                 <a href="{{ $waUrl }}" target="_blank" rel="noopener noreferrer" class="tix-drawer-wa-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
                     <span>Hubungi WA ({{ $waNumber }})</span>
                 </a>
             </div>
@@ -1129,9 +1154,11 @@
             <div class="tix-drawer-auth-box">
                 @auth
                     <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:0.5rem;">
-                        <img src="{{ $userAvatar }}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #E2E8F0;">
+                        <img src="{{ $userAvatar }}"
+                            style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #E2E8F0;">
                         <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.86rem; font-weight:700; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            <div
+                                style="font-size:0.86rem; font-weight:700; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                 {{ Auth::user()->name }}
                             </div>
                             <div style="font-size:0.72rem; color:#16A34A; font-weight:600;">
@@ -1142,16 +1169,24 @@
 
                     <form method="POST" action="{{ route('logout') }}" style="width:100%;">
                         @csrf
-                        <button type="submit" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#FEF2F2; color:#EF4444; border:1px solid #FECACA; padding:0.6rem 1rem; border-radius:10px; font-size:0.84rem; font-weight:700; cursor:pointer;">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <button type="submit"
+                            style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#FEF2F2; color:#EF4444; border:1px solid #FECACA; padding:0.6rem 1rem; border-radius:10px; font-size:0.84rem; font-weight:700; cursor:pointer;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
                             <span>Keluar dari Akun</span>
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="tix-auth-masuk-btn" style="width:100%; background:#16a34a; color:#ffffff; height:42px; box-shadow:none;">
+                    <a href="{{ route('login') }}" class="tix-auth-masuk-btn"
+                        style="width:100%; background:#16a34a; color:#ffffff; height:42px; box-shadow:none;">
                         Masuk ke Akun
                     </a>
-                    <a href="{{ route('register') }}" class="tix-auth-daftar-btn" style="width:100%; color:#16a34a; background:#F0FDF4; border-color:#BBF7D0; height:42px; justify-content:center;">
+                    <a href="{{ route('register') }}" class="tix-auth-daftar-btn"
+                        style="width:100%; color:#16a34a; background:#F0FDF4; border-color:#BBF7D0; height:42px; justify-content:center;">
                         Daftar Akun Baru
                     </a>
                 @endauth
@@ -1197,8 +1232,8 @@
     }
 
     // Legacy alias (kalau ada link lama yg pakai closeTixSearch — aman tidak error)
-    function closeTixSearch() {}
-    function handleSearchOverlayClick() {}
+    function closeTixSearch() { }
+    function handleSearchOverlayClick() { }
 
     // User Menu Dropdown (Desktop)
     function toggleTixUserMenu(e) {
@@ -1207,7 +1242,7 @@
         if (wrapper) wrapper.classList.toggle('open');
     }
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         const wrapper = document.getElementById('tixUserWrapper');
         if (wrapper && !wrapper.contains(e.target)) {
             wrapper.classList.remove('open');
@@ -1238,7 +1273,7 @@
     }
 
     // Keyboard Shortcuts (ESC to close drawer)
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             closeTixDrawer();
             const wrapper = document.getElementById('tixUserWrapper');

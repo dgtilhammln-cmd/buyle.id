@@ -80,10 +80,10 @@
                 ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-banner-section {
             width: 100%;
-            max-width: 1320px;
+            max-width: 1440px;
             margin: 1rem auto 2.25rem;
             position: relative;
-            padding: 0 1rem;
+            padding: 0 1.5rem;
             box-sizing: border-box;
             overflow: visible;
         }
@@ -94,7 +94,14 @@
             margin: 0 auto;
             overflow: visible;
             padding: 0.75rem 0 0.5rem;
-            --tix-banner-w: min(70vw, 840px);
+            /* Banner utama ~88% lebar viewport, maksimal 1100px — lebih besar agar persis seperti Artatix di 100% zoom */
+            --tix-banner-w: min(88vw, 1100px);
+        }
+
+        @media (max-width: 1200px) {
+            .tix-orbit-carousel-wrap {
+                --tix-banner-w: min(84vw, 960px);
+            }
         }
 
         @media (max-width: 991px) {
@@ -102,18 +109,21 @@
                 max-width: 100%;
                 margin-top: 0.5rem !important;
                 margin-bottom: 1.5rem !important;
-                padding: 0 0.5rem;
+                padding: 0 0.75rem;
             }
 
             .tix-orbit-carousel-wrap {
-                --tix-banner-w: 80vw;
+                --tix-banner-w: 88vw;
                 padding: 0.5rem 0;
             }
         }
 
         @media (max-width: 600px) {
+            .tix-hero-banner-section {
+                padding: 0 0.5rem;
+            }
             .tix-orbit-carousel-wrap {
-                --tix-banner-w: 82vw;
+                --tix-banner-w: 90vw;
             }
         }
 
@@ -126,10 +136,10 @@
         .tix-orbit-stage {
             position: relative;
             width: 100%;
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
             height: calc(var(--tix-banner-w) * (600 / 1920));
-            perspective: 1200px;
+            perspective: 1400px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -148,7 +158,7 @@
             width: var(--tix-banner-w);
             height: 100%;
             aspect-ratio: 1920 / 600;
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
             background: #0f172a;
             transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
@@ -163,162 +173,159 @@
 
         @media (max-width: 768px) {
             .tix-orbit-card {
-                border-radius: 12px;
+                border-radius: 14px;
             }
         }
 
-        /* ── Card States (Exact Artatix Fanned Deck - Image 2) ── */
-        /* Active Center Card */
+        /* ── Card States — Fanned Deck Artatix-style ── */
+        /* Active Center Card — full size, no scaling */
         .tix-orbit-card.is-active {
             transform: translateX(-50%) scale(1);
             z-index: 12;
             opacity: 1;
             filter: none;
-            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.20), 0 2px 12px rgba(0, 0, 0, 0.08);
             pointer-events: auto;
         }
 
-        /* Stepped Deck Behind Left (Clearly Fanned Out) */
+        /* Layer 1 kiri/kanan — mengintip ~6% di sisi kartu aktif */
         .tix-orbit-card.is-prev-1,
         .tix-orbit-card.is-prev {
-            transform: translateX(calc(-50% - 70px)) scale(0.94);
+            transform: translateX(calc(-50% - 5.5%)) scale(0.95);
             z-index: 10;
-            opacity: 0.90;
-            filter: brightness(0.92);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+            opacity: 0.88;
+            filter: brightness(0.90);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-prev-2 {
-            transform: translateX(calc(-50% - 132px)) scale(0.88);
+            transform: translateX(calc(-50% - 10%)) scale(0.90);
             z-index: 8;
-            opacity: 0.75;
-            filter: brightness(0.85);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+            opacity: 0.72;
+            filter: brightness(0.82);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-prev-3 {
-            transform: translateX(calc(-50% - 188px)) scale(0.82);
+            transform: translateX(calc(-50% - 14%)) scale(0.85);
             z-index: 6;
-            opacity: 0.58;
-            filter: brightness(0.78);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            opacity: 0.52;
+            filter: brightness(0.72);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-prev-4 {
-            transform: translateX(calc(-50% - 238px)) scale(0.76);
+            transform: translateX(calc(-50% - 17.5%)) scale(0.80);
             z-index: 4;
-            opacity: 0.40;
-            filter: brightness(0.70);
+            opacity: 0.32;
+            filter: brightness(0.62);
             pointer-events: auto;
         }
 
-        /* Stepped Deck Behind Right (Clearly Fanned Out) */
         .tix-orbit-card.is-next-1,
         .tix-orbit-card.is-next {
-            transform: translateX(calc(-50% + 70px)) scale(0.94);
+            transform: translateX(calc(-50% + 5.5%)) scale(0.95);
             z-index: 10;
-            opacity: 0.90;
-            filter: brightness(0.92);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+            opacity: 0.88;
+            filter: brightness(0.90);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-next-2 {
-            transform: translateX(calc(-50% + 132px)) scale(0.88);
+            transform: translateX(calc(-50% + 10%)) scale(0.90);
             z-index: 8;
-            opacity: 0.75;
-            filter: brightness(0.85);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+            opacity: 0.72;
+            filter: brightness(0.82);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-next-3 {
-            transform: translateX(calc(-50% + 188px)) scale(0.82);
+            transform: translateX(calc(-50% + 14%)) scale(0.85);
             z-index: 6;
-            opacity: 0.58;
-            filter: brightness(0.78);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            opacity: 0.52;
+            filter: brightness(0.72);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-next-4 {
-            transform: translateX(calc(-50% + 238px)) scale(0.76);
+            transform: translateX(calc(-50% + 17.5%)) scale(0.80);
             z-index: 4;
-            opacity: 0.40;
-            filter: brightness(0.70);
+            opacity: 0.32;
+            filter: brightness(0.62);
             pointer-events: auto;
         }
 
-        /* Hidden Cards (further in the stack) */
+        /* Hidden Cards */
         .tix-orbit-card.is-hidden {
-            transform: translateX(-50%) scale(0.70);
+            transform: translateX(-50%) scale(0.72);
             z-index: 1;
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Responsive Stepped Deck on Tablet */
+        /* Tablet adjustments (offset tetap proporsional karena pakai %) */
         @media (max-width: 991px) {
             .tix-orbit-card.is-prev-1,
             .tix-orbit-card.is-prev {
-                transform: translateX(calc(-50% - 46px)) scale(0.94);
+                transform: translateX(calc(-50% - 6%)) scale(0.94);
             }
             .tix-orbit-card.is-prev-2 {
-                transform: translateX(calc(-50% - 86px)) scale(0.88);
+                transform: translateX(calc(-50% - 11%)) scale(0.88);
             }
             .tix-orbit-card.is-prev-3 {
-                transform: translateX(calc(-50% - 122px)) scale(0.82);
+                transform: translateX(calc(-50% - 15%)) scale(0.82);
             }
             .tix-orbit-card.is-prev-4 {
-                transform: translateX(calc(-50% - 152px)) scale(0.76);
+                transform: translateX(calc(-50% - 18.5%)) scale(0.76);
             }
 
             .tix-orbit-card.is-next-1,
             .tix-orbit-card.is-next {
-                transform: translateX(calc(-50% + 46px)) scale(0.94);
+                transform: translateX(calc(-50% + 6%)) scale(0.94);
             }
             .tix-orbit-card.is-next-2 {
-                transform: translateX(calc(-50% + 86px)) scale(0.88);
+                transform: translateX(calc(-50% + 11%)) scale(0.88);
             }
             .tix-orbit-card.is-next-3 {
-                transform: translateX(calc(-50% + 122px)) scale(0.82);
+                transform: translateX(calc(-50% + 15%)) scale(0.82);
             }
             .tix-orbit-card.is-next-4 {
-                transform: translateX(calc(-50% + 152px)) scale(0.76);
+                transform: translateX(calc(-50% + 18.5%)) scale(0.76);
             }
         }
 
-        /* Responsive Stepped Deck on Mobile */
+        /* Mobile */
         @media (max-width: 768px) {
             .tix-orbit-card.is-prev-1,
             .tix-orbit-card.is-prev {
-                transform: translateX(calc(-50% - 24px)) scale(0.95);
+                transform: translateX(calc(-50% - 4%)) scale(0.95);
             }
             .tix-orbit-card.is-prev-2 {
-                transform: translateX(calc(-50% - 45px)) scale(0.90);
+                transform: translateX(calc(-50% - 7.5%)) scale(0.90);
             }
             .tix-orbit-card.is-prev-3 {
-                transform: translateX(calc(-50% - 64px)) scale(0.85);
+                transform: translateX(calc(-50% - 10.5%)) scale(0.85);
             }
             .tix-orbit-card.is-prev-4 {
-                transform: translateX(calc(-50% - 80px)) scale(0.80);
+                transform: translateX(calc(-50% - 13%)) scale(0.80);
             }
 
             .tix-orbit-card.is-next-1,
             .tix-orbit-card.is-next {
-                transform: translateX(calc(-50% + 24px)) scale(0.95);
+                transform: translateX(calc(-50% + 4%)) scale(0.95);
             }
             .tix-orbit-card.is-next-2 {
-                transform: translateX(calc(-50% + 45px)) scale(0.90);
+                transform: translateX(calc(-50% + 7.5%)) scale(0.90);
             }
             .tix-orbit-card.is-next-3 {
-                transform: translateX(calc(-50% + 64px)) scale(0.85);
+                transform: translateX(calc(-50% + 10.5%)) scale(0.85);
             }
             .tix-orbit-card.is-next-4 {
-                transform: translateX(calc(-50% + 80px)) scale(0.80);
+                transform: translateX(calc(-50% + 13%)) scale(0.80);
             }
         }
 
@@ -1191,19 +1198,12 @@
         {{-- ══ REAL CONTENT CONTAINER ══ --}}
         <div id="tixRealContent" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
 
-            {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (ARTATIX DECK STYLE - IMAGE 2) ══ --}}
+            {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (ARTATIX DECK STYLE) ══ --}}
             @php
                 $realBannerCount = count($banners);
-                // Duplicate banners if count is between 2 and 9 so the 3D coverflow deck always has 9 visible stacked layers (4 left, 1 center, 4 right)
+                // Gunakan banner asli saja — TANPA duplikasi
+                // Looping infinit ditangani JS secara virtual circular
                 $displayBanners = $banners;
-                if ($realBannerCount > 1 && $realBannerCount < 9) {
-                    while (count($displayBanners) < 9) {
-                        foreach ($banners as $b) {
-                            $displayBanners[] = $b;
-                            if (count($displayBanners) >= 9) break;
-                        }
-                    }
-                }
             @endphp
             <div class="tix-hero-banner-section">
                 <div class="tix-orbit-carousel-wrap {{ $realBannerCount <= 1 ? 'single-banner' : '' }}"
@@ -1212,16 +1212,17 @@
                         <div class="tix-orbit-stage" id="tixOrbitStage">
                             @foreach($displayBanners as $index => $banner)
                                 @php
+                                    $totalBanners = count($displayBanners);
                                     $cardClass = 'is-hidden';
                                     if ($index === 0) $cardClass = 'is-active';
                                     elseif ($index === 1) $cardClass = 'is-next-1 is-next';
                                     elseif ($index === 2) $cardClass = 'is-next-2';
                                     elseif ($index === 3) $cardClass = 'is-next-3';
                                     elseif ($index === 4) $cardClass = 'is-next-4';
-                                    elseif ($index === count($displayBanners) - 1) $cardClass = 'is-prev-1 is-prev';
-                                    elseif ($index === count($displayBanners) - 2) $cardClass = 'is-prev-2';
-                                    elseif ($index === count($displayBanners) - 3) $cardClass = 'is-prev-3';
-                                    elseif ($index === count($displayBanners) - 4) $cardClass = 'is-prev-4';
+                                    elseif ($totalBanners > 1 && $index === $totalBanners - 1) $cardClass = 'is-prev-1 is-prev';
+                                    elseif ($totalBanners > 2 && $index === $totalBanners - 2) $cardClass = 'is-prev-2';
+                                    elseif ($totalBanners > 3 && $index === $totalBanners - 3) $cardClass = 'is-prev-3';
+                                    elseif ($totalBanners > 4 && $index === $totalBanners - 4) $cardClass = 'is-prev-4';
                                 @endphp
                                 <div class="tix-orbit-card {{ $cardClass }}"
                                     data-index="{{ $index }}"
@@ -1552,7 +1553,7 @@
     {{-- ══ JAVASCRIPT CONTROLLERS: CAROUSEL, SKELETON TRANSITION, & INFINITE SCROLL ══ --}}
     <script>
         let currentOrbitSlide = 0;
-        const orbitSlideCount = {{ count($displayBanners) }};
+        const orbitSlideCount = {{ count($displayBanners) }}; // jumlah banner asli (tanpa duplikasi)
         const realBannerCount = {{ $realBannerCount }};
         let orbitAutoPlayTimer = null;
 
@@ -1573,9 +1574,10 @@
                     'is-hidden'
                 );
 
-                let diff = (idx - currentOrbitSlide) % orbitSlideCount;
+                // Circular diff — wrap correctly regardless of total count
+                let diff = ((idx - currentOrbitSlide) % orbitSlideCount + orbitSlideCount) % orbitSlideCount;
+                // Convert to signed: values > half wrap to negative
                 if (diff > orbitSlideCount / 2) diff -= orbitSlideCount;
-                if (diff < -orbitSlideCount / 2) diff += orbitSlideCount;
 
                 if (diff === 0) {
                     card.classList.add('is-active');
@@ -1600,7 +1602,7 @@
                 }
             });
 
-            // Update real dots
+            // Update dots (berdasarkan index asli mod realBannerCount)
             const realActiveDot = currentOrbitSlide % Math.max(1, realBannerCount);
             const dots = document.querySelectorAll('#tixOrbitDots .tix-orbit-dot');
             dots.forEach((dot, idx) => {
@@ -1627,25 +1629,15 @@
         }
 
         function tixGoToOrbitSlide(index) {
-            currentOrbitSlide = index;
+            currentOrbitSlide = ((index % orbitSlideCount) + orbitSlideCount) % orbitSlideCount;
             tixUpdateOrbitCarousel();
             tixResetOrbitTimer();
         }
 
         function tixGoToRealSlide(realIdx) {
             if (orbitSlideCount <= 1) return;
-            let bestIdx = currentOrbitSlide;
-            let minDistance = 999;
-            for (let i = 0; i < orbitSlideCount; i++) {
-                if (i % realBannerCount === realIdx) {
-                    let dist = Math.abs(i - currentOrbitSlide);
-                    if (dist < minDistance) {
-                        minDistance = dist;
-                        bestIdx = i;
-                    }
-                }
-            }
-            tixGoToOrbitSlide(bestIdx);
+            // Langsung jump ke index = realIdx (karena tidak duplikasi)
+            tixGoToOrbitSlide(realIdx);
         }
 
         function tixStartOrbitTimer() {
