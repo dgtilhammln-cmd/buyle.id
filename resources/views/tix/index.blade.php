@@ -1264,6 +1264,21 @@
             }
         }
 
+        /* ── Infinite Scroll Skeleton Control: Pastikan TERSEMBUNYI saat tidak aktif ── */
+        #infiniteScrollSkeleton {
+            display: none !important;
+        }
+
+        #infiniteScrollSkeleton.is-loading {
+            display: grid !important;
+        }
+
+        @media (max-width: 640px) {
+            #infiniteScrollSkeleton.is-loading {
+                display: flex !important;
+            }
+        }
+
         .article-card-box:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
@@ -1840,7 +1855,7 @@
 
                     {{-- Infinite Scroll Skeleton Placeholders (4 cards matching grid) --}}
                     <div class="tix-grid" id="infiniteScrollSkeleton"
-                        style="display: none; margin-top: -1.75rem; margin-bottom: 1.5rem;">
+                        style="display: none !important; margin-top: -1.75rem; margin-bottom: 1.5rem;">
                         @for($i = 0; $i < 4; $i++)
                             <div class="tix-skeleton-card">
                                 <div class="tix-skeleton"
@@ -2464,7 +2479,10 @@
                 })
                 .finally(() => {
                     tixIsLoading = false;
-                    if (skeleton) skeleton.style.display = 'none';
+                    if (skeleton) {
+                        skeleton.classList.remove('is-loading');
+                        skeleton.style.display = 'none';
+                    }
                 });
         }
 
@@ -2510,7 +2528,10 @@
             const statusBox = document.getElementById('infiniteScrollStatus');
             const statusText = document.getElementById('infiniteScrollStatusText');
 
-            if (skeleton) skeleton.style.display = 'grid';
+            if (skeleton) {
+                skeleton.classList.add('is-loading');
+                skeleton.style.display = window.innerWidth <= 640 ? 'flex' : 'grid';
+            }
             if (statusBox && statusText) {
                 statusText.textContent = 'Memuat lebih banyak event...';
                 statusBox.style.display = 'block';
@@ -2556,7 +2577,10 @@
                 })
                 .finally(() => {
                     tixIsLoading = false;
-                    if (skeleton) skeleton.style.display = 'none';
+                    if (skeleton) {
+                        skeleton.classList.remove('is-loading');
+                        skeleton.style.display = 'none';
+                    }
                 });
         }
 
