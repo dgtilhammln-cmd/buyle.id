@@ -1286,8 +1286,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                           MOBILE BOTTOM NAVIGATION BAR (Identical style to /pos page)
-                        ══════════════════════════════════════════════════════════════════════ */
+                               MOBILE BOTTOM NAVIGATION BAR (Identical style to /pos page)
+                            ══════════════════════════════════════════════════════════════════════ */
         /* Prevent duplicate superapp navbar on event-attendance */
         #superappBottomNav {
             display: none !important;
@@ -1907,8 +1907,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                           FULLSCREEN QR SCANNER MODE (Mobile-only, superapp quality)
-                        ══════════════════════════════════════════════════════════════════════ */
+                               FULLSCREEN QR SCANNER MODE (Mobile-only, superapp quality)
+                            ══════════════════════════════════════════════════════════════════════ */
         @keyframes slideUpCard {
             from {
                 transform: translateY(100%);
@@ -2885,7 +2885,7 @@
                             </span>
                             <span id="homeCountdownPill"
                                 style="font-size:0.74rem; font-weight:700; color:#166534; background:#dcfce7; border:1px solid #bbf7d0; padding:0.2rem 0.55rem; border-radius:999px;">
-                                H-{{ $daysUntilEvent !== null ? $daysUntilEvent : '0' }} Menuju Hari H
+                                H-{{ $daysUntilEvent !== null ? $daysUntilEvent : '0' }}
                             </span>
                         </div>
 
@@ -4153,12 +4153,12 @@
                 const isToday = cur.toDateString() === today.toDateString();
                 const dStr = String(cur.getDate()).padStart(2, '0');
                 html += `
-                                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; ${isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;'} font-family:'Montserrat',sans-serif;">
-                                        <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; ${isToday ? 'color:#15803d;' : 'color:#64748b;'}">${dayNames[i]}</span>
-                                        <span style="font-size:0.9rem; font-weight:${isToday ? '700' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
-                                        <span style="width:4px; height:4px; ${isToday ? 'background:#15803d;' : 'opacity:0;'} border-radius:50%;"></span>
-                                    </div>
-                                `;
+                                        <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; ${isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : 'color:#64748b;'} font-family:'Montserrat',sans-serif;">
+                                            <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; ${isToday ? 'color:#15803d;' : 'color:#64748b;'}">${dayNames[i]}</span>
+                                            <span style="font-size:0.9rem; font-weight:${isToday ? '700' : '600'}; ${isToday ? 'color:#14532d;' : 'color:#0f172a;'}">${dStr}</span>
+                                            <span style="width:4px; height:4px; ${isToday ? 'background:#15803d;' : 'opacity:0;'} border-radius:50%;"></span>
+                                        </div>
+                                    `;
             }
             strip.innerHTML = html;
         }
@@ -4493,37 +4493,37 @@
                         const evName = st.product ? st.product.name : 'Event Tiket';
 
                         html += `
-                                            <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-                                                <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
-                                                    <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
-                                                        ${initial}
+                                                <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                                                    <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
+                                                        <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
+                                                            ${initial}
+                                                        </div>
+                                                        <div style="min-width:0;">
+                                                            <strong style="color:#0f172a; font-size:0.84rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                                ${st.name}
+                                                            </strong>
+                                                            <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                                <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div style="min-width:0;">
-                                                        <strong style="color:#0f172a; font-size:0.84rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                                            ${st.name}
-                                                        </strong>
-                                                        <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                            <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>
-                                                        </span>
+                                                    <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
+                                                        <button type="button" onclick="toggleStaffSimple('${st.product_id}', ${st.id}, this)"
+                                                            class="badge-status ${statusClass}"
+                                                            style="cursor:pointer; border:none; font-size:0.72rem; padding:0.25rem 0.65rem; font-weight:700;">
+                                                            ${statusText}
+                                                        </button>
+                                                        <button type="button" onclick="deleteStaffSimple('${st.product_id}', ${st.id}, '${st.name.replace(/'/g, "\\'")}')"
+                                                            title="Hapus Panitia"
+                                                            style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
+                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                            </svg>
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
-                                                    <button type="button" onclick="toggleStaffSimple('${st.product_id}', ${st.id}, this)"
-                                                        class="badge-status ${statusClass}"
-                                                        style="cursor:pointer; border:none; font-size:0.72rem; padding:0.25rem 0.65rem; font-weight:700;">
-                                                        ${statusText}
-                                                    </button>
-                                                    <button type="button" onclick="deleteStaffSimple('${st.product_id}', ${st.id}, '${st.name.replace(/'/g, "\\'")}')"
-                                                        title="Hapus Panitia"
-                                                        style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
-                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        `;
+                                            `;
                     });
                     container.innerHTML = html;
                 }
@@ -5431,15 +5431,15 @@
                 card.style.display = 'block';
                 const t = data.ticket;
                 card.innerHTML = `
-                                                    <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
-                                                        <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
-                                                        <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
-                                                    </div>
-                                                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-                                                        <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
-                                                        <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
-                                                    </div>
-                                                `;
+                                                        <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+                                                            <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
+                                                            <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
+                                                        </div>
+                                                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                                                            <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
+                                                            <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
+                                                        </div>
+                                                    `;
             } else {
                 card.style.display = 'none';
             }
@@ -5869,11 +5869,11 @@
             // Render rows instan
             if (filtered.length === 0) {
                 tbody.innerHTML = `<tr>
-                                                    <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
-                                                        <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.92rem;">Tidak Ada Tiket yang Cocok</div>
-                                                        <div style="font-size: 0.78rem; color: #64748b;">Pencarian instan tidak menemukan data untuk filter yang dipilih.</div>
-                                                    </td>
-                                                </tr>`;
+                                                        <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
+                                                            <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.92rem;">Tidak Ada Tiket yang Cocok</div>
+                                                            <div style="font-size: 0.78rem; color: #64748b;">Pencarian instan tidak menemukan data untuk filter yang dipilih.</div>
+                                                        </td>
+                                                    </tr>`;
             } else {
                 let html = '';
                 filtered.forEach((t, index) => {
@@ -5885,16 +5885,16 @@
                         badgeClass = 'badge-used';
                         statusLabel = 'Hadir (Checked-In)';
                         btnHtml = `<button type="button" class="btn-action-sm btn-toggle-undo" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
-                                                        </button>`;
+                                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
+                                                            </button>`;
                     } else if (t.status === 'cancelled') {
                         badgeClass = 'badge-cancelled';
                         statusLabel = 'Dibatalkan';
                         btnHtml = `<span style="font-size: 0.75rem; color: #94a3b8;">Tidak Aktif</span>`;
                     } else {
                         btnHtml = `<button type="button" class="btn-action-sm btn-toggle-checkin" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Check-In
-                                                        </button>`;
+                                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Check-In
+                                                            </button>`;
                     }
 
                     const timeDisplay = t.checked_in_at
@@ -5902,31 +5902,31 @@
                         : `<span style="color: #94a3b8; font-style: italic; font-size: 0.8rem;">— Belum —</span>`;
 
                     html += `<tr id="row-ticket-${t.id}">
-                                                        <td class="row-index">${index + 1}</td>
-                                                        <td class="row-code">
-                                                            <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                                                ${t.code}
-                                                            </span>
-                                                        </td>
-                                                        <td class="row-event">
-                                                            <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
-                                                            <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
-                                                        </td>
-                                                        <td class="row-holder">
-                                                            <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
-                                                            <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
-                                                            <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>
-                                                            ${t.holder_nik ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
-                                                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                                                ${t.holder_nik}
-                                                            </span>` : ''}
-                                                        </td>
-                                                        <td class="row-status">
-                                                            <span class="badge-status ${badgeClass}">${statusLabel}</span>
-                                                        </td>
-                                                        <td class="row-time">${timeDisplay}${t.scanned_by ? `<span style="font-size: 0.71rem; color: #475569; display: flex; align-items: center; gap: 3px; margin-top: 2px; font-weight: 600;"><svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.scanned_by}</span>` : ''}</td>
-                                                        <td style="text-align: center;" class="row-action">${btnHtml}</td>
-                                                    </tr>`;
+                                                            <td class="row-index">${index + 1}</td>
+                                                            <td class="row-code">
+                                                                <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                                                    ${t.code}
+                                                                </span>
+                                                            </td>
+                                                            <td class="row-event">
+                                                                <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
+                                                                <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
+                                                            </td>
+                                                            <td class="row-holder">
+                                                                <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
+                                                                <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
+                                                                <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>
+                                                                ${t.holder_nik ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
+                                                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                                                    ${t.holder_nik}
+                                                                </span>` : ''}
+                                                            </td>
+                                                            <td class="row-status">
+                                                                <span class="badge-status ${badgeClass}">${statusLabel}</span>
+                                                            </td>
+                                                            <td class="row-time">${timeDisplay}${t.scanned_by ? `<span style="font-size: 0.71rem; color: #475569; display: flex; align-items: center; gap: 3px; margin-top: 2px; font-weight: 600;"><svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.scanned_by}</span>` : ''}</td>
+                                                            <td style="text-align: center;" class="row-action">${btnHtml}</td>
+                                                        </tr>`;
                 });
                 tbody.innerHTML = html;
             }

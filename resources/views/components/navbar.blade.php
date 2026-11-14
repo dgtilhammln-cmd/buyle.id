@@ -1,4 +1,10 @@
 @php
+    $isTixPage = request()->is('tix') || request()->is('tix/*') || request()->routeIs('tix.*') || request()->routeIs('ticketing*');
+@endphp
+@if($isTixPage)
+    @include('components.tix-navbar')
+@else
+@php
     $logo = \App\Models\Setting::get('logo');
     $siteName = \App\Models\Setting::get('site_name', 'buyle.id');
     $siteTagline = \App\Models\Setting::get('site_tagline', 'Toko Serba Ada');
@@ -1791,3 +1797,4 @@
         });
     });
 </script>
+@endif
