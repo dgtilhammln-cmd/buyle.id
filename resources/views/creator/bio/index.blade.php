@@ -2197,6 +2197,7 @@
                             </svg>
                             Informasi Profil
                         </button>
+                        @if($currentTheme === 'theme5')
                         <button type="button" class="prof-subtab-btn" id="btn-subtab-homepage"
                             onclick="switchProfileSubtab('subtab-homepage-main', this)">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -2225,6 +2226,7 @@
                             </svg>
                             Halaman Kontak
                         </button>
+                        @endif
                     </div>
 
                     {{-- SUBTAB 1: INFORMASI PROFIL --}}
