@@ -75,27 +75,45 @@
                            Bottom Half: Pure White Background with Overlapping Banner & Logos
                         ══════════════════════════════════════════════════════════════════════ */
         /* ══════════════════════════════════════════════════════════════════════
-                   1. 3D ORBIT / STACKED BANNER CAROUSEL (EXACT IMAGE 2 STYLE)
-                   Centered active card + peeking sibling cards on left & right
+                   1. 3D ORBIT / STACKED BANNER CAROUSEL (ARTATIX DECK - IMAGE 1)
+                   Stepped Card Deck: layers stay tightly stacked even when zoomed out
                 ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-banner-section {
             width: 100%;
-            margin-top: 1.25rem;
-            margin-bottom: 2rem;
+            max-width: 1200px;
+            margin: 1rem auto 2.25rem;
             position: relative;
+            padding: 0 1rem;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .tix-orbit-carousel-wrap {
             position: relative;
             width: 100%;
-            overflow: hidden;
+            margin: 0 auto;
+            overflow: visible;
             padding: 0.75rem 0 0.5rem;
-            --tix-banner-w: min(88vw, 1200px);
+            --tix-banner-w: min(78vw, 920px);
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
+            .tix-hero-banner-section {
+                max-width: 100%;
+                margin-top: 0.5rem !important;
+                margin-bottom: 1.5rem !important;
+                padding: 0 0.5rem;
+            }
+
             .tix-orbit-carousel-wrap {
-                --tix-banner-w: 92vw;
+                --tix-banner-w: 84vw;
+                padding: 0.5rem 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .tix-orbit-carousel-wrap {
+                --tix-banner-w: 86vw;
             }
         }
 
@@ -108,10 +126,13 @@
         .tix-orbit-stage {
             position: relative;
             width: 100%;
-            max-width: 1440px;
+            max-width: 1140px;
             margin: 0 auto;
             height: calc(var(--tix-banner-w) * (600 / 1920));
             perspective: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         @media (max-width: 768px) {
@@ -130,7 +151,10 @@
             border-radius: 20px;
             overflow: hidden;
             background: #0f172a;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                        filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.45s ease;
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
@@ -143,39 +167,104 @@
             }
         }
 
-        /* Card States (Image 2 Stack Effect) */
+        /* ── Card States (Exact Artatix Deck Stack Effect from Image 1) ── */
+        /* Active Center Card */
         .tix-orbit-card.is-active {
             transform: translateX(-50%) scale(1);
-            z-index: 10;
+            z-index: 12;
             opacity: 1;
             filter: none;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08);
             pointer-events: auto;
         }
 
+        /* Stepped Deck Behind Left */
+        .tix-orbit-card.is-prev-1,
         .tix-orbit-card.is-prev {
-            transform: translateX(calc(-50% - 72%)) scale(0.85);
-            z-index: 3;
-            opacity: 0.5;
-            filter: brightness(0.8);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateX(calc(-50% - 32px)) scale(0.95);
+            z-index: 10;
+            opacity: 0.90;
+            filter: brightness(0.92);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
             pointer-events: auto;
         }
 
+        .tix-orbit-card.is-prev-2 {
+            transform: translateX(calc(-50% - 58px)) scale(0.90);
+            z-index: 8;
+            opacity: 0.70;
+            filter: brightness(0.82);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            pointer-events: auto;
+        }
+
+        .tix-orbit-card.is-prev-3 {
+            transform: translateX(calc(-50% - 80px)) scale(0.85);
+            z-index: 6;
+            opacity: 0.45;
+            filter: brightness(0.72);
+            pointer-events: auto;
+        }
+
+        /* Stepped Deck Behind Right */
+        .tix-orbit-card.is-next-1,
         .tix-orbit-card.is-next {
-            transform: translateX(calc(-50% + 72%)) scale(0.85);
-            z-index: 3;
-            opacity: 0.5;
-            filter: brightness(0.8);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateX(calc(-50% + 32px)) scale(0.95);
+            z-index: 10;
+            opacity: 0.90;
+            filter: brightness(0.92);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
             pointer-events: auto;
         }
 
+        .tix-orbit-card.is-next-2 {
+            transform: translateX(calc(-50% + 58px)) scale(0.90);
+            z-index: 8;
+            opacity: 0.70;
+            filter: brightness(0.82);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            pointer-events: auto;
+        }
+
+        .tix-orbit-card.is-next-3 {
+            transform: translateX(calc(-50% + 80px)) scale(0.85);
+            z-index: 6;
+            opacity: 0.45;
+            filter: brightness(0.72);
+            pointer-events: auto;
+        }
+
+        /* Hidden Cards (further in the stack) */
         .tix-orbit-card.is-hidden {
-            transform: translateX(-50%) scale(0.75);
+            transform: translateX(-50%) scale(0.78);
             z-index: 1;
             opacity: 0;
             pointer-events: none;
+        }
+
+        /* Responsive Stepped Deck on Mobile */
+        @media (max-width: 768px) {
+            .tix-orbit-card.is-prev-1,
+            .tix-orbit-card.is-prev {
+                transform: translateX(calc(-50% - 15px)) scale(0.96);
+            }
+            .tix-orbit-card.is-prev-2 {
+                transform: translateX(calc(-50% - 28px)) scale(0.92);
+            }
+            .tix-orbit-card.is-prev-3 {
+                transform: translateX(calc(-50% - 38px)) scale(0.88);
+            }
+
+            .tix-orbit-card.is-next-1,
+            .tix-orbit-card.is-next {
+                transform: translateX(calc(-50% + 15px)) scale(0.96);
+            }
+            .tix-orbit-card.is-next-2 {
+                transform: translateX(calc(-50% + 28px)) scale(0.92);
+            }
+            .tix-orbit-card.is-next-3 {
+                transform: translateX(calc(-50% + 38px)) scale(0.88);
+            }
         }
 
         /* Single Banner Mode (When count <= 1: Polosan, Balanced & Centered, Exact 1920x600 Ratio) */
@@ -234,13 +323,13 @@
             display: block;
         }
 
-        /* Nav Circular Prev / Next Buttons */
+        /* Nav Circular Prev / Next Buttons (Placed right on the active card edge) */
         .tix-orbit-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: #ffffff;
             border: 1px solid rgba(0, 0, 0, 0.08);
@@ -249,8 +338,8 @@
             justify-content: center;
             color: #0f172a;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-            z-index: 20;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+            z-index: 25;
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;
             outline: none;
             padding: 0;
@@ -259,15 +348,15 @@
         .tix-orbit-btn:hover {
             background: #f8fafc;
             transform: translateY(-50%) scale(1.08);
-            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.24);
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.22);
         }
 
         .tix-orbit-btn.prev {
-            left: max(0.75rem, calc(50% - (var(--tix-banner-w) / 2) - 22px));
+            left: calc(50% - (var(--tix-banner-w) / 2) - 16px);
         }
 
         .tix-orbit-btn.next {
-            right: max(0.75rem, calc(50% - (var(--tix-banner-w) / 2) - 22px));
+            right: calc(50% - (var(--tix-banner-w) / 2) - 16px);
         }
 
         @media (max-width: 768px) {
@@ -277,11 +366,11 @@
             }
 
             .tix-orbit-btn.prev {
-                left: 8px;
+                left: calc(50% - (var(--tix-banner-w) / 2) - 10px);
             }
 
             .tix-orbit-btn.next {
-                right: 8px;
+                right: calc(50% - (var(--tix-banner-w) / 2) - 10px);
             }
         }
 
@@ -1047,15 +1136,39 @@
         {{-- ══ REAL CONTENT CONTAINER ══ --}}
         <div id="tixRealContent" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
 
-            {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (EXACT IMAGE 2 STYLE) ══ --}}
+            {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (ARTATIX DECK STYLE - IMAGE 1) ══ --}}
+            @php
+                $realBannerCount = count($banners);
+                // Duplicate banners if count is between 2 and 6 so the 3D coverflow deck always has 7 visible stacked layers
+                $displayBanners = $banners;
+                if ($realBannerCount > 1 && $realBannerCount < 7) {
+                    while (count($displayBanners) < 7) {
+                        foreach ($banners as $b) {
+                            $displayBanners[] = $b;
+                            if (count($displayBanners) >= 7) break;
+                        }
+                    }
+                }
+            @endphp
             <div class="tix-hero-banner-section">
-                <div class="tix-orbit-carousel-wrap {{ count($banners) <= 1 ? 'single-banner' : '' }}"
+                <div class="tix-orbit-carousel-wrap {{ $realBannerCount <= 1 ? 'single-banner' : '' }}"
                     id="tixOrbitCarousel">
                     <div class="tix-orbit-viewport">
                         <div class="tix-orbit-stage" id="tixOrbitStage">
-                            @foreach($banners as $index => $banner)
-                                <div class="tix-orbit-card {{ $index === 0 ? 'is-active' : ($index === 1 ? 'is-next' : ($index === count($banners) - 1 ? 'is-prev' : 'is-hidden')) }}"
-                                    data-index="{{ $index }}">
+                            @foreach($displayBanners as $index => $banner)
+                                @php
+                                    $cardClass = 'is-hidden';
+                                    if ($index === 0) $cardClass = 'is-active';
+                                    elseif ($index === 1) $cardClass = 'is-next-1 is-next';
+                                    elseif ($index === 2) $cardClass = 'is-next-2';
+                                    elseif ($index === 3) $cardClass = 'is-next-3';
+                                    elseif ($index === count($displayBanners) - 1) $cardClass = 'is-prev-1 is-prev';
+                                    elseif ($index === count($displayBanners) - 2) $cardClass = 'is-prev-2';
+                                    elseif ($index === count($displayBanners) - 3) $cardClass = 'is-prev-3';
+                                @endphp
+                                <div class="tix-orbit-card {{ $cardClass }}"
+                                    data-index="{{ $index }}"
+                                    data-real-index="{{ $index % max(1, $realBannerCount) }}">
                                     <a href="{{ $banner['url'] }}" class="tix-orbit-card-inner">
                                         @if(!empty($banner['image']))
                                             {{-- Clean Pure 1920x600 Image (No Text Overlaid on Faces) --}}
@@ -1084,7 +1197,7 @@
                             @endforeach
                         </div>
 
-                        @if(count($banners) > 1)
+                        @if($realBannerCount > 1)
                             {{-- Circular Navigation Buttons (Only shown if banners > 1) --}}
                             <button type="button" class="tix-orbit-btn prev" onclick="tixPrevOrbitSlide()"
                                 aria-label="Slide Sebelumnya">
@@ -1103,13 +1216,13 @@
                         @endif
                     </div>
 
-                    @if(count($banners) > 1)
+                    @if($realBannerCount > 1)
                         {{-- Orbit Dots Indicator (Only shown if banners > 1) --}}
                         <div class="tix-orbit-dots" id="tixOrbitDots">
-                            @foreach($banners as $index => $banner)
-                                <button type="button" class="tix-orbit-dot {{ $index === 0 ? 'active' : '' }}"
-                                    onclick="tixGoToOrbitSlide({{ $index }})" aria-label="Slide {{ $index + 1 }}"></button>
-                            @endforeach
+                            @for($d = 0; $d < $realBannerCount; $d++)
+                                <button type="button" class="tix-orbit-dot {{ $d === 0 ? 'active' : '' }}"
+                                    onclick="tixGoToRealSlide({{ $d }})" aria-label="Slide {{ $d + 1 }}"></button>
+                            @endfor
                         </div>
                     @endif
                 </div>
@@ -1382,7 +1495,8 @@
     {{-- ══ JAVASCRIPT CONTROLLERS: CAROUSEL, SKELETON TRANSITION, & INFINITE SCROLL ══ --}}
     <script>
         let currentOrbitSlide = 0;
-        const orbitSlideCount = {{ count($banners) }};
+        const orbitSlideCount = {{ count($displayBanners) }};
+        const realBannerCount = {{ $realBannerCount }};
         let orbitAutoPlayTimer = null;
 
         function tixUpdateOrbitCarousel() {
@@ -1395,21 +1509,41 @@
             }
 
             cards.forEach((card, idx) => {
-                card.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden');
-                if (idx === currentOrbitSlide) {
+                card.classList.remove(
+                    'is-active',
+                    'is-prev-1', 'is-prev-2', 'is-prev-3', 'is-prev',
+                    'is-next-1', 'is-next-2', 'is-next-3', 'is-next',
+                    'is-hidden'
+                );
+
+                let diff = (idx - currentOrbitSlide) % orbitSlideCount;
+                if (diff > orbitSlideCount / 2) diff -= orbitSlideCount;
+                if (diff < -orbitSlideCount / 2) diff += orbitSlideCount;
+
+                if (diff === 0) {
                     card.classList.add('is-active');
-                } else if (idx === (currentOrbitSlide - 1 + orbitSlideCount) % orbitSlideCount) {
-                    card.classList.add('is-prev');
-                } else if (idx === (currentOrbitSlide + 1) % orbitSlideCount) {
-                    card.classList.add('is-next');
+                } else if (diff === 1) {
+                    card.classList.add('is-next-1', 'is-next');
+                } else if (diff === 2) {
+                    card.classList.add('is-next-2');
+                } else if (diff === 3) {
+                    card.classList.add('is-next-3');
+                } else if (diff === -1) {
+                    card.classList.add('is-prev-1', 'is-prev');
+                } else if (diff === -2) {
+                    card.classList.add('is-prev-2');
+                } else if (diff === -3) {
+                    card.classList.add('is-prev-3');
                 } else {
                     card.classList.add('is-hidden');
                 }
             });
 
+            // Update real dots
+            const realActiveDot = currentOrbitSlide % Math.max(1, realBannerCount);
             const dots = document.querySelectorAll('#tixOrbitDots .tix-orbit-dot');
             dots.forEach((dot, idx) => {
-                if (idx === currentOrbitSlide) {
+                if (idx === realActiveDot) {
                     dot.classList.add('active');
                 } else {
                     dot.classList.remove('active');
@@ -1437,9 +1571,25 @@
             tixResetOrbitTimer();
         }
 
+        function tixGoToRealSlide(realIdx) {
+            if (orbitSlideCount <= 1) return;
+            let bestIdx = currentOrbitSlide;
+            let minDistance = 999;
+            for (let i = 0; i < orbitSlideCount; i++) {
+                if (i % realBannerCount === realIdx) {
+                    let dist = Math.abs(i - currentOrbitSlide);
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        bestIdx = i;
+                    }
+                }
+            }
+            tixGoToOrbitSlide(bestIdx);
+        }
+
         function tixStartOrbitTimer() {
             if (orbitSlideCount > 1) {
-                orbitAutoPlayTimer = setInterval(tixNextOrbitSlide, 5000);
+                orbitAutoPlayTimer = setInterval(tixNextOrbitSlide, 4500);
             }
         }
 
@@ -1680,15 +1830,15 @@
                 carousel.addEventListener('mouseleave', () => tixStartOrbitTimer());
             }
 
-            // Click on peeking prev/next card to slide it to center
+            // Click on any peeking stacked card to smoothly slide it to center
             document.querySelectorAll('.tix-orbit-card').forEach((card) => {
                 card.addEventListener('click', function (e) {
-                    if (this.classList.contains('is-prev')) {
+                    if (!this.classList.contains('is-active')) {
                         e.preventDefault();
-                        tixPrevOrbitSlide();
-                    } else if (this.classList.contains('is-next')) {
-                        e.preventDefault();
-                        tixNextOrbitSlide();
+                        const idx = parseInt(this.getAttribute('data-index'), 10);
+                        if (!isNaN(idx)) {
+                            tixGoToOrbitSlide(idx);
+                        }
                     }
                 });
             });
