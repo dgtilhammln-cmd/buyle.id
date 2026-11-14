@@ -132,13 +132,17 @@
     .tix-nav-capsule {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
-        background: rgba(255, 255, 255, 0.18);
+        gap: 0.25rem;
+        height: 42px;
+        min-height: 42px;
+        max-height: 42px;
+        box-sizing: border-box;
+        padding: 4px;
+        background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
-        border: 1px solid rgba(255, 255, 255, 0.32);
+        border: 1px solid rgba(255, 255, 255, 0.35);
         border-radius: 999px;
-        padding: 5px 6px;
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.3);
     }
 
@@ -147,15 +151,17 @@
         align-items: center;
         justify-content: center;
         gap: 0.35rem;
-        font-size: 0.88rem;
-        font-weight: 600;
+        height: 32px;
+        padding: 0 1.25rem;
+        font-size: 0.84rem;
+        font-weight: 500;
         color: #ffffff;
         text-decoration: none;
-        padding: 0.5rem 1.35rem;
         border-radius: 999px;
         white-space: nowrap;
-        line-height: 1.2;
-        transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        line-height: 1;
+        box-sizing: border-box;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
     }
 
@@ -169,8 +175,8 @@
     .tix-nav-pill.is-active {
         background: #ffffff;
         color: #15803D;
-        font-weight: 700;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .tix-nav-pill.is-active:hover {
@@ -348,7 +354,7 @@
 
     .tix-user-name {
         font-size: 0.84rem;
-        font-weight: 700;
+        font-weight: 500;
         color: #ffffff;
         max-width: 120px;
         overflow: hidden;
