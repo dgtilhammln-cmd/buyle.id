@@ -3795,9 +3795,6 @@
                             </svg>
                             <span>Akses Panitia Gate</span>
                         </div>
-                        <span class="badge-status badge-valid" style="font-size:0.72rem; padding:0.25rem 0.65rem;">
-                            Live Gate System
-                        </span>
                     </div>
 
                     <div class="prof-card-body" style="padding:1.25rem 1.5rem;">
