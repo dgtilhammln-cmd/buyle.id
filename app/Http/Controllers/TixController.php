@@ -199,6 +199,41 @@ class TixController extends Controller
 
         $schema = json_encode($schemaGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
+        // ── Data Kalender Event untuk Pop-up Kalender ──
+        $calendarEvents = Product::where(function ($q) {
+                $q->where('product_type', 'ticket')
+                  ->orWhereNotNull('event_date');
+            })
+            ->where('is_active', true)
+            ->get()
+            ->filter(function ($p) {
+                return !empty($p->event_date) || !empty($p->data_json['event_date']);
+            })
+            ->map(function ($p) {
+                $rawDate = $p->event_date ?: ($p->data_json['event_date'] ?? null);
+                $carbonDate = \Carbon\Carbon::parse($rawDate);
+                $img = !empty($p->featured_image) ? asset('storage/' . $p->featured_image) : (!empty($p->og_image) ? asset('storage/' . $p->og_image) : ($p->image ? asset('storage/' . $p->image) : asset('assets/images/default-ticket.webp')));
+                $loc = $p->event_location ?: ($p->location ?: ($p->data_json['event_location'] ?? ($p->event_type === 'online' ? 'Online / Webinar' : 'Indonesia')));
+                $time = $p->event_time ?: ($p->data_json['event_time'] ?? null);
+                $price = $p->sale_price > 0 && $p->sale_price < $p->price ? $p->sale_price : $p->effective_price;
+                $priceFmt = $price > 0 ? 'Rp' . number_format($price, 0, ',', '.') : 'GRATIS';
+
+                return [
+                    'id'             => $p->id,
+                    'title'          => $p->name,
+                    'slug'           => $p->slug,
+                    'url'            => route('tix.show', $p->slug),
+                    'date_str'       => $carbonDate->format('Y-m-d'),
+                    'date_formatted' => $carbonDate->locale('id')->isoFormat('D MMMM Y'),
+                    'time_formatted' => $time ? $time : null,
+                    'location'       => $loc,
+                    'price'          => $priceFmt,
+                    'image'          => $img,
+                ];
+            })
+            ->sortBy('date_str')
+            ->values();
+
         return view('tix.index', compact(
             'upcomingEvents',
             'hasMoreUpcoming',
@@ -209,7 +244,8 @@ class TixController extends Controller
             'search',
             'type',
             'schema',
-            'breadcrumbs'
+            'breadcrumbs',
+            'calendarEvents'
         ));
     }
 

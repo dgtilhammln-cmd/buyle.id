@@ -679,84 +679,437 @@
             font-weight: 400;
         }
 
-        .tix-filter-chips {
-            display: flex;
+        /* ── Tombol Kalender Event di Search Bar ── */
+        .tix-calendar-trigger-btn {
+            display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.55rem 1.15rem;
+            border-radius: 99px;
+            background: linear-gradient(135deg, #1eb349 0%, #7db928 100%);
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.28);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            outline: none;
+        }
+
+        .tix-calendar-trigger-btn:hover {
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+        }
+
+        .tix-calendar-trigger-btn:active {
+            transform: translateY(0);
         }
 
         @media (max-width: 600px) {
             .tix-search-bar-wrap {
-                padding: 0.5rem 0.65rem;
-                gap: 0.5rem;
-                margin-bottom: 1.75rem;
+                padding: 0.45rem 0.6rem;
+                gap: 0.4rem;
+                margin-bottom: 1.5rem;
             }
 
-            .tix-filter-chips {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                width: 100%;
-                gap: 0.35rem;
-                padding-bottom: 2px;
-            }
-
-            .tix-filter-chips::-webkit-scrollbar {
-                display: none;
-            }
-
-            .tix-chip {
-                padding: 0.28rem 0.65rem;
-                font-size: 0.72rem;
-                white-space: nowrap;
+            .tix-calendar-trigger-btn {
+                width: 38px;
+                height: 38px;
+                padding: 0;
+                border-radius: 50%;
+                justify-content: center;
                 flex-shrink: 0;
-                gap: 4px;
             }
 
-            .tix-chip svg {
-                width: 12px;
-                height: 12px;
+            .tix-calendar-trigger-text {
+                display: none !important;
             }
         }
 
-        .tix-chip {
-            padding: 0.35rem 0.85rem;
-            border-radius: 999px;
-            font-size: 0.76rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: #475569;
+        /* ══════════════════════════════════════════════════════════════════════
+           POP-UP MODAL KALENDER EVENT (BUYLE TIX THEME)
+        ══════════════════════════════════════════════════════════════════════ */
+        .tix-cal-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.62);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 999999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .tix-cal-modal-card {
+            background: #ffffff;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.28);
+            border: 1px solid #E2E8F0;
+            overflow: hidden;
+            animation: tixCalPop 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes tixCalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .tix-cal-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.35rem 0.85rem;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .tix-cal-month-title {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0F172A;
+            letter-spacing: -0.01em;
+        }
+
+        .tix-cal-nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
-            transition: all 0.15s ease;
-            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-family: inherit;
-            line-height: 1.4;
-            outline: none;
+            justify-content: center;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
 
-        .tix-chip:hover {
+        .tix-cal-nav-btn:hover {
+            background: #F1F5F9;
+            color: #0F172A;
+            border-color: #CBD5E1;
+        }
+
+        .tix-cal-close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #F1F5F9;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748B;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-left: 0.5rem;
+        }
+
+        .tix-cal-close-btn:hover {
             background: #E2E8F0;
             color: #0F172A;
         }
 
-        .tix-chip.active {
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            color: #ffffff;
-            border-color: transparent;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        .tix-cal-modal-body {
+            padding: 1.15rem 1.35rem;
+            overflow-y: auto;
+            max-height: calc(90vh - 80px);
         }
 
-        .tix-chip.active:hover {
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            color: #ffffff;
+        /* ── Day Header Strip: M S S R K J S ── */
+        .tix-cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            gap: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .tix-cal-weekday-item {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748B;
+            padding: 0.35rem 0;
+        }
+
+        /* ── Full Month Days Grid ── */
+        .tix-cal-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 1.25rem;
+        }
+
+        .tix-cal-day-cell {
+            min-height: 48px;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            background: #ffffff;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        .tix-cal-day-cell.is-empty {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .tix-cal-day-num {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #0F172A;
+            line-height: 1;
+        }
+
+        .tix-cal-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        /* Day Has Event */
+        .tix-cal-day-cell.has-event {
+            background: #F0FDF4;
+            border-color: #DCFCE7;
+        }
+
+        .tix-cal-day-cell.has-event .tix-cal-day-num {
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        .tix-cal-day-cell.has-event .tix-cal-dot {
+            background: #16A34A;
+            box-shadow: 0 0 6px rgba(22, 163, 74, 0.6);
+        }
+
+        .tix-cal-day-cell:hover:not(.is-empty):not(.is-active) {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.45);
+        }
+
+        .tix-cal-day-cell.has-event:hover:not(.is-active) {
+            background: #DCFCE7;
+            border-color: #86EFAC;
+        }
+
+        /* Today Highlight */
+        .tix-cal-day-cell.is-today:not(.is-active) {
+            box-shadow: inset 0 0 0 1.5px #15803D;
+        }
+
+        /* Active / Selected Day */
+        .tix-cal-day-cell.is-active {
+            background: linear-gradient(135deg, #1eb349 0%, #7db928 100%) !important;
+            border-color: transparent !important;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
+            transform: translateY(-1px);
+        }
+
+        .tix-cal-day-cell.is-active .tix-cal-day-num {
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+
+        .tix-cal-day-cell.is-active .tix-cal-dot {
+            background: #ffffff !important;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* ── Event Detail Container ── */
+        .tix-cal-detail-wrap {
+            border-top: 1px solid #F1F5F9;
+            padding-top: 1rem;
+        }
+
+        .tix-cal-detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .tix-cal-detail-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .tix-cal-event-card {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 0.85rem;
+            display: flex;
+            gap: 0.85rem;
+            align-items: center;
+            margin-bottom: 0.65rem;
+            transition: all 0.2s ease;
+        }
+
+        .tix-cal-event-card:hover {
+            border-color: #86EFAC;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+            background: #ffffff;
+        }
+
+        .tix-cal-event-thumb {
+            width: 105px;
+            aspect-ratio: 16/9;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #E2E8F0;
+            flex-shrink: 0;
+        }
+
+        .tix-cal-event-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .tix-cal-event-body {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .tix-cal-event-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #0F172A;
+            margin: 0;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tix-cal-event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.18rem;
+            font-size: 0.72rem;
+            color: #64748B;
+            font-weight: 500;
+        }
+
+        .tix-cal-meta-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tix-cal-event-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.2rem;
+            gap: 0.5rem;
+        }
+
+        .tix-cal-event-price {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #16A34A;
+        }
+
+        .tix-cal-btn-curved {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.32rem 0.75rem;
+            border-radius: 99px;
+            background: linear-gradient(135deg, #1eb349 0%, #7db928 100%);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.3);
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tix-cal-btn-curved:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.4);
+        }
+
+        .tix-cal-empty-box {
+            text-align: center;
+            padding: 1.25rem 0.5rem;
+            color: #94A3B8;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .tix-cal-modal-card {
+                max-height: 94vh;
+                border-radius: 20px;
+            }
+            .tix-cal-modal-header {
+                padding: 1rem 1rem 0.75rem;
+            }
+            .tix-cal-modal-body {
+                padding: 0.85rem 1rem;
+            }
+            .tix-cal-event-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .tix-cal-event-thumb {
+                width: 100%;
+                aspect-ratio: 16/9;
+            }
+            .tix-cal-event-footer {
+                width: 100%;
+            }
         }
 
         /* Section Header & Title / Reset Link */
@@ -1434,28 +1787,16 @@
                         </button>
                     </form>
 
-                    <div class="tix-filter-chips">
-                        <button type="button" class="tix-chip active" data-type="" onclick="tixFilterType('')">
-                            Semua Event
-                        </button>
-                        <button type="button" class="tix-chip" data-type="offline" onclick="tixFilterType('offline')">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24" style="flex-shrink: 0;">
-                                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                            <span>Event Offline</span>
-                        </button>
-                        <button type="button" class="tix-chip" data-type="online" onclick="tixFilterType('online')">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24" style="flex-shrink: 0;">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                <line x1="8" y1="21" x2="16" y2="21"></line>
-                                <line x1="12" y1="17" x2="12" y2="21"></line>
-                            </svg>
-                            <span>Event Online</span>
-                        </button>
-                    </div>
+                    {{-- Tombol Kalender Event menggantikan chip filter --}}
+                    <button type="button" class="tix-calendar-trigger-btn" onclick="tixOpenCalendarModal()" title="Buka Kalender Event">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span class="tix-calendar-trigger-text">Kalender Event</span>
+                    </button>
                 </div>
 
                 {{-- ══ 4. SECTION: TIKET EVENT & KONSER (DYNAMIC REALTIME RESULTS) ══ --}}
@@ -1604,8 +1945,312 @@
         </div>
     </div>
 
+    {{-- ══ POP-UP MODAL: KALENDER EVENT (1 BULAN PENUH) ══ --}}
+    <div id="tixCalendarModal" class="tix-cal-modal-overlay">
+        <div class="tix-cal-modal-card">
+            {{-- Header: Month Year + Prev/Next Buttons + Close Button --}}
+            <div class="tix-cal-modal-header">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 9px; background: #DCFCE7; color: #16A34A;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </span>
+                    <h3 id="tixCalMonthLabel" class="tix-cal-month-title">Desember 2026</h3>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                    <button type="button" class="tix-cal-nav-btn" onclick="tixCalPrevMonth()" title="Bulan Sebelumnya">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button type="button" class="tix-cal-nav-btn" onclick="tixCalNextMonth()" title="Bulan Selanjutnya">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                    <button type="button" class="tix-cal-close-btn" onclick="tixCloseCalendarModal()" title="Tutup (Esc)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            {{-- Body: Calendar Grid + Event Details --}}
+            <div class="tix-cal-modal-body">
+                {{-- Day Header Strip (M S S R K J S) --}}
+                <div class="tix-cal-weekdays">
+                    <div class="tix-cal-weekday-item" style="color: #EF4444;">M</div>
+                    <div class="tix-cal-weekday-item">S</div>
+                    <div class="tix-cal-weekday-item">S</div>
+                    <div class="tix-cal-weekday-item">R</div>
+                    <div class="tix-cal-weekday-item">K</div>
+                    <div class="tix-cal-weekday-item">J</div>
+                    <div class="tix-cal-weekday-item">S</div>
+                </div>
+
+                {{-- Full Month Days Grid (Rendered dynamically) --}}
+                <div id="tixCalDaysGrid" class="tix-cal-days-grid"></div>
+
+                {{-- Event Detail Container --}}
+                <div class="tix-cal-detail-wrap">
+                    <div class="tix-cal-detail-header">
+                        <h4 id="tixCalDetailDateTitle" class="tix-cal-detail-title">Detail Jadwal Event</h4>
+                        <span id="tixCalEventCountBadge" style="font-size: 0.72rem; font-weight: 700; color: #16A34A; background: #DCFCE7; padding: 0.15rem 0.5rem; border-radius: 99px;">0 Event</span>
+                    </div>
+                    <div id="tixCalEventDetailList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- ══ JAVASCRIPT CONTROLLERS: CAROUSEL, SKELETON TRANSITION, & INFINITE SCROLL ══ --}}
     <script>
+        // ══ POP-UP KALENDER EVENT CONTROLLER ══
+        const tixCalendarEventsData = {!! json_encode($calendarEvents ?? []) !!};
+        const tixEventsByDate = {};
+        tixCalendarEventsData.forEach(ev => {
+            if (!ev.date_str) return;
+            if (!tixEventsByDate[ev.date_str]) {
+                tixEventsByDate[ev.date_str] = [];
+            }
+            tixEventsByDate[ev.date_str].push(ev);
+        });
+
+        const tixMonthNamesIndo = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+
+        let tixCalYear = new Date().getFullYear();
+        let tixCalMonth = new Date().getMonth(); // 0-11
+        let tixCalSelectedDate = null;
+
+        function tixOpenCalendarModal() {
+            const modal = document.getElementById('tixCalendarModal');
+            if (!modal) return;
+
+            // Cari event terdekat di masa depan untuk langsung di-highlight saat modal terbuka
+            const todayStr = (new Date()).toISOString().split('T')[0];
+            const sortedDates = Object.keys(tixEventsByDate).sort();
+            let targetDate = sortedDates.find(d => d >= todayStr) || sortedDates[0];
+
+            if (targetDate) {
+                const parts = targetDate.split('-');
+                tixCalYear = parseInt(parts[0], 10);
+                tixCalMonth = parseInt(parts[1], 10) - 1;
+                tixCalSelectedDate = targetDate;
+            } else {
+                const now = new Date();
+                tixCalYear = now.getFullYear();
+                tixCalMonth = now.getMonth();
+                tixCalSelectedDate = todayStr;
+            }
+
+            tixRenderCalendarMonth();
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function tixCloseCalendarModal() {
+            const modal = document.getElementById('tixCalendarModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Keyboard Esc listener
+        window.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                tixCloseCalendarModal();
+            }
+        });
+
+        function tixCalPrevMonth() {
+            tixCalMonth--;
+            if (tixCalMonth < 0) {
+                tixCalMonth = 11;
+                tixCalYear--;
+            }
+            tixRenderCalendarMonth();
+        }
+
+        function tixCalNextMonth() {
+            tixCalMonth++;
+            if (tixCalMonth > 11) {
+                tixCalMonth = 0;
+                tixCalYear++;
+            }
+            tixRenderCalendarMonth();
+        }
+
+        function tixRenderCalendarMonth() {
+            const monthLabel = document.getElementById('tixCalMonthLabel');
+            if (monthLabel) {
+                monthLabel.textContent = tixMonthNamesIndo[tixCalMonth] + ' ' + tixCalYear;
+            }
+
+            const grid = document.getElementById('tixCalDaysGrid');
+            if (!grid) return;
+
+            const daysInMonth = new Date(tixCalYear, tixCalMonth + 1, 0).getDate();
+            const firstDayIndex = new Date(tixCalYear, tixCalMonth, 1).getDay(); // 0=Min, 1=Sen, ...
+
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+            let html = '';
+
+            // Leading empty placeholders
+            for (let i = 0; i < firstDayIndex; i++) {
+                html += `<div class="tix-cal-day-cell is-empty"></div>`;
+            }
+
+            // Days of month (1 s/d daysInMonth)
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${tixCalYear}-${String(tixCalMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const hasEvents = !!tixEventsByDate[dateStr];
+                const isToday = dateStr === todayStr;
+                const isActive = dateStr === tixCalSelectedDate;
+
+                let classes = 'tix-cal-day-cell';
+                if (hasEvents) classes += ' has-event';
+                if (isToday) classes += ' is-today';
+                if (isActive) classes += ' is-active';
+
+                const dNumStr = String(d).padStart(2, '0');
+                const dotHtml = hasEvents
+                    ? `<span class="tix-cal-dot" title="Ada Event"></span>`
+                    : `<span class="tix-cal-dot" style="opacity: 0;"></span>`;
+
+                html += `
+                    <div class="${classes}"
+                         onclick="tixSelectCalDate('${dateStr}')"
+                         onmouseenter="tixHoverCalDate('${dateStr}')"
+                         data-date="${dateStr}"
+                         title="${hasEvents ? tixEventsByDate[dateStr].length + ' event terjadwal' : ''}">
+                        <span class="tix-cal-day-num">${dNumStr}</span>
+                        ${dotHtml}
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+
+            // Render detail event yang sedang aktif
+            if (tixCalSelectedDate) {
+                tixShowEventDetailForDate(tixCalSelectedDate);
+            }
+        }
+
+        function tixSelectCalDate(dateStr) {
+            tixCalSelectedDate = dateStr;
+            document.querySelectorAll('.tix-cal-day-cell').forEach(cell => {
+                if (cell.getAttribute('data-date') === dateStr) {
+                    cell.classList.add('is-active');
+                } else {
+                    cell.classList.remove('is-active');
+                }
+            });
+            tixShowEventDetailForDate(dateStr);
+        }
+
+        function tixHoverCalDate(dateStr) {
+            // Hanya update jika tanggal memiliki event, agar user bisa intip saat mouse hover
+            if (tixEventsByDate[dateStr] && tixEventsByDate[dateStr].length > 0) {
+                tixSelectCalDate(dateStr);
+            }
+        }
+
+        function tixShowEventDetailForDate(dateStr) {
+            const listEl = document.getElementById('tixCalEventDetailList');
+            const dateTitleEl = document.getElementById('tixCalDetailDateTitle');
+            const countBadgeEl = document.getElementById('tixCalEventCountBadge');
+            if (!listEl) return;
+
+            const events = tixEventsByDate[dateStr] || [];
+
+            // Format tanggal yang dipilih (e.g. 12 Desember 2026)
+            const parts = dateStr.split('-');
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const day = parseInt(parts[2], 10);
+            const formattedDate = `${day} ${tixMonthNamesIndo[month]} ${year}`;
+
+            if (dateTitleEl) {
+                dateTitleEl.textContent = `Event: ${formattedDate}`;
+            }
+
+            if (countBadgeEl) {
+                countBadgeEl.textContent = `${events.length} Event`;
+                countBadgeEl.style.display = events.length > 0 ? 'inline-block' : 'none';
+            }
+
+            if (events.length === 0) {
+                listEl.innerHTML = `
+                    <div class="tix-cal-empty-box">
+                        <svg width="26" height="26" fill="none" stroke="#CBD5E1" stroke-width="1.8" viewBox="0 0 24 24" style="margin: 0 auto 0.4rem; display: block;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Belum ada jadwal event pada tanggal ini.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            events.forEach(ev => {
+                html += `
+                    <div class="tix-cal-event-card">
+                        <div class="tix-cal-event-thumb">
+                            <img src="${ev.image}" alt="${escapeHtml(ev.title)}" loading="lazy">
+                        </div>
+                        <div class="tix-cal-event-body">
+                            <h5 class="tix-cal-event-name" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h5>
+                            <div class="tix-cal-event-meta">
+                                <div class="tix-cal-meta-row" title="Waktu">
+                                    <svg width="12" height="12" fill="none" stroke="#16A34A" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                    </svg>
+                                    <span>${ev.date_formatted}${ev.time_formatted ? ' · ' + ev.time_formatted : ''}</span>
+                                </div>
+                                <div class="tix-cal-meta-row" title="Lokasi / Venue">
+                                    <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    <span>${escapeHtml(ev.location)}</span>
+                                </div>
+                            </div>
+                            <div class="tix-cal-event-footer">
+                                <span class="tix-cal-event-price">${ev.price}</span>
+                                <a href="${ev.url}" class="tix-cal-btn-curved">
+                                    <span>Beli Tiket</span>
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listEl.innerHTML = html;
+        }
         let currentOrbitSlide = 0;
         const orbitSlideCount = {{ count($displayBanners) }}; // jumlah banner asli (tanpa duplikasi)
         const realBannerCount = {{ $realBannerCount }};
