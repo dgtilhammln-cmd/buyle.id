@@ -800,29 +800,29 @@
             flex-shrink: 0;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
             .tix-section-header {
                 gap: 0.5rem;
                 margin-bottom: 1rem;
             }
 
             .tix-section-title {
-                font-size: 0.95rem;
-                gap: 0.3rem;
+                font-size: 1.05rem !important;
+                gap: 0.35rem;
             }
 
             .tix-reset-btn {
-                font-size: 0.7rem;
-                gap: 0.2rem;
+                font-size: 0.82rem !important;
+                gap: 0.25rem;
             }
 
             .tix-reset-btn svg {
-                width: 12px;
-                height: 12px;
+                width: 13px;
+                height: 13px;
             }
 
             .tix-section-sub {
-                font-size: 0.68rem;
+                font-size: 0.72rem;
             }
         }
 
@@ -850,10 +850,64 @@
             }
         }
 
-        @media (max-width: 500px) {
+        /* ── Mobile: horizontal swipe scroll snap (sama persis buyle.id homepage) ── */
+        @media (max-width: 640px) {
             .tix-grid {
-                grid-template-columns: 1fr;
-                gap: 0.85rem;
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: visible !important;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                gap: 1.1rem !important;
+                padding: 0.25rem 0.25rem 0.85rem !important;
+                margin-bottom: 2rem !important;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .tix-grid::-webkit-scrollbar {
+                display: none !important;
+            }
+
+            /* Setiap card: ukuran tetap 240px persis Image 1 buyle.id homepage */
+            .tix-grid > a.ticket-card-swipe-item,
+            .tix-grid > .tix-skeleton-card {
+                flex: 0 0 240px !important;
+                width: 240px !important;
+                min-width: 240px !important;
+                max-width: 240px !important;
+                box-sizing: border-box !important;
+                scroll-snap-align: start;
+            }
+
+            /* Empty state tetap full width */
+            .tix-grid > .tix-empty-card {
+                flex: 0 0 100% !important;
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+
+            /* Sembunyikan baris organizer di mobile agar layout & tinggi card persis Image 1 */
+            .tix-card-organizer {
+                display: none !important;
+            }
+
+            /* Tombol Lihat: lingkaran bulat hijau dengan panah saja di mobile persis Image 1 */
+            .retarget-btn-cta {
+                width: 32px !important;
+                height: 32px !important;
+                min-width: 32px !important;
+                padding: 0 !important;
+                border-radius: 50% !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .retarget-btn-text {
+                display: none !important;
             }
         }
 

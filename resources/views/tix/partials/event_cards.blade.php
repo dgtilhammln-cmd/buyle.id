@@ -106,7 +106,7 @@
 
                     {{-- Creator / Organizer Logo & Name --}}
                     @if($tOrganizer)
-                        <div style="font-size: 0.74rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.35rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="Penyelenggara: {{ $tOrganizer }}">
+                        <div class="tix-card-organizer" style="font-size: 0.74rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.35rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="Penyelenggara: {{ $tOrganizer }}">
                             @if($sellerAvatarUrl)
                                 <img src="{{ $sellerAvatarUrl }}" alt="{{ $tOrganizer }}" style="width: 18px; height: 18px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid #E2E8F0;">
                             @else
@@ -165,8 +165,8 @@
                                 Selesai
                             </span>
                         @else
-                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;">
-                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">
+                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
                             </span>
                         @endif
                     </div>
