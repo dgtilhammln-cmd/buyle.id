@@ -2019,7 +2019,7 @@
                         <h4 id="tixCalDetailDateTitle" class="tix-cal-detail-title">Detail Jadwal Event</h4>
                         <span id="tixCalEventCountBadge" style="font-size: 0.72rem; font-weight: 700; color: #16A34A; background: #DCFCE7; padding: 0.15rem 0.5rem; border-radius: 99px;">0 Event</span>
                     </div>
-                    <div id="tixCalEventDetailList"></div>
+                    <div id="tixCalEventDetailList" style="min-height: 140px;"></div>
                 </div>
             </div>
         </div>
@@ -2142,16 +2142,17 @@
 
                 const dNumStr = String(d).padStart(2, '0');
                 const dotHtml = hasEvents
-                    ? `<span class="tix-cal-dot" title="Ada Event"></span>`
-                    : `<span class="tix-cal-dot" style="opacity: 0;"></span>`;
+                    ? `<span class="tix-cal-dot" title="Ada Event" style="pointer-events:none;"></span>`
+                    : `<span class="tix-cal-dot" style="opacity: 0; pointer-events:none;"></span>`;
 
                 html += `
                     <div class="${classes}"
                          onclick="tixSelectCalDate('${dateStr}')"
-                         onmouseenter="tixHoverCalDate('${dateStr}')"
                          data-date="${dateStr}"
+                         role="button"
+                         tabindex="0"
                          title="${hasEvents ? tixEventsByDate[dateStr].length + ' event terjadwal' : ''}">
-                        <span class="tix-cal-day-num">${dNumStr}</span>
+                        <span class="tix-cal-day-num" style="pointer-events:none;">${dNumStr}</span>
                         ${dotHtml}
                     </div>
                 `;
@@ -2175,13 +2176,6 @@
                 }
             });
             tixShowEventDetailForDate(dateStr);
-        }
-
-        function tixHoverCalDate(dateStr) {
-            // Hanya update jika tanggal memiliki event, agar user bisa intip saat mouse hover
-            if (tixEventsByDate[dateStr] && tixEventsByDate[dateStr].length > 0) {
-                tixSelectCalDate(dateStr);
-            }
         }
 
         function tixShowEventDetailForDate(dateStr) {
