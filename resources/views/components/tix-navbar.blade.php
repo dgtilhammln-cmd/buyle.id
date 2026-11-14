@@ -3,6 +3,7 @@
      Gradient: #1db349 to #84ce00
      Inspired by Artatix / Creative Agency Reference
      100% Mobile Friendly & Responsive
+     Fixed Sticky (Always Stays at Top on Scroll)
      ══════════════════════════════════════════════════════════════════ --}}
 @php
     $isHome = request()->routeIs('tix.index') && !request()->has('q');
@@ -14,34 +15,33 @@
 <style>
     /* ── TIX HEADER SCOPED STYLES ── */
     :root {
-        --tix-h-desktop: 70px;
-        --tix-h-mobile: 58px;
+        --tix-h-desktop: 80px;
+        --tix-h-mobile: 66px;
     }
 
-    /* Page container adjustments for sticky header */
+    /* Page container adjustments for fixed header */
     body {
         margin: 0;
         padding-top: 0 !important;
         background-color: #ffffff;
     }
 
-    /* Adjust page containers so spacing under header is ideal */
     .buyle-tix-page {
-        padding-top: 1.25rem !important;
+        padding-top: 1.5rem !important;
     }
     @media (max-width: 991px) {
         .buyle-tix-page {
-            padding-top: 0.85rem !important;
+            padding-top: 1rem !important;
         }
     }
 
     .pd-page {
-        padding-top: 1rem !important;
+        padding-top: 1.25rem !important;
     }
 
-    /* Sticky Header Bar */
+    /* Fixed Header Bar — Always pinned to top, never sinks on scroll */
     .tix-main-header {
-        position: sticky;
+        position: fixed !important;
         top: 0;
         left: 0;
         right: 0;
@@ -50,14 +50,33 @@
         background: linear-gradient(135deg, #1db349 0%, #84ce00 100%);
         box-shadow: 0 4px 24px rgba(29, 179, 73, 0.28), 0 1px 3px rgba(0, 0, 0, 0.05);
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        z-index: 9999;
+        z-index: 99999;
         font-family: 'Montserrat', sans-serif !important;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-sizing: border-box;
     }
 
     .tix-main-header * {
         box-sizing: border-box;
         font-family: 'Montserrat', sans-serif !important;
+    }
+
+    /* Spacer element under fixed header to prevent content overlap */
+    .tix-header-spacer {
+        display: block;
+        width: 100%;
+        height: var(--tix-h-desktop);
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    /* Page container adjustments for pages using tix navbar */
+    .buyle-ticketing-section {
+        padding-top: 3.5rem !important;
+    }
+    @media (max-width: 991px) {
+        .buyle-ticketing-section {
+            padding-top: 2rem !important;
+        }
     }
 
     .tix-header-container {
@@ -76,6 +95,7 @@
         display: flex;
         align-items: center;
         flex-shrink: 0;
+        height: 100%;
     }
 
     .tix-header-logo-link {
@@ -91,9 +111,9 @@
     }
 
     .tix-header-logo-img {
-        height: 38px;
+        height: 42px;
         width: auto;
-        max-width: 195px;
+        max-width: 215px;
         object-fit: contain;
         display: block;
         filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
@@ -106,32 +126,35 @@
         justify-content: center;
         flex: 1 1 auto;
         min-width: 0;
+        height: 100%;
     }
 
     .tix-nav-capsule {
         display: inline-flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: 0.35rem;
         background: rgba(255, 255, 255, 0.18);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.32);
         border-radius: 999px;
-        padding: 4px;
+        padding: 5px 6px;
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.3);
     }
 
     .tix-nav-pill {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 0.35rem;
-        font-size: 0.86rem;
+        font-size: 0.88rem;
         font-weight: 600;
         color: #ffffff;
         text-decoration: none;
-        padding: 0.45rem 1.15rem;
+        padding: 0.5rem 1.35rem;
         border-radius: 999px;
         white-space: nowrap;
+        line-height: 1.2;
         transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
     }
@@ -156,34 +179,23 @@
         transform: none;
     }
 
-    .tix-wa-badge-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        background: rgba(255, 255, 255, 0.22);
-        padding: 0.15rem 0.55rem;
-        border-radius: 999px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-    }
-
-    .tix-nav-pill:hover .tix-wa-badge-pill {
-        background: rgba(255, 255, 255, 0.35);
-    }
-
     /* ── RIGHT: Actions (Search, Auth, Drawer Toggle) ── */
     .tix-header-right {
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         gap: 0.65rem;
         flex-shrink: 0;
+        height: 100%;
     }
 
     /* Search Circle Button */
     .tix-search-btn {
-        width: 38px;
-        height: 38px;
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
+        max-height: 42px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.32);
@@ -191,11 +203,17 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        align-self: center;
         cursor: pointer;
         padding: 0;
+        margin: 0;
+        line-height: 1;
+        vertical-align: middle;
         transition: all 0.2s ease;
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .tix-search-btn:hover {
@@ -213,17 +231,25 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 38px;
-        padding: 0 1.25rem;
+        align-self: center;
+        height: 42px;
+        min-height: 42px;
+        max-height: 42px;
+        padding: 0 1.35rem;
         border-radius: 999px;
         background: #ffffff;
         color: #15803D;
-        font-size: 0.86rem;
+        font-size: 0.88rem;
         font-weight: 700;
         text-decoration: none;
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        margin: 0;
+        line-height: 1;
+        vertical-align: middle;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         white-space: nowrap;
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .tix-auth-masuk-btn:hover {
@@ -237,17 +263,25 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 38px;
-        padding: 0 1.15rem;
+        align-self: center;
+        height: 42px;
+        min-height: 42px;
+        max-height: 42px;
+        padding: 0 1.25rem;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.18);
         border: 1px solid rgba(255, 255, 255, 0.32);
         color: #ffffff;
-        font-size: 0.86rem;
+        font-size: 0.88rem;
         font-weight: 600;
         text-decoration: none;
+        margin: 0;
+        line-height: 1;
+        vertical-align: middle;
         transition: all 0.2s ease;
         white-space: nowrap;
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .tix-auth-daftar-btn:hover {
@@ -259,21 +293,38 @@
     /* User Profile Dropdown Button (when logged in) */
     .tix-user-wrapper {
         position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        height: 42px;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
     .tix-user-btn {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
+        align-self: center;
         gap: 0.45rem;
-        height: 38px;
-        padding: 2px 10px 2px 4px;
+        height: 42px;
+        min-height: 42px;
+        max-height: 42px;
+        padding: 0 12px 0 5px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.35);
         color: #ffffff;
         cursor: pointer;
+        margin: 0;
+        line-height: 1;
+        vertical-align: middle;
         transition: all 0.2s ease;
         white-space: nowrap;
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .tix-user-btn:hover {
@@ -281,29 +332,47 @@
     }
 
     .tix-user-avatar {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
         border-radius: 50%;
         object-fit: cover;
         background: #ffffff;
-        border: 1.5px solid rgba(255, 255, 255, 0.8);
+        border: 1.5px solid rgba(255, 255, 255, 0.85);
+        display: block;
+        margin: 0;
+        padding: 0;
+        flex-shrink: 0;
     }
 
     .tix-user-name {
-        font-size: 0.82rem;
+        font-size: 0.84rem;
         font-weight: 700;
         color: #ffffff;
-        max-width: 110px;
+        max-width: 120px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .tix-user-btn svg {
+        display: block;
+        vertical-align: middle;
+        margin: 0;
+        flex-shrink: 0;
     }
 
     /* Dropdown Flyout */
     .tix-user-menu {
         display: none;
         position: absolute;
-        top: calc(100% + 10px);
+        top: calc(100% + 8px);
         right: 0;
         width: 240px;
         background: #ffffff;
@@ -397,9 +466,9 @@
     /* Mobile Hamburger Button */
     .tix-hamburger-btn {
         display: none;
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
         background: rgba(255, 255, 255, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.32);
         color: #ffffff;
@@ -407,7 +476,12 @@
         justify-content: center;
         cursor: pointer;
         padding: 0;
+        margin: 0;
+        line-height: 1;
+        vertical-align: middle;
         transition: all 0.2s ease;
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .tix-hamburger-btn:hover {
@@ -427,7 +501,7 @@
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        padding: 5rem 1.25rem 2rem;
+        padding: 6rem 1.25rem 2rem;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.25s ease;
@@ -576,7 +650,7 @@
     }
 
     .tix-drawer-head {
-        padding: 1.1rem 1.25rem;
+        padding: 1.25rem;
         background: linear-gradient(135deg, #1db349 0%, #84ce00 100%);
         display: flex;
         align-items: center;
@@ -584,15 +658,15 @@
     }
 
     .tix-drawer-logo-img {
-        height: 28px;
+        height: 32px;
         width: auto;
-        max-width: 140px;
+        max-width: 155px;
         object-fit: contain;
     }
 
     .tix-drawer-close-btn {
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.25);
         border: none;
@@ -708,20 +782,24 @@
     }
 
     /* ══════════════════════════════════════════════════════════════
-       RESPONSIVE BREAKPOINTS (Mobile-Friendly & Ideal)
+       RESPONSIVE BREAKPOINTS (Mobile-Friendly & Perfectly Aligned)
        ══════════════════════════════════════════════════════════════ */
     @media (max-width: 991px) {
         .tix-main-header {
-            height: var(--tix-h-mobile);
+            height: var(--tix-h-mobile) !important;
+        }
+
+        .tix-header-spacer {
+            height: var(--tix-h-mobile) !important;
         }
 
         .tix-header-container {
-            padding: 0 0.85rem;
+            padding: 0 1rem;
         }
 
         .tix-header-logo-img {
-            height: 30px;
-            max-width: 145px;
+            height: 34px;
+            max-width: 165px;
         }
 
         /* Center pill capsule is hidden on mobile to avoid any collision */
@@ -733,54 +811,156 @@
             display: none !important;
         }
 
-        .tix-auth-masuk-btn {
-            height: 34px;
-            padding: 0 0.95rem;
-            font-size: 0.78rem;
+        .tix-header-right {
+            gap: 0.5rem !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            height: 100% !important;
         }
 
+        /* All right buttons: exact same 38px height & perfectly centered */
         .tix-search-btn {
-            width: 34px;
-            height: 34px;
+            width: 38px !important;
+            height: 38px !important;
+            min-width: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            align-self: center !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
         }
 
         .tix-search-btn svg {
-            width: 15px;
-            height: 15px;
+            width: 16px !important;
+            height: 16px !important;
+            display: block !important;
+            margin: 0 !important;
+        }
+
+        .tix-user-wrapper {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            align-self: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 38px !important;
+            box-sizing: border-box !important;
         }
 
         .tix-user-btn {
-            height: 34px;
-            padding: 2px 6px 2px 3px;
+            height: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+            padding: 0 8px 0 4px !important;
+            margin: 0 !important;
+            gap: 5px !important;
+            box-sizing: border-box !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            align-self: center !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+            border-radius: 999px !important;
+        }
+
+        .tix-user-avatar {
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px !important;
+            min-height: 28px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block !important;
+            border-radius: 50% !important;
+            flex-shrink: 0 !important;
+            border-width: 1.5px !important;
         }
 
         .tix-user-name {
-            display: none;
+            display: none !important;
+        }
+
+        .tix-user-btn svg {
+            width: 11px !important;
+            height: 11px !important;
+            margin: 0 !important;
+            flex-shrink: 0 !important;
+            display: block !important;
         }
 
         .tix-hamburger-btn {
-            display: inline-flex;
+            display: inline-flex !important;
+            width: 38px !important;
+            height: 38px !important;
+            min-width: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+            border-radius: 10px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            align-items: center !important;
+            justify-content: center !important;
+            align-self: center !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+        }
+
+        .tix-hamburger-btn svg {
+            width: 20px !important;
+            height: 20px !important;
+            display: block !important;
+            margin: 0 !important;
+        }
+
+        .tix-auth-masuk-btn {
+            height: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+            padding: 0 1rem !important;
+            font-size: 0.8rem !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            align-self: center !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+        }
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
     }
 
     @media (max-width: 420px) {
         .tix-header-logo-img {
-            height: 26px;
-            max-width: 125px;
+            height: 30px;
+            max-width: 135px;
         }
 
         .tix-header-right {
-            gap: 0.45rem;
+            gap: 0.35rem;
         }
 
         .tix-auth-masuk-btn {
-            padding: 0 0.75rem;
-            font-size: 0.74rem;
+            padding: 0 0.8rem !important;
+            font-size: 0.76rem !important;
         }
     }
 </style>
 
-{{-- ── TIX MAIN HEADER ── --}}
+{{-- ── TIX MAIN HEADER (FIXED TOP) ── --}}
 <header class="tix-main-header" id="tixHeader">
     <div class="tix-header-container">
 
@@ -792,8 +972,8 @@
                     <img src="{{ asset('images/logobuyletix.png') }}"
                          alt="Buyle TIX"
                          class="tix-header-logo-img"
-                         width="195"
-                         height="38">
+                         width="215"
+                         height="42">
                 </picture>
             </a>
         </div>
@@ -813,17 +993,13 @@
                     Tentang
                 </a>
 
-                {{-- Kerjasama --}}
+                {{-- Kerja Sama (Clean tanpa nomor di pill) --}}
                 <a href="{{ $waUrl }}"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="tix-nav-pill"
                    title="Kerjasama Event Organizer / Penyelenggara: {{ $waNumber }}">
-                    <span>Kerjasama</span>
-                    <span class="tix-wa-badge-pill">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        {{ $waNumber }}
-                    </span>
+                    Kerja Sama
                 </a>
             </nav>
         </div>
@@ -851,7 +1027,7 @@
                         @endphp
                         <img src="{{ $userAvatar }}" class="tix-user-avatar" alt="{{ Auth::user()->name }}">
                         <span class="tix-user-name">{{ Str::limit(Auth::user()->name, 12) }}</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:2px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <polyline points="6 9 12 15 18 9" />
                         </svg>
                     </button>
@@ -940,6 +1116,9 @@
 
     </div>
 </header>
+
+{{-- Spacer element so page content doesn't hide behind fixed header --}}
+<div class="tix-header-spacer"></div>
 
 {{-- ══════════════════════════════════════════════════════════════
      SEARCH MODAL POPUP
@@ -1050,11 +1229,11 @@
                 @endauth
             </div>
 
-            {{-- WhatsApp Partnership Card (Kerjasama) --}}
+            {{-- WhatsApp Partnership Card (Kerja Sama) --}}
             <div class="tix-drawer-wa-card">
                 <div class="tix-drawer-wa-title">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <span>Kerjasama Event (EO)</span>
+                    <span>Kerja Sama Event (EO)</span>
                 </div>
                 <p class="tix-drawer-wa-desc">
                     Kelola penjualan tiket event, gate scanner QR kilat, dan settlement otomatis bersama Buyle TIX.
@@ -1088,10 +1267,10 @@
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="tix-auth-masuk-btn" style="width:100%; background:#16a34a; color:#ffffff; height:40px; box-shadow:none;">
+                    <a href="{{ route('login') }}" class="tix-auth-masuk-btn" style="width:100%; background:#16a34a; color:#ffffff; height:42px; box-shadow:none;">
                         Masuk ke Akun
                     </a>
-                    <a href="{{ route('register') }}" class="tix-auth-daftar-btn" style="width:100%; color:#16a34a; background:#F0FDF4; border-color:#BBF7D0; height:40px; justify-content:center;">
+                    <a href="{{ route('register') }}" class="tix-auth-daftar-btn" style="width:100%; color:#16a34a; background:#F0FDF4; border-color:#BBF7D0; height:42px; justify-content:center;">
                         Daftar Akun Baru
                     </a>
                 @endauth
@@ -1175,4 +1354,3 @@
         }
     });
 </script>
-
