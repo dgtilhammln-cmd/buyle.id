@@ -455,11 +455,115 @@
             margin-bottom: 1.5rem;
         }
 
-        .filter-grid {
-            display: grid;
-            grid-template-columns: 2fr 1.2fr 2.5fr;
-            gap: 0.85rem;
+        /* ── ATTENDANCE HEADER (DESKTOP) ── */
+        .attendance-card-head {
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .att-head-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0f172a;
+        }
+
+        .att-head-title {
+            white-space: nowrap;
+        }
+
+        .att-head-extra {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .att-head-extra::before {
+            content: '·';
+            margin-right: 0.4rem;
+            color: #cbd5e1;
+        }
+
+        .att-head-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .att-cache-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            color: #166534;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .cache-green-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #16a34a;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .cache-pill-text {
+            display: inline;
+        }
+
+        .btn-export-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0.4rem 0.9rem;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.18s;
+            white-space: nowrap;
+        }
+
+        .btn-export-sm:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .filter-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .filter-search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 2 1 260px;
+            min-width: 0;
+        }
+
+        .filter-select-wrap {
+            flex: 1 1 150px;
+            min-width: 130px;
         }
 
         .input-icon-wrap {
@@ -954,20 +1058,18 @@
             }
 
             .filter-grid {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
+                flex-direction: column !important;
                 gap: 0.45rem !important;
             }
 
             .filter-search-wrap {
-                grid-column: 1 / -1 !important;
-                display: flex !important;
-                gap: 0.35rem !important;
                 width: 100% !important;
+                flex: unset !important;
             }
 
             .filter-select-wrap {
                 width: 100% !important;
+                flex: unset !important;
             }
 
             .filter-select,
@@ -1286,8 +1388,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                               MOBILE BOTTOM NAVIGATION BAR (Identical style to /pos page)
-                            ══════════════════════════════════════════════════════════════════════ */
+                                       MOBILE BOTTOM NAVIGATION BAR (Identical style to /pos page)
+                                    ══════════════════════════════════════════════════════════════════════ */
         /* Prevent duplicate superapp navbar on event-attendance */
         #superappBottomNav {
             display: none !important;
@@ -1907,8 +2009,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                               FULLSCREEN QR SCANNER MODE (Mobile-only, superapp quality)
-                            ══════════════════════════════════════════════════════════════════════ */
+                                       FULLSCREEN QR SCANNER MODE (Mobile-only, superapp quality)
+                                    ══════════════════════════════════════════════════════════════════════ */
         @keyframes slideUpCard {
             from {
                 transform: translateY(100%);
@@ -2493,8 +2595,8 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
-                    <span class="tab-text-full">Data Kehadiran & Event</span>
-                    <small class="tab-text-mob">Kehadiran</small>
+                    <span class="tab-text-full">Data Pengunjung</span>
+                    <small class="tab-text-mob">Pengunjung</small>
                 </button>
                 <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}"
                     onclick="switchTab('tab-scanner', this)">
@@ -2503,7 +2605,7 @@
                             d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
                         <rect x="7" y="7" width="10" height="10" rx="1" />
                     </svg>
-                    <span class="tab-text-full">Live QR Scanner</span>
+                    <span class="tab-text-full">Quick Scanner</span>
                     <small class="tab-text-mob">Scanner</small>
                 </button>
                 <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}"
@@ -2801,7 +2903,8 @@
                                     {{ $curDay->format('d') }}
                                 </span>
                                 @if($isEventDay || $isToday)
-                                    <span style="width:5px; height:5px; background:{{ $isEventDay ? '#16a34a' : '#15803d' }}; border-radius:50%; display:block;"
+                                    <span
+                                        style="width:5px; height:5px; background:{{ $isEventDay ? '#16a34a' : '#15803d' }}; border-radius:50%; display:block;"
                                         title="{{ $isEventDay ? 'Ada Event' : 'Hari Ini' }}"></span>
                                 @else
                                     <span style="width:5px; height:5px; opacity:0; display:block;"></span>
@@ -4196,12 +4299,12 @@
                 const dotTitle = isEventDay ? 'Ada Event' : 'Hari Ini';
 
                 html += `
-                    <div style="${wrapStyle}">
-                        <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:${dayNameColor};">${dayNames[i]}</span>
-                        <span style="font-size:0.9rem; font-weight:${dateFontWeight}; color:${dateColor};">${dStr}</span>
-                        <span style="width:5px; height:5px; background:${dotColor}; border-radius:50%; display:block; ${dotVisible ? '' : 'opacity:0;'}" title="${dotTitle}"></span>
-                    </div>
-                `;
+                            <div style="${wrapStyle}">
+                                <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:${dayNameColor};">${dayNames[i]}</span>
+                                <span style="font-size:0.9rem; font-weight:${dateFontWeight}; color:${dateColor};">${dStr}</span>
+                                <span style="width:5px; height:5px; background:${dotColor}; border-radius:50%; display:block; ${dotVisible ? '' : 'opacity:0;'}" title="${dotTitle}"></span>
+                            </div>
+                        `;
             }
             strip.innerHTML = html;
         }
@@ -4536,37 +4639,37 @@
                         const evName = st.product ? st.product.name : 'Event Tiket';
 
                         html += `
-                                                <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-                                                    <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
-                                                        <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
-                                                            ${initial}
+                                                        <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                                                            <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
+                                                                <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
+                                                                    ${initial}
+                                                                </div>
+                                                                <div style="min-width:0;">
+                                                                    <strong style="color:#0f172a; font-size:0.84rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                                        ${st.name}
+                                                                    </strong>
+                                                                    <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                                        <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
+                                                                <button type="button" onclick="toggleStaffSimple('${st.product_id}', ${st.id}, this)"
+                                                                    class="badge-status ${statusClass}"
+                                                                    style="cursor:pointer; border:none; font-size:0.72rem; padding:0.25rem 0.65rem; font-weight:700;">
+                                                                    ${statusText}
+                                                                </button>
+                                                                <button type="button" onclick="deleteStaffSimple('${st.product_id}', ${st.id}, '${st.name.replace(/'/g, "\\'")}')"
+                                                                    title="Hapus Panitia"
+                                                                    style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
+                                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                        <div style="min-width:0;">
-                                                            <strong style="color:#0f172a; font-size:0.84rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                                                ${st.name}
-                                                            </strong>
-                                                            <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                                <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
-                                                        <button type="button" onclick="toggleStaffSimple('${st.product_id}', ${st.id}, this)"
-                                                            class="badge-status ${statusClass}"
-                                                            style="cursor:pointer; border:none; font-size:0.72rem; padding:0.25rem 0.65rem; font-weight:700;">
-                                                            ${statusText}
-                                                        </button>
-                                                        <button type="button" onclick="deleteStaffSimple('${st.product_id}', ${st.id}, '${st.name.replace(/'/g, "\\'")}')"
-                                                            title="Hapus Panitia"
-                                                            style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
-                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                                <polyline points="3 6 5 6 21 6"></polyline>
-                                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            `;
+                                                    `;
                     });
                     container.innerHTML = html;
                 }
@@ -5474,15 +5577,15 @@
                 card.style.display = 'block';
                 const t = data.ticket;
                 card.innerHTML = `
-                                                        <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
-                                                            <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
-                                                            <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
-                                                        </div>
-                                                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-                                                            <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
-                                                            <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
-                                                        </div>
-                                                    `;
+                                                                <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+                                                                    <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
+                                                                    <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
+                                                                </div>
+                                                                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                                                                    <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
+                                                                    <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
+                                                                </div>
+                                                            `;
             } else {
                 card.style.display = 'none';
             }
@@ -5912,11 +6015,11 @@
             // Render rows instan
             if (filtered.length === 0) {
                 tbody.innerHTML = `<tr>
-                                                        <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
-                                                            <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.92rem;">Tidak Ada Tiket yang Cocok</div>
-                                                            <div style="font-size: 0.78rem; color: #64748b;">Pencarian instan tidak menemukan data untuk filter yang dipilih.</div>
-                                                        </td>
-                                                    </tr>`;
+                                                                <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
+                                                                    <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.92rem;">Tidak Ada Tiket yang Cocok</div>
+                                                                    <div style="font-size: 0.78rem; color: #64748b;">Pencarian instan tidak menemukan data untuk filter yang dipilih.</div>
+                                                                </td>
+                                                            </tr>`;
             } else {
                 let html = '';
                 filtered.forEach((t, index) => {
@@ -5928,16 +6031,16 @@
                         badgeClass = 'badge-used';
                         statusLabel = 'Hadir (Checked-In)';
                         btnHtml = `<button type="button" class="btn-action-sm btn-toggle-undo" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
-                                                            </button>`;
+                                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
+                                                                    </button>`;
                     } else if (t.status === 'cancelled') {
                         badgeClass = 'badge-cancelled';
                         statusLabel = 'Dibatalkan';
                         btnHtml = `<span style="font-size: 0.75rem; color: #94a3b8;">Tidak Aktif</span>`;
                     } else {
                         btnHtml = `<button type="button" class="btn-action-sm btn-toggle-checkin" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Check-In
-                                                            </button>`;
+                                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Check-In
+                                                                    </button>`;
                     }
 
                     const timeDisplay = t.checked_in_at
@@ -5945,31 +6048,31 @@
                         : `<span style="color: #94a3b8; font-style: italic; font-size: 0.8rem;">— Belum —</span>`;
 
                     html += `<tr id="row-ticket-${t.id}">
-                                                            <td class="row-index">${index + 1}</td>
-                                                            <td class="row-code">
-                                                                <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                                                    ${t.code}
-                                                                </span>
-                                                            </td>
-                                                            <td class="row-event">
-                                                                <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
-                                                                <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
-                                                            </td>
-                                                            <td class="row-holder">
-                                                                <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
-                                                                <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
-                                                                <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>
-                                                                ${t.holder_nik ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
-                                                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                                                    ${t.holder_nik}
-                                                                </span>` : ''}
-                                                            </td>
-                                                            <td class="row-status">
-                                                                <span class="badge-status ${badgeClass}">${statusLabel}</span>
-                                                            </td>
-                                                            <td class="row-time">${timeDisplay}${t.scanned_by ? `<span style="font-size: 0.71rem; color: #475569; display: flex; align-items: center; gap: 3px; margin-top: 2px; font-weight: 600;"><svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.scanned_by}</span>` : ''}</td>
-                                                            <td style="text-align: center;" class="row-action">${btnHtml}</td>
-                                                        </tr>`;
+                                                                    <td class="row-index">${index + 1}</td>
+                                                                    <td class="row-code">
+                                                                        <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                                                            ${t.code}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td class="row-event">
+                                                                        <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
+                                                                        <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
+                                                                    </td>
+                                                                    <td class="row-holder">
+                                                                        <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
+                                                                        <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
+                                                                        <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>
+                                                                        ${t.holder_nik ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
+                                                                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                                                            ${t.holder_nik}
+                                                                        </span>` : ''}
+                                                                    </td>
+                                                                    <td class="row-status">
+                                                                        <span class="badge-status ${badgeClass}">${statusLabel}</span>
+                                                                    </td>
+                                                                    <td class="row-time">${timeDisplay}${t.scanned_by ? `<span style="font-size: 0.71rem; color: #475569; display: flex; align-items: center; gap: 3px; margin-top: 2px; font-weight: 600;"><svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.scanned_by}</span>` : ''}</td>
+                                                                    <td style="text-align: center;" class="row-action">${btnHtml}</td>
+                                                                </tr>`;
                 });
                 tbody.innerHTML = html;
             }
