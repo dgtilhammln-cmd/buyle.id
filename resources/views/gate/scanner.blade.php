@@ -50,20 +50,21 @@
             background: linear-gradient(135deg, #1db349 0%, #84ce00 100%);
             box-shadow: 0 4px 20px rgba(29, 179, 73, 0.28);
             border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 0.75rem 1.25rem;
+            padding: 0.65rem 1rem;
             position: sticky;
             top: 0;
             z-index: 50;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            overflow: hidden;
         }
 
         .gate-header-left {
             display: flex;
             align-items: center;
-            gap: 0.85rem;
+            gap: 0.5rem;
             min-width: 0;
             flex-shrink: 0;
         }
@@ -73,6 +74,7 @@
             align-items: center;
             text-decoration: none;
             transition: transform 0.2s ease;
+            flex-shrink: 0;
         }
         .gate-tix-logo:hover {
             transform: scale(1.02);
@@ -85,12 +87,12 @@
             background: rgba(255, 255, 255, 0.18);
             border: 1px solid rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(8px);
-            padding: 0.3rem 0.75rem;
+            padding: 0.25rem 0.65rem;
             border-radius: 999px;
             color: #ffffff;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 700;
-            max-width: 240px;
+            max-width: 140px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -100,26 +102,38 @@
             .gate-event-badge-strip {
                 display: none !important;
             }
+            .gate-tix-header {
+                padding: 0.5rem 0.75rem;
+            }
         }
 
         .gate-header-right {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.35rem;
             flex-shrink: 0;
         }
 
         .gate-staff-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             background: #ffffff;
             color: #166534;
-            padding: 0.32rem 0.75rem;
+            padding: 0.25rem 0.55rem;
             border-radius: 999px;
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             font-weight: 700;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+        }
+
+        .gate-staff-name-text {
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
         }
 
         .gate-dot-online {
@@ -128,6 +142,7 @@
             background: #16a34a;
             border-radius: 50%;
             display: inline-block;
+            flex-shrink: 0;
         }
 
         .gate-staff-logout-btn {
@@ -144,20 +159,22 @@
         .gate-live-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
-            background: rgba(255, 255, 255, 0.2);
+            gap: 0.35rem;
+            background: rgba(255, 255, 255, 0.22);
             border: 1px solid rgba(255, 255, 255, 0.35);
             color: #ffffff;
-            padding: 0.32rem 0.75rem;
+            padding: 0.25rem 0.55rem;
             border-radius: 999px;
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             font-weight: 700;
             backdrop-filter: blur(8px);
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .btn-fs-toggle {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: #ffffff;
             border: none;
@@ -168,6 +185,7 @@
             justify-content: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
             transition: all 0.2s ease;
+            flex-shrink: 0;
         }
         .btn-fs-toggle:hover {
             transform: scale(1.05);
@@ -549,6 +567,400 @@
         /* Animation */
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* ════ FULLSCREEN QR SCANNER MODE (Mobile Superapp Style) ════ */
+        @keyframes slideUpCard {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes scanLineAnim {
+            0% { transform: translateY(8px); opacity: 0.65; }
+            50% { transform: translateY(calc(min(260px, 72vw) - 16px)); opacity: 1; }
+            100% { transform: translateY(8px); opacity: 0.65; }
+        }
+
+        #fullscreenScannerOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99990;
+            background: #000;
+            flex-direction: column;
+        }
+
+        #fullscreenScannerOverlay.active {
+            display: flex !important;
+        }
+
+        #fsVideoWrapper {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #fsVideoEl {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #fsGreenTint {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 179, 73, 0.08);
+            pointer-events: none;
+        }
+
+        #fsScanFrame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            width: min(260px, 72vw);
+            height: min(260px, 72vw);
+            pointer-events: none;
+        }
+
+        .fs-corner {
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            border-color: #ffffff;
+            border-style: solid;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+        }
+
+        .fs-corner.tl {
+            top: 0;
+            left: 0;
+            border-width: 4px 0 0 4px;
+            border-radius: 18px 0 0 0;
+        }
+
+        .fs-corner.tr {
+            top: 0;
+            right: 0;
+            border-width: 4px 4px 0 0;
+            border-radius: 0 18px 0 0;
+        }
+
+        .fs-corner.bl {
+            bottom: 0;
+            left: 0;
+            border-width: 0 0 4px 4px;
+            border-radius: 0 0 0 18px;
+        }
+
+        .fs-corner.br {
+            bottom: 0;
+            right: 0;
+            border-width: 0 4px 4px 0;
+            border-radius: 0 0 18px 0;
+        }
+
+        #fsScanLine {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            right: 6px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #ffffff, #86efac, #ffffff, rgba(255, 255, 255, 0.4), transparent);
+            border-radius: 999px;
+            animation: scanLineAnim 2.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.95), 0 0 24px rgba(34, 197, 94, 0.7);
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        #fsTopBar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding-top: max(env(safe-area-inset-top, 0px), 14px);
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+        }
+
+        #fsBackBtn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.15s;
+        }
+
+        #fsBackBtn:active { transform: scale(0.9); }
+
+        #fsTopRight {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #fsSignalWidget {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.3rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        #fsFlashBtn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.2s;
+        }
+
+        #fsFlashBtn.on {
+            background: rgba(255, 220, 0, 0.3);
+            border-color: rgba(255, 220, 0, 0.5);
+            color: #fde68a;
+        }
+
+        #fsGuideText {
+            position: absolute;
+            bottom: 42%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            white-space: nowrap;
+            pointer-events: none;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #fsScanResultCard {
+            position: absolute;
+            bottom: max(env(safe-area-inset-bottom, 0px), 18px);
+            left: 14px;
+            right: 14px;
+            max-width: 430px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 1rem 1.15rem 1.15rem;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.35);
+            display: none;
+            animation: slideUpCard 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            z-index: 20;
+        }
+
+        #fsScanResultCard.show {
+            display: block;
+        }
+
+        .fs-card-drag-pill {
+            width: 36px;
+            height: 4px;
+            background: #cbd5e1;
+            border-radius: 999px;
+            margin: 0 auto 0.75rem;
+        }
+
+        .fs-card-event-row {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .fs-card-event-img {
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: #f1f5f9;
+            flex-shrink: 0;
+            border: 1.5px solid #f1f5f9;
+        }
+
+        .fs-card-event-img-placeholder {
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1.5px solid #bbf7d0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1eb349;
+        }
+
+        .fs-card-event-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fs-card-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .fs-card-status-badge.valid {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .fs-card-status-badge.used {
+            background: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+        }
+
+        .fs-card-status-badge.invalid {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .fs-card-event-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.1rem;
+        }
+
+        .fs-card-event-date {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .fs-card-data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .fs-card-data-item {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 0.5rem 0.65rem;
+        }
+
+        .fs-card-data-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #94a3b8;
+            margin-bottom: 2px;
+        }
+
+        .fs-card-data-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fs-card-next-btn {
+            width: 100%;
+            height: 48px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            border: none;
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(30, 179, 73, 0.4);
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .fs-card-next-btn:active { transform: scale(0.97); }
+
+        .fs-card-next-btn.error-btn {
+            background: #0f172a;
+            box-shadow: none;
+        }
+
+        /* ── Fullscreen Trigger Button ── */
+        #openFullscreenBtn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.25);
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+        }
+        #openFullscreenBtn:active {
+            transform: scale(0.98);
+        }
+
         /* Mobile Adjustments */
         @media (max-width: 640px) {
             .gate-nav { padding: 0.75rem 1rem; }
@@ -633,20 +1045,20 @@
 
         <div class="gate-header-right">
             @if($staffSession)
-                <div id="staffActiveBadge" class="gate-staff-pill" title="Petugas Aktif">
+                <div id="staffActiveBadge" class="gate-staff-pill" title="Petugas Aktif: {{ $staffSession['name'] }}">
                     <span class="gate-dot-online"></span>
-                    <span>{{ $staffSession['name'] }} (Gate {{ $staffSession['gate'] }})</span>
+                    <span class="gate-staff-name-text">{{ $staffSession['name'] }}</span>
                     <button type="button" onclick="logoutStaff()" title="Keluar / Ganti Panitia" class="gate-staff-logout-btn">✕</button>
                 </div>
             @endif
 
             <div class="gate-live-pill" title="Status Gate Aktif">
                 <span class="pulse-dot"></span>
-                <span>Gate Live</span>
+                <span>Live</span>
             </div>
 
             <!-- Fullscreen Mode Button -->
-            <button type="button" onclick="toggleFullscreen()" class="btn-fs-toggle" id="btnFsToggle" title="Mode Layar Penuh (Fullscreen)">
+            <button type="button" onclick="openFullscreenScanner()" class="btn-fs-toggle" id="btnFsToggle" title="Buka Mode Fullscreen Scanner">
                 <span id="fsIconWrap" style="display:flex; align-items:center; justify-content:center;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
@@ -723,6 +1135,14 @@
                         <!-- Viewport Box -->
                         <div id="reader"></div>
 
+                        <!-- Fullscreen Button Superapp Style (seperti di tab=scanner) -->
+                        <button type="button" id="openFullscreenBtn" onclick="openFullscreenScanner()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            </svg>
+                            Buka Mode Fullscreen Scanner
+                        </button>
+
                         <!-- Input Manual Ringkas -->
                         <form id="manualScanForm" class="manual-scan-wrap" onsubmit="handleManualSubmit(event)" style="display:flex; margin-top:0.75rem;">
                             <input type="text" id="manualCodeInput" placeholder="Ketik kode tiket manual jika QR bermasalah..." autocomplete="off"
@@ -734,26 +1154,11 @@
                         </form>
                     </div>
 
-                    <!-- Kolom Kanan: Live Data Hasil Scan -->
+                    <!-- Kolom Kanan: Live Data Hasil Scan (Muncul saat memindai) -->
                     <div class="scanner-data-col">
-                        <div id="scannerResultPanel" class="scanner-result-panel" style="min-height: 360px;">
-                            
-                            <!-- 1. State Idle (Menunggu Scan) -->
-                            <div id="resStateIdle" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:1.5rem 1rem;">
-                                <div style="width:64px; height:64px; border-radius:20px; background:#f0fdf4; border:1.5px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#1eb349; margin-bottom:1rem; box-shadow:0 8px 20px rgba(30,179,73,0.12);">
-                                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>
-                                </div>
-                                <div style="display:inline-flex; align-items:center; gap:6px; padding:0.25rem 0.75rem; border-radius:999px; background:#e0f2fe; color:#0369a1; font-size:0.73rem; font-weight:700; margin-bottom:0.65rem;">
-                                    <span style="width:7px; height:7px; border-radius:50%; background:#0284c7; display:inline-block;"></span>
-                                    Kamera Siap Memindai
-                                </div>
-                                <h4 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 0.35rem 0;">Menunggu Scan Tiket</h4>
-                                <p style="font-size:0.8rem; color:#64748b; line-height:1.5; margin:0; max-width:280px;">
-                                    Arahkan QR Code pengunjung ke kamera di sebelah kiri, atau ketik kode tiket pada kolom di bawah.
-                                </p>
-                            </div>
+                        <div id="scannerResultPanel" class="scanner-result-panel" style="display:none;">
 
-                            <!-- 2. State Loading -->
+                            <!-- 1. State Loading -->
                             <div id="resStateLoading" style="display:none; flex-direction:column; align-items:center; text-align:center; padding:2.5rem 1rem;">
                                 <svg width="44" height="44" stroke="#1eb349" stroke-width="2.5" fill="none" viewBox="0 0 24 24" style="animation:spin 1s linear infinite; margin-bottom:1rem;">
                                     <circle cx="12" cy="12" r="10" stroke-dasharray="31" stroke-dashoffset="10"/>
@@ -855,6 +1260,104 @@
                     <svg id="gateMobBtnIcon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
             </div>
+        </div>
+    </div>
+
+    {{-- ══ FULLSCREEN QR SCANNER OVERLAY (Mobile Superapp Style) ══ --}}
+    <div id="fullscreenScannerOverlay">
+        <div id="fsVideoWrapper">
+            <video id="fsVideoEl" autoplay playsinline muted></video>
+            <div id="fsGreenTint"></div>
+
+            <div id="fsScanFrame">
+                <div class="fs-corner tl"></div>
+                <div class="fs-corner tr"></div>
+                <div class="fs-corner bl"></div>
+                <div class="fs-corner br"></div>
+                <div id="fsScanLine"></div>
+            </div>
+
+            <div id="fsTopBar">
+                <button type="button" id="fsBackBtn" onclick="closeFullscreenScanner()" aria-label="Tutup Fullscreen">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </button>
+
+                <div id="fsTopRight">
+                    <div id="fsSignalWidget">
+                        <div id="fsSignalBars" style="display:flex; align-items:flex-end; gap:1.5px; height:12px;">
+                            <div id="fsBar1" style="width:2.5px; height:3px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar2" style="width:2.5px; height:5px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar3" style="width:2.5px; height:7.5px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar4" style="width:2.5px; height:10px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                            <div id="fsBar5" style="width:2.5px; height:12px; border-radius:1.5px; background:rgba(255,255,255,0.4);"></div>
+                        </div>
+                        <span id="fsSignalLabel" style="font-size:0.68rem;">Live</span>
+                    </div>
+                    <button type="button" id="fsFlashBtn" onclick="toggleFsFlash()" aria-label="Flash">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        <span id="fsFlashLabel">Flash off</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="fsGuideText">Arahkan QR Code ke dalam bingkai</div>
+
+            <div id="fsScanResultCard">
+                <div class="fs-card-drag-pill"></div>
+
+                <div class="fs-card-event-row">
+                    <div id="fsCardEventImgWrap" class="fs-card-event-img-placeholder">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </div>
+                    <div class="fs-card-event-info">
+                        <div id="fsCardStatusBadge" class="fs-card-status-badge valid">
+                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            CHECK-IN BERHASIL
+                        </div>
+                        <div id="fsCardEventName" class="fs-card-event-name">{{ $event->name }}</div>
+                        <div id="fsCardEventDate" class="fs-card-event-date">{{ $event->event_date ? $event->event_date->format('d M Y') : '' }}</div>
+                    </div>
+                </div>
+
+                <div class="fs-card-data-grid">
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Pemegang Tiket</div>
+                        <div id="fsCardHolderName" class="fs-card-data-value">—</div>
+                    </div>
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Kode Tiket</div>
+                        <div id="fsCardTicketCode" class="fs-card-data-value" style="font-family:monospace; color:#1eb349;">—</div>
+                    </div>
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Email</div>
+                        <div id="fsCardEmail" class="fs-card-data-value" style="font-size:0.72rem;">—</div>
+                    </div>
+                    <div class="fs-card-data-item">
+                        <div class="fs-card-data-label">Waktu Check-In</div>
+                        <div id="fsCardTime" class="fs-card-data-value">—</div>
+                    </div>
+                </div>
+
+                <button type="button" class="fs-card-next-btn" id="fsCardNextBtn" onclick="closeFsScanCard()">
+                    <span id="fsCardNextLabel">Scan Berikutnya</span>
+                    <svg id="fsCardNextIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
+            </div>
+
+            <canvas id="fsCanvas" style="display:none;"></canvas>
         </div>
     </div>
 
@@ -1082,10 +1585,14 @@
             const clean = rawCode.trim();
 
             // Set loading state
-            document.getElementById('resStateIdle').style.display = 'none';
-            document.getElementById('resStateActive').style.display = 'none';
-            document.getElementById('resStateLoading').style.display = 'flex';
-            document.getElementById('resLoadingCode').innerText = clean;
+            const panel = document.getElementById('scannerResultPanel');
+            if (panel) panel.style.display = 'block';
+            const active = document.getElementById('resStateActive');
+            const loading = document.getElementById('resStateLoading');
+            if (active) active.style.display = 'none';
+            if (loading) loading.style.display = 'flex';
+            const codeEl = document.getElementById('resLoadingCode');
+            if (codeEl) codeEl.innerText = clean;
 
             const headers = {
                 'Content-Type': 'application/json',
@@ -1119,14 +1626,13 @@
             const isMobile = window.innerWidth <= 768;
 
             // Render right side panel
-            const idle = document.getElementById('resStateIdle');
+            const panel = document.getElementById('scannerResultPanel');
             const loading = document.getElementById('resStateLoading');
             const active = document.getElementById('resStateActive');
-            const panel = document.getElementById('scannerResultPanel');
 
-            loading.style.display = 'none';
-            idle.style.display = 'none';
-            active.style.display = 'flex';
+            if (panel) panel.style.display = 'block';
+            if (loading) loading.style.display = 'none';
+            if (active) active.style.display = 'flex';
 
             panel.className = `scanner-result-panel status-${data.status}`;
 
@@ -1340,78 +1846,352 @@
 
         function resumeScannerNow() {
             isProcessing = false;
-            document.getElementById('resStateActive').style.display = 'none';
-            document.getElementById('resStateLoading').style.display = 'none';
-            document.getElementById('resStateIdle').style.display = 'flex';
-            document.getElementById('scannerResultPanel').className = 'scanner-result-panel';
-            document.getElementById('manualCodeInput').value = '';
+            const active = document.getElementById('resStateActive');
+            const loading = document.getElementById('resStateLoading');
+            const panel = document.getElementById('scannerResultPanel');
+            if (active) active.style.display = 'none';
+            if (loading) loading.style.display = 'none';
+            if (panel) {
+                panel.style.display = 'none';
+                panel.className = 'scanner-result-panel';
+            }
+            const input = document.getElementById('manualCodeInput');
+            if (input) input.value = '';
         }
 
-        function incrementCounter() {
-            const elChecked = document.getElementById('stat-checked');
-            const elRemain = document.getElementById('stat-remain');
-            const elTotal = document.getElementById('stat-total');
-            if (!elChecked || !elRemain || !elTotal) return;
+        // ════ FULLSCREEN QR SCANNER CONTROLLER (Mobile Superapp Mode) ════
+        let fsStream = null;
+        let fsTorchTrack = null;
+        let fsFlashOn = false;
+        let fsIsProcessing = false;
+        let fsQrInterval = null;
+        let fsNativeDetector = null;
 
-            let checked = parseInt(elChecked.innerText) || 0;
-            let remain = parseInt(elRemain.innerText) || 0;
-            let total = parseInt(elTotal.innerText) || 0;
-
-            checked++;
-            remain = Math.max(0, remain - 1);
-            elChecked.innerText = checked;
-            elRemain.innerText = remain;
+        if ('BarcodeDetector' in window) {
+            try { fsNativeDetector = new window.BarcodeDetector({ formats: ['qr_code'] }); } catch (e) { }
         }
 
-        // ── FULLSCREEN CONTROLLER ──
-        function toggleFullscreen() {
-            const doc = document;
-            const docEl = document.documentElement;
+        async function openFullscreenScanner() {
+            if (audioCtx && audioCtx.state === 'suspended') {
+                try { audioCtx.resume(); } catch(e) {}
+            }
+            const overlay = document.getElementById('fullscreenScannerOverlay');
+            const videoEl = document.getElementById('fsVideoEl');
+            if (!overlay || !videoEl) return;
 
-            const requestFs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-            const exitFs = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
 
-            const isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
-
-            if (!isFs) {
-                if (requestFs) {
-                    requestFs.call(docEl).catch(err => {
-                        console.log('Fullscreen error:', err);
-                    });
+            // Attempt native browser fullscreen if supported
+            try {
+                const docEl = document.documentElement;
+                const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+                if (req && !document.fullscreenElement) {
+                    req.call(docEl).catch(() => {});
                 }
-            } else {
-                if (exitFs) {
-                    exitFs.call(doc);
+            } catch(e) {}
+
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    await screen.orientation.lock('portrait').catch(() => {});
                 }
+            } catch(e) {}
+
+            fsFlashOn = false;
+            fsIsProcessing = false;
+            const flashLbl = document.getElementById('fsFlashLabel');
+            const flashBtn = document.getElementById('fsFlashBtn');
+            if (flashLbl) flashLbl.textContent = 'Flash off';
+            if (flashBtn) flashBtn.classList.remove('on');
+            closeFsScanCard();
+
+            // Pause inline camera video to prevent camera resource conflict
+            const inlineVideo = document.querySelector('#reader video');
+            if (inlineVideo) {
+                try { inlineVideo.pause(); } catch(e) {}
+            }
+
+            try {
+                const constraints = {
+                    video: {
+                        facingMode: { ideal: 'environment' },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+                fsStream = await navigator.mediaDevices.getUserMedia(constraints);
+                videoEl.srcObject = fsStream;
+                await videoEl.play();
+
+                const tracks = fsStream.getVideoTracks();
+                if (tracks.length > 0) {
+                    fsTorchTrack = tracks[0];
+                    const caps = fsTorchTrack.getCapabilities ? fsTorchTrack.getCapabilities() : {};
+                    if (!caps.torch) {
+                        if (flashBtn) {
+                            flashBtn.style.opacity = '0.5';
+                            flashBtn.style.pointerEvents = 'none';
+                        }
+                    } else {
+                        if (flashBtn) {
+                            flashBtn.style.opacity = '1';
+                            flashBtn.style.pointerEvents = 'auto';
+                        }
+                    }
+                }
+
+                startFsQrLoop();
+            } catch(err) {
+                console.error('[FS Scanner] Camera error:', err);
+                alert('Gagal mengakses kamera di mode fullscreen. Pastikan izin kamera aktif.');
+                closeFullscreenScanner();
             }
         }
 
-        document.addEventListener('fullscreenchange', updateFullscreenIcon);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-        document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
-        document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+        function closeFullscreenScanner() {
+            const overlay = document.getElementById('fullscreenScannerOverlay');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
 
-        function updateFullscreenIcon() {
-            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-            const iconWrap = document.getElementById('fsIconWrap');
-            if (!iconWrap) return;
+            try {
+                const doc = document;
+                const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+                if (exit && (doc.fullscreenElement || doc.webkitFullscreenElement)) {
+                    exit.call(doc).catch(() => {});
+                }
+            } catch(e) {}
 
-            if (isFs) {
-                // Compress icon
-                iconWrap.innerHTML = `
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M14 10V4m0 6h6m-6 0l7-7M10 10V4m0 6H4m0 0l7-7" />
-                    </svg>
-                `;
-                document.body.classList.add('fullscreen-mode');
-            } else {
-                // Expand icon
-                iconWrap.innerHTML = `
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                    </svg>
-                `;
-                document.body.classList.remove('fullscreen-mode');
+            stopFsCamera();
+            stopFsQrLoop();
+            closeFsScanCard();
+
+            // Resume inline camera video
+            const inlineVideo = document.querySelector('#reader video');
+            if (inlineVideo) {
+                try { inlineVideo.play(); } catch(e) {}
+            }
+        }
+
+        function stopFsCamera() {
+            const videoEl = document.getElementById('fsVideoEl');
+            if (videoEl) { videoEl.pause(); videoEl.srcObject = null; }
+            if (fsStream) {
+                fsStream.getTracks().forEach(t => t.stop());
+                fsStream = null;
+                fsTorchTrack = null;
+            }
+        }
+
+        async function toggleFsFlash() {
+            if (!fsTorchTrack) return;
+            fsFlashOn = !fsFlashOn;
+            try {
+                await fsTorchTrack.applyConstraints({ advanced: [{ torch: fsFlashOn }] });
+                const btn = document.getElementById('fsFlashBtn');
+                const lbl = document.getElementById('fsFlashLabel');
+                if (fsFlashOn) {
+                    if (btn) btn.classList.add('on');
+                    if (lbl) lbl.textContent = 'Flash on';
+                } else {
+                    if (btn) btn.classList.remove('on');
+                    if (lbl) lbl.textContent = 'Flash off';
+                }
+            } catch (e) {
+                console.warn('[FS Flash] torch not supported:', e);
+            }
+        }
+
+        function startFsQrLoop() {
+            stopFsQrLoop();
+            const video = document.getElementById('fsVideoEl');
+            const canvas = document.getElementById('fsCanvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const guideEl = document.getElementById('fsGuideText');
+
+            fsQrInterval = setInterval(async () => {
+                if (fsIsProcessing) return;
+                if (!video || video.readyState < 2 || video.paused) return;
+                const vw = video.videoWidth, vh = video.videoHeight;
+                if (!vw || !vh) return;
+
+                // Engine 1: Native BarcodeDetector (fastest)
+                if (fsNativeDetector) {
+                    try {
+                        const barcodes = await fsNativeDetector.detect(video);
+                        if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
+                            if (guideEl) guideEl.textContent = 'QR terdeteksi! Memverifikasi...';
+                            fsScanSuccess(barcodes[0].rawValue);
+                            return;
+                        }
+                    } catch (e) { }
+                }
+
+                // Engine 2: jsQR with contrast boost
+                if (typeof window.jsQR !== 'function') return;
+                canvas.width = vw;
+                canvas.height = vh;
+                ctx.drawImage(video, 0, 0, vw, vh);
+                try {
+                    const imgData = ctx.getImageData(0, 0, vw, vh);
+                    const code = window.jsQR(imgData.data, vw, vh, { inversionAttempts: 'attemptBoth' });
+                    if (code && code.data) {
+                        if (guideEl) guideEl.textContent = 'QR terdeteksi! Memverifikasi...';
+                        fsScanSuccess(code.data);
+                        return;
+                    }
+                    // Contrast boost for glare
+                    const d = new Uint8ClampedArray(imgData.data);
+                    for (let i = 0; i < d.length; i += 4) {
+                        const g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+                        const b = g < 128 ? 0 : 255;
+                        d[i] = d[i + 1] = d[i + 2] = b;
+                    }
+                    const code2 = window.jsQR(d, vw, vh, { inversionAttempts: 'attemptBoth' });
+                    if (code2 && code2.data) {
+                        if (guideEl) guideEl.textContent = 'QR terdeteksi! Memverifikasi...';
+                        fsScanSuccess(code2.data);
+                        return;
+                    }
+                    if (guideEl) guideEl.textContent = 'Arahkan QR Code ke dalam bingkai';
+                } catch (e) { }
+            }, 80);
+        }
+
+        function stopFsQrLoop() {
+            if (fsQrInterval) { clearInterval(fsQrInterval); fsQrInterval = null; }
+        }
+
+        function fsScanSuccess(rawCode) {
+            if (fsIsProcessing) return;
+            fsIsProcessing = true;
+            stopFsQrLoop();
+
+            const clean = rawCode.trim();
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json'
+            };
+            if (currentGatePin) headers['X-Gate-Pin'] = currentGatePin;
+
+            showFsScanCard({
+                status: 'loading',
+                title: 'Memverifikasi Tiket...',
+                ticket: null
+            });
+
+            fetch(VERIFY_URL, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({ code: clean, gate_pin: currentGatePin })
+            })
+            .then(r => r.json())
+            .then(data => {
+                const sType = data.status === 'valid' ? 'success' : (data.status === 'used' ? 'used' : 'invalid');
+                playSound(sType);
+                triggerHaptic(sType);
+                showFsScanCard(data);
+            })
+            .catch(() => {
+                playSound('invalid');
+                triggerHaptic('invalid');
+                showFsScanCard({
+                    status: 'invalid',
+                    title: 'Koneksi Terganggu',
+                    message: 'Tidak dapat menghubungi server gate.'
+                });
+            });
+        }
+
+        function showFsScanCard(data) {
+            const card = document.getElementById('fsScanResultCard');
+            const statusBadge = document.getElementById('fsCardStatusBadge');
+            const eventNameEl = document.getElementById('fsCardEventName');
+            const eventDateEl = document.getElementById('fsCardEventDate');
+            const holderEl = document.getElementById('fsCardHolderName');
+            const codeEl = document.getElementById('fsCardTicketCode');
+            const emailEl = document.getElementById('fsCardEmail');
+            const timeEl = document.getElementById('fsCardTime');
+            const imgWrap = document.getElementById('fsCardEventImgWrap');
+            const nextBtn = document.getElementById('fsCardNextBtn');
+            const nextLabel = document.getElementById('fsCardNextLabel');
+            const nextIcon = document.getElementById('fsCardNextIcon');
+            if (!card) return;
+
+            if (data.status === 'loading') {
+                card.classList.add('show');
+                if (statusBadge) {
+                    statusBadge.style.background = '#f8fafc';
+                    statusBadge.style.color = '#64748b';
+                    statusBadge.style.border = '1px solid #e2e8f0';
+                    statusBadge.innerHTML = `<span style="animation:spin 1s linear infinite;display:inline-block;">⏳</span> Memverifikasi...`;
+                }
+                if (eventNameEl) eventNameEl.textContent = 'Sedang memeriksa tiket...';
+                if (eventDateEl) eventDateEl.textContent = '';
+                if (holderEl) holderEl.textContent = '—';
+                if (codeEl) codeEl.textContent = '—';
+                if (emailEl) emailEl.textContent = '—';
+                if (timeEl) timeEl.textContent = '—';
+                return;
+            }
+
+            const isValid = data.status === 'valid';
+            const isUsed = data.status === 'used';
+
+            if (statusBadge) {
+                statusBadge.className = 'fs-card-status-badge ' + (isValid ? 'valid' : (isUsed ? 'used' : 'invalid'));
+                if (isValid) {
+                    statusBadge.style.background = '#dcfce7';
+                    statusBadge.style.color = '#15803d';
+                    statusBadge.style.border = '1.5px solid #86efac';
+                    statusBadge.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> CHECK-IN BERHASIL`;
+                } else if (isUsed) {
+                    statusBadge.style.background = '#fef3c7';
+                    statusBadge.style.color = '#b45309';
+                    statusBadge.style.border = '1.5px solid #fde68a';
+                    statusBadge.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> SUDAH CHECK-IN`;
+                } else {
+                    statusBadge.style.background = '#fee2e2';
+                    statusBadge.style.color = '#b91c1c';
+                    statusBadge.style.border = '1.5px solid #fca5a5';
+                    statusBadge.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> TIKET TIDAK VALID`;
+                }
+            }
+
+            if (imgWrap && data.ticket && data.ticket.event_image) {
+                imgWrap.innerHTML = `<img src="${data.ticket.event_image}" class="fs-card-event-img" alt="Event">`;
+            }
+
+            if (eventNameEl) eventNameEl.textContent = (data.ticket && data.ticket.event_name) ? data.ticket.event_name : (data.title || 'Status Tiket');
+            if (eventDateEl) eventDateEl.textContent = (data.ticket && data.ticket.event_date) ? data.ticket.event_date : (data.message || '');
+            if (holderEl) holderEl.textContent = (data.ticket && data.ticket.holder_name) ? data.ticket.holder_name : (data.holder_name || '—');
+            if (codeEl) {
+                codeEl.textContent = (data.ticket && data.ticket.code) ? data.ticket.code : (data.code || '—');
+                codeEl.style.color = isValid ? '#1eb349' : '#64748b';
+            }
+            if (emailEl) emailEl.textContent = (data.ticket && data.ticket.holder_email) ? data.ticket.holder_email : (data.holder_email || '—');
+            if (timeEl) timeEl.textContent = (data.ticket && data.ticket.checked_in_at) ? data.ticket.checked_in_at : (isValid ? 'Baru saja' : '—');
+
+            if (nextBtn) {
+                nextBtn.className = 'fs-card-next-btn' + (!isValid ? ' error-btn' : '');
+            }
+            if (nextLabel) nextLabel.textContent = isValid ? 'Scan Berikutnya' : 'Tutup';
+            if (nextIcon) nextIcon.style.display = isValid ? 'block' : 'none';
+
+            card.classList.add('show');
+
+            if (isValid) {
+                setTimeout(() => closeFsScanCard(), 3500);
+            }
+        }
+
+        function closeFsScanCard() {
+            const card = document.getElementById('fsScanResultCard');
+            if (card) card.classList.remove('show');
+            fsIsProcessing = false;
+            const overlay = document.getElementById('fullscreenScannerOverlay');
+            if (overlay && overlay.classList.contains('active')) {
+                setTimeout(() => startFsQrLoop(), 400);
             }
         }
 
