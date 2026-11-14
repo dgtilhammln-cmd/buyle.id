@@ -75,17 +75,17 @@
                            Bottom Half: Pure White Background with Overlapping Banner & Logos
                         ══════════════════════════════════════════════════════════════════════ */
         /* ══════════════════════════════════════════════════════════════════════
-                   1. 3D ORBIT / STACKED BANNER CAROUSEL (ARTATIX DECK - IMAGE 1)
-                   Stepped Card Deck: layers stay tightly stacked even when zoomed out
+                   1. 3D ORBIT / STACKED BANNER CAROUSEL (ARTATIX DECK - IMAGE 2)
+                   Stepped Card Deck: layers fan out prominently on both sides
                 ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-banner-section {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1320px;
             margin: 1rem auto 2.25rem;
             position: relative;
             padding: 0 1rem;
             box-sizing: border-box;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .tix-orbit-carousel-wrap {
@@ -94,7 +94,7 @@
             margin: 0 auto;
             overflow: visible;
             padding: 0.75rem 0 0.5rem;
-            --tix-banner-w: min(78vw, 920px);
+            --tix-banner-w: min(70vw, 840px);
         }
 
         @media (max-width: 991px) {
@@ -106,14 +106,14 @@
             }
 
             .tix-orbit-carousel-wrap {
-                --tix-banner-w: 84vw;
+                --tix-banner-w: 80vw;
                 padding: 0.5rem 0;
             }
         }
 
         @media (max-width: 600px) {
             .tix-orbit-carousel-wrap {
-                --tix-banner-w: 86vw;
+                --tix-banner-w: 82vw;
             }
         }
 
@@ -126,7 +126,7 @@
         .tix-orbit-stage {
             position: relative;
             width: 100%;
-            max-width: 1140px;
+            max-width: 1280px;
             margin: 0 auto;
             height: calc(var(--tix-banner-w) * (600 / 1920));
             perspective: 1200px;
@@ -148,7 +148,7 @@
             width: var(--tix-banner-w);
             height: 100%;
             aspect-ratio: 1920 / 600;
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
             background: #0f172a;
             transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
@@ -163,107 +163,162 @@
 
         @media (max-width: 768px) {
             .tix-orbit-card {
-                border-radius: 14px;
+                border-radius: 12px;
             }
         }
 
-        /* ── Card States (Exact Artatix Deck Stack Effect from Image 1) ── */
+        /* ── Card States (Exact Artatix Fanned Deck - Image 2) ── */
         /* Active Center Card */
         .tix-orbit-card.is-active {
             transform: translateX(-50%) scale(1);
             z-index: 12;
             opacity: 1;
             filter: none;
-            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.08);
             pointer-events: auto;
         }
 
-        /* Stepped Deck Behind Left */
+        /* Stepped Deck Behind Left (Clearly Fanned Out) */
         .tix-orbit-card.is-prev-1,
         .tix-orbit-card.is-prev {
-            transform: translateX(calc(-50% - 32px)) scale(0.95);
+            transform: translateX(calc(-50% - 70px)) scale(0.94);
             z-index: 10;
             opacity: 0.90;
             filter: brightness(0.92);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-prev-2 {
-            transform: translateX(calc(-50% - 58px)) scale(0.90);
+            transform: translateX(calc(-50% - 132px)) scale(0.88);
             z-index: 8;
-            opacity: 0.70;
-            filter: brightness(0.82);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            opacity: 0.75;
+            filter: brightness(0.85);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-prev-3 {
-            transform: translateX(calc(-50% - 80px)) scale(0.85);
+            transform: translateX(calc(-50% - 188px)) scale(0.82);
             z-index: 6;
-            opacity: 0.45;
-            filter: brightness(0.72);
+            opacity: 0.58;
+            filter: brightness(0.78);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
             pointer-events: auto;
         }
 
-        /* Stepped Deck Behind Right */
+        .tix-orbit-card.is-prev-4 {
+            transform: translateX(calc(-50% - 238px)) scale(0.76);
+            z-index: 4;
+            opacity: 0.40;
+            filter: brightness(0.70);
+            pointer-events: auto;
+        }
+
+        /* Stepped Deck Behind Right (Clearly Fanned Out) */
         .tix-orbit-card.is-next-1,
         .tix-orbit-card.is-next {
-            transform: translateX(calc(-50% + 32px)) scale(0.95);
+            transform: translateX(calc(-50% + 70px)) scale(0.94);
             z-index: 10;
             opacity: 0.90;
             filter: brightness(0.92);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-next-2 {
-            transform: translateX(calc(-50% + 58px)) scale(0.90);
+            transform: translateX(calc(-50% + 132px)) scale(0.88);
             z-index: 8;
-            opacity: 0.70;
-            filter: brightness(0.82);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            opacity: 0.75;
+            filter: brightness(0.85);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
             pointer-events: auto;
         }
 
         .tix-orbit-card.is-next-3 {
-            transform: translateX(calc(-50% + 80px)) scale(0.85);
+            transform: translateX(calc(-50% + 188px)) scale(0.82);
             z-index: 6;
-            opacity: 0.45;
-            filter: brightness(0.72);
+            opacity: 0.58;
+            filter: brightness(0.78);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            pointer-events: auto;
+        }
+
+        .tix-orbit-card.is-next-4 {
+            transform: translateX(calc(-50% + 238px)) scale(0.76);
+            z-index: 4;
+            opacity: 0.40;
+            filter: brightness(0.70);
             pointer-events: auto;
         }
 
         /* Hidden Cards (further in the stack) */
         .tix-orbit-card.is-hidden {
-            transform: translateX(-50%) scale(0.78);
+            transform: translateX(-50%) scale(0.70);
             z-index: 1;
             opacity: 0;
             pointer-events: none;
+        }
+
+        /* Responsive Stepped Deck on Tablet */
+        @media (max-width: 991px) {
+            .tix-orbit-card.is-prev-1,
+            .tix-orbit-card.is-prev {
+                transform: translateX(calc(-50% - 46px)) scale(0.94);
+            }
+            .tix-orbit-card.is-prev-2 {
+                transform: translateX(calc(-50% - 86px)) scale(0.88);
+            }
+            .tix-orbit-card.is-prev-3 {
+                transform: translateX(calc(-50% - 122px)) scale(0.82);
+            }
+            .tix-orbit-card.is-prev-4 {
+                transform: translateX(calc(-50% - 152px)) scale(0.76);
+            }
+
+            .tix-orbit-card.is-next-1,
+            .tix-orbit-card.is-next {
+                transform: translateX(calc(-50% + 46px)) scale(0.94);
+            }
+            .tix-orbit-card.is-next-2 {
+                transform: translateX(calc(-50% + 86px)) scale(0.88);
+            }
+            .tix-orbit-card.is-next-3 {
+                transform: translateX(calc(-50% + 122px)) scale(0.82);
+            }
+            .tix-orbit-card.is-next-4 {
+                transform: translateX(calc(-50% + 152px)) scale(0.76);
+            }
         }
 
         /* Responsive Stepped Deck on Mobile */
         @media (max-width: 768px) {
             .tix-orbit-card.is-prev-1,
             .tix-orbit-card.is-prev {
-                transform: translateX(calc(-50% - 15px)) scale(0.96);
+                transform: translateX(calc(-50% - 24px)) scale(0.95);
             }
             .tix-orbit-card.is-prev-2 {
-                transform: translateX(calc(-50% - 28px)) scale(0.92);
+                transform: translateX(calc(-50% - 45px)) scale(0.90);
             }
             .tix-orbit-card.is-prev-3 {
-                transform: translateX(calc(-50% - 38px)) scale(0.88);
+                transform: translateX(calc(-50% - 64px)) scale(0.85);
+            }
+            .tix-orbit-card.is-prev-4 {
+                transform: translateX(calc(-50% - 80px)) scale(0.80);
             }
 
             .tix-orbit-card.is-next-1,
             .tix-orbit-card.is-next {
-                transform: translateX(calc(-50% + 15px)) scale(0.96);
+                transform: translateX(calc(-50% + 24px)) scale(0.95);
             }
             .tix-orbit-card.is-next-2 {
-                transform: translateX(calc(-50% + 28px)) scale(0.92);
+                transform: translateX(calc(-50% + 45px)) scale(0.90);
             }
             .tix-orbit-card.is-next-3 {
-                transform: translateX(calc(-50% + 38px)) scale(0.88);
+                transform: translateX(calc(-50% + 64px)) scale(0.85);
+            }
+            .tix-orbit-card.is-next-4 {
+                transform: translateX(calc(-50% + 80px)) scale(0.80);
             }
         }
 
@@ -1136,16 +1191,16 @@
         {{-- ══ REAL CONTENT CONTAINER ══ --}}
         <div id="tixRealContent" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
 
-            {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (ARTATIX DECK STYLE - IMAGE 1) ══ --}}
+            {{-- ══ 1. 3D ORBIT / STACKED BANNER SECTION (ARTATIX DECK STYLE - IMAGE 2) ══ --}}
             @php
                 $realBannerCount = count($banners);
-                // Duplicate banners if count is between 2 and 6 so the 3D coverflow deck always has 7 visible stacked layers
+                // Duplicate banners if count is between 2 and 9 so the 3D coverflow deck always has 9 visible stacked layers (4 left, 1 center, 4 right)
                 $displayBanners = $banners;
-                if ($realBannerCount > 1 && $realBannerCount < 7) {
-                    while (count($displayBanners) < 7) {
+                if ($realBannerCount > 1 && $realBannerCount < 9) {
+                    while (count($displayBanners) < 9) {
                         foreach ($banners as $b) {
                             $displayBanners[] = $b;
-                            if (count($displayBanners) >= 7) break;
+                            if (count($displayBanners) >= 9) break;
                         }
                     }
                 }
@@ -1162,9 +1217,11 @@
                                     elseif ($index === 1) $cardClass = 'is-next-1 is-next';
                                     elseif ($index === 2) $cardClass = 'is-next-2';
                                     elseif ($index === 3) $cardClass = 'is-next-3';
+                                    elseif ($index === 4) $cardClass = 'is-next-4';
                                     elseif ($index === count($displayBanners) - 1) $cardClass = 'is-prev-1 is-prev';
                                     elseif ($index === count($displayBanners) - 2) $cardClass = 'is-prev-2';
                                     elseif ($index === count($displayBanners) - 3) $cardClass = 'is-prev-3';
+                                    elseif ($index === count($displayBanners) - 4) $cardClass = 'is-prev-4';
                                 @endphp
                                 <div class="tix-orbit-card {{ $cardClass }}"
                                     data-index="{{ $index }}"
@@ -1511,8 +1568,8 @@
             cards.forEach((card, idx) => {
                 card.classList.remove(
                     'is-active',
-                    'is-prev-1', 'is-prev-2', 'is-prev-3', 'is-prev',
-                    'is-next-1', 'is-next-2', 'is-next-3', 'is-next',
+                    'is-prev-1', 'is-prev-2', 'is-prev-3', 'is-prev-4', 'is-prev',
+                    'is-next-1', 'is-next-2', 'is-next-3', 'is-next-4', 'is-next',
                     'is-hidden'
                 );
 
@@ -1528,12 +1585,16 @@
                     card.classList.add('is-next-2');
                 } else if (diff === 3) {
                     card.classList.add('is-next-3');
+                } else if (diff === 4) {
+                    card.classList.add('is-next-4');
                 } else if (diff === -1) {
                     card.classList.add('is-prev-1', 'is-prev');
                 } else if (diff === -2) {
                     card.classList.add('is-prev-2');
                 } else if (diff === -3) {
                     card.classList.add('is-prev-3');
+                } else if (diff === -4) {
+                    card.classList.add('is-prev-4');
                 } else {
                     card.classList.add('is-hidden');
                 }
