@@ -665,6 +665,101 @@
             color: #0f172a;
         }
 
+        /* ── DAFTAR PANITIA FORM (COMPACT DESKTOP & BALANCED MOBILE) ── */
+        .staff-add-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1.1fr 1.1fr auto;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .staff-field-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .staff-field-label {
+            display: block;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.35rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .staff-form-control {
+            width: 100%;
+            height: 38px;
+            padding: 0 0.75rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 9px;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 0.78rem !important;
+            font-weight: 600;
+            color: #0f172a;
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .staff-form-control:focus {
+            border-color: #1eb349;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
+        }
+
+        .staff-form-select {
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            padding-right: 2.2rem !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 0.75rem center !important;
+            background-size: 14px !important;
+            cursor: pointer;
+        }
+
+        .staff-submit-btn {
+            height: 38px;
+            padding: 0 1.25rem;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 9px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .staff-submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(30, 179, 73, 0.35);
+        }
+
+        @media (max-width: 900px) {
+            .staff-add-grid {
+                grid-template-columns: 1fr;
+                gap: 0.65rem;
+            }
+
+            .staff-submit-btn {
+                width: 100%;
+                margin-top: 0.15rem;
+            }
+        }
+
         /* ── STATS GRID (UNIFORM THEME CARDS) ── */
         .stat-grid {
             display: grid;
@@ -3735,16 +3830,13 @@
                                             </div>
 
                                             <form id="formAddStaffSimple" onsubmit="submitSimpleAddStaff(event)">
-                                                <div
-                                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; align-items:flex-end;">
+                                                <div class="staff-add-grid">
                                                     {{-- Event Selector --}}
-                                                    <div>
-                                                        <label
-                                                            style="display:block; font-size:0.74rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">
+                                                    <div class="staff-field-group">
+                                                        <label class="staff-field-label">
                                                             Pilih Event Tiket
                                                         </label>
-                                                        <select id="simpleStaffProductId" required
-                                                            style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #cbd5e1; border-radius:9px; font-size:0.78rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
+                                                        <select id="simpleStaffProductId" required class="staff-form-control staff-form-select">
                                                             @foreach($events as $ev)
                                                                 <option value="{{ $ev->id }}">{{ $ev->name }}</option>
                                                             @endforeach
@@ -3752,26 +3844,25 @@
                                                     </div>
 
                                                     {{-- Input Nama Panitia --}}
-                                                    <div>
-                                                        <label
-                                                            style="display:block; font-size:0.74rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">
+                                                    <div class="staff-field-group">
+                                                        <label class="staff-field-label">
                                                             Nama Panitia
                                                         </label>
                                                         <input type="text" id="simpleStaffName" required
                                                             placeholder="Contoh: Panitia Gate 1 / Budi"
-                                                            style="width:100%; height:38px; padding:0 0.75rem; border:1.5px solid #cbd5e1; border-radius:9px; font-size:0.78rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
+                                                            class="staff-form-control">
                                                     </div>
 
                                                     {{-- Input Password Panitia --}}
-                                                    <div>
-                                                        <label
-                                                            style="display:block; font-size:0.74rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">
+                                                    <div class="staff-field-group">
+                                                        <label class="staff-field-label">
                                                             Password Panitia
                                                         </label>
                                                         <div style="position:relative; display:flex; align-items:center;">
                                                             <input type="password" id="simpleStaffPassword" required
                                                                 placeholder="Minimal 4 karakter"
-                                                                style="width:100%; height:38px; padding:0 2.2rem 0 0.75rem; border:1.5px solid #cbd5e1; border-radius:9px; font-size:0.78rem; color:#0f172a; background:#f8fafc; outline:none; font-family:inherit;">
+                                                                class="staff-form-control"
+                                                                style="padding-right: 2.2rem;">
                                                             <button type="button" onclick="toggleSimplePwd()"
                                                                 style="position:absolute; right:0.5rem; background:none; border:none; color:#94a3b8; cursor:pointer; padding:0.2rem; display:flex; align-items:center;">
                                                                 <svg id="eyeSimpleStaff" width="15" height="15" fill="none"
@@ -3784,9 +3875,8 @@
                                                     </div>
 
                                                     {{-- Submit Button --}}
-                                                    <div>
-                                                        <button type="submit" id="btnSubmitSimpleStaff"
-                                                            style="width:100%; height:38px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:9px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.25); transition:all 0.2s ease;">
+                                                    <div class="staff-btn-group">
+                                                        <button type="submit" id="btnSubmitSimpleStaff" class="staff-submit-btn">
                                                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                                                                 viewBox="0 0 24 24">
                                                                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -3798,15 +3888,6 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <line x1="12" y1="5" x2="12" y2="19" />
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                        </svg>
-                                        <span>Tambah Panitia</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                </form>
-                            </div>
 
                             {{-- DAFTAR PANITIA TERDAFTAR --}}
                             <div>
@@ -4610,7 +4691,7 @@
                 alert('Terjadi kesalahan koneksi.');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Tambah Panitia</span>`;
+                btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Daftarkan Panitia</span>`;
             }
         }
 
