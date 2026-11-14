@@ -111,9 +111,9 @@
     }
 
     .tix-header-logo-img {
-        height: 42px;
+        height: 30px;
         width: auto;
-        max-width: 215px;
+        max-width: 160px;
         object-fit: contain;
         display: block;
         filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
@@ -368,11 +368,11 @@
         flex-shrink: 0;
     }
 
-    /* Dropdown Flyout */
+    /* Dropdown Flyout — muncul saat hover MAUPUN saat .open (klik fallback) */
     .tix-user-menu {
         display: none;
         position: absolute;
-        top: calc(100% + 8px);
+        top: calc(100% + 6px);
         right: 0;
         width: 240px;
         background: #ffffff;
@@ -384,7 +384,20 @@
         animation: tixDropIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
+    /* Hover pada wrapper → tampilkan dropdown */
+    .tix-user-wrapper:hover .tix-user-menu,
     .tix-user-wrapper.open .tix-user-menu {
+        display: block;
+    }
+
+    /* Bridge invisible agar dropdown tidak hilang saat mouse pindah dari button ke menu */
+    .tix-user-wrapper::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        right: 0;
+        height: 10px;
         display: block;
     }
 
@@ -687,8 +700,8 @@
         }
 
         .tix-header-logo-img {
-            height: 34px;
-            max-width: 165px;
+            height: 26px;
+            max-width: 140px;
         }
 
         /* Center pill capsule is hidden on mobile to avoid any collision */
@@ -861,8 +874,8 @@
                     <img src="{{ asset('images/logobuyletix.png') }}"
                          alt="Buyle TIX"
                          class="tix-header-logo-img"
-                         width="215"
-                         height="42">
+                         width="160"
+                         height="30">
                 </picture>
             </a>
         </div>
