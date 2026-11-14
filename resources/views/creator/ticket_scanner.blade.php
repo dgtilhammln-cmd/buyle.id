@@ -2665,9 +2665,6 @@
                 <div class="home-highlight-card"
                     style="background:#eaf8ed; border:1px solid #c8eccf; border-radius:22px; padding:1.25rem 1.35rem; margin-bottom:1.15rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; position:relative; overflow:hidden; box-shadow:0 3px 12px rgba(30,179,73,0.06);">
                     <div style="flex:1; min-width:0; z-index:2;">
-                        <div
-                            style="display:inline-flex; align-items:center; gap:0.35rem; background:rgba(255,255,255,0.7); border:1px solid #bbf7d0; padding:0.25rem 0.65rem; border-radius:999px; margin-bottom:0.55rem;">
-                        </div>
                         <h4
                             style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0 0 0.35rem; line-height:1.25; letter-spacing:-0.02em;">
                             Event Terdekat Anda!
@@ -2822,12 +2819,27 @@
                     {{-- Landscape Banner Image Container --}}
                     <div
                         style="position:relative; width:100%; height:180px; background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); overflow:hidden;">
-                        @if(isset($primaryEvent) && $primaryEvent && ($primaryEvent->featured_image || $primaryEvent->image))
-                            @php
-                                $imgSrc = $primaryEvent->featured_image ? asset('storage/' . $primaryEvent->featured_image) : asset('storage/' . $primaryEvent->image);
-                            @endphp
-                            <img src="{{ $imgSrc }}" alt="{{ $primaryEvent->name }}"
-                                style="width:100%; height:100%; object-fit:cover; opacity:0.88;">
+                        @php
+                            $imgSrc = null;
+                            if (isset($primaryEvent) && $primaryEvent) {
+                                if (!empty($primaryEvent->og_image)) {
+                                    $imgSrc = \Illuminate\Support\Str::startsWith($primaryEvent->og_image, 'http')
+                                        ? $primaryEvent->og_image
+                                        : asset('storage/' . $primaryEvent->og_image);
+                                } elseif (!empty($primaryEvent->featured_image)) {
+                                    $imgSrc = \Illuminate\Support\Str::startsWith($primaryEvent->featured_image, 'http')
+                                        ? $primaryEvent->featured_image
+                                        : asset('storage/' . $primaryEvent->featured_image);
+                                } elseif (!empty($primaryEvent->image)) {
+                                    $imgSrc = \Illuminate\Support\Str::startsWith($primaryEvent->image, 'http')
+                                        ? $primaryEvent->image
+                                        : asset('storage/' . $primaryEvent->image);
+                                }
+                            }
+                        @endphp
+                        @if($imgSrc)
+                            <img src="{{ $imgSrc }}" alt="{{ $primaryEvent->name ?? 'Event Poster' }}"
+                                style="width:100%; height:100%; object-fit:cover; object-position:center; opacity:0.92;">
                         @else
                             <div
                                 style="width:100%; height:100%; background:linear-gradient(135deg, #052e16 0%, #15803d 50%, #166534 100%); display:flex; align-items:center; justify-content:center; position:relative;">

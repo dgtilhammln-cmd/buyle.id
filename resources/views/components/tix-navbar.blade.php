@@ -952,15 +952,15 @@
                         </a>
 
                         @if(Auth::user()->role !== 'buyer')
-                            {{-- Dashboard Creator --}}
-                            <a href="{{ Route::has('creator.dashboard') ? route('creator.dashboard') : url('/creator') }}" class="tix-menu-item">
+                            {{-- Dashboard EO (event-attendance?tab=home) --}}
+                            <a href="{{ url('/creator/event-attendance?tab=home') }}" class="tix-menu-item">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="7"/>
                                     <rect x="14" y="3" width="7" height="7"/>
                                     <rect x="14" y="14" width="7" height="7"/>
                                     <rect x="3" y="14" width="7" height="7"/>
                                 </svg>
-                                <span>Dashboard Creator</span>
+                                <span>Dashboard EO</span>
                             </a>
 
                             {{-- Scanner Tiket Gate --}}
@@ -1089,6 +1089,18 @@
                         </svg>
                         <span>Tiket Saya</span>
                     </a>
+
+                    @if(Auth::user()->role !== 'buyer')
+                        <a href="{{ url('/creator/event-attendance?tab=home') }}" class="tix-drawer-link" onclick="closeTixDrawer()">
+                            <svg class="tix-drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            <span>Dashboard EO</span>
+                        </a>
+                    @endif
                 @endauth
             </div>
 
