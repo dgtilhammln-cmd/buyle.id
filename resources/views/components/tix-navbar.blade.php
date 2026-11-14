@@ -489,123 +489,12 @@
     }
 
     /* ══════════════════════════════════════════════════════════════
-       SEARCH OVERLAY POPUP (Desktop & Mobile)
+       SEARCH HIGHLIGHT RING — animasi ring pada search bar saat diklik dari header
        ══════════════════════════════════════════════════════════════ */
-    .tix-search-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        z-index: 100000;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 6rem 1.25rem 2rem;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.25s ease;
-    }
-
-    .tix-search-overlay.open {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .tix-search-modal {
-        width: 100%;
-        max-width: 680px;
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-        overflow: hidden;
-        border: 1px solid #E2E8F0;
-        transform: translateY(-16px) scale(0.98);
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .tix-search-overlay.open .tix-search-modal {
-        transform: translateY(0) scale(1);
-    }
-
-    .tix-search-modal-form {
-        display: flex;
-        align-items: center;
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid #F1F5F9;
-        gap: 0.75rem;
-    }
-
-    .tix-search-modal-input {
-        flex: 1;
-        border: none;
-        outline: none;
-        font-size: 1.05rem;
-        font-weight: 600;
-        color: #0F172A;
-        background: transparent;
-    }
-
-    .tix-search-modal-input::placeholder {
-        color: #94A3B8;
-        font-weight: 400;
-    }
-
-    .tix-search-close-btn {
-        background: #F1F5F9;
-        border: none;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #64748B;
-        cursor: pointer;
-        transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .tix-search-close-btn:hover {
-        background: #E2E8F0;
-        color: #0F172A;
-    }
-
-    .tix-search-chips {
-        padding: 1rem 1.25rem 1.25rem;
-        background: #FAFAFA;
-    }
-
-    .tix-chips-title {
-        font-size: 0.72rem;
-        font-weight: 700;
-        color: #64748B;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0.65rem;
-    }
-
-    .tix-chips-wrap {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.45rem;
-    }
-
-    .tix-chip-link {
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: #334155;
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        padding: 0.35rem 0.85rem;
-        border-radius: 999px;
-        text-decoration: none;
-        transition: all 0.15s ease;
-    }
-
-    .tix-chip-link:hover {
-        background: #F0FDF4;
-        border-color: #86EFAC;
-        color: #15803D;
+    .tix-search-bar-wrap.tix-search-highlight {
+        border-color: #1db349 !important;
+        box-shadow: 0 0 0 3px rgba(29, 179, 73, 0.25), 0 4px 18px rgba(29, 179, 73, 0.1) !important;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     /* ══════════════════════════════════════════════════════════════
@@ -1121,45 +1010,6 @@
 <div class="tix-header-spacer"></div>
 
 {{-- ══════════════════════════════════════════════════════════════
-     SEARCH MODAL POPUP
-     ══════════════════════════════════════════════════════════════ --}}
-<div class="tix-search-overlay" id="tixSearchOverlay" onclick="handleSearchOverlayClick(event)">
-    <div class="tix-search-modal">
-        <form action="{{ route('tix.index') }}" method="GET" class="tix-search-modal-form">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.5" style="flex-shrink:0;">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="M21 21l-4.35-4.35"></path>
-            </svg>
-            <input type="text"
-                   name="q"
-                   id="tixSearchModalInput"
-                   class="tix-search-modal-input"
-                   placeholder="Cari nama event, artis, seminar, kota..."
-                   value="{{ request('q') }}"
-                   autocomplete="off">
-            <button type="button" class="tix-search-close-btn" onclick="closeTixSearch()" aria-label="Tutup Pencarian">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-            </button>
-        </form>
-
-        <div class="tix-search-chips">
-            <div class="tix-chips-title">Kategori Populer</div>
-            <div class="tix-chips-wrap">
-                <a href="{{ route('tix.index', ['q' => 'Konser']) }}" class="tix-chip-link">🎵 Konser Musik</a>
-                <a href="{{ route('tix.index', ['q' => 'Webinar']) }}" class="tix-chip-link">💻 Webinar & Edukasi</a>
-                <a href="{{ route('tix.index', ['q' => 'Festival']) }}" class="tix-chip-link">🎪 Festival & Expo</a>
-                <a href="{{ route('tix.index', ['q' => 'Workshop']) }}" class="tix-chip-link">🚀 Workshop</a>
-                <a href="{{ route('tix.index', ['q' => 'Surabaya']) }}" class="tix-chip-link">📍 Event Surabaya</a>
-                <a href="{{ route('tix.index', ['q' => 'Jakarta']) }}" class="tix-chip-link">📍 Event Jakarta</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- ══════════════════════════════════════════════════════════════
      MOBILE OFFCANVAS DRAWER
      ══════════════════════════════════════════════════════════════ --}}
 <div class="tix-drawer-backdrop" id="tixDrawerBackdrop" onclick="handleDrawerBackdropClick(event)">
@@ -1282,30 +1132,42 @@
 
 {{-- ── INTERACTIVE JAVASCRIPT FOR TIX HEADER ── --}}
 <script>
-    // Search Overlay
+    // ── SEARCH: Scroll ke search bar di halaman & auto-focus input ──
     function openTixSearch() {
-        const overlay = document.getElementById('tixSearchOverlay');
-        const input = document.getElementById('tixSearchModalInput');
-        if (overlay) {
-            overlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => { if (input) input.focus(); }, 120);
+        // Coba cari search bar di halaman (tix/index.blade.php)
+        var searchWrap = document.querySelector('.tix-search-bar-wrap');
+        var searchInput = document.getElementById('tixSearchInput');
+
+        // Jika search bar ada (halaman /tix) → scroll & focus
+        if (searchWrap && searchInput) {
+            var headerH = parseInt(getComputedStyle(document.documentElement)
+                .getPropertyValue('--tix-h-desktop')) || 80;
+
+            // Scroll smooth ke posisi search bar dikurangi header tinggi + sedikit padding
+            var rect = searchWrap.getBoundingClientRect();
+            var targetY = window.scrollY + rect.top - headerH - 20;
+
+            window.scrollTo({ top: targetY, behavior: 'smooth' });
+
+            // Efek highlight ring pada search bar
+            searchWrap.classList.add('tix-search-highlight');
+            setTimeout(function () {
+                searchInput.focus();
+                searchInput.select();
+            }, 350);
+            setTimeout(function () {
+                searchWrap.classList.remove('tix-search-highlight');
+            }, 2000);
+
+        } else {
+            // Halaman bukan /tix (mis. /tix/info) → redirect ke /tix dengan fokus hash
+            window.location.href = '{{ route('tix.index') }}#tix-search-section';
         }
     }
 
-    function closeTixSearch() {
-        const overlay = document.getElementById('tixSearchOverlay');
-        if (overlay) {
-            overlay.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-    }
-
-    function handleSearchOverlayClick(e) {
-        if (e.target.id === 'tixSearchOverlay') {
-            closeTixSearch();
-        }
-    }
+    // Legacy alias (kalau ada link lama yg pakai closeTixSearch — aman tidak error)
+    function closeTixSearch() {}
+    function handleSearchOverlayClick() {}
 
     // User Menu Dropdown (Desktop)
     function toggleTixUserMenu(e) {
@@ -1344,13 +1206,34 @@
         }
     }
 
-    // Keyboard Shortcuts (ESC to close)
+    // Keyboard Shortcuts (ESC to close drawer)
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            closeTixSearch();
             closeTixDrawer();
             const wrapper = document.getElementById('tixUserWrapper');
             if (wrapper) wrapper.classList.remove('open');
+        }
+    });
+
+    // Auto-scroll ke search bar jika URL ada hash #tix-search-section (dari redirect halaman lain)
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.hash === '#tix-search-section') {
+            var searchWrap = document.querySelector('.tix-search-bar-wrap');
+            var searchInput = document.getElementById('tixSearchInput');
+            if (searchWrap && searchInput) {
+                var headerH = parseInt(getComputedStyle(document.documentElement)
+                    .getPropertyValue('--tix-h-desktop')) || 80;
+                setTimeout(function () {
+                    var rect = searchWrap.getBoundingClientRect();
+                    var targetY = window.scrollY + rect.top - headerH - 20;
+                    window.scrollTo({ top: targetY, behavior: 'smooth' });
+                    searchWrap.classList.add('tix-search-highlight');
+                    setTimeout(function () { searchInput.focus(); }, 350);
+                    setTimeout(function () { searchWrap.classList.remove('tix-search-highlight'); }, 2000);
+                    // Bersihkan hash dari URL tanpa reload
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }, 200);
+            }
         }
     });
 </script>

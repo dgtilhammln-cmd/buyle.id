@@ -1188,7 +1188,7 @@
                 </div>
 
                 {{-- ══ 3. SEARCH & QUICK FILTER BAR (REALTIME AJAX, NO URL PARAMS) ══ --}}
-                <div class="tix-search-bar-wrap">
+                <div class="tix-search-bar-wrap" id="tix-search-section">
                     <form id="tixSearchForm" action="javascript:void(0)" class="tix-search-form" onsubmit="return false;">
                         <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2.2" viewBox="0 0 24 24"
                             style="flex-shrink: 0;">
