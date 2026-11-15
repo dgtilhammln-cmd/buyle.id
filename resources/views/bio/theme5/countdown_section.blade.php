@@ -298,7 +298,7 @@
                 <div class="t5-cd-label">Detik</div>
             </div>
         </div>
-        <div class="t5-cd-finished" id="t5CdFinished" style="display:none;">🎉 Event Telah Dimulai!</div>
+        <div class="t5-cd-finished" id="t5CdFinished" style="display:none;">Event Telah Dimulai!</div>
 
         {{-- CTA Button --}}
         @if($cdCtaEnabled)

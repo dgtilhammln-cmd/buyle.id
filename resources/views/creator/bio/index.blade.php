@@ -2243,19 +2243,19 @@
                         </button>
 
                         {{-- Dropdown Tipe Website (hanya Tema 5) --}}
-                        <div style="margin-left:auto; flex-shrink:0; display:flex; align-items:center; gap:0.4rem;">
+                        <div style="margin-left:auto; flex-shrink:0; display:flex; align-items:center;">
                             <form id="webTypeForm" action="{{ route('creator.bio.save-profile') }}" method="POST" style="display:inline; margin:0;">
                                 @csrf
                                 <input type="hidden" name="web_type_save" value="1">
                                 <div style="position:relative; display:inline-block;">
                                     <select name="web_type" id="webTypeSelect"
                                         onchange="changeWebType(this)"
-                                        title="Pilih tampilan: Web Company Profile (semua section) atau Web EO (hanya Hero, Countdown, Tiket & Footer)"
-                                        style="border:1.5px solid #1eb349; border-radius:8px; padding:0.45rem 2rem 0.45rem 0.8rem; font-size:0.78rem; font-weight:700; color:#15803d; background:#f0fdf4; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; box-shadow:0 1px 4px rgba(30,179,73,0.12); transition:all 0.2s ease;">
-                                        <option value="company_profile" {{ ($cfg['web_type'] ?? 'company_profile') === 'company_profile' ? 'selected' : '' }}>🏢 Web Company Profile (Lengkap)</option>
-                                        <option value="event_organizer" {{ ($cfg['web_type'] ?? 'company_profile') === 'event_organizer' ? 'selected' : '' }}>🎪 Web Event Organizer (Hero, Countdown, Tiket & Footer)</option>
+                                        title="Pilih Tipe Website"
+                                        style="border:1.5px solid #cbd5e1; border-radius:12px; padding:0.5rem 1.85rem 0.5rem 0.85rem; font-family:'Montserrat', sans-serif; font-size:0.78rem; font-weight:600; color:#475569; background:#f8fafc; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; transition:all 0.2s ease;">
+                                        <option value="company_profile" {{ ($cfg['web_type'] ?? 'company_profile') === 'company_profile' ? 'selected' : '' }}>Web Company Profile</option>
+                                        <option value="event_organizer" {{ ($cfg['web_type'] ?? 'company_profile') === 'event_organizer' ? 'selected' : '' }}>Web Event Organizer</option>
                                     </select>
-                                    <svg style="position:absolute; right:0.65rem; top:50%; transform:translateY(-50%); pointer-events:none;" width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                                    <svg style="position:absolute; right:0.65rem; top:50%; transform:translateY(-50%); pointer-events:none;" width="12" height="12" fill="none" stroke="#64748b" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
                             </form>
                         </div>
@@ -2850,28 +2850,18 @@
                                     <div class="hpsub-pane" id="hpsub-products" style="display:none;">
                                         <input type="hidden" name="products_section_enabled_present" value="1">
 
-                                        {{-- Card Status Section --}}
+                                        {{-- Card Headline & Sub-headline dengan Checkbox --}}
                                         <div class="prof-card">
                                             <div class="prof-card-head"
                                                 style="display:flex; justify-content:space-between; align-items:center;">
-                                                <span>Status Section Produk Unggulan (Tema 5)</span>
+                                                <span>1. Judul &amp; Sub-judul Section Produk</span>
                                                 <label
                                                     style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
                                                     <input type="checkbox" name="products_section_enabled" value="1" {{ ($cfg['products_section_enabled'] ?? 1) ? 'checked' : '' }}
                                                         style="width:18px; height:18px; accent-color:#1eb349;">
-                                                    Aktifkan Section Produk
+                                                    Tampilkan Section
                                                 </label>
                                             </div>
-                                            <div class="card-body">
-                                                <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                                    Tampilkan etalase katalog produk unggulan pada homepage Tema 5. Jika dinonaktifkan, section produk dan menu navigasi terkait di header/footer otomatis disembunyikan.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {{-- Card Headline & Sub-headline --}}
-                                        <div class="prof-card">
-                                            <div class="prof-card-head">1. Judul &amp; Sub-judul Section Produk</div>
                                             <div class="card-body">
                                                 <div class="form-group" style="margin-bottom:1.15rem;">
                                                     <label class="form-label">Judul Utama H2 (Headline)</label>
@@ -4117,7 +4107,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1rem 1.25rem; font-size:0.82rem; color:#166534; line-height:1.5;">
-                                                    <strong>📌 Cara Kerja:</strong> Section countdown otomatis mengambil produk tipe <strong>Tiket Event</strong> yang waktu eventnya paling dekat dari daftar produk Anda. Jika ada event terdekat, countdown live ditampilkan. Anda juga bisa sembunyikan section ini kapan saja.
+                                                    <strong>Petunjuk:</strong> Section countdown otomatis mengambil produk tipe <strong>Tiket Event</strong> terdekat dari katalog Anda. Countdown live tampil otomatis jika tanggal event belum lewat.
                                                 </div>
                                             </div>
                                         </div>
