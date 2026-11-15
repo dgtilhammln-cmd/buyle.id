@@ -549,9 +549,13 @@
             $aboutOnClick = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
             $contactOnClick = $isHome ? "t5ScrollTo('contact-section'); return false;" : "";
 
+            // Web Type
+            $webType = $config['web_type'] ?? 'company_profile';
+            $isEO = ($webType === 'event_organizer');
+
             $aboutEnabled = !empty($config['about_enabled'] ?? 1);
             $productsSectionEnabled = !empty($config['products_section_enabled'] ?? 1);
-            $servicesSectionEnabled = !empty($config['services_enabled'] ?? 1);
+            $servicesSectionEnabled = $isEO ? false : !empty($config['services_enabled'] ?? 1);
 
             // Check if creator has any active products or services
             $hasProductsOrServices = false;
@@ -580,11 +584,11 @@
         {{-- Navigation Links (Top Row) --}}
         <div class="t5-footer-nav">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}">Beranda</a>
-            @if($aboutEnabled)
+            @if($aboutEnabled && !$isEO)
                 <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}">Profil</a>
             @endif
             @if($hasProductsOrServices)
-                <a href="{{ $productsUrl }}">Produk / Layanan</a>
+                <a href="{{ $productsUrl }}">{{ $isEO ? 'Tiket Event' : 'Produk / Layanan' }}</a>
             @endif
             <a href="{{ $contactLink }}" onclick="{{ $contactOnClick }}">Kontak</a>
         </div>

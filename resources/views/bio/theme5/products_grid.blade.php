@@ -1,5 +1,8 @@
 @php
-    $catalogProducts = $products->reject(function ($p) {
+    $webType = $config['web_type'] ?? 'company_profile';
+    $isEO = ($webType === 'event_organizer');
+
+    $catalogProducts = $products->reject(function ($p) use ($isEO) {
         // Sembunyikan produk yang tidak aktif / diarsipkan
         if (isset($p->is_active) && !$p->is_active) return true;
 
@@ -11,18 +14,22 @@
         }
         $catName = strtolower($p->category->name ?? '');
 
-        // Sembunyikan: Jasa / Service
+        // Mode EO: hanya tampilkan produk tiket / event
+        if ($isEO) {
+            $isTicket = in_array($pType, ['ticket', 'tiket', 'tiket event', 'event', 'ticket_event']) || !empty($p->event_date);
+            return !$isTicket;
+        }
+
+        // Mode Company Profile: Sembunyikan Jasa, Makanan, Barang Fisik jika ada section terpisah
         if (in_array($pType, ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
             || in_array($catName, ['service', 'jasa', 'layanan', 'services'])
             || str_contains($pName, 'jasa')
             || str_contains($pName, 'layanan')
             || str_contains($pName, 'service')) return true;
 
-        // Sembunyikan: Makanan / Kuliner / FnB
         if (in_array($pType, ['makanan', 'fnb', 'kuliner', 'food', 'dapur', 'resto'])
             || in_array($catName, ['makanan', 'fnb', 'kuliner', 'food'])) return true;
 
-        // Sembunyikan: Barang Fisik / UMKM
         if (in_array($pType, ['physical', 'barang', 'fisik', 'umkm'])
             || in_array($catName, ['physical', 'barang', 'fisik', 'umkm'])) return true;
 
@@ -30,11 +37,14 @@
     });
 
     $isProfileVerified = isset($profile) && $profile ? $profile->isVerified() : false;
-    $productsEnabled = $config['products_section_enabled'] ?? 1;
-    $headline = !empty($config['products_headline']) ? $config['products_headline'] : 'Produk Unggulan';
-    $subheadline = !empty($config['products_subheadline']) ? $config['products_subheadline'] : 'Katalog produk pilihan terbaik.';
-    $seeAllEnabled = $config['products_see_all_enabled'] ?? 1;
-    $seeAllText = !empty($config['products_see_all_text']) ? $config['products_see_all_text'] : 'Lihat Semua';
+    $productsEnabled = !empty($config['products_section_enabled'] ?? 1);
+
+    $defaultHeadline = $isEO ? 'Tiket Event' : 'Produk Unggulan';
+    $defaultSubheadline = $isEO ? 'Daftar tiket event resmi dan terpercaya.' : 'Katalog produk pilihan terbaik.';
+    $headline = !empty($config['products_headline']) ? $config['products_headline'] : $defaultHeadline;
+    $subheadline = !empty($config['products_subheadline']) ? $config['products_subheadline'] : $defaultSubheadline;
+    $seeAllEnabled = !empty($config['products_see_all_enabled'] ?? 1);
+    $seeAllText = !empty($config['products_see_all_text']) ? $config['products_see_all_text'] : ($isEO ? 'Lihat Semua Tiket' : 'Lihat Semua');
 @endphp
 
 @if($productsEnabled && $catalogProducts->count() > 0)
@@ -178,6 +188,22 @@
                                     </svg>
                                     {{ number_format($ratingVal, 1) }}
                                 </span>
+                            @endif
+                            @if(!empty($product->event_date))
+                                @php
+                                    try {
+                                        $pEvDate = $product->event_date instanceof \Carbon\Carbon
+                                            ? $product->event_date
+                                            : \Carbon\Carbon::parse($product->event_date);
+                                        $pEvDateStr = $pEvDate->translatedFormat('d M Y');
+                                    } catch (\Exception $e) { $pEvDateStr = ''; }
+                                @endphp
+                                @if($pEvDateStr)
+                                    <span class="t5-rating-badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; font-weight:700;">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        {{ $pEvDateStr }}
+                                    </span>
+                                @endif
                             @endif
                             @if($isProfileVerified)
                                 <span class="t5-verified-tag">

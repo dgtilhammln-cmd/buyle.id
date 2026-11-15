@@ -1271,21 +1271,35 @@
 
     <main>
         @php
-            $defaultT5Sections = [
-                'hero_slider',
-                'client_logos',
-                'about_section',
-                'products_grid',
-                'services_section',
-                'gallery_section',
-                'tiktok_section',
-                'teams_section',
-            ];
+            $webType = $config['web_type'] ?? 'company_profile';
+            $isEO = ($webType === 'event_organizer');
+
+            // EO mode: only hero, countdown, products (event tickets), footer
+            $defaultT5Sections = $isEO
+                ? ['hero_slider', 'countdown_section', 'products_grid']
+                : [
+                    'hero_slider',
+                    'client_logos',
+                    'about_section',
+                    'countdown_section',
+                    'products_grid',
+                    'services_section',
+                    'gallery_section',
+                    'tiktok_section',
+                    'teams_section',
+                  ];
             $userT5Sections = $config['homepage_sections_order'] ?? [];
             if (!is_array($userT5Sections) || empty($userT5Sections)) {
                 $userT5Sections = $defaultT5Sections;
             } else {
-                $userT5Sections = array_values(array_unique(array_merge($userT5Sections, $defaultT5Sections)));
+                // Merge user order with defaults but respect EO restriction
+                if ($isEO) {
+                    $allowed = ['hero_slider', 'countdown_section', 'products_grid'];
+                    $userT5Sections = array_values(array_intersect($userT5Sections, $allowed));
+                    $userT5Sections = array_values(array_unique(array_merge($userT5Sections, $defaultT5Sections)));
+                } else {
+                    $userT5Sections = array_values(array_unique(array_merge($userT5Sections, $defaultT5Sections)));
+                }
             }
         @endphp
 
@@ -1306,6 +1320,8 @@
                 @include('bio.theme5.tiktok_section')
             @elseif($secKey === 'teams_section')
                 @include('bio.theme5.teams_section')
+            @elseif($secKey === 'countdown_section')
+                @include('bio.theme5.countdown_section')
             @endif
         @endforeach
     </main>

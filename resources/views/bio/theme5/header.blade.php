@@ -432,10 +432,14 @@
     $aboutOnClick   = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
     $contactOnClick = '';
 
+    // Check Web Type (Company Profile vs Event Organizer)
+    $webType = $config['web_type'] ?? 'company_profile';
+    $isEO = ($webType === 'event_organizer');
+
     // Check if About section is enabled
     $aboutEnabled = !empty($config['about_enabled'] ?? 1);
     $productsSectionEnabled = !empty($config['products_section_enabled'] ?? 1);
-    $servicesSectionEnabled = !empty($config['services_enabled'] ?? 1);
+    $servicesSectionEnabled = $isEO ? false : !empty($config['services_enabled'] ?? 1);
 
     // Check if creator has any active products or services
     $hasProductsOrServices = false;
@@ -497,12 +501,12 @@
         {{-- Desktop Navigation Links --}}
         <nav class="t5-nav-desktop">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}" class="t5-nav-link {{ $isHome ? 'active' : '' }}">Beranda</a>
-            @if($aboutEnabled)
+            @if($aboutEnabled && !$isEO)
                 <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}" class="t5-nav-link">Profil</a>
             @endif
             
             @if($hasProductsOrServices)
-                <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">Produk / Layanan</a>
+                <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">{{ $isEO ? 'Tiket Event' : 'Produk / Layanan' }}</a>
             @endif
             
             {{-- Actions Dropdown (Hanya Tampil Jika Ada Block Custom Link Button Aktif) --}}
@@ -608,12 +612,12 @@
         </div>
         <nav class="t5-drawer-nav">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }} toggleT5Drawer();" class="t5-drawer-link">Beranda</a>
-            @if($aboutEnabled)
+            @if($aboutEnabled && !$isEO)
                 <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }} toggleT5Drawer();" class="t5-drawer-link">Profil</a>
             @endif
             
             @if($hasProductsOrServices)
-                <a href="{{ $productsUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>
+                <a href="{{ $productsUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">{{ $isEO ? 'Tiket Event' : 'Produk / Layanan' }}</a>
                 <a href="https://buyle.id/keranjang" class="t5-drawer-link t5-drawer-cart-link">
                     <span style="display:inline-flex; align-items:center; gap:0.45rem;">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">

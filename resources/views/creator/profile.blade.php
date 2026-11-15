@@ -891,7 +891,11 @@
         {{-- TAB 3: SOSIAL MEDIA --}}
         {{-- ══════════════════════════════════════════════════════════════ --}}
         <div class="tab-pane" id="tab-social">
-            @php $socials = old('social_links', $profile->social_links ?? []); @endphp
+            @php
+                // Always use DB values after save (PRG pattern — no withInput used)
+                // old() is only used if validation fails and redirects back with input
+                $socials = $errors->any() ? old('social_links', $profile->social_links ?? []) : ($profile->social_links ?? []);
+            @endphp
 
             <div class="prof-card">
                 <div class="prof-card-head">

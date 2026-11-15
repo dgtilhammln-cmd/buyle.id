@@ -1537,14 +1537,15 @@
             {{-- COMPACT SIDEBAR REORDER CARD (Khusus Tab Profil & Tema 5) --}}
             @php
                 $allSecDef = [
-                    'hero_slider' => ['label' => 'Banner Slider Hero', 'icon' => 'M4 6h16M4 12h16M4 18h16'],
-                    'client_logos' => ['label' => 'Client Logos / Partners', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87'],
-                    'about_section' => ['label' => 'About Us / Tentang Kami', 'icon' => 'M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'],
-                    'products_grid' => ['label' => 'Katalog Produk / Etalase', 'icon' => 'M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'],
-                    'services_section' => ['label' => 'Jasa & Layanan', 'icon' => 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'],
-                    'gallery_section' => ['label' => 'Galeri Coverflow', 'icon' => 'M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z'],
-                    'tiktok_section' => ['label' => 'TikTok Reel Video', 'icon' => 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z'],
-                    'teams_section' => ['label' => 'Tim Kami / Teams', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'],
+                    'hero_slider'       => ['label' => 'Banner Slider Hero', 'icon' => 'M4 6h16M4 12h16M4 18h16', 'toggle' => null],
+                    'countdown_section' => ['label' => 'Countdown Event Terdekat', 'icon' => 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z', 'toggle' => 'countdown_enabled', 'default' => 0],
+                    'products_grid'     => ['label' => 'Katalog Produk (Produk Unggulan)', 'icon' => 'M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z', 'toggle' => 'products_section_enabled', 'default' => 1],
+                    'client_logos'      => ['label' => 'Client Logos / Partners', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87', 'toggle' => 'client_logos_enabled', 'default' => 1],
+                    'about_section'     => ['label' => 'About Us / Tentang Kami', 'icon' => 'M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z', 'toggle' => 'about_enabled', 'default' => 1],
+                    'services_section'  => ['label' => 'Jasa & Layanan', 'icon' => 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z', 'toggle' => 'services_enabled', 'default' => 1],
+                    'gallery_section'   => ['label' => 'Galeri Coverflow', 'icon' => 'M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z', 'toggle' => 'gallery_enabled', 'default' => 1],
+                    'tiktok_section'    => ['label' => 'TikTok Reel Video', 'icon' => 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z', 'toggle' => 'tiktok_section_enabled', 'default' => 1],
+                    'teams_section'     => ['label' => 'Tim Kami / Teams', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', 'toggle' => 'teams_enabled', 'default' => 1],
                 ];
                 $currSecOrder = $cfg['homepage_sections_order'] ?? array_keys($allSecDef);
                 if (!is_array($currSecOrder) || empty($currSecOrder)) {
@@ -1666,8 +1667,13 @@
                     <div class="sec-reorder-list-compact" id="secReorderListCompact">
                         @foreach($currSecOrder as $secKey)
                             @if(isset($allSecDef[$secKey]))
-                                @php $secInfo = $allSecDef[$secKey]; @endphp
-                                <div class="sec-reorder-item-compact" draggable="true" data-sec-key="{{ $secKey }}">
+                                @php
+                                    $secInfo = $allSecDef[$secKey];
+                                    $toggleKey = $secInfo['toggle'] ?? null;
+                                    $defaultVal = $secInfo['default'] ?? 1;
+                                    $isSecActive = $toggleKey ? (!empty($cfg[$toggleKey] ?? $defaultVal)) : true;
+                                @endphp
+                                <div class="sec-reorder-item-compact" draggable="true" data-sec-key="{{ $secKey }}" style="{{ !$isSecActive ? 'opacity:0.6; background:#f1f5f9;' : '' }}">
                                     <div class="sec-reorder-compact-left">
                                         <span class="sec-reorder-compact-handle" title="Geser untuk mengubah urutan">
                                             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -1675,7 +1681,16 @@
                                                 <path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01" />
                                             </svg>
                                         </span>
-                                        <span class="sec-reorder-compact-title"
+                                        @if($toggleKey)
+                                            <input type="checkbox"
+                                                class="sec-toggle-checkbox"
+                                                title="Centang untuk menampilkan section ini di website"
+                                                data-toggle-target="{{ $toggleKey }}"
+                                                {{ $isSecActive ? 'checked' : '' }}
+                                                onchange="syncSecToggleFromSidebar(this, '{{ $toggleKey }}')"
+                                                style="width:15px; height:15px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
+                                        @endif
+                                        <span class="sec-reorder-compact-title {{ !$isSecActive ? 'text-muted' : '' }}"
                                             title="{{ $secInfo['label'] }}">{{ $secInfo['label'] }}</span>
                                     </div>
                                     <div style="display:flex; align-items:center; gap:2px; flex-shrink:0;">
@@ -2187,7 +2202,7 @@
                         }
                     </style>
                     <div
-                        style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.85rem; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none;">
+                        style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.85rem; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; align-items:center;">
                         <button type="button" class="prof-subtab-btn active" id="btn-subtab-info"
                             onclick="switchProfileSubtab('subtab-profile-info', this)">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -2226,6 +2241,24 @@
                             </svg>
                             Halaman Kontak
                         </button>
+
+                        {{-- Dropdown Tipe Website (hanya Tema 5) --}}
+                        <div style="margin-left:auto; flex-shrink:0; display:flex; align-items:center; gap:0.4rem;">
+                            <form id="webTypeForm" action="{{ route('creator.bio.save-profile') }}" method="POST" style="display:inline; margin:0;">
+                                @csrf
+                                <input type="hidden" name="web_type_save" value="1">
+                                <div style="position:relative; display:inline-block;">
+                                    <select name="web_type" id="webTypeSelect"
+                                        onchange="changeWebType(this)"
+                                        title="Pilih tampilan: Web Company Profile (semua section) atau Web EO (hanya Hero, Countdown, Tiket & Footer)"
+                                        style="border:1.5px solid #1eb349; border-radius:8px; padding:0.45rem 2rem 0.45rem 0.8rem; font-size:0.78rem; font-weight:700; color:#15803d; background:#f0fdf4; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; box-shadow:0 1px 4px rgba(30,179,73,0.12); transition:all 0.2s ease;">
+                                        <option value="company_profile" {{ ($cfg['web_type'] ?? 'company_profile') === 'company_profile' ? 'selected' : '' }}>🏢 Web Company Profile (Lengkap)</option>
+                                        <option value="event_organizer" {{ ($cfg['web_type'] ?? 'company_profile') === 'event_organizer' ? 'selected' : '' }}>🎪 Web Event Organizer (Hero, Countdown, Tiket & Footer)</option>
+                                    </select>
+                                    <svg style="position:absolute; right:0.65rem; top:50%; transform:translateY(-50%); pointer-events:none;" width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                            </form>
+                        </div>
                         @endif
                     </div>
 
@@ -2523,6 +2556,15 @@
                                         <path d="M3 10h18M3 6h18" />
                                     </svg>
                                     Footer
+                                </button>
+                                <button type="button" class="hp-subtab-btn" id="btn-hpsub-countdown"
+                                    onclick="switchHomepageSubSubtab('hpsub-countdown', this)">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                                        viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    Countdown
                                 </button>
                             </div>
 
@@ -4054,6 +4096,99 @@
                                         </div>
                                     </div> {{-- End #hpsub-footer --}}
 
+                                    {{-- SUB-SUBTAB: COUNTDOWN EVENT (TEMA 5) --}}
+                                    <div class="hpsub-pane" id="hpsub-countdown" style="display:none;">
+                                        <input type="hidden" name="countdown_enabled_present" value="1">
+
+                                        {{-- Card Toggle --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head"
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <span style="display:flex;align-items:center;gap:0.5rem;">
+                                                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                    Section Countdown Event (Tema 5)
+                                                </span>
+                                                <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                                    <input type="checkbox" name="countdown_enabled" value="1"
+                                                        {{ ($cfg['countdown_enabled'] ?? 0) ? 'checked' : '' }}
+                                                        style="width:18px; height:18px; accent-color:#1eb349;">
+                                                    Aktifkan Section Countdown
+                                                </label>
+                                            </div>
+                                            <div class="card-body">
+                                                <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1rem 1.25rem; font-size:0.82rem; color:#166534; line-height:1.5;">
+                                                    <strong>📌 Cara Kerja:</strong> Section countdown otomatis mengambil produk tipe <strong>Tiket Event</strong> yang waktu eventnya paling dekat dari daftar produk Anda. Jika ada event terdekat, countdown live ditampilkan. Anda juga bisa sembunyikan section ini kapan saja.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Card Header & Sub-judul --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head">1. Judul & Sub-judul Section Countdown</div>
+                                            <div class="card-body">
+                                                <div class="form-group" style="margin-bottom:1.15rem;">
+                                                    <label class="form-label">Judul Utama (Headline)</label>
+                                                    <input type="text" name="countdown_headline"
+                                                        value="{{ old('countdown_headline', $cfg['countdown_headline'] ?? 'Event Akan Segera Dimulai!') }}"
+                                                        class="form-input" placeholder="Misal: Event Akan Segera Dimulai!">
+                                                </div>
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <label class="form-label">Sub-judul / Deskripsi</label>
+                                                    <input type="text" name="countdown_subheadline"
+                                                        value="{{ old('countdown_subheadline', $cfg['countdown_subheadline'] ?? 'Dapatkan tiket Anda sebelum kehabisan.') }}"
+                                                        class="form-input" placeholder="Misal: Dapatkan tiket Anda sebelum kehabisan.">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Card Tombol CTA --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head"
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <span>2. Tombol CTA (Call to Action)</span>
+                                                <input type="hidden" name="countdown_cta_enabled_present" value="1">
+                                                <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                                    <input type="checkbox" name="countdown_cta_enabled" value="1"
+                                                        {{ ($cfg['countdown_cta_enabled'] ?? 1) ? 'checked' : '' }}
+                                                        style="width:18px; height:18px; accent-color:#1eb349;">
+                                                    Tampilkan Tombol
+                                                </label>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <label class="form-label">Teks Tombol CTA</label>
+                                                    <input type="text" name="countdown_cta_text"
+                                                        value="{{ old('countdown_cta_text', $cfg['countdown_cta_text'] ?? 'Beli Tiket Sekarang') }}"
+                                                        class="form-input" placeholder="Misal: Beli Tiket Sekarang">
+                                                </div>
+                                                <span style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:0.5rem;">Tombol otomatis mengarah ke halaman produk event terdekat.</span>
+                                            </div>
+                                        </div>
+
+                                        {{-- Card Info Kelola Event --}}
+                                        <div class="prof-card" style="background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #bbf7d0;">
+                                            <div class="card-body" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.15rem 1.25rem;">
+                                                <div style="display:flex; align-items:center; gap:0.85rem;">
+                                                    <div style="width:38px; height:38px; border-radius:10px; background:#10b981; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                                    </div>
+                                                    <div>
+                                                        <div style="font-weight:700; color:#065f46; font-size:0.9rem;">Kelola Event Anda</div>
+                                                        <div style="font-size:0.78rem; color:#047857; margin-top:2px;">Tambah atau edit tiket event di <strong>Produk Saya</strong>, pilih tipe <strong>Tiket Event</strong> dan isi tanggal event.</div>
+                                                    </div>
+                                                </div>
+                                                @if(Route::has('creator.products.index'))
+                                                    <a href="{{ route('creator.products.index') }}" target="_blank"
+                                                        style="padding:0.5rem 1rem; border-radius:8px; border:1px solid #10b981; background:#ffffff; color:#047857; font-size:0.8rem; font-weight:700; text-decoration:none; white-space:nowrap;"
+                                                        onmouseover="this.style.background='#10b981'; this.style.color='#fff';"
+                                                        onmouseout="this.style.background='#fff'; this.style.color='#047857';">
+                                                        Buka Produk &rarr;
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div> {{-- End #hpsub-countdown --}}
+
                                     @if(($profile->bio_theme ?? '') === 'theme5')
                                         {{-- FAVICON & SEO HOME PANE (DIPINDAHKAN KE PALING BAWAH FORM) --}}
                                         <div class="prof-card"
@@ -4139,6 +4274,46 @@
                             <div class="prof-subtab-pane" id="subtab-products-main" style="display:none;">
                                 <form action="{{ route('creator.bio.save-profile') }}" method="POST">
                                     @csrf
+
+                                    {{-- Card: Status Section Produk Unggulan di Beranda --}}
+                                    <div class="prof-card" style="border: 1.5px solid #bbf7d0; background: #f0fdf4; margin-bottom: 1.5rem;">
+                                        <div class="prof-card-head"
+                                            style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; border-bottom:1.5px solid #dcfce7; padding:0.85rem 1.25rem;">
+                                            <span style="font-weight:700; color:#14532d; display:flex; align-items:center; gap:0.5rem; font-size:0.95rem;">
+                                                <svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                                                </svg>
+                                                Status Section Produk Unggulan di Beranda
+                                            </span>
+                                            <input type="hidden" name="products_section_enabled_present" value="1">
+                                            <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.85rem; font-weight:700; color:#16a34a;">
+                                                <input type="checkbox" name="products_section_enabled" value="1"
+                                                    {{ ($cfg['products_section_enabled'] ?? 1) ? 'checked' : '' }}
+                                                    style="width:18px; height:18px; accent-color:#16a34a;">
+                                                Aktifkan Section Produk
+                                            </label>
+                                        </div>
+                                        <div class="card-body" style="padding:1rem 1.25rem;">
+                                            <p style="font-size:0.82rem; color:#166534; margin:0 0 0.75rem; line-height:1.5;">
+                                                Centang untuk menampilkan etalase <strong>Produk Unggulan</strong> pada halaman Beranda (Homepage Tema 5). Jika tidak dicentang, section Produk Unggulan dan menu navigasi terkait otomatis disembunyikan dari pengunjung.
+                                            </p>
+                                            <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+                                                <button type="button" onclick="switchProfileSubtab('subtab-homepage-main', document.getElementById('btn-subtab-homepage')); switchHomepageSubSubtab('hpsub-products', document.getElementById('btn-hpsub-products'));"
+                                                    style="background:#16a34a; color:#fff; border:none; border-radius:6px; padding:0.4rem 0.85rem; font-size:0.75rem; font-weight:700; cursor:pointer;">
+                                                    Edit Judul & Tampilan Produk di Beranda &rarr;
+                                                </button>
+                                                @if(Route::has('creator.products.index'))
+                                                    <a href="{{ route('creator.products.index') }}" target="_blank"
+                                                        style="background:#fff; color:#16a34a; border:1px solid #16a34a; border-radius:6px; padding:0.4rem 0.85rem; font-size:0.75rem; font-weight:700; text-decoration:none;">
+                                                        Kelola Katalog di Produk Saya &rarr;
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="prof-card" style="border: 1.5px solid #1eb349; background: #fafdfb;">
                                         <div class="prof-card-head"
                                             style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
@@ -8235,6 +8410,83 @@
                                     hiddenContainer.appendChild(input);
                                 }
                             });
+                        }
+
+                        function changeWebType(selectEl) {
+                            const form = document.getElementById('webTypeForm');
+                            if (!form) return;
+                            const val = selectEl.value;
+                            const formData = new FormData(form);
+
+                            selectEl.disabled = true;
+                            selectEl.style.opacity = '0.6';
+
+                            fetch(form.action, {
+                                method: 'POST',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: formData
+                            })
+                            .then(r => r.json().catch(() => ({})))
+                            .then(() => {
+                                selectEl.disabled = false;
+                                selectEl.style.opacity = '1';
+                                // Refresh live preview frame
+                                const frame = document.getElementById('bioPreviewFrame');
+                                if (frame && frame.contentWindow) {
+                                    frame.contentWindow.location.reload();
+                                }
+                                if (typeof showToast === 'function') {
+                                    showToast('success', 'Tipe Website Diperbarui!', val === 'event_organizer'
+                                        ? 'Mode Web Event Organizer aktif (Hero, Countdown, Tiket & Footer).'
+                                        : 'Mode Web Company Profile aktif (Semua section ditampilkan).', 4000);
+                                }
+                            })
+                            .catch(() => {
+                                selectEl.disabled = false;
+                                selectEl.style.opacity = '1';
+                                form.submit();
+                            });
+                        }
+
+                        function syncSecToggleFromSidebar(cb, toggleKey) {
+                            const item = cb.closest('.sec-reorder-item-compact');
+                            if (item) {
+                                if (cb.checked) {
+                                    item.style.opacity = '1';
+                                    item.style.background = '#f8fafc';
+                                } else {
+                                    item.style.opacity = '0.6';
+                                    item.style.background = '#f1f5f9';
+                                }
+                            }
+                            // Sync with form inputs if present
+                            const formInputs = document.querySelectorAll(`input[name="${toggleKey}"]`);
+                            formInputs.forEach(fi => {
+                                if (fi !== cb) fi.checked = cb.checked;
+                            });
+
+                            // Ensure hidden input exists in #secReorderHiddenContainer
+                            const hiddenContainer = document.getElementById('secReorderHiddenContainer');
+                            if (hiddenContainer) {
+                                let presentInput = hiddenContainer.querySelector(`input[name="${toggleKey}_present"]`);
+                                if (!presentInput) {
+                                    presentInput = document.createElement('input');
+                                    presentInput.type = 'hidden';
+                                    presentInput.name = `${toggleKey}_present`;
+                                    presentInput.value = '1';
+                                    hiddenContainer.appendChild(presentInput);
+                                }
+                                let valInput = hiddenContainer.querySelector(`input[name="${toggleKey}"]`);
+                                if (!valInput) {
+                                    valInput = document.createElement('input');
+                                    valInput.type = 'hidden';
+                                    valInput.name = toggleKey;
+                                    hiddenContainer.appendChild(valInput);
+                                }
+                                valInput.value = cb.checked ? '1' : '0';
+                            }
                         }
 
                         function moveSecItem(btn, direction) {

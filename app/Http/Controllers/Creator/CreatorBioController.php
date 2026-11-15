@@ -185,6 +185,12 @@ class CreatorBioController extends Controller
             'theme5_seo_contact_keywords' => 'nullable|string|max:500',
             'theme5_contact_address'      => 'nullable|string|max:1000',
             'theme5_contact_maps_embed'   => 'nullable|string|max:2000',
+            // Countdown Section
+            'countdown_headline'          => 'nullable|string|max:200',
+            'countdown_subheadline'       => 'nullable|string|max:300',
+            'countdown_cta_text'          => 'nullable|string|max:100',
+            // Web Type
+            'web_type'                    => 'nullable|in:company_profile,event_organizer',
         ]);
 
         $profile = $this->getProfile();
@@ -524,6 +530,22 @@ class CreatorBioController extends Controller
             }
         }
 
+        // Web Type (company_profile / event_organizer) — saved from dropdown
+        if ($request->has('web_type_save')) {
+            $config['web_type'] = $request->input('web_type', 'company_profile');
+        }
+
+        // Countdown Section fields (Tema 5 — Event Organizer / Semua)
+        if ($request->has('countdown_enabled_present')) {
+            $config['countdown_enabled'] = $request->has('countdown_enabled') ? 1 : 0;
+        }
+        if ($request->has('countdown_cta_enabled_present')) {
+            $config['countdown_cta_enabled'] = $request->has('countdown_cta_enabled') ? 1 : 0;
+        }
+        if ($request->has('countdown_headline'))    $config['countdown_headline']    = $request->countdown_headline;
+        if ($request->has('countdown_subheadline')) $config['countdown_subheadline'] = $request->countdown_subheadline;
+        if ($request->has('countdown_cta_text'))    $config['countdown_cta_text']    = $request->countdown_cta_text;
+
         if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
         if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;
         if ($request->has('theme5_seo_home_keywords'))     $config['theme5_seo_home_keywords']     = $request->theme5_seo_home_keywords;
@@ -552,6 +574,14 @@ class CreatorBioController extends Controller
 
         $profile->bio_config = $config;
         $profile->save();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil berhasil disimpan!',
+                'web_type' => $config['web_type'] ?? 'company_profile',
+            ]);
+        }
 
         return back()->with('success', 'Profil berhasil disimpan!');
     }
