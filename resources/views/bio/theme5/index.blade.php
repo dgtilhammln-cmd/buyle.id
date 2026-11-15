@@ -1309,6 +1309,13 @@
                 } else {
                     $userT5Sections = array_values(array_unique(array_merge($userT5Sections, $defaultT5Sections)));
                 }
+                $cIdx = array_search('countdown_section', $userT5Sections);
+                $pIdx = array_search('products_grid', $userT5Sections);
+                if ($cIdx !== false && $pIdx !== false && $cIdx > $pIdx && $cIdx === count($userT5Sections) - 1) {
+                    array_splice($userT5Sections, $cIdx, 1);
+                    $pIdx = array_search('products_grid', $userT5Sections);
+                    array_splice($userT5Sections, $pIdx, 0, 'countdown_section');
+                }
             }
         @endphp
 

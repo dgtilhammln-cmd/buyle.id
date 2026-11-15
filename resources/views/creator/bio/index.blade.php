@@ -1560,6 +1560,13 @@
                         }
                     }
                     $currSecOrder = array_values(array_unique(array_merge($currSecOrder, array_keys($allSecDef))));
+                    $cIdx = array_search('countdown_section', $currSecOrder);
+                    $pIdx = array_search('products_grid', $currSecOrder);
+                    if ($cIdx !== false && $pIdx !== false && $cIdx > $pIdx && $cIdx === count($currSecOrder) - 1) {
+                        array_splice($currSecOrder, $cIdx, 1);
+                        $pIdx = array_search('products_grid', $currSecOrder);
+                        array_splice($currSecOrder, $pIdx, 0, 'countdown_section');
+                    }
                 }
             @endphp
 
