@@ -39,10 +39,12 @@
     $isProfileVerified = isset($profile) && $profile ? $profile->isVerified() : false;
     $productsEnabled = !empty($config['products_section_enabled'] ?? 1);
 
-    $defaultHeadline = $isEO ? 'Tiket Event' : 'Produk Unggulan';
-    $defaultSubheadline = $isEO ? 'Daftar tiket event resmi dan terpercaya.' : 'Katalog produk pilihan terbaik.';
-    $headline = !empty($config['products_headline']) ? $config['products_headline'] : $defaultHeadline;
-    $subheadline = !empty($config['products_subheadline']) ? $config['products_subheadline'] : $defaultSubheadline;
+    $hasHeadlineKey = array_key_exists('products_headline', $config);
+    $headline = $hasHeadlineKey ? ($config['products_headline'] ?? '') : ($isEO ? 'Tiket Event' : 'Produk Unggulan');
+
+    $hasSubKey = array_key_exists('products_subheadline', $config);
+    $subheadline = $hasSubKey ? ($config['products_subheadline'] ?? '') : ($isEO ? 'Daftar tiket event resmi dan terpercaya.' : 'Katalog produk pilihan terbaik.');
+
     $seeAllEnabled = !empty($config['products_see_all_enabled'] ?? 1);
     $seeAllText = !empty($config['products_see_all_text']) ? $config['products_see_all_text'] : ($isEO ? 'Lihat Semua Tiket' : 'Lihat Semua');
 @endphp
@@ -91,61 +93,102 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(30, 179, 73, 0.25);
         }
-        /* Rasio foto produk presisi 1:1 */
+        /* Rasio foto produk landscape 16:9 */
+        .t5-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
         .t5-product-img-wrap {
             position: relative;
             width: 100%;
-            aspect-ratio: 1 / 1 !important;
-            background: #f1f5f9;
+            aspect-ratio: 16 / 9 !important;
+            background: #0f172a;
             overflow: hidden;
             display: block;
         }
         .t5-product-img {
             width: 100%;
             height: 100%;
-            aspect-ratio: 1 / 1 !important;
+            aspect-ratio: 16 / 9 !important;
             object-fit: cover !important;
             transition: transform 0.4s ease;
         }
+        @media (max-width: 640px) {
+            .t5-products-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.25rem !important;
+            }
+            .t5-product-card {
+                width: 100% !important;
+            }
+        }
     </style>
     <section class="t5-products-section" id="products-section">
-        <div class="t5-products-header">
-            <div class="t5-section-title-wrap">
-                <h2 class="t5-section-title">{{ $headline }}</h2>
-                @if(!empty($subheadline))
-                    <p class="t5-section-sub">{{ $subheadline }}</p>
+        @if(!empty(trim($headline)) || !empty(trim($subheadline)) || $seeAllEnabled)
+            <div class="t5-products-header" style="{{ (empty(trim($headline)) && empty(trim($subheadline))) ? 'justify-content:flex-end; margin-bottom:1rem;' : '' }}">
+                @if(!empty(trim($headline)) || !empty(trim($subheadline)))
+                    <div class="t5-section-title-wrap">
+                        @if(!empty(trim($headline)))
+                            <h2 class="t5-section-title">{{ $headline }}</h2>
+                        @endif
+                        @if(!empty(trim($subheadline)))
+                            <p class="t5-section-sub">{{ $subheadline }}</p>
+                        @endif
+                    </div>
+                @endif
+                @if($seeAllEnabled)
+                    @php
+                        $storeUsername = $profile->store_slug ?? ($username ?? 'creator');
+                        if (!empty($config['products_see_all_link'])) {
+                            $allProductsUrl = $config['products_see_all_link'];
+                        } elseif (!empty($profile->custom_domain)) {
+                            $allProductsUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk';
+                        } else {
+                            $allProductsUrl = url($storeUsername . '/produk');
+                        }
+                    @endphp
+                    <a href="{{ $allProductsUrl }}" class="t5-see-all-btn">
+                        <span>{{ $seeAllText }}</span>
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </a>
                 @endif
             </div>
-            @if($seeAllEnabled)
-                @php
-                    $storeUsername = $profile->store_slug ?? ($username ?? 'creator');
-                    if (!empty($config['products_see_all_link'])) {
-                        $allProductsUrl = $config['products_see_all_link'];
-                    } elseif (!empty($profile->custom_domain)) {
-                        $allProductsUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk';
-                    } else {
-                        $allProductsUrl = url($storeUsername . '/produk');
-                    }
-                @endphp
-                <a href="{{ $allProductsUrl }}" class="t5-see-all-btn">
-                    <span>{{ $seeAllText }}</span>
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                        <polyline points="12 5 19 12 12 19" />
-                    </svg>
-                </a>
-            @endif
-        </div>
+        @endif
 
         <div class="t5-products-grid">
             @foreach($catalogProducts as $product)
                 @php
-                    $img = $product->image_url ?: asset('images/buyle-placeholder.svg');
+                    $bData = is_array($product->data_json) ? $product->data_json : (json_decode($product->data_json ?? '[]', true) ?: []);
+                    $linkedProd = !empty($bData['product_id']) ? \App\Models\Product::find($bData['product_id']) : null;
+
+                    // Poster Event (Landscape 16:9), fallback ke gambar utama
+                    $landscapeImg = null;
+                    if (!empty($product->og_image)) {
+                        $landscapeImg = \Illuminate\Support\Str::startsWith($product->og_image, 'http')
+                            ? $product->og_image
+                            : asset('storage/' . $product->og_image);
+                    } elseif (!empty($linkedProd->og_image)) {
+                        $landscapeImg = \Illuminate\Support\Str::startsWith($linkedProd->og_image, 'http')
+                            ? $linkedProd->og_image
+                            : asset('storage/' . $linkedProd->og_image);
+                    } elseif (!empty($product->image)) {
+                        $landscapeImg = \Illuminate\Support\Str::startsWith($product->image, 'http')
+                            ? $product->image
+                            : asset('storage/' . $product->image);
+                    } elseif (!empty($product->image_url)) {
+                        $landscapeImg = $product->image_url;
+                    } else {
+                        $landscapeImg = asset('images/buyle-placeholder.svg');
+                    }
+
                     $hasDiscount = $product->sale_price && $product->sale_price < $product->price;
                     $effectivePrice = $hasDiscount ? $product->sale_price : $product->price;
                     $discountPercent = $hasDiscount ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
-                    $bData = is_array($product->data_json) ? $product->data_json : (json_decode($product->data_json ?? '[]', true) ?: []);
-                    $linkedProd = !empty($bData['product_id']) ? \App\Models\Product::find($bData['product_id']) : null;
+                    
                     // Priority: linked product slug > data_json slug > block->slug > title slug > block ID (numeric, always resolves)
                     $prodIdentifier = !empty($linkedProd->slug)
                         ? $linkedProd->slug
@@ -170,7 +213,8 @@
 
                 <div class="t5-product-card">
                     <a href="{{ $productUrl }}" class="t5-product-img-wrap" aria-label="{{ $product->name }}">
-                        <img src="{{ $img }}" alt="{{ $product->name }}" loading="lazy" class="t5-product-img" draggable="false">
+                        <img src="{{ $landscapeImg }}" alt="{{ $product->name }}" loading="lazy" class="t5-product-img" draggable="false"
+                            onerror="this.onerror=null;this.src='{{ asset('images/buyle-placeholder.svg') }}';">
 
                         @if($hasDiscount)
                             <span class="t5-discount-tag">-{{ $discountPercent }}%</span>
@@ -188,22 +232,6 @@
                                     </svg>
                                     {{ number_format($ratingVal, 1) }}
                                 </span>
-                            @endif
-                            @if(!empty($product->event_date))
-                                @php
-                                    try {
-                                        $pEvDate = $product->event_date instanceof \Carbon\Carbon
-                                            ? $product->event_date
-                                            : \Carbon\Carbon::parse($product->event_date);
-                                        $pEvDateStr = $pEvDate->translatedFormat('d M Y');
-                                    } catch (\Exception $e) { $pEvDateStr = ''; }
-                                @endphp
-                                @if($pEvDateStr)
-                                    <span class="t5-rating-badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; font-weight:700;">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                        {{ $pEvDateStr }}
-                                    </span>
-                                @endif
                             @endif
                             @if($isProfileVerified)
                                 <span class="t5-verified-tag">

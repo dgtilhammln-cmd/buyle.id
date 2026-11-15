@@ -575,7 +575,7 @@
         }
         .t5-products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 1.5rem;
         }
         .t5-product-card {
@@ -596,15 +596,15 @@
         .t5-product-img-wrap {
             position: relative;
             width: 100%;
-            aspect-ratio: 1 / 1;
-            background: #f1f5f9;
+            aspect-ratio: 16 / 9;
+            background: #0f172a;
             overflow: hidden;
             display: block;
         }
         .t5-product-img {
             width: 100%;
             height: 100%;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 16 / 9;
             object-fit: cover;
             transition: transform 0.4s ease;
         }
@@ -728,19 +728,19 @@
                 padding: 2rem 0.85rem;
             }
             .t5-products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
             }
             .t5-product-body {
-                padding: 0.75rem;
+                padding: 1rem 1.15rem;
             }
             .t5-product-name {
-                font-size: 0.82rem;
-                line-height: 1.3;
+                font-size: 0.95rem;
+                line-height: 1.4;
                 margin-bottom: 0.5rem;
             }
             .t5-price-main {
-                font-size: 0.88rem;
+                font-size: 1rem;
             }
             .t5-price-old {
                 font-size: 0.65rem;
@@ -1292,6 +1292,15 @@
             if (!is_array($userT5Sections) || empty($userT5Sections)) {
                 $userT5Sections = $defaultT5Sections;
             } else {
+                // Pastikan countdown_section berada tepat di atas products_grid secara default jika belum diatur
+                if (!in_array('countdown_section', $userT5Sections)) {
+                    $pIdx = array_search('products_grid', $userT5Sections);
+                    if ($pIdx !== false) {
+                        array_splice($userT5Sections, $pIdx, 0, 'countdown_section');
+                    } else {
+                        $userT5Sections[] = 'countdown_section';
+                    }
+                }
                 // Merge user order with defaults but respect EO restriction
                 if ($isEO) {
                     $allowed = ['hero_slider', 'countdown_section', 'products_grid'];

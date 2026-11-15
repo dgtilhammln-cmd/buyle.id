@@ -189,6 +189,16 @@ class CreatorBioController extends Controller
             'countdown_headline'          => 'nullable|string|max:200',
             'countdown_subheadline'       => 'nullable|string|max:300',
             'countdown_cta_text'          => 'nullable|string|max:100',
+            'countdown_bg_color1'         => 'nullable|string|max:50',
+            'countdown_bg_color2'         => 'nullable|string|max:50',
+            'countdown_title_color'       => 'nullable|string|max:50',
+            'countdown_subtitle_color'    => 'nullable|string|max:50',
+            'countdown_event_name_color'  => 'nullable|string|max:50',
+            'countdown_meta_color'        => 'nullable|string|max:50',
+            'countdown_num_color'         => 'nullable|string|max:50',
+            'countdown_box_bg'            => 'nullable|string|max:50',
+            'countdown_cta_bg'            => 'nullable|string|max:50',
+            'countdown_cta_color'         => 'nullable|string|max:50',
             // Web Type
             'web_type'                    => 'nullable|in:company_profile,event_organizer',
         ]);
@@ -396,8 +406,12 @@ class CreatorBioController extends Controller
         if ($request->has('products_section_enabled_present')) {
             $config['products_section_enabled'] = $request->has('products_section_enabled') ? 1 : 0;
         }
-        if ($request->has('products_headline'))    $config['products_headline']    = $request->products_headline;
-        if ($request->has('products_subheadline')) $config['products_subheadline'] = $request->products_subheadline;
+        if ($request->has('products_headline') || $request->has('products_headline_present')) {
+            $config['products_headline'] = (string) ($request->input('products_headline') ?? '');
+        }
+        if ($request->has('products_subheadline') || $request->has('products_headline_present')) {
+            $config['products_subheadline'] = (string) ($request->input('products_subheadline') ?? '');
+        }
         if ($request->has('products_see_all_enabled_present')) {
             $config['products_see_all_enabled'] = $request->has('products_see_all_enabled') ? 1 : 0;
         }
@@ -545,6 +559,16 @@ class CreatorBioController extends Controller
         if ($request->has('countdown_headline'))    $config['countdown_headline']    = $request->countdown_headline;
         if ($request->has('countdown_subheadline')) $config['countdown_subheadline'] = $request->countdown_subheadline;
         if ($request->has('countdown_cta_text'))    $config['countdown_cta_text']    = $request->countdown_cta_text;
+        if ($request->has('countdown_bg_color1'))        $config['countdown_bg_color1']        = $request->countdown_bg_color1;
+        if ($request->has('countdown_bg_color2'))        $config['countdown_bg_color2']        = $request->countdown_bg_color2;
+        if ($request->has('countdown_title_color'))      $config['countdown_title_color']      = $request->countdown_title_color;
+        if ($request->has('countdown_subtitle_color'))   $config['countdown_subtitle_color']   = $request->countdown_subtitle_color;
+        if ($request->has('countdown_event_name_color')) $config['countdown_event_name_color'] = $request->countdown_event_name_color;
+        if ($request->has('countdown_meta_color'))       $config['countdown_meta_color']       = $request->countdown_meta_color;
+        if ($request->has('countdown_num_color'))        $config['countdown_num_color']        = $request->countdown_num_color;
+        if ($request->has('countdown_box_bg'))           $config['countdown_box_bg']           = $request->countdown_box_bg;
+        if ($request->has('countdown_cta_bg'))           $config['countdown_cta_bg']           = $request->countdown_cta_bg;
+        if ($request->has('countdown_cta_color'))        $config['countdown_cta_color']        = $request->countdown_cta_color;
 
         if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
         if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;

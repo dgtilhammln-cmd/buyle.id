@@ -1551,6 +1551,14 @@
                 if (!is_array($currSecOrder) || empty($currSecOrder)) {
                     $currSecOrder = array_keys($allSecDef);
                 } else {
+                    if (!in_array('countdown_section', $currSecOrder)) {
+                        $pIdx = array_search('products_grid', $currSecOrder);
+                        if ($pIdx !== false) {
+                            array_splice($currSecOrder, $pIdx, 0, 'countdown_section');
+                        } else {
+                            $currSecOrder[] = 'countdown_section';
+                        }
+                    }
                     $currSecOrder = array_values(array_unique(array_merge($currSecOrder, array_keys($allSecDef))));
                 }
             @endphp
@@ -1694,9 +1702,9 @@
                                             title="{{ $secInfo['label'] }}">{{ $secInfo['label'] }}</span>
                                     </div>
                                     <div style="display:flex; align-items:center; gap:2px; flex-shrink:0;">
-                                        <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'up')"
+                                        <button type="button" class="sec-reorder-compact-btn" draggable="false" onclick="moveSecItem(this, 'up')"
                                             title="Naik">↑</button>
-                                        <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'down')"
+                                        <button type="button" class="sec-reorder-compact-btn" draggable="false" onclick="moveSecItem(this, 'down')"
                                             title="Turun">↓</button>
                                     </div>
                                 </div>
@@ -2863,17 +2871,18 @@
                                                 </label>
                                             </div>
                                             <div class="card-body">
+                                                <input type="hidden" name="products_headline_present" value="1">
                                                 <div class="form-group" style="margin-bottom:1.15rem;">
                                                     <label class="form-label">Judul Utama H2 (Headline)</label>
                                                     <input type="text" name="products_headline"
-                                                        value="{{ old('products_headline', $cfg['products_headline'] ?? 'Produk Unggulan') }}"
-                                                        class="form-input" placeholder="Misal: Produk Unggulan">
+                                                        value="{{ old('products_headline', array_key_exists('products_headline', $cfg) ? $cfg['products_headline'] : 'Produk Unggulan') }}"
+                                                        class="form-input" placeholder="Kosongkan jika tidak ingin menampilkan judul">
                                                 </div>
                                                 <div class="form-group" style="margin-bottom:0;">
                                                     <label class="form-label">Sub-judul / Deskripsi Singkat</label>
                                                     <input type="text" name="products_subheadline"
-                                                        value="{{ old('products_subheadline', $cfg['products_subheadline'] ?? 'Katalog produk pilihan terbaik.') }}"
-                                                        class="form-input" placeholder="Misal: Katalog produk pilihan terbaik.">
+                                                        value="{{ old('products_subheadline', array_key_exists('products_subheadline', $cfg) ? $cfg['products_subheadline'] : 'Katalog produk pilihan terbaik.') }}"
+                                                        class="form-input" placeholder="Kosongkan jika tidak ingin menampilkan sub-judul">
                                                 </div>
                                             </div>
                                         </div>
@@ -4152,6 +4161,172 @@
                                                         class="form-input" placeholder="Misal: Beli Tiket Sekarang">
                                                 </div>
                                                 <span style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:0.5rem;">Tombol otomatis mengarah ke halaman produk event terdekat.</span>
+                                            </div>
+                                        </div>
+
+                                        {{-- Card Warna Background & Teks Countdown --}}
+                                        <div class="prof-card">
+                                            <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                                <span style="display:flex;align-items:center;gap:0.5rem;">
+                                                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12"/></svg>
+                                                    3. Warna Background & Teks Countdown
+                                                </span>
+                                            </div>
+                                            <div class="card-body">
+                                                <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem;">
+                                                    Sesuaikan warna latar gradasi, teks judul, detail event, kotak countdown, hingga tombol aksi agar selaras dengan tema atau branding event Anda.
+                                                </p>
+                                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.15rem;">
+                                                    {{-- Background 1 --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Background Gradasi 1 (Kiri/Atas)</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_bg_color1" id="cd_bg1_picker"
+                                                                value="{{ $cfg['countdown_bg_color1'] ?? '#09121a' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_bg1_text').value=this.value;">
+                                                            <input type="text" id="cd_bg1_text"
+                                                                value="{{ $cfg['countdown_bg_color1'] ?? '#09121a' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_bg1_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Background 2 --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Background Gradasi 2 (Kanan/Bawah)</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_bg_color2" id="cd_bg2_picker"
+                                                                value="{{ $cfg['countdown_bg_color2'] ?? '#064e3b' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_bg2_text').value=this.value;">
+                                                            <input type="text" id="cd_bg2_text"
+                                                                value="{{ $cfg['countdown_bg_color2'] ?? '#064e3b' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_bg2_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Title Headline Color --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Judul Headline</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_title_color" id="cd_title_picker"
+                                                                value="{{ $cfg['countdown_title_color'] ?? '#ffffff' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_title_text').value=this.value;">
+                                                            <input type="text" id="cd_title_text"
+                                                                value="{{ $cfg['countdown_title_color'] ?? '#ffffff' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_title_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Subtitle Color --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Sub-judul / Deskripsi</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_subtitle_color" id="cd_sub_picker"
+                                                                value="{{ $cfg['countdown_subtitle_color'] ?? '#94a3b8' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_sub_text').value=this.value;">
+                                                            <input type="text" id="cd_sub_text"
+                                                                value="{{ $cfg['countdown_subtitle_color'] ?? '#94a3b8' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_sub_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Event Name Color --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Nama Event</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_event_name_color" id="cd_name_picker"
+                                                                value="{{ $cfg['countdown_event_name_color'] ?? '#4ade80' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_name_text').value=this.value;">
+                                                            <input type="text" id="cd_name_text"
+                                                                value="{{ $cfg['countdown_event_name_color'] ?? '#4ade80' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_name_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Meta Detail Color --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Detail Tanggal & Lokasi</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_meta_color" id="cd_meta_picker"
+                                                                value="{{ $cfg['countdown_meta_color'] ?? '#cbd5e1' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_meta_text').value=this.value;">
+                                                            <input type="text" id="cd_meta_text"
+                                                                value="{{ $cfg['countdown_meta_color'] ?? '#cbd5e1' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_meta_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Timer Box Background --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Latar Belakang Kotak Timer</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_box_bg" id="cd_boxbg_picker"
+                                                                value="{{ (!empty($cfg['countdown_box_bg']) && str_starts_with($cfg['countdown_box_bg'], '#')) ? $cfg['countdown_box_bg'] : '#132f22' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_boxbg_text').value=this.value;">
+                                                            <input type="text" id="cd_boxbg_text"
+                                                                value="{{ $cfg['countdown_box_bg'] ?? '#132f22' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_boxbg_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Timer Number Color --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Angka Timer (00 : 00 : 00)</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_num_color" id="cd_num_picker"
+                                                                value="{{ $cfg['countdown_num_color'] ?? '#ffffff' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_num_text').value=this.value;">
+                                                            <input type="text" id="cd_num_text"
+                                                                value="{{ $cfg['countdown_num_color'] ?? '#ffffff' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_num_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- CTA Button Background --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Background Tombol CTA</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_cta_bg" id="cd_ctabg_picker"
+                                                                value="{{ (!empty($cfg['countdown_cta_bg']) && str_starts_with($cfg['countdown_cta_bg'], '#')) ? $cfg['countdown_cta_bg'] : '#1eb349' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_ctabg_text').value=this.value;">
+                                                            <input type="text" id="cd_ctabg_text"
+                                                                value="{{ $cfg['countdown_cta_bg'] ?? '#1eb349' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_ctabg_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- CTA Button Text Color --}}
+                                                    <div class="form-group" style="margin-bottom:0;">
+                                                        <label class="form-label">Warna Teks Tombol CTA</label>
+                                                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                            <input type="color" name="countdown_cta_color" id="cd_ctacolor_picker"
+                                                                value="{{ $cfg['countdown_cta_color'] ?? '#ffffff' }}"
+                                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                                oninput="document.getElementById('cd_ctacolor_text').value=this.value;">
+                                                            <input type="text" id="cd_ctacolor_text"
+                                                                value="{{ $cfg['countdown_cta_color'] ?? '#ffffff' }}"
+                                                                class="form-input" style="flex:1;"
+                                                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){document.getElementById('cd_ctacolor_picker').value=this.value;}">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -8369,6 +8544,7 @@
                                 }
                                 valInput.value = cb.checked ? '1' : '0';
                             }
+                            saveHomepageSectionOrderAuto();
                         }
 
                         function moveSecItem(btn, direction) {
@@ -8388,6 +8564,48 @@
                                 container.appendChild(item);
                             }
                             updateHomepageSectionInputs();
+                            saveHomepageSectionOrderAuto();
+                        }
+
+                        function saveHomepageSectionOrderAuto() {
+                            const list = document.getElementById('secReorderListCompact');
+                            if (!list) return;
+                            const items = list.querySelectorAll('.sec-reorder-item-compact');
+                            const formData = new FormData();
+                            formData.append('_token', '{{ csrf_token() }}');
+                            items.forEach(item => {
+                                const key = item.getAttribute('data-sec-key');
+                                if (key) {
+                                    formData.append('homepage_sections_order[]', key);
+                                }
+                                const cb = item.querySelector('.sec-toggle-checkbox');
+                                if (cb) {
+                                    const toggleKey = cb.getAttribute('data-toggle-target');
+                                    if (toggleKey) {
+                                        formData.append(toggleKey + '_present', '1');
+                                        if (cb.checked) {
+                                            formData.append(toggleKey, '1');
+                                        }
+                                    }
+                                }
+                            });
+
+                            fetch('{{ route("creator.bio.save-profile") }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'Accept': 'application/json'
+                                },
+                                body: formData
+                            })
+                            .then(r => r.json())
+                            .then(data => {
+                                const iframe = document.getElementById('bioPreviewFrame');
+                                if (iframe && iframe.contentWindow) {
+                                    iframe.contentWindow.location.reload();
+                                }
+                            })
+                            .catch(err => console.error('Auto-save order error:', err));
                         }
 
                         document.addEventListener('DOMContentLoaded', function () {
@@ -8396,6 +8614,10 @@
                                 let dragItem = null;
 
                                 list.addEventListener('dragstart', function (e) {
+                                    if (e.target.closest('button, input, select, label')) {
+                                        e.preventDefault();
+                                        return;
+                                    }
                                     dragItem = e.target.closest('.sec-reorder-item-compact');
                                     if (dragItem) {
                                         dragItem.classList.add('dragging');
@@ -8408,6 +8630,7 @@
                                         dragItem.classList.remove('dragging');
                                         dragItem = null;
                                         updateHomepageSectionInputs();
+                                        saveHomepageSectionOrderAuto();
                                     }
                                 });
 
