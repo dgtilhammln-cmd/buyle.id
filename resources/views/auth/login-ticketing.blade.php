@@ -114,11 +114,12 @@
         @media (max-width: 520px) {
             .auth-canvas {
                 max-width: 100%;
-                min-height: auto;
+                min-height: 100dvh;
                 border-radius: 0;
                 border: none;
                 box-shadow: none;
-                margin: 0 0 5rem 0;
+                margin: 0;
+                padding-bottom: 90px;
             }
         }
 
@@ -329,80 +330,109 @@
 
         /* ══════════════════════════════════════════
            MOBILE BOTTOM NAVIGATION BAR
+           (Exact same style as buyle.id/tix)
            ══════════════════════════════════════════ */
-        .tix-auth-bottom-nav {
+        .tix-bottom-nav {
             display: none;
         }
-        .tix-auth-bottom-nav-spacer {
+        .tix-bottom-nav-spacer {
             display: none;
         }
 
-        @media (max-width: 768px) {
-            .tix-auth-bottom-nav {
-                display: flex;
-                position: fixed;
-                bottom: 1rem;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 9999;
-                background: rgba(10, 20, 12, 0.92);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: 1px solid rgba(255,255,255,0.12);
-                border-radius: 999px;
-                padding: 0.4rem 0.75rem;
-                gap: 0;
-                box-shadow:
-                    0 8px 32px rgba(0,0,0,0.6),
-                    0 0 20px rgba(30,179,73,0.15);
-                min-width: 280px;
-                max-width: calc(100vw - 2rem);
+        @media (max-width: 991px) {
+            .tix-bottom-nav {
+                display: flex !important;
+                position: fixed !important;
+                bottom: 14px !important;
+                left: 14px !important;
+                right: 14px !important;
+                max-width: 440px !important;
+                margin: 0 auto !important;
+                height: 62px !important;
+                background: rgba(255, 255, 255, 0.96) !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                border-radius: 999px !important;
+                box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+                border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+                z-index: 99998 !important;
+                align-items: center !important;
+                justify-content: space-around !important;
+                padding: 0 0.5rem !important;
+                box-sizing: border-box !important;
+                font-family: 'Montserrat', sans-serif !important;
+                pointer-events: auto !important;
             }
 
-            .tix-auth-bottom-nav-spacer {
-                display: block;
-                height: 90px;
+            .tix-bottom-nav-item {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 3px !important;
+                padding: 5px 8px !important;
+                border-radius: 14px !important;
+                text-decoration: none !important;
+                color: #64748b !important;
+                font-size: 0.67rem !important;
+                font-weight: 600 !important;
+                line-height: 1.1 !important;
+                letter-spacing: -0.01em !important;
+                font-family: 'Montserrat', sans-serif !important;
+                transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                -webkit-tap-highlight-color: transparent !important;
+                flex: 1 !important;
+                max-width: 95px !important;
+                height: 50px !important;
+                box-sizing: border-box !important;
+                position: relative !important;
             }
 
-            .tix-auth-bnav-item {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 3px;
-                padding: 0.5rem 0.4rem;
-                border-radius: 999px;
-                text-decoration: none;
-                color: rgba(255,255,255,0.45);
-                transition: all 0.2s ease;
-                min-width: 56px;
+            .tix-bottom-nav-item svg {
+                width: 20px !important;
+                height: 20px !important;
+                display: block !important;
+                transition: transform 0.2s ease, color 0.2s ease !important;
+                flex-shrink: 0 !important;
+                color: #64748b !important;
             }
 
-            .tix-auth-bnav-item svg {
-                width: 20px;
-                height: 20px;
-                stroke-width: 2;
-                transition: all 0.2s ease;
+            .tix-bottom-nav-item:hover { color: #15803d !important; }
+            .tix-bottom-nav-item:hover svg { color: #15803d !important; }
+            .tix-bottom-nav-item:active { transform: scale(0.92) !important; }
+
+            .tix-bottom-nav-item.active {
+                color: #15803d !important;
+                font-weight: 700 !important;
+            }
+            .tix-bottom-nav-item.active svg {
+                color: #16a34a !important;
+                stroke-width: 2.5 !important;
+                transform: translateY(-2px) !important;
+            }
+            .tix-bottom-nav-item.active::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 2px !important;
+                width: 18px !important;
+                height: 3px !important;
+                background: linear-gradient(135deg, #1db349 0%, #84ce00 100%) !important;
+                border-radius: 999px !important;
             }
 
-            .tix-auth-bnav-item span {
-                font-size: 0.6rem;
-                font-weight: 700;
-                letter-spacing: 0.01em;
-                line-height: 1;
+            .tix-bottom-nav-label {
+                font-size: 0.67rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                display: block !important;
             }
 
-            .tix-auth-bnav-item.active {
-                color: #1eb349;
-            }
-
-            .tix-auth-bnav-item.active svg {
-                filter: drop-shadow(0 0 6px rgba(30,179,73,0.7));
-            }
-
-            .tix-auth-bnav-item:hover:not(.active) {
-                color: rgba(255,255,255,0.75);
+            .tix-bottom-nav-spacer {
+                display: block !important;
+                width: 100% !important;
+                height: 84px !important;
+                pointer-events: none !important;
             }
         }
 
@@ -512,51 +542,51 @@
         </div>{{-- /canvas-body --}}
     </main>
 
-    <div class="tix-auth-bottom-nav-spacer"></div>
-
-    <!-- ══════ MOBILE BOTTOM NAVBAR ══════ -->
-    <nav class="tix-auth-bottom-nav" aria-label="Navigasi bawah">
+    <!-- ══════ MOBILE BOTTOM NAVBAR (Exact style: buyle.id/tix) ══════ -->
+    <nav class="tix-bottom-nav" aria-label="Navigasi Bawah">
         {{-- Home --}}
         <a href="{{ url('/tix') }}"
-           class="tix-auth-bnav-item {{ request()->is('tix') ? 'active' : '' }}"
+           class="tix-bottom-nav-item {{ request()->is('tix') ? 'active' : '' }}"
            title="Beranda TIX">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
-            <span>Home</span>
+            <span class="tix-bottom-nav-label">Home</span>
         </a>
 
         {{-- About Buyle --}}
         <a href="{{ url('/tix/info') }}"
-           class="tix-auth-bnav-item {{ request()->is('tix/info*') ? 'active' : '' }}"
+           class="tix-bottom-nav-item {{ request()->is('tix/info*') ? 'active' : '' }}"
            title="Tentang Buyle TIX">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
             </svg>
-            <span>About</span>
+            <span class="tix-bottom-nav-label">About Buyle</span>
         </a>
 
         {{-- Kerjasama --}}
         <a href="{{ $waUrl }}" target="_blank" rel="noopener"
-           class="tix-auth-bnav-item"
+           class="tix-bottom-nav-item"
            title="Kerjasama dengan Buyle TIX">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
-            <span>Kerjasama</span>
+            <span class="tix-bottom-nav-label">Kerjasama</span>
         </a>
 
         {{-- Profile --}}
         <a href="{{ url('/tix/auth') }}"
-           class="tix-auth-bnav-item {{ (request()->is('tix/auth*') || request()->is('login-ticketing*')) ? 'active' : '' }}"
+           class="tix-bottom-nav-item {{ (request()->is('tix/auth*') || request()->is('login-ticketing*')) ? 'active' : '' }}"
            title="Masuk / Daftar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
-            <span>Profile</span>
+            <span class="tix-bottom-nav-label">Profile</span>
         </a>
     </nav>
+
+    <div class="tix-bottom-nav-spacer"></div>
 
     <script>
         // ── DYNAMIC DATA ──
@@ -651,17 +681,9 @@
             document.getElementById('authTitle').innerHTML = r.title;
             document.getElementById('authSubtitle').textContent = r.subtitle;
 
-            // Info card
-            document.getElementById('roleInfoIcon').innerHTML = r.iconSvg;
-            document.getElementById('roleInfoTitle').textContent = r.infoTitle;
-            document.getElementById('roleInfoDesc').textContent  = r.infoDesc;
-
             // CTA button
             document.getElementById('btnGoogleCta').href = m.url;
             document.getElementById('btnGoogleText').textContent = m.btnText;
-
-            // Destination badge
-            document.getElementById('destLabel').textContent = m.destText;
         }
 
         // Initialize on load
