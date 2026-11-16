@@ -2844,14 +2844,14 @@
                 {{-- Kuota Slider --}}
                 <div style="margin-bottom:0.75rem;">
                     <label style="font-size:0.75rem;font-weight:700;color:#334155;display:flex;justify-content:space-between;margin-bottom:0.3rem;">
-                        <span>Kuota Undangan (min. 150)</span>
-                        <strong id="slider-val" style="color:#1eb349;">150 Tamu</strong>
+                        <span>Kuota Undangan (min. 20)</span>
+                        <strong id="slider-val" style="color:#1eb349;">20 Tamu</strong>
                     </label>
-                    <input type="range" id="inp-guest-limit" min="150" max="2000" step="50" value="150"
+                    <input type="range" id="inp-guest-limit" min="20" max="2000" step="10" value="20"
                            oninput="updateWeddingPricing(this.value)"
                            style="width:100%;accent-color:#1eb349;cursor:pointer;"/>
                     <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#94a3b8;margin-top:0.2rem;">
-                        <span>150</span><span>500</span><span>1.000</span><span>2.000</span>
+                        <span>20</span><span>500</span><span>1.000</span><span>2.000</span>
                     </div>
                 </div>
 
@@ -2863,25 +2863,25 @@
                     </div>
                     <div id="pricing-breakdown">
                         <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
-                            <span>Paket Undangan Digital (150 Tamu)</span>
-                            <span>Rp 250.000</span>
+                            <span id="pack-label">1 Pack = Rp 1.500 × 20 Tamu</span>
+                            <span id="pack-val">Rp 30.000</span>
                         </div>
-                        <div id="extra-row" style="display:none;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
-                            <span id="extra-label">Extra Kuota</span>
-                            <span id="extra-val">Rp 0</span>
+                        <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#64748b;margin-bottom:0.4rem;font-style:italic;">
+                            <span>Subtotal</span>
+                            <span id="subtotal-val">Rp 30.000</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
                             <span>Biaya Administrasi (5%)</span>
-                            <span id="admin-fee-val">Rp 12.500</span>
+                            <span id="admin-fee-val">Rp 1.500</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
                             <span>Platform Fee Buyle (5%)</span>
-                            <span id="platform-fee-val">Rp 12.500</span>
+                            <span id="platform-fee-val">Rp 1.500</span>
                         </div>
                         <hr style="border:none;border-top:1px dashed #e2e8f0;margin:0.6rem 0;"/>
                         <div style="display:flex;justify-content:space-between;font-size:0.95rem;font-weight:800;color:#0f172a;">
                             <span>Total</span>
-                            <span id="total-price" style="color:#1eb349;">Rp 275.000</span>
+                            <span id="total-price" style="color:#1eb349;">Rp 33.000</span>
                         </div>
                     </div>
                 </div>
@@ -2930,24 +2930,21 @@
         }
 
         function updateWeddingPricing(val) {
-            val = Math.max(150, parseInt(val));
+            val = Math.max(20, parseInt(val));
             document.getElementById('slider-val').textContent = val + ' Tamu';
-            const base = 250000;
-            const extraCount = Math.max(0, val - 150);
-            const extra = extraCount * 1500;
-            const subtotal = base + extra;
-            const adminFee = Math.round(subtotal * 0.05);
-            const platformFee = Math.round(subtotal * 0.05);
-            const total = subtotal + adminFee + platformFee;
 
-            const extraRow = document.getElementById('extra-row');
-            if (extra > 0) {
-                extraRow.style.display = 'flex';
-                document.getElementById('extra-label').textContent = 'Extra ' + extraCount + ' Tamu (@Rp 1.500)';
-                document.getElementById('extra-val').textContent = formatRupiah(extra);
-            } else {
-                extraRow.style.display = 'none';
-            }
+            const ratePerGuest = 1500;
+            const subtotal    = val * ratePerGuest;
+            const adminFee    = Math.round(subtotal * 0.05);
+            const platformFee = Math.round(subtotal * 0.05);
+            const total       = subtotal + adminFee + platformFee;
+
+            const packLabel = document.getElementById('pack-label');
+            if (packLabel) packLabel.textContent = 'Rp 1.500 × ' + val + ' Tamu';
+            const packVal = document.getElementById('pack-val');
+            if (packVal) packVal.textContent = formatRupiah(subtotal);
+            const subtotalEl = document.getElementById('subtotal-val');
+            if (subtotalEl) subtotalEl.textContent = formatRupiah(subtotal);
 
             const adminEl = document.getElementById('admin-fee-val');
             if (adminEl) adminEl.textContent = formatRupiah(adminFee);

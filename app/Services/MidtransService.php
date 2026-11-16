@@ -296,21 +296,12 @@ class MidtransService
 
         $items = [
             [
-                'id'       => 'WED_BASE_' . $wedding->id,
-                'price'    => $pricing['base_price'],
-                'quantity' => 1,
-                'name'     => 'Paket Undangan Base (150 Tamu)',
+                'id'       => 'WED_UNDANGAN_' . $wedding->id,
+                'price'    => $pricing['rate_per_guest'],
+                'quantity' => $pricing['guest_limit'],
+                'name'     => 'Paket Undangan Digital (' . $pricing['guest_limit'] . ' Tamu @Rp ' . number_format($pricing['rate_per_guest'], 0, ',', '.') . ')',
             ]
         ];
-
-        if ($pricing['extra_guests'] > 0) {
-            $items[] = [
-                'id'       => 'WED_EXTRA_' . $wedding->id,
-                'price'    => $pricing['extra_rate'],
-                'quantity' => $pricing['extra_guests'],
-                'name'     => 'Extra Kuota (' . $pricing['extra_guests'] . ' Tamu @Rp ' . number_format($pricing['extra_rate'], 0, ',', '.') . ')',
-            ];
-        }
 
         if ($pricing['admin_fee'] > 0) {
             $items[] = [

@@ -61,14 +61,11 @@ class WeddingController extends Controller
     // ──────────────────────────────────────────────────────────────────────────
     public static function computePrice(int $guestLimit): array
     {
-        $baseGuests = 150;
-        $basePrice  = 250000;
-        $extraRate  = 1500; // Rp 1.500 / tamu tambahan
+        $minGuests    = 20;
+        $ratePerGuest = 1500; // Rp 1.500 per tamu (semua tamu)
 
-        $guestLimit = max($baseGuests, $guestLimit);
-        $extraGuests = $guestLimit - $baseGuests;
-        $extraAmount = $extraGuests * $extraRate;
-        $subtotal    = $basePrice + $extraAmount;
+        $guestLimit = max($minGuests, $guestLimit);
+        $subtotal   = $guestLimit * $ratePerGuest;
 
         // Setting pusat admin_fee_rate (5%) & platform_fee_rate (5%)
         $adminFeeRate    = (float) (\App\Models\Setting::get('admin_fee_rate', 5));
@@ -80,11 +77,8 @@ class WeddingController extends Controller
 
         return [
             'guest_limit'       => $guestLimit,
-            'base_guests'       => $baseGuests,
-            'base_price'        => $basePrice,
-            'extra_guests'      => $extraGuests,
-            'extra_rate'        => $extraRate,
-            'extra_amount'      => $extraAmount,
+            'min_guests'        => $minGuests,
+            'rate_per_guest'    => $ratePerGuest,
             'subtotal'          => $subtotal,
             'admin_fee_rate'    => $adminFeeRate,
             'admin_fee'         => $adminFee,
@@ -99,7 +93,7 @@ class WeddingController extends Controller
     // ──────────────────────────────────────────────────────────────────────────
     public function calculatePrice(Request $request)
     {
-        $guestLimit = (int) ($request->guest_limit ?? 150);
+        $guestLimit = (int) ($request->guest_limit ?? 20);
         return response()->json(self::computePrice($guestLimit));
     }
 
@@ -115,7 +109,7 @@ class WeddingController extends Controller
             return response()->json(['success' => false, 'message' => 'URL Undangan (Slug) wajib diisi.'], 422);
         }
 
-        $pricing = self::computePrice((int) ($request->guest_limit ?? 150));
+        $pricing = self::computePrice((int) ($request->guest_limit ?? 20));
 
         // Cek jika user ini sudah memiliki wedding pending dengan slug yang sama, gunakan kembali daripada error
         $existingPending = Wedding::where('user_id', $user->id)
@@ -137,7 +131,7 @@ class WeddingController extends Controller
             $request->validate([
                 'groom_name'  => ['required', 'string', 'max:150'],
                 'bride_name'  => ['required', 'string', 'max:150'],
-                'guest_limit' => ['required', 'integer', 'min:150', 'max:5000'],
+                'guest_limit' => ['required', 'integer', 'min:20', 'max:5000'],
                 'slug'        => ['required', 'string', 'max:100', 'unique:weddings,slug'],
             ]);
 
@@ -196,7 +190,7 @@ class WeddingController extends Controller
         }
 
         $user = auth()->user();
-        $pricing = self::computePrice((int) ($wedding->guest_limit ?? 150));
+        $pricing = self::computePrice((int) ($wedding->guest_limit ?? 20));
 
         $snapToken = $this->midtrans->createWeddingSnapToken(
             $wedding,
