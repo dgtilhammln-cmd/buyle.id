@@ -506,6 +506,11 @@
             color: #92400e;
         }
 
+        .badge-pill.danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .bio-layout {
@@ -1819,12 +1824,9 @@
                             </div>
                             <span>Riwayat Amplop Digital Masuk</span>
                         </div>
-                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                            <span style="background:#ecfdf5; border:1.5px solid #a7f3d0; color:#065f46; font-size:0.8rem; font-weight:800; padding:4px 14px; border-radius:99px;">
-                                Total Bersih Mempelai: Rp {{ number_format($totalGifts, 0, ',', '.') }}
-                            </span>
-                            <span style="background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:99px;" title="Biaya platform Buyle.id Rp 5.000 per pembayaran Midtrans">
-                                Potongan Platform: Rp 5.000 / Transaksi Midtrans
+                        <div>
+                            <span style="background:#ecfdf5; border:1.5px solid #a7f3d0; color:#065f46; font-size:0.82rem; font-weight:800; padding:6px 16px; border-radius:99px;">
+                                Total Diterima Bersih: Rp {{ number_format($totalGifts, 0, ',', '.') }}
                             </span>
                         </div>
                     </div>
@@ -1834,9 +1836,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nama Pengirim</th>
-                                        <th>Nominal Amplop</th>
-                                        <th>Biaya Platform</th>
-                                        <th>Total Dibayar Tamu</th>
+                                        <th>Nominal Bersih Diterima</th>
                                         <th>Metode</th>
                                         <th>Status</th>
                                         <th>Waktu</th>
@@ -1846,36 +1846,24 @@
                                 <tbody>
                                     @forelse($gifts as $gift)
                                         @php
-                                            $isMidtrans = (strtolower($gift->payment_method ?? '') === 'midtrans');
-                                            $pFee = (int) ($gift->platform_fee ?? ($isMidtrans ? 5000 : 0));
-                                            if ($pFee === 0 && $isMidtrans) { $pFee = 5000; }
-                                            $gross = (int) ($gift->gross_amount ?? ($gift->amount + $pFee));
-                                            if ($gross === 0) { $gross = $gift->amount + $pFee; }
+                                            $isSuccess = ($gift->payment_status === 'settlement');
+                                            $isRecentPending = ($gift->payment_status === 'pending' && $gift->created_at->diffInMinutes(now()) <= 30);
                                         @endphp
                                         <tr>
                                             <td><strong>{{ $gift->sender_name }}</strong></td>
-                                            <td><span style="font-weight:800; color:#166534;">Rp
-                                                    {{ number_format($gift->amount, 0, ',', '.') }}</span></td>
                                             <td>
-                                                @if($pFee > 0)
-                                                    <span style="font-size:0.75rem; font-weight:700; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:99px; border:1px solid #bfdbfe;">
-                                                        Rp {{ number_format($pFee, 0, ',', '.') }}
-                                                    </span>
-                                                @else
-                                                    <span style="color:#94a3b8; font-size:0.78rem;">Rp 0</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <span style="font-weight:700; color:#0f172a; font-size:0.85rem;">
-                                                    Rp {{ number_format($gross, 0, ',', '.') }}
+                                                <span style="font-weight:800; color: {{ $isSuccess ? '#166534' : '#64748b' }};">
+                                                    Rp {{ number_format($gift->amount, 0, ',', '.') }}
                                                 </span>
                                             </td>
                                             <td><span style="font-size:0.75rem; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 8px; border-radius:6px;">{{ strtoupper($gift->payment_method ?: 'TRANSFER') }}</span></td>
                                             <td>
-                                                @if($gift->payment_status === 'settlement')
+                                                @if($isSuccess)
                                                     <span class="badge-pill success">Berhasil</span>
+                                                @elseif($isRecentPending)
+                                                    <span class="badge-pill warning">Menunggu Pembayaran</span>
                                                 @else
-                                                    <span class="badge-pill warning">{{ ucfirst($gift->payment_status) }}</span>
+                                                    <span class="badge-pill danger">Gagal</span>
                                                 @endif
                                             </td>
                                             <td>{{ $gift->created_at->format('d/m/Y H:i') }}</td>
@@ -1883,11 +1871,16 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="8" style="text-align:center; padding:2rem; color:#94a3b8;">
+                                            <td colspan="6" style="text-align:center; padding:2rem; color:#94a3b8;">
                                                 Belum ada data amplop digital yang masuk.
                                             </td>
                                         </tr>
                                     @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                                 </tbody>
                             </table>
                         </div>

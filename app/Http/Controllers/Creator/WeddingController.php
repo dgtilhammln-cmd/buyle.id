@@ -201,6 +201,18 @@ class WeddingController extends Controller
 
         $totalGuests    = $wedding->guests()->count();
         $checkedInCount = $wedding->guests()->where('is_checked_in', true)->count();
+
+        // Auto-expire transaksi amplop digital yang tidak diselesaikan / ditinggalkan (> 30 menit) menjadi 'failed' (Gagal)
+        $wedding->gifts()
+            ->where('payment_status', 'pending')
+            ->where('created_at', '<', now()->subMinutes(30))
+            ->update(['payment_status' => 'failed']);
+
+        $wedding->wishes()
+            ->where('payment_status', 'pending')
+            ->where('created_at', '<', now()->subMinutes(30))
+            ->update(['payment_status' => 'failed']);
+
         $totalGifts     = $wedding->gifts()->where('payment_status', 'settlement')->sum('amount');
         $totalWishes    = $wedding->wishes()->count();
 

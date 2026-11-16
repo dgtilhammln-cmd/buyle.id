@@ -258,6 +258,29 @@ class WeddingPublicController extends Controller
     }
 
     /**
+     * Tandai pembayaran amplop digital sebagai gagal jika user menutup/membatalkan Snap modal.
+     */
+    public function cancelEnvelope(string $slug, Request $request)
+    {
+        $wedding = Wedding::where('slug', $slug)->firstOrFail();
+        $orderId = $request->input('midtrans_order_id');
+
+        if (!empty($orderId)) {
+            WeddingGift::where('wedding_id', $wedding->id)
+                ->where('midtrans_order_id', $orderId)
+                ->where('payment_status', 'pending')
+                ->update(['payment_status' => 'failed']);
+
+            \App\Models\WeddingWish::where('wedding_id', $wedding->id)
+                ->where('midtrans_order_id', $orderId)
+                ->where('payment_status', 'pending')
+                ->update(['payment_status' => 'failed']);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Konfirmasi Kirim Amplop Digital (Manual Transfer / QRIS).
      */
     public function submitGift(string $slug, Request $request)

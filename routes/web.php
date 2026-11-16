@@ -1215,6 +1215,7 @@ Route::prefix('wedding/{slug}')->group(function () {
     Route::post('/wish',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitWish'])->name('wedding.wish');
     Route::post('/gift',                        [\App\Http\Controllers\WeddingPublicController::class, 'submitGift'])->name('wedding.gift');
     Route::post('/envelope/snap-token',          [\App\Http\Controllers\WeddingPublicController::class, 'getEnvelopeSnapToken'])->name('wedding.envelope.snap');
+    Route::post('/envelope/cancel',              [\App\Http\Controllers\WeddingPublicController::class, 'cancelEnvelope'])->name('wedding.envelope.cancel');
     Route::match(['get', 'post'], '/buku-tamu', [\App\Http\Controllers\WeddingPublicController::class, 'reception'])->name('wedding.reception');
     Route::post('/buku-tamu/checkin',           [\App\Http\Controllers\WeddingPublicController::class, 'submitReceptionCheckin'])->name('wedding.reception.checkin');
 });

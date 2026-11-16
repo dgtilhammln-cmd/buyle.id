@@ -1355,9 +1355,23 @@
                         },
                         onError: function(result) {
                             alert('Pembayaran gagal atau dibatalkan.');
+                            if (data.midtrans_order_id) {
+                                fetch("{{ route('wedding.envelope.cancel', $wedding->slug) }}", {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                                    body: JSON.stringify({ midtrans_order_id: data.midtrans_order_id })
+                                });
+                            }
                             if (btn) { btn.disabled = false; btn.innerText = 'Kirim Doa Restu'; }
                         },
                         onClose: function() {
+                            if (data.midtrans_order_id) {
+                                fetch("{{ route('wedding.envelope.cancel', $wedding->slug) }}", {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                                    body: JSON.stringify({ midtrans_order_id: data.midtrans_order_id })
+                                });
+                            }
                             if (confirm('Anda menutup jendela pembayaran. Ingin tetap mengirim doa dan konfirmasi kehadiran tanpa amplop?')) {
                                 if (amountInput) amountInput.value = 0;
                                 form.submit();
