@@ -760,7 +760,7 @@
                                                                    (TEMA UNIFORM BUYLE — CLEAN LIGHT & GRADIENT)
                                                                    ══════════════════════════════════════════════ */
         .buyle-venue-section {
-            padding: 6.5rem 1.5rem 7.5rem;
+            padding: 3.5rem 1.5rem 7.5rem;
             background: #FFFFFF;
             position: relative;
             overflow: hidden;
@@ -1035,13 +1035,13 @@
             }
 
             .buyle-venue-section {
-                padding: 5rem 1.25rem 5.5rem;
+                padding: 2.5rem 1.25rem 5.5rem;
             }
         }
 
         @media (max-width: 640px) {
             .buyle-ticketing-section {
-                padding: 6.5rem 1.25rem 4rem;
+                padding: 1rem 1.25rem 4rem;
             }
 
             .ticket-title {
