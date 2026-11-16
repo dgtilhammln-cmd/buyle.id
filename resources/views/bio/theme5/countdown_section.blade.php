@@ -523,19 +523,6 @@
                 <span class="t5-cd-badge-discount" id="t5CdDiscountBadge" style="{{ $activeEv['has_discount'] ? '' : 'display:none;' }}">
                     -{{ $activeEv['discount_percent'] }}%
                 </span>
-
-                <div class="t5-cd-poster-pills">
-                    <span class="t5-cd-pill t5-cd-pill-rating" id="t5CdRatingPill" style="{{ ($activeEv['rating'] !== null && $activeEv['rating'] > 0) ? '' : 'display:none;' }}">
-                        <svg width="12" height="12" fill="#f59e0b" stroke="#f59e0b" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <span id="t5CdRatingNum">{{ number_format($activeEv['rating'] ?? 0, 1) }}</span>
-                    </span>
-                    @if($activeEv['is_verified'])
-                        <span class="t5-cd-pill t5-cd-pill-verified">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            Verified
-                        </span>
-                    @endif
-                </div>
             </a>
 
             {{-- Card Body --}}
@@ -700,14 +687,6 @@
                 elDiscountBadge.style.display = 'inline-block';
             } else {
                 elDiscountBadge.style.display = 'none';
-            }
-        }
-        if (elRatingPill) {
-            if (ev.rating && ev.rating > 0) {
-                elRatingPill.style.display = 'inline-flex';
-                if (elRatingNum) elRatingNum.textContent = Number(ev.rating).toFixed(1);
-            } else {
-                elRatingPill.style.display = 'none';
             }
         }
         if (elDate) {
