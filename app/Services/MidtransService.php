@@ -292,26 +292,41 @@ class MidtransService
         $midtransOrderId = 'WED-' . $wedding->id . '-' . time();
         $wedding->update(['midtrans_order_id' => $midtransOrderId]);
 
-        $baseGuests = 150;
-        $basePrice  = 250000;
-        $extraGuests = max(0, $guestsLimit - $baseGuests);
-        $extraPrice  = $extraGuests * 1000;
+        $pricing = \App\Http\Controllers\Creator\WeddingController::computePrice($guestsLimit);
 
         $items = [
             [
                 'id'       => 'WED_BASE_' . $wedding->id,
-                'price'    => $basePrice,
+                'price'    => $pricing['base_price'],
                 'quantity' => 1,
                 'name'     => 'Paket Undangan Base (150 Tamu)',
             ]
         ];
 
-        if ($extraGuests > 0) {
+        if ($pricing['extra_guests'] > 0) {
             $items[] = [
                 'id'       => 'WED_EXTRA_' . $wedding->id,
-                'price'    => 1000,
-                'quantity' => $extraGuests,
-                'name'     => 'Extra Kuota (' . $extraGuests . ' Tamu @Rp 1.000)',
+                'price'    => $pricing['extra_rate'],
+                'quantity' => $pricing['extra_guests'],
+                'name'     => 'Extra Kuota (' . $pricing['extra_guests'] . ' Tamu @Rp ' . number_format($pricing['extra_rate'], 0, ',', '.') . ')',
+            ];
+        }
+
+        if ($pricing['admin_fee'] > 0) {
+            $items[] = [
+                'id'       => 'ADMIN_FEE',
+                'price'    => $pricing['admin_fee'],
+                'quantity' => 1,
+                'name'     => 'Biaya Administrasi (' . $pricing['admin_fee_rate'] . '%)',
+            ];
+        }
+
+        if ($pricing['platform_fee'] > 0) {
+            $items[] = [
+                'id'       => 'PLATFORM_FEE',
+                'price'    => $pricing['platform_fee'],
+                'quantity' => 1,
+                'name'     => 'Biaya Platform Buyle (' . $pricing['platform_fee_rate'] . '%)',
             ];
         }
 

@@ -63,21 +63,34 @@ class WeddingController extends Controller
     {
         $baseGuests = 150;
         $basePrice  = 250000;
-        $extraRate  = 1000; // Rp 1.000 / tamu tambahan
+        $extraRate  = 1500; // Rp 1.500 / tamu tambahan
 
         $guestLimit = max($baseGuests, $guestLimit);
         $extraGuests = $guestLimit - $baseGuests;
         $extraAmount = $extraGuests * $extraRate;
-        $total = $basePrice + $extraAmount;
+        $subtotal    = $basePrice + $extraAmount;
+
+        // Setting pusat admin_fee_rate (5%) & platform_fee_rate (5%)
+        $adminFeeRate    = (float) (\App\Models\Setting::get('admin_fee_rate', 5));
+        $platformFeeRate = (float) (\App\Models\Setting::get('platform_fee_rate', 5));
+
+        $adminFee    = (int) round($subtotal * ($adminFeeRate / 100));
+        $platformFee = (int) round($subtotal * ($platformFeeRate / 100));
+        $total       = $subtotal + $adminFee + $platformFee;
 
         return [
-            'guest_limit'  => $guestLimit,
-            'base_guests'  => $baseGuests,
-            'base_price'   => $basePrice,
-            'extra_guests' => $extraGuests,
-            'extra_rate'   => $extraRate,
-            'extra_amount' => $extraAmount,
-            'total'        => $total,
+            'guest_limit'       => $guestLimit,
+            'base_guests'       => $baseGuests,
+            'base_price'        => $basePrice,
+            'extra_guests'      => $extraGuests,
+            'extra_rate'        => $extraRate,
+            'extra_amount'      => $extraAmount,
+            'subtotal'          => $subtotal,
+            'admin_fee_rate'    => $adminFeeRate,
+            'admin_fee'         => $adminFee,
+            'platform_fee_rate' => $platformFeeRate,
+            'platform_fee'      => $platformFee,
+            'total'             => $total,
         ];
     }
 
@@ -97,36 +110,58 @@ class WeddingController extends Controller
     {
         $user = auth()->user();
 
-        $request->validate([
-            'groom_name'  => ['required', 'string', 'max:150'],
-            'bride_name'  => ['required', 'string', 'max:150'],
-            'guest_limit' => ['required', 'integer', 'min:150', 'max:5000'],
-            'slug'        => ['required', 'string', 'max:100', 'unique:weddings,slug'],
-        ]);
+        $slug = Str::slug($request->slug ?? '');
+        if (empty($slug)) {
+            return response()->json(['success' => false, 'message' => 'URL Undangan (Slug) wajib diisi.'], 422);
+        }
 
-        $pricing = self::computePrice((int) $request->guest_limit);
+        $pricing = self::computePrice((int) ($request->guest_limit ?? 150));
 
-        // Buat record wedding dengan payment_status = 'pending'
-        $wedding = Wedding::create([
-            'user_id'                  => $user->id,
-            'slug'                     => Str::slug($request->slug),
-            'event_title'              => 'The Wedding of',
-            'groom_name'               => $request->groom_name,
-            'groom_nickname'           => explode(' ', $request->groom_name)[0],
-            'bride_name'               => $request->bride_name,
-            'bride_nickname'           => explode(' ', $request->bride_name)[0],
-            'reception_pin'            => '1234',
-            'event_date'               => now()->addMonths(2)->setTime(9, 0, 0),
-            'ceremony_date'            => now()->addMonths(2)->setTime(8, 0, 0),
-            'event_location_name'      => 'Gedung Serbaguna',
-            'event_address'            => 'Jl. Bahagia Selalu No. 123',
-            'digital_envelope_enabled' => true,
-            'is_active'                => false, // aktif setelah bayar
-            'theme'                    => 'classic_gold',
-            'payment_status'           => 'pending',
-            'guest_limit'              => $pricing['guest_limit'],
-            'paid_amount'              => $pricing['total'],
-        ]);
+        // Cek jika user ini sudah memiliki wedding pending dengan slug yang sama, gunakan kembali daripada error
+        $existingPending = Wedding::where('user_id', $user->id)
+            ->where('slug', $slug)
+            ->where('payment_status', 'pending')
+            ->first();
+
+        if ($existingPending) {
+            $wedding = $existingPending;
+            $wedding->update([
+                'groom_name'     => $request->groom_name ?? $wedding->groom_name,
+                'groom_nickname' => explode(' ', $request->groom_name ?? $wedding->groom_name)[0],
+                'bride_name'     => $request->bride_name ?? $wedding->bride_name,
+                'bride_nickname' => explode(' ', $request->bride_name ?? $wedding->bride_name)[0],
+                'guest_limit'    => $pricing['guest_limit'],
+                'paid_amount'    => $pricing['total'],
+            ]);
+        } else {
+            $request->validate([
+                'groom_name'  => ['required', 'string', 'max:150'],
+                'bride_name'  => ['required', 'string', 'max:150'],
+                'guest_limit' => ['required', 'integer', 'min:150', 'max:5000'],
+                'slug'        => ['required', 'string', 'max:100', 'unique:weddings,slug'],
+            ]);
+
+            $wedding = Wedding::create([
+                'user_id'                  => $user->id,
+                'slug'                     => $slug,
+                'event_title'              => 'The Wedding of',
+                'groom_name'               => $request->groom_name,
+                'groom_nickname'           => explode(' ', $request->groom_name)[0],
+                'bride_name'               => $request->bride_name,
+                'bride_nickname'           => explode(' ', $request->bride_name)[0],
+                'reception_pin'            => '1234',
+                'event_date'               => now()->addMonths(2)->setTime(9, 0, 0),
+                'ceremony_date'            => now()->addMonths(2)->setTime(8, 0, 0),
+                'event_location_name'      => 'Gedung Serbaguna',
+                'event_address'            => 'Jl. Bahagia Selalu No. 123',
+                'digital_envelope_enabled' => true,
+                'is_active'                => false, // aktif setelah bayar
+                'theme'                    => 'classic_gold',
+                'payment_status'           => 'pending',
+                'guest_limit'              => $pricing['guest_limit'],
+                'paid_amount'              => $pricing['total'],
+            ]);
+        }
 
         // Minta Snap Token ke Midtrans
         $snapToken = $this->midtrans->createWeddingSnapToken(
@@ -137,7 +172,40 @@ class WeddingController extends Controller
         );
 
         if (!$snapToken) {
-            $wedding->delete();
+            if (!$existingPending) {
+                $wedding->delete();
+            }
+            return response()->json(['success' => false, 'message' => 'Gagal mendapatkan token pembayaran Midtrans. Pastikan konfigurasi Midtrans aktif.'], 500);
+        }
+
+        return response()->json([
+            'success'    => true,
+            'snap_token' => $snapToken,
+            'wedding_id' => $wedding->id,
+            'pricing'    => $pricing,
+        ]);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // POST: Ambil Snap Token untuk wedding pending yang sudah ada
+    // ──────────────────────────────────────────────────────────────────────────
+    public function getPendingWeddingSnapToken(Request $request, Wedding $wedding)
+    {
+        if ($wedding->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $user = auth()->user();
+        $pricing = self::computePrice((int) ($wedding->guest_limit ?? 150));
+
+        $snapToken = $this->midtrans->createWeddingSnapToken(
+            $wedding,
+            $user,
+            $pricing['total'],
+            $pricing['guest_limit']
+        );
+
+        if (!$snapToken) {
             return response()->json(['success' => false, 'message' => 'Gagal mendapatkan token pembayaran Midtrans.'], 500);
         }
 

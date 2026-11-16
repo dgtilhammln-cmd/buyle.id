@@ -648,33 +648,28 @@
     </div>
 
     {{-- ═══════════════════════════════════════════════════
-         COUPLE SWITCHER + TAMBAH PASANGAN BARU
+         COUPLE SWITCHER (MULTI-TENANT) + TAMBAH PASANGAN BARU
     ═══════════════════════════════════════════════════ --}}
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.25rem;">
-        {{-- Dropdown Pasangan --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+        {{-- Dropdown Pasangan Multi-Tenant --}}
         <div style="display:flex; align-items:center; gap:0.65rem;">
             <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            <span style="font-size:0.8rem; font-weight:700; color:#334155; font-family:'Montserrat',sans-serif;">Pasangan Aktif:</span>
-            @if($allWeddings->count() > 1)
+            <span style="font-size:0.8rem; font-weight:700; color:#334155; font-family:'Montserrat',sans-serif;">Pilih Pasangan:</span>
+            @if($allWeddings->count() > 0)
                 <div style="position:relative;">
                     <select onchange="window.location.href='{{ route('creator.wedding.index') }}?w=' + this.value + '&tab={{ $activeTab }}'"
-                            style="appearance:none; background:#fff; border:1.5px solid #e2e8f0; border-radius:10px; padding:0.4rem 2.2rem 0.4rem 0.8rem; font-size:0.83rem; font-weight:700; color:#0f172a; cursor:pointer; font-family:'Montserrat',sans-serif;">
+                            style="appearance:none; background:#fff; border:1.5px solid #e2e8f0; border-radius:10px; padding:0.4rem 2.2rem 0.4rem 0.8rem; font-size:0.83rem; font-weight:700; color:#0f172a; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                         @foreach($allWeddings as $w)
                             <option value="{{ $w->id }}" {{ ($wedding && $wedding->id === $w->id) ? 'selected' : '' }}>
                                 {{ $w->groom_nickname ?? $w->groom_name }} &amp; {{ $w->bride_nickname ?? $w->bride_name }}
-                                @if($w->payment_status !== 'paid') [Pending] @endif
+                                ({{ $w->payment_status === 'paid' ? 'Aktif' : 'Menunggu Bayar' }})
                             </option>
                         @endforeach
                     </select>
                     <svg style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;" width="12" height="12" fill="none" stroke="#64748b" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-            @elseif($wedding)
-                <span style="background:#ecfdf5; color:#166534; font-size:0.83rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:8px; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.4rem;">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                    {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp; {{ $wedding->bride_nickname ?? $wedding->bride_name }}
-                </span>
             @else
                 <span style="color:#94a3b8; font-size:0.8rem;">Belum ada pasangan</span>
             @endif
@@ -687,6 +682,24 @@
             Tambah Pasangan Baru
         </button>
     </div>
+
+    {{-- Banner Notifikasi Jika Pasangan Aktif Masih Pending Payment --}}
+    @if($wedding && $wedding->payment_status !== 'paid')
+        <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:14px; padding:0.9rem 1.25rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <svg width="22" height="22" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <div>
+                    <div style="font-size:0.85rem; font-weight:800; color:#92400e;">Pasangan ini masih menunggu pembayaran paket undangan digital.</div>
+                    <div style="font-size:0.75rem; color:#b45309; margin-top:2px;">Selesaikan pembayaran via Midtrans agar tautan undangan publik &amp; check-in dapat diakses tamu.</div>
+                </div>
+            </div>
+            <button onclick="payPendingWedding({{ $wedding->id }})" id="btn-pay-pending-{{ $wedding->id }}"
+                    style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.55rem 1.35rem; border-radius:10px; font-weight:800; font-size:0.82rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 3px 10px rgba(30,179,73,0.3); display:inline-flex; align-items:center; gap:6px;">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <span>Selesaikan Pembayaran via Midtrans</span>
+            </button>
+        </div>
+    @endif
 
     {{-- Layout Web Builder --}}
     <div class="bio-layout">
@@ -2857,10 +2870,18 @@
                             <span id="extra-label">Extra Kuota</span>
                             <span id="extra-val">Rp 0</span>
                         </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
+                            <span>Biaya Administrasi (5%)</span>
+                            <span id="admin-fee-val">Rp 12.500</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#475569;margin-bottom:0.4rem;">
+                            <span>Platform Fee Buyle (5%)</span>
+                            <span id="platform-fee-val">Rp 12.500</span>
+                        </div>
                         <hr style="border:none;border-top:1px dashed #e2e8f0;margin:0.6rem 0;"/>
                         <div style="display:flex;justify-content:space-between;font-size:0.95rem;font-weight:800;color:#0f172a;">
                             <span>Total</span>
-                            <span id="total-price" style="color:#1eb349;">Rp 250.000</span>
+                            <span id="total-price" style="color:#1eb349;">Rp 275.000</span>
                         </div>
                     </div>
                 </div>
@@ -2880,8 +2901,12 @@
     </div>
 
     {{-- Midtrans Snap Script --}}
-    <script src="https://app.{{ $midtransEnv }}.midtrans.com/snap/snap.js"
-            data-client-key="{{ $midtransClientKeyJs }}"></script>
+    @php
+        $midtransSvc = app(\App\Services\MidtransService::class);
+        $snapUrl = $midtransSvc->isProduction() ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+        $clientKey = $midtransSvc->getClientKey();
+    @endphp
+    <script src="{{ $snapUrl }}" data-client-key="{{ $clientKey }}"></script>
 
     <script>
         const WEDDING_ORDER_URL      = "{{ route('creator.wedding.order-couple') }}";
@@ -2908,17 +2933,27 @@
             val = Math.max(150, parseInt(val));
             document.getElementById('slider-val').textContent = val + ' Tamu';
             const base = 250000;
-            const extra = Math.max(0, val - 150) * 1000;
-            const total = base + extra;
-            document.getElementById('total-price').textContent = formatRupiah(total);
+            const extraCount = Math.max(0, val - 150);
+            const extra = extraCount * 1500;
+            const subtotal = base + extra;
+            const adminFee = Math.round(subtotal * 0.05);
+            const platformFee = Math.round(subtotal * 0.05);
+            const total = subtotal + adminFee + platformFee;
+
             const extraRow = document.getElementById('extra-row');
             if (extra > 0) {
                 extraRow.style.display = 'flex';
-                document.getElementById('extra-label').textContent = 'Extra ' + (val - 150) + ' Tamu (@Rp 1.000)';
+                document.getElementById('extra-label').textContent = 'Extra ' + extraCount + ' Tamu (@Rp 1.500)';
                 document.getElementById('extra-val').textContent = formatRupiah(extra);
             } else {
                 extraRow.style.display = 'none';
             }
+
+            const adminEl = document.getElementById('admin-fee-val');
+            if (adminEl) adminEl.textContent = formatRupiah(adminFee);
+            const platEl = document.getElementById('platform-fee-val');
+            if (platEl) platEl.textContent = formatRupiah(platformFee);
+            document.getElementById('total-price').textContent = formatRupiah(total);
         }
 
         async function submitOrderCouple() {
@@ -2962,6 +2997,10 @@
                     throw new Error(data.message || 'Gagal membuat order.');
                 }
 
+                if (typeof snap === 'undefined') {
+                    throw new Error('Midtrans Snap SDK gagal dimuat. Silakan periksa koneksi internet atau muat ulang halaman.');
+                }
+
                 // Tampilkan Midtrans Snap popup
                 snap.pay(data.snap_token, {
                     onSuccess: async (result) => {
@@ -2977,7 +3016,7 @@
                         document.getElementById('modal-add-couple').style.display = 'none';
                     },
                     onError: (err) => {
-                        errEl.textContent = 'Pembayaran gagal. Silakan coba lagi.';
+                        errEl.textContent = 'Pembayaran gagal atau dibatalkan.';
                         errEl.style.display = 'block';
                         btn.disabled = false;
                         btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar via Midtrans';
@@ -2993,6 +3032,57 @@
                 errEl.style.display = 'block';
                 btn.disabled = false;
                 btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Bayar via Midtrans';
+            }
+        }
+
+        async function payPendingWedding(weddingId) {
+            const btn = document.getElementById('btn-pay-pending-' + weddingId);
+            const originalContent = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24" style="animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Memuat Midtrans...';
+            }
+
+            try {
+                const res = await fetch('/creator/wedding/' + weddingId + '/snap-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Accept': 'application/json',
+                    }
+                });
+                const data = await res.json();
+                if (!data.success) {
+                    throw new Error(data.message || 'Gagal memuat token pembayaran.');
+                }
+
+                if (typeof snap === 'undefined') {
+                    throw new Error('Midtrans Snap SDK belum termuat dengan benar. Coba refresh halaman.');
+                }
+
+                snap.pay(data.snap_token, {
+                    onSuccess: async (result) => {
+                        await fetch(WEDDING_SUCCESS_BASE + '/' + weddingId, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' },
+                        });
+                        window.location.href = '/creator/wedding?w=' + weddingId;
+                    },
+                    onPending: () => {
+                        alert('Pembayaran sedang diproses. Undangan akan otomatis aktif setelah pembayaran dikonfirmasi Midtrans.');
+                    },
+                    onError: () => {
+                        alert('Pembayaran gagal atau dibatalkan.');
+                        if (btn) { btn.disabled = false; btn.innerHTML = originalContent; }
+                    },
+                    onClose: () => {
+                        if (btn) { btn.disabled = false; btn.innerHTML = originalContent; }
+                    }
+                });
+            } catch (err) {
+                alert(err.message || 'Terjadi kesalahan.');
+                if (btn) { btn.disabled = false; btn.innerHTML = originalContent; }
             }
         }
 
