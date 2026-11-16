@@ -1,38 +1,35 @@
 @php
     $logo = \App\Models\Setting::get('logo');
+    $currentRole = request('role', $initialRole ?? 'event_creator'); // 'event_creator', 'buyle_creator', 'buyer'
+    $currentMode = request('mode', $initialMode ?? 'register'); // 'register' (daftar) atau 'login'
+    $waNumber = '085179982373';
+    $waUrl = 'https://wa.me/6285179982373?text=' . urlencode('Halo Buyle TIX, saya ingin konsultasi dan kerjasama ticketing event.');
 @endphp
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Portal Tiket & Gatekeeper · Buyle.id</title>
-    <meta name="description"
-        content="Platform e-ticketing modern untuk konser, webinar, dan festival. Masuk sebagai penyelenggara event atau petugas gate scanner.">
-    <meta name="theme-color" content="#020704">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Masuk &amp; Daftar · Buyle TIX</title>
+    <meta name="description" content="Portal Autentikasi Buyle TIX untuk Event Creator, Buyle Creator, dan Pembeli. Masuk instan via Google.">
+    <meta name="theme-color" content="#1db349">
     <link rel="icon" type="image/png" href="/favicon.png">
 
-    <!-- Fonts: Montserrat (Official Buyle.id Font) -->
+    <!-- Fonts: Montserrat (Official Buyle Font) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --buyle-green: #1eb349;
-            --buyle-green-light: #a5cf37;
-            --buyle-emerald: #10b981;
-            --buyle-gradient: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
-            --buyle-gradient-hover: linear-gradient(135deg, #18983e 0%, #95bd30 100%);
-            --bg-dark: #020704;
-            --text-pure: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.75);
-            --text-muted: rgba(255, 255, 255, 0.45);
+            --brand-green: #1db349;
+            --brand-green-light: #84ce00;
+            --brand-gradient: linear-gradient(135deg, #1db349 0%, #84ce00 100%);
+            --brand-gradient-hover: linear-gradient(135deg, #169b3e 0%, #75b700 100%);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-page: #f8fafc;
         }
 
         * {
@@ -43,855 +40,983 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html,
-        body {
-            height: 100%;
-            background-color: var(--bg-dark);
-            color: var(--text-pure);
-            overflow-x: hidden;
+        html, body {
+            min-height: 100%;
+            background-color: var(--bg-page);
+            color: var(--text-main);
         }
 
         body {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100dvh;
-            background: #020704;
+            flex-direction: column;
+            min-height: 100vh;
             position: relative;
+            background: radial-gradient(circle at 50% 0%, rgba(29, 179, 73, 0.08) 0%, rgba(248, 250, 252, 0) 50%), #f8fafc;
+            padding-bottom: 90px;
         }
 
-        /* ── AMBIENT BACKGROUND GLOW (DESKTOP CANVAS) ── */
-        .ambient-bg-glow {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            background:
-                radial-gradient(circle at 50% 25%, rgba(30, 179, 73, 0.22) 0%, rgba(5, 18, 9, 0) 55%),
-                radial-gradient(circle at 85% 75%, rgba(165, 207, 55, 0.12) 0%, rgba(2, 7, 4, 0) 50%),
-                radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, rgba(2, 7, 4, 0) 50%),
-                #020704;
-        }
-
-        /* ── SMARTPHONE APP CANVAS / MOCKUP CONTAINER ── */
-        .phone-canvas {
-            position: relative;
-            z-index: 10;
+        /* ── TOP HEADER / NAVBAR (DESKTOP & MOBILE) ── */
+        .tix-auth-topbar {
             width: 100%;
-            max-width: 420px;
-            height: 100dvh;
-            max-height: 860px;
-            background: #020704;
-            border-radius: 46px;
-            border: 1.5px solid rgba(255, 255, 255, 0.1);
-            box-shadow:
-                0 30px 90px rgba(0, 0, 0, 0.85),
-                0 0 60px rgba(30, 179, 73, 0.18);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        @media (max-width: 480px) {
-            .phone-canvas {
-                max-width: 100%;
-                height: 100dvh;
-                max-height: 100dvh;
-                border-radius: 0;
-                border: none;
-                box-shadow: none;
-            }
-        }
-
-        /* ── CONCERT HERO IMAGES (SLIDE BACKGROUND PICTURES) ── */
-        .concert-hero-wrap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 55%;
-            overflow: hidden;
-            z-index: 2;
-        }
-
-        .concert-hero-img {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center top;
-            opacity: 0;
-            transform: scale(1.05);
-            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            filter: contrast(1.05) saturate(1.1);
-        }
-
-        .concert-hero-img.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .concert-hero-overlay {
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(180deg, rgba(2, 7, 4, 0.15) 0%, rgba(2, 7, 4, 0.45) 45%, #020704 100%),
-                radial-gradient(circle at 50% 20%, rgba(30, 179, 73, 0.25) 0%, transparent 65%);
-            pointer-events: none;
-        }
-
-        .canvas-content-wrap {
-            position: relative;
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            justify-content: space-between;
-            padding: 1.5rem 1.65rem 1.5rem;
-            box-sizing: border-box;
-        }
-
-        @media (max-width: 480px) {
-            .canvas-content-wrap {
-                padding: max(env(safe-area-inset-top, 0px), 1.25rem) 1.45rem max(env(safe-area-inset-bottom, 0px), 1.25rem);
-            }
-        }
-
-        /* ── BRAND LOGO PILL (Exact Logo in Header Buyle.id) ── */
-        .brand-header-row {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            margin-bottom: auto;
-            user-select: none;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
         }
 
-        .brand-logo-pill {
+        .tix-auth-topbar-inner {
+            max-width: 1120px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tix-auth-logo-link {
             display: inline-flex;
             align-items: center;
-            background: #ffffff;
-            padding: 7px 15px;
-            border-radius: 999px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
             text-decoration: none;
-            transition: transform 0.18s ease;
+            transition: opacity 0.2s ease;
         }
 
-        .brand-logo-pill:hover {
-            transform: scale(1.03);
+        .tix-auth-logo-link:hover {
+            opacity: 0.9;
         }
 
-        .brand-logo-img {
-            height: 25px;
+        .tix-auth-logo-img {
+            height: 32px;
             width: auto;
             object-fit: contain;
             display: block;
         }
 
-        /* ── CAROUSEL SLIDES WRAPPER ── */
-        .slider-viewport {
-            position: relative;
-            overflow: hidden;
-            touch-action: pan-y;
-            user-select: none;
-            margin-top: auto;
-        }
-
-        .slides-container {
-            display: flex;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            width: 300%;
-        }
-
-        .slide-item {
-            width: 33.333333%;
-            flex-shrink: 0;
-            padding-right: 0.5rem;
-            box-sizing: border-box;
-        }
-
-        .slide-headline {
-            font-size: 1.85rem;
-            font-weight: 700;
-            line-height: 1.22;
-            letter-spacing: -0.02em;
-            color: #ffffff;
-            margin-bottom: 0.65rem;
-        }
-
-        @media (max-width: 380px) {
-            .slide-headline {
-                font-size: 1.65rem;
-            }
-        }
-
-        .hl-green {
-            background: linear-gradient(135deg, #22c55e 0%, #a3e635 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline;
-        }
-
-        .slide-subtitle {
-            font-size: 0.86rem;
-            line-height: 1.55;
-            color: var(--text-secondary);
-            font-weight: 500;
-            min-height: 48px;
-        }
-
-        /* ── SLIDE DOT INDICATORS (Pill shape) ── */
-        .slide-indicators-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 1.15rem;
-            margin-bottom: 1.85rem;
-        }
-
-        .indicator-dot {
-            height: 4.5px;
-            width: 7px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.22);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-            border: none;
-            padding: 0;
-        }
-
-        .indicator-dot.active {
-            width: 30px;
-            background: var(--buyle-gradient);
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
-        }
-
-        /* ── THREE ACTION BUTTONS ── */
-        .actions-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 0.25rem;
-        }
-
-        /* Button 1: Daftar Penyelenggara (Primary Green Curved Button) */
-        .btn-register-organizer {
-            width: 100%;
-            height: 52px;
-            border-radius: 999px;
-            background: var(--buyle-gradient);
-            color: #ffffff;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.65rem;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(30, 179, 73, 0.42), 0 2px 6px rgba(0, 0, 0, 0.2);
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .btn-register-organizer:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(30, 179, 73, 0.55);
-            background: var(--buyle-gradient-hover);
-        }
-
-        .btn-register-organizer:active {
-            transform: scale(0.98);
-        }
-
-        /* Button 2: Login Penyelenggara (Frosted Dark Glass Button) */
-        .btn-login-organizer {
-            width: 100%;
-            height: 48px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1.5px solid rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: #ffffff;
-            font-size: 0.9rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .btn-login-organizer:hover {
-            background: rgba(255, 255, 255, 0.14);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .btn-login-organizer:active {
-            transform: scale(0.98);
-        }
-
-        /* Button 3: Login Scanner (Sleek Minimal Text Link) */
-        .btn-login-scanner {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 0.82rem;
-            font-weight: 600;
+        .tix-auth-back-link {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.35rem;
-            cursor: pointer;
-            padding: 0.4rem;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #475569;
             text-decoration: none;
-            transition: color 0.18s ease;
-            margin-top: 0.15rem;
-        }
-
-        .btn-login-scanner strong {
-            color: #4ade80;
-            font-weight: 700;
-        }
-
-        .btn-login-scanner:hover {
-            color: #ffffff;
-        }
-
-        /* ── SCANNER STAFF LOGIN MODAL / BOTTOM SHEET ── */
-        .scanner-modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: none;
-            align-items: flex-end;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-        }
-
-        .scanner-modal-backdrop.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        @media (min-width: 640px) {
-            .scanner-modal-backdrop {
-                align-items: center;
-                padding: 1rem;
-            }
-        }
-
-        .scanner-sheet {
-            width: 100%;
-            max-width: 440px;
-            background: #09130c;
-            border: 1.5px solid rgba(34, 197, 94, 0.3);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(30, 179, 73, 0.25);
-            border-radius: 32px 32px 0 0;
-            padding: 1.25rem 1.65rem 2rem;
-            box-sizing: border-box;
-            transform: translateY(100%);
-            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @media (min-width: 640px) {
-            .scanner-sheet {
-                border-radius: 32px;
-                transform: scale(0.95) translateY(20px);
-                transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-            }
-        }
-
-        .scanner-modal-backdrop.active .scanner-sheet {
-            transform: translateY(0);
-        }
-
-        @media (min-width: 640px) {
-            .scanner-modal-backdrop.active .scanner-sheet {
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .sheet-drag-handle {
-            width: 36px;
-            height: 4px;
+            padding: 7px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.22);
-            margin: 0 auto 1.15rem;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            transition: all 0.2s ease;
         }
 
-        .sheet-header {
+        .tix-auth-back-link:hover {
+            border-color: var(--brand-green);
+            color: var(--brand-green);
+            background: #f0fdf4;
+        }
+
+        /* ── AUTH CONTAINER / CARD ── */
+        .tix-auth-wrapper {
+            flex: 1;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            padding: 2.5rem 1rem 3rem;
+            box-sizing: border-box;
+        }
+
+        .tix-auth-card {
+            width: 100%;
+            max-width: 500px;
+            background: #ffffff;
+            border-radius: 28px;
+            border: 1.5px solid #e2e8f0;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.06), 0 2px 10px rgba(0, 0, 0, 0.02);
+            padding: 2.25rem 2rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* ── BRAND LOGO INSIDE CARD ── */
+        .tix-card-logo-head {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tix-card-logo-img {
+            height: 38px;
+            width: auto;
+            max-width: 180px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+        }
+
+        .tix-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #15803d;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 3px 10px;
+            border-radius: 999px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── DUAL SWITCH 1: 3-WAY ROLE SELECTOR (Event Creator | Buyle Creator | Pembeli) ── */
+        .role-switch-container {
             margin-bottom: 1.25rem;
         }
 
-        .sheet-title-group {
+        .role-switch-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: space-between;
         }
 
-        .sheet-icon-box {
-            width: 40px;
-            height: 40px;
+        .role-switch-pills {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .role-pill-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 8px 4px;
             border-radius: 12px;
-            background: rgba(30, 179, 73, 0.18);
-            border: 1px solid rgba(34, 197, 94, 0.35);
-            color: #4ade80;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .role-pill-btn svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.2s ease;
+        }
+
+        .role-pill-btn.active {
+            background: #ffffff;
+            color: #15803d;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+        }
+
+        .role-pill-btn.active svg {
+            color: #16a34a;
+            transform: scale(1.08);
+        }
+
+        /* ── DUAL SWITCH 2: 2-WAY MODE SELECTOR (Daftar vs Login) ── */
+        .mode-switch-pills {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            background: #f8fafc;
+            padding: 4px;
+            border-radius: 999px;
+            border: 1.5px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-pill-btn {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-pill-btn.active {
+            background: var(--brand-gradient);
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(29, 179, 73, 0.28);
+        }
+
+        /* ── DYNAMIC HEADLINE & DESTINATION NOTICE ── */
+        .auth-heading-box {
+            text-align: center;
+            margin-bottom: 1.35rem;
+        }
+
+        .auth-main-title {
+            font-size: 1.22rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.25;
+            margin-bottom: 4px;
+        }
+
+        .auth-sub-title {
+            font-size: 0.8rem;
+            color: #64748b;
+            line-height: 1.45;
+        }
+
+        .dest-banner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: #166534;
+            margin-bottom: 1.35rem;
+            line-height: 1.35;
+        }
+
+        .dest-banner svg {
+            flex-shrink: 0;
+            color: #16a34a;
+        }
+
+        /* ── HERO GOOGLE BUTTON ("Semua via Google") ── */
+        .google-auth-btn {
+            width: 100%;
+            height: 52px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .google-auth-btn:hover {
+            border-color: #16a34a;
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.16);
+            transform: translateY(-2px);
+            background: #ffffff;
+        }
+
+        .google-auth-btn:active {
+            transform: translateY(0);
+        }
+
+        .google-icon-svg {
+            width: 22px;
+            height: 22px;
             flex-shrink: 0;
         }
 
-        .sheet-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-            line-height: 1.25;
-        }
-
-        .sheet-sub {
-            font-size: 0.74rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .btn-sheet-close {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+        /* ── DIVIDER ── */
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.35rem 0;
             color: #94a3b8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .btn-sheet-close:hover {
-            background: rgba(255, 255, 255, 0.16);
-            color: #ffffff;
-        }
-
-        /* Form Inputs */
-        .sheet-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
-
-        .field-label {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .field-input-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .field-input {
-            width: 100%;
-            height: 46px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1.5px solid rgba(255, 255, 255, 0.14);
-            padding: 0 1rem 0 2.6rem;
-            color: #ffffff;
-            font-size: 0.88rem;
+            font-size: 0.72rem;
             font-weight: 600;
-            outline: none;
-            transition: all 0.18s ease;
-            box-sizing: border-box;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .field-input:focus {
-            border-color: #22c55e;
-            background: rgba(30, 179, 73, 0.08);
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .field-icon-left {
-            position: absolute;
-            left: 0.85rem;
-            color: #64748b;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
+        .auth-divider span {
+            padding: 0 10px;
         }
 
-        .btn-toggle-pin {
-            position: absolute;
-            right: 0.75rem;
+        /* ── EMAIL FORM (ACCORDION / CLEAN TOGGLE) ── */
+        .email-form-toggle-btn {
+            width: 100%;
             background: none;
             border: none;
+            font-size: 0.78rem;
             color: #64748b;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 4px;
-        }
-
-        .btn-toggle-pin:hover {
-            color: #ffffff;
-        }
-
-        .btn-sheet-submit {
-            width: 100%;
-            height: 48px;
-            border-radius: 999px;
-            background: var(--buyle-gradient);
-            color: #ffffff;
-            font-size: 0.92rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            box-shadow: 0 8px 20px rgba(30, 179, 73, 0.35);
+            gap: 6px;
+            padding: 6px;
+            transition: color 0.15s ease;
+        }
+
+        .email-form-toggle-btn:hover {
+            color: #15803d;
+        }
+
+        .email-form-box {
+            display: none;
+            margin-top: 1rem;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .email-form-box.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 0.95rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 44px;
+            border-radius: 12px;
+            border: 1.5px solid #cbd5e1;
+            padding: 0 14px;
+            font-size: 0.85rem;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+
+        .form-input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+        }
+
+        .btn-submit-auth {
+            width: 100%;
+            height: 46px;
+            border-radius: 12px;
+            border: none;
+            background: var(--brand-gradient);
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(29, 179, 73, 0.28);
             transition: all 0.2s ease;
             margin-top: 0.5rem;
         }
 
-        .btn-sheet-submit:hover {
+        .btn-submit-auth:hover {
+            background: var(--brand-gradient-hover);
             transform: translateY(-1px);
-            box-shadow: 0 10px 24px rgba(30, 179, 73, 0.45);
         }
 
-        .alert-error-sheet {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            color: #fca5a5;
-            font-size: 0.76rem;
+        /* ── FOOTER TRUST INFOS ── */
+        .auth-trust-footer {
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            line-height: 1.45;
+        }
+
+        .auth-trust-footer a {
+            color: #15803d;
+            text-decoration: none;
             font-weight: 600;
-            padding: 0.65rem 0.85rem;
+        }
+
+        .auth-trust-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── ALERTS / FLASH MESSAGES ── */
+        .auth-alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            font-size: 0.78rem;
+            padding: 0.75rem 1rem;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        /* ══════════════════════════════════════════════════════════════
+           MOBILE BOTTOM NAVIGATION BAR (Identical to buyle.id/tix)
+           ══════════════════════════════════════════════════════════════ */
+        .tix-bottom-nav {
+            display: none;
+        }
+
+        @media (max-width: 991px) {
+            .tix-auth-card {
+                border-radius: 24px;
+                padding: 1.75rem 1.25rem;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+            }
+
+            .tix-auth-wrapper {
+                padding: 1.5rem 1rem 2rem;
+            }
+
+            .tix-bottom-nav {
+                display: flex !important;
+                position: fixed !important;
+                bottom: 14px !important;
+                left: 14px !important;
+                right: 14px !important;
+                max-width: 440px !important;
+                margin: 0 auto !important;
+                height: 62px !important;
+                background: rgba(255, 255, 255, 0.96) !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                border-radius: 999px !important;
+                box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+                border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+                z-index: 99998 !important;
+                align-items: center !important;
+                justify-content: space-around !important;
+                padding: 0 0.5rem !important;
+                box-sizing: border-box !important;
+                font-family: 'Montserrat', sans-serif !important;
+                pointer-events: auto !important;
+            }
+
+            .tix-bottom-nav-item {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 3px !important;
+                padding: 5px 8px !important;
+                border-radius: 14px !important;
+                text-decoration: none !important;
+                color: #64748b !important;
+                font-size: 0.67rem !important;
+                font-weight: 600 !important;
+                line-height: 1.1 !important;
+                letter-spacing: -0.01em !important;
+                font-family: 'Montserrat', sans-serif !important;
+                transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                -webkit-tap-highlight-color: transparent !important;
+                flex: 1 !important;
+                max-width: 95px !important;
+                height: 50px !important;
+                box-sizing: border-box !important;
+                position: relative !important;
+            }
+
+            .tix-bottom-nav-item svg {
+                width: 20px !important;
+                height: 20px !important;
+                display: block !important;
+                transition: transform 0.2s ease, color 0.2s ease !important;
+                flex-shrink: 0 !important;
+                color: #64748b !important;
+            }
+
+            .tix-bottom-nav-item:hover {
+                color: #15803d !important;
+            }
+
+            .tix-bottom-nav-item:active {
+                transform: scale(0.92) !important;
+            }
+
+            .tix-bottom-nav-item.active {
+                color: #15803d !important;
+                font-weight: 700 !important;
+            }
+
+            .tix-bottom-nav-item.active svg {
+                color: #16a34a !important;
+                stroke-width: 2.5 !important;
+                transform: translateY(-2px) !important;
+            }
+
+            .tix-bottom-nav-item.active::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 2px !important;
+                width: 18px !important;
+                height: 3px !important;
+                background: linear-gradient(135deg, #1db349 0%, #84ce00 100%) !important;
+                border-radius: 999px !important;
+            }
+
+            .tix-bottom-nav-label {
+                font-size: 0.67rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                display: block !important;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    {{-- Atmospheric Background for Desktop View --}}
-    <div class="ambient-bg-glow"></div>
+    {{-- ── DESKTOP & MOBILE TOPBAR ── --}}
+    <header class="tix-auth-topbar">
+        <div class="tix-auth-topbar-inner">
+            <a href="{{ route('tix.index') }}" class="tix-auth-logo-link" title="Buyle TIX">
+                <picture>
+                    <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" class="tix-auth-logo-img">
+                </picture>
+            </a>
 
-    {{-- Main Smartphone Canvas --}}
-    <main class="phone-canvas">
-
-        {{-- 3 Concert Hero Images (Top Visual Anchor) --}}
-        <div class="concert-hero-wrap">
-            <div class="concert-hero-img slide-img-0 active" style="background-image: url('{{ asset('images/ticketing/concert1.jpg') }}');"></div>
-            <div class="concert-hero-img slide-img-1" style="background-image: url('{{ asset('images/ticketing/concert2.jpg') }}');"></div>
-            <div class="concert-hero-img slide-img-2" style="background-image: url('{{ asset('images/ticketing/concert3.jpg') }}');"></div>
-            <div class="concert-hero-overlay"></div>
+            <a href="{{ route('tix.index') }}" class="tix-auth-back-link">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Ke Beranda TIX</span>
+            </a>
         </div>
+    </header>
 
-        <div class="canvas-content-wrap">
+    {{-- ── MAIN AUTH WRAPPER ── --}}
+    <main class="tix-auth-wrapper">
+        <div class="tix-auth-card">
 
-            {{-- 1. Official Buyle.id Header Logo (Replacing text) --}}
-            <div class="brand-header-row">
-                <a href="{{ route('tix.info') }}" class="brand-logo-pill" title="Buyle.id">
-                    @if($logo)
-                        <img src="{{ asset('storage/' . $logo) }}" alt="Buyle.id" class="brand-logo-img">
-                    @else
-                        <img src="{{ asset('images/buyle-logo.png') }}" alt="Buyle.id" class="brand-logo-img">
-                    @endif
-                </a>
-            </div>
-
-            {{-- 2. Carousel: 3 Slide Informasi Copywriting Indonesia To-The-Point & Bervalue --}}
-            <div class="slider-viewport" id="sliderViewport">
-                <div class="slides-container" id="slidesContainer">
-
-                    {{-- SLIDE 1: PENJUALAN TIKET --}}
-                    <article class="slide-item">
-                        <h1 class="slide-headline">
-                            Kelola Tiket Event,<br>
-                            <span class="hl-green">Semudah 1 Klik.</span>
-                        </h1>
-                        <p class="slide-subtitle">
-                            Platform e-ticketing modern untuk konser, festival, dan seminar. Atur kuota, kategori tiket, dan publikasi instan tanpa ribet.
-                        </p>
-                    </article>
-
-                    {{-- SLIDE 2: SCANNER & GATEKEEPER --}}
-                    <article class="slide-item">
-                        <h1 class="slide-headline">
-                            Scan Kilat 0,1 Detik,<br>
-                            <span class="hl-green">100% Bebas Antre.</span>
-                        </h1>
-                        <p class="slide-subtitle">
-                            Validasi QR code & barcode super cepat di gate panitia. Sistem proteksi anti-duplikasi menjamin tiket palsu tidak tembus.
-                        </p>
-                    </article>
-
-                    {{-- SLIDE 3: PENCAIRAN SALDO INSTAN --}}
-                    <article class="slide-item">
-                        <h1 class="slide-headline">
-                            Pencairan Saldo Instan,<br>
-                            <span class="hl-green">Aman & Terpercaya.</span>
-                        </h1>
-                        <p class="slide-subtitle">
-                            Pantau arus kas tiket secara real-time dari HP Anda. Payout otomatis langsung ke rekening bank & e-wallet kapan saja.
-                        </p>
-                    </article>
-
-                </div>
-
-                {{-- Pill-shaped 3 Dots Indicator --}}
-                <div class="slide-indicators-row" id="slideIndicators">
-                    <button type="button" class="indicator-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
-                    <button type="button" class="indicator-dot" onclick="goToSlide(1)" aria-label="Slide 2"></button>
-                    <button type="button" class="indicator-dot" onclick="goToSlide(2)" aria-label="Slide 3"></button>
-                </div>
-            </div>
-
-            {{-- 3. Three Action Buttons --}}
-            <div class="actions-group">
-
-                {{-- BUTTON 1: DAFTAR PENYELENGGARA (Direct Google OAuth -> Dashboard Ticketing) --}}
-                <a href="{{ route('auth.google', ['role' => 'seller', 'redirect' => route('creator.ticket.scanner')]) }}"
-                   class="btn-register-organizer" id="btnDaftarPenyelenggara" title="Daftar sebagai Penyelenggara Event">
-                    {{-- Google Icon --}}
-                    <svg width="19" height="19" viewBox="0 0 24 24">
-                        <path fill="#ffffff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#ffffff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#ffffff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                        <path fill="#ffffff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            {{-- Brand Logo in Card --}}
+            <div class="tix-card-logo-head">
+                <picture>
+                    <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" class="tix-card-logo-img">
+                </picture>
+                <div class="tix-card-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
-                    <span>Daftar Penyelenggara</span>
-                </a>
+                    Portal Resmi Masuk &amp; Daftar
+                </div>
+            </div>
 
-                {{-- BUTTON 2: LOGIN PENYELENGGARA (Direct Google OAuth -> Dashboard Ticketing) --}}
-                <a href="{{ route('auth.google', ['role' => 'seller', 'redirect' => route('creator.ticket.scanner')]) }}"
-                   class="btn-login-organizer" id="btnLoginPenyelenggara" title="Login Penyelenggara Event">
-                    <span>Login Penyelenggara</span>
-                </a>
+            {{-- Flash Messages / Errors --}}
+            @if ($errors->any())
+                <div class="auth-alert-error">
+                    @foreach ($errors->all() as $error)
+                        <div>• {{ $error }}</div>
+                    @endforeach
+                </div>
+            @endif
 
-                {{-- BUTTON 3: LOGIN SCANNER (Opens Staff Login Form Modal) --}}
-                <button type="button" class="btn-login-scanner" onclick="openScannerModal()" id="btnOpenScannerModal">
-                    Petugas Gate? <strong>Login Scanner &rarr;</strong>
+            @if(session('success'))
+                <div class="dest-banner" style="background:#f0fdf4; color:#15803d; border-color:#bbf7d0;">
+                    ✓ {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- ── DUAL SWITCH 1: PILIH PERAN (Event Creator | Buyle Creator | Pembeli) ── --}}
+            <div class="role-switch-container">
+                <div class="role-switch-label">
+                    <span>1. Pilih Tipe Akun Anda</span>
+                    <span id="roleBadgeIndicator" style="font-size:0.7rem; color:#16a34a; font-weight:700;">Event Creator</span>
+                </div>
+                <div class="role-switch-pills" role="tablist">
+                    {{-- 1. Event Creator --}}
+                    <button type="button" class="role-pill-btn active" id="btnRoleEvent" onclick="switchRole('event_creator')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
+                            <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line>
+                        </svg>
+                        <span>Event Creator</span>
+                    </button>
+
+                    {{-- 2. Buyle Creator --}}
+                    <button type="button" class="role-pill-btn" id="btnRoleBuyle" onclick="switchRole('buyle_creator')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        <span>Buyle Creator</span>
+                    </button>
+
+                    {{-- 3. Pembeli --}}
+                    <button type="button" class="role-pill-btn" id="btnRoleBuyer" onclick="switchRole('buyer')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Pembeli</span>
+                    </button>
+                </div>
+            </div>
+
+            {{-- ── DUAL SWITCH 2: PILIH MODE (Daftar vs Login) ── --}}
+            <div class="mode-switch-pills" role="tablist">
+                <button type="button" class="mode-pill-btn active" id="btnModeRegister" onclick="switchMode('register')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                    </svg>
+                    <span id="labelModeRegister">Daftar</span>
                 </button>
+                <button type="button" class="mode-pill-btn" id="btnModeLogin" onclick="switchMode('login')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    <span id="labelModeLogin">Login</span>
+                </button>
+            </div>
 
+            {{-- Dynamic Heading & Subtitle --}}
+            <div class="auth-heading-box">
+                <h1 class="auth-main-title" id="authHeadline">Daftar Event Creator</h1>
+                <p class="auth-sub-title" id="authSubheadline">
+                    Mulai jual tiket konser, festival, &amp; event Anda dengan gate scanner kilat dan settlement instan.
+                </p>
+            </div>
+
+            {{-- Destination Notice Banner --}}
+            <div class="dest-banner" id="destBanner">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span id="destBannerText">Setelah berhasil, otomatis langsung diarahkan ke Dashboard Event &amp; Kehadiran</span>
+            </div>
+
+            {{-- ── HERO GOOGLE BUTTON ("Semua via Google") ── --}}
+            <a href="#" class="google-auth-btn" id="btnGoogleAuth">
+                <svg class="google-icon-svg" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                </svg>
+                <span id="btnGoogleText">Daftar Event Creator via Google</span>
+            </a>
+
+            {{-- ── DIVIDER ── --}}
+            <div class="auth-divider">
+                <span>atau login dengan email</span>
+            </div>
+
+            {{-- Toggle Button for Email Form --}}
+            <button type="button" class="email-form-toggle-btn" id="btnToggleEmailForm" onclick="toggleEmailForm()">
+                <span id="emailToggleLabel">Tampilkan form email &amp; kata sandi</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+
+            {{-- ── EMAIL & PASSWORD FORMS ── --}}
+            <div class="email-form-box" id="emailFormBox">
+
+                {{-- FORM 1: LOGIN (EMAIL + PASSWORD) --}}
+                <form action="{{ route('tix.auth.login') }}" method="POST" id="formLoginEmail" style="display:none;">
+                    @csrf
+                    <input type="hidden" name="target_role" id="loginTargetRole" value="event_creator">
+                    <input type="hidden" name="redirect_url" id="loginRedirectUrl" value="{{ url('/creator/event-attendance') }}">
+
+                    <div class="form-group">
+                        <label class="form-label">Email atau WhatsApp</label>
+                        <input type="text" name="email" class="form-input" placeholder="nama@email.com atau 08xxxxxxxx" required value="{{ old('email') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kata Sandi</label>
+                        <input type="password" name="password" class="form-input" placeholder="Masukkan kata sandi akun" required>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; font-size:0.75rem;">
+                        <label style="display:inline-flex; align-items:center; gap:6px; color:#475569; cursor:pointer;">
+                            <input type="checkbox" name="remember" value="1" checked> Ingat saya
+                        </label>
+                        <a href="{{ route('password.request') }}" style="color:#16a34a; text-decoration:none; font-weight:600;">Lupa Sandi?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit-auth" id="btnSubmitLogin">
+                        Masuk ke Akun
+                    </button>
+                </form>
+
+                {{-- FORM 2: REGISTER (NAME + EMAIL + PHONE + PASSWORD) --}}
+                <form action="{{ route('tix.auth.register') }}" method="POST" id="formRegisterEmail">
+                    @csrf
+                    <input type="hidden" name="target_role" id="regTargetRole" value="event_creator">
+                    <input type="hidden" name="redirect_url" id="regRedirectUrl" value="{{ url('/creator/event-attendance') }}">
+
+                    <div class="form-group">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" name="name" class="form-input" placeholder="Nama Anda atau Nama Penyelenggara" required value="{{ old('name') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Alamat Email Aktif</label>
+                        <input type="email" name="email" class="form-input" placeholder="nama@email.com" required value="{{ old('email') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nomor WhatsApp</label>
+                        <input type="text" name="phone" class="form-input" placeholder="Contoh: 08123456789" required value="{{ old('phone') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kata Sandi</label>
+                        <input type="password" name="password" class="form-input" placeholder="Minimal 6 karakter" required minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Konfirmasi Kata Sandi</label>
+                        <input type="password" name="password_confirmation" class="form-input" placeholder="Ulangi kata sandi" required minlength="6">
+                    </div>
+
+                    <button type="submit" class="btn-submit-auth" id="btnSubmitRegister">
+                        Daftar Akun Sekarang
+                    </button>
+                </form>
+            </div>
+
+            {{-- Trust & Terms Footer --}}
+            <div class="auth-trust-footer">
+                Dengan melanjutkan, Anda menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank">Syarat &amp; Ketentuan</a> serta <a href="{{ url('/kebijakan-privasi') }}" target="_blank">Kebijakan Privasi</a> Buyle TIX Indonesia.
             </div>
 
         </div>
     </main>
 
-    {{-- ══ SCANNER STAFF LOGIN BOTTOM SHEET / MODAL ══ --}}
-    <div class="scanner-modal-backdrop {{ ($errors->has('staff_name') || $errors->has('staff_password')) ? 'active' : '' }}"
-         id="scannerModalBackdrop" onclick="handleBackdropClick(event)">
-        <div class="scanner-sheet" id="scannerSheet">
-            <div class="sheet-drag-handle"></div>
+    {{-- ══════════════════════════════════════════════════════════════
+       MOBILE BOTTOM NAVIGATION BAR (Identical to buyle.id/tix)
+       Items: Home, About Buyle, Kerjasama, Profile (active)
+       ══════════════════════════════════════════════════════════════ --}}
+    <nav class="tix-bottom-nav" id="tixBottomNav" aria-label="Navigasi Bawah Buyle TIX">
+        {{-- 1. Home --}}
+        <a href="{{ route('tix.index') }}" class="tix-bottom-nav-item" title="Home Buyle TIX">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <span class="tix-bottom-nav-label">Home</span>
+        </a>
 
-            <div class="sheet-header">
-                <div class="sheet-title-group">
-                    <div class="sheet-icon-box">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                            <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                            <rect x="7" y="7" width="10" height="10" rx="1" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="sheet-title">Login Petugas Scanner</h3>
-                        <p class="sheet-sub">Validasi tiket gate konser & event</p>
-                    </div>
-                </div>
-                <button type="button" class="btn-sheet-close" onclick="closeScannerModal()" aria-label="Tutup">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
+        {{-- 2. About Buyle --}}
+        <a href="{{ route('tix.info') }}" class="tix-bottom-nav-item" title="About Buyle TIX">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span class="tix-bottom-nav-label">About Buyle</span>
+        </a>
 
-            {{-- Error alerts --}}
-            @if($errors->has('staff_name') || $errors->has('staff_password'))
-                <div class="alert-error-sheet">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                    </svg>
-                    <span>{{ $errors->first('staff_name') ?: $errors->first('staff_password') }}</span>
-                </div>
-            @endif
+        {{-- 3. Kerjasama --}}
+        <a href="{{ $waUrl }}" target="_blank" rel="noopener noreferrer" class="tix-bottom-nav-item" title="Kerjasama Event Organizer (WhatsApp)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span class="tix-bottom-nav-label">Kerjasama</span>
+        </a>
 
-            <form method="POST" action="{{ route('ticketing.login.staff') }}" class="sheet-form">
-                @csrf
-                <div class="form-field">
-                    <label class="field-label" for="staffNameInput">Nama Petugas / Panitia</label>
-                    <div class="field-input-box">
-                        <span class="field-icon-left">
-                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </span>
-                        <input type="text" id="staffNameInput" name="name" class="field-input"
-                               placeholder="Contoh: Gate 1 - Budi" value="{{ old('name') }}" required autocomplete="off">
-                    </div>
-                </div>
+        {{-- 4. Profile (Active) --}}
+        <a href="{{ url('/tix/auth') }}" class="tix-bottom-nav-item active" title="Profile / Portal Tiket Buyle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span class="tix-bottom-nav-label">Profile</span>
+        </a>
+    </nav>
 
-                <div class="form-field">
-                    <label class="field-label" for="staffPinInput">Password / PIN Gate</label>
-                    <div class="field-input-box">
-                        <span class="field-icon-left">
-                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                        </span>
-                        <input type="password" id="staffPinInput" name="password" class="field-input"
-                               placeholder="Masukkan PIN gate panitia" required autocomplete="off">
-                        <button type="button" class="btn-toggle-pin" onclick="togglePinVisibility()" title="Lihat PIN">
-                            <svg id="eyeIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-sheet-submit">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                        <rect x="7" y="7" width="10" height="10" rx="1" />
-                    </svg>
-                    <span>Masuk Layar Scanner</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    {{-- Interactive Carousel & Modal Logic --}}
+    {{-- Interactive State Engine --}}
     <script>
-        // 3-Slide Carousel Logic with Syncing Concert Hero Images
-        let currentSlide = 0;
-        const totalSlides = 3;
-        const slidesContainer = document.getElementById('slidesContainer');
-        const dots = document.querySelectorAll('.indicator-dot');
-        const heroImages = document.querySelectorAll('.concert-hero-img');
-        let autoSlideTimer = null;
+        // State Store
+        const AUTH_STATE = {
+            role: "{{ $currentRole }}", // 'event_creator' | 'buyle_creator' | 'buyer'
+            mode: "{{ $currentMode }}"  // 'register' | 'login'
+        };
 
-        function goToSlide(index) {
-            currentSlide = (index + totalSlides) % totalSlides;
-            if (slidesContainer) {
-                slidesContainer.style.transform = `translateX(-${currentSlide * 33.333333}%)`;
+        // Configuration Map per Role
+        const ROLE_CONFIGS = {
+            event_creator: {
+                label: 'Event Creator',
+                destUrl: "{{ url('/creator/event-attendance') }}",
+                destText: 'Setelah berhasil, otomatis langsung diarahkan ke Dashboard Event & Kehadiran (buyle.id/creator/event-attendance)',
+                googleRole: 'seller',
+                registerTitle: 'Daftar Event Creator',
+                registerSubtitle: 'Mulai jual tiket konser, festival, & event Anda dengan gate scanner kilat dan settlement instan.',
+                loginTitle: 'Login Event Creator',
+                loginSubtitle: 'Masuk ke akun penyelenggara event untuk kelola tiket, pantau penjualan, dan manajemen gate.',
+                googleBtnRegister: 'Daftar Event Creator via Google',
+                googleBtnLogin: 'Masuk Event Creator via Google',
+                submitRegister: 'Daftar Event Creator',
+                submitLogin: 'Masuk Event Creator'
+            },
+            buyle_creator: {
+                label: 'Buyle Creator',
+                destUrl: "{{ url('/creator/dashboard') }}",
+                destText: 'Setelah berhasil, otomatis langsung diarahkan ke Creator Dashboard (buyle.id/creator/dashboard)',
+                googleRole: 'seller',
+                registerTitle: 'Daftar Buyle Creator',
+                registerSubtitle: 'Buat toko online, bio link, jual produk digital, dan kelola order dalam satu platform.',
+                loginTitle: 'Login Buyle Creator',
+                loginSubtitle: 'Kelola web builder, kasir POS, katalog produk digital, dan pencairan saldo Anda.',
+                googleBtnRegister: 'Daftar Buyle Creator via Google',
+                googleBtnLogin: 'Masuk Buyle Creator via Google',
+                submitRegister: 'Daftar Buyle Creator',
+                submitLogin: 'Masuk Buyle Creator'
+            },
+            buyer: {
+                label: 'Pembeli',
+                destUrl: "{{ url('/akun') }}",
+                destText: 'Setelah berhasil, otomatis langsung diarahkan ke Akun & Pesanan Saya (buyle.id/akun/)',
+                googleRole: 'buyer',
+                registerTitle: 'Daftar Akun Pembeli',
+                registerSubtitle: 'Beli tiket event, simpan e-tiket QR, dan cek riwayat transaksi Anda dengan mudah.',
+                loginTitle: 'Login Akun Pembeli',
+                loginSubtitle: 'Akses e-tiket konser Anda, download invoice, dan kelola profil pengguna.',
+                googleBtnRegister: 'Daftar Pembeli via Google',
+                googleBtnLogin: 'Masuk Pembeli via Google',
+                submitRegister: 'Daftar Akun Pembeli',
+                submitLogin: 'Masuk Akun Pembeli'
             }
-            dots.forEach((dot, idx) => {
-                dot.classList.toggle('active', idx === currentSlide);
-            });
-            heroImages.forEach((img, idx) => {
-                img.classList.toggle('active', idx === currentSlide);
-            });
-            resetAutoSlide();
+        };
+
+        function switchRole(roleKey) {
+            AUTH_STATE.role = roleKey;
+
+            // Update Role Pills UI
+            document.querySelectorAll('.role-pill-btn').forEach(btn => btn.classList.remove('active'));
+            if (roleKey === 'event_creator') document.getElementById('btnRoleEvent').classList.add('active');
+            if (roleKey === 'buyle_creator') document.getElementById('btnRoleBuyle').classList.add('active');
+            if (roleKey === 'buyer') document.getElementById('btnRoleBuyer').classList.add('active');
+
+            renderUI();
         }
 
-        function resetAutoSlide() {
-            clearInterval(autoSlideTimer);
-            autoSlideTimer = setInterval(() => {
-                goToSlide(currentSlide + 1);
-            }, 5000);
-        }
-        resetAutoSlide();
+        function switchMode(modeKey) {
+            AUTH_STATE.mode = modeKey;
 
-        // Touch Swipe Support for Mobile
-        const viewport = document.getElementById('sliderViewport');
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        if (viewport) {
-            viewport.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            viewport.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipeGesture();
-            }, { passive: true });
-        }
-
-        function handleSwipeGesture() {
-            const threshold = 40;
-            if (touchEndX < touchStartX - threshold) {
-                goToSlide(currentSlide + 1);
-            } else if (touchEndX > touchStartX + threshold) {
-                goToSlide(currentSlide - 1);
-            }
-        }
-
-        // Scanner Modal Open / Close
-        function openScannerModal() {
-            const backdrop = document.getElementById('scannerModalBackdrop');
-            if (backdrop) {
-                backdrop.classList.add('active');
-                setTimeout(() => {
-                    const input = document.getElementById('staffNameInput');
-                    if (input) input.focus();
-                }, 300);
-            }
-        }
-
-        function closeScannerModal() {
-            const backdrop = document.getElementById('scannerModalBackdrop');
-            if (backdrop) {
-                backdrop.classList.remove('active');
-            }
-        }
-
-        function handleBackdropClick(e) {
-            if (e.target.id === 'scannerModalBackdrop') {
-                closeScannerModal();
-            }
-        }
-
-        // Toggle PIN Visibility
-        function togglePinVisibility() {
-            const pinInput = document.getElementById('staffPinInput');
-            const eyeIcon = document.getElementById('eyeIcon');
-            if (!pinInput) return;
-
-            if (pinInput.type === 'password') {
-                pinInput.type = 'text';
-                eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+            // Update Mode Pills UI
+            document.querySelectorAll('.mode-pill-btn').forEach(btn => btn.classList.remove('active'));
+            if (modeKey === 'register') {
+                document.getElementById('btnModeRegister').classList.add('active');
+                document.getElementById('formRegisterEmail').style.display = 'block';
+                document.getElementById('formLoginEmail').style.display = 'none';
             } else {
-                pinInput.type = 'password';
-                eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+                document.getElementById('btnModeLogin').classList.add('active');
+                document.getElementById('formRegisterEmail').style.display = 'none';
+                document.getElementById('formLoginEmail').style.display = 'block';
+            }
+
+            renderUI();
+        }
+
+        function renderUI() {
+            const cfg = ROLE_CONFIGS[AUTH_STATE.role] || ROLE_CONFIGS.event_creator;
+            const isReg = AUTH_STATE.mode === 'register';
+
+            // Indicator Badge
+            document.getElementById('roleBadgeIndicator').textContent = cfg.label;
+
+            // Headline & Subheadline
+            document.getElementById('authHeadline').textContent = isReg ? cfg.registerTitle : cfg.loginTitle;
+            document.getElementById('authSubheadline').textContent = isReg ? cfg.registerSubtitle : cfg.loginSubtitle;
+
+            // Destination text
+            document.getElementById('destBannerText').textContent = cfg.destText;
+
+            // Google Button Link & Text
+            const googleRedirectUrl = "{{ route('auth.google') }}?role=" + encodeURIComponent(cfg.googleRole) + "&redirect=" + encodeURIComponent(cfg.destUrl);
+            document.getElementById('btnGoogleAuth').href = googleRedirectUrl;
+            document.getElementById('btnGoogleText').textContent = isReg ? cfg.googleBtnRegister : cfg.googleBtnLogin;
+
+            // Hidden Form Inputs
+            document.getElementById('loginTargetRole').value = AUTH_STATE.role;
+            document.getElementById('loginRedirectUrl').value = cfg.destUrl;
+            document.getElementById('regTargetRole').value = AUTH_STATE.role;
+            document.getElementById('regRedirectUrl').value = cfg.destUrl;
+
+            // Submit Button Labels
+            document.getElementById('btnSubmitRegister').textContent = cfg.submitRegister;
+            document.getElementById('btnSubmitLogin').textContent = cfg.submitLogin;
+
+            // Sub-mode tab text
+            document.getElementById('labelModeRegister').textContent = 'Daftar ' + (AUTH_STATE.role === 'buyer' ? 'Pembeli' : (AUTH_STATE.role === 'event_creator' ? 'Event' : 'Creator'));
+            document.getElementById('labelModeLogin').textContent = 'Login ' + (AUTH_STATE.role === 'buyer' ? 'Pembeli' : (AUTH_STATE.role === 'event_creator' ? 'Event' : 'Creator'));
+        }
+
+        function toggleEmailForm() {
+            const formBox = document.getElementById('emailFormBox');
+            const toggleLabel = document.getElementById('emailToggleLabel');
+            if (formBox.classList.contains('show')) {
+                formBox.classList.remove('show');
+                toggleLabel.textContent = 'Tampilkan form email & kata sandi';
+            } else {
+                formBox.classList.add('show');
+                toggleLabel.textContent = 'Sembunyikan form email & kata sandi';
             }
         }
 
-        // Close on Escape Key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeScannerModal();
-            }
+        // Initialize UI on load
+        document.addEventListener('DOMContentLoaded', function () {
+            switchRole(AUTH_STATE.role);
+            switchMode(AUTH_STATE.mode);
         });
     </script>
 </body>

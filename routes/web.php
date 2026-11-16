@@ -103,6 +103,7 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/cron/clean-temp-images', [\App\Http\Controllers\ToolController::class, 'cronCleanTempImages'])->name('cron.clean_temp_images');
     Route::get('/tix',            [\App\Http\Controllers\TixController::class, 'index'])->name('tix.index');
     Route::get('/tix/info',       [\App\Http\Controllers\TicketingController::class, 'index'])->name('tix.info');
+    Route::get('/tix/auth',       [\App\Http\Controllers\TicketingAuthController::class, 'show'])->name('tix.auth');
     Route::get('/tix/{slug}',     [ServiceController::class, 'show'])->name('tix.show');
     Route::get('/ticketing',      fn() => redirect()->route('tix.info', [], 301))->name('ticketing');
     Route::get('/ticketing/profile', fn() => redirect()->route('creator.ticket.profile'))->name('ticketing.profile');
@@ -187,11 +188,15 @@ Route::post('/request-order', [LeadController::class, 'store'])->name('lead.stor
 Route::get('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'showLogin'])->name('pos.login');
 Route::post('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::class, 'login'])->name('pos.login.submit');
 
-// Dedicated Portal Autentikasi Ticketing & Gate (Daftar Penyelenggara, Login Penyelenggara, Login Panitia)
-Route::get('/login-ticketing', [\App\Http\Controllers\TicketingAuthController::class, 'show'])->name('ticketing.login');
+// Dedicated Portal Autentikasi TIX & Creator (URL resmi: /tix/auth, alias 301: /login-ticketing)
+Route::get('/login-ticketing', function () {
+    return redirect()->route('tix.auth', request()->query(), 301);
+})->name('ticketing.login');
 Route::post('/login-ticketing/staff', [\App\Http\Controllers\TicketingAuthController::class, 'loginStaff'])->name('ticketing.login.staff');
 Route::post('/login-ticketing/organizer-login', [\App\Http\Controllers\TicketingAuthController::class, 'loginOrganizer'])->name('ticketing.login.organizer');
 Route::post('/login-ticketing/organizer-register', [\App\Http\Controllers\TicketingAuthController::class, 'registerOrganizer'])->name('ticketing.register.organizer');
+Route::post('/tix/auth/login', [\App\Http\Controllers\TicketingAuthController::class, 'loginOrganizer'])->name('tix.auth.login');
+Route::post('/tix/auth/register', [\App\Http\Controllers\TicketingAuthController::class, 'registerOrganizer'])->name('tix.auth.register');
 
 // PWA Manifest & Service Worker Routes (Explicit delivery for PWABuilder & Server Cache)
 Route::get('/pos-manifest.json', function () {

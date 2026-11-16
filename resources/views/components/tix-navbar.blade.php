@@ -1154,8 +1154,8 @@ Fixed Sticky (Always Stays at Top on Scroll)
     </a>
 
     {{-- 4. Profile --}}
-    <a href="{{ url('/login-ticketing') }}" 
-       class="tix-bottom-nav-item {{ request()->is('login-ticketing*') ? 'active' : '' }}" 
+    <a href="{{ url('/tix/auth') }}" 
+       class="tix-bottom-nav-item {{ (request()->is('tix/auth*') || request()->is('login-ticketing*')) ? 'active' : '' }}" 
        title="Profile / Portal Tiket Buyle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />

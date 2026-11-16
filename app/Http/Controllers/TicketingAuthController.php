@@ -13,28 +13,31 @@ use Illuminate\Support\Str;
 class TicketingAuthController extends Controller
 {
     /**
-     * Tampilkan Portal Super App Login & Registrasi Khusus Ticketing.
+     * Tampilkan Portal Super App Login & Registrasi Khusus Ticketing & Creator (/tix/auth).
      */
     public function show(Request $request)
     {
-        // Jika sudah login sebagai creator / seller / admin, langsung arahkan ke Dashboard Tiket
+        // Jika sudah login, langsung arahkan ke dashboard yang sesuai
         if (Auth::check()) {
             $user = Auth::user();
             if ($user->role === 'seller' || $user->role === 'super_admin' || $user->role === 'admin') {
-                return redirect()->route('creator.ticket.scanner');
+                return redirect('/creator/event-attendance');
+            } else {
+                return redirect('/akun');
             }
         }
 
         $activeStaffSession = session('gate_staff_active');
-        $initialTab = $request->query('mode', 'menu'); // 'menu', 'register', 'organizer', 'staff'
+        $initialRole = $request->query('role', 'event_creator'); // 'event_creator', 'buyle_creator', 'buyer'
+        $initialMode = $request->query('mode', 'register'); // 'register' (daftar) atau 'login'
 
         $seo = [
-            'title'       => 'Portal Tiket & Gatekeeper · Buyle.id',
-            'description' => 'Akses resmi penyelenggara tiket event dan panitia gate scanner tiket Buyle.',
+            'title'       => 'Masuk & Daftar · Buyle TIX',
+            'description' => 'Akses resmi Event Creator, Buyle Creator, dan Pembeli tiket Buyle TIX.',
             'robots'      => 'noindex, nofollow',
         ];
 
-        return view('auth.login-ticketing', compact('seo', 'activeStaffSession', 'initialTab'));
+        return view('auth.login-ticketing', compact('seo', 'activeStaffSession', 'initialRole', 'initialMode'));
     }
 
     /**
@@ -171,13 +174,27 @@ class TicketingAuthController extends Controller
                 return back()->withInput()->withErrors(['organizer_email' => 'Akun penyelenggara Anda saat ini dinonaktifkan.']);
             }
 
-            // Pastikan role seller agar bisa akses studio tiket
-            if ($user->role === 'buyer') {
-                $user->role = 'seller';
-                $user->save();
+            $targetRole  = $request->input('target_role', 'event_creator');
+            $customRedir = $request->input('redirect_url');
+
+            // Role assignment: Event Creator & Buyle Creator otomatis upgrade ke seller
+            if ($targetRole === 'event_creator' || $targetRole === 'buyle_creator') {
+                if ($user->role === 'buyer') {
+                    $user->role = 'seller';
+                    $user->save();
+                }
             }
 
-            $redirectUrl = route('creator.ticket.scanner');
+            // Redirect target sesuai role
+            if (!empty($customRedir)) {
+                $redirectUrl = $customRedir;
+            } elseif ($targetRole === 'event_creator') {
+                $redirectUrl = url('/creator/event-attendance');
+            } elseif ($targetRole === 'buyle_creator') {
+                $redirectUrl = url('/creator/dashboard');
+            } else {
+                $redirectUrl = url('/akun');
+            }
 
             if ($request->expectsJson()) {
                 return response()->json([
@@ -212,16 +229,20 @@ class TicketingAuthController extends Controller
         ], [
             'name.required'      => 'Nama lengkap wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
-            'email.unique'       => 'Email sudah terdaftar. Silakan gunakan tombol Login Penyelenggara.',
+            'email.unique'       => 'Email sudah terdaftar. Silakan gunakan tab Login.',
             'phone.required'     => 'No. WhatsApp wajib diisi.',
             'password.required'  => 'Password wajib diisi.',
             'password.min'       => 'Password minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
+        $targetRole  = $request->input('target_role', 'event_creator');
+        $customRedir = $request->input('redirect_url');
+        $assignedRole = ($targetRole === 'buyer') ? 'buyer' : 'seller';
+
         $baseUsername = Str::slug($request->name);
         if (empty($baseUsername)) {
-            $baseUsername = 'organizer';
+            $baseUsername = 'creator';
         }
         $username = $baseUsername . rand(100, 9999);
         while (User::where('username', $username)->exists()) {
@@ -234,7 +255,7 @@ class TicketingAuthController extends Controller
             'phone'             => $request->phone,
             'username'          => $username,
             'password'          => Hash::make($request->password),
-            'role'              => 'seller', // Langsung siap kelola event & tiket
+            'role'              => $assignedRole,
             'email_verified_at' => now(),
             'is_active'         => true,
         ]);
@@ -242,12 +263,20 @@ class TicketingAuthController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        $redirectUrl = route('creator.ticket.scanner');
+        if (!empty($customRedir)) {
+            $redirectUrl = $customRedir;
+        } elseif ($targetRole === 'event_creator') {
+            $redirectUrl = url('/creator/event-attendance');
+        } elseif ($targetRole === 'buyle_creator') {
+            $redirectUrl = url('/creator/dashboard');
+        } else {
+            $redirectUrl = url('/akun');
+        }
 
         if ($request->expectsJson()) {
             return response()->json([
                 'success'      => true,
-                'message'      => 'Pendaftaran berhasil. Mengalihkan ke Creator Studio...',
+                'message'      => 'Pendaftaran berhasil. Mengalihkan ke halaman tujuan...',
                 'redirect_url' => $redirectUrl,
             ]);
         }
