@@ -93,11 +93,14 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(30, 179, 73, 0.25);
         }
-        /* Rasio foto produk landscape 16:9 */
+        /* Rasio foto produk landscape 16:9 & Center Alignment */
         .t5-products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 460px));
+            justify-content: center;
             gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .t5-product-img-wrap {
             position: relative;

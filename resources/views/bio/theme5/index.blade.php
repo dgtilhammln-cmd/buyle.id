@@ -575,8 +575,11 @@
         }
         .t5-products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 460px));
+            justify-content: center;
             gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .t5-product-card {
             background: var(--t5-white);
