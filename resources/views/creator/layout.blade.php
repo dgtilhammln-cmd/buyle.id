@@ -1194,7 +1194,7 @@
         {{-- Brand / Logo Only --}}
         <div class="cr-brand-area">
             @if($logo)
-                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id">
+                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id" style="height:36px; max-width:180px; width:auto; object-fit:contain; display:block;">
             @else
                 <div class="cr-brand-logo-fallback">
                     <div class="cr-brand-logo-dot">B</div>
