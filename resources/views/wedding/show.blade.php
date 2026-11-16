@@ -727,13 +727,57 @@
             pointer-events: none;
             transition: opacity 0.3s;
         }
+        /* ── THEME PRESETS ── */
+        /* 1. Romantic Rose */
+        body[data-theme="romantic_rose"] { background: #120a10; }
+        body[data-theme="romantic_rose"] .phone-wrap { box-shadow: 0 30px 100px rgba(244, 114, 182, 0.25), 0 0 0 10px #1a0f16; }
+        body[data-theme="romantic_rose"] .c-name { color: #fce7f3; text-shadow: 0 4px 24px rgba(244, 63, 94, 0.4); }
+        body[data-theme="romantic_rose"] .c-amp { color: #f472b6; }
+        body[data-theme="romantic_rose"] .gold-text { color: #f472b6 !important; -webkit-text-fill-color: #f472b6 !important; }
+        body[data-theme="romantic_rose"] .btn-open { background: linear-gradient(135deg, #e11d48 0%, #fb7185 100%) !important; box-shadow: 0 8px 25px rgba(225, 29, 72, 0.4) !important; color: #fff !important; }
+        body[data-theme="romantic_rose"] .guest-card { border-color: rgba(244, 114, 182, 0.3); background: rgba(26, 15, 22, 0.75); }
+        body[data-theme="romantic_rose"] .gift-box-btn { border-color: rgba(244, 114, 182, 0.35); }
+        body[data-theme="romantic_rose"] .floating-envelope-btn { background: linear-gradient(135deg, #e11d48 0%, #fb7185 100%) !important; }
+
+        /* 2. Sage Botanical */
+        body[data-theme="sage_botanical"] { background: #08110b; }
+        body[data-theme="sage_botanical"] .phone-wrap { box-shadow: 0 30px 100px rgba(74, 222, 128, 0.2), 0 0 0 10px #0f1c13; }
+        body[data-theme="sage_botanical"] .c-name { color: #f0fdf4; text-shadow: 0 4px 24px rgba(34, 197, 94, 0.35); }
+        body[data-theme="sage_botanical"] .c-amp { color: #86efac; }
+        body[data-theme="sage_botanical"] .gold-text { color: #86efac !important; -webkit-text-fill-color: #86efac !important; }
+        body[data-theme="sage_botanical"] .btn-open { background: linear-gradient(135deg, #15803d 0%, #22c55e 100%) !important; box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4) !important; color: #fff !important; }
+        body[data-theme="sage_botanical"] .guest-card { border-color: rgba(134, 239, 172, 0.3); background: rgba(15, 28, 19, 0.75); }
+        body[data-theme="sage_botanical"] .gift-box-btn { border-color: rgba(134, 239, 172, 0.35); }
+        body[data-theme="sage_botanical"] .floating-envelope-btn { background: linear-gradient(135deg, #15803d 0%, #22c55e 100%) !important; }
+
+        /* 3. Royal Midnight Navy */
+        body[data-theme="royal_navy"] { background: #060a12; }
+        body[data-theme="royal_navy"] .phone-wrap { box-shadow: 0 30px 100px rgba(59, 130, 246, 0.25), 0 0 0 10px #0a1322; }
+        body[data-theme="royal_navy"] .c-name { color: #f0f9ff; text-shadow: 0 4px 24px rgba(59, 130, 246, 0.4); }
+        body[data-theme="royal_navy"] .c-amp { color: #93c5fd; }
+        body[data-theme="royal_navy"] .gold-text { color: #93c5fd !important; -webkit-text-fill-color: #93c5fd !important; }
+        body[data-theme="royal_navy"] .btn-open { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%) !important; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.45) !important; color: #fff !important; }
+        body[data-theme="royal_navy"] .guest-card { border-color: rgba(147, 197, 253, 0.3); background: rgba(10, 19, 34, 0.75); }
+        body[data-theme="royal_navy"] .gift-box-btn { border-color: rgba(147, 197, 253, 0.35); }
+        body[data-theme="royal_navy"] .floating-envelope-btn { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%) !important; }
+
+        /* 4. Modern Minimalist */
+        body[data-theme="clean_minimalist"] { background: #09090b; }
+        body[data-theme="clean_minimalist"] .phone-wrap { box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8), 0 0 0 10px #18181b; }
+        body[data-theme="clean_minimalist"] .c-name { color: #ffffff; letter-spacing: 0.18em; }
+        body[data-theme="clean_minimalist"] .c-amp { color: #a1a1aa; }
+        body[data-theme="clean_minimalist"] .gold-text { color: #e4e4e7 !important; -webkit-text-fill-color: #e4e4e7 !important; }
+        body[data-theme="clean_minimalist"] .btn-open { background: linear-gradient(135deg, #27272a 0%, #52525b 100%) !important; border: 1px solid rgba(255,255,255,0.2) !important; box-shadow: 0 8px 25px rgba(0,0,0,0.5) !important; color: #fff !important; }
+        body[data-theme="clean_minimalist"] .guest-card { border-color: rgba(255, 255, 255, 0.2); background: rgba(24, 24, 27, 0.8); }
+        body[data-theme="clean_minimalist"] .gift-box-btn { border-color: rgba(255, 255, 255, 0.25); }
+        body[data-theme="clean_minimalist"] .floating-envelope-btn { background: linear-gradient(135deg, #27272a 0%, #52525b 100%) !important; }
     </style>
 </head>
 
 @php
     $showGuestCard = $wedding->data_json['show_guest_card'] ?? true;
 @endphp
-<body>
+<body data-theme="{{ $wedding->theme ?? 'classic_gold' }}">
 
     <div class="phone-wrap" id="phoneWrap">
 

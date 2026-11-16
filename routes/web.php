@@ -1123,6 +1123,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::prefix('wedding')->name('wedding.')->group(function () {
         Route::get('/',              [\App\Http\Controllers\Creator\WeddingController::class, 'index'])->name('index');
         Route::post('/info',         [\App\Http\Controllers\Creator\WeddingController::class, 'updateInfo'])->name('update-info');
+        Route::post('/theme',        [\App\Http\Controllers\Creator\WeddingController::class, 'updateTheme'])->name('theme.update');
         Route::post('/guest',        [\App\Http\Controllers\Creator\WeddingController::class, 'storeGuest'])->name('guest.store');
         Route::post('/guest/import', [\App\Http\Controllers\Creator\WeddingController::class, 'importGuests'])->name('guest.import');
         Route::delete('/guest/{guest}', [\App\Http\Controllers\Creator\WeddingController::class, 'destroyGuest'])->name('guest.destroy');

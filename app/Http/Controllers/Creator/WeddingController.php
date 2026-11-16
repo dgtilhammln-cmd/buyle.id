@@ -413,6 +413,24 @@ class WeddingController extends Controller
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Update Tema Undangan (Tab Tema).
+    // ──────────────────────────────────────────────────────────────────────────
+    public function updateTheme(Request $request)
+    {
+        $wedding = $this->resolveActiveWedding($request);
+        if (!$wedding || $wedding->user_id !== auth()->id()) abort(403);
+
+        $validated = $request->validate([
+            'theme' => ['required', 'string', 'in:classic_gold,romantic_rose,sage_botanical,royal_navy,clean_minimalist'],
+        ]);
+
+        $wedding->update(['theme' => $validated['theme']]);
+
+        return redirect()->route('creator.wedding.index', ['tab' => 'tab-theme', 'w' => $wedding->id])
+            ->with('success', 'Tema undangan berhasil diterapkan!');
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Tambah 1 Tamu Undangan (Tab Tamu).
     // ──────────────────────────────────────────────────────────────────────────
     public function storeGuest(Request $request)

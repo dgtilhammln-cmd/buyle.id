@@ -637,14 +637,24 @@
                 dan ucapan doa dalam satu tempat.</p>
         </div>
         <div class="wb-page-banner-actions">
-            <a href="{{ $publicWeddingUrl }}" target="_blank" class="wb-btn-preview-link" title="Buka Halaman Undangan">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
-                <span>Lihat Undangan</span>
-            </a>
+            @if($wedding && $wedding->payment_status === 'paid')
+                <a href="{{ $publicWeddingUrl }}" target="_blank" class="wb-btn-preview-link" title="Buka Halaman Undangan">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    <span>Lihat Undangan</span>
+                </a>
+            @elseif($wedding)
+                <span class="wb-btn-preview-link" style="background:#fef2f2; border-color:#fecaca; color:#dc2626; cursor:not-allowed;" title="Undangan belum aktif. Selesaikan pembayaran terlebih dahulu.">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>Belum Aktif (Menunggu Bayar)</span>
+                </span>
+            @endif
             <a href="{{ route('creator.wedding.panic-pdf') }}" class="wb-btn-danger-outline"
                 title="Cetak Buku Tamu Cadangan Fisik">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -703,36 +713,67 @@
         </button>
     </div>
 
-    {{-- Banner Notifikasi Jika Pasangan Aktif Masih Pending Payment --}}
+    {{-- Gateway Pembayaran jika Pasangan Aktif Belum Bayar --}}
     @if($wedding && $wedding->payment_status !== 'paid')
-        <div
-            style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:14px; padding:0.9rem 1.25rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <svg width="22" height="22" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                    <line x1="12" y1="9" x2="12" y2="13" />
-                    <line x1="12" y1="17" x2="12.01" y2="17" />
+        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:24px; padding:3.5rem 2rem; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.04); max-width:680px; margin:1.5rem auto 3rem;">
+            <div style="width:76px; height:76px; border-radius:24px; background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.08)); border:1.5px solid #fde68a; display:inline-flex; align-items:center; justify-content:center; color:#d97706; margin-bottom:1.5rem;">
+                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
-                <div>
-                    <div style="font-size:0.85rem; font-weight:800; color:#92400e;">Pasangan ini masih menunggu pembayaran paket
-                        undangan digital.</div>
-                    <div style="font-size:0.75rem; color:#b45309; margin-top:2px;">Selesaikan pembayaran via Midtrans agar
-                        tautan undangan publik &amp; check-in dapat diakses tamu.</div>
+            </div>
+            <div style="font-size:0.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:0.4rem;">
+                Aktivasi Paket Diperlukan
+            </div>
+            <h3 style="font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;">
+                {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp; {{ $wedding->bride_nickname ?? $wedding->bride_name }}
+            </h3>
+            <p style="font-size:0.86rem; color:#64748b; line-height:1.6; max-width:500px; margin:0 auto 1.75rem;">
+                Form kustomisasi mempelai, buku tamu, QR check-in, amplop digital, dan link undangan publik akan otomatis terbuka segera setelah pembayaran paket diselesaikan.
+            </p>
+
+            {{-- Ringkasan Order Pasangan Ini --}}
+            @php
+                $pendingPricing = \App\Http\Controllers\Creator\WeddingController::computePrice((int)($wedding->guest_limit ?? 20));
+            @endphp
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1.25rem 1.5rem; max-width:440px; margin:0 auto 2rem; text-align:left;">
+                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+                    <span>URL Undangan</span>
+                    <strong style="color:#0f172a; font-family:monospace;">buyle.id/wedding/{{ $wedding->slug }}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+                    <span>Kuota Undangan</span>
+                    <strong style="color:#1eb349;">{{ $wedding->guest_limit ?? 20 }} Tamu (Pack)</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+                    <span>Biaya Undangan (Rp 1.500/pax)</span>
+                    <span>Rp {{ number_format($pendingPricing['subtotal'], 0, ',', '.') }}</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+                    <span>Biaya Layanan (Platform & Admin)</span>
+                    <span>+Rp {{ number_format($pendingPricing['admin_fee'] + $pendingPricing['platform_fee'], 0, ',', '.') }}</span>
+                </div>
+                <hr style="border:none; border-top:1px dashed #cbd5e1; margin:0.6rem 0;"/>
+                <div style="display:flex; justify-content:space-between; font-size:1.05rem; font-weight:800; color:#0f172a;">
+                    <span>Total Pembayaran</span>
+                    <span style="color:#1eb349;">Rp {{ number_format($wedding->paid_amount ?: $pendingPricing['total'], 0, ',', '.') }}</span>
                 </div>
             </div>
-            <button onclick="payPendingWedding({{ $wedding->id }})" id="btn-pay-pending-{{ $wedding->id }}"
-                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.55rem 1.35rem; border-radius:10px; font-weight:800; font-size:0.82rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 3px 10px rgba(30,179,73,0.3); display:inline-flex; align-items:center; gap:6px;">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="1" y="4" width="22" height="16" rx="2" />
-                    <line x1="1" y1="10" x2="23" y2="10" />
-                </svg>
-                <span>Selesaikan Pembayaran via Midtrans</span>
-            </button>
-        </div>
-    @endif
 
-    {{-- Layout Web Builder --}}
-    <div class="bio-layout">
+            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+                <button onclick="payPendingWedding({{ $wedding->id }})" id="btn-pay-pending-{{ $wedding->id }}"
+                        style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.95rem 2.4rem; border-radius:14px; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 6px 20px rgba(30,179,73,0.35); display:inline-flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <span>Bayar Sekarang via Midtrans</span>
+                </button>
+            </div>
+            <p style="font-size:0.75rem; color:#94a3b8; margin-top:0.9rem;">
+                Mendukung QRIS, GoPay, ShopeePay, Transfer Virtual Account Bank, dll.
+            </p>
+        </div>
+    @else
+        {{-- Layout Web Builder --}}
+        <div class="bio-layout">
 
         {{-- Sidebar Tab Column --}}
         <div class="bio-sidebar-column">
@@ -746,6 +787,18 @@
                         </svg>
                         <span class="tab-text-full">Mempelai & Acara</span>
                         <small class="tab-text-mob">Acara</small>
+                    </button>
+
+                    <button class="tab-btn {{ $activeTab === 'tab-theme' ? 'active' : '' }}" data-tab="tab-theme">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+                            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+                            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+                            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                        </svg>
+                        <span class="tab-text-full">Pilih Tema Undangan</span>
+                        <small class="tab-text-mob">Tema</small>
                     </button>
 
                     <button class="tab-btn {{ $activeTab === 'tab-checkin' ? 'active' : '' }}" data-tab="tab-checkin">
@@ -1291,6 +1344,151 @@
                         </button>
                     </div>
                 </form>
+            </div>
+
+            {{-- ═══════════════════════════════════════════════════════════
+                 TAB: PILIH TEMA UNDANGAN
+            ═══════════════════════════════════════════════════════════════ --}}
+            <div class="tab-pane {{ $activeTab === 'tab-theme' ? 'active' : '' }}" id="tab-theme">
+                <div class="bio-card">
+                    <div class="bio-card-header">
+                        <div class="bio-card-title">
+                            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+                                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+                                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+                                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                            </svg>
+                            <h3>Pilih Tema Desain Undangan Digital</h3>
+                        </div>
+                        <span style="font-size:0.75rem; color:#64748b; font-weight:600;">
+                            Tema aktif: <strong style="color:#1eb349;">{{ ucwords(str_replace('_', ' ', $wedding->theme ?? 'classic_gold')) }}</strong>
+                        </span>
+                    </div>
+
+                    <p style="font-size:0.83rem; color:#64748b; margin-bottom:1.5rem; line-height:1.5;">
+                        Pilih palet warna dan nuansa visual yang sesuai dengan konsep pernikahan Anda. Semua teks, animasi buka amplop, tombol RSVP, dan ornamen akan otomatis menyesuaikan tema yang dipilih secara real-time.
+                    </p>
+
+                    @php
+                        $themes = [
+                            [
+                                'key' => 'classic_gold',
+                                'title' => 'Classic Gold & Dark Marble',
+                                'tag' => 'Mewah & Elegan (Default)',
+                                'desc' => 'Nuansa marmer hitam dengan aksen emas champagne berkilau, tipografi Cinzel & Alex Brush premium.',
+                                'bg_preview' => 'linear-gradient(135deg, #06080c 0%, #1a150a 50%, #291d08 100%)',
+                                'badge_bg' => '#fef3c7',
+                                'badge_color' => '#92400e',
+                                'accent_color' => '#d4af37',
+                                'circles' => ['#d4af37', '#f3e5ab', '#06080c'],
+                            ],
+                            [
+                                'key' => 'romantic_rose',
+                                'title' => 'Romantic Rose Gold',
+                                'tag' => 'Romantis & Manis',
+                                'desc' => 'Perpaduan warna rose gold hangat dan blush pink pastel lembut yang memancarkan keanggunan cinta.',
+                                'bg_preview' => 'linear-gradient(135deg, #120a10 0%, #2b111e 50%, #4c1d35 100%)',
+                                'badge_bg' => '#fce7f3',
+                                'badge_color' => '#9d174d',
+                                'accent_color' => '#f472b6',
+                                'circles' => ['#fb7185', '#f472b6', '#fce7f3'],
+                            ],
+                            [
+                                'key' => 'sage_botanical',
+                                'title' => 'Sage Botanical Garden',
+                                'tag' => 'Modern & Natural',
+                                'desc' => 'Nuansa hijau sage alami dan earthy botanical yang menenangkan, modern, dan bernuansa outdoor intimate.',
+                                'bg_preview' => 'linear-gradient(135deg, #08110b 0%, #14281a 50%, #1f3d27 100%)',
+                                'badge_bg' => '#dcfce7',
+                                'badge_color' => '#166534',
+                                'accent_color' => '#4ade80',
+                                'circles' => ['#22c55e', '#86efac', '#f0fdf4'],
+                            ],
+                            [
+                                'key' => 'royal_navy',
+                                'title' => 'Royal Midnight Navy',
+                                'tag' => 'Megah & Berwibawa',
+                                'desc' => 'Kemewahan warna biru malam royal navy berpadu dengan sentuhan silver perak yang gagah dan eksklusif.',
+                                'bg_preview' => 'linear-gradient(135deg, #060a12 0%, #0d1e38 50%, #17325c 100%)',
+                                'badge_bg' => '#dbeafe',
+                                'badge_color' => '#1e40af',
+                                'accent_color' => '#60a5fa',
+                                'circles' => ['#3b82f6', '#93c5fd', '#f0f9ff'],
+                            ],
+                            [
+                                'key' => 'clean_minimalist',
+                                'title' => 'Modern Minimalist Editorial',
+                                'tag' => 'Simpel & Timeless',
+                                'desc' => 'Desain minimalis bersih dengan estetika editorial majalah, tipografi serif modern, dan kesan kontemporer berkelas.',
+                                'bg_preview' => 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%)',
+                                'badge_bg' => '#f4f4f5',
+                                'badge_color' => '#27272a',
+                                'accent_color' => '#e4e4e7',
+                                'circles' => ['#ffffff', '#a1a1aa', '#27272a'],
+                            ],
+                        ];
+                        $activeThemeKey = $wedding->theme ?? 'classic_gold';
+                    @endphp
+
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem;">
+                        @foreach($themes as $t)
+                            @php $isCurrent = ($activeThemeKey === $t['key']); @endphp
+                            <div style="background:#ffffff; border:{{ $isCurrent ? '2.5px solid #1eb349' : '1.5px solid #e2e8f0' }}; border-radius:18px; padding:1.25rem; display:flex; flex-direction:column; justify-content:space-between; transition:all .2s; box-shadow:{{ $isCurrent ? '0 8px 24px rgba(30,179,73,0.15)' : '0 2px 8px rgba(0,0,0,0.03)' }}; position:relative;">
+                                @if($isCurrent)
+                                    <div style="position:absolute; top:12px; right:12px; background:#1eb349; color:#fff; font-size:0.68rem; font-weight:800; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(30,179,73,0.4);">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Tema Aktif
+                                    </div>
+                                @endif
+
+                                <div>
+                                    {{-- Banner Visual Mini Preview --}}
+                                    <div style="background:{{ $t['bg_preview'] }}; border-radius:12px; height:100px; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.08);">
+                                        @foreach($t['circles'] as $c)
+                                            <span style="width:28px; height:28px; border-radius:50%; background:{{ $c }}; border:2px solid rgba(255,255,255,0.25); display:inline-block; box-shadow:0 3px 8px rgba(0,0,0,0.3);"></span>
+                                        @endforeach
+                                    </div>
+
+                                    <div style="display:inline-block; background:{{ $t['badge_bg'] }}; color:{{ $t['badge_color'] }}; font-size:0.68rem; font-weight:800; padding:2px 8px; border-radius:6px; margin-bottom:0.4rem;">
+                                        {{ $t['tag'] }}
+                                    </div>
+                                    <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem; font-family:'Montserrat',sans-serif;">
+                                        {{ $t['title'] }}
+                                    </h4>
+                                    <p style="font-size:0.78rem; color:#64748b; line-height:1.45; margin-bottom:1.25rem;">
+                                        {{ $t['desc'] }}
+                                    </p>
+                                </div>
+
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <form action="{{ route('creator.wedding.theme.update') }}" method="POST" style="flex:1;">
+                                        @csrf
+                                        <input type="hidden" name="w" value="{{ $wedding->id }}">
+                                        <input type="hidden" name="theme" value="{{ $t['key'] }}">
+                                        @if($isCurrent)
+                                            <button type="button" disabled style="width:100%; padding:0.65rem; background:#ecfdf5; color:#059669; border:1.5px solid #a7f3d0; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:default; display:flex; align-items:center; justify-content:center; gap:5px;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                                Sedang Digunakan
+                                            </button>
+                                        @else
+                                            <button type="submit" style="width:100%; padding:0.65rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 3px 10px rgba(30,179,73,0.25); transition:transform .15s;">
+                                                Gunakan Tema Ini
+                                            </button>
+                                        @endif
+                                    </form>
+
+                                    @if($wedding->payment_status === 'paid')
+                                        <a href="{{ $publicWeddingUrl }}" target="_blank" style="padding:0.65rem 0.85rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; color:#475569; font-size:0.78rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Lihat Tampilan">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
 
             {{-- ═══════════════════════════════════════════════════════════
@@ -2787,6 +2985,7 @@
 
     </div>
     </div>
+    @endif
 
     {{-- Hidden HTML5 Canvas untuk InstaStory Wish Card Generator --}}
     <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>

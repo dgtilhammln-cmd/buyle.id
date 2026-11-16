@@ -36,6 +36,13 @@ class WeddingPublicController extends Controller
     public function photobooth(string $slug, Request $request)
     {
         $wedding = Wedding::where('slug', $slug)->firstOrFail();
+
+        // Guard: Jika paket belum dibayar, cegah akses photobooth
+        $isOwner = auth()->check() && (int) auth()->id() === (int) $wedding->user_id;
+        if (!$wedding->isPaid() && !$isOwner) {
+            return response()->view('wedding.inactive', compact('wedding'), 403);
+        }
+
         $guestName = $request->query('to', 'Tamu Spesial');
 
         return view('wedding.photobooth', compact('wedding', 'guestName'));
@@ -48,6 +55,12 @@ class WeddingPublicController extends Controller
     public function show(string $slug, Request $request)
     {
         $wedding = Wedding::where('slug', $slug)->firstOrFail();
+
+        // Guard: Jika paket belum dibayar, cegah akses publik
+        $isOwner = auth()->check() && (int) auth()->id() === (int) $wedding->user_id;
+        if (!$wedding->isPaid() && !$isOwner) {
+            return response()->view('wedding.inactive', compact('wedding'), 403);
+        }
 
         $guest = null;
         $guestName = 'Tamu Undangan';
