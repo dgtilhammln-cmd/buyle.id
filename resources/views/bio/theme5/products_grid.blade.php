@@ -2,7 +2,9 @@
     $webType = $config['web_type'] ?? 'company_profile';
     $isEO = ($webType === 'event_organizer');
 
-    $catalogProducts = $products->reject(function ($p) use ($isEO) {
+    $cdActive = !empty($config['countdown_enabled'] ?? 0);
+
+    $catalogProducts = $products->reject(function ($p) use ($isEO, $cdActive) {
         // Sembunyikan produk yang tidak aktif / diarsipkan
         if (isset($p->is_active) && !$p->is_active) return true;
 
@@ -14,9 +16,16 @@
         }
         $catName = strtolower($p->category->name ?? '');
 
-        // Mode EO: hanya tampilkan produk tiket / event
+        $isTicket = in_array($pType, ['ticket', 'tiket', 'tiket event', 'event', 'ticket_event']) || !empty($p->event_date);
+
+        // Khusus produk bertipe tiket: jika section countdown aktif, produk tiket sudah tampil terpadu di dalam countdown section
+        if ($cdActive && $isTicket) {
+            return true;
+        }
+
+        // Mode EO: jika countdown aktif, semua tiket sudah di countdown sehingga tidak tampil di grid produk
         if ($isEO) {
-            $isTicket = in_array($pType, ['ticket', 'tiket', 'tiket event', 'event', 'ticket_event']) || !empty($p->event_date);
+            if ($cdActive) return true;
             return !$isTicket;
         }
 
@@ -93,14 +102,11 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(30, 179, 73, 0.25);
         }
-        /* Rasio foto produk landscape 16:9 & Center Alignment */
+        /* Grid Produk standard (kiri) */
         .t5-products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 460px));
-            justify-content: center;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
         }
         .t5-product-img-wrap {
             position: relative;
