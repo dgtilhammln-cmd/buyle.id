@@ -299,41 +299,6 @@
             color: rgba(255,255,255,0.75);
         }
 
-        /* ── INFO CARD (role description) ── */
-        .role-info-card {
-            background: rgba(30,179,73,0.08);
-            border: 1px solid rgba(30,179,73,0.22);
-            border-radius: 14px;
-            padding: 0.9rem 1rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.65rem;
-        }
-        .role-info-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(30,179,73,0.18);
-            border: 1px solid rgba(34,197,94,0.3);
-            color: #4ade80;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .role-info-icon svg { width: 18px; height: 18px; }
-        .role-info-text h4 {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.2rem;
-        }
-        .role-info-text p {
-            font-size: 0.75rem;
-            color: var(--text-sec);
-            line-height: 1.5;
-        }
-
         /* ── GOOGLE CTA BUTTON ── */
         .btn-google-cta {
             width: 100%;
@@ -361,57 +326,6 @@
         }
         .btn-google-cta:active { transform: scale(0.97); }
         .btn-google-cta svg { flex-shrink: 0; }
-
-        /* ── DIVIDER ── */
-        .divider-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .divider-row::before,
-        .divider-row::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* ── TOS NOTE ── */
-        .tos-note {
-            text-align: center;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-        .tos-note a {
-            color: #4ade80;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .tos-note a:hover { text-decoration: underline; }
-
-        /* ── DESTINATION BADGE ── */
-        .dest-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 999px;
-            padding: 0.35rem 0.85rem;
-            font-size: 0.72rem;
-            color: var(--text-sec);
-            font-weight: 600;
-            margin: 0 auto;
-        }
-        .dest-badge span { color: #4ade80; }
-        .dest-row {
-            display: flex;
-            justify-content: center;
-        }
 
         /* ══════════════════════════════════════════
            MOBILE BOTTOM NAVIGATION BAR
@@ -584,21 +498,6 @@
                 </button>
             </div>
 
-            <!-- ROLE INFO CARD -->
-            <div class="role-info-card" id="roleInfoCard">
-                <div class="role-info-icon" id="roleInfoIcon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-                        <rect x="9" y="3" width="6" height="4" rx="1"/>
-                        <path d="M9 12h6M9 16h4"/>
-                    </svg>
-                </div>
-                <div class="role-info-text">
-                    <h4 id="roleInfoTitle">Event Creator</h4>
-                    <p id="roleInfoDesc">Kelola event, tiket, & laporan penjualan. Akses dashboard penyelenggara secara instan.</p>
-                </div>
-            </div>
-
             <!-- GOOGLE CTA BUTTON -->
             <a href="#" class="btn-google-cta" id="btnGoogleCta">
                 <svg width="20" height="20" viewBox="0 0 24 24">
@@ -609,25 +508,6 @@
                 </svg>
                 <span id="btnGoogleText">Daftar Event Creator via Google</span>
             </a>
-
-            <!-- Destination indicator -->
-            <div class="dest-row">
-                <div class="dest-badge" id="destBadge">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                    Diarahkan ke <span id="destLabel">Dashboard Event Creator</span>
-                </div>
-            </div>
-
-            <div class="divider-row">atau</div>
-
-            <!-- TOS -->
-            <p class="tos-note">
-                Dengan melanjutkan, Anda menyetujui
-                <a href="{{ route('tix.info') }}#terms">Syarat & Ketentuan</a>
-                serta <a href="{{ route('tix.info') }}#privacy">Kebijakan Privasi</a> Buyle TIX.
-            </p>
 
         </div>{{-- /canvas-body --}}
     </main>
