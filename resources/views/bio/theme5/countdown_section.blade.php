@@ -158,7 +158,7 @@
         }
 
         .t5-cd-container {
-            max-width: 760px;
+            max-width: 980px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
@@ -181,7 +181,7 @@
             line-height: 1.5;
         }
 
-        /* Unified Event Showcase Card */
+        /* Unified Event Showcase Card - Horizontal Layout on Desktop */
         .t5-cd-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1.5px solid rgba(255, 255, 255, 0.12);
@@ -191,6 +191,9 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: stretch;
             text-align: left;
         }
 
@@ -202,7 +205,8 @@
         .t5-cd-poster-wrap {
             position: relative;
             width: 100%;
-            aspect-ratio: 16 / 9;
+            height: 100%;
+            min-height: 320px;
             background: #0f172a;
             overflow: hidden;
             display: block;
@@ -211,7 +215,6 @@
         .t5-cd-poster-img {
             width: 100%;
             height: 100%;
-            aspect-ratio: 16 / 9;
             object-fit: cover;
             display: block;
             transition: transform 0.4s ease;
@@ -276,19 +279,21 @@
         }
 
         .t5-cd-card-body {
-            padding: 1.75rem 2rem;
+            padding: 2.25rem 2rem;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            justify-content: center;
+            align-items: flex-start;
+            text-align: left;
         }
 
         .t5-cd-event-name {
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
             font-weight: 800;
             color: {{ $cdNameColor }};
-            margin: 0 0 0.5rem;
+            margin: 0 0 0.6rem;
             line-height: 1.3;
+            text-align: left;
         }
 
         .t5-cd-event-name a {
@@ -304,12 +309,13 @@
         .t5-cd-event-meta {
             font-size: 0.85rem;
             color: {{ $cdMetaColor }};
-            margin-bottom: 1.75rem;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 1.15rem;
+            justify-content: flex-start;
+            gap: 0.85rem;
             flex-wrap: wrap;
+            text-align: left;
         }
 
         .t5-cd-event-meta span {
@@ -343,10 +349,10 @@
         /* Countdown Timer Boxes */
         .t5-cd-timer {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            gap: clamp(0.5rem, 2vw, 1.25rem);
-            margin-bottom: 2rem;
+            gap: clamp(0.4rem, 1.5vw, 0.85rem);
+            margin-bottom: 1.75rem;
             width: 100%;
             flex-wrap: nowrap;
         }
@@ -354,11 +360,12 @@
         .t5-cd-box {
             background: {{ $cdBoxBg }};
             border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px;
-            padding: clamp(0.75rem, 2vw, 1.25rem) clamp(0.75rem, 2.5vw, 1.5rem);
-            min-width: clamp(58px, 14vw, 86px);
+            border-radius: 14px;
+            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.6rem, 1.8vw, 1.15rem);
+            min-width: clamp(52px, 10vw, 72px);
             backdrop-filter: blur(8px);
             transition: transform 0.15s ease;
+            text-align: center;
         }
 
         .t5-cd-box:hover {
@@ -366,7 +373,7 @@
         }
 
         .t5-cd-num {
-            font-size: clamp(1.5rem, 4.5vw, 2.6rem);
+            font-size: clamp(1.3rem, 3vw, 2.1rem);
             font-weight: 900;
             color: {{ $cdNumColor }};
             line-height: 1;
@@ -380,7 +387,7 @@
         }
 
         .t5-cd-label {
-            font-size: clamp(0.6rem, 1.4vw, 0.72rem);
+            font-size: clamp(0.58rem, 1.2vw, 0.68rem);
             font-weight: 600;
             color: {{ $cdSubColor }};
             text-transform: uppercase;
@@ -389,12 +396,12 @@
         }
 
         .t5-cd-separator {
-            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
             font-weight: 900;
             color: {{ $cdSubColor }};
             opacity: 0.5;
             align-self: center;
-            padding-bottom: 0.75rem;
+            padding-bottom: 0.6rem;
             animation: t5cdBlink 1s infinite;
         }
 
@@ -407,7 +414,7 @@
         .t5-cd-cta-wrap {
             width: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         .t5-cd-cta {
@@ -417,8 +424,8 @@
             background: {{ $cdCtaBg }};
             color: {{ $cdCtaColor }} !important;
             font-weight: 700;
-            font-size: 0.98rem;
-            padding: 0.85rem 2.2rem;
+            font-size: 0.95rem;
+            padding: 0.85rem 2rem;
             border-radius: 50px;
             text-decoration: none;
             box-shadow: 0 8px 25px rgba(29,179,73,0.35);
@@ -444,36 +451,53 @@
             padding: 1.5rem 0;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 820px) {
             .t5-countdown-wrap {
                 padding: 2.5rem 0.85rem 3rem;
             }
             .t5-cd-card {
+                grid-template-columns: 1fr;
                 border-radius: 18px;
             }
+            .t5-cd-poster-wrap {
+                aspect-ratio: 16 / 9;
+                min-height: auto;
+                height: auto;
+            }
             .t5-cd-card-body {
-                padding: 1.25rem 1rem;
+                padding: 1.35rem 1rem;
+                align-items: center;
+                text-align: center;
+            }
+            .t5-cd-event-name {
+                text-align: center;
             }
             .t5-cd-event-meta {
+                justify-content: center;
+                text-align: center;
                 gap: 0.65rem;
                 font-size: 0.78rem;
                 margin-bottom: 1.25rem;
             }
             .t5-cd-timer {
+                justify-content: center;
                 gap: 0.25rem;
                 margin-bottom: 1.4rem;
             }
             .t5-cd-separator {
                 font-size: 1.1rem;
-                padding-bottom: 0.5rem;
+                padding-bottom: 0.4rem;
             }
             .t5-cd-box {
-                padding: 0.65rem 0.5rem;
+                padding: 0.65rem 0.45rem;
                 border-radius: 12px;
                 min-width: 52px;
             }
             .t5-cd-num {
-                font-size: 1.4rem;
+                font-size: 1.35rem;
+            }
+            .t5-cd-cta-wrap {
+                justify-content: center;
             }
             .t5-cd-cta {
                 width: 100%;
