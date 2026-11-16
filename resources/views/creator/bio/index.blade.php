@@ -3,6 +3,16 @@
 @section('page_title', 'Web Builder')
 
 @section('topbar_actions')
+    <button type="button" onclick="openWebBuilderIntroModal(true)"
+        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#1eb349; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:999px; cursor:pointer; transition:all 0.15s ease; font-family:'Montserrat',sans-serif;"
+        onmouseover="this.style.background='#dcfce7';"
+        onmouseout="this.style.background='#f0fdf4';"
+        title="Buka Video Panduan Web Builder">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
+            <polygon points="5 3 19 12 5 21 5 3" />
+        </svg>
+        Panduan Video
+    </button>
     <a href="{{ route('creator.app.index') }}"
         style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#475569; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; text-decoration:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,0.03);"
         onmouseover="this.style.borderColor='#1eb349';this.style.color='#166534';"
@@ -6249,11 +6259,7 @@
                                     allowfullscreen></iframe>
                             </div>
                         </div>
-                        <div class="wb-intro-footer">
-                            <label class="wb-intro-checkbox-label">
-                                <input type="checkbox" id="wbIntroDontShowAgain">
-                                <span>Jangan tampilkan otomatis lagi</span>
-                            </label>
+                        <div class="wb-intro-footer" style="justify-content: flex-end;">
                             <button type="button" class="wb-intro-btn-start" onclick="closeWebBuilderIntroModal()">
                                 Mulai Desain Web Builder
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -8672,8 +8678,8 @@
                             }
                         });
 
-                        /* ── Web Builder Intro Modal Logic (Auto Pop-up with Autoplay Video) ── */
-                        const WB_INTRO_STORAGE_KEY = 'buyle_wb_intro_dismissed_v1';
+                        /* ── Web Builder Intro Modal Logic (Muncul 1x saja diawal, tidak berulang saat refresh/simpan) ── */
+                        const WB_INTRO_STORAGE_KEY = 'buyle_wb_intro_seen_v2';
                         const WB_INTRO_RAW_URL = "{{ \App\Models\Setting::get('web_builder_intro_video_url') ?: 'https://www.youtube-nocookie.com/embed/h-GRYD3Ild4' }}";
 
                         function parseWbVideoUrl(url) {
@@ -8689,17 +8695,19 @@
                         function openWebBuilderIntroModal(autoplay = true) {
                             const modal = document.getElementById('webBuilderIntroModal');
                             const iframe = document.getElementById('wbIntroIframe');
-                            const chk = document.getElementById('wbIntroDontShowAgain');
                             if (!modal || !iframe) return;
+
+                            // Tandai langsung agar tidak pernah muncul otomatis lagi
+                            try {
+                                localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
+                                localStorage.setItem('buyle_wb_intro_dismissed_v1', 'true');
+                            } catch (e) {}
 
                             const baseEmbed = parseWbVideoUrl(WB_INTRO_RAW_URL);
                             const delimiter = baseEmbed.includes('?') ? '&' : '?';
                             const autoplayParam = autoplay ? 'autoplay=1&mute=0&rel=0&enablejsapi=1' : 'rel=0&enablejsapi=1';
 
                             iframe.src = baseEmbed ? (baseEmbed + delimiter + autoplayParam) : '';
-                            if (chk) {
-                                chk.checked = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
-                            }
                             modal.style.display = 'flex';
                             document.body.style.overflow = 'hidden';
                         }
@@ -8707,10 +8715,12 @@
                         function closeWebBuilderIntroModal() {
                             const modal = document.getElementById('webBuilderIntroModal');
                             const iframe = document.getElementById('wbIntroIframe');
-                            const chk = document.getElementById('wbIntroDontShowAgain');
-                            if (chk && chk.checked) {
+
+                            try {
                                 localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
-                            }
+                                localStorage.setItem('buyle_wb_intro_dismissed_v1', 'true');
+                            } catch (e) {}
+
                             if (iframe) {
                                 iframe.src = '';
                             }
@@ -8735,24 +8745,25 @@
                             }
                         });
 
-                        // Auto pop-up on first visit if not dismissed
+                        // CUKUP 1 KALI MUNCUL: Hanya muncul di kunjungan pertama.
+                        // Jika sudah pernah melihat atau refresh / simpan, TIDAK AKAN PERNAH muncul otomatis lagi.
                         document.addEventListener('DOMContentLoaded', function () {
-                            const isDismissed = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true';
-                            if (!isDismissed) {
+                            let alreadySeen = false;
+                            try {
+                                alreadySeen = localStorage.getItem(WB_INTRO_STORAGE_KEY) === 'true' ||
+                                              localStorage.getItem('buyle_wb_intro_dismissed_v1') === 'true';
+                            } catch (e) {}
+
+                            if (!alreadySeen) {
+                                // Tandai langsung sebelum popup dibuka agar jika user refresh atau simpan tidak akan memicu lagi
+                                try {
+                                    localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
+                                    localStorage.setItem('buyle_wb_intro_dismissed_v1', 'true');
+                                } catch (e) {}
+
                                 setTimeout(function () {
                                     openWebBuilderIntroModal(true);
-                                }, 500);
-                            }
-
-                            const chk = document.getElementById('wbIntroDontShowAgain');
-                            if (chk) {
-                                chk.addEventListener('change', function () {
-                                    if (this.checked) {
-                                        localStorage.setItem(WB_INTRO_STORAGE_KEY, 'true');
-                                    } else {
-                                        localStorage.removeItem(WB_INTRO_STORAGE_KEY);
-                                    }
-                                });
+                                }, 700);
                             }
                         });
 
