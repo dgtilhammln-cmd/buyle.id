@@ -27,17 +27,17 @@ Fixed Sticky (Always Stays at Top on Scroll)
     }
 
     .buyle-tix-page {
-        padding-top: 1.5rem !important;
+        padding-top: 0 !important;
     }
 
     @media (max-width: 991px) {
         .buyle-tix-page {
-            padding-top: 1rem !important;
+            padding-top: 0 !important;
         }
     }
 
     .pd-page {
-        padding-top: 1.25rem !important;
+        padding-top: 0.5rem !important;
     }
 
     /* Fixed Header Bar — Always pinned to top, never sinks on scroll */
@@ -72,12 +72,12 @@ Fixed Sticky (Always Stays at Top on Scroll)
 
     /* Page container adjustments for pages using tix navbar */
     .buyle-ticketing-section {
-        padding-top: 3.5rem !important;
+        padding-top: 1.5rem !important;
     }
 
     @media (max-width: 991px) {
         .buyle-ticketing-section {
-            padding-top: 2rem !important;
+            padding-top: 0.75rem !important;
         }
     }
 
@@ -919,11 +919,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
             display: block !important;
             width: 100% !important;
             height: 76px !important;
-            pointer-events: none !important;
-        }
-            display: block !important;
-            width: 100% !important;
-            height: 84px !important;
             pointer-events: none !important;
         }
 

@@ -16,11 +16,17 @@
         }
 
         .buyle-ticketing-section {
-            padding: 8rem 1.5rem 5.5rem;
+            padding: 1.5rem 1.5rem 5.5rem;
             background: #FFFFFF;
             position: relative;
             overflow: hidden;
             font-family: var(--font);
+        }
+
+        @media (max-width: 991px) {
+            .buyle-ticketing-section {
+                padding: 1rem 1rem 5.5rem;
+            }
         }
 
         /* Subtle Ambient Glow */

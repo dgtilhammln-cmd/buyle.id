@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
 class TicketingAuthController extends Controller
@@ -56,6 +57,21 @@ class TicketingAuthController extends Controller
         $name = trim($request->input('name'));
         $password = trim($request->input('password'));
 
+        // Brute-force throttling per IP + nama panitia (maks 5 percobaan gagal per menit)
+        $staffThrottleKey = 'staff_login|' . Str::lower($name) . '|' . $request->ip();
+        if (RateLimiter::tooManyAttempts($staffThrottleKey, 5)) {
+            $seconds = RateLimiter::availableIn($staffThrottleKey);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Terlalu banyak percobaan masuk scanner. Silakan coba lagi dalam {$seconds} detik."
+                ], 429);
+            }
+            return back()->withInput()->withErrors([
+                'staff_password' => "Terlalu banyak percobaan masuk scanner yang gagal. Silakan tunggu {$seconds} detik."
+            ]);
+        }
+
         // Cari panitia aktif dengan nama ini (case-insensitive)
         $candidates = GateStaff::where('is_active', true)
             ->where(function ($q) use ($name) {
@@ -66,6 +82,7 @@ class TicketingAuthController extends Controller
             ->get();
 
         if ($candidates->isEmpty()) {
+            RateLimiter::hit($staffThrottleKey, 60);
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -86,6 +103,7 @@ class TicketingAuthController extends Controller
         }
 
         if (!$matchedStaff) {
+            RateLimiter::hit($staffThrottleKey, 60);
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -96,6 +114,9 @@ class TicketingAuthController extends Controller
                 'staff_password' => 'Password panitia salah. Periksa kembali kata sandi Anda.'
             ]);
         }
+
+        // Login berhasil -> bersihkan hitungan rate limiter
+        RateLimiter::clear($staffThrottleKey);
 
         $event = $matchedStaff->product;
         if (!$event) {
@@ -150,8 +171,9 @@ class TicketingAuthController extends Controller
     public function loginOrganizer(Request $request)
     {
         $request->validate([
-            'email'    => 'required|string',
-            'password' => 'required|string',
+            'email'       => 'required|string',
+            'password'    => 'required|string',
+            'target_role' => 'nullable|string|in:event_creator,buyle_creator,buyer',
         ], [
             'email.required'    => 'Email atau No. WhatsApp wajib diisi.',
             'password.required' => 'Password wajib diisi.',
@@ -162,7 +184,23 @@ class TicketingAuthController extends Controller
         $credentials = [$fieldType => $loginInput, 'password' => $request->password];
         $remember    = $request->boolean('remember', true);
 
+        // Brute-force throttling: maks 5 percobaan per menit per identifier + IP
+        $throttleKey = 'organizer_login|' . Str::lower($loginInput) . '|' . $request->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Terlalu banyak percobaan masuk yang gagal. Silakan tunggu {$seconds} detik."
+                ], 429);
+            }
+            return back()->withInput($request->only('email'))->withErrors([
+                'organizer_email' => "Terlalu banyak percobaan masuk yang gagal. Silakan tunggu {$seconds} detik."
+            ]);
+        }
+
         if (Auth::attempt($credentials, $remember)) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
             $user = Auth::user();
 
@@ -185,16 +223,8 @@ class TicketingAuthController extends Controller
                 }
             }
 
-            // Redirect target sesuai role
-            if (!empty($customRedir)) {
-                $redirectUrl = $customRedir;
-            } elseif ($targetRole === 'event_creator') {
-                $redirectUrl = url('/creator/event-attendance');
-            } elseif ($targetRole === 'buyle_creator') {
-                $redirectUrl = url('/creator/dashboard');
-            } else {
-                $redirectUrl = url('/akun');
-            }
+            // Sanitasi redirect URL aman (anti open-redirect phishing)
+            $redirectUrl = $this->getSafeRedirectUrl($customRedir, $targetRole);
 
             if ($request->expectsJson()) {
                 return response()->json([
@@ -206,6 +236,8 @@ class TicketingAuthController extends Controller
 
             return redirect($redirectUrl);
         }
+
+        RateLimiter::hit($throttleKey, 60);
 
         if ($request->expectsJson()) {
             return response()->json(['success' => false, 'message' => 'Email/WhatsApp atau Kata Sandi salah.'], 401);
@@ -221,11 +253,27 @@ class TicketingAuthController extends Controller
      */
     public function registerOrganizer(Request $request)
     {
+        // Rate-limit pendaftaran: maks 5 akun per 10 menit per IP
+        $regThrottleKey = 'organizer_reg|' . $request->ip();
+        if (RateLimiter::tooManyAttempts($regThrottleKey, 5)) {
+            $seconds = RateLimiter::availableIn($regThrottleKey);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Terlalu banyak pendaftaran dari perangkat Anda. Silakan coba lagi dalam {$seconds} detik."
+                ], 429);
+            }
+            return back()->withInput()->withErrors([
+                'email' => "Terlalu banyak pendaftaran dari IP ini. Silakan tunggu {$seconds} detik."
+            ]);
+        }
+
         $request->validate([
-            'name'     => 'required|string|max:100',
-            'email'    => 'required|email|max:255|unique:users,email',
-            'phone'    => 'required|string|max:20',
-            'password' => 'required|string|min:6|confirmed',
+            'name'        => 'required|string|max:100',
+            'email'       => 'required|email|max:255|unique:users,email',
+            'phone'       => 'required|string|max:20',
+            'password'    => 'required|string|min:6|confirmed',
+            'target_role' => 'nullable|string|in:event_creator,buyle_creator,buyer',
         ], [
             'name.required'      => 'Nama lengkap wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
@@ -236,8 +284,10 @@ class TicketingAuthController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
-        $targetRole  = $request->input('target_role', 'event_creator');
-        $customRedir = $request->input('redirect_url');
+        RateLimiter::hit($regThrottleKey, 600);
+
+        $targetRole   = $request->input('target_role', 'event_creator');
+        $customRedir  = $request->input('redirect_url');
         $assignedRole = ($targetRole === 'buyer') ? 'buyer' : 'seller';
 
         $baseUsername = Str::slug($request->name);
@@ -263,15 +313,7 @@ class TicketingAuthController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        if (!empty($customRedir)) {
-            $redirectUrl = $customRedir;
-        } elseif ($targetRole === 'event_creator') {
-            $redirectUrl = url('/creator/event-attendance');
-        } elseif ($targetRole === 'buyle_creator') {
-            $redirectUrl = url('/creator/dashboard');
-        } else {
-            $redirectUrl = url('/akun');
-        }
+        $redirectUrl = $this->getSafeRedirectUrl($customRedir, $targetRole);
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -282,6 +324,30 @@ class TicketingAuthController extends Controller
         }
 
         return redirect($redirectUrl);
+    }
+
+    /**
+     * Sanitasi redirect URL agar tidak bisa diarahkan ke domain luar (Anti Open-Redirect Phishing).
+     */
+    private function getSafeRedirectUrl(?string $customRedir, string $targetRole): string
+    {
+        if (!empty($customRedir)) {
+            $parsedHost = parse_url($customRedir, PHP_URL_HOST);
+            $appHost    = parse_url(config('app.url'), PHP_URL_HOST);
+
+            // Hanya izinkan jika relative path atau host persis sama dengan domain app
+            if ((empty($parsedHost) || strcasecmp($parsedHost, $appHost) === 0) && !Str::startsWith($customRedir, ['//', '\\\\'])) {
+                return $customRedir;
+            }
+        }
+
+        if ($targetRole === 'event_creator') {
+            return url('/creator/event-attendance');
+        } elseif ($targetRole === 'buyle_creator') {
+            return url('/creator/dashboard');
+        }
+
+        return url('/akun');
     }
 }
 

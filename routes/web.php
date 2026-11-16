@@ -103,7 +103,7 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/cron/clean-temp-images', [\App\Http\Controllers\ToolController::class, 'cronCleanTempImages'])->name('cron.clean_temp_images');
     Route::get('/tix',            [\App\Http\Controllers\TixController::class, 'index'])->name('tix.index');
     Route::get('/tix/info',       [\App\Http\Controllers\TicketingController::class, 'index'])->name('tix.info');
-    Route::get('/tix/auth',       [\App\Http\Controllers\TicketingAuthController::class, 'show'])->name('tix.auth');
+    Route::get('/tix/auth',       [\App\Http\Controllers\TicketingAuthController::class, 'show'])->middleware('throttle:30,1')->name('tix.auth');
     Route::get('/tix/{slug}',     [ServiceController::class, 'show'])->name('tix.show');
     Route::get('/ticketing',      fn() => redirect()->route('tix.info', [], 301))->name('ticketing');
     Route::get('/ticketing/profile', fn() => redirect()->route('creator.ticket.profile'))->name('ticketing.profile');
@@ -192,11 +192,15 @@ Route::post('/login-pos', [\App\Http\Controllers\Creator\PosAuthController::clas
 Route::get('/login-ticketing', function () {
     return redirect()->route('tix.auth', request()->query(), 301);
 })->name('ticketing.login');
-Route::post('/login-ticketing/staff', [\App\Http\Controllers\TicketingAuthController::class, 'loginStaff'])->name('ticketing.login.staff');
-Route::post('/login-ticketing/organizer-login', [\App\Http\Controllers\TicketingAuthController::class, 'loginOrganizer'])->name('ticketing.login.organizer');
-Route::post('/login-ticketing/organizer-register', [\App\Http\Controllers\TicketingAuthController::class, 'registerOrganizer'])->name('ticketing.register.organizer');
-Route::post('/tix/auth/login', [\App\Http\Controllers\TicketingAuthController::class, 'loginOrganizer'])->name('tix.auth.login');
-Route::post('/tix/auth/register', [\App\Http\Controllers\TicketingAuthController::class, 'registerOrganizer'])->name('tix.auth.register');
+
+// Proteksi brute-force untuk endpoint autentikasi TIX (maks 10 attempt per menit)
+Route::middleware(['throttle:10,1'])->group(function () {
+    Route::post('/login-ticketing/staff', [\App\Http\Controllers\TicketingAuthController::class, 'loginStaff'])->name('ticketing.login.staff');
+    Route::post('/login-ticketing/organizer-login', [\App\Http\Controllers\TicketingAuthController::class, 'loginOrganizer'])->name('ticketing.login.organizer');
+    Route::post('/login-ticketing/organizer-register', [\App\Http\Controllers\TicketingAuthController::class, 'registerOrganizer'])->name('ticketing.register.organizer');
+    Route::post('/tix/auth/login', [\App\Http\Controllers\TicketingAuthController::class, 'loginOrganizer'])->name('tix.auth.login');
+    Route::post('/tix/auth/register', [\App\Http\Controllers\TicketingAuthController::class, 'registerOrganizer'])->name('tix.auth.register');
+});
 
 // PWA Manifest & Service Worker Routes (Explicit delivery for PWABuilder & Server Cache)
 Route::get('/pos-manifest.json', function () {

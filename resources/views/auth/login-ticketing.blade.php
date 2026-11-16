@@ -106,7 +106,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 52%;
+            height: 48%;
             overflow: hidden;
             z-index: 2;
             pointer-events: none;
@@ -144,7 +144,7 @@
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
-            padding: 1.25rem 1.4rem calc(72px + env(safe-area-inset-bottom, 0px));
+            padding: 1.15rem 1.4rem calc(56px + 28px + env(safe-area-inset-bottom, 0px));
             box-sizing: border-box;
         }
 
@@ -173,13 +173,13 @@
         .bottom-content-group {
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            gap: 0.75rem;
             margin-top: auto;
         }
 
         /* Title & Subtitle */
         .auth-title {
-            font-size: 1.55rem;
+            font-size: 1.45rem;
             font-weight: 800;
             line-height: 1.22;
             color: #ffffff;

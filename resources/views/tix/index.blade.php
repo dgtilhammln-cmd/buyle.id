@@ -14,7 +14,7 @@
             font-family: 'Montserrat', sans-serif !important;
             background: #ffffff;
             min-height: 100vh;
-            padding-top: 5.75rem;
+            padding-top: 0.5rem;
             padding-bottom: 5rem;
             color: #0F172A;
             overflow-x: hidden;
@@ -22,13 +22,12 @@
 
         @media (max-width: 991px) {
             .buyle-tix-page {
-                padding-top: 1.5rem !important;
-                /* Generous breathing room so banner never touches mobile header/search */
+                padding-top: 0.25rem !important;
             }
 
             .tix-hero-banner-section {
-                margin-top: 0.75rem !important;
-                margin-bottom: 1.5rem !important;
+                margin-top: 0.25rem !important;
+                margin-bottom: 1.25rem !important;
             }
 
             .tix-orbit-carousel-wrap {
@@ -38,12 +37,12 @@
 
         @media (max-width: 600px) {
             .buyle-tix-page {
-                padding-top: 1.5rem !important;
+                padding-top: 0.25rem !important;
             }
 
             .tix-hero-banner-section {
-                margin-top: 0.75rem !important;
-                margin-bottom: 1.25rem !important;
+                margin-top: 0.25rem !important;
+                margin-bottom: 1rem !important;
             }
 
             .tix-orbit-carousel-wrap {
