@@ -1337,6 +1337,12 @@
             padding: 0.75rem 0 0.5rem;
         }
 
+        @media (max-width: 991px) {
+            .tix-orbit-skel-wrap {
+                padding: 0.25rem 0 !important;
+            }
+        }
+
         .tix-orbit-skel-stage {
             position: relative;
             width: 100%;

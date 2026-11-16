@@ -37,7 +37,7 @@ Fixed Sticky (Always Stays at Top on Scroll)
     }
 
     .pd-page {
-        padding-top: 0.5rem !important;
+        padding-top: 0 !important;
     }
 
     /* Fixed Header Bar — Always pinned to top, never sinks on scroll */
@@ -77,7 +77,7 @@ Fixed Sticky (Always Stays at Top on Scroll)
 
     @media (max-width: 991px) {
         .buyle-ticketing-section {
-            padding-top: 0.75rem !important;
+            padding-top: 0.5rem !important;
         }
     }
 
@@ -507,7 +507,7 @@ Fixed Sticky (Always Stays at Top on Scroll)
     }
 
     .tix-bottom-nav-spacer {
-        display: none;
+        display: none !important;
     }
 
     /* ══════════════════════════════════════════════════════════════
@@ -915,13 +915,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
             display: none !important;
         }
 
-        .tix-bottom-nav-spacer {
-            display: block !important;
-            width: 100% !important;
-            height: 76px !important;
-            pointer-events: none !important;
-        }
-
         body {
             padding-bottom: 78px !important;
         }
@@ -1148,9 +1141,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
         </svg>
     </a>
 </nav>
-
-{{-- Spacer agar konten halaman bagian paling bawah tidak tertutup floating bottom nav --}}
-<div class="tix-bottom-nav-spacer"></div>
 
 {{-- ══════════════════════════════════════════════════════════════
 MOBILE OFFCANVAS DRAWER

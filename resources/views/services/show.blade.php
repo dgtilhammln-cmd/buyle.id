@@ -1217,7 +1217,7 @@
             }
 
             .pd-breadcrumb {
-                padding: 1rem 1rem 0.5rem;
+                padding: 0.65rem 1rem 0.4rem;
             }
 
             /* push content up so sticky bar doesn't overlap */
