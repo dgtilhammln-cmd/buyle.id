@@ -835,9 +835,9 @@ Fixed Sticky (Always Stays at Top on Scroll)
             bottom: 14px !important;
             left: 14px !important;
             right: 14px !important;
-            max-width: 440px !important;
+            max-width: 360px !important;
             margin: 0 auto !important;
-            height: 62px !important;
+            height: 56px !important;
             background: rgba(255, 255, 255, 0.96) !important;
             backdrop-filter: blur(16px) !important;
             -webkit-backdrop-filter: blur(16px) !important;
@@ -855,31 +855,24 @@ Fixed Sticky (Always Stays at Top on Scroll)
 
         .tix-bottom-nav-item {
             display: flex !important;
-            flex-direction: column !important;
             align-items: center !important;
             justify-content: center !important;
-            gap: 3px !important;
-            padding: 5px 8px !important;
-            border-radius: 14px !important;
+            padding: 8px !important;
+            border-radius: 999px !important;
             text-decoration: none !important;
             color: #64748b !important;
-            font-size: 0.67rem !important;
-            font-weight: 600 !important;
-            line-height: 1.1 !important;
-            letter-spacing: -0.01em !important;
-            font-family: 'Montserrat', sans-serif !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
             -webkit-tap-highlight-color: transparent !important;
             flex: 1 !important;
-            max-width: 95px !important;
-            height: 50px !important;
+            max-width: 72px !important;
+            height: 42px !important;
             box-sizing: border-box !important;
             position: relative !important;
         }
 
         .tix-bottom-nav-item svg {
-            width: 20px !important;
-            height: 20px !important;
+            width: 22px !important;
+            height: 22px !important;
             display: block !important;
             transition: transform 0.2s ease, color 0.2s ease !important;
             flex-shrink: 0 !important;
@@ -900,34 +893,34 @@ Fixed Sticky (Always Stays at Top on Scroll)
 
         .tix-bottom-nav-item.active {
             color: #15803d !important;
-            font-weight: 700 !important;
         }
 
         .tix-bottom-nav-item.active svg {
             color: #16a34a !important;
             stroke-width: 2.5 !important;
-            transform: translateY(-2px) !important;
+            transform: translateY(-1px) !important;
         }
 
         .tix-bottom-nav-item.active::before {
             content: '' !important;
             position: absolute !important;
-            top: 2px !important;
-            width: 18px !important;
+            bottom: 4px !important;
+            width: 14px !important;
             height: 3px !important;
             background: linear-gradient(135deg, #1db349 0%, #84ce00 100%) !important;
             border-radius: 999px !important;
         }
 
         .tix-bottom-nav-label {
-            font-size: 0.67rem !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            display: block !important;
+            display: none !important;
         }
 
         .tix-bottom-nav-spacer {
+            display: block !important;
+            width: 100% !important;
+            height: 76px !important;
+            pointer-events: none !important;
+        }
             display: block !important;
             width: 100% !important;
             height: 84px !important;
@@ -1123,7 +1116,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
-        <span class="tix-bottom-nav-label">Home</span>
     </a>
 
     {{-- 2. About Buyle --}}
@@ -1135,7 +1127,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
             <line x1="12" y1="16" x2="12" y2="12" />
             <line x1="12" y1="8" x2="12.01" y2="8" />
         </svg>
-        <span class="tix-bottom-nav-label">About Buyle</span>
     </a>
 
     {{-- 3. Kerjasama --}}
@@ -1150,7 +1141,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
-        <span class="tix-bottom-nav-label">Kerjasama</span>
     </a>
 
     {{-- 4. Profile --}}
@@ -1161,7 +1151,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
         </svg>
-        <span class="tix-bottom-nav-label">Profile</span>
     </a>
 </nav>
 
