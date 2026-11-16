@@ -1808,7 +1808,7 @@
 
                 {{-- Riwayat Amplop Digital Masuk --}}
                 <div class="prof-card">
-                    <div class="prof-card-head">
+                    <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                         <div class="head-title-wrap">
                             <div class="head-icon">
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
@@ -1817,8 +1817,15 @@
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                             </div>
-                            <span>Riwayat Amplop Digital Masuk (Total: Rp
-                                {{ number_format($totalGifts, 0, ',', '.') }})</span>
+                            <span>Riwayat Amplop Digital Masuk</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span style="background:#ecfdf5; border:1.5px solid #a7f3d0; color:#065f46; font-size:0.8rem; font-weight:800; padding:4px 14px; border-radius:99px;">
+                                Total Bersih Mempelai: Rp {{ number_format($totalGifts, 0, ',', '.') }}
+                            </span>
+                            <span style="background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:99px;" title="Biaya platform Buyle.id Rp 5.000 per pembayaran Midtrans">
+                                Potongan Platform: Rp 5.000 / Transaksi Midtrans
+                            </span>
                         </div>
                     </div>
                     <div class="card-body" style="padding:0;">
@@ -1827,7 +1834,9 @@
                                 <thead>
                                     <tr>
                                         <th>Nama Pengirim</th>
-                                        <th>Nominal</th>
+                                        <th>Nominal Amplop</th>
+                                        <th>Biaya Platform</th>
+                                        <th>Total Dibayar Tamu</th>
                                         <th>Metode</th>
                                         <th>Status</th>
                                         <th>Waktu</th>
@@ -1836,11 +1845,32 @@
                                 </thead>
                                 <tbody>
                                     @forelse($gifts as $gift)
+                                        @php
+                                            $isMidtrans = (strtolower($gift->payment_method ?? '') === 'midtrans');
+                                            $pFee = (int) ($gift->platform_fee ?? ($isMidtrans ? 5000 : 0));
+                                            if ($pFee === 0 && $isMidtrans) { $pFee = 5000; }
+                                            $gross = (int) ($gift->gross_amount ?? ($gift->amount + $pFee));
+                                            if ($gross === 0) { $gross = $gift->amount + $pFee; }
+                                        @endphp
                                         <tr>
                                             <td><strong>{{ $gift->sender_name }}</strong></td>
                                             <td><span style="font-weight:800; color:#166534;">Rp
                                                     {{ number_format($gift->amount, 0, ',', '.') }}</span></td>
-                                            <td>{{ strtoupper($gift->payment_method ?: 'TRANSFER') }}</td>
+                                            <td>
+                                                @if($pFee > 0)
+                                                    <span style="font-size:0.75rem; font-weight:700; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:99px; border:1px solid #bfdbfe;">
+                                                        Rp {{ number_format($pFee, 0, ',', '.') }}
+                                                    </span>
+                                                @else
+                                                    <span style="color:#94a3b8; font-size:0.78rem;">Rp 0</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span style="font-weight:700; color:#0f172a; font-size:0.85rem;">
+                                                    Rp {{ number_format($gross, 0, ',', '.') }}
+                                                </span>
+                                            </td>
+                                            <td><span style="font-size:0.75rem; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 8px; border-radius:6px;">{{ strtoupper($gift->payment_method ?: 'TRANSFER') }}</span></td>
                                             <td>
                                                 @if($gift->payment_status === 'settlement')
                                                     <span class="badge-pill success">Berhasil</span>
@@ -1853,7 +1883,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" style="text-align:center; padding:2rem; color:#94a3b8;">
+                                            <td colspan="8" style="text-align:center; padding:2rem; color:#94a3b8;">
                                                 Belum ada data amplop digital yang masuk.
                                             </td>
                                         </tr>

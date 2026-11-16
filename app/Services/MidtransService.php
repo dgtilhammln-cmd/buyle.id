@@ -37,12 +37,15 @@ class MidtransService
     /**
      * Membuat Snap Token khusus Amplop Digital / Tanda Kasih Pernikahan (Tamu Undangan).
      */
-    public function createWeddingEnvelopeSnapToken(\App\Models\Wedding $wedding, string $guestName, int $amount, string $midtransOrderId): ?string
+    public function createWeddingEnvelopeSnapToken(\App\Models\Wedding $wedding, string $guestName, int $amount, string $midtransOrderId, int $platformFee = 5000): ?string
     {
+        $grossAmount = $amount + $platformFee;
+        $coupleName  = substr(($wedding->groom_nickname ?? $wedding->groom_name) . ' & ' . ($wedding->bride_nickname ?? $wedding->bride_name), 0, 45);
+
         $params = [
             'transaction_details' => [
                 'order_id'     => $midtransOrderId,
-                'gross_amount' => $amount,
+                'gross_amount' => $grossAmount,
             ],
             'customer_details' => [
                 'first_name' => !empty($guestName) ? $guestName : 'Tamu Undangan',
@@ -53,8 +56,14 @@ class MidtransService
                     'id'       => 'ENVELOPE_' . $wedding->id,
                     'price'    => $amount,
                     'quantity' => 1,
-                    'name'     => 'Amplop Digital: ' . substr(($wedding->groom_nickname ?? $wedding->groom_name) . ' & ' . ($wedding->bride_nickname ?? $wedding->bride_name), 0, 45),
-                ]
+                    'name'     => 'Amplop Digital: ' . $coupleName,
+                ],
+                [
+                    'id'       => 'PLATFORM_FEE',
+                    'price'    => $platformFee,
+                    'quantity' => 1,
+                    'name'     => 'Biaya Layanan Buyle.id',
+                ],
             ],
         ];
 

@@ -164,6 +164,9 @@ class WeddingPublicController extends Controller
         ]);
 
         if ($envelopeAmount > 0) {
+            $platformFee = 5000;
+            $grossAmount = $envelopeAmount + $platformFee;
+
             if ($midtransOrderId) {
                 WeddingGift::updateOrCreate(
                     ['midtrans_order_id' => $midtransOrderId],
@@ -172,6 +175,8 @@ class WeddingPublicController extends Controller
                         'guest_id'          => $guestId,
                         'sender_name'       => $validated['sender_name'],
                         'amount'            => $envelopeAmount,
+                        'platform_fee'      => $platformFee,
+                        'gross_amount'      => $grossAmount,
                         'payment_method'    => 'midtrans',
                         'payment_status'    => 'settlement',
                         'message'           => $validated['message'],
@@ -182,6 +187,8 @@ class WeddingPublicController extends Controller
                     'guest_id'          => $guestId,
                     'sender_name'       => $validated['sender_name'],
                     'amount'            => $envelopeAmount,
+                    'platform_fee'      => $platformFee,
+                    'gross_amount'      => $grossAmount,
                     'payment_method'    => 'midtrans',
                     'payment_status'    => 'settlement',
                     'message'           => $validated['message'],
@@ -214,10 +221,13 @@ class WeddingPublicController extends Controller
         $amount = (int) $validated['amount'];
         $senderName = trim($validated['sender_name'] ?? '') ?: 'Tamu Undangan';
 
+        $platformFee = 5000; // Platform fee Buyle.id tetap Rp 5.000 per transaksi amplop digital
+        $grossAmount = $amount + $platformFee;
+
         $midtransOrderId = 'AMPLOP-' . $wedding->id . '-' . time() . '-' . rand(100, 999);
 
         $midtransService = app(\App\Services\MidtransService::class);
-        $snapToken = $midtransService->createWeddingEnvelopeSnapToken($wedding, $senderName, $amount, $midtransOrderId);
+        $snapToken = $midtransService->createWeddingEnvelopeSnapToken($wedding, $senderName, $amount, $midtransOrderId, $platformFee);
 
         if (!$snapToken) {
             return response()->json([
@@ -231,6 +241,8 @@ class WeddingPublicController extends Controller
             'wedding_id'        => $wedding->id,
             'sender_name'       => $senderName,
             'amount'            => $amount,
+            'platform_fee'      => $platformFee,
+            'gross_amount'      => $grossAmount,
             'payment_method'    => 'midtrans',
             'payment_status'    => 'pending',
             'midtrans_order_id' => $midtransOrderId,

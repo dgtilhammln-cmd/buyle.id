@@ -49,6 +49,11 @@ class PaymentWebhookController extends Controller
             return $this->handleWeddingWebhook($payload, $rawOrderId);
         }
 
+        // Support AMPLOP-xxx for Wedding Digital Envelope (Amplop Digital)
+        if (\Illuminate\Support\Str::startsWith($rawOrderId, 'AMPLOP-')) {
+            return $this->handleWeddingEnvelopeWebhook($payload, $rawOrderId);
+        }
+
         // Support BUYLE-{id}, ORD-xxx, or numeric ID
         $order = null;
         if (\Illuminate\Support\Str::startsWith($rawOrderId, 'BUYLE-')) {
@@ -423,6 +428,70 @@ class PaymentWebhookController extends Controller
             ]);
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
             $wedding->update(['payment_status' => 'cancelled']);
+        }
+
+        return response('OK', 200);
+    }
+
+    /**
+     * Handle webhook callback khusus pembayaran Amplop Digital Undangan Pernikahan (AMPLOP-xxx)
+     * Mengamankan potongan platform fee Rp 5.000 per transaksi Midtrans.
+     */
+    protected function handleWeddingEnvelopeWebhook(array $payload, string $rawOrderId): Response
+    {
+        $serverKey  = \App\Models\Setting::get('midtrans_server_key') ?: config('midtrans.server_key');
+        $signature  = hash('sha512',
+            ($payload['order_id'] ?? '') .
+            ($payload['status_code'] ?? '') .
+            ($payload['gross_amount'] ?? '') .
+            $serverKey
+        );
+
+        if ($signature !== ($payload['signature_key'] ?? '')) {
+            Log::warning('[Webhook Wedding Envelope] Invalid Midtrans signature', ['order' => $rawOrderId]);
+            return response('OK', 200);
+        }
+
+        $gift = \App\Models\WeddingGift::where('midtrans_order_id', $rawOrderId)->first();
+        if (!$gift) {
+            Log::warning("[Webhook Wedding Envelope] Gift record not found", ['order_id' => $rawOrderId]);
+            return response('OK', 200);
+        }
+
+        $transactionStatus = $payload['transaction_status'] ?? '';
+        $fraudStatus       = $payload['fraud_status'] ?? '';
+
+        $isPaid = (
+            ($transactionStatus === 'capture' && $fraudStatus === 'accept') ||
+            $transactionStatus === 'settlement'
+        );
+
+        if ($isPaid) {
+            $paymentMethod = $payload['payment_type'] ?? 'midtrans';
+            $gift->update([
+                'payment_status' => 'settlement',
+                'payment_method' => $paymentMethod,
+            ]);
+
+            // Sinkronkan juga ke WeddingWish jika ada order_id yang sama
+            \App\Models\WeddingWish::where('midtrans_order_id', $rawOrderId)->update([
+                'payment_status' => 'settlement',
+            ]);
+
+            Log::info("[Webhook Wedding Envelope] Amplop digital berhasil dibayar", [
+                'gift_id'      => $gift->id,
+                'wedding_id'   => $gift->wedding_id,
+                'sender'       => $gift->sender_name,
+                'amount'       => $gift->amount,
+                'platform_fee' => $gift->platform_fee,
+                'order_id'     => $rawOrderId,
+            ]);
+        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+            $status = $transactionStatus === 'expire' ? 'expire' : 'failed';
+            $gift->update(['payment_status' => $status]);
+            \App\Models\WeddingWish::where('midtrans_order_id', $rawOrderId)->update([
+                'payment_status' => $status,
+            ]);
         }
 
         return response('OK', 200);

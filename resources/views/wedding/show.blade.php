@@ -1144,6 +1144,20 @@
                                     <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.6);">Rp</span>
                                     <input type="number" name="amount" id="rsvpEnvelopeAmount" min="0" step="1000" placeholder="0 (Isi nominal jika ingin kirim amplop)" class="d-input" style="padding-left: 36px; margin-bottom: 4px;">
                                 </div>
+                                <div id="envelopeFeeBox" style="display:none; margin:6px 0 8px; padding:8px 12px; background:rgba(0,0,0,0.35); border:1px solid rgba(212,175,55,0.4); border-radius:10px; font-size:0.7rem; color:#fef08a;">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                                        <span style="color:rgba(255,255,255,0.85);">Amplop untuk Mempelai:</span>
+                                        <strong id="lblEnvBase" style="color:#ffffff;">Rp 0</strong>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                                        <span style="color:rgba(255,255,255,0.85);">Biaya Layanan Buyle.id:</span>
+                                        <strong style="color:#86efac;">+ Rp 5.000</strong>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; font-weight:800; border-top:1px dashed rgba(255,255,255,0.25); padding-top:4px; margin-top:4px; color:#ffffff; font-size:0.75rem;">
+                                        <span>Total Pembayaran:</span>
+                                        <span id="lblEnvTotal" style="color:#d4af37;">Rp 0</span>
+                                    </div>
+                                </div>
                                 <div style="font-size: 0.65rem; color: rgba(255,255,255,0.45); line-height: 1.4;">
                                     *Bisa diisi 0 jika hanya ingin mengirim doa &amp; konfirmasi kehadiran tanpa amplop. Jika nominal diisi, pembayaran digital (QRIS/Transfer) akan otomatis muncul.
                                 </div>
@@ -1373,6 +1387,27 @@
             }
             input.value = value;
         }
+
+        // Live Preview Breakdown Amplop + Platform Fee Rp 5.000
+        document.addEventListener('DOMContentLoaded', function() {
+            const envInput = document.getElementById('rsvpEnvelopeAmount');
+            const feeBox = document.getElementById('envelopeFeeBox');
+            const lblBase = document.getElementById('lblEnvBase');
+            const lblTotal = document.getElementById('lblEnvTotal');
+
+            if (envInput && feeBox) {
+                envInput.addEventListener('input', function() {
+                    const val = parseInt(this.value) || 0;
+                    if (val > 0) {
+                        feeBox.style.display = 'block';
+                        lblBase.textContent = 'Rp ' + val.toLocaleString('id-ID');
+                        lblTotal.textContent = 'Rp ' + (val + 5000).toLocaleString('id-ID');
+                    } else {
+                        feeBox.style.display = 'none';
+                    }
+                });
+            }
+        });
     </script>
 </body>
 
