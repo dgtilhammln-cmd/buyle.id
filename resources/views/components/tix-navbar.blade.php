@@ -491,29 +491,23 @@ Fixed Sticky (Always Stays at Top on Scroll)
         background: #FEF2F2;
     }
 
-    /* Mobile Hamburger Button */
-    .tix-hamburger-btn {
-        display: none;
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.32);
-        color: #ffffff;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-        line-height: 1;
-        vertical-align: middle;
-        transition: all 0.2s ease;
-        box-sizing: border-box;
-        flex-shrink: 0;
+    /* Mobile Hamburger Button REMOVED (Replaced by Mobile Bottom Navbar) */
+    .tix-hamburger-btn,
+    .tix-drawer-backdrop,
+    .tix-mobile-drawer {
+        display: none !important;
     }
 
-    .tix-hamburger-btn:hover {
-        background: rgba(255, 255, 255, 0.32);
+    /* ══════════════════════════════════════════════════════════════
+       MOBILE BOTTOM NAVIGATION BAR (Modern Floating Capsule Style)
+       Items: Home, About Buyle, Kerjasama, Profile (https://buyle.id/login-ticketing)
+       ══════════════════════════════════════════════════════════════ */
+    .tix-bottom-nav {
+        display: none;
+    }
+
+    .tix-bottom-nav-spacer {
+        display: none;
     }
 
     /* ══════════════════════════════════════════════════════════════
@@ -815,28 +809,7 @@ Fixed Sticky (Always Stays at Top on Scroll)
         }
 
         .tix-hamburger-btn {
-            display: inline-flex !important;
-            width: 38px !important;
-            height: 38px !important;
-            min-width: 38px !important;
-            min-height: 38px !important;
-            max-height: 38px !important;
-            border-radius: 10px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            box-sizing: border-box !important;
-            align-items: center !important;
-            justify-content: center !important;
-            align-self: center !important;
-            line-height: 1 !important;
-            vertical-align: middle !important;
-        }
-
-        .tix-hamburger-btn svg {
-            width: 20px !important;
-            height: 20px !important;
-            display: block !important;
-            margin: 0 !important;
+            display: none !important;
         }
 
         .tix-auth-masuk-btn {
@@ -855,10 +828,115 @@ Fixed Sticky (Always Stays at Top on Scroll)
             vertical-align: middle !important;
         }
 
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
+        /* ── MOBILE BOTTOM NAVBAR (Modern Floating Capsule Style) ── */
+        .tix-bottom-nav {
+            display: flex !important;
+            position: fixed !important;
+            bottom: 14px !important;
+            left: 14px !important;
+            right: 14px !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            height: 62px !important;
+            background: rgba(255, 255, 255, 0.96) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-radius: 999px !important;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+            z-index: 99998 !important;
+            align-items: center !important;
+            justify-content: space-around !important;
+            padding: 0 0.5rem !important;
+            box-sizing: border-box !important;
+            font-family: 'Montserrat', sans-serif !important;
+            pointer-events: auto !important;
+        }
+
+        .tix-bottom-nav-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 3px !important;
+            padding: 5px 8px !important;
+            border-radius: 14px !important;
+            text-decoration: none !important;
+            color: #64748b !important;
+            font-size: 0.67rem !important;
+            font-weight: 600 !important;
+            line-height: 1.1 !important;
+            letter-spacing: -0.01em !important;
+            font-family: 'Montserrat', sans-serif !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            -webkit-tap-highlight-color: transparent !important;
+            flex: 1 !important;
+            max-width: 95px !important;
+            height: 50px !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+        }
+
+        .tix-bottom-nav-item svg {
+            width: 20px !important;
+            height: 20px !important;
+            display: block !important;
+            transition: transform 0.2s ease, color 0.2s ease !important;
+            flex-shrink: 0 !important;
+            color: #64748b !important;
+        }
+
+        .tix-bottom-nav-item:hover {
+            color: #15803d !important;
+        }
+
+        .tix-bottom-nav-item:hover svg {
+            color: #15803d !important;
+        }
+
+        .tix-bottom-nav-item:active {
+            transform: scale(0.92) !important;
+        }
+
+        .tix-bottom-nav-item.active {
+            color: #15803d !important;
+            font-weight: 700 !important;
+        }
+
+        .tix-bottom-nav-item.active svg {
+            color: #16a34a !important;
+            stroke-width: 2.5 !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .tix-bottom-nav-item.active::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 2px !important;
+            width: 18px !important;
+            height: 3px !important;
+            background: linear-gradient(135deg, #1db349 0%, #84ce00 100%) !important;
+            border-radius: 999px !important;
+        }
+
+        .tix-bottom-nav-label {
+            font-size: 0.67rem !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            display: block !important;
+        }
+
+        .tix-bottom-nav-spacer {
+            display: block !important;
+            width: 100% !important;
+            height: 84px !important;
+            pointer-events: none !important;
+        }
+
+        body {
+            padding-bottom: 78px !important;
+        }
     }
 
     @media (max-width: 420px) {
@@ -1022,14 +1100,7 @@ Fixed Sticky (Always Stays at Top on Scroll)
                 <a href="{{ route('register') }}" class="tix-auth-daftar-btn">Daftar</a>
             @endauth
 
-            {{-- Mobile Hamburger Toggle --}}
-            <button type="button" class="tix-hamburger-btn" onclick="openTixDrawer()" aria-label="Buka Menu Mobile">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-            </button>
+            {{-- Mobile Hamburger Button REMOVED (Replaced by Bottom Navigation Bar) --}}
 
         </div>
 
@@ -1038,6 +1109,64 @@ Fixed Sticky (Always Stays at Top on Scroll)
 
 {{-- Spacer element so page content doesn't hide behind fixed header --}}
 <div class="tix-header-spacer"></div>
+
+{{-- ══════════════════════════════════════════════════════════════
+   MOBILE BOTTOM NAVIGATION BAR (Modern Floating Capsule Style)
+   Items: Home, About Buyle, Kerjasama, Profile (https://buyle.id/login-ticketing)
+   ══════════════════════════════════════════════════════════════ --}}
+<nav class="tix-bottom-nav" id="tixBottomNav" aria-label="Navigasi Bawah Buyle TIX">
+    {{-- 1. Home --}}
+    <a href="{{ route('tix.index') }}" 
+       class="tix-bottom-nav-item {{ (request()->routeIs('tix.index') && !request()->has('q')) ? 'active' : '' }}" 
+       title="Home Buyle TIX">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        <span class="tix-bottom-nav-label">Home</span>
+    </a>
+
+    {{-- 2. About Buyle --}}
+    <a href="{{ route('tix.info') }}" 
+       class="tix-bottom-nav-item {{ (request()->routeIs('tix.info') || request()->is('tix/info*')) ? 'active' : '' }}" 
+       title="About Buyle TIX">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+        <span class="tix-bottom-nav-label">About Buyle</span>
+    </a>
+
+    {{-- 3. Kerjasama --}}
+    <a href="{{ $waUrl }}" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="tix-bottom-nav-item" 
+       title="Kerjasama Event Organizer (WhatsApp)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        <span class="tix-bottom-nav-label">Kerjasama</span>
+    </a>
+
+    {{-- 4. Profile --}}
+    <a href="{{ url('/login-ticketing') }}" 
+       class="tix-bottom-nav-item {{ request()->is('login-ticketing*') ? 'active' : '' }}" 
+       title="Profile / Portal Tiket Buyle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span class="tix-bottom-nav-label">Profile</span>
+    </a>
+</nav>
+
+{{-- Spacer agar konten halaman bagian paling bawah tidak tertutup floating bottom nav --}}
+<div class="tix-bottom-nav-spacer"></div>
 
 {{-- ══════════════════════════════════════════════════════════════
 MOBILE OFFCANVAS DRAWER
