@@ -165,16 +165,13 @@
         .brand-pill {
             display: inline-flex;
             align-items: center;
-            background: rgba(255,255,255,0.95);
-            padding: 6px 14px;
-            border-radius: 999px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.4);
             text-decoration: none;
         }
         .brand-pill img {
-            height: 24px;
+            height: 30px;
             width: auto;
             display: block;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
         }
 
         /* ── SLIDE INDICATORS ── */
