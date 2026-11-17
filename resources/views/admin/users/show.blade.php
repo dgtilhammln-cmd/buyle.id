@@ -335,7 +335,7 @@
             <div style="font-size:.72rem;color:#64748B;">Status Check-in:</div>
             @if($isScanned)
               <div style="font-size:.78rem;font-weight:700;color:#15803D;margin-top:2px;">
-                ✓ Ter-scan ({{ $t->scanned_at->format('d/m/Y H:i') }})
+                ✓ Ter-scan ({{ $t->scanned_at ? \Carbon\Carbon::parse($t->scanned_at)->format('d/m/Y H:i') : '-' }})
               </div>
             @else
               <div style="font-size:.78rem;font-weight:700;color:#D97706;margin-top:2px;">
