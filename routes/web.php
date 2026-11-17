@@ -934,6 +934,7 @@ Route::prefix('admin')->group(function () {
         Route::put('/media-partners/{mediaPartner}',            [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'update'])->name('admin.media-partners.update');
         Route::post('/media-partners/{mediaPartner}/payout',     [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'payout'])->name('admin.media-partners.payout');
         Route::post('/media-partners/{mediaPartner}/toggle',     [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'toggleActive'])->name('admin.media-partners.toggle');
+        Route::delete('/media-partners/{mediaPartner}',          [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'destroy'])->name('admin.media-partners.destroy');
 
         // Order Management
         Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');

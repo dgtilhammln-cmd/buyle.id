@@ -332,4 +332,19 @@ class AdminMediaPartnerController extends Controller
         $statusText = $mediaPartner->is_active ? 'diaktifkan' : 'dinonaktifkan';
         return back()->with('success', 'Status Media Partner ' . $mediaPartner->name . ' berhasil ' . $statusText . '.');
     }
+
+    /**
+     * Hapus Media Partner.
+     */
+    public function destroy(MediaPartner $mediaPartner)
+    {
+        $name = $mediaPartner->name;
+
+        // Lepaskan kaitan user/creator jika ada
+        User::where('media_partner_id', $mediaPartner->id)->update(['media_partner_id' => null]);
+
+        $mediaPartner->delete();
+
+        return back()->with('success', 'Media Partner ' . $name . ' berhasil dihapus.');
+    }
 }

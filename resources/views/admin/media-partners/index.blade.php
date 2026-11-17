@@ -299,6 +299,17 @@
             background: #DCFCE7;
         }
 
+        .mp-action-btn.danger {
+            background: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+        }
+
+        .mp-action-btn.danger:hover {
+            background: #FEE2E2;
+            color: #B91C1C;
+        }
+
         /* ── Modal (Anti Keluar Jalur / Box Sizing Safe) ── */
         .mp-modal-overlay {
             position: fixed;
@@ -686,6 +697,10 @@
                                                 Cairkan
                                             </button>
                                         @endif
+                                        <button type="button" onclick="openDeleteModal({{ $mp->id }}, '{{ addslashes($mp->name) }}')"
+                                            class="mp-action-btn danger" title="Hapus Media Partner">
+                                            Hapus
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -1037,6 +1052,41 @@
         </div>
     </div>
 
+    {{-- MODAL KONFIRMASI HAPUS MEDIA PARTNER --}}
+    <div class="mp-modal-overlay" id="modalDelete" style="display:none;">
+        <div class="mp-modal-box" style="max-width:440px;">
+            <div class="mp-modal-header" style="border-bottom:none; padding-bottom:0.5rem;">
+                <div class="mp-modal-title" style="color:#DC2626; display:flex; align-items:center; gap:0.5rem; font-size:1.1rem;">
+                    <svg width="20" height="20" fill="none" stroke="#DC2626" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    Hapus Media Partner
+                </div>
+                <button type="button" onclick="closeModal('modalDelete')" class="mp-modal-close">&times;</button>
+            </div>
+            <form id="formDelete" method="POST" action="">
+                @csrf
+                @method('DELETE')
+                <div class="mp-modal-body" style="padding-top:0.25rem;">
+                    <p style="font-size:0.82rem; color:#475569; line-height:1.6; margin:0 0 0.85rem 0;">
+                        Apakah Anda yakin ingin menghapus Media Partner <strong id="deletePartnerName" style="color:#0F172A;"></strong>?
+                    </p>
+                    <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; padding:0.75rem 1rem; font-size:0.72rem; color:#991B1B; line-height:1.5;">
+                        Tindakan ini permanen dan akan menghapus data partner serta riwayat komisi terkait. Akun creator yang terhubung tidak akan terhapus, namun kaitan kemitraannya akan dilepas.
+                    </div>
+                </div>
+                <div class="mp-modal-footer" style="margin-top:0.5rem;">
+                    <button type="button" onclick="closeModal('modalDelete')" class="mp-btn-cancel">Batal</button>
+                    <button type="submit" class="mp-btn-submit" style="background:#DC2626; box-shadow:0 4px 14px rgba(220,38,38,0.25);">
+                        Ya, Hapus Partner
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         window.creatorsList = @json($creatorsList);
 
@@ -1242,6 +1292,12 @@
             amountInput.max = maxBalance;
             amountInput.value = maxBalance;
             document.getElementById('modalPayout').style.display = 'flex';
+        }
+
+        function openDeleteModal(id, name) {
+            document.getElementById('formDelete').action = '/admin/media-partners/' + id;
+            document.getElementById('deletePartnerName').innerText = name;
+            document.getElementById('modalDelete').style.display = 'flex';
         }
 
         function closeModal(id) {
