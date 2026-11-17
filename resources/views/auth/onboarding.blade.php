@@ -1166,17 +1166,20 @@
                                 <div class="partner-left">
                                     <div class="partner-avatar">
                                         @if(!empty($partner['logo']))
-                                            <img src="{{ $partner['logo'] }}" alt="{{ $partner['name'] }}">
+                                            <img src="{{ $partner['logo'] }}" alt="{{ $partner['name'] }}" onerror="this.style.display='none'; this.parentNode.textContent='{{ substr($partner['name'], 0, 1) }}'">
                                         @else
                                             {{ substr($partner['name'], 0, 1) }}
                                         @endif
                                     </div>
                                     <div class="partner-info">
                                         <div class="partner-name">{{ $partner['name'] }}</div>
-                                        <div class="partner-tag">{{ $partner['category'] ?? 'Media Partner' }}</div>
+                                        <div class="partner-tag">Official Media Partner</div>
                                     </div>
                                 </div>
-                                <span class="partner-badge">{{ $partner['tag'] ?? 'Partner' }}</span>
+                                <span class="partner-badge" style="display:flex;align-items:center;gap:3px;">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Terverifikasi
+                                </span>
                             </div>
                         @endforeach
                     </div>

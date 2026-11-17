@@ -31,16 +31,16 @@ class OnboardingController extends Controller
         }
 
         // Ambil data Media Partner dari database media_partners terlebih dahulu
-        $dbMediaPartners = \App\Models\MediaPartner::where('is_active', true)->orderBy('name')->get();
+        $dbMediaPartners = \App\Models\MediaPartner::with('user')->where('is_active', true)->orderBy('name')->get();
 
         if ($dbMediaPartners->isNotEmpty()) {
             $partners = $dbMediaPartners->map(function ($p) {
                 return [
                     'id'       => $p->id,
                     'name'     => $p->name,
-                    'logo'     => null,
+                    'logo'     => $p->avatar_url,
                     'category' => 'Official Media Partner',
-                    'tag'      => $p->commission_rate . '% Komisi',
+                    'tag'      => 'Official Media Partner',
                 ];
             })->toArray();
         } else {
