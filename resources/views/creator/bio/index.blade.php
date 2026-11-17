@@ -2304,16 +2304,24 @@
                                         <div class="form-group">
                                             <label class="form-label">Username / URL Publik</label>
                                             <div
-                                                style="display:flex; align-items:center; border:1.5px solid #e7f0e7; border-radius:10px; background:#f9fefb; overflow:hidden;">
+                                                style="display:flex; align-items:center; border:1.5px solid #e2e8f0; border-radius:10px; background:#f8fafc; overflow:hidden;">
                                                 <span
-                                                    style="padding:0 0.75rem; color:#94a3b8; font-size:0.8rem; border-right:1.5px solid #e7f0e7; background:#f1f5f9; height:44px; display:flex; align-items:center;">buyle.id/</span>
-                                                <input type="text" name="bio_username"
-                                                    value="{{ old('bio_username', $profile->store_slug) }}"
-                                                    style="height:44px; border:none; background:transparent; padding:0 1rem; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a; outline:none; flex:1;"
-                                                    placeholder="username">
+                                                    style="padding:0 0.75rem; color:#94a3b8; font-size:0.8rem; border-right:1.5px solid #e2e8f0; background:#f1f5f9; height:44px; display:flex; align-items:center;">buyle.id/</span>
+                                                <input type="text"
+                                                    value="{{ auth()->user()->username ?: $profile->store_slug }}"
+                                                    readonly
+                                                    tabindex="-1"
+                                                    style="height:44px; border:none; background:#f8fafc; padding:0 1rem; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#64748b; outline:none; flex:1; cursor:not-allowed;"
+                                                    title="Username terpusat pada profil">
+                                                <span style="padding:0 0.75rem; color:#94a3b8; font-size:0.75rem; display:flex; align-items:center; gap:3px;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                                    Terkunci
+                                                </span>
                                             </div>
-                                            @error('bio_username')<span
-                                            style="font-size:0.72rem; color:#ef4444;">{{ $message }}</span>@enderror
+                                            <div style="font-size:0.72rem; color:#64748b; margin-top:0.4rem; display:flex; align-items:center; gap:0.35rem;">
+                                                <span>Mau mengganti username?</span>
+                                                <a href="{{ route('creator.profile.edit') }}" style="color:#1eb349; font-weight:700; text-decoration:none;">Klik disini &rsaquo;</a>
+                                            </div>
                                         </div>
                                         <div class="form-group" style="grid-column:1/-1;">
                                             <label class="form-label">Bio / Tagline</label>

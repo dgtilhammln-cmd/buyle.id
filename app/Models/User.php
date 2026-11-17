@@ -23,7 +23,7 @@ class User extends Authenticatable
         'pos_pin',
         'business_persona', 'referral_source_type', 'referral_source_name',
         'media_partner_name', 'media_partner_id', 'referral_code', 'referrer_id',
-        'primary_goal', 'onboarding_completed_at'
+        'primary_goal', 'onboarding_completed_at', 'username_changed_at'
     ];
     protected $hidden = ['password', 'remember_token', 'security_pin', 'pos_pin'];
     use HasFactory, Notifiable;
@@ -87,8 +87,34 @@ class User extends Authenticatable
             'password'                => 'hashed',
             'last_seen_at'            => 'datetime',
             'onboarding_completed_at' => 'datetime',
+            'username_changed_at'     => 'datetime',
             'menu_permissions'        => 'array',
         ];
+    }
+
+    public function canChangeUsername(): bool
+    {
+        if (!$this->username_changed_at) {
+            return true;
+        }
+        return $this->username_changed_at->diffInDays(now()) >= 30;
+    }
+
+    public function daysUntilUsernameChange(): int
+    {
+        if (!$this->username_changed_at) {
+            return 0;
+        }
+        $diff = 30 - (int) $this->username_changed_at->diffInDays(now());
+        return max(0, $diff);
+    }
+
+    public function nextUsernameChangeDate(): ?string
+    {
+        if (!$this->username_changed_at) {
+            return null;
+        }
+        return $this->username_changed_at->copy()->addDays(30)->translatedFormat('d F Y');
     }
 
     // =========================================================================

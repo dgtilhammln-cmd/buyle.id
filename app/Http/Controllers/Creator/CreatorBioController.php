@@ -585,15 +585,9 @@ class CreatorBioController extends Controller
         if ($request->has('theme5_contact_address'))       $config['theme5_contact_address']       = $request->theme5_contact_address;
         if ($request->has('theme5_contact_maps_embed'))    $config['theme5_contact_maps_embed']    = $request->theme5_contact_maps_embed;
 
-        // Handle username (store_slug used as bio URL slug)
-
-        if ($request->filled('bio_username')) {
-            $slug = $request->bio_username;
-            $exists = CreatorProfile::where('store_slug', $slug)->where('id', '!=', $profile->id)->exists();
-            if ($exists) {
-                return back()->withErrors(['bio_username' => 'Username sudah dipakai orang lain.'])->withInput();
-            }
-            $profile->store_slug = $slug;
+        // store_slug selalu terpusat mengikuti username akun
+        if (auth()->user()->username) {
+            $profile->store_slug = auth()->user()->username;
         }
 
         $profile->bio_config = $config;

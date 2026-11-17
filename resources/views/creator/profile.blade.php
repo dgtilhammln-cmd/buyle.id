@@ -679,13 +679,25 @@
                         </div>
 
                         <div class="form-group full">
-                            <label class="form-label">Slug URL Toko</label>
-                            <div class="slug-wrap">
-                                <span class="slug-prefix">buyle.id/c/</span>
-                                <input type="text" name="store_slug" class="slug-input"
-                                    value="{{ old('store_slug', $profile->store_slug) }}" placeholder="nama-toko-anda">
+                            <label class="form-label">Username &amp; Slug URL Toko (Terpusat)</label>
+                            <div class="slug-wrap" style="{{ !$user->canChangeUsername() ? 'background:#F1F5F9; opacity:0.85;' : '' }}">
+                                <span class="slug-prefix">buyle.id/</span>
+                                <input type="text" name="username" class="slug-input"
+                                    value="{{ old('username', $user->username) }}" placeholder="username-anda"
+                                    {{ !$user->canChangeUsername() ? 'readonly' : '' }}
+                                    style="{{ !$user->canChangeUsername() ? 'cursor:not-allowed; color:#64748B;' : '' }}">
                             </div>
-                            <span class="form-hint">Format huruf kecil, angka, dan strip (-).</span>
+                            <input type="hidden" name="store_slug" value="{{ $user->username }}">
+                            
+                            @if(!$user->canChangeUsername())
+                                <div style="margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:#B45309; background:#FEF3C7; padding:0.35rem 0.65rem; border-radius:8px;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    <span>Username terkunci (aturan platform: hanya boleh diganti 1x dalam 30 hari). Bisa diganti kembali pada <strong>{{ $user->nextUsernameChangeDate() }}</strong> ({{ $user->daysUntilUsernameChange() }} hari lagi).</span>
+                                </div>
+                            @else
+                                <span class="form-hint">Slug URL toko (buyle.id/c/...) dan halaman bio (buyle.id/...) otomatis mengikuti username ini. <strong>Catatan: Mengganti username hanya diperbolehkan 1x dalam 1 bulan.</strong></span>
+                            @endif
+                            @error('username')<span class="form-error">{{ $message }}</span>@enderror
                             @error('store_slug')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 

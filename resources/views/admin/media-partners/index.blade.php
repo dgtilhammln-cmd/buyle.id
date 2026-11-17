@@ -285,6 +285,7 @@
         justify-content: center;
         padding: 1rem;
         box-sizing: border-box;
+        overflow-y: auto;
     }
     .mp-modal-box {
         background: #ffffff;
@@ -295,9 +296,17 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        max-height: 90vh;
+        max-height: 88vh;
         box-sizing: border-box;
         border: 1.5px solid #F1F5F9;
+        margin: auto;
+    }
+    .mp-modal-box form {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
     }
     .mp-modal-header {
         padding: 1.15rem 1.4rem;
@@ -328,7 +337,9 @@
     }
     .mp-modal-body {
         padding: 1.4rem;
-        overflow-y: auto;
+        overflow-y: auto !important;
+        flex: 1;
+        min-height: 0;
         box-sizing: border-box;
     }
     .mp-modal-footer {
@@ -690,8 +701,9 @@
 
                 <div class="mp-grid-2">
                     <div class="mp-form-group">
-                        <label class="mp-form-label">Kode Unik / Slug Referral</label>
-                        <input type="text" name="code" id="createCode" placeholder="infokonser (opsional)" class="mp-input">
+                        <label class="mp-form-label">Username / Kode Referral Buyletix <span style="color:#ef4444">*</span></label>
+                        <input type="text" name="code" id="createCode" placeholder="username-creator" class="mp-input">
+                        <span style="font-size:0.65rem; color:#64748B; margin-top:2px; display:block;">Terpusat dari username (buyle.id/register?ref=<strong>username</strong>)</span>
                     </div>
                     <div class="mp-form-group">
                         <label class="mp-form-label">Persentase Komisi (%) <span style="color:#ef4444">*</span></label>
@@ -803,8 +815,9 @@
 
                 <div class="mp-grid-2">
                     <div class="mp-form-group">
-                        <label class="mp-form-label">Kode Unik / Slug Referral <span style="color:#ef4444">*</span></label>
+                        <label class="mp-form-label">Username / Kode Referral Buyletix <span style="color:#ef4444">*</span></label>
                         <input type="text" name="code" id="editCode" required class="mp-input">
+                        <span style="font-size:0.65rem; color:#64748B; margin-top:2px; display:block;">Terpusat dari username (buyle.id/register?ref=<strong>username</strong>)</span>
                     </div>
                     <div class="mp-form-group">
                         <label class="mp-form-label">Persentase Komisi (%) <span style="color:#ef4444">*</span></label>

@@ -22,13 +22,67 @@ class CreatorProfileController extends Controller
     {
         $user = auth()->user();
 
-        if (empty($request->store_slug) && !empty($request->store_name)) {
-            $request->merge(['store_slug' => \Illuminate\Support\Str::slug($request->store_name)]);
+        // 1. Validasi & Penggantian Username (hanya boleh 1x dalam 1 bulan / 30 hari)
+        if ($request->filled('username')) {
+            $newUsername = strtolower(trim($request->input('username')));
+
+            if ($newUsername !== strtolower($user->username ?? '')) {
+                if (!$user->canChangeUsername()) {
+                    return back()->withErrors([
+                        'username' => 'Mengganti username hanya boleh 1x dalam 1 bulan. Anda dapat menggantinya kembali pada tanggal ' . $user->nextUsernameChangeDate() . ' (' . $user->daysUntilUsernameChange() . ' hari lagi).'
+                    ])->withInput();
+                }
+
+                $request->validate([
+                    'username' => [
+                        'required',
+                        'string',
+                        'min:3',
+                        'max:40',
+                        'regex:/^[a-z0-9._]+$/',
+                        'unique:users,username,' . $user->id,
+                    ],
+                ], [
+                    'username.required' => 'Username wajib diisi.',
+                    'username.min'      => 'Username minimal 3 karakter.',
+                    'username.max'      => 'Username maksimal 40 karakter.',
+                    'username.regex'    => 'Username hanya boleh huruf kecil, angka, titik, dan garis bawah (_).',
+                    'username.unique'   => 'Username ini sudah digunakan akun lain.',
+                ]);
+
+                // Pastikan tidak tabrakan dengan store_slug creator lain
+                $slugConflict = CreatorProfile::where('store_slug', $newUsername)
+                    ->where('user_id', '!=', $user->id)
+                    ->exists();
+                if ($slugConflict) {
+                    return back()->withErrors([
+                        'username' => 'Username ini sudah dipakai oleh creator lain sebagai URL toko.'
+                    ])->withInput();
+                }
+
+                // Update username & waktu perubahan
+                $user->username = $newUsername;
+                $user->username_changed_at = now();
+                if (!empty($user->referral_code)) {
+                    $user->referral_code = $newUsername;
+                }
+                $user->save();
+
+                // Singkronkan turunannya secara otomatis:
+                // a. Singkronkan kode media partner jika akun ini terdaftar sebagai Media Partner
+                \App\Models\MediaPartner::where('user_id', $user->id)->update([
+                    'code' => $newUsername
+                ]);
+            }
         }
+
+        // Slug toko selalu otomatis mengikuti username akun secara terpusat
+        $storeSlug = $user->username ?: ($request->filled('store_slug') ? \Illuminate\Support\Str::slug($request->store_slug) : \Illuminate\Support\Str::slug($request->store_name ?: 'store'));
+        $request->merge(['store_slug' => $storeSlug]);
 
         $request->validate([
             'store_name' => 'nullable|string|max:100',
-            'store_slug' => 'nullable|string|max:100|regex:/^[a-z0-9\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
+            'store_slug' => 'required|string|max:100|regex:/^[a-z0-9\._\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
             'store_description' => 'required|string|min:40|max:300',
             'creator_type' => 'nullable|string|max:100',
             'social_links' => 'nullable|array',
