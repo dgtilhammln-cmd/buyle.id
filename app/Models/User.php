@@ -19,7 +19,10 @@ class User extends Authenticatable
         'menu_permissions', 'is_active', 'last_seen_at', 
         'bank_name', 'bank_account_number', 'bank_account_name',
         'security_pin', 'biometric_enabled', 'biometric_credential_id',
-        'pos_pin'
+        'pos_pin',
+        'business_persona', 'referral_source_type', 'referral_source_name',
+        'media_partner_name', 'media_partner_id', 'referral_code',
+        'primary_goal', 'onboarding_completed_at'
     ];
     protected $hidden = ['password', 'remember_token', 'security_pin', 'pos_pin'];
     use HasFactory, Notifiable;

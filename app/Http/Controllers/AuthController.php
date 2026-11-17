@@ -222,10 +222,10 @@ class AuthController extends Controller
                 \Log::warning('Merge guest cart on register failed: ' . $e->getMessage());
             }
 
-            $redirectRoute = route('account.profile');
+            $redirectRoute = ($user->onboarding_completed_at === null) ? route('onboarding.index') : route('account.profile');
             if ($user->role === 'super_admin' || $user->role === 'admin') {
                 $redirectRoute = route('admin.dashboard');
-            } elseif ($user->role === 'seller') {
+            } elseif ($user->role === 'seller' && $user->onboarding_completed_at !== null) {
                 $redirectRoute = route('creator.dashboard');
             }
 
@@ -344,10 +344,10 @@ class AuthController extends Controller
         }
 
 
-        $redirectRoute = route('account.profile');
+        $redirectRoute = ($user->onboarding_completed_at === null) ? route('onboarding.index') : route('account.profile');
         if ($user->role === 'super_admin' || $user->role === 'admin') {
             $redirectRoute = route('admin.dashboard');
-        } elseif ($user->role === 'seller') {
+        } elseif ($user->role === 'seller' && $user->onboarding_completed_at !== null) {
             $redirectRoute = route('creator.dashboard');
         }
 
@@ -581,11 +581,15 @@ class AuthController extends Controller
         $fallback = url('/');
         if ($user->role === 'super_admin' || $user->role === 'admin') {
             $fallback = route('admin.dashboard');
+        } elseif ($user->onboarding_completed_at === null && !in_array($user->role, ['super_admin', 'admin', 'pos_cashier'])) {
+            $fallback = route('onboarding.index');
         } elseif ($user->role === 'seller') {
             $fallback = ($roleRequested === 'seller') ? route('creator.ticket.scanner') : route('creator.dashboard');
         }
 
-        $destination = $target ?: $fallback;
+        $destination = ($user->onboarding_completed_at === null && !in_array($user->role, ['super_admin', 'admin', 'pos_cashier']))
+            ? route('onboarding.index')
+            : ($target ?: $fallback);
 
         return redirect()->to($destination)
             ->with('success', 'Selamat datang, ' . $user->name . '!');

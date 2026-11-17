@@ -430,6 +430,11 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
 });
 
 Route::middleware(['auth'])->group(function () {
+    // ── Onboarding Super App Wizard (3-Step Progressive Profiling) ──
+    Route::get('/onboarding', [\App\Http\Controllers\OnboardingController::class, 'index'])->name('onboarding.index');
+    Route::post('/onboarding/save', [\App\Http\Controllers\OnboardingController::class, 'save'])->name('onboarding.save');
+    Route::post('/onboarding/skip', [\App\Http\Controllers\OnboardingController::class, 'skip'])->name('onboarding.skip');
+
     Route::get('/creator/onboarding', [\App\Http\Controllers\CreatorOnboardingController::class, 'index'])->name('creator.onboarding');
     Route::post('/creator/onboarding', [\App\Http\Controllers\CreatorOnboardingController::class, 'store'])->name('creator.onboarding.store');
 });
