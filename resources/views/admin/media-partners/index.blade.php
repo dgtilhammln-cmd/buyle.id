@@ -792,9 +792,10 @@
                     <div class="mp-grid-2">
                         <div class="mp-form-group">
                             <label class="mp-form-label">Username / Kode Referral <span style="color:#ef4444">*</span></label>
-                            <input type="text" name="code" id="createCode" placeholder="username-creator" maxlength="30"
-                                class="mp-input" required>
-                            <span style="font-size:0.65rem; color:#64748B; margin-top:2px; display:block;">Terpusat dari username creator (maks. 30 karakter)</span>
+                            <input type="text" name="code" id="createCode" placeholder="Terisi otomatis saat memilih creator" maxlength="30"
+                                class="mp-input" readonly tabindex="-1"
+                                style="background:#F8FAFC; cursor:not-allowed; color:#475569; font-weight:700;" required>
+                            <span style="font-size:0.65rem; color:#64748B; margin-top:2px; display:block;">Terkunci terpusat dari username creator (tidak dapat diubah manual)</span>
                         </div>
                         <div class="mp-form-group">
                             <label class="mp-form-label">Persentase Komisi (%) <span style="color:#ef4444">*</span></label>
@@ -930,8 +931,10 @@
                         <div class="mp-form-group">
                             <label class="mp-form-label">Username / Kode Referral <span
                                     style="color:#ef4444">*</span></label>
-                            <input type="text" name="code" id="editCode" required maxlength="30" class="mp-input">
-                            <span style="font-size:0.65rem; color:#64748B; margin-top:2px; display:block;">Terpusat dari username creator (maks. 30 karakter)</span>
+                            <input type="text" name="code" id="editCode" required maxlength="30" class="mp-input"
+                                readonly tabindex="-1"
+                                style="background:#F8FAFC; cursor:not-allowed; color:#475569; font-weight:700;">
+                            <span style="font-size:0.65rem; color:#64748B; margin-top:2px; display:block;">Terkunci terpusat dari username creator (tidak dapat diubah manual)</span>
                         </div>
                         <div class="mp-form-group">
                             <label class="mp-form-label">Persentase Komisi (%) <span style="color:#ef4444">*</span></label>
@@ -1174,6 +1177,7 @@
             if (mode === 'create') {
                 document.getElementById('createCreatorSearch').value = '';
                 document.getElementById('createUserId').value = '';
+                document.getElementById('createCode').value = '';
                 document.getElementById('createCreatorPreview').style.display = 'none';
                 document.getElementById('createCreatorDropdown').style.display = 'none';
             } else if (mode === 'edit') {
@@ -1251,6 +1255,15 @@
 
         // Auto open jika diarahkan dari halaman All Creator dengan param sync_user_id
         document.addEventListener('DOMContentLoaded', function () {
+            const nameInput = document.getElementById('createName');
+            if (nameInput) {
+                nameInput.addEventListener('input', function() {
+                    if (!document.getElementById('createUserId').value) {
+                        document.getElementById('createCode').value = this.value.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30);
+                    }
+                });
+            }
+
             const syncUserId = "{{ $syncUserId ?? '' }}";
             if (syncUserId) {
                 openCreateModal(syncUserId);

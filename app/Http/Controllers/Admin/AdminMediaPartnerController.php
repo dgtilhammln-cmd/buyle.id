@@ -140,10 +140,19 @@ class AdminMediaPartnerController extends Controller
             $linkedUser = User::with('creatorProfile')->find($validated['user_id']);
             if ($linkedUser) {
                 $userUpdates = [];
+
+                // Hanya update username jika belum sama dan tidak bentrok dengan akun lain
                 if ($linkedUser->username !== $code) {
-                    $userUpdates['username'] = $code;
-                    $userUpdates['referral_code'] = $code;
+                    $isConflict = User::where('username', $code)
+                        ->where('id', '!=', $linkedUser->id)
+                        ->exists();
+
+                    if (!$isConflict) {
+                        $userUpdates['username'] = $code;
+                        $userUpdates['referral_code'] = $code;
+                    }
                 }
+
                 if (empty($linkedUser->bank_name) && !empty($validated['bank_name'])) {
                     $userUpdates['bank_name'] = $validated['bank_name'];
                 }
@@ -153,11 +162,25 @@ class AdminMediaPartnerController extends Controller
                 if (empty($linkedUser->bank_account_name) && !empty($validated['bank_account_name'])) {
                     $userUpdates['bank_account_name'] = $validated['bank_account_name'];
                 }
+
                 if (!empty($userUpdates)) {
-                    $linkedUser->update($userUpdates);
+                    try {
+                        $linkedUser->update($userUpdates);
+                    } catch (\Throwable $e) {
+                        unset($userUpdates['username'], $userUpdates['referral_code']);
+                        if (!empty($userUpdates)) {
+                            $linkedUser->update($userUpdates);
+                        }
+                    }
                 }
+
                 if ($linkedUser->creatorProfile && $linkedUser->creatorProfile->store_slug !== $code) {
-                    $linkedUser->creatorProfile->update(['store_slug' => $code]);
+                    $slugConflict = \App\Models\CreatorProfile::where('store_slug', $code)
+                        ->where('user_id', '!=', $linkedUser->id)
+                        ->exists();
+                    if (!$slugConflict) {
+                        $linkedUser->creatorProfile->update(['store_slug' => $code]);
+                    }
                 }
             }
         }
@@ -226,10 +249,18 @@ class AdminMediaPartnerController extends Controller
             $linkedUser = User::with('creatorProfile')->find($targetUserId);
             if ($linkedUser) {
                 $userUpdates = [];
+
                 if ($linkedUser->username !== $mediaPartner->code) {
-                    $userUpdates['username'] = $mediaPartner->code;
-                    $userUpdates['referral_code'] = $mediaPartner->code;
+                    $isConflict = User::where('username', $mediaPartner->code)
+                        ->where('id', '!=', $linkedUser->id)
+                        ->exists();
+
+                    if (!$isConflict) {
+                        $userUpdates['username'] = $mediaPartner->code;
+                        $userUpdates['referral_code'] = $mediaPartner->code;
+                    }
                 }
+
                 if (empty($linkedUser->bank_name) && !empty($validated['bank_name'])) {
                     $userUpdates['bank_name'] = $validated['bank_name'];
                 }
@@ -239,11 +270,25 @@ class AdminMediaPartnerController extends Controller
                 if (empty($linkedUser->bank_account_name) && !empty($validated['bank_account_name'])) {
                     $userUpdates['bank_account_name'] = $validated['bank_account_name'];
                 }
+
                 if (!empty($userUpdates)) {
-                    $linkedUser->update($userUpdates);
+                    try {
+                        $linkedUser->update($userUpdates);
+                    } catch (\Throwable $e) {
+                        unset($userUpdates['username'], $userUpdates['referral_code']);
+                        if (!empty($userUpdates)) {
+                            $linkedUser->update($userUpdates);
+                        }
+                    }
                 }
+
                 if ($linkedUser->creatorProfile && $linkedUser->creatorProfile->store_slug !== $mediaPartner->code) {
-                    $linkedUser->creatorProfile->update(['store_slug' => $mediaPartner->code]);
+                    $slugConflict = \App\Models\CreatorProfile::where('store_slug', $mediaPartner->code)
+                        ->where('user_id', '!=', $linkedUser->id)
+                        ->exists();
+                    if (!$slugConflict) {
+                        $linkedUser->creatorProfile->update(['store_slug' => $mediaPartner->code]);
+                    }
                 }
             }
         }
