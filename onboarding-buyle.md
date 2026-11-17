@@ -68,12 +68,13 @@ Kolom-kolom yang ditambahkan ke tabel `users`:
 | `referral_source_name` | `VARCHAR(100)` | Ya | `NULL` | Nama spesifik sumber: `instagram`, `tiktok`, `youtube`, `google`, `twitter`, `friend`. |
 | `media_partner_name` | `VARCHAR(100)` | Ya | `NULL` | Nama media partner jika dipilih di Step 2 (misal: "Event Jawa Timur", "Info Surabaya"). |
 | `media_partner_id` | `BIGINT UNSIGNED` | Ya | `NULL` | Relasi ID ke media partner (tabel `hero_slides` atau partner entity). |
-| `referral_code` | `VARCHAR(50)` | Ya | `NULL` | Kode referral/afiliasi unik (misal: `BUYLEVIP`, `KOMUNITASPRO`). |
+| `referral_code` | `VARCHAR(50)` | Ya | `NULL` | Kode referral/afiliasi unik (misal: `BUYLEVIP`, `KOMUNITASPRO`, atau username pemilik bio seperti `mse`). |
+| `referrer_id` | `BIGINT UNSIGNED` | Ya | `NULL` | Foreign key ke `users.id` pemilik referral/bio link. Diindeks untuk relasi Eloquent cepat `$user->referrer`. |
 | `primary_goal` | `VARCHAR(50)` | Ya | `NULL` | Fitur utama yang ditargetkan user: `products`, `bio`, `pos`, `ticketing`, `wedding`. |
 | `onboarding_completed_at` | `TIMESTAMP` | Ya | `NULL` | Timestamp kapan user menyelesaikan onboarding. User lama otomatis diisi waktu migrasi agar tidak ter-redirect ulang. |
 
 ### Model Eloquent: `App\Models\User.php`
-Semua kolom di atas telah ditambahkan ke array `$fillable` pada model:
+Semua kolom di atas telah ditambahkan ke array `$fillable` dan relasi pada model:
 ```php
 protected $fillable = [
     // ... atribut bawaan ...
@@ -83,10 +84,51 @@ protected $fillable = [
     'media_partner_name',
     'media_partner_id',
     'referral_code',
+    'referrer_id',
     'primary_goal',
     'onboarding_completed_at',
 ];
+
+public function referrer()
+{
+    return $this->belongsTo(User::class, 'referrer_id');
+}
+
+public function referrals()
+{
+    return $this->hasMany(User::class, 'referrer_id');
+}
 ```
+
+---
+
+## 3.1 Sistem Tracker Anti-Lepas Bio Badge (Tema 1 s.d. 5)
+
+Fitur ini memastikan bahwa setiap pengunjung yang datang ke halaman Biolink kreator (`/{username}`) lalu mengklik logo/badge buyle di bagian paling bawah halaman akan **terkunci selamanya (*Anti-Lepas*)** ke referral akun kreator tersebut saat mendaftar.
+
+### Mekanisme 3 Lapis (*Triple-Lock Mechanism*):
+
+1. **Lapis 1: Server-Side Cookie Queue (Masa Aktif 30 Hari)**
+   - Saat pengunjung membuka `/{username}` (melalui `BioPageController@show`), sistem otomatis mengantrekan cookie:
+     - `buyle_referral = username` (path: `/`, max-age: 30 hari).
+     - `buyle_referrer_id = user_id` (path: `/`, max-age: 30 hari).
+2. **Lapis 2: Deep Link & Web Middleware Sync (`CaptureUtmMiddleware`)**
+   - Logo buyle di Tema 1, 2, 3, 4, dan 5 diarahkan ke URL berparameter:
+     `https://buyle.id/?ref={username}&src=bio_footer&utm_source=bio_badge&utm_medium={username}`
+   - `CaptureUtmMiddleware` berjalan di seluruh request web buyle.id:
+     - Membaca `ref`, mencocokkan ke database pemilik akun, menyimpan ke session (`referral_code`, `referrer_id`, `referral_source_type = 'creator_bio'`).
+     - Jika query string URL hilang karena user mengklik halaman lain, middleware otomatis membaca kembali cookie `buyle_referral` dan memasukkannya kembali ke session tanpa putus.
+3. **Lapis 3: Client-Side Storage Lock (`localStorage`)**
+   - Saat halaman bio dibuka atau logo diklik, JavaScript mengunci nilai ke `localStorage.setItem('buyle_referral', username)`.
+   - Di form pendaftaran Email & Google OAuth (`register`, `register_email`, `onboarding`), jika parameter kosong, JavaScript lapis 3 secara otomatis menarik nilai dari `localStorage` dan mengisikannya ke payload pendaftaran.
+
+### Hasil saat Registrasi:
+- User baru yang terdaftar langsung memiliki:
+  - `referrer_id` = ID pemilik bio page (misal ID akun `mse`).
+  - `referral_code` = Username pemilik bio page (misal `mse`).
+  - `referral_source_type` = `'creator_bio'`.
+  - `referral_source_name` = `'Bio Badge (@mse)'`.
+- Di Onboarding Wizard (`/onboarding`), kotak referral otomatis terisi dan terkoneksi dengan badge: *"Terkoneksi dengan referral @mse"*.
 
 ---
 

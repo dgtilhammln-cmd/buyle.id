@@ -21,7 +21,7 @@ class User extends Authenticatable
         'security_pin', 'biometric_enabled', 'biometric_credential_id',
         'pos_pin',
         'business_persona', 'referral_source_type', 'referral_source_name',
-        'media_partner_name', 'media_partner_id', 'referral_code',
+        'media_partner_name', 'media_partner_id', 'referral_code', 'referrer_id',
         'primary_goal', 'onboarding_completed_at'
     ];
     protected $hidden = ['password', 'remember_token', 'security_pin', 'pos_pin'];
@@ -40,6 +40,16 @@ class User extends Authenticatable
     public function posCashiers(): HasMany
     {
         return $this->hasMany(User::class, 'parent_seller_id');
+    }
+
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referrer_id');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referrer_id');
     }
 
     public function isOnline()

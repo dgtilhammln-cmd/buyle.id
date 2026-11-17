@@ -106,6 +106,14 @@ class BioPageController extends Controller
             $ogSiteName = 'buyle.id';
         }
 
+        // Auto-queue Referral Tracker Cookie (Anti-Lepas, 30 Hari)
+        $cleanUsername = strtolower($username);
+        \Illuminate\Support\Facades\Cookie::queue('buyle_referral', $cleanUsername, 60 * 24 * 30, '/', null, false, false);
+        if ($profile->user_id) {
+            \Illuminate\Support\Facades\Cookie::queue('buyle_referrer_id', (string)$profile->user_id, 60 * 24 * 30, '/', null, false, false);
+            \Illuminate\Support\Facades\Cookie::queue('buyle_referrer_username', $cleanUsername, 60 * 24 * 30, '/', null, false, false);
+        }
+
         return view("bio.{$theme}", compact(
             'profile', 'config', 'blocks', 'products',
             'seoTitle', 'seoDesc', 'ogImage', 'canonical', 'username', 'ogSiteName'

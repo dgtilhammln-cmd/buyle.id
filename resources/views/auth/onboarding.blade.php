@@ -1031,6 +1031,12 @@
                     <div class="referral-input-wrap">
                         <input type="text" id="inputReferralCode" class="referral-input" placeholder="CONTOH: BUYLEVIP" value="{{ $defaultRefCode }}">
                     </div>
+                    @if(!empty($referrerInfo))
+                        <div style="margin-top:6px; font-size:0.72rem; color:#15803d; font-weight:600; display:flex; align-items:center; gap:4px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            Terkoneksi dengan referral @<span>{{ $referrerInfo['username'] }}</span> ({{ $referrerInfo['name'] }})
+                        </div>
+                    @endif
                 </div>
             </section>
 
@@ -1166,7 +1172,17 @@
 
         // Auto-select initial state
         document.addEventListener('DOMContentLoaded', () => {
-            // Default persona jika belum
+            // Auto-fill referral dari localStorage jika input masih kosong (Anti-Lepas layer 3)
+            try {
+                const refInput = document.getElementById('inputReferralCode');
+                if (refInput && !refInput.value) {
+                    const savedRef = localStorage.getItem('buyle_referral');
+                    if (savedRef) {
+                        refInput.value = savedRef.toUpperCase();
+                    }
+                }
+            } catch (e) {}
+
             updateButtons();
         });
 

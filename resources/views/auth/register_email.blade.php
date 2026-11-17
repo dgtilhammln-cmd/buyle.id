@@ -29,6 +29,7 @@
 <form method="POST" action="{{ route('register.submit') }}" id="registerEmailForm" novalidate>
     @csrf
     <input type="hidden" name="otp_code" id="hiddenOtpCode">
+    <input type="hidden" name="referral_code" id="hiddenReferralCode" value="{{ request('ref') ?? session('referral_code') ?? request()->cookie('buyle_referral') ?? '' }}">
 
     <div class="form-group">
         <label class="form-label" for="name">Nama Lengkap <span>*</span></label>
@@ -366,6 +367,15 @@ document.addEventListener('DOMContentLoaded', function () {
             showOtpFeedback('danger', 'Mohon lengkapi semua kriteria keamanan kata sandi.');
         }
     });
+    // Auto-populate Referral Tracker Anti-Lepas
+    try {
+        var refHidden = document.getElementById('hiddenReferralCode');
+        if (refHidden && !refHidden.value) {
+            var localRef = localStorage.getItem('buyle_referral');
+            if (localRef) refHidden.value = localRef;
+        }
+    } catch (e) {}
+
     checkValidity();
 });
 </script>

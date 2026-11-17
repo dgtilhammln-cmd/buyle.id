@@ -58,13 +58,29 @@ class OnboardingController extends Controller
             ];
         }
 
-        // Cek kode referral dari query atau session
+        // Cek kode referral dari query, session, cookie, atau profil user
         $defaultRefCode = $request->query('ref') 
             ?? $request->query('aff') 
             ?? session('referral_code') 
+            ?? $request->cookie('buyle_referral')
+            ?? $user->referral_code
             ?? '';
 
-        return view('auth.onboarding', compact('user', 'partners', 'defaultRefCode'));
+        $referrerInfo = null;
+        if (!empty($defaultRefCode)) {
+            $refOwner = User::where('username', strtolower($defaultRefCode))
+                ->orWhere('referral_code', strtolower($defaultRefCode))
+                ->first();
+            if ($refOwner) {
+                $referrerInfo = [
+                    'id'       => $refOwner->id,
+                    'username' => $refOwner->username,
+                    'name'     => $refOwner->name,
+                ];
+            }
+        }
+
+        return view('auth.onboarding', compact('user', 'partners', 'defaultRefCode', 'referrerInfo'));
     }
 
     /**
@@ -93,6 +109,19 @@ class OnboardingController extends Controller
             $sourceName = $validated['media_partner_name'] ?? $validated['referral_source_type'];
         }
 
+        // Tentukan referrer_id jika ada kode referral
+        $referrerId = $user->referrer_id;
+        $refCode = $validated['referral_code'] ?? null;
+        if (!empty($refCode)) {
+            $refCode = strtolower(trim($refCode));
+            if (!$referrerId) {
+                $refOwner = User::where('username', $refCode)->orWhere('referral_code', $refCode)->first();
+                if ($refOwner && $refOwner->id !== $user->id) {
+                    $referrerId = $refOwner->id;
+                }
+            }
+        }
+
         // Update profil user
         $user->update([
             'business_persona'        => $validated['business_persona'],
@@ -100,7 +129,8 @@ class OnboardingController extends Controller
             'referral_source_name'    => $sourceName,
             'media_partner_name'      => $validated['media_partner_name'] ?? null,
             'media_partner_id'        => $validated['media_partner_id'] ?? null,
-            'referral_code'           => $validated['referral_code'] ?? null,
+            'referral_code'           => $refCode,
+            'referrer_id'             => $referrerId,
             'primary_goal'            => $validated['primary_goal'],
             'onboarding_completed_at' => now(),
         ]);

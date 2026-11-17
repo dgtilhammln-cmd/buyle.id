@@ -640,12 +640,36 @@
                 @endif
             </div>
 
-            {{-- Bottom Center: Credit --}}
+            {{-- Bottom Center: Credit with Anti-Lepas Referral Tracker --}}
+            @php
+                $referralParamT5 = strtolower($username ?? ($profile->store_slug ?? ''));
+                $t5ReferralUrl = url('/?ref=' . urlencode($referralParamT5) . '&utm_source=bio_badge&utm_medium=' . urlencode($referralParamT5));
+            @endphp
             <div class="t5-footer-credit">
-                &copy; {{ date('Y') }}. All Rights Reserved. Powered by <a href="https://buyle.id" target="_blank"
-                    rel="noopener">buyle.id</a> x <a href="https://hvm-digital.id" target="_blank" rel="noopener">HVM
+                &copy; {{ date('Y') }}. All Rights Reserved. Powered by <a href="{{ $t5ReferralUrl }}" target="_blank"
+                    rel="noopener" onclick="trackBuyleBadge('{{ $referralParamT5 }}')">buyle.id</a> x <a href="https://hvm-digital.id" target="_blank" rel="noopener">HVM
                     Digital</a>
             </div>
+            <script>
+            function trackBuyleBadge(ref) {
+                try {
+                    if (ref) {
+                        document.cookie = "buyle_referral=" + encodeURIComponent(ref) + "; path=/; max-age=" + (30 * 86400) + "; SameSite=Lax";
+                        localStorage.setItem('buyle_referral', ref);
+                        sessionStorage.setItem('buyle_referral', ref);
+                    }
+                } catch (e) {}
+            }
+            (function() {
+                try {
+                    var bioRef = "{{ $referralParamT5 }}";
+                    if (bioRef) {
+                        document.cookie = "buyle_referral=" + encodeURIComponent(bioRef) + "; path=/; max-age=" + (30 * 86400) + "; SameSite=Lax";
+                        localStorage.setItem('buyle_referral', bioRef);
+                    }
+                } catch (e) {}
+            })();
+            </script>
 
             {{-- Bottom Right: Social Icons --}}
             <div class="t5-footer-social-wrap">

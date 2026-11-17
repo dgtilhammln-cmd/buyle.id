@@ -186,7 +186,10 @@ class AuthController extends Controller
                 $username = $base . $i++;
             }
 
-            $user = User::create([
+            // Tracker Anti-Lepas Referral Data
+            $referralData = $this->resolveReferralData($request);
+
+            $userData = array_merge([
                 'name'              => $request->name,
                 'email'             => $request->email,
                 'phone'             => $request->phone,
@@ -194,7 +197,9 @@ class AuthController extends Controller
                 'password'          => Hash::make($request->password),
                 'role'              => 'buyer',
                 'email_verified_at' => now(),
-            ]);
+            ], array_filter($referralData));
+
+            $user = User::create($userData);
 
             try {
                 $user->notify(new \App\Notifications\WelcomeNotification());
@@ -304,7 +309,10 @@ class AuthController extends Controller
             $username = $base . $i++;
         }
 
-        $user = User::create([
+        // Tracker Anti-Lepas Referral Data
+        $referralData = $this->resolveReferralData($request);
+
+        $userData = array_merge([
             'name'     => $pending['name'],
             'email'    => $pending['email'],
             'phone'    => $pending['phone'],
@@ -312,7 +320,9 @@ class AuthController extends Controller
             'password' => Hash::make($pending['password']),
             'role'     => 'buyer',
             'email_verified_at' => now(),
-        ]);
+        ], array_filter($referralData));
+
+        $user = User::create($userData);
 
         try {
             $user->notify(new \App\Notifications\WelcomeNotification());
@@ -544,7 +554,10 @@ class AuthController extends Controller
 
             $userRole = ($roleRequested === 'seller') ? 'seller' : 'buyer';
 
-            $user = User::create([
+            // Tracker Anti-Lepas Referral Data
+            $referralData = $this->resolveReferralData();
+
+            $userData = array_merge([
                 'name'      => $googleUser->getName(),
                 'email'     => $googleUser->getEmail(),
                 'avatar'    => $googleUser->getAvatar(),
@@ -552,7 +565,9 @@ class AuthController extends Controller
                 'username'  => $username,
                 'password'  => Hash::make(Str::random(24)),
                 'role'      => $userRole,
-            ]);
+            ], array_filter($referralData));
+
+            $user = User::create($userData);
 
             try {
                 $user->notify(new \App\Notifications\WelcomeNotification());
@@ -722,5 +737,54 @@ class AuthController extends Controller
         \DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         return redirect()->route('login')->with('success', '✅ Kata sandi Anda berhasil diperbarui! Silakan masuk dengan kata sandi baru Anda.');
+    }
+
+    /**
+     * Resolve data tracker referral anti-lepas dari Request, Session, atau Cookie.
+     */
+    protected function resolveReferralData($request = null): array
+    {
+        $request = $request ?: request();
+        $refCode = $request->input('referral_code')
+            ?? session('referral_code')
+            ?? $request->cookie('buyle_referral')
+            ?? null;
+
+        if (empty($refCode) || !is_string($refCode)) {
+            return [
+                'referral_code'        => null,
+                'referrer_id'          => null,
+                'referral_source_type' => null,
+                'referral_source_name' => null,
+            ];
+        }
+
+        $refCode = strtolower(trim($refCode));
+        $referrerId = session('referrer_id') ?? $request->cookie('buyle_referrer_id');
+        $referrer = null;
+
+        if ($referrerId) {
+            $referrer = User::find($referrerId);
+        }
+
+        if (!$referrer) {
+            $referrer = User::where('username', $refCode)->orWhere('referral_code', $refCode)->first();
+            if (!$referrer) {
+                $creator = \App\Models\CreatorProfile::where('store_slug', $refCode)->with('user')->first();
+                if ($creator && $creator->user) {
+                    $referrer = $creator->user;
+                }
+            }
+        }
+
+        $sourceType = session('referral_source_type') ?? 'creator_bio';
+        $sourceName = session('referral_source_name') ?? ('Bio Badge (@' . ($referrer ? $referrer->username : $refCode) . ')');
+
+        return [
+            'referral_code'        => $refCode,
+            'referrer_id'          => $referrer ? $referrer->id : null,
+            'referral_source_type' => $sourceType,
+            'referral_source_name' => $sourceName,
+        ];
     }
 }
