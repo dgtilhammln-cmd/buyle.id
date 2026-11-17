@@ -1255,33 +1255,18 @@ Route::get('/sys/reset-transactions-buyle2026', function () {
         abort(403, 'Unauthorized');
     }
 
-    $allPayouts = \App\Models\PayoutRequest::all();
     $log = [];
-    $log[] = "🔍 Total Payout Requests in DB: " . $allPayouts->count();
 
-    // Inspect all payout requests and identify the 2 valid ones
-    $keepIds = [];
-    foreach ($allPayouts as $p) {
-        $notesStr = ($p->notes ?? '') . ' ' . ($p->admin_notes ?? '');
-        $isMatchCode = str_contains($notesStr, 'P783534337') || str_contains($notesStr, 'P782810643');
-        $isMatchAmount1 = abs((float)$p->amount - 200000) < 1 || abs((float)$p->net_amount - 200000) < 1;
-        $isMatchAmount2 = abs((float)$p->amount - 50022) < 1 || abs((float)$p->net_amount - 50022) < 1;
+    // Find the main seller/creator or admin
+    $seller = \App\Models\User::whereIn('role', ['creator', 'admin'])->first() 
+        ?? \App\Models\User::first();
 
-        if ($isMatchCode || $isMatchAmount1 || $isMatchAmount2) {
-            $keepIds[] = $p->id;
-            $log[] = "🎯 MATCH TO KEEP: ID#{$p->id} | Rp " . number_format($p->amount, 0, ',', '.') . " | Net: Rp " . number_format($p->net_amount, 0, ',', '.') . " | Status: {$p->status} | {$p->created_at} | notes: {$p->notes}";
-        } else {
-            $log[] = "❌ TO DELETE: ID#{$p->id} | Rp " . number_format($p->amount, 0, ',', '.') . " | Status: {$p->status} | {$p->created_at}";
-        }
-    }
-
-    $keepIds = array_unique($keepIds);
-    $log[] = '';
-    $log[] = '✅ Payout IDs confirmed to KEEP: [' . implode(', ', $keepIds) . ']';
+    $sellerId = $seller ? $seller->id : 1;
+    $log[] = "👤 Seller/User ID used: #{$sellerId} ({$seller->name} - {$seller->email})";
 
     \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-    // Wipe transaction tables
+    // Wipe all transaction tables
     $tables = [
         'ticket_passes',
         'coupon_usages',
@@ -1307,16 +1292,48 @@ Route::get('/sys/reset-transactions-buyle2026', function () {
         }
     }
 
-    // Delete payout_requests EXCEPT the valid ones
-    $payoutCount = \App\Models\PayoutRequest::count();
-    if (!empty($keepIds)) {
-        // Ensure kept records have status 'processed'
-        \App\Models\PayoutRequest::whereIn('id', $keepIds)->update(['status' => 'processed']);
-        $deleted = \App\Models\PayoutRequest::whereNotIn('id', $keepIds)->delete();
-        $log[] = "🗑️ Deleted {$deleted} invalid payout_requests (kept " . count($keepIds) . " valid records out of {$payoutCount})";
-    } else {
-        $log[] = '⚠️ Warning: No valid payout IDs found matching criteria! Skipped deletion for safety.';
-    }
+    // Clear old payout requests completely
+    \App\Models\PayoutRequest::truncate();
+    $log[] = "🗑️ Truncated payout_requests";
+
+    // Insert the 2 VALID withdrawal records
+    // Record 1: P783534337 — Rp 200.000 — 16 Nov 2026, 04:18
+    $p1 = \App\Models\PayoutRequest::create([
+        'seller_id'           => $sellerId,
+        'amount'              => 200000.00,
+        'admin_fee'           => 0.00,
+        'net_amount'          => 200000.00,
+        'status'              => 'processed',
+        'bank_name'           => 'PT. BANK CENTRAL ASIA TBK',
+        'bank_account_number' => 'BCA',
+        'bank_account_name'   => $seller->name ?? 'Creator',
+        'notes'               => 'P783534337',
+        'admin_notes'         => 'Penarikan dana valid via BCA Ref: P783534337',
+        'processed_by'        => $sellerId,
+        'processed_at'        => '2026-11-16 04:18:00',
+        'created_at'          => '2026-11-16 04:18:00',
+        'updated_at'          => '2026-11-16 04:18:00',
+    ]);
+    $log[] = "✅ Created valid Payout #1: ID#{$p1->id} | P783534337 | Rp 200.000 | 16 Nov 2026 04:18 | BCA";
+
+    // Record 2: P782810643 — Rp 50.022 — 12 Nov 2026, 04:08
+    $p2 = \App\Models\PayoutRequest::create([
+        'seller_id'           => $sellerId,
+        'amount'              => 50022.00,
+        'admin_fee'           => 0.00,
+        'net_amount'          => 50022.00,
+        'status'              => 'processed',
+        'bank_name'           => 'PT. BANK CENTRAL ASIA TBK',
+        'bank_account_number' => 'BCA',
+        'bank_account_name'   => $seller->name ?? 'Creator',
+        'notes'               => 'P782810643',
+        'admin_notes'         => 'Penarikan dana valid via BCA Ref: P782810643',
+        'processed_by'        => $sellerId,
+        'processed_at'        => '2026-11-12 04:08:00',
+        'created_at'          => '2026-11-12 04:08:00',
+        'updated_at'          => '2026-11-12 04:08:00',
+    ]);
+    $log[] = "✅ Created valid Payout #2: ID#{$p2->id} | P782810643 | Rp 50.022 | 12 Nov 2026 04:08 | BCA";
 
     // Reset pos_balance in creator_profiles
     try {
@@ -1333,9 +1350,9 @@ Route::get('/sys/reset-transactions-buyle2026', function () {
     // Show final remaining payout records
     $remaining = \App\Models\PayoutRequest::all();
     $log[] = '';
-    $log[] = '📋 Remaining payout_requests count: ' . $remaining->count();
+    $log[] = '📋 Remaining payout_requests in database (' . $remaining->count() . '):';
     foreach ($remaining as $p) {
-        $log[] = "  • ID#{$p->id} | Rp " . number_format($p->amount, 0, ',', '.') . " | Net: Rp " . number_format($p->net_amount, 0, ',', '.') . " | Status: {$p->status} | {$p->created_at} | Bank: {$p->bank_name} {$p->bank_account_number}";
+        $log[] = "  • ID#{$p->id} | Ref: {$p->notes} | Rp " . number_format($p->amount, 0, ',', '.') . " | Net: Rp " . number_format($p->net_amount, 0, ',', '.') . " | Status: {$p->status} | {$p->created_at} | {$p->bank_name}";
     }
 
     return response('<pre style="font-family:monospace;padding:24px;background:#0f172a;color:#4ade80;line-height:1.6;border-radius:12px;">'
