@@ -62,10 +62,10 @@
                 radial-gradient(circle at 90% 90%, rgba(14, 165, 233, 0.07) 0%, transparent 45%);
         }
 
-        /* Main Container: Mobile first, max 520px */
+        /* Main Container: Mobile-first portrait, Responsive Landscape on Tablet & Desktop */
         .wizard-container {
             width: 100%;
-            max-width: 520px;
+            max-width: 100%;
             min-height: 100vh;
             min-height: 100dvh;
             display: flex;
@@ -79,10 +79,21 @@
         @media (min-width: 640px) {
             .wizard-container {
                 min-height: auto;
-                margin: 24px auto;
-                border-radius: 28px;
+                max-width: 760px;
+                margin: 28px auto 40px;
+                border-radius: 24px;
                 border: 1px solid var(--slate-200);
                 overflow: hidden;
+                box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.09);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .wizard-container {
+                max-width: 940px;
+                margin: 40px auto 60px;
+                border-radius: 28px;
+                box-shadow: 0 24px 60px -15px rgba(15, 23, 42, 0.12);
             }
         }
 
@@ -96,6 +107,12 @@
             z-index: 20;
         }
 
+        @media (min-width: 640px) {
+            .wizard-header {
+                padding: 1.5rem 2rem 1rem;
+            }
+        }
+
         .header-top {
             display: flex;
             align-items: center;
@@ -106,24 +123,20 @@
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
         }
 
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            background: var(--primary-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            box-shadow: 0 4px 10px rgba(30, 179, 73, 0.35);
+        .brand-logo-img {
+            height: 36px;
+            width: auto;
+            max-height: 40px;
+            object-fit: contain;
+            display: block;
         }
 
         .brand-text {
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--slate-900);
             letter-spacing: -0.5px;
@@ -138,7 +151,7 @@
             font-weight: 700;
             color: var(--primary);
             background: var(--primary-light);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             letter-spacing: 0.3px;
         }
@@ -165,7 +178,19 @@
         .wizard-body {
             flex: 1;
             padding: 1.25rem;
-            padding-bottom: 90px; /* Space for sticky bottom bar */
+            padding-bottom: 95px; /* Space for sticky bottom bar */
+        }
+
+        @media (min-width: 640px) {
+            .wizard-body {
+                padding: 1.75rem 2rem 100px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .wizard-body {
+                padding: 2.25rem 2.5rem 110px;
+            }
         }
 
         .step-section {
@@ -196,6 +221,13 @@
             margin-bottom: 6px;
         }
 
+        @media (min-width: 640px) {
+            .section-title {
+                font-size: 1.48rem;
+                margin-bottom: 8px;
+            }
+        }
+
         .section-desc {
             font-size: 0.85rem;
             color: var(--slate-600);
@@ -203,11 +235,32 @@
             margin-bottom: 1.25rem;
         }
 
-        /* Grid Cards (Step 1 & Step 3) */
+        @media (min-width: 640px) {
+            .section-desc {
+                font-size: 0.92rem;
+                margin-bottom: 1.6rem;
+            }
+        }
+
+        /* Grid Cards (Step 1: Persona) - Responsive 2 col (mobile) to 4 col (tablet/desktop) */
         .persona-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
+        }
+
+        @media (min-width: 640px) {
+            .persona-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .persona-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 14px;
+            }
         }
 
         .persona-card {
@@ -222,6 +275,14 @@
             flex-direction: column;
             gap: 8px;
             user-select: none;
+        }
+
+        @media (min-width: 640px) {
+            .persona-card {
+                padding: 16px 14px;
+                gap: 10px;
+                border-radius: 18px;
+            }
         }
 
         .persona-card:hover {
@@ -247,6 +308,14 @@
             transition: all 0.2s ease;
         }
 
+        @media (min-width: 640px) {
+            .card-icon-wrap {
+                width: 42px;
+                height: 42px;
+                border-radius: 14px;
+            }
+        }
+
         .persona-card.selected .card-icon-wrap {
             background: var(--primary);
             color: #ffffff;
@@ -265,10 +334,22 @@
             line-height: 1.25;
         }
 
+        @media (min-width: 640px) {
+            .card-title {
+                font-size: 0.92rem;
+            }
+        }
+
         .card-desc {
             font-size: 0.72rem;
             color: var(--slate-600);
             line-height: 1.3;
+        }
+
+        @media (min-width: 640px) {
+            .card-desc {
+                font-size: 0.76rem;
+            }
         }
 
         .check-badge {
@@ -332,12 +413,26 @@
             display: block;
         }
 
-        /* Medsos Chips Grid */
+        /* Medsos Chips Grid - 2 col (mobile), 3 col (tablet), 6 col (desktop) */
         .chips-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .chips-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .chips-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 10px;
+            }
         }
 
         .chip-card {
@@ -351,6 +446,16 @@
             background: #ffffff;
             transition: all 0.2s ease;
             position: relative;
+        }
+
+        @media (min-width: 1024px) {
+            .chip-card {
+                flex-direction: column;
+                text-align: center;
+                justify-content: center;
+                padding: 14px 10px;
+                gap: 8px;
+            }
         }
 
         .chip-card:hover {
@@ -387,7 +492,7 @@
             right: 8px;
         }
 
-        /* Media Partner Cards */
+        /* Media Partner Cards - 1 col (mobile), 2 col (tablet/desktop) */
         .partner-list {
             display: flex;
             flex-direction: column;
@@ -396,6 +501,15 @@
             overflow-y: auto;
             padding-right: 4px;
             margin-bottom: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .partner-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                max-height: 300px;
+            }
         }
 
         .partner-card {
@@ -484,14 +598,14 @@
             background: #f8fafc;
             border: 1px dashed var(--slate-200);
             border-radius: 14px;
-            padding: 12px;
+            padding: 14px 16px;
         }
 
         .referral-box-header {
             font-size: 0.78rem;
             font-weight: 700;
             color: var(--slate-800);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -499,21 +613,23 @@
 
         .referral-input-wrap {
             display: flex;
-            gap: 6px;
+            gap: 8px;
+            max-width: 420px;
         }
 
         .referral-input {
             flex: 1;
-            padding: 10px 12px;
-            font-size: 0.82rem;
+            padding: 10px 14px;
+            font-size: 0.85rem;
             font-family: inherit;
-            border: 1px solid var(--slate-200);
+            border: 1.5px solid var(--slate-200);
             border-radius: 10px;
             background: #ffffff;
             color: var(--slate-900);
             outline: none;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .referral-input:focus {
@@ -521,11 +637,29 @@
             box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.15);
         }
 
-        /* Step 3: Goals Cards */
+        /* Step 3: Goals Cards - 1 col (mobile), 2 col (tablet/desktop) */
         .goal-cards-stack {
             display: flex;
             flex-direction: column;
             gap: 10px;
+        }
+
+        @media (min-width: 640px) {
+            .goal-cards-stack {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .goal-card-span-2 {
+                grid-column: span 2;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .goal-cards-stack {
+                gap: 14px;
+            }
         }
 
         .goal-card {
@@ -539,6 +673,13 @@
             background: #ffffff;
             transition: all 0.2s ease;
             position: relative;
+        }
+
+        @media (min-width: 640px) {
+            .goal-card {
+                padding: 16px 18px;
+                border-radius: 18px;
+            }
         }
 
         .goal-card:hover {
@@ -563,6 +704,14 @@
             color: var(--slate-800);
             flex-shrink: 0;
             transition: all 0.2s ease;
+        }
+
+        @media (min-width: 640px) {
+            .goal-icon-box {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+            }
         }
 
         .goal-card.selected .goal-icon-box {
@@ -590,6 +739,12 @@
             color: var(--slate-900);
         }
 
+        @media (min-width: 640px) {
+            .goal-title {
+                font-size: 0.96rem;
+            }
+        }
+
         .popular-pill {
             font-size: 0.65rem;
             font-weight: 800;
@@ -607,6 +762,12 @@
             line-height: 1.35;
         }
 
+        @media (min-width: 640px) {
+            .goal-desc {
+                font-size: 0.78rem;
+            }
+        }
+
         .goal-arrow {
             color: var(--slate-400);
             transition: transform 0.2s ease, color 0.2s ease;
@@ -621,39 +782,50 @@
         .wizard-footer {
             position: fixed;
             bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
             width: 100%;
-            max-width: 520px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-top: 1px solid var(--slate-200);
             padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 12px;
             z-index: 30;
         }
 
         @media (min-width: 640px) {
             .wizard-footer {
                 position: absolute;
+                bottom: 0;
+                left: 0;
+                transform: none;
+                width: 100%;
+                border-bottom-left-radius: 24px;
+                border-bottom-right-radius: 24px;
+                padding: 16px 28px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .wizard-footer {
                 border-bottom-left-radius: 28px;
                 border-bottom-right-radius: 28px;
+                padding: 18px 36px;
             }
         }
 
         .btn-ghost {
             background: transparent;
-            border: none;
+            border: 1px solid var(--slate-200);
             font-family: inherit;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--slate-600);
             cursor: pointer;
-            padding: 12px 14px;
+            padding: 12px 18px;
             border-radius: 12px;
             display: inline-flex;
             align-items: center;
@@ -664,24 +836,7 @@
         .btn-ghost:hover {
             background: #f1f5f9;
             color: var(--slate-900);
-        }
-
-        .btn-skip {
-            background: transparent;
-            border: none;
-            font-family: inherit;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--slate-400);
-            cursor: pointer;
-            padding: 8px 12px;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            transition: color 0.2s ease;
-        }
-
-        .btn-skip:hover {
-            color: var(--slate-600);
+            border-color: #cbd5e1;
         }
 
         .btn-primary-action {
@@ -690,9 +845,9 @@
             color: #ffffff;
             border: none;
             font-family: inherit;
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            padding: 12px 20px;
+            padding: 13px 24px;
             border-radius: 12px;
             cursor: pointer;
             display: flex;
@@ -701,6 +856,13 @@
             gap: 8px;
             box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
             transition: all 0.2s ease;
+        }
+
+        @media (min-width: 640px) {
+            .btn-primary-action {
+                max-width: 280px;
+                margin-left: auto;
+            }
         }
 
         .btn-primary-action:hover:not(:disabled) {
@@ -737,15 +899,13 @@
         <!-- Sticky Header with Progress Bar -->
         <header class="wizard-header">
             <div class="header-top">
-                <a href="{{ url('/') }}" class="brand-logo">
-                    <div class="brand-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>
-                    </div>
-                    <span class="brand-text">buyle<span>.id</span></span>
+                <a href="{{ url('/') }}" class="brand-logo" title="buyle.id">
+                    @php $navLogo = \App\Models\Setting::get('logo'); @endphp
+                    @if($navLogo)
+                        <img src="{{ asset('storage/' . $navLogo) }}" alt="buyle.id" class="brand-logo-img">
+                    @else
+                        <span class="brand-text">buyle<span>.id</span></span>
+                    @endif
                 </a>
                 <span class="step-pill" id="stepPill">Langkah 1 dari 3</span>
             </div>
@@ -1125,7 +1285,7 @@
                     </div>
 
                     <!-- Goal 5: Wedding Invitation -->
-                    <div class="goal-card" onclick="selectGoal('wedding', this)">
+                    <div class="goal-card goal-card-span-2" onclick="selectGoal('wedding', this)">
                         <div class="goal-icon-box">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -1151,12 +1311,6 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                 Kembali
             </button>
-
-            <!-- Skip Form (bisa skip kapan saja) -->
-            <form method="POST" action="{{ route('onboarding.skip') }}" style="display: inline-block;">
-                @csrf
-                <button type="submit" class="btn-skip" id="btnSkip">Lewati dulu</button>
-            </form>
 
             <button type="button" class="btn-primary-action" id="btnNext" onclick="nextStep()" disabled>
                 <span id="btnNextText">Lanjut</span>

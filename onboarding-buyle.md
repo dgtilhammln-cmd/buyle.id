@@ -208,15 +208,18 @@ Diperbarui pada 3 titik otentikasi pendaftaran baru:
 ## 5. Rincian Antarmuka & UX (`resources/views/auth/onboarding.blade.php`)
 
 ### Desain & Struktur Layout
-- **Container Mobile-First:** Lebar optimal maksimum `520px` di desktop dengan bayangan kartu halus dan latar belakang *ambient gradient*. Di perangkat ponsel, antarmuka otomatis memenuhi layar 100% (*viewport-fit=cover*).
-- **Sticky Header:** Menampilkan logo resmi buyle.id, pill langkah aktif (`Langkah X dari 3`), dan animasi *linear progress track* (33% $\rightarrow$ 66% $\rightarrow$ 100%).
+- **Responsif Adaptif (Mobile Portrait & Desktop Landscape):**
+  - **Mobile (< 640px):** Mode portrait ala Super App (lebar 100%, persona 2 kolom, touch target minimal 44px, anti-nabrak).
+  - **Tablet (640px s.d. 1023px):** Lebar kartu `760px`, persona 4 kolom, medsos 3 kolom, goals 2 kolom.
+  - **Desktop (>= 1024px):** Lebar kartu `940px` horizontal landscape leluasa, persona 4 kolom (2 baris x 4 kolom simetris), medsos 6 kolom (1 baris horizontal), dan goals 2 kolom proporsional.
+- **Header:** Menampilkan logo resmi dari navbar buyle.id (`\App\Models\Setting::get('logo')`), pill langkah aktif (`Langkah X dari 3`), dan animasi *linear progress track* (33% $\rightarrow$ 66% $\rightarrow$ 100%).
 - **Micro-Interactions:**
   - Pada **Langkah 1**, saat kartu persona ditekan, sistem memberikan jeda halus `250ms` sebelum otomatis maju ke **Langkah 2** (*auto-advance* ala Super App).
   - Pilihan yang aktif memiliki border tebal `#1eb349`, latar belakang hijau lembut `#f4fbf6`, bayangan elevasi, dan checkmark badge mengambang.
 - **Sticky Footer Bar:**
   - Tombol **Kembali** (*hidden* di Langkah 1, aktif di Langkah 2 & 3).
-  - Tombol **Lewati dulu** (form POST mandiri ke rute `onboarding.skip`).
   - Tombol **Lanjut / Mulai Sekarang** (otomatis *enabled* jika validasi langkah terpenuhi; menampilkan spinner loading saat AJAX berjalan).
+  - *Catatan:* Opsi "Lewati dulu" dinonaktifkan sehingga pengguna diarahkan untuk menyelesaikan orientasi profil secara terpadu.
 
 ### Peta Tujuan (*Auto-Direct Mapping*)
 

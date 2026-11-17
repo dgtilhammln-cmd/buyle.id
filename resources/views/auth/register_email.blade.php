@@ -1,4 +1,4 @@
-﻿@extends('auth.layout')
+@extends('auth.layout')
 
 @section('title', 'Daftar via Email - buyle.id')
 

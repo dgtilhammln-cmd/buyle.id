@@ -647,28 +647,29 @@
             @endphp
             <div class="t5-footer-credit">
                 &copy; {{ date('Y') }}. All Rights Reserved. Powered by <a href="{{ $t5ReferralUrl }}" target="_blank"
-                    rel="noopener" onclick="trackBuyleBadge('{{ $referralParamT5 }}')">buyle.id</a> x <a href="https://hvm-digital.id" target="_blank" rel="noopener">HVM
+                    rel="noopener" onclick="trackBuyleBadge('{{ $referralParamT5 }}')">buyle.id</a> x <a
+                    href="https://hvm-digital.id" target="_blank" rel="noopener">HVM
                     Digital</a>
             </div>
             <script>
-            function trackBuyleBadge(ref) {
-                try {
-                    if (ref) {
-                        document.cookie = "buyle_referral=" + encodeURIComponent(ref) + "; path=/; max-age=" + (30 * 86400) + "; SameSite=Lax";
-                        localStorage.setItem('buyle_referral', ref);
-                        sessionStorage.setItem('buyle_referral', ref);
-                    }
-                } catch (e) {}
-            }
-            (function() {
-                try {
-                    var bioRef = "{{ $referralParamT5 }}";
-                    if (bioRef) {
-                        document.cookie = "buyle_referral=" + encodeURIComponent(bioRef) + "; path=/; max-age=" + (30 * 86400) + "; SameSite=Lax";
-                        localStorage.setItem('buyle_referral', bioRef);
-                    }
-                } catch (e) {}
-            })();
+                function trackBuyleBadge(ref) {
+                    try {
+                        if (ref) {
+                            document.cookie = "buyle_referral=" + encodeURIComponent(ref) + "; path=/; max-age=" + (30 * 86400) + "; SameSite=Lax";
+                            localStorage.setItem('buyle_referral', ref);
+                            sessionStorage.setItem('buyle_referral', ref);
+                        }
+                    } catch (e) { }
+                }
+                (function () {
+                    try {
+                        var bioRef = "{{ $referralParamT5 }}";
+                        if (bioRef) {
+                            document.cookie = "buyle_referral=" + encodeURIComponent(bioRef) + "; path=/; max-age=" + (30 * 86400) + "; SameSite=Lax";
+                            localStorage.setItem('buyle_referral', bioRef);
+                        }
+                    } catch (e) { }
+                })();
             </script>
 
             {{-- Bottom Right: Social Icons --}}
