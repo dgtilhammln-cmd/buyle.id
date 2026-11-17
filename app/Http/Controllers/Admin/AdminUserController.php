@@ -30,6 +30,9 @@ class AdminUserController extends Controller
                         ->orWhere('phone', 'like', "%{$q}%")
                         ->orWhere('username', 'like', "%{$q}%")
                         ->orWhere('nik', 'like', "%{$q}%")
+                        ->orWhere('bank_name', 'like', "%{$q}%")
+                        ->orWhere('bank_account_number', 'like', "%{$q}%")
+                        ->orWhere('bank_account_name', 'like', "%{$q}%")
                         ->orWhere('referral_source_name', 'like', "%{$q}%")
                         ->orWhere('media_partner_name', 'like', "%{$q}%");
                 });

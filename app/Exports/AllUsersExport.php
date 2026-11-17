@@ -31,6 +31,9 @@ class AllUsersExport implements FromArray, WithHeadings, ShouldAutoSize, WithSty
             'Username',
             'Email',
             'No. WhatsApp',
+            'Nama Bank / E-Wallet',
+            'Nomor Rekening',
+            'Atas Nama Rekening',
             'NIK / Identitas',
             'Status Akun',
             'Role',
@@ -61,7 +64,10 @@ class AllUsersExport implements FromArray, WithHeadings, ShouldAutoSize, WithSty
                         ->orWhere('email', 'like', "%{$q}%")
                         ->orWhere('phone', 'like', "%{$q}%")
                         ->orWhere('username', 'like', "%{$q}%")
-                        ->orWhere('nik', 'like', "%{$q}%");
+                        ->orWhere('nik', 'like', "%{$q}%")
+                        ->orWhere('bank_name', 'like', "%{$q}%")
+                        ->orWhere('bank_account_number', 'like', "%{$q}%")
+                        ->orWhere('bank_account_name', 'like', "%{$q}%");
                 });
             })
             ->with(['referrer', 'ticketPasses', 'orders'])
@@ -136,6 +142,9 @@ class AllUsersExport implements FromArray, WithHeadings, ShouldAutoSize, WithSty
                 $user->username ? '@' . $user->username : '-',
                 $user->email,
                 $user->phone ? "'" . $user->phone : '-',
+                $user->bank_name ?: '-',
+                $user->bank_account_number ? "'" . $user->bank_account_number : '-',
+                $user->bank_account_name ?: '-',
                 $nik !== '-' ? "'" . $nik : '-',
                 ($user->is_active ?? true) ? 'Aktif' : 'Nonaktif',
                 ucfirst($user->role ?? 'Buyer'),

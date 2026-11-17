@@ -144,6 +144,57 @@
       @endforeach
     </div>
 
+    {{-- Rekening Bank & E-Wallet --}}
+    <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <h3 style="font-size:.875rem;font-weight:700;color:#1E293B;margin:0;display:flex;align-items:center;gap:6px;">
+          <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Rekening Bank / E-Wallet
+        </h3>
+        @if($user->bank_name || $user->bank_account_number)
+          <span style="font-size:0.65rem;font-weight:700;color:#16A34A;background:#DCFCE7;padding:2px 8px;border-radius:99px;">
+            Terdaftar
+          </span>
+        @else
+          <span style="font-size:0.65rem;font-weight:700;color:#94A3B8;background:#F1F5F9;padding:2px 8px;border-radius:99px;">
+            Belum Ada
+          </span>
+        @endif
+      </div>
+
+      @if($user->bank_name || $user->bank_account_number)
+        <div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:14px;padding:1rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+            <span style="font-size:0.78rem;font-weight:800;color:#0F172A;font-family:'Montserrat',sans-serif;">
+              {{ $user->bank_name ?: 'Bank / E-Wallet' }}
+            </span>
+            <span style="font-size:0.62rem;font-weight:700;padding:2px 6px;border-radius:4px;background:{{ preg_match('/(gopay|ovo|dana|shopeepay|linkaja|spay)/i', $user->bank_name ?? '') ? '#EFF6FF' : '#E2E8F0' }};color:{{ preg_match('/(gopay|ovo|dana|shopeepay|linkaja|spay)/i', $user->bank_name ?? '') ? '#1D4ED8' : '#334155' }};">
+              {{ preg_match('/(gopay|ovo|dana|shopeepay|linkaja|spay)/i', $user->bank_name ?? '') ? 'E-WALLET' : 'BANK TRANSFER' }}
+            </span>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid #CBD5E1;border-radius:8px;padding:0.5rem 0.75rem;margin-bottom:0.5rem;">
+            <span style="font-family:monospace;font-size:0.95rem;font-weight:800;color:#0F172A;letter-spacing:0.04em;">
+              {{ $user->bank_account_number ?: '-' }}
+            </span>
+            @if($user->bank_account_number)
+            <button type="button" onclick="navigator.clipboard.writeText('{{ $user->bank_account_number }}');alert('Nomor rekening disalin: {{ $user->bank_account_number }}');" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;padding:3px 8px;font-size:0.68rem;font-weight:700;cursor:pointer;">
+              Salin
+            </button>
+            @endif
+          </div>
+
+          <div style="font-size:0.72rem;color:#64748B;">
+            Atas Nama: <strong style="color:#0F172A;">{{ $user->bank_account_name ?: ($user->name ?: '-') }}</strong>
+          </div>
+        </div>
+      @else
+        <div style="text-align:center;padding:1.5rem;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:12px;color:#94A3B8;font-size:0.75rem;">
+          Pengguna ini belum mendaftarkan nomor rekening bank atau e-wallet untuk pencairan dana.
+        </div>
+      @endif
+    </div>
+
     {{-- Aksi Cepat --}}
     <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
       <h3 style="font-size:.875rem;font-weight:700;color:#1E293B;margin:0 0 1rem;">Aksi Cepat</h3>

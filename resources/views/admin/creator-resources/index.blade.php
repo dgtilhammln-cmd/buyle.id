@@ -633,11 +633,11 @@
 
             {{-- View Mode Switcher (Table vs Grid) --}}
             <div style="display:flex; gap:0.25rem; background:#F1F5F9; padding:0.2rem; border-radius:12px;">
-                <button type="button" id="btnViewTable" onclick="switchViewMode('table')" class="view-switch-btn active" title="Tampilan Tabel Data">
+                <button type="button" id="btnViewTable" onclick="switchViewMode('table')" class="view-switch-btn" title="Tampilan Tabel Data">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                     Tabel
                 </button>
-                <button type="button" id="btnViewGrid" onclick="switchViewMode('grid')" class="view-switch-btn" title="Tampilan Grid Card Creator">
+                <button type="button" id="btnViewGrid" onclick="switchViewMode('grid')" class="view-switch-btn active" title="Tampilan Grid Card Creator">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     Grid Cards
                 </button>
@@ -646,7 +646,7 @@
     </form>
 
     {{-- VIEW MODE 1: Table View --}}
-    <div id="viewContainerTable" class="res-table-card">
+    <div id="viewContainerTable" class="res-table-card" style="display:none;">
         <table class="res-table">
             <thead>
                 <tr>
@@ -838,8 +838,8 @@
         </table>
     </div>
 
-    {{-- VIEW MODE 2: Grid Cards View --    {{-- VIEW MODE 2: Compact Overview Grid Cards View --}}
-    <div id="viewContainerGrid" class="res-creators-grid" style="display:none;">
+    {{-- VIEW MODE 2: Grid Cards View --}}
+    <div id="viewContainerGrid" class="res-creators-grid" style="display:grid;">
         @forelse($creatorResources as $item)
             @php
                 $user = $item['user'];
@@ -1137,18 +1137,29 @@ function closeDomainSopModal() {
 }
 
 function switchViewMode(mode) {
-    if (mode === 'grid') {
-        document.getElementById('viewContainerTable').style.display = 'none';
-        document.getElementById('viewContainerGrid').style.display = 'grid';
-        document.getElementById('btnViewGrid').classList.add('active');
-        document.getElementById('btnViewTable').classList.remove('active');
-    } else {
+    try { localStorage.setItem('admin_creator_resources_view', mode); } catch(e){}
+    if (mode === 'table') {
         document.getElementById('viewContainerGrid').style.display = 'none';
         document.getElementById('viewContainerTable').style.display = 'block';
         document.getElementById('btnViewTable').classList.add('active');
         document.getElementById('btnViewGrid').classList.remove('active');
+    } else {
+        document.getElementById('viewContainerTable').style.display = 'none';
+        document.getElementById('viewContainerGrid').style.display = 'grid';
+        document.getElementById('btnViewGrid').classList.add('active');
+        document.getElementById('btnViewTable').classList.remove('active');
     }
 }
+(function(){
+    try {
+        const saved = localStorage.getItem('admin_creator_resources_view');
+        if (saved === 'table') {
+            switchViewMode('table');
+        } else {
+            switchViewMode('grid');
+        }
+    } catch(e){}
+})();
 
 function openGhostModal() {
     document.getElementById('ghostModal').style.display = 'flex';

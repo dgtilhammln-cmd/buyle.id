@@ -205,6 +205,8 @@
 /* Grid vs List Meta Row */
 .u-grid:not(.list-mode) .u-email-row { display: none; }
 .u-grid:not(.list-mode) .u-card-body { width: 100%; }
+.u-grid.list-mode .u-bank-box,
+.u-grid.list-mode .u-bank-box-empty { display: none; }
 
 /* Empty state */
 .u-empty {
@@ -361,6 +363,33 @@
           @endif
         </div>
 
+        {{-- Info Rekening Bank / E-Wallet (Grid Mode) --}}
+        @if($u->bank_name || $u->bank_account_number)
+          <div class="u-bank-box" style="margin-top:0.6rem;padding:0.45rem 0.65rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;width:100%;text-align:left;box-sizing:border-box;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:2px;">
+              <span style="font-size:0.7rem;font-weight:800;color:#0F172A;font-family:'Montserrat',sans-serif;display:inline-flex;align-items:center;gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                {{ $u->bank_name ?: 'Bank / E-Wallet' }}
+              </span>
+              <span style="font-size:0.6rem;font-weight:700;padding:1px 5px;border-radius:4px;background:{{ preg_match('/(gopay|ovo|dana|shopeepay|linkaja|spay)/i', $u->bank_name ?? '') ? '#EFF6FF' : '#F1F5F9' }};color:{{ preg_match('/(gopay|ovo|dana|shopeepay|linkaja|spay)/i', $u->bank_name ?? '') ? '#1D4ED8' : '#475569' }};">
+                {{ preg_match('/(gopay|ovo|dana|shopeepay|linkaja|spay)/i', $u->bank_name ?? '') ? 'E-WALLET' : 'REKENING' }}
+              </span>
+            </div>
+            <div style="font-family:monospace;font-size:0.76rem;font-weight:700;color:#1E293B;letter-spacing:0.02em;">
+              {{ $u->bank_account_number ?: '-' }}
+            </div>
+            @if($u->bank_account_name)
+              <div style="font-size:0.65rem;color:#64748B;font-weight:600;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="Atas Nama: {{ $u->bank_account_name }}">
+                a/n {{ $u->bank_account_name }}
+              </div>
+            @endif
+          </div>
+        @else
+          <div class="u-bank-box-empty" style="margin-top:0.5rem;padding:0.35rem 0.5rem;background:#FAFAFA;border:1px dashed #E2E8F0;border-radius:10px;width:100%;font-size:0.67rem;color:#94A3B8;text-align:center;box-sizing:border-box;">
+            Belum ada rekening
+          </div>
+        @endif
+
         {{-- Meta row: only shows in list mode --}}
         <div class="u-email-row">
           <span class="u-meta-item">
@@ -371,6 +400,20 @@
           <span class="u-meta-item">
             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 10.9 19.79 19.79 0 0 1 1.27 2.3 2 2 0 0 1 3.23 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 7.91a16 16 0 0 0 6 6z"/></svg>
             {{ $u->phone }}
+          </span>
+          @endif
+          @if($u->bank_name || $u->bank_account_number)
+          <span class="u-meta-item" style="color:#0F172A;font-weight:700;background:#F8FAFC;padding:2px 8px;border-radius:6px;border:1px solid #E2E8F0;" title="Rekening Terdaftar: {{ $u->bank_name }} - {{ $u->bank_account_number }} (a/n {{ $u->bank_account_name }})">
+            <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            {{ $u->bank_name ?: 'Bank' }}: <span style="font-family:monospace;color:#16a34a;margin-left:3px;">{{ $u->bank_account_number }}</span>
+            @if($u->bank_account_name)
+              <span style="font-size:0.65rem;color:#64748B;font-weight:500;margin-left:4px;">(a/n {{ $u->bank_account_name }})</span>
+            @endif
+          </span>
+          @else
+          <span class="u-meta-item" style="color:#CBD5E1;">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            Rekening: Belum Ada
           </span>
           @endif
           @if($u->referral_source_name || $u->media_partner_name)

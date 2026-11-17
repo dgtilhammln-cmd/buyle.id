@@ -229,31 +229,71 @@
 .pw-bank {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
-    min-width: 170px;
+    gap: 0.25rem;
+    min-width: 190px;
+}
+.pw-bank-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    width: fit-content;
+}
+.pw-bank-badge.bank {
+    background: #F1F5F9;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+}
+.pw-bank-badge.ewallet {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+.pw-bank-badge.pos {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
 }
 .pw-bank-name {
-    font-weight: 700;
-    color: #334155;
-    font-size: 0.82rem;
+    font-weight: 800;
+    color: #0F172A;
+    font-size: 0.84rem;
+}
+.pw-bank-num-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
 }
 .pw-bank-num {
-    font-size: 0.78rem;
-    color: #64748B;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #0F172A;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    font-family: monospace;
+    background: #F8FAFC;
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #E2E8F0;
 }
 .pw-bank-holder {
-    font-size: 0.7rem;
-    color: #94A3B8;
+    font-size: 0.72rem;
+    color: #64748B;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 .btn-copy {
-    border: none;
-    background: #F1F5F9;
-    color: #475569;
+    border: 1px solid #CBD5E1;
+    background: #ffffff;
+    color: #334155;
     border-radius: 6px;
-    padding: 0.25rem 0.5rem;
+    padding: 0.2rem 0.5rem;
     font-size: 0.65rem;
     font-weight: 700;
     cursor: pointer;
@@ -261,12 +301,12 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    margin-top: 0.25rem;
     font-family: 'Montserrat', sans-serif;
 }
 .btn-copy:hover {
-    background: #E2E8F0;
-    color: #1eb349;
+    background: #F8FAFC;
+    color: #16a34a;
+    border-color: #86EFAC;
 }
 .btn-copy.copied {
     background: #dcfce7;
@@ -712,7 +752,17 @@
                         $storeSlug = $profile?->store_slug;
                         $ownerName = $req->seller?->name ?? 'User';
                         $ownerEmail = $req->seller?->email ?? '';
+                        $ownerPhone = $req->seller?->phone ?? '';
                         $approvalDate = $req->approved_at ?? $req->processed_at;
+
+                        // Bank / E-Wallet Info Resolution with fallbacks
+                        $bankName = $req->bank_name ?: ($req->seller?->bank_name ?: 'Bank Transfer');
+                        $accNumber = $req->bank_account_number ?: ($req->seller?->bank_account_number ?: '-');
+                        $accHolder = $req->bank_account_name ?: ($req->seller?->bank_account_name ?: $ownerName);
+                        
+                        // Type classification
+                        $isPosInternal = str_contains($bankName, 'Deposit Kasir POS');
+                        $isEwallet = !$isPosInternal && (bool) preg_match('/(gopay|ovo|dana|shopeepay|linkaja|spay)/i', $bankName);
                     @endphp
                     <tr>
                         <td style="white-space:nowrap; color:#64748B; font-size:0.78rem;">
@@ -749,9 +799,12 @@
                                         </div>
                                     @endif
                                     <div class="pw-creator-sub" style="margin-top:3px;">
-                                        <span style="color:#475569;font-weight:600;">{{ $ownerName }}</span>
+                                        <span style="color:#0F172A;font-weight:700;">{{ $ownerName }}</span>
                                         @if($ownerEmail)
                                             &bull; <a href="{{ route('admin.users.show', $req->seller_id) }}" target="_blank" style="color:#64748B;text-decoration:underline;" title="Buka Profil User">{{ $ownerEmail }}</a>
+                                        @endif
+                                        @if($ownerPhone)
+                                            &bull; <span style="color:#475569;">{{ $ownerPhone }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -759,15 +812,33 @@
                         </td>
                         <td>
                             <div class="pw-bank">
-                                <div class="pw-bank-name">{{ $req->bank_name }}</div>
-                                <div class="pw-bank-num">{{ $req->bank_account_number }}</div>
-                                <div class="pw-bank-holder">a/n {{ $req->bank_account_name }}</div>
-                                @if($req->status === 'pending')
-                                <button class="btn-copy" onclick="copyAccountNum(this, '{{ $req->bank_account_number }}')">
-                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                    Salin Nomor
-                                </button>
-                                @endif
+                                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                    <span class="pw-bank-badge {{ $isPosInternal ? 'pos' : ($isEwallet ? 'ewallet' : 'bank') }}">
+                                        @if($isPosInternal)
+                                            INTERNAL POS
+                                        @elseif($isEwallet)
+                                            E-WALLET
+                                        @else
+                                            BANK TRANSFER
+                                        @endif
+                                    </span>
+                                    <span class="pw-bank-name">{{ $bankName }}</span>
+                                </div>
+                                
+                                <div class="pw-bank-num-row">
+                                    <span class="pw-bank-num">{{ $accNumber }}</span>
+                                    @if($accNumber && $accNumber !== '-')
+                                    <button type="button" class="btn-copy" onclick="copyAccountNum(this, '{{ $accNumber }}')" title="Salin nomor rekening">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                        Salin
+                                    </button>
+                                    @endif
+                                </div>
+
+                                <div class="pw-bank-holder">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    <span>a/n <strong>{{ $accHolder }}</strong></span>
+                                </div>
                             </div>
                         </td>
                         <td>
@@ -817,11 +888,11 @@
                         <td style="text-align:right">
                             @if($req->status === 'pending')
                             <div class="pw-actions" style="justify-content:flex-end">
-                                <button class="btn-acc" onclick="openAccModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}', '{{ $req->bank_name }} - {{ $req->bank_account_number }}', '{{ $req->bank_account_name }}', '{{ addslashes($storeName) }}')">
+                                <button class="btn-acc" onclick="openAccModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}', '{{ addslashes($bankName) }} &bull; {{ addslashes($accNumber) }}', '{{ addslashes($accHolder) }}', '{{ addslashes($storeName . ' (' . $ownerName . ')') }}')">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                     ACC
                                 </button>
-                                <button class="btn-reject" onclick="openRejectModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}', '{{ addslashes($storeName) }}')">
+                                <button class="btn-reject" onclick="openRejectModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}', '{{ addslashes($storeName . ' (' . $ownerName . ')') }}')">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                                     Tolak
                                 </button>
@@ -975,15 +1046,15 @@ function openAccModal(id, netAmount, bank, holder, storeName) {
     document.getElementById('accInfo').innerHTML = `
         <div class="pw-modal-info-row">
             <span class="pw-modal-info-key">Creator</span>
-            <span class="pw-modal-info-val">${storeName}</span>
+            <span class="pw-modal-info-val" style="font-weight:700;">${storeName}</span>
         </div>
         <div class="pw-modal-info-row">
-            <span class="pw-modal-info-key">Rekening Tujuan</span>
-            <span class="pw-modal-info-val">${bank}</span>
+            <span class="pw-modal-info-key">Bank / Rekening</span>
+            <span class="pw-modal-info-val" style="font-weight:800;color:#0F172A;font-family:monospace;">${bank}</span>
         </div>
         <div class="pw-modal-info-row">
-            <span class="pw-modal-info-key">Atas Nama</span>
-            <span class="pw-modal-info-val">${holder}</span>
+            <span class="pw-modal-info-key">Atas Nama (a/n)</span>
+            <span class="pw-modal-info-val" style="font-weight:700;">${holder}</span>
         </div>
         <div class="pw-modal-info-row" style="border-top:1px dashed #E2E8F0; padding-top:0.5rem; margin-top:0.3rem;">
             <span class="pw-modal-info-key" style="font-weight:800;color:#0F172A;">Total Transfer (100% Utuh)</span>
