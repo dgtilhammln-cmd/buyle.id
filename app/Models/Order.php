@@ -154,16 +154,29 @@ class Order extends Model
     // =========================================================================
 
     /**
-     * Generate nomor order unik.
-     * Format: BYL-YYYYMMDD-XXXX (misal: BYL-20260713-0001)
+     * Generate nomor order unik berstandar 4 pilar bisnis:
+     * - MKT : Marketplace & Produk Fisik/Digital
+     * - TIX : Ticketing & Event
+     * - POS : Kasir POS & Dine-in
+     * - WED : Paket Sewa Undangan Digital
+     * - AMP : Amplop Digital Kado Pernikahan
+     * - DOM : Domain Creator
+     *
+     * Format: TYPE-YYYYMMDD-XXXX (contoh: MKT-20261117-0001, TIX-20261117-0001)
      */
-    public static function generateOrderNumber(): string
+    public static function generateOrderNumber(string $type = 'MKT'): string
     {
-        $date   = now()->format('Ymd');
-        $prefix = "BYL-{$date}-";
+        $type = strtoupper(trim($type));
+        if (!in_array($type, ['MKT', 'TIX', 'POS', 'WED', 'AMP', 'DOM'])) {
+            $type = 'MKT';
+        }
 
-        $lastOrder = static::where(function($q) use ($prefix, $date) {
+        $date   = now()->format('Ymd');
+        $prefix = "{$type}-{$date}-";
+
+        $lastOrder = static::where(function($q) use ($prefix, $type, $date) {
                 $q->where('order_number', 'like', $prefix . '%')
+                  ->orWhere('order_number', 'like', "BYL-{$date}-%")
                   ->orWhere('order_number', 'like', "ORD-{$date}-%");
             })
             ->orderByDesc('id')

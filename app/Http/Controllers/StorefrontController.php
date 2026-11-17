@@ -303,7 +303,7 @@ class StorefrontController extends Controller
 
             // Create Order
             $order = Order::create([
-                'order_number'    => Order::generateOrderNumber(),
+                'order_number'    => Order::generateOrderNumber('POS'),
                 'user_id'         => $seller->id,
                 'status'          => OrderStatus::Pending,
                 'subtotal'        => $subtotal,

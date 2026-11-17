@@ -525,7 +525,7 @@ class PosController extends Controller
 
             // Create Order
             $order = Order::create([
-                'order_number'    => Order::generateOrderNumber(),
+                'order_number'    => Order::generateOrderNumber('POS'),
                 'user_id'         => $seller->id,
                 'cashier_id'      => $cashierId,
                 'cashier_name'    => $cashierName,

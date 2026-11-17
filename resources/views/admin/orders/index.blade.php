@@ -1,16 +1,16 @@
 @extends('layouts.admin')
-@section('title', 'Manajemen Pesanan')
-@section('page-title', 'Manajemen Pesanan')
+@section('title', 'Manajemen Transaksi')
+@section('page-title', 'Manajemen Transaksi')
 @section('content')
 
 <style>
-    /* ── Minimalist Orders Page System ── */
-    .opage {
+    .trx-page {
         font-family: 'Montserrat', sans-serif;
+        color: #0F172A;
     }
 
     /* Page Header */
-    .opage-head {
+    .trx-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -18,654 +18,376 @@
         margin-bottom: 1.25rem;
         flex-wrap: wrap;
     }
-
-    .opage-title {
+    .trx-title {
         font-size: 1.35rem;
         font-weight: 700;
         color: #0F172A;
-        letter-spacing: -.02em;
-        margin: 0 0 .2rem;
+        margin: 0 0 0.2rem;
     }
-
-    .opage-sub {
-        font-size: .8125rem;
+    .trx-subtitle {
+        font-size: 0.8125rem;
         color: #64748B;
         margin: 0;
-        font-weight: 500;
     }
 
-    /* Period Filter Pills & Inputs */
-    .filter-btn {
-        padding: 0.35rem 0.85rem;
+    /* Filter Toolbar */
+    .trx-period-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+    .trx-btn-filter {
+        padding: 0.38rem 0.85rem;
         font-size: 0.775rem;
         font-weight: 600;
         border-radius: 50px;
         border: 1px solid #E2E8F0;
-        background: #fff;
-        color: #64748B;
-        cursor: pointer;
-        text-decoration: none;
-        transition: all 0.15s;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-    }
-    .filter-btn:hover, .filter-btn.active {
-        background: #f0fdf4;
-        border-color: #10B981;
-        color: #15803D;
-    }
-
-    /* 5 Stat Cards in 1 Row */
-    .stat-5-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0.85rem;
-        margin-bottom: 1.25rem;
-    }
-    @media (max-width: 1200px) {
-        .stat-5-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 768px) {
-        .stat-5-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-        .stat-5-grid { grid-template-columns: 1fr; }
-    }
-
-    .dash-card-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-
-    .dash-card {
         background: #FFFFFF;
-        border-radius: 12px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        padding: 1rem;
+        color: #64748B;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
         transition: all 0.15s ease;
-        height: 100%;
     }
-    .dash-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-color: #CBD5E1;
-        transform: translateY(-1px);
-    }
-    .dash-card.card-active {
-        border-color: #10B981;
-        background: #F0FDF4;
-        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
-    }
-
-    /* Tabs Header */
-    .o-tabs-wrap {
-        display: flex;
-        gap: .4rem;
-        overflow-x: auto;
-        margin-bottom: 1rem;
-        padding-bottom: .25rem;
-    }
-
-    .o-tab {
-        padding: .4rem 0.9rem;
-        font-size: .775rem;
-        font-weight: 600;
-        color: #64748B;
-        background: #fff;
-        border: 1px solid #E2E8F0;
-        border-radius: 99px;
-        text-decoration: none;
-        white-space: nowrap;
-        transition: all .15s;
-        display: flex;
-        align-items: center;
-        gap: .4rem;
-    }
-
-    .o-tab:hover {
-        background: #F8FAFC;
+    .trx-btn-filter:hover {
         border-color: #CBD5E1;
         color: #0F172A;
     }
-
-    .o-tab.active {
-        background: #F0FDF4;
-        border-color: #BBF7D0;
-        color: #15803D;
-    }
-
-    .o-tab-count {
-        background: #F1F5F9;
-        color: #64748B;
-        padding: 2px 7px;
-        border-radius: 20px;
-        font-size: .7rem;
-        transition: all .15s;
-    }
-
-    .o-tab.active .o-tab-count {
-        background: #10B981;
-        color: #fff;
-    }
-
-    /* Search & Filter Bar */
-    .o-filter-bar {
-        display: flex;
-        gap: .65rem;
-        align-items: center;
-        margin-bottom: 1.25rem;
-        flex-wrap: wrap;
-        background: #fff;
-        padding: 0.65rem 0.85rem;
-        border-radius: 10px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-    }
-
-    .o-search-input {
-        flex: 1;
-        min-width: 220px;
-        padding: .45rem .75rem;
-        border: 1px solid #CBD5E1;
-        border-radius: 8px;
-        font-size: .8125rem;
-        outline: none;
-        font-family: inherit;
-        background: #F8FAFC;
-        transition: all .15s;
-        color: #0F172A;
-    }
-
-    .o-search-input:focus {
-        border-color: #10B981;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
-    }
-
-    .o-btn-submit {
+    .trx-btn-filter.active {
         background: #0F172A;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: .45rem 0.95rem;
-        font-size: .775rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all .15s;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-    }
-
-    .o-btn-submit:hover {
-        background: #1E293B;
-    }
-
-    .o-btn-reset {
-        background: #F1F5F9;
-        color: #475569;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: .45rem 0.85rem;
-        font-size: .775rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all .15s;
-    }
-    .o-btn-reset:hover {
-        background: #E2E8F0;
-    }
-
-    /* View Toggle */
-    .view-toggle-wrap {
-        display: flex;
-        gap: 4px;
-        background: #F1F5F9;
-        padding: 3px;
-        border-radius: 8px;
-    }
-    .view-toggle-btn {
-        background: none;
-        border: none;
-        padding: 5px 8px;
-        border-radius: 6px;
-        color: #64748B;
-        cursor: pointer;
-        transition: all 0.15s;
-    }
-    .view-toggle-btn.active {
-        background: #fff;
-        color: #0F172A;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    /* Minimalist Order Cards */
-    .o-card {
-        background: #fff;
-        border-radius: 12px;
-        border: 1px solid #E2E8F0;
-        margin-bottom: 0.85rem;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-        transition: all .15s;
-    }
-
-    .o-card:hover {
-        border-color: #CBD5E1;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-    }
-
-    .o-card-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #F1F5F9;
-        background: #FAFBFA;
-        font-size: 0.8125rem;
-    }
-
-    .o-card-user {
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        font-weight: 600;
-        color: #0F172A;
-    }
-
-    .o-card-ordernum {
-        font-size: .725rem;
-        font-weight: 700;
-        padding: .2rem .55rem;
-        background: #F1F5F9;
-        color: #475569;
-        border-radius: 6px;
-    }
-
-    .o-card-body {
-        padding: 0.85rem 1rem;
-        display: grid;
-        grid-template-columns: 2.2fr 1.4fr 1.2fr auto;
-        gap: 1rem;
-        align-items: center;
-    }
-    @media (max-width: 992px) {
-        .o-card-body {
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-        }
-    }
-
-    .o-item-col {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .o-item-img {
-        width: 44px;
-        height: 44px;
-        border-radius: 8px;
-        object-fit: cover;
-        border: 1px solid #E2E8F0;
-        flex-shrink: 0;
-    }
-
-    .o-item-title {
-        font-size: 0.8125rem;
-        font-weight: 600;
-        color: #0F172A;
-        line-height: 1.3;
-    }
-
-    .o-col-title {
-        font-size: 0.7rem;
-        color: #64748B;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
-        margin-bottom: 0.2rem;
-    }
-
-    .o-total-price {
-        font-size: 0.875rem;
-        font-weight: 700;
-        color: #0F172A;
-    }
-
-    .o-btn-action {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0.45rem 0.85rem;
-        font-size: 0.775rem;
-        font-weight: 600;
-        color: #0F172A;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: all 0.15s;
-    }
-    .o-btn-action:hover {
-        background: #0F172A;
-        color: #fff;
         border-color: #0F172A;
+        color: #FFFFFF;
+    }
+    .trx-btn-download {
+        background: #1eb349;
+        border-color: #1eb349;
+        color: #FFFFFF;
+        cursor: pointer;
+    }
+    .trx-btn-download:hover {
+        background: #16933c;
+        border-color: #16933c;
+        color: #FFFFFF;
     }
 
-    /* Grid Layout for Orders */
-    .o-grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 0.85rem;
-    }
-    @media (max-width: 1400px) { .o-grid { grid-template-columns: repeat(4, 1fr); } }
-    @media (max-width: 1024px) { .o-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 768px)  { .o-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px)  { .o-grid { grid-template-columns: 1fr; } }
-
-    .o-gcard {
-        background: #fff;
-        border-radius: 10px;
-        border: 1px solid #E2E8F0;
-        padding: 0.85rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: all 0.15s;
-    }
-    .o-gcard:hover {
-        border-color: #CBD5E1;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    }
-    .o-gcard-img {
-        width: 100%;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid #F1F5F9;
-        margin-bottom: 0.65rem;
-    }
-    .o-gcard-body {
-        flex: 1;
-        margin-bottom: 0.65rem;
-    }
-    .o-gcard-order {
-        font-size: 0.7rem;
-        color: #64748B;
-        font-weight: 600;
-    }
-    .o-gcard-name {
-        font-size: 0.8125rem;
-        font-weight: 600;
-        color: #0F172A;
-        line-height: 1.3;
-        margin: 0.15rem 0;
-    }
-    .o-gcard-email {
-        font-size: 0.725rem;
-        color: #64748B;
-    }
-    .o-gcard-price {
-        font-size: 0.8375rem;
-        font-weight: 700;
-        color: #0F172A;
-        margin-top: 0.35rem;
-    }
-    .o-gcard-foot {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 0.5rem;
-        border-top: 1px solid #F1F5F9;
-    }
-
-    /* Omset / Financial Table View */
-    .sync-payout-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-    }
-    @media (max-width: 1024px) {
-        .sync-payout-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-        .sync-payout-grid { grid-template-columns: 1fr; }
-    }
-
-    .omset-summary-grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-    }
-    @media (max-width: 1200px) { .sync-payout-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-    }
-    @media (max-width: 1024px) {
-        .sync-payout-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-        .sync-payout-grid { grid-template-columns: 1fr; }
-    }
-
-    .omset-summary-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 640px) { .sync-payout-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-    }
-    @media (max-width: 1024px) {
-        .sync-payout-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-        .sync-payout-grid { grid-template-columns: 1fr; }
-    }
-
-    .omset-summary-grid { grid-template-columns: repeat(2, 1fr); } }
-
-    .omset-sum-box {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 0.75rem 0.9rem;
-    }
-    .omset-sum-lbl {
-        font-size: 0.6875rem;
-        color: #64748B;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
-    }
-    .omset-sum-val {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #0F172A;
-        margin-top: 0.18rem;
-    }
-
-    /* Omset 3-Source Breakdown Cards */
-    .omset-breakdown-grid {
+    /* 3 Top KPI Cards */
+    .trx-kpi-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.75rem;
-        margin-bottom: 1rem;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
     @media (max-width: 900px) {
-        .omset-breakdown-grid {
+        .trx-kpi-grid {
             grid-template-columns: 1fr;
         }
     }
-
-    .omset-bcard {
+    .trx-kpi-card {
         background: #FFFFFF;
         border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 0.85rem 1rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        border-radius: 14px;
+        padding: 1.15rem 1.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     }
-    .omset-bcard-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.35rem;
+    .trx-kpi-card.profit-card {
+        background: #F0FDF4;
+        border-color: #BBF7D0;
     }
-    .omset-bcard-title {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #334155;
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
-    }
-    .omset-bcard-profit {
+    .trx-kpi-label {
         font-size: 0.725rem;
         font-weight: 700;
-        color: #15803D;
-        background: #F0FDF4;
-        border: 1px solid #BBF7D0;
-        padding: 2px 7px;
-        border-radius: 6px;
+        color: #64748B;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 0.25rem;
     }
-    .omset-bcard-val {
-        font-size: 1.125rem;
-        font-weight: 700;
+    .trx-kpi-val {
+        font-size: 1.45rem;
+        font-weight: 800;
         color: #0F172A;
+        line-height: 1.2;
     }
-    .omset-bcard-sub {
+    .trx-kpi-val.green {
+        color: #15803D;
+    }
+    .trx-kpi-sub {
         font-size: 0.725rem;
         color: #64748B;
-        margin-top: 0.25rem;
+        margin-top: 0.35rem;
     }
 
-    .omset-filter-toolbar {
+    /* 5 Main Pillars Tabs */
+    .trx-tabs-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .trx-tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1rem;
+        border-radius: 10px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid #E2E8F0;
+        background: #FFFFFF;
+        color: #475569;
+        white-space: nowrap;
+        transition: all 0.15s ease;
+    }
+    .trx-tab-btn:hover {
+        border-color: #CBD5E1;
+        background: #F8FAFC;
+        color: #0F172A;
+    }
+    .trx-tab-btn.active {
+        background: #0F172A;
+        border-color: #0F172A;
+        color: #FFFFFF;
+    }
+    .trx-tab-badge {
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 50px;
+        background: #F1F5F9;
+        color: #475569;
+    }
+    .trx-tab-btn.active .trx-tab-badge {
+        background: #1eb349;
+        color: #FFFFFF;
+    }
+
+    /* Substatus Pills for Marketplace */
+    .trx-substatus-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+    .trx-substatus-pill {
+        padding: 0.3rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid #E2E8F0;
+        background: #FFFFFF;
+        color: #64748B;
+        white-space: nowrap;
+    }
+    .trx-substatus-pill:hover {
+        color: #0F172A;
+    }
+    .trx-substatus-pill.active {
+        background: #1eb349;
+        border-color: #1eb349;
+        color: #FFFFFF;
+    }
+
+    /* Financial Bar for Finance Tab */
+    .trx-finance-recap {
         background: #FFFFFF;
         border: 1px solid #E2E8F0;
-        border-radius: 10px;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.25rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    @media (max-width: 768px) {
+        .trx-finance-recap {
+            grid-template-columns: 1fr;
+        }
+    }
+    .trx-frecap-box {
+        border-left: 3px solid #E2E8F0;
+        padding-left: 0.85rem;
+    }
+    .trx-frecap-box.green-border {
+        border-left-color: #1eb349;
+    }
+    .trx-frecap-box.amber-border {
+        border-left-color: #D97706;
+    }
+    .trx-frecap-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #64748B;
+        text-transform: uppercase;
+        margin-bottom: 0.15rem;
+    }
+    .trx-frecap-val {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #0F172A;
+    }
+    .trx-frecap-sub {
+        font-size: 0.7rem;
+        color: #64748B;
+        margin-top: 0.2rem;
+    }
+
+    /* Search Bar */
+    .trx-search-wrap {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
         padding: 0.6rem 0.85rem;
         margin-bottom: 1rem;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 0.65rem;
     }
-    .omset-filter-group {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.4rem;
+    .trx-search-input {
+        border: none;
+        outline: none;
+        font-size: 0.8125rem;
+        color: #0F172A;
+        width: 100%;
+        background: transparent;
+        font-family: inherit;
+    }
+    .trx-search-btn {
+        padding: 0.35rem 0.85rem;
+        border-radius: 8px;
+        background: #0F172A;
+        color: #FFFFFF;
+        border: none;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    .trx-reset-btn {
+        font-size: 0.75rem;
+        color: #64748B;
+        text-decoration: underline;
+        white-space: nowrap;
     }
 
-    .omset-table-card {
-        background: #fff;
-        border-radius: 12px;
+    /* Table & Card Wrapper */
+    .trx-table-card {
+        background: #FFFFFF;
         border: 1px solid #E2E8F0;
-        overflow-x: auto;
+        border-radius: 14px;
+        overflow: hidden;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     }
-
-    .omset-table {
+    .trx-table-scroll {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .trx-table {
         width: 100%;
         border-collapse: collapse;
         font-size: 0.8125rem;
     }
-
-    .omset-table th {
-        background: #FAFBFA;
-        padding: 0.65rem 0.85rem;
-        border-bottom: 1px solid #E2E8F0;
+    .trx-table th {
+        background: #F8FAFC;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.7rem;
+        font-weight: 700;
         color: #64748B;
-        font-weight: 600;
-        font-size: 0.725rem;
         text-transform: uppercase;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.03em;
+        border-bottom: 1px solid #E2E8F0;
         white-space: nowrap;
     }
-
-    .omset-table td {
-        padding: 0.75rem 0.85rem;
+    .trx-table td {
+        padding: 0.85rem 1rem;
         border-bottom: 1px solid #F1F5F9;
         vertical-align: middle;
         white-space: nowrap;
     }
-
-    .omset-table tr:hover td {
-        background: #F8FAFC;
+    .trx-table tr:hover td {
+        background: #FAFBFA;
     }
 
-    .badge-pill {
+    /* Pillar Code Tag */
+    .trx-tag {
         display: inline-block;
-        padding: 0.2rem 0.55rem;
-        border-radius: 50px;
-        font-size: 0.7rem;
-        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 6px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
     }
+    .trx-tag-mkt { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+    .trx-tag-tix { background: #FAF5FF; color: #7E22CE; border: 1px solid #E9D5FF; }
+    .trx-tag-pos { background: #FFFBEB; color: #B45309; border: 1px solid #FDE68A; }
+    .trx-tag-wed { background: #FDF2F8; color: #BE185D; border: 1px solid #FBCFE8; }
+    .trx-tag-amp { background: #FFF1F2; color: #BE123C; border: 1px solid #FECDD3; }
+    .trx-tag-wd  { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; }
 
-    .tx-type-pill {
-        padding: 0.35rem 0.75rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-decoration: none;
-        border: 1px solid #E2E8F0;
-        color: #64748B;
-        background: #FFFFFF;
-        transition: all 0.15s ease;
+    /* Action Button */
+    .trx-action-link {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        white-space: nowrap;
-    }
-    .tx-type-pill:hover {
-        border-color: #CBD5E1;
+        gap: 0.25rem;
+        padding: 0.3rem 0.65rem;
+        border-radius: 6px;
+        border: 1px solid #E2E8F0;
+        background: #FFFFFF;
         color: #0F172A;
-        background: #F8FAFC;
+        font-size: 0.725rem;
+        font-weight: 600;
+        text-decoration: none;
     }
-    .tx-type-pill.active {
+    .trx-action-link:hover {
         background: #0F172A;
         color: #FFFFFF;
         border-color: #0F172A;
     }
-    .select-status-mini {
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        border: 1px solid #CBD5E1;
-        font-size: 0.72rem;
-        font-weight: 600;
-        background: #FFFFFF;
+
+    /* Empty State */
+    .trx-empty {
+        padding: 3rem 1.5rem;
+        text-align: center;
+        color: #64748B;
+    }
+    .trx-empty-title {
+        font-size: 0.95rem;
+        font-weight: 700;
         color: #0F172A;
-        cursor: pointer;
-        outline: none;
+        margin-bottom: 0.25rem;
     }
 
     /* Modal Styling */
-    .rm-overlay {
+    .trx-modal-overlay {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(15, 23, 42, 0.4);
+        background: rgba(15, 23, 42, 0.5);
         backdrop-filter: blur(4px);
         display: none;
         align-items: center;
         justify-content: center;
         z-index: 9999;
     }
-    .rm-modal {
-        background: #fff;
+    .trx-modal-box {
+        background: #FFFFFF;
         border-radius: 16px;
         width: 100%;
         max-width: 440px;
         padding: 1.5rem;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        margin: 1rem;
     }
-    .rm-head {
+    .trx-modal-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -675,437 +397,279 @@
     }
 </style>
 
-<div class="opage">
+<div class="trx-page">
 
-    {{-- Header --}}
-    <div class="opage-head">
+    {{-- Header & Quick Period Filters --}}
+    <div class="trx-header">
         <div>
-            <h1 class="opage-title">Manajemen Pesanan</h1>
-            <p class="opage-sub">Ringkasan transaksi konsumen buyle.id &bull; {{ number_format($orders->total()) }} pesanan ditemukan</p>
+            <h1 class="trx-title">Manajemen Transaksi</h1>
+            <p class="trx-subtitle">Ringkasan transaksi multi-layanan Buyle.id &bull; {{ number_format($kpi['total_items']) }} data ditemukan</p>
         </div>
 
-        {{-- Filter Periode Quick Pills --}}
-        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'period' => '7d', 'q' => $q]) }}" class="filter-btn {{ $period === '7d' ? 'active' : '' }}">7 Hari</a>
-            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'period' => '30d', 'q' => $q]) }}" class="filter-btn {{ $period === '30d' ? 'active' : '' }}">30 Hari</a>
-            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'period' => '1y', 'q' => $q]) }}" class="filter-btn {{ $period === '1y' ? 'active' : '' }}">1 Tahun</a>
+        <div class="trx-period-bar">
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'status' => $subStatus, 'period' => '7d', 'q' => $q]) }}"
+               class="trx-btn-filter {{ $period === '7d' ? 'active' : '' }}">7 Hari</a>
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'status' => $subStatus, 'period' => '30d', 'q' => $q]) }}"
+               class="trx-btn-filter {{ $period === '30d' ? 'active' : '' }}">30 Hari</a>
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'status' => $subStatus, 'period' => '1y', 'q' => $q]) }}"
+               class="trx-btn-filter {{ $period === '1y' ? 'active' : '' }}">1 Tahun</a>
 
             <form method="GET" action="{{ route('admin.orders.index') }}" style="display:flex;align-items:center;gap:0.35rem;">
                 <input type="hidden" name="tab" value="{{ $tab }}">
-                <input type="date" name="start_date" value="{{ $start_date }}" style="padding:0.35rem 0.6rem;border:1px solid #E2E8F0;border-radius:6px;font-size:0.775rem;">
+                <input type="hidden" name="status" value="{{ $subStatus }}">
+                <input type="date" name="start_date" value="{{ $start_date }}" style="padding:0.35rem 0.5rem;border:1px solid #E2E8F0;border-radius:6px;font-size:0.75rem;font-family:inherit;">
                 <span style="font-size:0.75rem;color:#94A3B8;">s/d</span>
-                <input type="date" name="end_date" value="{{ $end_date }}" style="padding:0.35rem 0.6rem;border:1px solid #E2E8F0;border-radius:6px;font-size:0.775rem;">
-                <button type="submit" class="filter-btn active">Filter</button>
+                <input type="date" name="end_date" value="{{ $end_date }}" style="padding:0.35rem 0.5rem;border:1px solid #E2E8F0;border-radius:6px;font-size:0.75rem;font-family:inherit;">
+                <button type="submit" class="trx-btn-filter active">Filter</button>
             </form>
 
-            <button type="button" onclick="openReportModal()" class="filter-btn" style="background:#0F172A;color:#fff;border-color:#0F172A;">
+            <button type="button" onclick="openExportModal()" class="trx-btn-filter trx-btn-download">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                Laporan
+                Unduh Data
             </button>
         </div>
     </div>
 
-    {{-- 5 STAT CARDS IN 1 ROW (CLICKABLE SHORTCUTS) --}}
-    <div class="stat-5-grid">
-        {{-- Card 1: Total Order --}}
-        <a href="{{ route('admin.orders.index', ['tab' => 'all', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}" class="dash-card-link">
-            <div class="dash-card {{ $tab === 'all' ? 'card-active' : '' }}">
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                    <div style="background:rgba(30, 179, 73, 0.1);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:0.725rem;color:#64748B;font-weight:600;margin-bottom:0.1rem;">Total Transaksi</div>
-                        <div style="font-size:1.2rem;font-weight:700;color:#0F172A;line-height:1.1;">{{ number_format($stats['total']) }}</div>
-                    </div>
-                </div>
-            </div>
-        </a>
+    {{-- Top 3 Clean KPI Cards --}}
+    <div class="trx-kpi-grid">
+        {{-- Card 1: Omset Kotor (Gross) --}}
+        <div class="trx-kpi-card">
+            <div class="trx-kpi-label">Total Omset (Gross)</div>
+            <div class="trx-kpi-val">Rp {{ number_format($kpi['gross'], 0, ',', '.') }}</div>
+            <div class="trx-kpi-sub">Total akumulasi pembayaran yang masuk ke payment gateway</div>
+        </div>
 
-        {{-- Card 2: Perlu Dikirim --}}
-        <a href="{{ route('admin.orders.index', ['tab' => 'processing', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}" class="dash-card-link">
-            <div class="dash-card {{ $tab === 'processing' ? 'card-active' : '' }}">
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                    <div style="background:rgba(217, 119, 6, 0.1);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="#D97706" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:0.725rem;color:#64748B;font-weight:600;margin-bottom:0.1rem;">Perlu Dikirim</div>
-                        <div style="font-size:1.2rem;font-weight:700;color:#0F172A;line-height:1.1;">{{ number_format($stats['processing']) }}</div>
-                    </div>
-                </div>
-            </div>
-        </a>
+        {{-- Card 2: Hak Mitra / Penjual --}}
+        <div class="trx-kpi-card">
+            <div class="trx-kpi-label">Jatah Mitra / Penjual</div>
+            <div class="trx-kpi-val">Rp {{ number_format($kpi['partner_net'], 0, ',', '.') }}</div>
+            <div class="trx-kpi-sub">Hak bersih milik penjual, kreator, pengantin, atau merchant</div>
+        </div>
 
-        {{-- Card 3: Sedang Dikirim --}}
-        <a href="{{ route('admin.orders.index', ['tab' => 'shipped', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}" class="dash-card-link">
-            <div class="dash-card {{ $tab === 'shipped' ? 'card-active' : '' }}">
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                    <div style="background:rgba(37, 99, 235, 0.1);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="#2563EB" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:0.725rem;color:#64748B;font-weight:600;margin-bottom:0.1rem;">Sedang Dikirim</div>
-                        <div style="font-size:1.2rem;font-weight:700;color:#0F172A;line-height:1.1;">{{ number_format($stats['shipped']) }}</div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        {{-- Card 4: Order Selesai --}}
-        <a href="{{ route('admin.orders.index', ['tab' => 'completed', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}" class="dash-card-link">
-            <div class="dash-card {{ $tab === 'completed' ? 'card-active' : '' }}">
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                    <div style="background:rgba(22, 101, 52, 0.1);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:0.725rem;color:#64748B;font-weight:600;margin-bottom:0.1rem;">Order Selesai</div>
-                        <div style="font-size:1.2rem;font-weight:700;color:#0F172A;line-height:1.1;">{{ number_format($stats['completed']) }}</div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        {{-- Card 5: Total Omset (Clickable) --}}
-        <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}" class="dash-card-link">
-            <div class="dash-card {{ $tab === 'omset' ? 'card-active' : '' }}">
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                    <div style="background:rgba(16, 185, 129, 0.12);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="#10B981" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:0.725rem;color:#64748B;font-weight:600;margin-bottom:0.1rem;">Total Omset</div>
-                        <div style="font-size:1.1rem;font-weight:700;color:#166534;line-height:1.1;">Rp {{ number_format($stats['revenue'], 0, ',', '.') }}</div>
-                    </div>
-                </div>
-            </div>
-        </a>
+        {{-- Card 3: Profit Bersih Platform (Buyle.id) --}}
+        <div class="trx-kpi-card profit-card">
+            <div class="trx-kpi-label" style="color:#166534;">Profit Bersih Buyle.id</div>
+            <div class="trx-kpi-val green">+ Rp {{ number_format($kpi['profit'], 0, ',', '.') }}</div>
+            <div class="trx-kpi-sub" style="color:#166534;">Total Platform Fee dan Admin Fee murni milik platform</div>
+        </div>
     </div>
 
-    {{-- Tabs Filter Header --}}
-    <div class="o-tabs-wrap">
-        @foreach($tabs as $k => $t)
-            <a href="{{ route('admin.orders.index', ['tab' => $k, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}" class="o-tab {{ $tab == $k ? 'active' : '' }}">
-                {{ $t['label'] }} <span class="o-tab-count">{{ $counts[$k] ?? 0 }}</span>
+    {{-- 5 Main Pillars Tabs --}}
+    <div class="trx-tabs-container">
+        @foreach($tabs as $key => $t)
+            <a href="{{ route('admin.orders.index', ['tab' => $key, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="trx-tab-btn {{ $tab === $key ? 'active' : '' }}">
+                <span class="trx-tab-badge">{{ $t['code'] }}</span>
+                <span>{{ $t['label'] }}</span>
+                <span style="font-size:0.75rem;opacity:0.75;">({{ number_format($counts[$key] ?? 0) }})</span>
             </a>
         @endforeach
     </div>
 
-    {{-- Search Form --}}
-    <form class="o-filter-bar" method="GET" action="{{ route('admin.orders.index') }}">
+    {{-- Substatus Pills for Marketplace --}}
+    @if($tab === 'marketplace')
+        <div class="trx-substatus-bar">
+            <span style="font-size:0.75rem;font-weight:700;color:#64748B;margin-right:0.25rem;">Status:</span>
+            <a href="{{ route('admin.orders.index', ['tab' => 'marketplace', 'status' => 'all', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="trx-substatus-pill {{ $subStatus === 'all' ? 'active' : '' }}">
+                Semua ({{ number_format($subStatusCounts['all']) }})
+            </a>
+            <a href="{{ route('admin.orders.index', ['tab' => 'marketplace', 'status' => 'processing', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="trx-substatus-pill {{ $subStatus === 'processing' ? 'active' : '' }}">
+                Perlu Dikirim ({{ number_format($subStatusCounts['processing']) }})
+            </a>
+            <a href="{{ route('admin.orders.index', ['tab' => 'marketplace', 'status' => 'shipped', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="trx-substatus-pill {{ $subStatus === 'shipped' ? 'active' : '' }}">
+                Sedang Dikirim ({{ number_format($subStatusCounts['shipped']) }})
+            </a>
+            <a href="{{ route('admin.orders.index', ['tab' => 'marketplace', 'status' => 'completed', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="trx-substatus-pill {{ $subStatus === 'completed' ? 'active' : '' }}">
+                Selesai ({{ number_format($subStatusCounts['completed']) }})
+            </a>
+        </div>
+    @endif
+
+    {{-- Special Financial Clearance Bar for Finance Tab --}}
+    @if($tab === 'finance')
+        <div class="trx-finance-recap">
+            <div class="trx-frecap-box green-border">
+                <div class="trx-frecap-title">Dana Sudah Ditransfer (Withdrawal)</div>
+                <div class="trx-frecap-val" style="color:#15803D;">Rp {{ number_format($financeStats['payout_processed'] ?? 0, 0, ',', '.') }}</div>
+                <div class="trx-frecap-sub">Penarikan yang telah berhasil dikirim ke rekening bank mitra</div>
+            </div>
+            <div class="trx-frecap-box amber-border">
+                <div class="trx-frecap-title">Perlu Ditransfer (Antrean Payout)</div>
+                <div class="trx-frecap-val" style="color:#B45309;">Rp {{ number_format($financeStats['payout_pending'] ?? 0, 0, ',', '.') }}</div>
+                <div class="trx-frecap-sub">
+                    @if(($financeStats['payout_pending_count'] ?? 0) > 0)
+                        <a href="{{ route('admin.payouts.index', ['status' => 'pending']) }}" style="color:#B45309;font-weight:700;text-decoration:underline;">
+                            {{ $financeStats['payout_pending_count'] }} permohonan perlu diproses &rarr;
+                        </a>
+                    @else
+                        Tidak ada antrean pencairan dana
+                    @endif
+                </div>
+            </div>
+            <div class="trx-frecap-box">
+                <div class="trx-frecap-title">Saldo Mengendap (Belum Ditarik)</div>
+                <div class="trx-frecap-val">Rp {{ number_format($financeStats['outstanding'] ?? 0, 0, ',', '.') }}</div>
+                <div class="trx-frecap-sub">Hak mitra yang tersimpan di saldo dompet dan belum ditarik</div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Search Bar --}}
+    <form class="trx-search-wrap" method="GET" action="{{ route('admin.orders.index') }}">
         <input type="hidden" name="tab" value="{{ $tab }}">
+        <input type="hidden" name="status" value="{{ $subStatus }}">
         <input type="hidden" name="period" value="{{ $period }}">
         <input type="hidden" name="start_date" value="{{ $start_date }}">
         <input type="hidden" name="end_date" value="{{ $end_date }}">
-        @if($tab === 'omset')
-            <input type="hidden" name="tx_type" value="{{ $txType }}">
-        @endif
 
         <svg width="16" height="16" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input type="text" name="q" class="o-search-input" placeholder="Cari no. referensi, nama/email pembeli, creator, nama domain, atau produk..." value="{{ $q }}">
+        <input type="text" name="q" class="trx-search-input" placeholder="Cari kode Order ID (MKT, TIX, POS, AMP), nama pelanggan, atau nama toko..." value="{{ $q }}">
 
-        <button type="submit" class="o-btn-submit">
-            Cari
-        </button>
+        <button type="submit" class="trx-search-btn">Cari</button>
         @if($q)
-            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'tx_type' => $txType, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date]) }}" class="o-btn-reset">Reset</a>
-        @endif
-
-        @if($tab !== 'omset')
-            {{-- View Toggle --}}
-            <div class="view-toggle-wrap" style="margin-left:auto;">
-                <button type="button" class="view-toggle-btn active" id="btn-list-view" onclick="setView('list')" title="List View">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                </button>
-                <button type="button" class="view-toggle-btn" id="btn-grid-view" onclick="setView('grid')" title="Grid View">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                </button>
-            </div>
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'status' => $subStatus, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date]) }}" class="trx-reset-btn">Reset</a>
         @endif
     </form>
 
-    {{-- CONDITIONAL TAB DISPLAY --}}
-    @if($tab === 'omset')
-
-        {{-- Omset Summary Header Cards (6 Kolom Full-Width) --}}
-        <div class="omset-summary-grid">
-            <div class="omset-sum-box">
-                <div class="omset-sum-lbl">Total Omset (Gross)</div>
-                <div class="omset-sum-val">Rp {{ number_format($revenueStats['gross'] ?? 0, 0, ',', '.') }}</div>
-            </div>
-            <div class="omset-sum-box">
-                <div class="omset-sum-lbl">Modal / Pokok</div>
-                <div class="omset-sum-val">Rp {{ number_format($revenueStats['subtotal'] ?? 0, 0, ',', '.') }}</div>
-            </div>
-            <div class="omset-sum-box">
-                <div class="omset-sum-lbl">Total Admin Fee</div>
-                <div class="omset-sum-val" style="color:#D97706;">+ Rp {{ number_format($revenueStats['admin_fee'] ?? 0, 0, ',', '.') }}</div>
-            </div>
-            <div class="omset-sum-box">
-                <div class="omset-sum-lbl">Total Platform Fee</div>
-                <div class="omset-sum-val" style="color:#D97706;">+ Rp {{ number_format($revenueStats['platform_fee'] ?? 0, 0, ',', '.') }}</div>
-            </div>
-            <div class="omset-sum-box">
-                <div class="omset-sum-lbl">Total PPN (11%)</div>
-                <div class="omset-sum-val" style="color:#475569;">+ Rp {{ number_format($revenueStats['tax'] ?? 0, 0, ',', '.') }}</div>
-            </div>
-            <div class="omset-sum-box" style="background:#F0FDF4;border-color:#BBF7D0;">
-                <div class="omset-sum-lbl" style="color:#166534;">Profit Platform</div>
-                <div class="omset-sum-val" style="color:#15803D;">+ Rp {{ number_format($revenueStats['profit'] ?? 0, 0, ',', '.') }}</div>
-            </div>
-        </div>
-
-        {{-- Kartu Sinkronisasi Rekonsiliasi Dana Creator (Inflow vs Outflow vs Saldo Mengendap) --}}
-        <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.15rem 1.25rem; margin-bottom:1.25rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; flex-wrap:wrap; gap:0.5rem;">
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                    <span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:8px; background:#DCFCE7; color:#15803D;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    </span>
-                    <strong style="font-size:0.9rem; color:#0F172A;">Sinkronisasi Status Dana &amp; Rekonsiliasi Pencairan Creator</strong>
-                </div>
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                    <span style="font-size:0.72rem; color:#64748B; background:#F8FAFC; border:1px solid #E2E8F0; padding:2px 8px; border-radius:999px;">
-                        Status Saldo Real-Time
-                    </span>
-                    @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
-                        <a href="{{ route('admin.payouts.index', ['status' => 'pending']) }}" style="font-size:0.72rem; font-weight:800; background:#DC2626; color:#fff; padding:2px 10px; border-radius:999px; text-decoration:none;">
-                            ⚠️ {{ $revenueStats['payout_pending_count'] }} Menunggu Ditransfer
-                        </a>
-                    @endif
-                </div>
-            </div>
-
-            <div class="sync-payout-grid">
-                {{-- Box 1: Dana Sudah Dicairkan (Outflow) --}}
-                <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:0.85rem 1rem;">
-                    <div style="font-size:0.68rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">Dana Sudah Dicairkan</div>
-                    <div style="font-size:1.15rem; font-weight:800; color:#15803D; margin-top:0.2rem;">
-                        Rp {{ number_format($revenueStats['payout_processed'] ?? 0, 0, ',', '.') }}
-                    </div>
-                    <div style="font-size:0.68rem; color:#166534; margin-top:0.2rem;">
-                        Uang keluar yang telah sukses ditransfer ke rekening creator
-                    </div>
-                </div>
-
-                {{-- Box 2: Perlu Ditransfer (Pending Payout) --}}
-                <div style="background:{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#FEF3C7' : '#F8FAFC' }}; border:1.5px solid {{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#FDE68A' : '#E2E8F0' }}; border-radius:12px; padding:0.85rem 1rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:0.68rem; font-weight:700; color:{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#92400E' : '#64748B' }}; text-transform:uppercase; letter-spacing:0.04em;">Perlu Ditransfer</span>
-                        @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
-                            <span style="background:#DC2626; color:#fff; font-size:0.62rem; font-weight:800; padding:1px 6px; border-radius:999px;">{{ $revenueStats['payout_pending_count'] }} PENDING</span>
-                        @endif
-                    </div>
-                    <div style="font-size:1.15rem; font-weight:800; color:{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? '#B45309' : '#0F172A' }}; margin-top:0.2rem;">
-                        Rp {{ number_format($revenueStats['payout_pending'] ?? 0, 0, ',', '.') }}
-                    </div>
-                    <div style="font-size:0.68rem; margin-top:0.2rem;">
-                        @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
-                            <a href="{{ route('admin.payouts.index', ['status' => 'pending']) }}" style="color:#B45309; font-weight:700; text-decoration:underline;">Proses Transfer Sekarang &rarr;</a>
-                        @else
-                            <span style="color:#64748B;">Tidak ada antrean pencairan pending</span>
-                        @endif
-                    </div>
-                </div>
-
-                {{-- Box 3: Saldo Belum Dicairkan (Siap Tarik) --}}
-                <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem;">
-                    <div style="font-size:0.68rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.04em;">Saldo Siap Ditarik (Belum Dicairkan)</div>
-                    <div style="font-size:1.15rem; font-weight:800; color:#0F172A; margin-top:0.2rem;">
-                        Rp {{ number_format($revenueStats['outstanding'] ?? 0, 0, ',', '.') }}
-                    </div>
-                    <div style="font-size:0.68rem; color:#64748B; margin-top:0.2rem;">
-                        Hak creator yang lolos masa hold &amp; belum ditarik
-                    </div>
-                </div>
-
-                {{-- Box 4: Dana Tertahan (Hold / Escrow) --}}
-                <div style="background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:12px; padding:0.85rem 1rem;">
-                    <div style="font-size:0.68rem; font-weight:700; color:#1E40AF; text-transform:uppercase; letter-spacing:0.04em;">Dana Tertahan (Hold / Escrow)</div>
-                    <div style="font-size:1.15rem; font-weight:800; color:#1D4ED8; margin-top:0.2rem;">
-                        Rp {{ number_format($revenueStats['hold_total'] ?? 0, 0, ',', '.') }}
-                    </div>
-                    <div style="font-size:0.68rem; color:#1E40AF; margin-top:0.2rem;">
-                        Hold 3 Hari: Rp {{ number_format($revenueStats['hold_regular'] ?? 0, 0, ',', '.') }} &bull; Escrow Event: Rp {{ number_format($revenueStats['escrow_event'] ?? 0, 0, ',', '.') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Ringkasan Sumber Transaksi (Grid 3 Kolom Full-Width) --}}
-        <div class="omset-breakdown-grid">
-            <div class="omset-bcard">
-                <div class="omset-bcard-head">
-                    <span class="omset-bcard-title">Pesanan Pembeli</span>
-                    <span class="omset-bcard-profit">+ Rp {{ number_format($revenueStats['buyer_profit'] ?? 0, 0, ',', '.') }} profit</span>
-                </div>
-                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['buyer_gross'] ?? 0, 0, ',', '.') }}</div>
-                <div class="omset-bcard-sub">Dari {{ $txTypeCounts['buyer'] ?? 0 }} pesanan produk fisik &amp; digital</div>
-            </div>
-            <div class="omset-bcard">
-                <div class="omset-bcard-head">
-                    <span class="omset-bcard-title">Domain Creator</span>
-                    <span class="omset-bcard-profit">+ Rp {{ number_format($revenueStats['domain_profit'] ?? 0, 0, ',', '.') }} profit</span>
-                </div>
-                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['domain_gross'] ?? 0, 0, ',', '.') }}</div>
-                <div class="omset-bcard-sub">Keuntungan dari {{ $revenueStats['domain_paid'] ?? 0 }} domain aktif (Margin + Pajak 11% + Fee)</div>
-            </div>
-            <div class="omset-bcard">
-                <div class="omset-bcard-head">
-                    <span class="omset-bcard-title">POS (Kasir &amp; Deposit)</span>
-                    <span class="omset-bcard-profit">+ Rp {{ number_format($revenueStats['pos_profit'] ?? 0, 0, ',', '.') }} profit fee</span>
-                </div>
-                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['pos_gross'] ?? 0, 0, ',', '.') }}</div>
-                <div class="omset-bcard-sub">{{ $revenueStats['pos_order_count'] ?? 0 }} transaksi kasir &bull; {{ $revenueStats['deposit_count'] ?? 0 }} deposit kasir</div>
-            </div>
-        </div>
-
-        {{-- Toolbar Filter Sumber Transaksi (Full-Width Card) --}}
-        <div class="omset-filter-toolbar">
-            <div class="omset-filter-group">
-                <span style="font-size:0.725rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.02em; margin-right:4px;">Filter Sumber:</span>
-                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'all', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-                   class="tx-type-pill {{ $txType === 'all' ? 'active' : '' }}">
-                    Semua Transaksi ({{ $txTypeCounts['all'] ?? 0 }})
-                </a>
-                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'pos', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-                   class="tx-type-pill {{ in_array($txType, ['pos', 'deposit']) ? 'active' : '' }}">
-                    POS ({{ $txTypeCounts['pos'] ?? 0 }})
-                </a>
-                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'buyer', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-                   class="tx-type-pill {{ $txType === 'buyer' ? 'active' : '' }}">
-                    Penjualan Produk ({{ $txTypeCounts['buyer'] ?? 0 }})
-                </a>
-                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'payout', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-                   class="tx-type-pill {{ $txType === 'payout' ? 'active' : '' }}" style="{{ ($revenueStats['payout_pending_count'] ?? 0) > 0 ? 'border-color:#F59E0B;' : '' }}">
-                    💸 Pencairan Dana ({{ $txTypeCounts['payout'] ?? 0 }})
-                    @if(($revenueStats['payout_pending_count'] ?? 0) > 0)
-                        <span style="background:#DC2626; color:#fff; font-size:0.6rem; font-weight:800; padding:1px 5px; border-radius:999px; margin-left:3px;">{{ $revenueStats['payout_pending_count'] }}</span>
-                    @endif
-                </a>
-                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'creator', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-                   class="tx-type-pill {{ $txType === 'creator' ? 'active' : '' }}">
-                    Semua Creator ({{ $txTypeCounts['creator'] ?? 0 }})
-                </a>
-                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-                   class="tx-type-pill {{ $txType === 'domain' ? 'active' : '' }}">
-                    Domain Creator ({{ $txTypeCounts['domain'] ?? 0 }})
-                </a>
-            </div>
-            <div style="font-size:0.75rem; color:#64748B;">
-                Menampilkan <strong style="color:#0F172A;">{{ $orders->total() }}</strong> transaksi
-            </div>
-        </div>
-
-        {{-- Financial Transaction History Table --}}
-        <div class="omset-table-card">
-            <table class="omset-table">
+    {{-- Main Responsive Table --}}
+    <div class="trx-table-card">
+        <div class="trx-table-scroll">
+            <table class="trx-table">
                 <thead>
                     <tr>
-                        <th>Tanggal &amp; Waktu</th>
-                        <th>ID Referensi</th>
-                        <th>Pihak / User</th>
-                        <th>Kategori &amp; Info</th>
-                        <th>Channel</th>
-                        <th style="text-align:right;">Harga / Modal</th>
-                        <th style="text-align:right;">Admin Fee</th>
-                        <th style="text-align:right;">Platform Fee</th>
-                        <th style="text-align:right;">PPN (11%)</th>
-                        <th style="text-align:right;">Total Transaksi</th>
-                        <th style="text-align:right;">Profit Platform</th>
-                        <th style="text-align:center;">Status &amp; Clearance</th>
+                        <th>Order ID / Ref</th>
+                        <th>Waktu</th>
+                        <th>Pelanggan</th>
+                        <th>Toko / Mitra</th>
+                        <th>Metode</th>
+                        <th style="text-align:right;">Total Gross</th>
+                        <th style="text-align:right;">Jatah Mitra</th>
+                        <th style="text-align:right;">Profit Buyle</th>
+                        <th>Status</th>
+                        <th style="text-align:center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($orders as $o)
-                        <tr style="{{ ($o->source_type ?? '') === 'payout_withdrawal' && $o->status === 'pending' ? 'background:#FFFDF5;' : '' }}">
+                    @forelse($orders as $row)
+                        @php
+                            $isStandardOrder = isset($row->order_number) && is_object($row) && !isset($row->pillar);
+                            
+                            if ($isStandardOrder) {
+                                $oid = $row->order_number;
+                                $tagType = 'MKT';
+                                if ($tab === 'ticketing' || str_starts_with($oid, 'TIX-')) {
+                                    $tagType = 'TIX';
+                                } elseif ($tab === 'pos' || str_starts_with($oid, 'POS-')) {
+                                    $tagType = 'POS';
+                                }
+
+                                $custName = $row->user->name ?? ($row->shipping_address['receiver_name'] ?? ($row->shipping_address['customer_name'] ?? 'Pelanggan'));
+                                $custPhone = $row->user_phone ?? ($row->shipping_address['phone'] ?? ($row->shipping_address['customer_phone'] ?? '-'));
+                                $partnerName = $row->items->first()?->product?->seller?->name ?? ($tagType === 'POS' ? 'Kasir POS' : 'Creator');
+                                $method = $row->payment?->method ? strtoupper($row->payment->method) : ($row->shipping_address['payment_method'] ?? 'MIDTRANS');
+                                $grossAmt = (float)$row->total;
+                                $platFee = (float)$row->platform_fee;
+                                $admFee = (float)$row->admin_fee;
+                                $profitAmt = $platFee + $admFee;
+                                $partnerNet = max(0, (float)$row->subtotal - $platFee);
+                                $stValue = is_object($row->status) ? $row->status->value : (string)$row->status;
+
+                                $stColor = match($stValue) {
+                                    'confirmed', 'completed', 'delivered' => '#15803D',
+                                    'processing', 'shipped'               => '#0284C7',
+                                    'cancelled', 'refunded'               => '#DC2626',
+                                    default                               => '#D97706',
+                                };
+                                $stBg = match($stValue) {
+                                    'confirmed', 'completed', 'delivered' => '#DCFCE7',
+                                    'processing', 'shipped'               => '#E0F2FE',
+                                    'cancelled', 'refunded'               => '#FEE2E2',
+                                    default                               => '#FEF3C7',
+                                };
+                                $stLabel = match($stValue) {
+                                    'confirmed'  => 'Lunas',
+                                    'processing' => 'Diproses',
+                                    'shipped'    => 'Dikirim',
+                                    'completed'  => 'Selesai',
+                                    'delivered'  => 'Terkirim',
+                                    'cancelled'  => 'Batal',
+                                    default      => ucfirst($stValue),
+                                };
+                                $detailUrl = route('admin.orders.show', $row);
+                            } else {
+                                // Unified row (Wedding Amplop, Finance Payout, dll)
+                                $oid = $row->order_number;
+                                $tagType = $row->pillar ?? 'AMP';
+                                $custName = $row->customer_name;
+                                $custPhone = $row->customer_info ?? '-';
+                                $partnerName = $row->partner_name;
+                                $method = $row->channel;
+                                $grossAmt = (float)$row->gross;
+                                $partnerNet = (float)$row->partner_net;
+                                $profitAmt = (float)$row->profit;
+                                $stLabel = $row->status;
+                                $stColor = $row->status_color ?? '#15803D';
+                                $stBg = $row->status_bg ?? '#DCFCE7';
+                                $detailUrl = '#';
+                            }
+                        @endphp
+                        <tr>
                             <td>
-                                <div style="font-weight:600;color:#0F172A;">{{ $o->created_at ? $o->created_at->format('d M Y, H:i') : '-' }} WIB</div>
+                                <div style="display:flex;align-items:center;gap:0.45rem;">
+                                    <span class="trx-tag trx-tag-{{ strtolower($tagType) }}">{{ $tagType }}</span>
+                                    <strong style="color:#0F172A;font-weight:700;">{{ $oid }}</strong>
+                                </div>
+                            </td>
+                            <td style="color:#64748B;">
+                                {{ $row->created_at ? \Carbon\Carbon::parse($row->created_at)->format('d M Y, H:i') : '-' }}
                             </td>
                             <td>
-                                @if(!empty($o->url) && ($o->source_type === 'buyer_order' || $o->source_type === 'pos_order'))
-                                    <a href="{{ $o->url }}" style="font-weight:700;color:#10B981;text-decoration:none;">{{ $o->ref_number }}</a>
-                                @elseif(!empty($o->url) && $o->source_type === 'payout_withdrawal')
-                                    <a href="{{ $o->url }}" style="font-weight:700;color:#D97706;text-decoration:none;">{{ $o->ref_number }}</a>
-                                    <span style="display:block;font-size:0.65rem;color:#D97706;font-weight:800;">PENCAIRAN</span>
-                                @elseif(!empty($o->url) && $o->source_type === 'domain_order')
-                                    <strong style="color:#0F172A; display:block;">{{ $o->ref_number }}</strong>
-                                    <a href="{{ $o->url }}" target="_blank" style="font-size:0.7rem;color:#059669;font-weight:600;text-decoration:none;">Resource Creator &rarr;</a>
+                                <div style="font-weight:600;color:#0F172A;">{{ $custName }}</div>
+                                <div style="font-size:0.72rem;color:#64748B;">{{ $custPhone }}</div>
+                            </td>
+                            <td style="color:#334155;font-weight:600;">
+                                {{ $partnerName }}
+                            </td>
+                            <td>
+                                <span style="font-size:0.75rem;font-weight:600;color:#475569;">{{ strtoupper($method) }}</span>
+                            </td>
+                            <td style="text-align:right;font-weight:700;color:{{ $grossAmt < 0 ? '#DC2626' : '#0F172A' }};">
+                                Rp {{ number_format($grossAmt, 0, ',', '.') }}
+                            </td>
+                            <td style="text-align:right;font-weight:600;color:#475569;">
+                                Rp {{ number_format($partnerNet, 0, ',', '.') }}
+                            </td>
+                            <td style="text-align:right;font-weight:700;color:#15803D;">
+                                @if($profitAmt > 0)
+                                    + Rp {{ number_format($profitAmt, 0, ',', '.') }}
                                 @else
-                                    <strong style="color:#0F172A;">{{ $o->ref_number }}</strong>
+                                    -
                                 @endif
                             </td>
                             <td>
-                                <div style="font-weight:600;color:#0F172A;">{{ $o->party_name }}</div>
-                                <div style="font-size:0.72rem;color:#64748B;">{{ $o->party_email }}</div>
+                                <span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:50px;font-size:0.7rem;font-weight:700;background:{{ $stBg }};color:{{ $stColor }};">
+                                    {{ $stLabel }}
+                                </span>
                             </td>
-                            <td>
-                                @if(($o->source_type ?? '') === 'payout_withdrawal')
-                                    <span class="badge-pill" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">{{ $o->category }}</span>
-                                    <div style="font-size:0.7rem;color:#475569;margin-top:2px;font-weight:600;">{{ $o->bank_info ?? '' }}</div>
-                                @else
-                                    <span class="badge-pill" style="background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;">{{ $o->category }}</span>
-                                    @if(!empty($o->creator_name) && in_array($o->party_role, ['Pembeli', 'Pelanggan POS']))
-                                        <div style="font-size:0.7rem;color:#64748B;margin-top:2px;">Creator: {{ $o->creator_name }}</div>
-                                    @endif
-                                @endif
-                            </td>
-                            <td>
-                                <span class="badge-pill" style="background:#EFF6FF;color:#1D4ED8;">{{ $o->channel }}</span>
-                            </td>
-                            <td style="text-align:right;font-weight:500;">Rp {{ number_format($o->base_amount, 0, ',', '.') }}</td>
-                            <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->admin_fee, 0, ',', '.') }}</td>
-                            <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->platform_fee, 0, ',', '.') }}</td>
-                            <td style="text-align:right;color:#475569;font-weight:500;">+ Rp {{ number_format($o->tax_amount ?? 0, 0, ',', '.') }}</td>
-                            <td style="text-align:right;font-weight:700;">
-                                @if(($o->source_type ?? '') === 'payout_withdrawal')
-                                    <div style="color:#DC2626;font-weight:800;">- Rp {{ number_format(abs($o->gross), 0, ',', '.') }}</div>
-                                    <span style="font-size:0.62rem;font-weight:800;background:#FEE2E2;color:#DC2626;padding:1px 5px;border-radius:4px;">OUTFLOW</span>
-                                @else
-                                    <div style="color:#0F172A;font-weight:700;">Rp {{ number_format($o->gross, 0, ',', '.') }}</div>
-                                @endif
-                            </td>
-                            <td style="text-align:right;font-weight:700;color:#15803D;">+ Rp {{ number_format($o->profit, 0, ',', '.') }}</td>
                             <td style="text-align:center;">
-                                @if(!empty($o->can_update) && $o->source_type === 'domain_order')
-                                    <form method="POST" action="{{ route('admin.domain-orders.update-status', $o->raw->id) }}" style="display:inline-flex;align-items:center;gap:4px;">
-                                        @csrf
-                                        <select name="status" class="select-status-mini" onchange="this.form.submit()">
-                                            <option value="pending" {{ $o->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="paid" {{ $o->status === 'paid' ? 'selected' : '' }}>Lunas (Paid)</option>
-                                            <option value="completed" {{ $o->status === 'completed' ? 'selected' : '' }}>Sudah Berhasil</option>
-                                            <option value="rejected" {{ $o->status === 'rejected' ? 'selected' : '' }}>Ditolak</option>
-                                            <option value="cancelled" {{ $o->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                                        </select>
-                                    </form>
-                                @elseif(($o->source_type ?? '') === 'payout_withdrawal')
-                                    <span class="badge-pill" style="color:{{ $o->status_color }};background:{{ $o->status_bg }};">
-                                        {{ $o->status_label }}
-                                    </span>
-                                    @if($o->status === 'pending')
-                                        <a href="{{ $o->url }}" style="display:inline-block;margin-top:4px;background:linear-gradient(135deg,#1eb349,#10b981);color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:6px;text-decoration:none;box-shadow:0 2px 6px rgba(30,179,73,0.3);">
-                                            Transfer Sekarang &rarr;
-                                        </a>
-                                    @endif
+                                @if($isStandardOrder)
+                                    <a href="{{ $detailUrl }}" class="trx-action-link">Detail</a>
+                                @elseif($tagType === 'WD')
+                                    <a href="{{ route('admin.payouts.index') }}" class="trx-action-link">Cek Payout</a>
                                 @else
-                                    <span class="badge-pill" style="color:{{ $o->status_color }};background:{{ $o->status_bg }};">
-                                        {{ $o->status_label }}
-                                    </span>
-                                    @if(!empty($o->clearance_badge))
-                                        <div style="margin-top:3px;">
-                                            <span class="badge-pill" style="font-size:0.62rem;padding:1px 6px;color:{{ $o->clearance_badge[0] }};background:{{ $o->clearance_badge[1] }};font-weight:700;">
-                                                {{ $o->clearance_badge[2] }}
-                                            </span>
-                                        </div>
-                                    @endif
+                                    <span style="font-size:0.75rem;color:#94A3B8;">-</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="12" style="text-align:center;padding:2.5rem 1rem;color:#94A3B8;">
-                                Belum ada riwayat transaksi keuangan pada periode dan filter ini.
+                            <td colspan="10" class="trx-empty">
+                                <div class="trx-empty-title">Belum Ada Transaksi</div>
+                                <div>Tidak ada riwayat transaksi yang sesuai dengan filter periode atau pencarian ini.</div>
                             </td>
                         </tr>
                     @endforelse
@@ -1113,353 +677,71 @@
             </table>
         </div>
 
-        <div style="margin-top:1.25rem;">
-            {{ $orders->links() }}
-        </div>
-
-    @else
-
-        {{-- Order List --}}
-        <div id="view-list">
-            @forelse($orders as $o)
-                <div class="o-card">
-                    {{-- Card Header --}}
-                    <div class="o-card-head">
-                        <div class="o-card-user">
-                            @php
-                                $userAvatar = $o->user->avatar ?? null;
-                                $shipAddr = is_array($o->shipping_address) ? $o->shipping_address : [];
-                                $isPosOrder = ($o->source === 'pos') || (!empty($shipAddr['is_pos'])) || ($tab === 'pos');
-                                $userName = $isPosOrder
-                                    ? ($shipAddr['customer_name'] ?? $o->receiver_name ?? ($o->user->name ?? 'Pelanggan Walk-In'))
-                                    : ($o->user->name ?? $o->receiver_name ?? 'Konsumen');
-                                $userPhone = $isPosOrder
-                                    ? ($shipAddr['customer_phone'] ?? $o->user_phone ?? null)
-                                    : ($o->user_phone ?? null);
-                                $creatorStore = $o->items->first()?->product?->seller?->store_name ?? $o->items->first()?->product?->seller?->name ?? 'Kasir POS';
-                            @endphp
-                            @if($userAvatar)
-                                <img src="{{ asset('storage/' . $userAvatar) }}" loading="lazy" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0;flex-shrink:0;">
-                            @else
-                                <div style="width:26px;height:26px;border-radius:50%;background:#F1F5F9;color:#64748B;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.725rem;flex-shrink:0;border:1px solid #E2E8F0;">
-                                    {{ strtoupper(substr($userName, 0, 1)) }}
-                                </div>
-                            @endif
-                            <div>
-                                <span style="font-weight:700;">{{ $userName }}</span>
-                                @if($userPhone)
-                                    <span style="font-size:0.75rem;color:#059669;font-weight:600;margin-left:0.25rem;">({{ $userPhone }})</span>
-                                @elseif($o->user && $o->user->email)
-                                    <span style="font-size:0.75rem;color:#94A3B8;font-weight:400;margin-left:0.25rem;">({{ $o->user->email }})</span>
-                                @endif
-                                @if($isPosOrder)
-                                    <div style="font-size:0.7rem;color:#64748B;margin-top:2px;">Toko / Kasir: <strong style="color:#0F172A;">{{ $creatorStore }}</strong></div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="o-card-ordernum">
-                            @if($isPosOrder)
-                                <span style="font-size:0.62rem;background:#DCFCE7;color:#166534;font-weight:800;padding:2px 6px;border-radius:4px;margin-right:4px;">STRUK POS</span>
-                            @endif
-                            #{{ $o->order_number }}
-                        </div>
-                    </div>
-
-                    {{-- Card Body --}}
-                    <div class="o-card-body">
-
-                        {{-- Products Column --}}
-                        <div>
-                            @foreach($o->items->take(2) as $item)
-                                <div class="o-item-col" style="{{ !$loop->last ? 'margin-bottom:0.5rem;' : '' }}">
-                                    <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('img/no-image.jpg') }}" loading="lazy" class="o-item-img" onerror="this.src='https://via.placeholder.com/60?text=No+Img'">
-                                    <div>
-                                        <div class="o-item-title">{{ Str::limit($item->product_name ?? ($item->product->name ?? 'Produk'), 50) }}</div>
-                                        @if(!$isPosOrder && $item->product && $item->product->seller)
-                                            <div style="font-size:0.725rem;color:#059669;font-weight:600;margin-bottom:0.15rem;">Toko: {{ $item->product->seller->store_name ?? $item->product->seller->name }}</div>
-                                        @endif
-                                        <div style="font-size:0.725rem;color:#64748B;font-weight:500;">Qty: {{ $item->qty }} &bull; Rp {{ number_format($item->price, 0, ',', '.') }}</div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @if($o->items->count() > 2)
-                                <div style="font-size:0.725rem;color:#64748B;margin-top:0.35rem;font-weight:500;background:#F8FAFC;padding:.15rem .45rem;border-radius:4px;display:inline-block;">
-                                    + {{ $o->items->count() - 2 }} produk lainnya
-                                </div>
-                            @endif
-                        </div>
-
-                        {{-- Status & Courier / Layanan --}}
-                        <div>
-                            @if($isPosOrder)
-                                @php
-                                    $orderType = $shipAddr['order_type'] ?? 'dine_in';
-                                    $orderTypeLabel = match($orderType) {
-                                        'dine_in' => 'Makan di Tempat (Dine In)',
-                                        'take_away' => 'Bawa Pulang (Take Away)',
-                                        default => 'Pesanan Kasir POS'
-                                    };
-                                    $tableNo = $shipAddr['table_no'] ?? null;
-                                @endphp
-                                <div class="o-col-title">Layanan & Meja</div>
-                                <span class="badge-pill" style="color:#166534;background:#DCFCE7;font-weight:700;">
-                                    {{ $orderTypeLabel }}
-                                </span>
-                                @if($tableNo)
-                                    <div style="font-size:0.75rem;font-weight:700;color:#0F172A;margin-top:0.25rem;">Meja #{{ $tableNo }}</div>
-                                @endif
-
-                                <div class="o-col-title" style="margin-top:0.65rem;">Status Transaksi</div>
-                                @php
-                                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                                    $stBadge = match($statusVal) {
-                                        'completed', 'confirmed', 'delivered' => ['#166534', '#DCFCE7', 'Selesai'],
-                                        'cancelled'                           => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
-                                        default                               => ['#059669', '#E6F4EA', ucfirst($statusVal)]
-                                    };
-                                @endphp
-                                <span class="badge-pill" style="color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};">
-                                    {{ $stBadge[2] }}
-                                </span>
-                            @else
-                                <div class="o-col-title">Status Pesanan</div>
-                                @php
-                                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                                    $stBadge = match($statusVal) {
-                                        'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Perlu Dikirim'],
-                                        'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
-                                        'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
-                                        default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
-                                    };
-                                @endphp
-                                <span class="badge-pill" style="color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};">
-                                    {{ $stBadge[2] }}
-                                </span>
-
-                                <div class="o-col-title" style="margin-top:0.65rem;">Ekspedisi / Resi</div>
-                                <div style="font-size:0.775rem;font-weight:600;color:#1E293B;">{{ $o->shipment->courier_name ?? 'Pengiriman Digital / Reguler' }}</div>
-                                <div style="font-size:0.725rem;color:#64748B;margin-top:0.1rem;">Resi: {{ $o->shipment->tracking_number ?? 'Belum ada resi' }}</div>
-                            @endif
-                        </div>
-
-                        {{-- Total Amount --}}
-                        <div>
-                            <div class="o-col-title">Total Pembayaran</div>
-                            <div class="o-total-price">Rp {{ number_format($o->total, 0, ',', '.') }}</div>
-                            <div style="font-size:0.725rem;color:#64748B;margin-top:0.2rem;font-weight:500;">
-                                @php
-                                    $posMethod = $shipAddr['payment_method'] ?? null;
-                                    $payLabel = $posMethod ? match(strtolower($posMethod)) {
-                                        'cash', 'tunai' => 'Tunai (Cash)',
-                                        'qris', 'qris_pos' => 'QRIS POS',
-                                        'deposit', 'pos_deposit' => 'Saldo Deposit Kasir',
-                                        default => strtoupper($posMethod)
-                                    } : ($o->payment->method ?? 'Payment Gateway');
-                                @endphp
-                                <span style="background:#F1F5F9; color:#334155; padding:2px 6px; border-radius:4px; font-size:0.7rem; border:1px solid #E2E8F0;">
-                                    {{ $payLabel }}
-                                </span>
-                            </div>
-                        </div>
-
-                        {{-- Action Minimalist Button --}}
-                        <div style="text-align:right;">
-                            <a href="{{ route('admin.orders.show', $o) }}" class="o-btn-action">
-                                {{ $isPosOrder ? 'Detail Struk' : 'Rincian' }}
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-            @empty
-                <div style="text-align:center;padding:3rem 1rem;background:#fff;border-radius:12px;border:1px dashed #CBD5E1;">
-                    <svg width="48" height="48" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.75rem;opacity:0.5;">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                    </svg>
-                    <div style="font-size:0.95rem;font-weight:600;color:#334155;margin-bottom:0.2rem;">Tidak Ada Pesanan</div>
-                    <div style="font-size:0.775rem;color:#94A3B8;">Belum ada pesanan pada filter periode atau tab ini.</div>
-                </div>
-            @endforelse
-
-            {{-- Pagination --}}
-            <div style="margin-top:1.25rem;">
+        {{-- Pagination --}}
+        @if($orders->hasPages())
+            <div style="padding:1rem 1.25rem;border-top:1px solid #F1F5F9;display:flex;justify-content:flex-end;">
                 {{ $orders->links() }}
             </div>
-        </div>
-
-        {{-- Grid View --}}
-        <div id="view-grid" style="display:none;">
-            <div class="o-grid">
-            @forelse($orders as $o)
-                @php
-                    $firstItem = $o->items->first();
-                    $firstImg  = $firstItem && $firstItem->product && $firstItem->product->image
-                        ? asset('storage/' . $firstItem->product->image)
-                        : asset('img/no-image.jpg');
-                    $userName = $o->user->name ?? $o->receiver_name ?? 'Konsumen';
-                    $userEmail = $o->user->email ?? '—';
-                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                    $stBadge = match($statusVal) {
-                        'confirmed','processing' => ['#059669', '#E6F4EA', 'Proses'],
-                        'shipped'                => ['#047857', '#D1E7DD', 'Kirim'],
-                        'completed','delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
-                        default                  => ['#475569', '#F1F5F9', ucfirst($statusVal)]
-                    };
-                @endphp
-                <div class="o-gcard">
-                    <img src="{{ $firstImg }}" class="o-gcard-img" loading="lazy" onerror="this.src='https://via.placeholder.com/200?text=Produk'">
-                    <div class="o-gcard-body">
-                        <div class="o-gcard-order">#{{ $o->order_number }}</div>
-                        <div class="o-gcard-name">{{ Str::limit($userName, 22) }}</div>
-                        <div class="o-gcard-email">{{ Str::limit($userEmail, 24) }}</div>
-                        <div class="o-gcard-price">Rp {{ number_format($o->total, 0, ',', '.') }}</div>
-                    </div>
-                    <div class="o-gcard-foot">
-                        <span class="badge-pill" style="color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};">
-                            {{ $stBadge[2] }}
-                        </span>
-                        <a href="{{ route('admin.orders.show', $o) }}" style="display:flex;align-items:center;gap:.2rem;font-size:.725rem;font-weight:600;color:#10B981;text-decoration:none;">
-                            Detail
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-                </div>
-            @empty
-                <div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;background:#fff;border-radius:12px;border:1px dashed #CBD5E1;">
-                    <div style="font-size:0.95rem;font-weight:600;color:#334155;">Tidak Ada Pesanan</div>
-                    <div style="font-size:0.775rem;color:#94A3B8;">Belum ada pesanan pada filter ini.</div>
-                </div>
-            @endforelse
-            </div>
-            <div style="margin-top:1.25rem;">{{ $orders->links() }}</div>
-        </div>
-
-    @endif
+        @endif
+    </div>
 
 </div>
 
-{{-- MODAL DOWNLOAD LAPORAN --}}
-<div id="reportModal" class="rm-overlay">
-    <div class="rm-modal">
-        <div class="rm-head">
-            <div style="font-weight:600;font-size:0.95rem;color:#0F172A;" id="reportModalTitle">Unduh Laporan</div>
-            <button type="button" onclick="closeReportModal()" style="background:none;border:none;color:#94A3B8;cursor:pointer;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+{{-- Modal Export Laporan --}}
+<div class="trx-modal-overlay" id="exportModal">
+    <div class="trx-modal-box">
+        <div class="trx-modal-head">
+            <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:#0F172A;">Unduh Laporan Transaksi</h3>
+            <button type="button" onclick="closeExportModal()" style="background:none;border:none;cursor:pointer;color:#64748B;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
         </div>
 
-        {{-- Info Label Jenis Laporan --}}
-        <div id="reportTypeInfo" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:0.6rem 0.85rem;margin-bottom:1rem;font-size:0.775rem;color:#475569;line-height:1.5;">
-            &mdash;
-        </div>
+        <form method="GET" action="{{ route('admin.orders.export') }}" target="_blank">
+            <input type="hidden" name="tab" value="{{ $tab }}">
+            <input type="hidden" name="status" value="{{ $subStatus }}">
+            <input type="hidden" name="start_date" value="{{ $start_date }}">
+            <input type="hidden" name="end_date" value="{{ $end_date }}">
 
-        <form id="reportForm" action="{{ route('admin.orders.export') }}" method="GET" class="rm-body" style="padding-top:0;">
-            {{-- Hidden fields untuk filter --}}
-            <input type="hidden" name="tx_type" id="exportTxType" value="{{ $txType ?? 'all' }}">
-
-            <div style="margin-bottom:1rem;">
-                <label style="font-size:0.775rem;font-weight:600;color:#475569;display:block;margin-bottom:0.35rem;">Format File</label>
-                <select name="format" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
-                    <option value="xlsx">Excel (.xlsx)</option>
-                    <option value="csv">CSV (.csv)</option>
-                    <option value="pdf">PDF Document (.pdf)</option>
-                </select>
+            <div style="margin-bottom:1rem;font-size:0.8125rem;color:#475569;">
+                Pilih format data yang ingin diunduh untuk tab <strong>{{ $tabs[$tab]['label'] ?? 'Transaksi' }}</strong>:
             </div>
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
-                <div>
-                    <label style="font-size:0.775rem;font-weight:600;color:#475569;display:block;margin-bottom:0.35rem;">Dari Tanggal</label>
-                    <input type="date" name="start_date" id="exportStartDate"
-                        value="{{ $start_date ?: now()->subDays(30)->format('Y-m-d') }}"
-                        style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
-                </div>
-                <div>
-                    <label style="font-size:0.775rem;font-weight:600;color:#475569;display:block;margin-bottom:0.35rem;">Sampai Tanggal</label>
-                    <input type="date" name="end_date" id="exportEndDate"
-                        value="{{ $end_date ?: now()->format('Y-m-d') }}"
-                        style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
-                </div>
+            <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;">
+                <label style="flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;border:1.5px solid #E2E8F0;border-radius:10px;cursor:pointer;">
+                    <input type="radio" name="format" value="xlsx" checked>
+                    <div>
+                        <strong style="font-size:0.8125rem;color:#0F172A;">Excel (.xlsx)</strong>
+                        <div style="font-size:0.7rem;color:#64748B;">Format tabel lengkap</div>
+                    </div>
+                </label>
+                <label style="flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;border:1.5px solid #E2E8F0;border-radius:10px;cursor:pointer;">
+                    <input type="radio" name="format" value="csv">
+                    <div>
+                        <strong style="font-size:0.8125rem;color:#0F172A;">CSV (.csv)</strong>
+                        <div style="font-size:0.7rem;color:#64748B;">Format teks data</div>
+                    </div>
+                </label>
             </div>
 
-            <button type="submit" style="width:100%;padding:0.6rem;background:#0F172A;color:#fff;border:none;border-radius:8px;font-weight:600;font-size:0.8125rem;cursor:pointer;font-family:inherit;">
-                Download Laporan
-            </button>
+            <div style="display:flex;justify-content:flex-end;gap:0.5rem;">
+                <button type="button" onclick="closeExportModal()" class="trx-btn-filter" style="cursor:pointer;">Batal</button>
+                <button type="submit" class="trx-btn-filter trx-btn-download" style="cursor:pointer;" onclick="setTimeout(closeExportModal, 500)">Unduh Sekarang</button>
+            </div>
         </form>
     </div>
 </div>
 
 @push('scripts')
 <script>
-function openReportModal() {
-    const currentTab   = '{{ $tab }}';
-    const currentType  = '{{ $txType ?? "all" }}';
-    const form         = document.getElementById('reportForm');
-    const titleEl      = document.getElementById('reportModalTitle');
-    const infoEl       = document.getElementById('reportTypeInfo');
-    const txTypeInput  = document.getElementById('exportTxType');
-
-    if (currentTab === 'omset') {
-        // Laporan keuangan lengkap dengan breakdown totals
-        form.action = '{{ route("admin.orders.export-omset") }}';
-        if (txTypeInput) txTypeInput.value = currentType;
-        titleEl.textContent = 'Unduh Laporan Keuangan & Omset';
-
-        const typeLabels = {
-            'all':     'Semua Transaksi (Pembeli Online + POS + Domain Creator)',
-            'pos':     'POS (Transaksi Kasir & Deposit Saldo)',
-            'buyer':   'Pesanan Pembeli Online (Produk Fisik & Digital)',
-            'domain':  'Domain Creator',
-            'deposit': 'POS (Transaksi Kasir & Deposit Saldo)',
-            'creator': 'Semua Creator (Domain + POS)',
-        };
-        const label = typeLabels[currentType] || 'Semua Transaksi';
-        infoEl.innerHTML =
-            '<strong>Jenis Laporan:</strong> Keuangan &amp; Omset Platform<br>' +
-            '<strong>Filter Sumber:</strong> ' + label + '<br>' +
-            '<span style="color:#059669;font-weight:600;">Laporan ini mencakup rincian transaksi + baris total keseluruhan di bagian bawah.</span>';
-    } else {
-        // Laporan daftar pesanan produk biasa
-        form.action = '{{ route("admin.orders.export") }}';
-        if (txTypeInput) txTypeInput.value = '';
-        titleEl.textContent = 'Unduh Laporan Pesanan';
-        infoEl.innerHTML =
-            '<strong>Jenis Laporan:</strong> Daftar Pesanan Produk<br>' +
-            'Laporan ini berisi pesanan pembeli beserta total pembayaran di bagian bawah.';
-    }
-
-    document.getElementById('reportModal').style.display = 'flex';
+function openExportModal() {
+    document.getElementById('exportModal').style.display = 'flex';
 }
-function closeReportModal() {
-    document.getElementById('reportModal').style.display = 'none';
+function closeExportModal() {
+    document.getElementById('exportModal').style.display = 'none';
 }
-
-function setView(type) {
-    const listEl = document.getElementById('view-list');
-    const gridEl = document.getElementById('view-grid');
-    const btnList = document.getElementById('btn-list-view');
-    const btnGrid = document.getElementById('btn-grid-view');
-
-    if (!listEl || !gridEl) return;
-
-    if (type === 'grid') {
-        listEl.style.display = 'none';
-        gridEl.style.display = 'block';
-        if (btnList) btnList.classList.remove('active');
-        if (btnGrid) btnGrid.classList.add('active');
-    } else {
-        listEl.style.display = 'block';
-        gridEl.style.display = 'none';
-        if (btnList) btnList.classList.add('active');
-        if (btnGrid) btnGrid.classList.remove('active');
-    }
-    localStorage.setItem('admin_orders_view', type);
-}
-
-// Restore saved view preference
-document.addEventListener('DOMContentLoaded', function() {
-    const saved = localStorage.getItem('admin_orders_view') || 'list';
-    setView(saved);
+document.getElementById('exportModal').addEventListener('click', function(e) {
+    if (e.target === this) closeExportModal();
 });
 </script>
 @endpush

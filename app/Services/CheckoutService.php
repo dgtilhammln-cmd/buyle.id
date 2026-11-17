@@ -256,12 +256,17 @@ class CheckoutService
             $shippingAddressArray['table_number'] = $tableNumberInput;
         }
 
+        // Tentukan prefix standar: TIX untuk tiket event, MKT untuk marketplace produk fisik & digital
+        $isTicketOrder = collect($items)->contains(fn($ci) => ($ci['product']->product_type ?? '') === 'ticket')
+            || !empty($ticketHoldersInput);
+        $orderPrefix = $isTicketOrder ? 'TIX' : 'MKT';
+
         DB::beginTransaction();
 
         try {
             // 1. Buat Order
             $order = Order::create([
-                'order_number'     => Order::generateOrderNumber(),
+                'order_number'     => Order::generateOrderNumber($orderPrefix),
                 'user_id'          => $user?->id ?? null,
                 'customer_email'   => $user?->email ?? ($data['guest_email'] ?? null),
                 'status'           => OrderStatus::Pending,

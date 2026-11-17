@@ -15,31 +15,37 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class AdminOrderController extends Controller
 {
-    // Tab config: [label, status values or null for all, key]
+    // 4 Pilar Utama Bisnis Buyle.id + 1 Rekap Keuangan
     private array $tabs = [
-        'all'        => ['label' => 'Produk Digital & Marketplace', 'statuses' => null],
-        'processing' => ['label' => 'Perlu Dikirim',                 'statuses' => ['processing']],
-        'shipped'    => ['label' => 'Dikirim',                       'statuses' => ['shipped']],
-        'completed'  => ['label' => 'Selesai',                       'statuses' => ['confirmed','completed','delivered']],
-        'pos'        => ['label' => 'Kasir POS',                     'statuses' => null],
-        'omset'      => ['label' => 'Riwayat Omset & Keuangan',      'statuses' => null],
+        'marketplace' => ['label' => 'Marketplace',       'code' => 'MKT', 'desc' => 'Produk Fisik & Digital'],
+        'ticketing'   => ['label' => 'Tiket Event',       'code' => 'TIX', 'desc' => 'E-Tiket & Registrasi'],
+        'pos'         => ['label' => 'Kasir POS',         'code' => 'POS', 'desc' => 'Kasir Outlet & Dine-In'],
+        'wedding'     => ['label' => 'Undangan & Amplop', 'code' => 'WED', 'desc' => 'Paket Undangan & Kado Amplop'],
+        'finance'     => ['label' => 'Rekap Arus Kas',    'code' => 'FIN', 'desc' => 'Rekonsiliasi Profit & Payout'],
     ];
 
     public function index(Request $request)
     {
-        $tab = $request->get('tab', 'all');
-        if (!array_key_exists($tab, $this->tabs)) $tab = 'all';
+        $rawTab = $request->get('tab', 'marketplace');
+        $tabMapping = [
+            'all'        => 'marketplace',
+            'processing' => 'marketplace',
+            'shipped'    => 'marketplace',
+            'completed'  => 'marketplace',
+            'omset'      => 'finance',
+        ];
+        $tab = $tabMapping[$rawTab] ?? $rawTab;
+        if (!array_key_exists($tab, $this->tabs)) {
+            $tab = 'marketplace';
+        }
 
+        $subStatus = $request->get('status', in_array($rawTab, ['processing', 'shipped', 'completed']) ? $rawTab : 'all');
         $period    = $request->get('period', '30d');
         $startDate = $request->get('start_date');
         $endDate   = $request->get('end_date');
         $q         = trim($request->get('q', ''));
-        $txType    = $request->get('tx_type', 'all');
-        if (!in_array($txType, ['all', 'buyer', 'creator', 'domain', 'deposit', 'pos'])) {
-            $txType = 'all';
-        }
 
-        // Helper untuk filter tanggal konsisten
+        // Helper filter rentang tanggal
         $applyDate = function($qBuilder) use ($period, $startDate, $endDate) {
             if ($startDate && $endDate) {
                 $qBuilder->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
@@ -54,28 +60,10 @@ class AdminOrderController extends Controller
             }
         };
 
-        // Query dasar pesanan produk pembeli
-        $buyerQuery = Order::with(['user', 'items.product.seller', 'payment', 'shipment'])
-            ->where('status', '!=', OrderStatus::Pending)
-            ->orderByDesc('created_at');
-        $applyDate($buyerQuery);
-
-        if ($tab === 'pos') {
-            $buyerQuery->where(function($q) {
-                $q->where('source', 'pos')
-                  ->orWhere('shipping_address->is_pos', true);
-            });
-        } elseif ($tab !== 'omset') {
-            // Tab pesanan online biasa: KELUARKAN transaksi POS agar tidak tercampur!
-            $buyerQuery->where(function($q) {
-                $q->whereNull('source')->orWhere('source', '!=', 'pos');
-            })->where(function($q) {
-                $q->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
-            });
-        }
-
-        if ($q) {
-            $buyerQuery->where(function($sub) use ($q) {
+        // Helper filter pencarian order
+        $applySearch = function($qBuilder) use ($q) {
+            if (!$q) return;
+            $qBuilder->where(function($sub) use ($q) {
                 $sub->where('order_number', 'like', "%{$q}%")
                     ->orWhere('user_phone', 'like', "%{$q}%")
                     ->orWhere('receiver_name', 'like', "%{$q}%")
@@ -88,596 +76,323 @@ class AdminOrderController extends Controller
                         ->orWhere('slug', 'like', "%{$q}%"))
                     ->orWhereHas('items.product.seller', fn($cu) => $cu->where('name', 'like', "%{$q}%")
                         ->orWhere('email', 'like', "%{$q}%")
-                        ->orWhere('store_name', 'like', "%{$q}%")
-                        ->orWhere('store_slug', 'like', "%{$q}%"));
+                        ->orWhere('store_name', 'like', "%{$q}%"));
             });
-        }
+        };
 
-        // Stats standard untuk 4 tab pesanan produk online biasa (eksklusif tanpa POS)
-        $statsBase = Order::query()->where('status', '!=', OrderStatus::Pending)
-            ->where(function($q) {
-                $q->whereNull('source')->orWhere('source', '!=', 'pos');
-            })->where(function($q) {
-                $q->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
+        // -------------------------------------------------------------
+        // HITUNG COUNTS SETIAP TAB UTAMA
+        // -------------------------------------------------------------
+        $mktCountQuery = Order::query()->where('status', '!=', OrderStatus::Pending)
+            ->where(function($sq) {
+                $sq->whereNull('source')->orWhere('source', '!=', 'pos');
+            })->where(function($sq) {
+                $sq->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
+            })->whereDoesntHave('items.product', fn($p) => $p->where('product_type', 'ticket'));
+        $applyDate($mktCountQuery);
+
+        $tixCountQuery = Order::query()->where('status', '!=', OrderStatus::Pending)
+            ->where(function($sq) {
+                $sq->whereHas('items.product', fn($p) => $p->where('product_type', 'ticket'))
+                   ->orWhere('order_number', 'like', 'TIX-%');
             });
-        $applyDate($statsBase);
+        $applyDate($tixCountQuery);
 
-        // Stats khusus transaksi Kasir POS
-        $posStatsBase = Order::query()->where('status', '!=', OrderStatus::Pending)
-            ->where(function($q) {
-                $q->where('source', 'pos')
-                  ->orWhere('shipping_address->is_pos', true);
+        $posCountQuery = Order::query()->where('status', '!=', OrderStatus::Pending)
+            ->where(function($sq) {
+                $sq->where('source', 'pos')
+                   ->orWhere('shipping_address->is_pos', true)
+                   ->orWhere('order_number', 'like', 'POS-%');
             });
-        $applyDate($posStatsBase);
+        $applyDate($posCountQuery);
 
-        $stats = [
-            'total'       => (clone $statsBase)->count(),
-            'processing'  => (clone $statsBase)->whereIn('status', ['processing'])->count(),
-            'shipped'     => (clone $statsBase)->whereIn('status', ['shipped'])->count(),
-            'completed'   => (clone $statsBase)->whereIn('status', ['confirmed', 'completed', 'delivered'])->count(),
-            'revenue'     => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
-            'pos_total'   => (clone $posStatsBase)->count(),
-            'pos_revenue' => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('total'),
+        $wedCountQuery = \App\Models\WeddingGift::query();
+        $applyDate($wedCountQuery);
+
+        $payoutCountQuery = PayoutRequest::query();
+        $applyDate($payoutCountQuery);
+
+        $counts = [
+            'marketplace' => $mktCountQuery->count(),
+            'ticketing'   => $tixCountQuery->count(),
+            'pos'         => $posCountQuery->count(),
+            'wedding'     => $wedCountQuery->count(),
+            'finance'     => $payoutCountQuery->count(),
         ];
 
-        // Tab counts
-        $counts = [];
-        foreach ($this->tabs as $key => $cfg) {
-            if ($key === 'pos') {
-                $counts[$key] = (clone $posStatsBase)->count();
-            } elseif ($key === 'omset') {
-                $counts[$key] = (clone $statsBase)->count() + (clone $posStatsBase)->count();
-            } else {
-                $cQuery = clone $statsBase;
-                if ($cfg['statuses'] !== null) {
-                    $cQuery->whereIn('status', $cfg['statuses']);
-                }
-                $counts[$key] = $cQuery->count();
-            }
-        }
+        // -------------------------------------------------------------
+        // EKSEKUSI DATA PER TAB AKTIF
+        // -------------------------------------------------------------
+        $kpi = [
+            'gross'       => 0,
+            'partner_net' => 0,
+            'profit'      => 0,
+            'total_items' => 0,
+        ];
+        $subStatusCounts = ['all' => 0, 'processing' => 0, 'shipped' => 0, 'completed' => 0];
+        $financeStats = [];
 
-        // ═════════════════════════════════════════════════════════════════════
-        // KONDISIONAL KHUSUS TAB OMSET (SATU PINTU FINANCIAL LEDGER)
-        // ═════════════════════════════════════════════════════════════════════
-        $omsetItems = null;
-        $revenueStats = [];
-        $txTypeCounts = [];
-
-        if ($tab === 'omset') {
-            // 1. Query Domain Orders (Creator)
-            $domainQuery = DomainOrder::with('user.creatorProfile')->orderByDesc('created_at');
-            $applyDate($domainQuery);
-            if ($q) {
-                $domainQuery->where(function($sub) use ($q) {
-                    $sub->where('domain_name', 'like', "%{$q}%")
-                        ->orWhere('extension', 'like', "%{$q}%")
-                        ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$q}%")
-                            ->orWhere('email', 'like', "%{$q}%")
-                            ->orWhere('username', 'like', "%{$q}%"));
-                });
-            }
-
-            // 2. Query Pindah Saldo Toko ke Deposit Kasir POS (Creator)
-            $payoutDepositQuery = PayoutRequest::with('seller.creatorProfile')
-                ->where('bank_name', 'like', '%Deposit Kasir POS%')
-                ->where('status', 'processed')
+        if ($tab === 'marketplace') {
+            $baseQuery = Order::with(['user', 'items.product.seller', 'payment', 'shipment'])
+                ->where('status', '!=', OrderStatus::Pending)
+                ->where(function($sq) {
+                    $sq->whereNull('source')->orWhere('source', '!=', 'pos');
+                })->where(function($sq) {
+                    $sq->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
+                })->whereDoesntHave('items.product', fn($p) => $p->where('product_type', 'ticket'))
                 ->orderByDesc('created_at');
-            $applyDate($payoutDepositQuery);
-            if ($q) {
-                $payoutDepositQuery->where(function($sub) use ($q) {
-                    $sub->where('notes', 'like', "%{$q}%")
-                        ->orWhere('bank_account_name', 'like', "%{$q}%")
-                        ->orWhereHas('seller', fn($u) => $u->where('name', 'like', "%{$q}%")
-                            ->orWhere('email', 'like', "%{$q}%"));
-                });
+            $applyDate($baseQuery);
+            $applySearch($baseQuery);
+
+            // Substatus counts
+            $subStatusCounts['all']        = (clone $baseQuery)->count();
+            $subStatusCounts['processing'] = (clone $baseQuery)->whereIn('status', ['processing'])->count();
+            $subStatusCounts['shipped']    = (clone $baseQuery)->whereIn('status', ['shipped'])->count();
+            $subStatusCounts['completed']  = (clone $baseQuery)->whereIn('status', ['confirmed', 'completed', 'delivered'])->count();
+
+            // KPI
+            $paidMkt = (clone $baseQuery)->whereNotIn('status', ['cancelled', 'refunded']);
+            $gross      = (float)$paidMkt->sum('total');
+            $subtotal   = (float)$paidMkt->sum('subtotal');
+            $platFee    = (float)$paidMkt->sum('platform_fee');
+            $adminFee   = (float)$paidMkt->sum('admin_fee');
+            $kpi['gross']       = $gross;
+            $kpi['partner_net'] = max(0, $subtotal - $platFee);
+            $kpi['profit']      = $platFee + $adminFee;
+            $kpi['total_items'] = $subStatusCounts['all'];
+
+            // Filter substatus
+            if ($subStatus === 'processing') {
+                $baseQuery->whereIn('status', ['processing']);
+            } elseif ($subStatus === 'shipped') {
+                $baseQuery->whereIn('status', ['shipped']);
+            } elseif ($subStatus === 'completed') {
+                $baseQuery->whereIn('status', ['confirmed', 'completed', 'delivered']);
             }
 
-            // 2b. Query Semua Transaksi Pencairan Dana Creator (Bank / E-Wallet Outflow)
-            $payoutWithdrawalQuery = PayoutRequest::with('seller.creatorProfile')
-                ->where('bank_name', 'not like', '%Deposit Kasir POS%')
+            $orders = $baseQuery->paginate(20)->withQueryString();
+
+        } elseif ($tab === 'ticketing') {
+            $baseQuery = Order::with(['user', 'items.product.seller', 'payment', 'ticketPasses'])
+                ->where('status', '!=', OrderStatus::Pending)
+                ->where(function($sq) {
+                    $sq->whereHas('items.product', fn($p) => $p->where('product_type', 'ticket'))
+                       ->orWhere('order_number', 'like', 'TIX-%');
+                })
                 ->orderByDesc('created_at');
-            $applyDate($payoutWithdrawalQuery);
-            if ($q) {
-                $payoutWithdrawalQuery->where(function($sub) use ($q) {
-                    $sub->where('bank_name', 'like', "%{$q}%")
-                        ->orWhere('bank_account_number', 'like', "%{$q}%")
-                        ->orWhere('bank_account_name', 'like', "%{$q}%")
-                        ->orWhereHas('seller', fn($u) => $u->where('name', 'like', "%{$q}%")
-                            ->orWhere('email', 'like', "%{$q}%"));
-                });
-            }
+            $applyDate($baseQuery);
+            $applySearch($baseQuery);
 
-            // 3. Query Top-up Deposit POS via QRIS / Midtrans (Creator)
-            $directPosDepositQuery = PosDeposit::with('creator.user')
-                ->whereIn('status', ['paid', 'success'])
+            $paidTix = (clone $baseQuery)->whereNotIn('status', ['cancelled', 'refunded']);
+            $gross      = (float)$paidTix->sum('total');
+            $subtotal   = (float)$paidTix->sum('subtotal');
+            $platFee    = (float)$paidTix->sum('platform_fee');
+            $adminFee   = (float)$paidTix->sum('admin_fee');
+            $kpi['gross']       = $gross;
+            $kpi['partner_net'] = max(0, $subtotal - $platFee);
+            $kpi['profit']      = $platFee + $adminFee;
+            $kpi['total_items'] = (clone $baseQuery)->count();
+
+            $orders = $baseQuery->paginate(20)->withQueryString();
+
+        } elseif ($tab === 'pos') {
+            $baseQuery = Order::with(['user', 'items.product', 'payment'])
+                ->where('status', '!=', OrderStatus::Pending)
+                ->where(function($sq) {
+                    $sq->where('source', 'pos')
+                       ->orWhere('shipping_address->is_pos', true)
+                       ->orWhere('order_number', 'like', 'POS-%');
+                })
                 ->orderByDesc('created_at');
-            $applyDate($directPosDepositQuery);
+            $applyDate($baseQuery);
+            $applySearch($baseQuery);
+
+            $paidPos = (clone $baseQuery)->whereNotIn('status', ['cancelled', 'refunded']);
+            $gross      = (float)$paidPos->sum('total');
+            $subtotal   = (float)$paidPos->sum('subtotal');
+            $platFee    = (float)$paidPos->sum('platform_fee');
+            $adminFee   = (float)$paidPos->sum('admin_fee');
+            $kpi['gross']       = $gross;
+            $kpi['partner_net'] = max(0, $gross - $platFee - $adminFee);
+            $kpi['profit']      = $platFee + $adminFee;
+            $kpi['total_items'] = (clone $baseQuery)->count();
+
+            $orders = $baseQuery->paginate(20)->withQueryString();
+
+        } elseif ($tab === 'wedding') {
+            $giftQuery = \App\Models\WeddingGift::with(['wedding.user', 'guest'])->orderByDesc('created_at');
+            $applyDate($giftQuery);
             if ($q) {
-                $directPosDepositQuery->where(function($sub) use ($q) {
-                    $sub->where('deposit_number', 'like', "%{$q}%")
-                        ->orWhereHas('creator.user', fn($u) => $u->where('name', 'like', "%{$q}%")
-                            ->orWhere('email', 'like', "%{$q}%"));
+                $giftQuery->where(function($sub) use ($q) {
+                    $sub->where('sender_name', 'like', "%{$q}%")
+                        ->orWhere('midtrans_order_id', 'like', "%{$q}%")
+                        ->orWhereHas('wedding', fn($w) => $w->where('slug', 'like', "%{$q}%")
+                            ->orWhere('groom_name', 'like', "%{$q}%")
+                            ->orWhere('bride_name', 'like', "%{$q}%"));
                 });
             }
 
-            // ── Perhitungan Statistik Finansial Keseluruhan ──
-            $posPaidBase = (clone $buyerQuery)->where(function($q) {
-                $q->where('source', 'pos')
-                  ->orWhere('shipping_address->is_pos', true);
-            })->whereNotIn('status', ['cancelled', 'refunded']);
+            $settledGifts = (clone $giftQuery)->where('payment_status', 'settlement');
+            $settledGross = 0;
+            $coupleNet    = 0;
+            $feeBuyle     = 0;
 
-            $onlinePaidBase = (clone $buyerQuery)->where(function($q) {
-                $q->where(function($sub) {
-                    $sub->whereNull('source')->orWhere('source', '!=', 'pos');
-                })->where(function($sub) {
-                    $sub->whereNull('shipping_address->is_pos')->orWhere('shipping_address->is_pos', false);
-                });
-            })->whereNotIn('status', ['cancelled', 'refunded']);
-
-            $onlineGross    = (float) $onlinePaidBase->sum('total');
-            $onlineSubtotal = (float) $onlinePaidBase->sum('subtotal');
-            $onlineAdminFee = (float) $onlinePaidBase->sum('admin_fee');
-            $onlinePlatFee  = (float) $onlinePaidBase->sum('platform_fee');
-            $onlineProfit   = $onlineAdminFee + $onlinePlatFee;
-            $onlineCount    = (clone $onlinePaidBase)->count();
-
-            $posOrderGross    = (float) $posPaidBase->sum('total');
-            $posOrderSubtotal = (float) $posPaidBase->sum('subtotal');
-            $posOrderAdminFee = (float) $posPaidBase->sum('admin_fee');
-            $posOrderPlatFee  = (float) $posPaidBase->sum('platform_fee');
-            $posOrderProfit   = $posOrderAdminFee + $posOrderPlatFee;
-            $posOrderCount    = (clone $posPaidBase)->count();
-
-            $domainPaidBase = (clone $domainQuery)->whereIn('status', ['paid', 'completed']);
-            $domainGross    = (float) $domainPaidBase->sum('amount');
-            $domainAdminFee = (float) $domainPaidBase->sum('admin_fee');
-            $domainPlatFee  = (float) $domainPaidBase->sum('platform_fee');
-            $domainTax      = (float) $domainPaidBase->sum('tax_amount');
-
-            $buyPrices = \App\Http\Controllers\Creator\CreatorDomainController::getBuyPrices();
-
-            // Total Modal Beli Registrar dan Keuntungan Bersih Sebenarnya
-            $domainBaseCost = 0;
-            $domainProfit   = 0;
-            foreach ($domainPaidBase->get() as $dpb) {
-                $ext = strtolower($dpb->extension ?? '');
-                $buyCost = (float)($buyPrices[$ext] ?? 0);
-                $domainBaseCost += $buyCost;
-                // Rumus Keuntungan: (Harga Jual - Harga Beli Modal) + Platform Fee + Admin Fee + Pajak 11% = Gross - BuyCost
-                $domainProfit += max(0, (float)$dpb->amount - $buyCost);
+            foreach ($settledGifts->get() as $sg) {
+                $sgFee = 5000;
+                $settledGross += ((float)$sg->amount + $sgFee);
+                $coupleNet    += (float)$sg->amount;
+                $feeBuyle     += $sgFee;
             }
 
-            $domainCount    = (clone $domainQuery)->count();
-            $domainPaidCount= $domainPaidBase->count();
+            $kpi['gross']       = $settledGross;
+            $kpi['partner_net'] = $coupleNet;
+            $kpi['profit']      = $feeBuyle;
+            $kpi['total_items'] = (clone $giftQuery)->count();
 
-            $depositTransferGross = (float) (clone $payoutDepositQuery)->sum('amount');
-            $depositDirectGross   = (float) (clone $directPosDepositQuery)->sum('amount');
-            $depositTotalGross    = $depositTransferGross + $depositDirectGross;
-            $depositCount         = (clone $payoutDepositQuery)->count() + (clone $directPosDepositQuery)->count();
+            // Transform ke objek standar
+            $rawGifts = $giftQuery->get()->map(function($g) {
+                $sgFee = 5000;
+                $isPaid = $g->payment_status === 'settlement';
+                $gross = (float)$g->amount + ($isPaid ? $sgFee : 0);
+                $coupleNet = (float)$g->amount;
+                $profit = $isPaid ? $sgFee : 0;
+                $groom = $g->wedding->groom_nickname ?? $g->wedding->groom_name ?? 'Pengantin';
+                $bride = $g->wedding->bride_nickname ?? $g->wedding->bride_name ?? '';
+                $coupleStr = $bride ? "{$groom} & {$bride}" : $groom;
 
-            // Gabungan POS (Penjualan Kasir POS + Saldo Deposit POS)
-            $posTotalGross  = $posOrderGross + $depositTotalGross;
-            $posTotalProfit = $posOrderProfit;
-            $posTotalCount  = $posOrderCount + $depositCount;
-
-            // ── Kalkulasi Rekonsiliasi Pencairan & Clearance Saldo Creator ──
-            $payoutProcessedGross = (float) (clone $payoutWithdrawalQuery)->whereIn('status', ['processed', 'approved'])->sum('amount');
-            $payoutPendingGross   = (float) (clone $payoutWithdrawalQuery)->where('status', 'pending')->sum('amount');
-            $payoutPendingCount   = (clone $payoutWithdrawalQuery)->where('status', 'pending')->count();
-            $payoutTotalCount     = (clone $payoutWithdrawalQuery)->count();
-
-            // Hitung status clearance tiap pesanan (Hold 3 hari vs Escrow Event vs Cleared)
-            $nowTime = \Carbon\Carbon::now();
-            $clearedSalesTotal = 0;
-            $holdRegularTotal  = 0;
-            $escrowEventTotal  = 0;
-
-            foreach ((clone $buyerQuery)->whereNotIn('status', ['cancelled', 'refunded'])->get() as $ord) {
-                $isP = ($ord->source === 'pos') || (!empty($ord->shipping_address['is_pos']));
-                $pAt = $ord->payment?->paid_at ?? $ord->created_at;
-                $pTime = \Carbon\Carbon::parse($pAt);
-                $ordSub = (float) $ord->subtotal;
-
-                if ($isP) {
-                    $clearedSalesTotal += $ordSub;
-                } else {
-                    $hasTicket = $ord->items->contains(fn($i) => ($i->product?->product_type ?? '') === 'ticket');
-                    if ($hasTicket) {
-                        $evDate = $ord->items->first()?->product?->event_date ? \Carbon\Carbon::parse($ord->items->first()->product->event_date)->endOfDay() : null;
-                        $relDate = $evDate ? $evDate->copy()->addDays(3) : $pTime->copy()->addDays(3);
-                        if ($nowTime->lt($relDate)) {
-                            $escrowEventTotal += $ordSub;
-                        } else {
-                            $clearedSalesTotal += $ordSub;
-                        }
-                    } else {
-                        if ($pTime->diffInHours($nowTime) < 72) {
-                            $holdRegularTotal += $ordSub;
-                        } else {
-                            $clearedSalesTotal += $ordSub;
-                        }
-                    }
-                }
-            }
-
-            // Saldo Mengendap Hak Creator (Belum Dicairkan)
-            $outstandingUnwithdrawn = max(0, $clearedSalesTotal - $payoutProcessedGross - $payoutPendingGross - $depositTransferGross);
-
-            $revenueStats = [
-                'gross'            => $onlineGross + $posOrderGross + $domainGross + $depositTotalGross,
-                'subtotal'         => $onlineSubtotal + $posOrderSubtotal + $domainBaseCost,
-                'admin_fee'        => $onlineAdminFee + $posOrderAdminFee + $domainAdminFee,
-                'platform_fee'     => $onlinePlatFee + $posOrderPlatFee + $domainPlatFee,
-                'tax'              => $domainTax,
-                'profit'           => $onlineProfit + $posOrderProfit + $domainProfit,
-                'buyer_gross'      => $onlineGross,
-                'buyer_profit'     => $onlineProfit,
-                'buyer_count'      => $onlineCount,
-                'pos_gross'        => $posTotalGross,
-                'pos_profit'       => $posTotalProfit,
-                'pos_count'        => $posTotalCount,
-                'pos_order_gross'  => $posOrderGross,
-                'pos_order_count'  => $posOrderCount,
-                'domain_gross'     => $domainGross,
-                'domain_base'      => $domainBaseCost,
-                'domain_profit'    => $domainProfit,
-                'domain_tax'       => $domainTax,
-                'domain_count'     => $domainCount,
-                'domain_paid'      => $domainPaidCount,
-                'deposit_gross'    => $depositTotalGross,
-                'deposit_count'    => $depositCount,
-                // Rekonsiliasi Pencairan & Clearance
-                'payout_processed'     => $payoutProcessedGross,
-                'payout_pending'       => $payoutPendingGross,
-                'payout_pending_count' => $payoutPendingCount,
-                'payout_count'         => $payoutTotalCount,
-                'hold_regular'         => $holdRegularTotal,
-                'escrow_event'         => $escrowEventTotal,
-                'hold_total'           => $holdRegularTotal + $escrowEventTotal,
-                'cleared_total'        => $clearedSalesTotal,
-                'outstanding'          => $outstandingUnwithdrawn,
-            ];
-
-            // Update stats tab total omset card
-            $stats['revenue'] = $revenueStats['gross'];
-
-            // Counts untuk pill filter transaksi
-            $txTypeCounts = [
-                'all'     => $onlineCount + $posTotalCount + $domainCount + $payoutTotalCount,
-                'sales'   => $onlineCount + $posOrderCount,
-                'buyer'   => $onlineCount,
-                'payout'  => $payoutTotalCount,
-                'pos'     => $posTotalCount,
-                'deposit' => $posTotalCount, // alias backwards compatibility
-                'domain'  => $domainCount,
-                'creator' => $posTotalCount + $domainCount + $payoutTotalCount,
-            ];
-
-            // ── Kumpulkan dan seragamkan baris transaksi ──
-            $rows = collect();
-
-            // 1. Pesanan Pembeli Online & Kasir POS
-            foreach ($buyerQuery->get() as $o) {
-                $isPos = ($o->source === 'pos') || (!empty($o->shipping_address['is_pos']));
-
-                // Filter check berdasarkan tab/pill yang dipilih
-                if ($txType === 'payout') continue;
-                if ($txType === 'buyer' && $isPos) continue;
-                if (in_array($txType, ['pos', 'deposit']) && !$isPos) continue;
-                if ($txType === 'domain') continue;
-
-                $types = $o->items->map(function($i) {
-                    $pt = $i->product?->product_type ?? $i->product?->type ?? '';
-                    if ($pt === 'ticket') return 'Tiket';
-                    if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
-                    return 'Fisik';
-                })->unique()->implode(', ');
-                $txTypeLabel = $types ?: 'Produk';
-                $shipAddr = is_array($o->shipping_address) ? $o->shipping_address : [];
-                $posMethod = $shipAddr['payment_method'] ?? null;
-                $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($posMethod ? strtoupper($posMethod) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : ($isPos ? 'KASIR POS' : 'MIDTRANS')));
-                $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
-
-                $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                $stBadge = match($statusVal) {
-                    'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Berhasil'],
-                    'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
-                    'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
-                    'cancelled'               => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
-                    default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
-                };
-
-                $creatorName = $o->items->first()?->product?->seller?->name ?? ($isPos ? ($o->user->name ?? 'Kasir POS') : 'Creator');
-
-                if ($isPos) {
-                    $partyName = $shipAddr['name'] ?? $shipAddr['receiver_name'] ?? 'Pelanggan Kasir';
-                    $partyEmail = $shipAddr['email'] ?? ($shipAddr['phone'] ?? '-');
-                    $partyRole = 'Pelanggan POS';
-                    $categoryLabel = 'POS (Kasir - ' . $txTypeLabel . ')';
-                    $sourceType = 'pos_order';
-                } else {
-                    $partyName = $o->user->name ?? ($shipAddr['receiver_name'] ?? 'Pembeli');
-                    $partyEmail = $o->user->email ?? '-';
-                    $partyRole = 'Pembeli';
-                    $categoryLabel = 'Pembeli (' . $txTypeLabel . ')';
-                    $sourceType = 'buyer_order';
-                }
-
-                // Tentukan status clearance dana creator
-                $nowT = \Carbon\Carbon::now();
-                $pAtT = $o->payment?->paid_at ?? $o->created_at;
-                $pTimeT = \Carbon\Carbon::parse($pAtT);
-                if ($isPos) {
-                    $clearanceBadge = ['#166534', '#DCFCE7', 'Cair (POS)'];
-                } else {
-                    $hasTicket = $o->items->contains(fn($i) => ($i->product?->product_type ?? '') === 'ticket');
-                    if ($hasTicket) {
-                        $evDate = $o->items->first()?->product?->event_date ? \Carbon\Carbon::parse($o->items->first()->product->event_date)->endOfDay() : null;
-                        $relDate = $evDate ? $evDate->copy()->addDays(3) : $pTimeT->copy()->addDays(3);
-                        if ($nowT->lt($relDate)) {
-                            $clearanceBadge = ['#1E40AF', '#EFF6FF', 'Escrow Event (H+3)'];
-                        } else {
-                            $clearanceBadge = ['#166534', '#DCFCE7', 'Dana Siap Cair'];
-                        }
-                    } else {
-                        if ($pTimeT->diffInHours($nowT) < 72) {
-                            $clearanceBadge = ['#D97706', '#FEF3C7', 'Hold 3x24 Jam'];
-                        } else {
-                            $clearanceBadge = ['#166534', '#DCFCE7', 'Dana Siap Cair'];
-                        }
-                    }
-                }
-
-                $rows->push((object)[
-                    'id'              => 'ORD-' . $o->id,
-                    'source_type'     => $sourceType,
-                    'created_at'      => $o->created_at,
-                    'ref_number'      => '#' . $o->order_number,
-                    'url'             => route('admin.orders.show', $o),
-                    'party_name'      => $partyName,
-                    'party_email'     => $partyEmail,
-                    'party_role'      => $partyRole,
-                    'category'        => $categoryLabel,
-                    'creator_name'    => $creatorName,
-                    'channel'         => $channel,
-                    'base_amount'     => (float)$o->subtotal,
-                    'buy_cost'        => 0,
-                    'admin_fee'       => (float)($o->admin_fee ?? 0),
-                    'platform_fee'    => (float)($o->platform_fee ?? 0),
-                    'tax_amount'      => 0,
-                    'gross'           => (float)$o->total,
-                    'profit'          => $profit,
-                    'status'          => $statusVal,
-                    'status_label'    => $stBadge[2],
-                    'status_color'    => $stBadge[0],
-                    'status_bg'       => $stBadge[1],
-                    'clearance_badge' => $clearanceBadge,
-                    'can_update'      => false,
-                    'raw'             => $o,
-                ]);
-            }
-
-            // 2. Transaksi Domain Creator
-            if (in_array($txType, ['all', 'domain', 'creator'])) {
-                foreach ($domainQuery->get() as $d) {
-                    $ext = strtolower($d->extension ?? '');
-                    $buyCost = (float)($buyPrices[$ext] ?? 0);
-                    $isPaid = in_array($d->status, ['paid', 'completed']);
-                    // Keuntungan = (Harga Jual - Harga Beli) + Platform Fee + Admin Fee + Pajak 11%
-                    $profit = $isPaid ? max(0, (float)$d->amount - $buyCost) : 0;
-
-                    $stBadge = match($d->status) {
-                        'completed' => ['#166534', '#DCFCE7', 'Sudah Berhasil'],
-                        'paid'      => ['#0284C7', '#E0F2FE', 'Lunas (Paid)'],
-                        'pending'   => ['#D97706', '#FEF3C7', 'Pending'],
-                        'rejected'  => ['#DC2626', '#FEE2E2', 'Ditolak'],
-                        'cancelled' => ['#64748B', '#F1F5F9', 'Dibatalkan'],
-                        default     => ['#475569', '#F1F5F9', ucfirst($d->status)]
-                    };
-
-                    $creatorName = $d->user->name ?? 'Creator';
-
-                    $rows->push((object)[
-                        'id'           => 'DOM-' . $d->id,
-                        'source_type'  => 'domain_order',
-                        'created_at'   => $d->created_at,
-                        'ref_number'   => '#DOM-' . str_pad($d->id, 5, '0', STR_PAD_LEFT),
-                        'url'          => $d->user ? route('admin.creator-resources.show', $d->user->id) : null,
-                        'party_name'   => $creatorName,
-                        'party_email'  => $d->user->email ?? '-',
-                        'party_role'   => 'Creator',
-                        'category'     => 'Domain: ' . $d->domain_name,
-                        'creator_name' => $creatorName,
-                        'channel'      => 'MIDTRANS',
-                        'base_amount'  => (float)$d->base_amount,
-                        'buy_cost'     => $buyCost,
-                        'admin_fee'    => (float)($d->admin_fee ?? 0),
-                        'platform_fee' => (float)($d->platform_fee ?? 0),
-                        'tax_amount'   => (float)($d->tax_amount ?? 0),
-                        'gross'        => (float)$d->amount,
-                        'profit'       => $profit,
-                        'status'       => $d->status,
-                        'status_label' => $stBadge[2],
-                        'status_color' => $stBadge[0],
-                        'status_bg'    => $stBadge[1],
-                        'can_update'   => true,
-                        'raw'          => $d,
-                    ]);
-                }
-            }
-
-            // 3. Pindah Saldo Kasir POS (Creator)
-            if (in_array($txType, ['all', 'deposit', 'pos', 'creator'])) {
-                foreach ($payoutDepositQuery->get() as $p) {
-                    $creatorName = $p->seller->name ?? 'Creator';
-                    $rows->push((object)[
-                        'id'           => 'TRF-' . $p->id,
-                        'source_type'  => 'pos_deposit',
-                        'created_at'   => $p->created_at,
-                        'ref_number'   => '#TRF-POS-' . $p->id,
-                        'url'          => null,
-                        'party_name'   => $creatorName,
-                        'party_email'  => $p->seller->email ?? '-',
-                        'party_role'   => 'Creator',
-                        'category'     => 'Deposit POS (Pindah Saldo)',
-                        'creator_name' => $creatorName,
-                        'channel'      => 'SALDO CREATOR',
-                        'base_amount'  => (float)$p->amount,
-                        'buy_cost'     => (float)$p->amount,
-                        'admin_fee'    => 0,
-                        'platform_fee' => 0,
-                        'tax_amount'   => 0,
-                        'gross'        => (float)$p->amount,
-                        'profit'       => 0,
-                        'status'       => 'processed',
-                        'status_label' => 'Berhasil',
-                        'status_color' => '#166534',
-                        'status_bg'    => '#DCFCE7',
-                        'can_update'   => false,
-                        'raw'          => $p,
-                    ]);
-                }
-
-                foreach ($directPosDepositQuery->get() as $dp) {
-                    $user = $dp->creator?->user;
-                    $creatorName = $user->name ?? 'Creator';
-                    $rows->push((object)[
-                        'id'           => 'DEP-' . $dp->id,
-                        'source_type'  => 'pos_deposit',
-                        'created_at'   => $dp->created_at,
-                        'ref_number'   => '#' . $dp->deposit_number,
-                        'url'          => null,
-                        'party_name'   => $creatorName,
-                        'party_email'  => $user->email ?? '-',
-                        'party_role'   => 'Creator',
-                        'category'     => 'Deposit POS (Top-Up)',
-                        'creator_name' => $creatorName,
-                        'channel'      => strtoupper($dp->payment_method ?: 'QRIS'),
-                        'base_amount'  => (float)$dp->amount,
-                        'buy_cost'     => (float)$dp->amount,
-                        'admin_fee'    => 0,
-                        'platform_fee' => 0,
-                        'tax_amount'   => 0,
-                        'gross'        => (float)$dp->amount,
-                        'profit'       => 0,
-                        'status'       => $dp->status,
-                        'status_label' => $dp->status === 'paid' ? 'Lunas' : ucfirst($dp->status),
-                        'status_color' => $dp->status === 'paid' ? '#166534' : '#D97706',
-                        'status_bg'    => $dp->status === 'paid' ? '#DCFCE7' : '#FEF3C7',
-                        'can_update'   => false,
-                        'raw'          => $dp,
-                    ]);
-                }
-            }
-
-            // 4. Transaksi Pencairan Dana Creator (Outflow Rekening Bank / E-Wallet)
-            if (in_array($txType, ['all', 'payout', 'creator'])) {
-                foreach ($payoutWithdrawalQuery->get() as $p) {
-                    $creatorName = $p->seller->name ?? 'Creator';
-                    $stBadge = match($p->status) {
-                        'pending'   => ['#D97706', '#FEF3C7', 'Menunggu Transfer'],
-                        'approved'  => ['#0284C7', '#E0F2FE', 'Disetujui'],
-                        'processed' => ['#166534', '#DCFCE7', 'Sudah Dicairkan'],
-                        'rejected'  => ['#DC2626', '#FEE2E2', 'Ditolak'],
-                        default     => ['#475569', '#F1F5F9', ucfirst($p->status)]
-                    };
-
-                    $clearanceBadge = match($p->status) {
-                        'processed' => ['#166534', '#DCFCE7', 'Dana Sudah Keluar'],
-                        'pending'   => ['#D97706', '#FEF3C7', 'Perlu Transfer'],
-                        'approved'  => ['#0284C7', '#E0F2FE', 'Disetujui'],
-                        'rejected'  => ['#DC2626', '#FEE2E2', 'Batal / Ditolak'],
-                        default     => ['#475569', '#F1F5F9', ucfirst($p->status)]
-                    };
-
-                    $rows->push((object)[
-                        'id'              => 'WD-' . $p->id,
-                        'source_type'     => 'payout_withdrawal',
-                        'created_at'      => $p->created_at,
-                        'ref_number'      => '#WD-' . str_pad($p->id, 5, '0', STR_PAD_LEFT),
-                        'url'             => route('admin.payouts.index', ['status' => $p->status]),
-                        'party_name'      => $creatorName,
-                        'party_email'     => $p->seller->email ?? '-',
-                        'party_role'      => 'Creator (Pencairan)',
-                        'category'        => 'Pencairan: ' . $p->bank_name,
-                        'creator_name'    => $creatorName,
-                        'channel'         => strtoupper($p->bank_name),
-                        'base_amount'     => (float)$p->amount,
-                        'buy_cost'        => (float)$p->amount,
-                        'admin_fee'       => 0,
-                        'platform_fee'    => 0,
-                        'tax_amount'      => 0,
-                        'gross'           => -(float)$p->amount, // Nominal negatif menandakan penarikan keluar
-                        'profit'          => 0,
-                        'status'          => $p->status,
-                        'status_label'    => $stBadge[2],
-                        'status_color'    => $stBadge[0],
-                        'status_bg'       => $stBadge[1],
-                        'clearance_badge' => $clearanceBadge,
-                        'bank_info'       => $p->bank_name . ' • ' . $p->bank_account_number . ' a.n ' . $p->bank_account_name,
-                        'can_update'      => false,
-                        'raw'             => $p,
-                    ]);
-                }
-            }
-
-            // Urutkan berdasarkan waktu transaksi terbaru
-            $rows = $rows->sortByDesc('created_at')->values();
+                return (object)[
+                    'id'            => 'AMP-' . $g->id,
+                    'pillar'        => 'AMP',
+                    'order_number'  => $g->midtrans_order_id ?: ('AMP-' . $g->id),
+                    'created_at'    => $g->created_at,
+                    'customer_name' => $g->sender_name ?: 'Tamu Undangan',
+                    'customer_info' => 'Kado untuk: ' . $coupleStr,
+                    'partner_name'  => $g->wedding->user->name ?? 'Pengantin',
+                    'channel'       => strtoupper($g->payment_method ?? 'QRIS'),
+                    'gross'         => $gross,
+                    'partner_net'   => $coupleNet,
+                    'profit'        => $profit,
+                    'status'        => $isPaid ? 'Lunas' : ($g->payment_status === 'expire' ? 'Expired' : ucfirst($g->payment_status)),
+                    'status_color'  => $isPaid ? '#15803D' : ($g->payment_status === 'expire' ? '#DC2626' : '#D97706'),
+                    'status_bg'     => $isPaid ? '#DCFCE7' : ($g->payment_status === 'expire' ? '#FEE2E2' : '#FEF3C7'),
+                    'raw'           => $g,
+                ];
+            });
 
             // Paginate
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $perPage = 20;
-            $pagedRows = $rows->slice(($currentPage - 1) * $perPage, $perPage)->values();
-            $omsetItems = new LengthAwarePaginator(
+            $pagedRows = $rawGifts->slice(($currentPage - 1) * $perPage, $perPage)->values();
+            $orders = new LengthAwarePaginator(
                 $pagedRows,
-                $rows->count(),
+                $rawGifts->count(),
                 $perPage,
                 $currentPage,
                 ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
             );
 
-            $orders = $omsetItems;
-        } elseif ($tab === 'pos') {
-            $orders = $buyerQuery->paginate(20)->withQueryString();
-
-            $revenueStats = [
-                'gross'        => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('total'),
-                'subtotal'     => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('subtotal'),
-                'admin_fee'    => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('admin_fee'),
-                'platform_fee' => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->sum('platform_fee'),
-                'profit'       => (clone $posStatsBase)->whereNotIn('status', ['cancelled', 'refunded'])->selectRaw('SUM(COALESCE(admin_fee,0) + COALESCE(platform_fee,0)) as profit')->value('profit') ?? 0,
-            ];
         } else {
-            // Tab pesanan biasa: filter status tab & paginate
-            $statuses = $this->tabs[$tab]['statuses'];
-            if ($statuses) {
-                $buyerQuery->whereIn('status', $statuses);
+            // Tab Finance (Rekap Arus Kas & Payout)
+            $payoutWithdrawalQuery = PayoutRequest::with('seller.creatorProfile')->orderByDesc('created_at');
+            $applyDate($payoutWithdrawalQuery);
+            if ($q) {
+                $payoutWithdrawalQuery->where(function($sub) use ($q) {
+                    $sub->where('bank_name', 'like', "%{$q}%")
+                        ->orWhere('bank_account_number', 'like', "%{$q}%")
+                        ->orWhere('notes', 'like', "%{$q}%")
+                        ->orWhereHas('seller', fn($u) => $u->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%"));
+                });
             }
-            $orders = $buyerQuery->paginate(20)->withQueryString();
 
-            $revenueStats = [
-                'gross'        => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
-                'subtotal'     => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('subtotal'),
-                'admin_fee'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('admin_fee'),
-                'platform_fee' => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('platform_fee'),
-                'profit'       => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->selectRaw('SUM(COALESCE(admin_fee,0) + COALESCE(platform_fee,0)) as profit')->value('profit') ?? 0,
+            // Kumpulkan seluruh data payout
+            $payoutProcessed = (float) (clone $payoutWithdrawalQuery)->whereIn('status', ['processed', 'approved'])->sum('amount');
+            $payoutPending   = (float) (clone $payoutWithdrawalQuery)->where('status', 'pending')->sum('amount');
+            $payoutPendingCount = (clone $payoutWithdrawalQuery)->where('status', 'pending')->count();
+
+            // Hitung akumulasi gross & profit dari seluruh pilar
+            $allOrders = Order::query()->whereNotIn('status', ['cancelled', 'refunded', 'pending']);
+            $applyDate($allOrders);
+            $totalOrderGross  = (float)$allOrders->sum('total');
+            $totalOrderPlat   = (float)$allOrders->sum('platform_fee');
+            $totalOrderAdmin  = (float)$allOrders->sum('admin_fee');
+            $totalOrderProfit = $totalOrderPlat + $totalOrderAdmin;
+
+            // Amplop nikah
+            $allGifts = \App\Models\WeddingGift::query()->where('payment_status', 'settlement');
+            $applyDate($allGifts);
+            $totalGiftAmount = (float)$allGifts->sum('amount');
+            $totalGiftFee    = (float)$allGifts->count() * 5000;
+            $totalGiftGross  = $totalGiftAmount + $totalGiftFee;
+
+            $totalGrossAll   = $totalOrderGross + $totalGiftGross;
+            $totalProfitAll  = $totalOrderProfit + $totalGiftFee;
+            $totalPartnerNet = max(0, $totalGrossAll - $totalProfitAll);
+            $outstandingNet  = max(0, $totalPartnerNet - $payoutProcessed - $payoutPending);
+
+            $kpi['gross']       = $totalGrossAll;
+            $kpi['partner_net'] = $totalPartnerNet;
+            $kpi['profit']      = $totalProfitAll;
+            $kpi['total_items'] = (clone $payoutWithdrawalQuery)->count();
+
+            $financeStats = [
+                'total_gross'          => $totalGrossAll,
+                'total_partner_net'    => $totalPartnerNet,
+                'total_profit'         => $totalProfitAll,
+                'payout_processed'     => $payoutProcessed,
+                'payout_pending'       => $payoutPending,
+                'payout_pending_count' => $payoutPendingCount,
+                'outstanding'          => $outstandingNet,
             ];
+
+            // Tampilkan daftar mutasi payout sebagai tabel utama di tab finance
+            $payoutRows = $payoutWithdrawalQuery->get()->map(function($p) {
+                $sellerName = $p->seller->name ?? 'Creator';
+                $isSuccess = in_array($p->status, ['processed', 'approved']);
+                return (object)[
+                    'id'            => 'WD-' . $p->id,
+                    'pillar'        => 'WD',
+                    'order_number'  => $p->notes ? $p->notes : ('WD-' . str_pad($p->id, 5, '0', STR_PAD_LEFT)),
+                    'created_at'    => $p->created_at,
+                    'customer_name' => $sellerName,
+                    'customer_info' => 'Pencairan Dana ke: ' . $p->bank_name . ' (' . $p->bank_account_number . ')',
+                    'partner_name'  => $sellerName,
+                    'channel'       => strtoupper($p->bank_name),
+                    'gross'         => -(float)$p->amount,
+                    'partner_net'   => (float)$p->amount,
+                    'profit'        => 0,
+                    'status'        => $isSuccess ? 'Success' : ($p->status === 'rejected' ? 'Ditolak' : 'Menunggu'),
+                    'status_color'  => $isSuccess ? '#15803D' : ($p->status === 'rejected' ? '#DC2626' : '#D97706'),
+                    'status_bg'     => $isSuccess ? '#DCFCE7' : ($p->status === 'rejected' ? '#FEE2E2' : '#FEF3C7'),
+                    'raw'           => $p,
+                ];
+            });
+
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 20;
+            $pagedRows = $payoutRows->slice(($currentPage - 1) * $perPage, $perPage)->values();
+            $orders = new LengthAwarePaginator(
+                $pagedRows,
+                $payoutRows->count(),
+                $perPage,
+                $currentPage,
+                ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
+            );
         }
 
         return view('admin.orders.index', [
-            'orders'       => $orders,
-            'omsetItems'   => $omsetItems,
-            'tab'          => $tab,
-            'tabs'         => $this->tabs,
-            'counts'       => $counts,
-            'stats'        => $stats,
-            'revenueStats' => $revenueStats,
-            'txType'       => $txType,
-            'txTypeCounts' => $txTypeCounts,
-            'q'            => $q,
-            'period'       => $period,
-            'start_date'   => $startDate ?? '',
-            'end_date'     => $endDate ?? '',
+            'orders'          => $orders,
+            'tab'             => $tab,
+            'tabs'            => $this->tabs,
+            'counts'          => $counts,
+            'kpi'             => $kpi,
+            'subStatus'       => $subStatus,
+            'subStatusCounts' => $subStatusCounts,
+            'financeStats'    => $financeStats,
+            'q'               => $q,
+            'period'          => $period,
+            'start_date'      => $startDate ?? '',
+            'end_date'        => $endDate ?? '',
         ]);
     }
 

@@ -49,12 +49,12 @@ class PaymentWebhookController extends Controller
             return $this->handleWeddingWebhook($payload, $rawOrderId);
         }
 
-        // Support AMPLOP-xxx for Wedding Digital Envelope (Amplop Digital)
-        if (\Illuminate\Support\Str::startsWith($rawOrderId, 'AMPLOP-')) {
+        // Support AMP-xxx / AMPLOP-xxx for Wedding Digital Envelope (Amplop Digital)
+        if (\Illuminate\Support\Str::startsWith($rawOrderId, 'AMPLOP-') || \Illuminate\Support\Str::startsWith($rawOrderId, 'AMP-')) {
             return $this->handleWeddingEnvelopeWebhook($payload, $rawOrderId);
         }
 
-        // Support BUYLE-{id}, ORD-xxx, or numeric ID
+        // Support BUYLE-{id}, MKT-xxx, TIX-xxx, POS-xxx, ORD-xxx, or numeric ID
         $order = null;
         if (\Illuminate\Support\Str::startsWith($rawOrderId, 'BUYLE-')) {
             $id = (int) str_replace('BUYLE-', '', $rawOrderId);
@@ -62,6 +62,10 @@ class PaymentWebhookController extends Controller
         }
         if (!$order) {
             $order = Order::with('payment')->where('order_number', $rawOrderId)->first();
+        }
+        if (!$order && str_contains($rawOrderId, '-')) {
+            $baseOrderNumber = preg_replace('/-[0-9]{3,}$/', '', $rawOrderId);
+            $order = Order::with('payment')->where('order_number', $baseOrderNumber)->first();
         }
         if (!$order && is_numeric($rawOrderId)) {
             $order = Order::with('payment')->find((int) $rawOrderId);

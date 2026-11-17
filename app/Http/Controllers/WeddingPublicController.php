@@ -237,7 +237,7 @@ class WeddingPublicController extends Controller
         $platformFee = 5000; // Platform fee Buyle.id tetap Rp 5.000 per transaksi amplop digital
         $grossAmount = $amount + $platformFee;
 
-        $midtransOrderId = 'AMPLOP-' . $wedding->id . '-' . time() . '-' . rand(100, 999);
+        $midtransOrderId = 'AMP-' . now()->format('Ymd') . '-' . $wedding->id . '-' . time();
 
         $midtransService = app(\App\Services\MidtransService::class);
         $snapToken = $midtransService->createWeddingEnvelopeSnapToken($wedding, $senderName, $amount, $midtransOrderId, $platformFee);
