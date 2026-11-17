@@ -679,11 +679,12 @@
                         </div>
 
                         <div class="form-group full">
-                            <label class="form-label">Username &amp; Slug URL Toko (Terpusat)</label>
+                            <label class="form-label">Username &amp; Slug URL Toko (Terpusat) <span style="color:#ef4444">*</span></label>
                             <div class="slug-wrap" style="{{ !$user->canChangeUsername() ? 'background:#F1F5F9; opacity:0.85;' : '' }}">
                                 <span class="slug-prefix">buyle.id/</span>
                                 <input type="text" name="username" class="slug-input"
                                     value="{{ old('username', $user->username) }}" placeholder="username-anda"
+                                    maxlength="30"
                                     {{ !$user->canChangeUsername() ? 'readonly' : '' }}
                                     style="{{ !$user->canChangeUsername() ? 'cursor:not-allowed; color:#64748B;' : '' }}">
                             </div>
@@ -695,7 +696,7 @@
                                     <span>Username terkunci (aturan platform: hanya boleh diganti 1x dalam 30 hari). Bisa diganti kembali pada <strong>{{ $user->nextUsernameChangeDate() }}</strong> ({{ $user->daysUntilUsernameChange() }} hari lagi).</span>
                                 </div>
                             @else
-                                <span class="form-hint">Slug URL toko (buyle.id/c/...) dan halaman bio (buyle.id/...) otomatis mengikuti username ini. <strong>Catatan: Mengganti username hanya diperbolehkan 1x dalam 1 bulan.</strong></span>
+                                <span class="form-hint">Username minimal 3 karakter &amp; maksimal 30 karakter. Slug URL toko (buyle.id/c/...) dan bio page (buyle.id/...) otomatis mengikuti username ini. <strong>Catatan: Mengganti username hanya diperbolehkan 1x dalam 1 bulan.</strong></span>
                             @endif
                             @error('username')<span class="form-error">{{ $message }}</span>@enderror
                             @error('store_slug')<span class="form-error">{{ $message }}</span>@enderror
@@ -708,8 +709,7 @@
                                     style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
                                     <div style="display:flex; align-items:center; gap:0.5rem;">
                                         <span
-                                            style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 500; padding:0.2rem 0.5rem; border-radius:6px;">🌐
-                                            ACTIVE DOMAIN</span>
+                                            style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 500; padding:0.2rem 0.5rem; border-radius:6px;">ACTIVE DOMAIN</span>
                                         <strong
                                             style="color:#166534; font-size:0.875rem;">https://{{ $profile->custom_domain }}</strong>
                                     </div>
@@ -917,6 +917,13 @@
                     Akun Sosial Media
                 </div>
                 <div class="prof-card-body">
+                    @error('social_links')
+                        <div style="background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.25rem; font-size:0.82rem; font-weight:700; display:flex; align-items:center; gap:0.6rem;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+
                     <div
                         style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"
@@ -935,9 +942,9 @@
                                     <path d="M9 18h6" />
                                     <path d="M10 22h4" />
                                 </svg>
-                                Panduan:
+                                Aturan Pengisian Sosial Media:
                             </strong>
-                            Disarankan mengisi <strong>maksimal 3 sosial media utama</strong>.
+                            Akun media sosial <strong>wajib diisi minimal 1 dan maksimal 3 akun utama</strong> (rekomendasi terbaik: WhatsApp, Instagram, dan TikTok).
                         </div>
                     </div>
 
@@ -1202,17 +1209,19 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label class="form-label">Provinsi</label>
+                            <label class="form-label">Provinsi <span style="color:#ef4444">*</span></label>
                             <select name="province_id" id="province" class="form-input">
                                 <option value="">— Pilih Provinsi —</option>
                             </select>
+                            @error('province_name')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Kabupaten / Kota</label>
+                            <label class="form-label">Kabupaten / Kota <span style="color:#ef4444">*</span></label>
                             <select name="city_id" id="city" class="form-input" disabled>
                                 <option value="">— Pilih Kabupaten/Kota —</option>
                             </select>
+                            @error('city_name')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 
                         <div class="form-group full">
@@ -1237,9 +1246,10 @@
                         </div>
 
                         <div class="form-group full">
-                            <label class="form-label">Alamat Lengkap</label>
+                            <label class="form-label">Alamat Lengkap <span style="color:#ef4444">*</span></label>
                             <textarea name="address" class="form-input" rows="3"
                                 placeholder="Nama jalan, gedung, nomor rumah/ruko...">{{ old('address', $profile->address) }}</textarea>
+                            @error('address')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 
                         <input type="hidden" id="provId_val" value="{{ old('province_id', $profile->province_id) }}">
@@ -1372,7 +1382,16 @@
             const tabAliases = { 'lokasi': 'tab-location', 'identitas': 'tab-identity', 'seo': 'tab-seo', 'bio': 'tab-bio', 'pengiriman': 'tab-location', 'location': 'tab-location' };
             const resolvedTab = tabFromUrl ? (tabAliases[tabFromUrl] || `tab-${tabFromUrl}`) : null;
             const savedTab = resolvedTab || localStorage.getItem('prof_active_tab') || 'tab-identity';
-            activateTab(savedTab);
+            
+            @if($errors->has('username') || $errors->has('store_name') || $errors->has('store_description'))
+                activateTab('tab-identity');
+            @elseif($errors->has('social_links'))
+                activateTab('tab-social');
+            @elseif($errors->has('address') || $errors->has('province_name') || $errors->has('city_name'))
+                activateTab('tab-location');
+            @else
+                activateTab(savedTab);
+            @endif
 
             tabBtns.forEach(btn => {
                 btn.addEventListener('click', function () {

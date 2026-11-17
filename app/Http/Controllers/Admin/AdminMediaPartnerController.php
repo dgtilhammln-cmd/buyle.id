@@ -88,7 +88,7 @@ class AdminMediaPartnerController extends Controller
         $validated = $request->validate([
             'user_id'             => 'nullable|exists:users,id',
             'name'                => 'required|string|max:120',
-            'code'                => 'nullable|string|max:60|unique:media_partners,code',
+            'code'                => 'nullable|string|max:30|unique:media_partners,code',
             'pic_name'            => 'nullable|string|max:100',
             'pic_phone'           => 'nullable|string|max:30',
             'pic_email'           => 'nullable|email|max:150',
