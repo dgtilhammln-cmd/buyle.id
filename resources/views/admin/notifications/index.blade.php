@@ -4,40 +4,44 @@
 @section('page-title', 'Pusat Notifikasi')
 
 @section('content')
-<div style="max-width:1000px; margin:0 auto;">
+<div style="max-width:1050px; margin:0 auto; font-family:'Montserrat',sans-serif;">
 
   {{-- HEADER --}}
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.75rem; flex-wrap:wrap; gap:1rem;">
     <div>
-      <h1 style="font-size:1.5rem; font-weight:800; color:#1E293B; margin:0 0 .25rem; letter-spacing:-.02em;">Pusat Notifikasi</h1>
-      <p style="font-size:.875rem; color:#94A3B8; margin:0;">Pantau aktivitas akun baru, pembayaran, approval whitelabel, dan leads terbaru.</p>
+      <h1 style="font-size:1.5rem; font-weight:800; color:#1E293B; margin:0 0 .25rem; letter-spacing:-.02em;">Pusat Notifikasi &amp; Log Transaksi</h1>
+      <p style="font-size:.825rem; color:#94A3B8; margin:0;">Pantau seluruh transaksi Midtrans (Order, Undangan Digital, Amplop, Domain, POS), akun baru, dan aktivitas platform.</p>
     </div>
   </div>
 
   {{-- FILTER TABS --}}
-  <div style="display:flex; gap:.5rem; margin-bottom:1.5rem; flex-wrap:wrap; background:#fff; padding:6px; border-radius:16px; border:1px solid #E2E8F0; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+  <div style="display:flex; gap:.4rem; margin-bottom:1.5rem; flex-wrap:wrap; background:#fff; padding:6px; border-radius:16px; border:1px solid #E2E8F0; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
     <a href="{{ route('admin.notifications.index', ['type' => 'all']) }}" 
-       style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'all' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+       style="padding:.45rem .95rem; border-radius:10px; font-size:.8rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'all' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
       Semua ({{ $counts['all'] }})
     </a>
+    <a href="{{ route('admin.notifications.index', ['type' => 'payment']) }}" 
+       style="padding:.45rem .95rem; border-radius:10px; font-size:.8rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'payment' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+      💳 Pembayaran Midtrans ({{ $counts['payment'] }})
+    </a>
+    <a href="{{ route('admin.notifications.index', ['type' => 'wedding']) }}" 
+       style="padding:.45rem .95rem; border-radius:10px; font-size:.8rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'wedding' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+      💍 Undangan &amp; Amplop ({{ $counts['wedding'] }})
+    </a>
     <a href="{{ route('admin.notifications.index', ['type' => 'payout']) }}" 
-       style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'payout' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+       style="padding:.45rem .95rem; border-radius:10px; font-size:.8rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'payout' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
       💸 Pencairan ({{ $counts['payout'] ?? 0 }})
     </a>
     <a href="{{ route('admin.notifications.index', ['type' => 'user']) }}" 
-       style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'user' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+       style="padding:.45rem .95rem; border-radius:10px; font-size:.8rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'user' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
       👤 Akun Baru ({{ $counts['user'] }})
     </a>
-    <a href="{{ route('admin.notifications.index', ['type' => 'payment']) }}" 
-       style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'payment' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
-      💳 Pembayaran Baru ({{ $counts['payment'] }})
-    </a>
     <a href="{{ route('admin.notifications.index', ['type' => 'whitelabel']) }}" 
-       style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'whitelabel' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
-      🏷️ Approval Whitelabel ({{ $counts['whitelabel'] }})
+       style="padding:.45rem .95rem; border-radius:10px; font-size:.8rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'whitelabel' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+      🏷️ Whitelabel ({{ $counts['whitelabel'] }})
     </a>
     <a href="{{ route('admin.notifications.index', ['type' => 'lead']) }}" 
-       style="padding:.5rem 1rem; border-radius:10px; font-size:.825rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'lead' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
+       style="padding:.45rem .95rem; border-radius:10px; font-size:.8rem; font-weight:700; text-decoration:none; transition:all .2s; {{ $filterType === 'lead' ? 'background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; box-shadow:0 4px 12px rgba(30,179,73,0.3);' : 'color:#64748B;' }}">
       📩 Leads ({{ $counts['lead'] }})
     </a>
   </div>
@@ -45,11 +49,17 @@
   {{-- NOTIFICATIONS LIST CARD --}}
   <div style="background:#fff; border-radius:20px; border:1px solid #E2E8F0; box-shadow:0 4px 20px rgba(0,0,0,0.03); overflow:hidden;">
     @forelse($filteredNotifs as $notif)
-      <a href="{{ $notif->link }}" style="display:flex; align-items:flex-start; gap:1.25rem; padding:1.25rem 1.5rem; border-bottom:1px solid #F1F5F9; text-decoration:none; transition:background .2s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+      <a href="{{ $notif->link }}" style="display:flex; align-items:flex-start; gap:1.25rem; padding:1.2rem 1.5rem; border-bottom:1px solid #F1F5F9; text-decoration:none; transition:background .2s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
         
         {{-- Icon --}}
         <div style="width:44px; height:44px; border-radius:14px; background:{{ $notif->icon_bg }}; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
-          @if($notif->type === 'payout')
+          @if(($notif->subtype ?? '') === 'wedding' || str_contains($notif->category, 'Undangan') || str_contains($notif->category, 'Amplop'))
+            <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          @elseif(($notif->subtype ?? '') === 'domain' || str_contains($notif->category, 'Domain'))
+            <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          @elseif(($notif->subtype ?? '') === 'pos' || str_contains($notif->category, 'POS'))
+            <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 12h12M12 8v8"/></svg>
+          @elseif($notif->type === 'payout')
             <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
           @elseif($notif->type === 'user')
             <svg width="20" height="20" fill="none" stroke="{{ $notif->icon_color }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -66,7 +76,7 @@
         <div style="flex:1; min-width:0;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:.35rem; flex-wrap:wrap;">
             <div style="display:flex; align-items:center; gap:.5rem;">
-              <span style="font-size:.7rem; font-weight:700; padding:.2rem .6rem; border-radius:6px; background:{{ $notif->icon_bg }}; color:{{ $notif->icon_color }}; text-transform:uppercase; letter-spacing:.03em;">
+              <span style="font-size:.68rem; font-weight:800; padding:.2rem .6rem; border-radius:6px; background:{{ $notif->icon_bg }}; color:{{ $notif->icon_color }}; text-transform:uppercase; letter-spacing:.03em;">
                 {{ $notif->category }}
               </span>
               <h3 style="font-size:.925rem; font-weight:700; color:#1E293B; margin:0;">{{ $notif->title }}</h3>

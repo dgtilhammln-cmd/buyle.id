@@ -699,13 +699,31 @@ button.btn-primary:hover, a.btn-primary:hover {
             'link' => route('admin.users.show', $u->id),
             'bg' => '#dcfce7', 'color' => '#1eb349', 'type' => 'user'
         ]);
-        $nOrders = \App\Models\Order::whereHas('payment', fn($q) => $q->where('status', \App\Enums\PaymentStatus::Success->value))
-            ->with('user')->latest()->take(3)->get()->map(fn($o) => (object)[
+        $nOrders = \App\Models\Order::where(function ($q) {
+            $q->whereHas('payment', fn($p) => $p->whereIn('status', ['success', 'settlement']))
+              ->orWhereIn('status', ['confirmed', 'processing', 'shipped', 'delivered']);
+        })->with('user')->latest()->take(3)->get()->map(fn($o) => (object)[
             'title' => 'Pembayaran Sukses #'.($o->order_number ?? $o->id),
             'subtitle' => 'Rp '.number_format($o->total, 0, ',', '.').' • '.($o->user->name ?? 'Guest'),
             'time' => $o->created_at,
             'link' => route('admin.orders.show', $o->id),
             'bg' => '#e0e7ff', 'color' => '#4f46e5', 'type' => 'payment'
+        ]);
+        $nWeddings = \App\Models\Wedding::where(function ($q) {
+            $q->where('payment_status', 'paid')->orWhereNotNull('paid_at');
+        })->with('user')->latest('updated_at')->take(3)->get()->map(fn($w) => (object)[
+            'title' => 'Undangan: ' . trim(($w->groom_nickname ?: $w->groom_name) . ' & ' . ($w->bride_nickname ?: $w->bride_name)),
+            'subtitle' => 'Rp ' . number_format($w->paid_amount ?: 250000, 0, ',', '.') . ' • ' . ($w->user->name ?? 'Creator'),
+            'time' => $w->paid_at ?? $w->updated_at ?? $w->created_at,
+            'link' => url('/wedding/' . $w->slug),
+            'bg' => '#fce7f3', 'color' => '#be185d', 'type' => 'payment'
+        ]);
+        $nDomains = \App\Models\DomainOrder::where('status', 'paid')->with('user')->latest('updated_at')->take(3)->get()->map(fn($d) => (object)[
+            'title' => 'Domain: ' . $d->domain_name,
+            'subtitle' => 'Rp ' . number_format($d->amount, 0, ',', '.') . ' • ' . ($d->user->name ?? 'Creator'),
+            'time' => $d->updated_at ?? $d->created_at,
+            'link' => route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain']),
+            'bg' => '#eff6ff', 'color' => '#2563eb', 'type' => 'payment'
         ]);
         $nWls = \App\Models\Product::where('is_whitelabel', true)->where('whitelabel_approval_status', 'pending')
             ->with('seller')->latest()->take(3)->get()->map(fn($p) => (object)[
@@ -723,8 +741,8 @@ button.btn-primary:hover, a.btn-primary:hover {
             'bg' => '#f1f5f9', 'color' => '#475569', 'type' => 'lead'
         ]);
 
-        $recentNotifs = collect()->concat($nPayouts)->concat($nUsers)->concat($nOrders)->concat($nWls)->concat($nLeads)->sortByDesc('time')->take(6);
-        $totalNotifCount = $nPayouts->count() + $nUsers->count() + $nOrders->count() + $nWls->count() + $nLeads->count();
+        $recentNotifs = collect()->concat($nPayouts)->concat($nUsers)->concat($nOrders)->concat($nWeddings)->concat($nDomains)->concat($nWls)->concat($nLeads)->sortByDesc('time')->take(6);
+        $totalNotifCount = $nPayouts->count() + $nUsers->count() + $nOrders->count() + $nWeddings->count() + $nDomains->count() + $nWls->count() + $nLeads->count();
       @endphp
       <div style="position:relative;" id="notif-container">
         <button id="notif-btn" title="Notifikasi ({{ $totalNotifCount }})" onclick="toggleNotif(event)" style="position:relative;width:38px;height:38px;border-radius:12px;border:1.5px solid var(--border,#E4E7F0);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04);">
