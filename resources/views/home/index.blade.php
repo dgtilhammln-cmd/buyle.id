@@ -3542,6 +3542,12 @@
     {{-- ════════════════════════════════════════════════════════════════════════
     SECTION 1: REKOMENDASI TIKET & EVENT (1 BARIS 5 CARDS - STYLE CARDS MATCHING PRODUCT)
     ════════════════════════════════════════════════════════════════════════ --}}
+    @php
+        $tProds = isset($ticketProducts) && $ticketProducts->count() > 0
+            ? $ticketProducts
+            : (isset($products) ? $products->filter(fn($p) => strtolower($p->product_type ?? $p->type ?? '') === 'ticket') : collect());
+    @endphp
+    @if($tProds->count() > 0)
     <section
         style="background: #F8FAFC; padding: 3.5rem 0 3.5rem; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
@@ -3562,12 +3568,6 @@
             </div>
 
             <div class="swipe-cards-container">
-                @php
-                    $tProds = isset($ticketProducts) && $ticketProducts->count() > 0
-                        ? $ticketProducts
-                        : (isset($products) ? $products->filter(fn($p) => strtolower($p->product_type ?? $p->type ?? '') === 'ticket') : collect());
-                @endphp
-                @if($tProds->count() > 0)
                     @foreach($tProds as $tProd)
                         @php
                             $tPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->sale_price : $tProd->effective_price;
@@ -3754,96 +3754,11 @@
                             </div>
                         </a>
                     @endforeach
-                @else
-                    {{-- Demo Cards --}}
-                    @php
-                        $demoTickets = [
-                            ['title' => 'Canisius College Cup XLI 2026', 'date' => '26 September 2026', 'location' => 'Jakarta Pusat', 'price' => 'Rp 80.000', 'creator' => 'Canisius College Cup', 'img' => 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop'],
-                            ['title' => 'MusicFest Live Concert 2026', 'date' => '12 Oktober 2026', 'location' => 'Surabaya', 'price' => 'Rp 150.000', 'creator' => 'Jakarta Music Live', 'img' => 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop'],
-                            ['title' => 'Digital Creator Masterclass Workshop', 'date' => '05 November 2026', 'location' => 'Online / Webinar', 'price' => 'Rp 125.000', 'creator' => 'Kreator Academy', 'img' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop'],
-                            ['title' => 'Tiket Rekreasi & Art Exhibition 2026', 'date' => '20 November 2026', 'location' => 'Bandung', 'price' => 'Rp 50.000', 'creator' => 'ArtSpace Indonesia', 'img' => 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop'],
-                            ['title' => 'Seminar Edukasi & International Pass', 'date' => '02 Desember 2026', 'location' => 'Bali', 'price' => 'Rp 99.000', 'creator' => 'EduPass Global', 'img' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop'],
-                        ];
-                    @endphp
-                    @foreach($demoTickets as $dT)
-                        <a href="{{ route_locale('products') }}?category=tiket"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="ticket-card-swipe-item">
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
-                                class="article-card-box">
-                                <div
-                                    style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $dT['img'] }}" alt="{{ $dT['title'] }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                        class="article-banner-img">
-                                    <div
-                                        style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
-                                        EVENT
-                                    </div>
-                                </div>
-                                <div
-                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                                    <div>
-                                        <div
-                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div
-                                                style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
-                                                <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                <span>0.0</span>
-                                            </div>
-                                        </div>
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $dT['title'] }}
-                                        </h3>
-                                        <div
-                                            style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
-                                            <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2"
-                                                    viewBox="0 0 24 24">
-                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                                    <line x1="16" y1="2" x2="16" y2="6" />
-                                                    <line x1="8" y1="2" x2="8" y2="6" />
-                                                    <line x1="3" y1="10" x2="21" y2="10" />
-                                                </svg>
-                                                <span>{{ $dT['date'] }}</span>
-                                            </div>
-                                            <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                                    <circle cx="12" cy="10" r="3" />
-                                                </svg>
-                                                <span>{{ $dT['location'] }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.5rem 0 0.65rem;"></div>
-                                        <div
-                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
-                                            <span
-                                                style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
-                                                {{ $dT['price'] }}
-                                            </span>
-                                            <span
-                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); flex-shrink: 0; white-space: nowrap;"
-                                                class="retarget-btn-cta">
-                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
-                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    @endforeach
-                @endif
             </div>
 
         </div>
     </section>
+    @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
     SECTION IKLAN BANNER LANDSCAPE (RASIO 640 : 131)
