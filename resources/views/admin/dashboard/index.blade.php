@@ -32,6 +32,103 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
     }
 
+    /* Cash Flow Style Hero Chart */
+    .chart-hero-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.75rem;
+      transition: all 0.2s ease;
+    }
+    .chart-hero-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .chart-hero-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748B;
+      letter-spacing: -0.01em;
+    }
+    .chart-hero-stat {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin: 0.35rem 0 0.85rem;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .chart-indicator-pills {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: transparent;
+      flex-wrap: wrap;
+    }
+    .indicator-pill {
+      border: none;
+      background: transparent;
+      color: #64748B;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .indicator-pill:hover {
+      color: #0F172A;
+      background: #F8FAFC;
+    }
+    .indicator-pill.active {
+      background: #F1F5F9;
+      color: #0F172A;
+      font-weight: 800;
+    }
+    .chart-period-dropdown-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .chart-period-dropdown {
+      appearance: none;
+      -webkit-appearance: none;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 999px;
+      padding: 0.45rem 2.2rem 0.45rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      outline: none;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.15s ease;
+    }
+    .chart-period-dropdown:hover {
+      border-color: #CBD5E1;
+      background: #F8FAFC;
+    }
+    .chart-dropdown-arrow {
+      position: absolute;
+      right: 12px;
+      pointer-events: none;
+      color: #64748B;
+    }
+    .chart-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 290px;
+      margin-top: 1rem;
+    }
+
     .filter-btn {
       padding: 0.5rem 1rem;
       font-size: 0.825rem;
@@ -260,33 +357,32 @@
     </div>
   </div>
 
-  {{-- MAIN CHART ROW --}}
-  <div class="dash-card" style="margin-bottom: 1.75rem; padding: 1.75rem;">
-    <div
-      style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
-      <div>
-        <div
-          style="font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem;">
-          Grafik Performa Sistem</div>
-        <div style="font-size:1.25rem;font-weight:800;color:#0F172A;">Trend Grafik </div>
+  {{-- MAIN CHART ROW (Cash Flow Style Pill Bar Chart) --}}
+  <div class="dash-card chart-hero-card">
+    <div class="chart-hero-head">
+      <div class="chart-hero-left">
+        <div class="chart-hero-title">Statistik Platform</div>
+        <div class="chart-hero-stat" id="chart-hero-stat-val">{{ number_format($stats['visitor'] ?? 0, 0, ',', '.') }}</div>
+        <div class="chart-indicator-pills">
+          <button type="button" class="indicator-pill active" id="btn-metric-visitor" data-metric="visitor" onclick="setChartMetric('visitor')">Total Visitor</button>
+          <button type="button" class="indicator-pill" id="btn-metric-creators" data-metric="creators" onclick="setChartMetric('creators')">Total Creators</button>
+          <button type="button" class="indicator-pill" id="btn-metric-transactions" data-metric="transactions" onclick="setChartMetric('transactions')">Total Transaksi</button>
+        </div>
       </div>
-      <div
-        style="display:flex;gap:.75rem;align-items:center;padding:.5rem .875rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:100px;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span
-            style="display:inline-block;width:10px;height:3px;background:#1eb349;border-radius:2px;"></span>Total Visitor
-        </div>
-        <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span
-            style="display:inline-block;width:10px;height:3px;background:#059669;border-radius:2px;"></span>Total Creators
-        </div>
-        <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span
-            style="display:inline-block;width:10px;height:3px;background:#10B981;border-radius:2px;"></span>Total
-          Transaksi</div>
-        <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span
-            style="display:inline-block;width:10px;height:3px;background:#8ebd28;border-radius:2px;"></span>Produk Baru
+      <div class="chart-hero-right">
+        <div class="chart-period-dropdown-wrap">
+          <select id="chart-period-select" class="chart-period-dropdown" onchange="setChartPeriod(this.value)">
+            <option value="yearly" selected>Yearly</option>
+            <option value="30d">30 Hari</option>
+            <option value="7d">7 Hari</option>
+          </select>
+          <svg class="chart-dropdown-arrow" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </div>
     </div>
-    <canvas id="main-analytics-chart" height="110"></canvas>
+    <div class="chart-canvas-wrap">
+      <canvas id="main-analytics-chart"></canvas>
+    </div>
   </div>
 
   {{-- GRID ROW 2: Klasemen Creator + Riwayat Transaksi Terbaru --}}
@@ -445,122 +541,217 @@
       setInterval(updateClock, 1000);
       updateClock();
 
-      // Chart Config
-      Chart.defaults.font.family = "'Inter','Segoe UI',sans-serif";
+      // Cash Flow Style Pill Bar Chart Config
+      Chart.defaults.font.family = "'Montserrat', 'Inter', sans-serif";
 
-      const ctx = document.getElementById('main-analytics-chart').getContext('2d');
-
-      const gVisitor = ctx.createLinearGradient(0, 0, 0, 280);
-      gVisitor.addColorStop(0, 'rgba(30,179,73,0.20)');
-      gVisitor.addColorStop(1, 'rgba(30,179,73,0.00)');
-
-      const gCreator = ctx.createLinearGradient(0, 0, 0, 280);
-      gCreator.addColorStop(0, 'rgba(5,150,105,0.20)');
-      gCreator.addColorStop(1, 'rgba(5,150,105,0.00)');
-
-      const gTx = ctx.createLinearGradient(0, 0, 0, 280);
-      gTx.addColorStop(0, 'rgba(16,185,129,0.20)');
-      gTx.addColorStop(1, 'rgba(16,185,129,0.00)');
-
-      const gProd = ctx.createLinearGradient(0, 0, 0, 280);
-      gProd.addColorStop(0, 'rgba(142,189,40,0.20)');
-      gProd.addColorStop(1, 'rgba(142,189,40,0.00)');
-
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: {!! json_encode($labels) !!},
-          datasets: [
-            {
-              label: 'Total Visitor',
-              data: {!! json_encode($visitorValues) !!},
-              borderColor: '#1eb349',
-              backgroundColor: gVisitor,
-              borderWidth: 2.5,
-              tension: 0.4,
-              fill: true,
-              pointRadius: 0,
-              pointHoverRadius: 6,
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: '#1eb349',
-              pointHoverBorderWidth: 2.5,
-            },
-            {
-              label: 'Total Creators',
-              data: {!! json_encode($creatorValues) !!},
-              borderColor: '#059669',
-              backgroundColor: gCreator,
-              borderWidth: 2.5,
-              tension: 0.4,
-              fill: true,
-              pointRadius: 0,
-              pointHoverRadius: 6,
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: '#059669',
-              pointHoverBorderWidth: 2.5,
-            },
-            {
-              label: 'Total Transaksi',
-              data: {!! json_encode($transactionValues) !!},
-              borderColor: '#10B981',
-              backgroundColor: gTx,
-              borderWidth: 2.5,
-              tension: 0.4,
-              fill: true,
-              pointRadius: 0,
-              pointHoverRadius: 6,
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: '#10B981',
-              pointHoverBorderWidth: 2.5,
-            },
-            {
-              label: 'Produk Baru',
-              data: {!! json_encode($productValues) !!},
-              borderColor: '#8ebd28',
-              backgroundColor: gProd,
-              borderWidth: 2.5,
-              tension: 0.4,
-              fill: true,
-              pointRadius: 0,
-              pointHoverRadius: 6,
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: '#8ebd28',
-              pointHoverBorderWidth: 2.5,
-            }
-          ]
+      const chartDataSets = {
+        yearly: {
+          labels: {!! json_encode($monthNames ?? ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']) !!},
+          visitor: {!! json_encode($yearlyVisitors ?? [0,0,0,0,0,0,0,0,0,0,0,0]) !!},
+          creators: {!! json_encode($yearlyCreators ?? [0,0,0,0,0,0,0,0,0,0,0,0]) !!},
+          transactions: {!! json_encode($yearlyTransactions ?? [0,0,0,0,0,0,0,0,0,0,0,0]) !!},
+          defaultIndex: {{ $activeMonthIndex ?? 10 }}
         },
+        '30d': {
+          labels: {!! json_encode($labels) !!},
+          visitor: {!! json_encode($visitorValues) !!},
+          creators: {!! json_encode($creatorValues) !!},
+          transactions: {!! json_encode($transactionValues) !!},
+          defaultIndex: Math.max(0, {!! count($labels) !!} - 1)
+        },
+        '7d': {
+          labels: {!! json_encode(array_slice($labels, -7)) !!},
+          visitor: {!! json_encode(array_slice($visitorValues, -7)) !!},
+          creators: {!! json_encode(array_slice($creatorValues, -7)) !!},
+          transactions: {!! json_encode(array_slice($transactionValues, -7)) !!},
+          defaultIndex: Math.min(6, Math.max(0, {!! count($labels) !!} - 1))
+        }
+      };
+
+      const metricTotals = {
+        visitor: {{ $stats['visitor'] ?? 0 }},
+        creators: {{ $stats['creators'] ?? 0 }},
+        transactions: {{ $stats['transactions'] ?? 0 }}
+      };
+
+      let currentMetric = 'visitor';
+      let currentPeriod = 'yearly';
+      let activeBarIndex = chartDataSets[currentPeriod].defaultIndex;
+
+      function getBarColors(count, highlightIdx) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+          colors.push(i === highlightIdx ? '#84cc16' : '#F1F5F9');
+        }
+        return colors;
+      }
+
+      const activeBadgePlugin = {
+        id: 'activeBadge',
+        afterDatasetsDraw(chart) {
+          const { ctx } = chart;
+          const meta = chart.getDatasetMeta(0);
+          if (!meta || !meta.data || meta.data.length === 0) return;
+
+          const pData = chartDataSets[currentPeriod] || chartDataSets.yearly;
+          const idx = (typeof activeBarIndex === 'number' && activeBarIndex >= 0 && activeBarIndex < meta.data.length)
+            ? activeBarIndex
+            : (pData.defaultIndex ?? (meta.data.length - 1));
+
+          const bar = meta.data[idx];
+          if (!bar) return;
+
+          const rawVal = chart.data.datasets[0].data[idx] || 0;
+          const textVal = Number(rawVal).toLocaleString('id-ID');
+
+          ctx.save();
+          ctx.font = '800 12px Montserrat, sans-serif';
+          const textWidth = ctx.measureText(textVal).width;
+          const badgeW = Math.max(textWidth + 24, 64);
+          const badgeH = 28;
+          const badgeX = bar.x - badgeW / 2;
+          const badgeY = Math.max(chart.chartArea.top, bar.y - badgeH - 10);
+
+          // Draw Black Rounded Bubble
+          ctx.fillStyle = '#0F172A';
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 8);
+          } else {
+            ctx.rect(badgeX, badgeY, badgeW, badgeH);
+          }
+          ctx.fill();
+
+          // Downward pointer arrow
+          const arrowY = badgeY + badgeH;
+          ctx.beginPath();
+          ctx.moveTo(bar.x - 5, arrowY);
+          ctx.lineTo(bar.x + 5, arrowY);
+          ctx.lineTo(bar.x, arrowY + 5);
+          ctx.closePath();
+          ctx.fill();
+
+          // Value text in white
+          ctx.fillStyle = '#FFFFFF';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(textVal, bar.x, badgeY + badgeH / 2);
+          ctx.restore();
+        }
+      };
+
+      const canvas = document.getElementById('main-analytics-chart');
+      const ctx = canvas.getContext('2d');
+
+      const initialData = chartDataSets[currentPeriod][currentMetric];
+      const initialLabels = chartDataSets[currentPeriod].labels;
+
+      const mainChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: initialLabels,
+          datasets: [{
+            data: initialData,
+            backgroundColor: getBarColors(initialLabels.length, activeBarIndex),
+            hoverBackgroundColor: '#84cc16',
+            borderRadius: 20,
+            borderSkipped: false,
+            barPercentage: 0.52,
+            categoryPercentage: 0.85,
+          }]
+        },
+        plugins: [activeBadgePlugin],
         options: {
           responsive: true,
-          maintainAspectRatio: true,
-          interaction: { mode: 'index', intersect: false },
+          maintainAspectRatio: false,
+          layout: {
+            padding: { top: 38, bottom: 5, left: 0, right: 0 }
+          },
           plugins: {
             legend: { display: false },
-            tooltip: {
-              backgroundColor: '#FFFFFF',
-              titleColor: '#0F172A',
-              bodyColor: '#475569',
-              borderColor: '#E2E8F0',
-              borderWidth: 1,
-              padding: { x: 14, y: 10 },
-              cornerRadius: 12,
-              titleFont: { size: 12, weight: '700' },
-              bodyFont: { size: 12, weight: '600' }
+            tooltip: { enabled: false }
+          },
+          onHover: (event, activeElements) => {
+            if (activeElements && activeElements.length > 0) {
+              const hovered = activeElements[0].index;
+              if (activeBarIndex !== hovered) {
+                activeBarIndex = hovered;
+                mainChart.data.datasets[0].backgroundColor = getBarColors(mainChart.data.labels.length, activeBarIndex);
+                mainChart.update('none');
+              }
             }
           },
           scales: {
             x: {
               grid: { display: false },
               border: { display: false },
-              ticks: { color: '#94A3B8', font: { size: 11 }, maxTicksLimit: 10 }
+              ticks: {
+                color: (c) => (c.index === activeBarIndex ? '#0F172A' : '#94A3B8'),
+                font: (c) => ({
+                  family: "'Montserrat', sans-serif",
+                  weight: c.index === activeBarIndex ? '800' : '600',
+                  size: 12
+                })
+              }
             },
             y: {
-              grid: { color: '#F1F5F9', borderDash: [5, 4] },
+              grid: {
+                color: '#F8FAFC',
+                borderDash: [4, 4],
+                drawBorder: false
+              },
               border: { display: false },
-              ticks: { color: '#94A3B8', font: { size: 11 }, stepSize: 1, precision: 0 }
+              ticks: {
+                color: '#94A3B8',
+                font: { family: "'Montserrat', sans-serif", weight: '600', size: 11 },
+                callback: function(v) {
+                  if (v >= 1000000) return (v / 1000000) + 'M';
+                  if (v >= 1000) return (v / 1000) + 'k';
+                  return v;
+                },
+                maxTicksLimit: 5
+              }
             }
           }
         }
       });
+
+      canvas.addEventListener('mouseleave', () => {
+        const pData = chartDataSets[currentPeriod] || chartDataSets.yearly;
+        activeBarIndex = pData.defaultIndex;
+        mainChart.data.datasets[0].backgroundColor = getBarColors(mainChart.data.labels.length, activeBarIndex);
+        mainChart.update('none');
+      });
+
+      window.setChartMetric = function(metric) {
+        currentMetric = metric;
+        document.querySelectorAll('.indicator-pill').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-metric') === metric);
+        });
+
+        // Update big stat number
+        const statEl = document.getElementById('chart-hero-stat-val');
+        if (statEl) {
+          statEl.textContent = Number(metricTotals[metric] || 0).toLocaleString('id-ID');
+        }
+
+        // Update chart data
+        const pData = chartDataSets[currentPeriod] || chartDataSets.yearly;
+        activeBarIndex = pData.defaultIndex;
+        mainChart.data.datasets[0].data = pData[metric];
+        mainChart.data.datasets[0].backgroundColor = getBarColors(pData.labels.length, activeBarIndex);
+        mainChart.update();
+      };
+
+      window.setChartPeriod = function(period) {
+        currentPeriod = period;
+        const pData = chartDataSets[currentPeriod] || chartDataSets['yearly'];
+        activeBarIndex = pData.defaultIndex;
+        mainChart.data.labels = pData.labels;
+        mainChart.data.datasets[0].data = pData[currentMetric];
+        mainChart.data.datasets[0].backgroundColor = getBarColors(pData.labels.length, activeBarIndex);
+        mainChart.update();
+      };
     </script>
   @endpush
 @endsection

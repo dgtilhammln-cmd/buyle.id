@@ -55,6 +55,11 @@ class AdminDashboardController extends Controller
             $productValues,
             $recentOrders,
             $creatorsLeaderboard,
+            $monthNames,
+            $yearlyVisitors,
+            $yearlyCreators,
+            $yearlyTransactions,
+            $activeMonthIndex,
         ] = Cache::remember($cacheKey, $cacheTtl, function () use ($from, $to, $now, $daysDiff) {
 
             // 1. STAT CARDS
@@ -115,13 +120,43 @@ class AdminDashboardController extends Controller
                 $productValues[]     = $productChart[$date] ?? 0;
             }
 
-            // 3. RIWAYAT TRANSAKSI TERBARU
+            // 3. YEARLY MONTHLY DATA (12 Bulan: Jan - Des)
+            $currentYear = $to->year;
+            $monthlyVisitorsRaw = AnalyticsEvent::ofType('pageview')
+                ->whereYear('created_at', $currentYear)
+                ->selectRaw('MONTH(created_at) as m, COUNT(*) as cnt')
+                ->groupBy('m')
+                ->pluck('cnt', 'm');
+
+            $monthlyCreatorsRaw = User::whereIn('role', ['seller', 'creator'])
+                ->whereYear('created_at', $currentYear)
+                ->selectRaw('MONTH(created_at) as m, COUNT(*) as cnt')
+                ->groupBy('m')
+                ->pluck('cnt', 'm');
+
+            $monthlyTransactionsRaw = Order::whereYear('created_at', $currentYear)
+                ->selectRaw('MONTH(created_at) as m, COUNT(*) as cnt')
+                ->groupBy('m')
+                ->pluck('cnt', 'm');
+
+            $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            $yearlyVisitors = [];
+            $yearlyCreators = [];
+            $yearlyTransactions = [];
+            for ($m = 1; $m <= 12; $m++) {
+                $yearlyVisitors[]     = (int) ($monthlyVisitorsRaw[$m] ?? 0);
+                $yearlyCreators[]     = (int) ($monthlyCreatorsRaw[$m] ?? 0);
+                $yearlyTransactions[] = (int) ($monthlyTransactionsRaw[$m] ?? 0);
+            }
+            $activeMonthIndex = max(0, min(11, $to->month - 1));
+
+            // 4. RIWAYAT TRANSAKSI TERBARU
             $recentOrders = Order::with(['user:id,name,email', 'items.product:id,name,slug'])
                 ->latestFirst()
                 ->limit(25)
                 ->get();
 
-            // 4. LEADERBOARD — 1 query aggregate, TIDAK ada N+1 per creator
+            // 5. LEADERBOARD — 1 query aggregate, TIDAK ada N+1 per creator
             // Hitung total sold & views per user via JOIN ke products + order_items
             $leaderRaw = DB::table('users')
                 ->select([
@@ -174,6 +209,8 @@ class AdminDashboardController extends Controller
             return [
                 $stats, $labels, $visitorValues, $creatorValues,
                 $transactionValues, $productValues, $recentOrders, $creatorsLeaderboard,
+                $monthNames, $yearlyVisitors, $yearlyCreators, $yearlyTransactions,
+                $activeMonthIndex,
             ];
         });
 
@@ -186,6 +223,11 @@ class AdminDashboardController extends Controller
             'productValues',
             'recentOrders',
             'creatorsLeaderboard',
+            'monthNames',
+            'yearlyVisitors',
+            'yearlyCreators',
+            'yearlyTransactions',
+            'activeMonthIndex',
             'period',
             'start_date',
             'end_date'

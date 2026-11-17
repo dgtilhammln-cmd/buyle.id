@@ -449,7 +449,7 @@ button.btn-primary:hover, a.btn-primary:hover {
   {{-- CARD 2: TRANSAKSI & KEUANGAN --}}
   <div class="sb-capsule-card">
     @if(!$uPerm || $uPerm->hasMenuPermission('orders'))
-    <a href="{{ route('admin.orders.index') }}" class="sb-link {{ (request()->routeIs('admin.orders*') && !(request('tab') === 'omset' && request('tx_type') === 'domain')) ? 'active' : '' }}" title="Pesanan">
+    <a href="{{ route('admin.orders.index') }}" class="sb-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}" title="Pesanan">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       </div>
@@ -463,13 +463,6 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">Pencairan Dana</span>
       @if($pendingPayoutsCount > 0)<span class="sb-badge" style="background:#d97706;">{{ $pendingPayoutsCount }}</span>@endif
-    </a>
-
-    <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain']) }}" class="sb-link {{ (request()->routeIs('admin.domain-orders*') || (request()->routeIs('admin.orders*') && request('tab') === 'omset' && request('tx_type') === 'domain')) ? 'active' : '' }}" title="Transaksi Domain">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      </div>
-      <span class="sb-link-text">Transaksi Domain</span>
     </a>
     @endif
   </div>
