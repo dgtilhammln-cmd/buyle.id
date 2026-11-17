@@ -290,7 +290,7 @@
         background: #ffffff;
         border-radius: 20px;
         width: 100%;
-        max-width: 600px;
+        max-width: 620px;
         box-shadow: 0 20px 45px rgba(0,0,0,0.2);
         overflow: hidden;
         display: flex;
@@ -421,6 +421,20 @@
         transform: translateY(-1px);
         box-shadow: 0 6px 18px rgba(30,179,73,0.35);
     }
+
+    /* Searchable Creator Picker Dropdown Item */
+    .creator-item-row {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.55rem 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background .15s;
+    }
+    .creator-item-row:hover {
+        background: #F0FDF4;
+    }
 </style>
 
 <div class="mp-page">
@@ -519,7 +533,7 @@
                                         <div style="font-weight:800; color:#0F172A; font-size:0.85rem;">{{ $mp->name }}</div>
                                         @if($mp->user)
                                             <a href="{{ route('admin.creator-resources.index', ['search' => $mp->user->username ?: $mp->user->name]) }}" style="font-size:0.68rem; font-weight:700; color:#15803D; text-decoration:none; background:#DCFCE7; padding:1px 6px; border-radius:4px; display:inline-block; margin-top:2px;">
-                                                Creator @{{ $mp->user->username ?: 'user' }}
+                                                Creator {{ '@' . ($mp->user->username ?: 'user') }}
                                             </a>
                                         @endif
                                         @if($mp->notes)
@@ -611,7 +625,7 @@
 
 </div>
 
-{{-- MODAL TAMBAH MEDIA PARTNER (DENGAN INTEGRASI TARIK DATA DARI ALL CREATOR) --}}
+{{-- MODAL TAMBAH MEDIA PARTNER (DENGAN SEARCHABLE CREATOR PICKER) --}}
 <div class="mp-modal-overlay" id="modalCreate" style="display:none;">
     <div class="mp-modal-box">
         <div class="mp-modal-header">
@@ -622,7 +636,7 @@
             @csrf
             <div class="mp-modal-body">
 
-                {{-- Fitur Tarik Data dari Creator (https://buyle.id/admin/all-creator) --}}
+                {{-- Searchable Creator Picker --}}
                 <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:14px; padding:0.85rem 1rem; margin-bottom:1rem; box-sizing:border-box;">
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem;">
                         <label style="font-size:0.75rem; font-weight:800; color:#15803D;">
@@ -633,14 +647,25 @@
                         </span>
                     </div>
                     <p style="font-size:0.7rem; color:#166534; margin:0 0 0.5rem 0; line-height:1.4;">
-                        Pilih profil Creator terdaftar agar nama, nomor WhatsApp, email, dan info rekening bank terisi instan dan saling tersinkronisasi.
+                        Ketik nama, username, atau email creator terdaftar untuk mengisi profil &amp; rekening secara instan.
                     </p>
-                    <select id="selectCreatorCreate" onchange="pullCreatorData(this.value, 'create')" class="mp-select" style="background:#fff; font-weight:600;">
-                        <option value="">-- Pilih Creator Terdaftar (Opsional) --</option>
-                        @foreach($creatorsList as $c)
-                            <option value="{{ $c['id'] }}">{{ $c['name'] }} (@{{ $c['username'] ?: 'no-user' }}) - {{ $c['email'] }}</option>
-                        @endforeach
-                    </select>
+
+                    <div style="position:relative; width:100%;">
+                        <div style="position:relative;">
+                            <input type="text" id="createCreatorSearch" placeholder="Ketik nama, @username, atau email creator..." 
+                                class="mp-input" autocomplete="off" 
+                                oninput="handleCreatorSearch(this.value, 'create')" 
+                                onfocus="handleCreatorSearch(this.value, 'create')">
+                            <svg width="15" height="15" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24" 
+                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none;">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </div>
+
+                        {{-- Search Results Dropdown List --}}
+                        <div id="createCreatorDropdown" style="display:none; position:absolute; left:0; right:0; top:calc(100% + 4px); max-height:220px; overflow-y:auto; background:#ffffff; border:1.5px solid #BBF7D0; border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,0.12); z-index:99999; padding:4px; box-sizing:border-box;">
+                        </div>
+                    </div>
 
                     <input type="hidden" name="user_id" id="createUserId" value="">
 
@@ -653,7 +678,7 @@
                             <div id="createCreatorMeta" style="font-size:0.68rem; color:#64748B;"></div>
                         </div>
                         <button type="button" onclick="clearCreatorPull('create')" style="border:none; background:#FEE2E2; color:#DC2626; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.68rem; font-weight:700; cursor:pointer;">
-                            Batal Tarik
+                            Ganti / Putus
                         </button>
                     </div>
                 </div>
@@ -715,7 +740,7 @@
     </div>
 </div>
 
-{{-- MODAL EDIT MEDIA PARTNER --}}
+{{-- MODAL EDIT MEDIA PARTNER (DENGAN SEARCHABLE CREATOR PICKER) --}}
 <div class="mp-modal-overlay" id="modalEdit" style="display:none;">
     <div class="mp-modal-box">
         <div class="mp-modal-header">
@@ -729,16 +754,46 @@
 
                 {{-- Sinkronisasi Creator di Edit --}}
                 <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:14px; padding:0.85rem 1rem; margin-bottom:1rem; box-sizing:border-box;">
-                    <label style="display:block; font-size:0.75rem; font-weight:800; color:#15803D; margin-bottom:0.35rem;">
-                        Hubungkan dengan Akun Creator (All Creator)
-                    </label>
-                    <select id="selectCreatorEdit" onchange="pullCreatorData(this.value, 'edit')" class="mp-select" style="background:#fff; font-weight:600;">
-                        <option value="">-- Tidak Terhubung / Pilih Creator --</option>
-                        @foreach($creatorsList as $c)
-                            <option value="{{ $c['id'] }}">{{ $c['name'] }} (@{{ $c['username'] ?: 'no-user' }}) - {{ $c['email'] }}</option>
-                        @endforeach
-                    </select>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem;">
+                        <label style="font-size:0.75rem; font-weight:800; color:#15803D;">
+                            Hubungkan / Sinkronkan Akun Creator
+                        </label>
+                        <span style="font-size:0.65rem; background:#DCFCE7; color:#15803D; font-weight:700; padding:1px 6px; border-radius:4px;">
+                            All Creator
+                        </span>
+                    </div>
+
+                    <div style="position:relative; width:100%;">
+                        <div style="position:relative;">
+                            <input type="text" id="editCreatorSearch" placeholder="Cari nama, @username, atau email creator..." 
+                                class="mp-input" autocomplete="off" 
+                                oninput="handleCreatorSearch(this.value, 'edit')" 
+                                onfocus="handleCreatorSearch(this.value, 'edit')">
+                            <svg width="15" height="15" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24" 
+                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none;">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </div>
+
+                        {{-- Dropdown Search Edit --}}
+                        <div id="editCreatorDropdown" style="display:none; position:absolute; left:0; right:0; top:calc(100% + 4px); max-height:220px; overflow-y:auto; background:#ffffff; border:1.5px solid #BBF7D0; border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,0.12); z-index:99999; padding:4px; box-sizing:border-box;">
+                        </div>
+                    </div>
+
                     <input type="hidden" name="user_id" id="editUserId" value="">
+
+                    {{-- Live Preview Box Edit --}}
+                    <div id="editCreatorPreview" style="display:none; margin-top:0.65rem; padding:0.6rem 0.75rem; background:#ffffff; border-radius:10px; border:1px solid #BBF7D0; align-items:center; gap:0.65rem;">
+                        <img id="editCreatorAvatar" src="" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1.5px solid #BBF7D0; display:none;">
+                        <div id="editCreatorAvatarInit" style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.85rem; flex-shrink:0;"></div>
+                        <div style="flex:1; min-width:0;">
+                            <div id="editCreatorName" style="font-size:0.78rem; font-weight:800; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+                            <div id="editCreatorMeta" style="font-size:0.68rem; color:#64748B;"></div>
+                        </div>
+                        <button type="button" onclick="clearCreatorPull('edit')" style="border:none; background:#FEE2E2; color:#DC2626; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.68rem; font-weight:700; cursor:pointer;">
+                            Lepas
+                        </button>
+                    </div>
                 </div>
 
                 <div class="mp-form-group">
@@ -847,16 +902,77 @@
 <script>
 window.creatorsList = @json($creatorsList);
 
-function pullCreatorData(userId, mode) {
-    if (!userId) {
-        if (mode === 'create') clearCreatorPull('create');
+/**
+ * Filter & render dropdown hasil pencarian creator
+ */
+function handleCreatorSearch(keyword, mode) {
+    const dropdown = document.getElementById(mode + 'CreatorDropdown');
+    const term = (keyword || '').toLowerCase().trim();
+
+    let matches = window.creatorsList;
+    if (term !== '') {
+        matches = window.creatorsList.filter(c => {
+            const name = (c.name || '').toLowerCase();
+            const username = (c.username || '').toLowerCase();
+            const email = (c.email || '').toLowerCase();
+            const phone = (c.phone || '').toLowerCase();
+            return name.includes(term) || username.includes(term) || email.includes(term) || phone.includes(term);
+        });
+    }
+
+    if (matches.length === 0) {
+        dropdown.innerHTML = '<div style="padding:0.75rem; text-align:center; color:#94A3B8; font-size:0.72rem;">Tidak ada creator yang cocok.</div>';
+        dropdown.style.display = 'block';
         return;
     }
 
+    let html = '';
+    matches.slice(0, 30).forEach(c => {
+        const usernameText = c.username ? '@' + c.username : 'user';
+        const avHtml = c.avatar_url 
+            ? `<img src="${c.avatar_url}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #BBF7D0; flex-shrink:0;">`
+            : `<div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">${(c.name || 'C').charAt(0).toUpperCase()}</div>`;
+        
+        const bankInfo = c.bank_name ? `<span style="font-size:0.62rem; background:#EFF6FF; color:#1D4ED8; padding:1px 5px; border-radius:4px; font-weight:700;">${c.bank_name}</span>` : '';
+
+        html += `
+            <div class="creator-item-row" onclick="selectCreator(${c.id}, '${mode}')">
+                ${avHtml}
+                <div style="flex:1; min-width:0;">
+                    <div style="display:flex; align-items:center; gap:0.4rem;">
+                        <span style="font-weight:700; font-size:0.78rem; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(c.name)}</span>
+                        <span style="font-size:0.65rem; color:#16A34A; font-weight:700;">${escapeHtml(usernameText)}</span>
+                        ${bankInfo}
+                    </div>
+                    <div style="font-size:0.68rem; color:#64748B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        ${escapeHtml(c.email)}${c.phone ? ' &bull; ' + escapeHtml(c.phone) : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    dropdown.innerHTML = html;
+    dropdown.style.display = 'block';
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/**
+ * Pilih creator dari hasil pencarian
+ */
+function selectCreator(userId, mode) {
     const creator = window.creatorsList.find(c => String(c.id) === String(userId));
     if (!creator) return;
 
+    // Sembunyikan dropdown
+    document.getElementById(mode + 'CreatorDropdown').style.display = 'none';
+
     if (mode === 'create') {
+        document.getElementById('createCreatorSearch').value = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
         document.getElementById('createUserId').value = creator.id;
         document.getElementById('createName').value = creator.name || '';
         document.getElementById('createCode').value = creator.username || (creator.name ? creator.name.toLowerCase().replace(/[^a-z0-9]/g, '') : '');
@@ -885,6 +1001,7 @@ function pullCreatorData(userId, mode) {
         }
         preview.style.display = 'flex';
     } else if (mode === 'edit') {
+        document.getElementById('editCreatorSearch').value = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
         document.getElementById('editUserId').value = creator.id;
         if (!document.getElementById('editName').value) document.getElementById('editName').value = creator.name || '';
         if (!document.getElementById('editPicName').value) document.getElementById('editPicName').value = creator.name || '';
@@ -893,29 +1010,66 @@ function pullCreatorData(userId, mode) {
         if (!document.getElementById('editBankName').value) document.getElementById('editBankName').value = creator.bank_name || '';
         if (!document.getElementById('editBankNumber').value) document.getElementById('editBankNumber').value = creator.bank_account_number || '';
         if (!document.getElementById('editBankHolder').value) document.getElementById('editBankHolder').value = creator.bank_account_name || creator.name || '';
+
+        // Preview Box Edit
+        const preview = document.getElementById('editCreatorPreview');
+        const avImg = document.getElementById('editCreatorAvatar');
+        const avInit = document.getElementById('editCreatorAvatarInit');
+        document.getElementById('editCreatorName').innerText = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
+        document.getElementById('editCreatorMeta').innerText = creator.email + (creator.phone ? ' | ' + creator.phone : '');
+
+        if (creator.avatar_url) {
+            avImg.src = creator.avatar_url;
+            avImg.style.display = 'block';
+            avInit.style.display = 'none';
+        } else {
+            avImg.style.display = 'none';
+            avInit.innerText = (creator.name || 'C').charAt(0).toUpperCase();
+            avInit.style.display = 'flex';
+        }
+        preview.style.display = 'flex';
     }
 }
 
 function clearCreatorPull(mode) {
     if (mode === 'create') {
-        document.getElementById('selectCreatorCreate').value = '';
+        document.getElementById('createCreatorSearch').value = '';
         document.getElementById('createUserId').value = '';
         document.getElementById('createCreatorPreview').style.display = 'none';
+        document.getElementById('createCreatorDropdown').style.display = 'none';
+    } else if (mode === 'edit') {
+        document.getElementById('editCreatorSearch').value = '';
+        document.getElementById('editUserId').value = '';
+        document.getElementById('editCreatorPreview').style.display = 'none';
+        document.getElementById('editCreatorDropdown').style.display = 'none';
     }
 }
+
+// Tutup dropdown jika klik di luar
+document.addEventListener('click', function(e) {
+    const createInput = document.getElementById('createCreatorSearch');
+    const createDropdown = document.getElementById('createCreatorDropdown');
+    if (createInput && createDropdown && !createInput.contains(e.target) && !createDropdown.contains(e.target)) {
+        createDropdown.style.display = 'none';
+    }
+
+    const editInput = document.getElementById('editCreatorSearch');
+    const editDropdown = document.getElementById('editCreatorDropdown');
+    if (editInput && editDropdown && !editInput.contains(e.target) && !editDropdown.contains(e.target)) {
+        editDropdown.style.display = 'none';
+    }
+});
 
 function openCreateModal(selectedUserId = null) {
     document.getElementById('modalCreate').style.display = 'flex';
     if (selectedUserId) {
-        document.getElementById('selectCreatorCreate').value = selectedUserId;
-        pullCreatorData(selectedUserId, 'create');
+        selectCreator(selectedUserId, 'create');
     }
 }
 
 function openEditModal(partner) {
     document.getElementById('formEdit').action = '/admin/media-partners/' + partner.id;
     document.getElementById('editUserId').value = partner.user_id || '';
-    document.getElementById('selectCreatorEdit').value = partner.user_id || '';
     document.getElementById('editName').value = partner.name || '';
     document.getElementById('editCode').value = partner.code || '';
     document.getElementById('editRate').value = partner.commission_rate || '2.00';
@@ -926,6 +1080,13 @@ function openEditModal(partner) {
     document.getElementById('editBankNumber').value = partner.bank_account_number || '';
     document.getElementById('editBankHolder').value = partner.bank_account_name || '';
     document.getElementById('editNotes').value = partner.notes || '';
+
+    if (partner.user_id) {
+        selectCreator(partner.user_id, 'edit');
+    } else {
+        clearCreatorPull('edit');
+    }
+
     document.getElementById('modalEdit').style.display = 'flex';
 }
 
