@@ -10,6 +10,7 @@ use App\Models\CreatorBioBlock;
 use App\Models\OrderItem;
 use App\Models\AnalyticsEvent;
 use App\Models\ProductVisit;
+use App\Models\MediaPartner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -41,16 +42,30 @@ class AdminCreatorResourceController extends Controller
         $search = trim($request->input('search', ''));
         $sortBy = $request->input('sort_by', 'storage_desc');
         $onlineFilter = $request->input('online_status', 'all');
+        $mediaPartnerFilter = $request->input('media_partner', 'all');
+        $sourceFilter = $request->input('referral_source', 'all');
 
         // Ambil semua pengguna bertipe creator (Kecuali Admin / Super Admin)
         $query = User::query()
-            ->with(['creatorProfile', 'products'])
+            ->with(['creatorProfile', 'products', 'mediaPartner'])
             ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
             ->where(function ($q) {
                 $q->where('role', 'creator')
                   ->orWhereHas('creatorProfile')
                   ->orWhereHas('products');
             });
+
+        if ($mediaPartnerFilter !== 'all') {
+            if ($mediaPartnerFilter === 'none') {
+                $query->whereNull('media_partner_id');
+            } else {
+                $query->where('media_partner_id', $mediaPartnerFilter);
+            }
+        }
+
+        if ($sourceFilter !== 'all') {
+            $query->where('referral_source_type', $sourceFilter);
+        }
 
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
@@ -346,11 +361,17 @@ class AdminCreatorResourceController extends Controller
         // Scan Orphan / Ghost Files (File Sampah Terbuang)
         $orphanData = self::getOrphanFiles();
 
+        // Master Media Partners untuk filter dan assignment
+        $mediaPartners = MediaPartner::orderBy('name')->get();
+
         return view('admin.creator-resources.index', [
             'creatorResources'        => $creatorResources,
             'search'                  => $search,
             'sortBy'                  => $sortBy,
             'onlineFilter'            => $onlineFilter,
+            'mediaPartnerFilter'      => $mediaPartnerFilter,
+            'sourceFilter'            => $sourceFilter,
+            'mediaPartners'           => $mediaPartners,
             'totalCreatorsCount'      => $totalCreatorsCount,
             'onlineCreatorsCount'     => $onlineCreatorsCount,
             'totalStorageMbOverall'   => $totalStorageMbOverall,
@@ -1451,6 +1472,32 @@ class AdminCreatorResourceController extends Controller
             \Illuminate\Support\Facades\Log::error('[SendDomainCompletedEmail] Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Update asosiasi Media Partner creator / EO (Lifetime Attribution)
+     */
+    public function updateMediaPartner(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'media_partner_id' => 'nullable|exists:media_partners,id',
+        ]);
+
+        $mpId = $validated['media_partner_id'] ?? null;
+        $mp = $mpId ? MediaPartner::find($mpId) : null;
+
+        $user->update([
+            'media_partner_id'     => $mp?->id,
+            'media_partner_name'   => $mp?->name,
+            'referral_source_type' => $mp ? 'media_partner' : ($user->referral_source_type ?: 'direct'),
+            'referral_source_name' => $mp ? $mp->name : $user->referral_source_name,
+        ]);
+
+        $msg = $mp
+            ? "Creator {$user->name} berhasil dikaitkan ke Media Partner {$mp->name}."
+            : "Kaitan Media Partner untuk creator {$user->name} berhasil dihapus.";
+
+        return back()->with('success', $msg);
     }
 }
 

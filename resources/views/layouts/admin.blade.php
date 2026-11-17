@@ -477,11 +477,18 @@ button.btn-primary:hover, a.btn-primary:hover {
       <span class="sb-link-text">All User</span>
     </a>
 
-    <a href="{{ route('admin.creator-resources.index') }}" class="sb-link {{ request()->routeIs('admin.creator-resources*') ? 'active' : '' }}" title="Creator Buyle">
+    <a href="{{ route('admin.all-creator.index') }}" class="sb-link {{ (request()->routeIs('admin.all-creator*') || request()->routeIs('admin.creator-resources*')) ? 'active' : '' }}" title="All Creator">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       </div>
-      <span class="sb-link-text">Creator Buyle</span>
+      <span class="sb-link-text">All Creator</span>
+    </a>
+
+    <a href="{{ route('admin.media-partners.index') }}" class="sb-link {{ request()->routeIs('admin.media-partners*') ? 'active' : '' }}" title="Media Partner & Komisi">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      </div>
+      <span class="sb-link-text">Media Partner</span>
     </a>
 
     @php $pendingKycCount = \App\Models\CreatorKyc::where('status', 'pending')->count(); @endphp

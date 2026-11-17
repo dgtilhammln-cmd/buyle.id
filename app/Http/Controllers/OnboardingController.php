@@ -30,32 +30,47 @@ class OnboardingController extends Controller
             return redirect()->route('creator.dashboard');
         }
 
-        // Ambil data Media Partner dari database (HeroSlide position=partner)
-        $dbPartners = HeroSlide::where('position', 'partner')
-            ->where('is_active', true)
-            ->orderBy('order')
-            ->get(['id', 'title', 'image', 'button_url']);
+        // Ambil data Media Partner dari database media_partners terlebih dahulu
+        $dbMediaPartners = \App\Models\MediaPartner::where('is_active', true)->orderBy('name')->get();
 
-        if ($dbPartners->isNotEmpty()) {
-            $partners = $dbPartners->map(function ($p) {
+        if ($dbMediaPartners->isNotEmpty()) {
+            $partners = $dbMediaPartners->map(function ($p) {
                 return [
                     'id'       => $p->id,
-                    'name'     => $p->title,
-                    'logo'     => $p->image ? asset('storage/' . $p->image) : null,
-                    'category' => 'Official Partner',
-                    'tag'      => 'Partner Resmi',
+                    'name'     => $p->name,
+                    'logo'     => null,
+                    'category' => 'Official Media Partner',
+                    'tag'      => $p->commission_rate . '% Komisi',
                 ];
             })->toArray();
         } else {
-            // Curated official partner list fallback
-            $partners = [
-                ['id' => 1, 'name' => 'Event Jawa Timur', 'logo' => null, 'category' => 'Event & Ticketing', 'tag' => 'Media Partner'],
-                ['id' => 2, 'name' => 'Info Surabaya', 'logo' => null, 'category' => 'City Media', 'tag' => 'Media Partner'],
-                ['id' => 3, 'name' => 'Creative Hub ID', 'logo' => null, 'category' => 'Creator Community', 'tag' => 'Komunitas'],
-                ['id' => 4, 'name' => 'Prambors Network', 'logo' => null, 'category' => 'Broadcast & Radio', 'tag' => 'Official Partner'],
-                ['id' => 5, 'name' => 'Konser & Festival ID', 'logo' => null, 'category' => 'Music & Concert', 'tag' => 'Media Partner'],
-                ['id' => 6, 'name' => 'Affiliator VIP Buyle', 'logo' => null, 'category' => 'Affiliate Network', 'tag' => 'Affiliator'],
-            ];
+            // Ambil data Media Partner dari database (HeroSlide position=partner)
+            $dbPartners = HeroSlide::where('position', 'partner')
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->get(['id', 'title', 'image', 'button_url']);
+
+            if ($dbPartners->isNotEmpty()) {
+                $partners = $dbPartners->map(function ($p) {
+                    return [
+                        'id'       => $p->id,
+                        'name'     => $p->title,
+                        'logo'     => $p->image ? asset('storage/' . $p->image) : null,
+                        'category' => 'Official Partner',
+                        'tag'      => 'Partner Resmi',
+                    ];
+                })->toArray();
+            } else {
+                // Curated official partner list fallback
+                $partners = [
+                    ['id' => 1, 'name' => 'Event Jawa Timur', 'logo' => null, 'category' => 'Event & Ticketing', 'tag' => 'Media Partner'],
+                    ['id' => 2, 'name' => 'Info Surabaya', 'logo' => null, 'category' => 'City Media', 'tag' => 'Media Partner'],
+                    ['id' => 3, 'name' => 'Creative Hub ID', 'logo' => null, 'category' => 'Creator Community', 'tag' => 'Komunitas'],
+                    ['id' => 4, 'name' => 'Prambors Network', 'logo' => null, 'category' => 'Broadcast & Radio', 'tag' => 'Official Partner'],
+                    ['id' => 5, 'name' => 'Konser & Festival ID', 'logo' => null, 'category' => 'Music & Concert', 'tag' => 'Media Partner'],
+                    ['id' => 6, 'name' => 'Affiliator VIP Buyle', 'logo' => null, 'category' => 'Affiliate Network', 'tag' => 'Affiliator'],
+                ];
+            }
         }
 
         // Cek kode referral dari query, session, cookie, atau profil user
@@ -112,9 +127,17 @@ class OnboardingController extends Controller
         // Tentukan referrer_id jika ada kode referral
         $referrerId = $user->referrer_id;
         $refCode = $validated['referral_code'] ?? null;
+        $mediaPartnerId = $validated['media_partner_id'] ?? null;
+        $mediaPartnerName = $validated['media_partner_name'] ?? null;
+
         if (!empty($refCode)) {
             $refCode = strtolower(trim($refCode));
-            if (!$referrerId) {
+            // Cek apakah refCode adalah kode Media Partner
+            $mp = \App\Models\MediaPartner::where('code', $refCode)->where('is_active', true)->first();
+            if ($mp) {
+                $mediaPartnerId = $mp->id;
+                $mediaPartnerName = $mp->name;
+            } elseif (!$referrerId) {
                 $refOwner = User::where('username', $refCode)->orWhere('referral_code', $refCode)->first();
                 if ($refOwner && $refOwner->id !== $user->id) {
                     $referrerId = $refOwner->id;
@@ -122,13 +145,20 @@ class OnboardingController extends Controller
             }
         }
 
+        if (!empty($mediaPartnerId) && empty($mediaPartnerName)) {
+            $mp = \App\Models\MediaPartner::find($mediaPartnerId);
+            if ($mp) {
+                $mediaPartnerName = $mp->name;
+            }
+        }
+
         // Update profil user
         $user->update([
             'business_persona'        => $validated['business_persona'],
-            'referral_source_type'    => $validated['referral_source_type'],
-            'referral_source_name'    => $sourceName,
-            'media_partner_name'      => $validated['media_partner_name'] ?? null,
-            'media_partner_id'        => $validated['media_partner_id'] ?? null,
+            'referral_source_type'    => $mediaPartnerId ? 'media_partner' : $validated['referral_source_type'],
+            'referral_source_name'    => $mediaPartnerName ?: $sourceName,
+            'media_partner_name'      => $mediaPartnerName,
+            'media_partner_id'        => $mediaPartnerId,
             'referral_code'           => $refCode,
             'referrer_id'             => $referrerId,
             'primary_goal'            => $validated['primary_goal'],

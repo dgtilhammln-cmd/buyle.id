@@ -106,6 +106,13 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             Log::warning("Gagal mencatat konversi AutomationCampaign: " . $e->getMessage());
         }
 
+        // 4b. Catat komisi Media Partner Buyletix (jika creator terikat ke Media Partner)
+        try {
+            \App\Services\MediaPartnerService::recordOrderCommission($order);
+        } catch (\Throwable $e) {
+            Log::warning("Gagal mencatat komisi Media Partner: " . $e->getMessage());
+        }
+
         // 5. Generate Magic Login URL (hanya jika user punya akun)
         $magicLoginUrl = route('account.orders');
         if ($user) {

@@ -906,6 +906,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/users/{user}/password',                   [AdminUserController::class, 'updatePassword'])->name('admin.users.password');
         Route::post('/users/{user}/toggle',                     [AdminUserController::class, 'toggleActive'])->name('admin.users.toggle');
         Route::delete('/users/{user}/addresses/{address}',      [AdminUserController::class, 'destroyAddress'])->name('admin.users.addresses.destroy');
+
+        // All Creator (Sebelumnya Creator Resources)
+        Route::get('/all-creator',                              [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'index'])->name('admin.all-creator.index');
+        Route::get('/all-creator/{user}',                        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'show'])->name('admin.all-creator.show');
+        Route::post('/all-creator/{user}/media-partner',        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'updateMediaPartner'])->name('admin.all-creator.media-partner');
         Route::get('/creator-resources',                        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'index'])->name('admin.creator-resources.index');
         Route::get('/creator-resources/{user}',                  [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'show'])->name('admin.creator-resources.show');
         Route::post('/creator-resources/{user}/custom-domain',   [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'updateCustomDomain'])->name('admin.creator-resources.custom-domain');
@@ -921,6 +926,14 @@ Route::prefix('admin')->group(function () {
         Route::post('/creator-resources/delete-cart-item',       [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'deleteCartItem'])->name('admin.creator-resources.delete-cart-item');
         Route::post('/creator-resources/clear-cart-items',       [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'clearCreatorAbandonedCarts'])->name('admin.creator-resources.clear-cart-items');
         Route::post('/creator-resources/{user}/send-domain-completed-email', [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'sendDomainCompletedEmail'])->name('admin.creator-resources.send-domain-completed-email');
+
+        // Media Partner & Komisi Buyletix
+        Route::get('/media-partners',                           [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'index'])->name('admin.media-partners.index');
+        Route::post('/media-partners',                          [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'store'])->name('admin.media-partners.store');
+        Route::get('/media-partners/{mediaPartner}',            [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'show'])->name('admin.media-partners.show');
+        Route::put('/media-partners/{mediaPartner}',            [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'update'])->name('admin.media-partners.update');
+        Route::post('/media-partners/{mediaPartner}/payout',     [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'payout'])->name('admin.media-partners.payout');
+        Route::post('/media-partners/{mediaPartner}/toggle',     [\App\Http\Controllers\Admin\AdminMediaPartnerController::class, 'toggleActive'])->name('admin.media-partners.toggle');
 
         // Order Management
         Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');

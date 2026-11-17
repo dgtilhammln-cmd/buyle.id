@@ -299,15 +299,46 @@ class TicketingAuthController extends Controller
             $username = $baseUsername . rand(100, 9999);
         }
 
+        $refCode = $request->input('ref') 
+            ?? $request->query('ref') 
+            ?? session('referral_code') 
+            ?? $request->cookie('buyle_referral');
+
+        $mediaPartnerId = null;
+        $mediaPartnerName = null;
+        $referrerId = null;
+
+        if (!empty($refCode)) {
+            $refCode = strtolower(trim($refCode));
+            $mp = \App\Models\MediaPartner::where('code', $refCode)->where('is_active', true)->first();
+            if ($mp) {
+                $mediaPartnerId = $mp->id;
+                $mediaPartnerName = $mp->name;
+            } else {
+                $refOwner = User::where('username', $refCode)->orWhere('referral_code', $refCode)->first();
+                if ($refOwner) {
+                    $referrerId = $refOwner->id;
+                }
+            }
+        }
+
         $user = User::create([
-            'name'              => $request->name,
-            'email'             => $request->email,
-            'phone'             => $request->phone,
-            'username'          => $username,
-            'password'          => Hash::make($request->password),
-            'role'              => $assignedRole,
-            'email_verified_at' => now(),
-            'is_active'         => true,
+            'name'                 => $request->name,
+            'email'                => $request->email,
+            'phone'                => $request->phone,
+            'username'             => $username,
+            'password'             => Hash::make($request->password),
+            'role'                 => $assignedRole,
+            'email_verified_at'    => now(),
+            'is_active'            => true,
+            'business_persona'     => 'event_ticket',
+            'referral_source_type' => $mediaPartnerId ? 'media_partner' : ($refCode ? 'referral' : 'direct'),
+            'referral_source_name' => $mediaPartnerName ?: ($refCode ?: 'Organik'),
+            'media_partner_name'   => $mediaPartnerName,
+            'media_partner_id'     => $mediaPartnerId,
+            'referral_code'        => $refCode,
+            'referrer_id'          => $referrerId,
+            'primary_goal'         => 'ticketing',
         ]);
 
         Auth::login($user, true);

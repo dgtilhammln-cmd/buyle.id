@@ -176,6 +176,11 @@ class User extends Authenticatable
         return $this->hasMany(Wedding::class)->latest();
     }
 
+    public function mediaPartner(): BelongsTo
+    {
+        return $this->belongsTo(MediaPartner::class, 'media_partner_id');
+    }
+
     public function ticketPasses(): HasMany
     {
         return $this->hasMany(TicketPass::class, 'user_id');

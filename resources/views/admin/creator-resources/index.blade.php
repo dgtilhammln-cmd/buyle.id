@@ -589,7 +589,7 @@
     </div>
 
     {{-- Filter / Search Bar & View Switcher --}}
-    <form method="GET" action="{{ route('admin.creator-resources.index') }}" class="res-filter-box">
+    <form method="GET" action="{{ route('admin.all-creator.index') }}" class="res-filter-box">
         <div class="res-search-group">
             <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama, email, username, telepon, atau toko creator..." class="res-input">
             <button type="submit" class="res-btn">
@@ -599,11 +599,38 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            {{-- Filter Media Partner --}}
+            <div style="display:flex; align-items:center; gap:0.3rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#64748B;">MEDIA PARTNER:</label>
+                <select name="media_partner" onchange="this.form.submit()" class="res-select">
+                    <option value="all" {{ ($mediaPartnerFilter ?? 'all') === 'all' ? 'selected' : '' }}>Semua Asal</option>
+                    <option value="none" {{ ($mediaPartnerFilter ?? '') === 'none' ? 'selected' : '' }}>Tanpa Medpart (Organik)</option>
+                    @foreach($mediaPartners as $mp)
+                        <option value="{{ $mp->id }}" {{ (string)($mediaPartnerFilter ?? '') === (string)$mp->id ? 'selected' : '' }}>
+                            {{ $mp->name }} ({{ $mp->commission_rate }}%)
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filter Sumber Referral --}}
+            <div style="display:flex; align-items:center; gap:0.3rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#64748B;">SUMBER TAHU:</label>
+                <select name="referral_source" onchange="this.form.submit()" class="res-select">
+                    <option value="all" {{ ($sourceFilter ?? 'all') === 'all' ? 'selected' : '' }}>Semua Sumber</option>
+                    <option value="media_partner" {{ ($sourceFilter ?? '') === 'media_partner' ? 'selected' : '' }}>Media Partner</option>
+                    <option value="social_media" {{ ($sourceFilter ?? '') === 'social_media' ? 'selected' : '' }}>Media Sosial</option>
+                    <option value="word_of_mouth" {{ ($sourceFilter ?? '') === 'word_of_mouth' ? 'selected' : '' }}>Teman / Komunitas</option>
+                    <option value="ads" {{ ($sourceFilter ?? '') === 'ads' ? 'selected' : '' }}>Iklan Digital</option>
+                    <option value="search_engine" {{ ($sourceFilter ?? '') === 'search_engine' ? 'selected' : '' }}>Google Search</option>
+                </select>
+            </div>
+
             {{-- Filter Status Online --}}
             <div style="display:flex; align-items:center; gap:0.3rem;">
                 <label style="font-size:0.75rem; font-weight:700; color:#64748B;">STATUS ONLINE:</label>
                 <select name="online_status" onchange="this.form.submit()" class="res-select">
-                    <option value="all"           {{ $onlineFilter === 'all'           ? 'selected' : '' }}>Semua Creator</option>
+                    <option value="all"           {{ $onlineFilter === 'all'           ? 'selected' : '' }}>Semua Status</option>
                     <option value="online_now"    {{ $onlineFilter === 'online_now'    ? 'selected' : '' }}>Online Sekarang</option>
                     <option value="active_today"  {{ $onlineFilter === 'active_today'  ? 'selected' : '' }}>Aktif Hari Ini</option>
                     <option value="active_week"   {{ $onlineFilter === 'active_week'   ? 'selected' : '' }}>Aktif Minggu Ini</option>
@@ -713,6 +740,30 @@
                                                 GPS Maps
                                             </a>
                                         @endif
+                                    </div>
+
+                                    {{-- Referral & Media Partner Row --}}
+                                    <div style="font-size:0.68rem; margin-top:0.35rem; display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
+                                        @if($user->mediaPartner)
+                                            <span style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; font-weight:800;" title="Kaitkan ke Media Partner">
+                                                Medpart: {{ $user->mediaPartner->name }} ({{ $user->mediaPartner->commission_rate }}%)
+                                            </span>
+                                        @elseif($user->media_partner_name)
+                                            <span style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; font-weight:700;">
+                                                Medpart: {{ $user->media_partner_name }}
+                                            </span>
+                                        @elseif($user->referral_source_name || $user->referral_source_type)
+                                            <span style="background:#F1F5F9; color:#475569; padding:1px 6px; border-radius:4px; font-weight:600;">
+                                                Ref: {{ $user->referral_source_name ?: ucfirst(str_replace('_', ' ', $user->referral_source_type)) }}
+                                            </span>
+                                        @else
+                                            <span style="color:#94A3B8;">
+                                                Ref: Organik / Langsung
+                                            </span>
+                                        @endif
+                                        <button type="button" onclick="openAssignMedpartModal({{ $user->id }}, '{{ addslashes($user->name) }}', {{ $user->media_partner_id ?: 'null' }})" style="border:none; background:transparent; color:#1eb349; font-size:0.65rem; font-weight:800; cursor:pointer; text-decoration:underline; padding:0;">
+                                            Ubah
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -887,6 +938,32 @@
                             </span>
                         </div>
                     @endif
+
+                    {{-- Referral / Media Partner Pill Row --}}
+                    <div style="background:#F1F5F9; border-radius:10px; padding:0.4rem 0.6rem; margin-bottom:0.75rem; display:flex; align-items:center; justify-content:space-between; gap:4px;">
+                        @if($user->mediaPartner)
+                            <div style="font-size:0.68rem; font-weight:800; color:#15803d; display:flex; align-items:center; gap:3px;">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                <span>{{ $user->mediaPartner->name }} ({{ $user->mediaPartner->commission_rate }}%)</span>
+                            </div>
+                        @elseif($user->media_partner_name)
+                            <div style="font-size:0.68rem; font-weight:700; color:#16a34a;">
+                                Medpart: {{ $user->media_partner_name }}
+                            </div>
+                        @elseif($user->referral_source_name || $user->referral_source_type)
+                            <div style="font-size:0.68rem; font-weight:600; color:#475569;">
+                                Ref: {{ $user->referral_source_name ?: ucfirst(str_replace('_', ' ', $user->referral_source_type)) }}
+                            </div>
+                        @else
+                            <div style="font-size:0.65rem; color:#94A3B8;">
+                                Ref: Organik / Langsung
+                            </div>
+                        @endif
+
+                        <button type="button" onclick="openAssignMedpartModal({{ $user->id }}, '{{ addslashes($user->name) }}', {{ $user->media_partner_id ?: 'null' }})" style="border:none; background:#ffffff; color:#1eb349; font-size:0.65rem; font-weight:800; border-radius:4px; padding:2px 6px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.05);" title="Atur Asosiasi Media Partner">
+                            Set Medpart
+                        </button>
+                    </div>
 
                     {{-- Compact Overview Stats Bar --}}
                     <div style="background:#F8FAFC; border:1px solid #F1F5F9; border-radius:12px; padding:0.65rem 0.75rem; margin-bottom:0.85rem; display:flex; justify-content:space-between; align-items:center;">
@@ -1375,6 +1452,50 @@ function toggleExclusive(userId, currentState) {
         alert('Terjadi kesalahan jaringan. Coba lagi.');
     });
 }
+
+function openAssignMedpartModal(userId, userName, currentMedpartId) {
+    document.getElementById('assignCreatorName').innerText = userName;
+    document.getElementById('formAssignMedpart').action = '/admin/all-creator/' + userId + '/media-partner';
+    document.getElementById('assignMedpartSelect').value = currentMedpartId || '';
+    document.getElementById('assignMedpartModal').style.display = 'flex';
+}
+function closeAssignMedpartModal() {
+    document.getElementById('assignMedpartModal').style.display = 'none';
+}
 </script>
+
+{{-- MODAL ATUR MEDIA PARTNER CREATOR --}}
+<div class="ghost-modal-overlay" id="assignMedpartModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:1rem;">
+    <div style="background:#ffffff; border-radius:20px; width:100%; max-width:440px; box-shadow:0 20px 40px rgba(0,0,0,0.15); overflow:hidden;">
+        <div style="padding:1.15rem 1.35rem; border-bottom:1px solid #F1F5F9; display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:0.95rem; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:6px;">
+                <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+                Atur Media Partner Creator
+            </div>
+            <button type="button" onclick="closeAssignMedpartModal()" style="border:none; background:transparent; font-size:1.3rem; cursor:pointer; color:#64748B;">&times;</button>
+        </div>
+        <form id="formAssignMedpart" method="POST" action="">
+            @csrf
+            <div style="padding:1.25rem;">
+                <p style="font-size:0.78rem; color:#64748B; margin:0 0 1rem; line-height:1.5;">
+                    Kaitkan creator <strong id="assignCreatorName" style="color:#0F172A;"></strong> ke Media Partner. Setiap transaksi tiket yang dibuat creator ini akan otomatis mengalirkan komisi ke Media Partner terpilih.
+                </p>
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block; font-size:0.72rem; font-weight:700; color:#475569; margin-bottom:0.35rem;">PILIH MEDIA PARTNER</label>
+                    <select name="media_partner_id" id="assignMedpartSelect" class="res-select" style="width:100%; padding:0.6rem; border-radius:10px;">
+                        <option value="">-- Tanpa Media Partner (Lepas Asosiasi) --</option>
+                        @foreach($mediaPartners as $mp)
+                            <option value="{{ $mp->id }}">{{ $mp->name }} (Komisi: {{ $mp->commission_rate }}%)</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.5rem; padding:0.85rem 1.25rem; background:#F8FAFC; border-top:1px solid #F1F5F9;">
+                <button type="button" onclick="closeAssignMedpartModal()" class="res-btn" style="background:#fff; color:#475569; border:1px solid #CBD5E1;">Batal</button>
+                <button type="submit" class="res-btn" style="background:#1eb349; color:#fff;">Simpan Asosiasi</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @endsection
