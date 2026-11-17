@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -412,7 +412,8 @@ button.btn-primary:hover, a.btn-primary:hover {
   @php
     $uPerm = auth()->user();
   @endphp
-  {{-- CARD 1: BRAND & UTAMA --}}
+
+  {{-- CARD 1: BRAND & IKHTISAR --}}
   <div class="sb-capsule-card">
     <div class="sb-brand-wrapper">
       <a href="{{ route('admin.dashboard') }}" class="sb-brand-box" title="buyle.id Admin">
@@ -443,7 +444,101 @@ button.btn-primary:hover, a.btn-primary:hover {
       <span class="sb-link-text">Analytics</span>
     </a>
     @endif
+  </div>
 
+  {{-- CARD 2: TRANSAKSI & KEUANGAN --}}
+  <div class="sb-capsule-card">
+    @if(!$uPerm || $uPerm->hasMenuPermission('orders'))
+    <a href="{{ route('admin.orders.index') }}" class="sb-link {{ (request()->routeIs('admin.orders*') && !(request('tab') === 'omset' && request('tx_type') === 'domain')) ? 'active' : '' }}" title="Pesanan">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <span class="sb-link-text">Pesanan</span>
+    </a>
+
+    @php $pendingPayoutsCount = \App\Models\PayoutRequest::where('status', 'pending')->count(); @endphp
+    <a href="{{ route('admin.payouts.index') }}" class="sb-link {{ request()->routeIs('admin.payouts*') ? 'active' : '' }}" title="Pencairan Dana">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <span class="sb-link-text">Pencairan Dana</span>
+      @if($pendingPayoutsCount > 0)<span class="sb-badge" style="background:#d97706;">{{ $pendingPayoutsCount }}</span>@endif
+    </a>
+
+    <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain']) }}" class="sb-link {{ (request()->routeIs('admin.domain-orders*') || (request()->routeIs('admin.orders*') && request('tab') === 'omset' && request('tx_type') === 'domain')) ? 'active' : '' }}" title="Transaksi Domain">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <span class="sb-link-text">Transaksi Domain</span>
+    </a>
+    @endif
+  </div>
+
+  {{-- CARD 3: PENGGUNA & KREATOR --}}
+  <div class="sb-capsule-card">
+    @if(!$uPerm || $uPerm->hasMenuPermission('buyers'))
+    <a href="{{ route('admin.users.index') }}" class="sb-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}" title="All User">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <span class="sb-link-text">All User</span>
+    </a>
+
+    <a href="{{ route('admin.creator-resources.index') }}" class="sb-link {{ request()->routeIs('admin.creator-resources*') ? 'active' : '' }}" title="Creator Buyle">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <span class="sb-link-text">Creator Buyle</span>
+    </a>
+
+    @php $pendingKycCount = \App\Models\CreatorKyc::where('status', 'pending')->count(); @endphp
+    <a href="{{ route('admin.kyc.index') }}" class="sb-link {{ request()->routeIs('admin.kyc*') ? 'active' : '' }}" title="Verifikasi e-KYC">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+      </div>
+      <span class="sb-link-text">Verifikasi e-KYC</span>
+      @if($pendingKycCount > 0)<span class="sb-badge">{{ $pendingKycCount }}</span>@endif
+    </a>
+    @endif
+  </div>
+
+  {{-- CARD 4: MARKETPLACE & PENGIRIMAN --}}
+  <div class="sb-capsule-card">
+    @if(!$uPerm || $uPerm->hasMenuPermission('products'))
+    <a href="{{ route('admin.product-categories.index') }}" class="sb-link {{ request()->routeIs('admin.product-categories*') ? 'active' : '' }}" title="Kategori Marketplace">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+      </div>
+      <span class="sb-link-text">Kategori Marketplace</span>
+    </a>
+
+    @php $pendingWlCount = \App\Models\Product::where('is_whitelabel', true)->where('whitelabel_approval_status', 'pending')->count(); @endphp
+    <a href="{{ route('admin.whitelabel.index') }}" class="sb-link {{ request()->routeIs('admin.whitelabel*') ? 'active' : '' }}" title="Approval Whitelabel">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <span class="sb-link-text">Approval Whitelabel</span>
+      @if($pendingWlCount > 0)<span class="sb-badge">{{ $pendingWlCount }}</span>@endif
+    </a>
+
+    <a href="{{ route('admin.coupons.index') }}" class="sb-link {{ request()->routeIs('admin.coupons*') ? 'active' : '' }}" title="Kupon / Voucher">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+      </div>
+      <span class="sb-link-text">Kupon / Voucher</span>
+    </a>
+
+    <a href="{{ route('admin.couriers.index') }}" class="sb-link {{ request()->routeIs('admin.couriers*') ? 'active' : '' }}" title="Kurir &amp; Pengiriman">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <span class="sb-link-text">Kurir &amp; Pengiriman</span>
+    </a>
+    @endif
+  </div>
+
+  {{-- CARD 5: KONTEN & PEMASARAN --}}
+  <div class="sb-capsule-card">
     @if(!$uPerm || $uPerm->hasMenuPermission('articles'))
     <a href="{{ route('admin.articles.index') }}" class="sb-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}" title="Artikel">
       <div class="sb-link-icon">
@@ -473,92 +568,33 @@ button.btn-primary:hover, a.btn-primary:hover {
       <span class="sb-link-text">Testimoni</span>
     </a>
     @endif
+
+    @if(!$uPerm || $uPerm->hasMenuPermission('banners'))
+    <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}" title="Banner Hero">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+      </div>
+      <span class="sb-link-text">Banner Hero</span>
+    </a>
+
+    <a href="{{ route('admin.usp.index') }}" class="sb-link {{ request()->routeIs('admin.usp*') ? 'active' : '' }}" title="USP Bar">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+      </div>
+      <span class="sb-link-text">USP Bar</span>
+    </a>
+
+    <a href="{{ route('admin.promo-sections.index') }}" class="sb-link {{ request()->routeIs('admin.promo-sections*') ? 'active' : '' }}" title="Promo &amp; Deals">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      </div>
+      <span class="sb-link-text">Promo &amp; Deals</span>
+    </a>
+    @endif
   </div>
 
-  {{-- CARD 2: E-COMMERCE & DATA --}}
+  {{-- CARD 6: LAYANAN & KOMUNIKASI --}}
   <div class="sb-capsule-card">
-    @if(!$uPerm || $uPerm->hasMenuPermission('orders'))
-    <a href="{{ route('admin.orders.index') }}" class="sb-link {{ (request()->routeIs('admin.orders*') && !(request('tab') === 'omset' && request('tx_type') === 'domain')) ? 'active' : '' }}" title="Pesanan">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      </div>
-      <span class="sb-link-text">Pesanan</span>
-    </a>
-    @endif
-
-    @if(!$uPerm || $uPerm->hasMenuPermission('products'))
-    <a href="{{ route('admin.coupons.index') }}" class="sb-link {{ request()->routeIs('admin.coupons*') ? 'active' : '' }}" title="Kupon / Voucher">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-      </div>
-      <span class="sb-link-text">Kupon / Voucher</span>
-    </a>
-
-    @php $pendingWlCount = \App\Models\Product::where('is_whitelabel', true)->where('whitelabel_approval_status', 'pending')->count(); @endphp
-    <a href="{{ route('admin.whitelabel.index') }}" class="sb-link {{ request()->routeIs('admin.whitelabel*') ? 'active' : '' }}" title="Approval Whitelabel">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      </div>
-      <span class="sb-link-text">Approval Whitelabel</span>
-      @if($pendingWlCount > 0)<span class="sb-badge">{{ $pendingWlCount }}</span>@endif
-    </a>
-
-    <a href="{{ route('admin.product-categories.index') }}" class="sb-link {{ request()->routeIs('admin.product-categories*') ? 'active' : '' }}" title="Kategori Marketplace">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
-      </div>
-      <span class="sb-link-text">Kategori Marketplace</span>
-    </a>
-
-    <a href="{{ route('admin.couriers.index') }}" class="sb-link {{ request()->routeIs('admin.couriers*') ? 'active' : '' }}" title="Pengiriman / Kurir">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      </div>
-      <span class="sb-link-text">Kurir & Pengiriman</span>
-    </a>
-    @endif
-
-    @if(!$uPerm || $uPerm->hasMenuPermission('buyers'))
-    <a href="{{ route('admin.users.index') }}" class="sb-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}" title="All User">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      </div>
-      <span class="sb-link-text">All User</span>
-    </a>
-
-    <a href="{{ route('admin.creator-resources.index') }}" class="sb-link {{ request()->routeIs('admin.creator-resources*') ? 'active' : '' }}" title="Creator Buyle">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      </div>
-      <span class="sb-link-text">Creator Buyle</span>
-    </a>
-
-    @php $pendingKycCount = \App\Models\CreatorKyc::where('status', 'pending')->count(); @endphp
-    <a href="{{ route('admin.kyc.index') }}" class="sb-link {{ request()->routeIs('admin.kyc*') ? 'active' : '' }}" title="Verifikasi e-KYC">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
-      </div>
-      <span class="sb-link-text">Verifikasi e-KYC</span>
-      @if($pendingKycCount > 0)<span class="sb-badge">{{ $pendingKycCount }}</span>@endif
-    </a>
-
-    <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain']) }}" class="sb-link {{ (request()->routeIs('admin.domain-orders*') || (request()->routeIs('admin.orders*') && request('tab') === 'omset' && request('tx_type') === 'domain')) ? 'active' : '' }}" title="Transaksi Domain Creator">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      </div>
-      <span class="sb-link-text">Transaksi Domain</span>
-    </a>
-
-    @php $pendingPayoutsCount = \App\Models\PayoutRequest::where('status', 'pending')->count(); @endphp
-    <a href="{{ route('admin.payouts.index') }}" class="sb-link {{ request()->routeIs('admin.payouts*') ? 'active' : '' }}" title="Pencairan Dana (Payout)">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      </div>
-      <span class="sb-link-text">Pencairan Dana</span>
-      @if($pendingPayoutsCount > 0)<span class="sb-badge" style="background:#d97706;">{{ $pendingPayoutsCount }}</span>@endif
-    </a>
-    @endif
-
     @if(!$uPerm || $uPerm->hasMenuPermission('leads'))
     @php $newLeads = \App\Models\Lead::where('status','new')->count(); @endphp
     <a href="{{ route('admin.leads.index') }}" class="sb-link {{ request()->routeIs('admin.leads*') ? 'active' : '' }}" title="Laporan Chat">
@@ -580,32 +616,9 @@ button.btn-primary:hover, a.btn-primary:hover {
       @if($pendingReportsCount > 0)<span class="sb-badge">{{ $pendingReportsCount }}</span>@endif
     </a>
     @endif
-
-    @if(!$uPerm || $uPerm->hasMenuPermission('banners'))
-    <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}" title="Banner Hero">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
-      </div>
-      <span class="sb-link-text">Banner Hero</span>
-    </a>
-
-    <a href="{{ route('admin.usp.index') }}" class="sb-link {{ request()->routeIs('admin.usp*') ? 'active' : '' }}" title="USP Bar">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-      </div>
-      <span class="sb-link-text">USP Bar</span>
-    </a>
-
-    <a href="{{ route('admin.promo-sections.index') }}" class="sb-link {{ request()->routeIs('admin.promo-sections*') ? 'active' : '' }}" title="Promo & Deals">
-      <div class="sb-link-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      </div>
-      <span class="sb-link-text">Promo & Deals</span>
-    </a>
-    @endif
   </div>
 
-  {{-- CARD 3: PENGATURAN & AKSI --}}
+  {{-- CARD 7: SISTEM & PENGATURAN --}}
   <div class="sb-capsule-card" style="margin-top: auto;">
     @if(!$uPerm || $uPerm->hasMenuPermission('settings'))
     <a href="{{ route('admin.notifications.index') }}" class="sb-link {{ request()->routeIs('admin.notifications*') ? 'active' : '' }}" title="Notifikasi">
@@ -622,20 +635,20 @@ button.btn-primary:hover, a.btn-primary:hover {
       <span class="sb-link-text">Pengaturan</span>
     </a>
 
-    <a href="{{ route('admin.apikeys.index') }}" class="sb-link {{ request()->routeIs('admin.apikeys*') ? 'active' : '' }}" title="API & Integrasi">
+    <a href="{{ route('admin.apikeys.index') }}" class="sb-link {{ request()->routeIs('admin.apikeys*') ? 'active' : '' }}" title="API &amp; Integrasi">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
       </div>
-      <span class="sb-link-text">API & Integrasi</span>
+      <span class="sb-link-text">API &amp; Integrasi</span>
     </a>
     @endif
 
     @if(!$uPerm || $uPerm->hasMenuPermission('admin_users'))
-    <a href="{{ route('admin.admin-users.index') }}" class="sb-link {{ request()->routeIs('admin.admin-users*') ? 'active' : '' }}" title="Akun Admin & Akses">
+    <a href="{{ route('admin.admin-users.index') }}" class="sb-link {{ request()->routeIs('admin.admin-users*') ? 'active' : '' }}" title="Akun Admin &amp; Akses">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
       </div>
-      <span class="sb-link-text">Akun Admin & Akses</span>
+      <span class="sb-link-text">Akun Admin &amp; Akses</span>
     </a>
     @endif
 
