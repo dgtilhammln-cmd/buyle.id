@@ -1255,95 +1255,91 @@ Route::get('/sys/reset-transactions-buyle2026', function () {
         abort(403, 'Unauthorized');
     }
 
-    // Find the 2 valid payout records to KEEP
-    // P783534337 and P782810643 — search in notes, admin_notes, or any text field
-    $keepIds = \App\Models\PayoutRequest::where(function ($q) {
-        $q->where('notes', 'like', '%P783534337%')
-          ->orWhere('admin_notes', 'like', '%P783534337%');
-    })->orWhere(function ($q) {
-        $q->where('notes', 'like', '%P782810643%')
-          ->orWhere('admin_notes', 'like', '%P782810643%');
-    })->pluck('id')->toArray();
-
-    // Also try to match by amount + date as fallback
-    // P783534337 = Rp 200.000 on 16 Nov 2026
-    // P782810643 = Rp 50.022 on 12 Nov 2026
-    if (empty($keepIds)) {
-        $keepIds = \App\Models\PayoutRequest::where(function ($q) {
-            $q->whereBetween('amount', [199000, 201000])
-              ->whereDate('created_at', '2026-11-16');
-        })->orWhere(function ($q) {
-            $q->whereBetween('amount', [49000, 51000])
-              ->whereDate('created_at', '2026-11-12');
-        })->pluck('id')->toArray();
-    }
-
-    // Also try net_amount match
-    if (empty($keepIds)) {
-        $keepIds = \App\Models\PayoutRequest::where('status', 'processed')
-            ->pluck('id')->toArray();
-    }
-
+    $allPayouts = \App\Models\PayoutRequest::all();
     $log = [];
-    $log[] = '✅ Payout IDs to KEEP: ' . implode(', ', $keepIds);
+    $log[] = "🔍 Total Payout Requests in DB: " . $allPayouts->count();
+
+    // Inspect all payout requests and identify the 2 valid ones
+    $keepIds = [];
+    foreach ($allPayouts as $p) {
+        $notesStr = ($p->notes ?? '') . ' ' . ($p->admin_notes ?? '');
+        $isMatchCode = str_contains($notesStr, 'P783534337') || str_contains($notesStr, 'P782810643');
+        $isMatchAmount1 = abs((float)$p->amount - 200000) < 1 || abs((float)$p->net_amount - 200000) < 1;
+        $isMatchAmount2 = abs((float)$p->amount - 50022) < 1 || abs((float)$p->net_amount - 50022) < 1;
+
+        if ($isMatchCode || $isMatchAmount1 || $isMatchAmount2) {
+            $keepIds[] = $p->id;
+            $log[] = "🎯 MATCH TO KEEP: ID#{$p->id} | Rp " . number_format($p->amount, 0, ',', '.') . " | Net: Rp " . number_format($p->net_amount, 0, ',', '.') . " | Status: {$p->status} | {$p->created_at} | notes: {$p->notes}";
+        } else {
+            $log[] = "❌ TO DELETE: ID#{$p->id} | Rp " . number_format($p->amount, 0, ',', '.') . " | Status: {$p->status} | {$p->created_at}";
+        }
+    }
+
+    $keepIds = array_unique($keepIds);
+    $log[] = '';
+    $log[] = '✅ Payout IDs confirmed to KEEP: [' . implode(', ', $keepIds) . ']';
 
     \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
     // Wipe transaction tables
     $tables = [
-        'ticket_passes', 'coupon_usages', 'shipments',
-        'payments', 'order_items', 'orders',
-        'wedding_gifts', 'domain_orders',
-        'pos_balance_mutations', 'pos_deposits',
+        'ticket_passes',
+        'coupon_usages',
+        'shipments',
+        'payments',
+        'order_items',
+        'orders',
+        'wedding_gifts',
+        'domain_orders',
+        'pos_balance_mutations',
+        'pos_deposits',
     ];
 
     foreach ($tables as $table) {
         try {
-            $count = \Illuminate\Support\Facades\DB::table($table)->count();
-            \Illuminate\Support\Facades\DB::table($table)->truncate();
-            $log[] = "🗑️ Truncated {$table} ({$count} rows)";
-        } catch (\Exception $e) {
-            $log[] = "⚠️ Skip {$table}: " . $e->getMessage();
+            if (\Illuminate\Support\Facades\Schema::hasTable($table)) {
+                $count = \Illuminate\Support\Facades\DB::table($table)->count();
+                \Illuminate\Support\Facades\DB::table($table)->truncate();
+                $log[] = "🗑️ Truncated {$table} ({$count} rows)";
+            }
+        } catch (\Throwable $e) {
+            $log[] = "⚠️ Error truncating {$table}: " . $e->getMessage();
         }
     }
 
-    // Delete payout_requests EXCEPT the 2 valid ones
+    // Delete payout_requests EXCEPT the valid ones
     $payoutCount = \App\Models\PayoutRequest::count();
     if (!empty($keepIds)) {
+        // Ensure kept records have status 'processed'
+        \App\Models\PayoutRequest::whereIn('id', $keepIds)->update(['status' => 'processed']);
         $deleted = \App\Models\PayoutRequest::whereNotIn('id', $keepIds)->delete();
+        $log[] = "🗑️ Deleted {$deleted} invalid payout_requests (kept " . count($keepIds) . " valid records out of {$payoutCount})";
     } else {
-        $deleted = 0;
-        $log[] = '⚠️ No valid payout IDs found — skipping payout deletion for safety!';
+        $log[] = '⚠️ Warning: No valid payout IDs found matching criteria! Skipped deletion for safety.';
     }
-    $log[] = "🗑️ Deleted {$deleted} payout_requests (kept " . count($keepIds) . " valid records out of {$payoutCount})";
 
-    // Reset wallet & pos balances
-    \Illuminate\Support\Facades\DB::table('creator_profiles')
-        ->update(['wallet_balance' => 0, 'pos_balance' => 0]);
-    $log[] = '✅ Reset wallet_balance & pos_balance to 0 for all creator_profiles';
-
-    // Reset wedding_gifts payment status if needed
+    // Reset pos_balance in creator_profiles
     try {
-        \Illuminate\Support\Facades\DB::table('wedding_wishes')
-            ->where('payment_status', 'settlement')
-            ->update(['payment_status' => 'pending', 'midtrans_order_id' => null]);
-        $log[] = '✅ Reset wedding_wishes settlement → pending';
-    } catch (\Exception $e) {
-        $log[] = '⚠️ wedding_wishes: ' . $e->getMessage();
+        if (\Illuminate\Support\Facades\Schema::hasTable('creator_profiles') && \Illuminate\Support\Facades\Schema::hasColumn('creator_profiles', 'pos_balance')) {
+            \Illuminate\Support\Facades\DB::table('creator_profiles')->update(['pos_balance' => 0]);
+            $log[] = '✅ Reset pos_balance to 0 in creator_profiles';
+        }
+    } catch (\Throwable $e) {
+        $log[] = '⚠️ creator_profiles: ' . $e->getMessage();
     }
 
     \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-    // Show remaining payout records
-    $remaining = \App\Models\PayoutRequest::all(['id', 'amount', 'net_amount', 'status', 'notes', 'admin_notes', 'created_at']);
+    // Show final remaining payout records
+    $remaining = \App\Models\PayoutRequest::all();
     $log[] = '';
-    $log[] = '📋 Remaining payout_requests (' . $remaining->count() . '):';
+    $log[] = '📋 Remaining payout_requests count: ' . $remaining->count();
     foreach ($remaining as $p) {
-        $log[] = "  ID#{$p->id} | Rp " . number_format($p->amount, 0, ',', '.') . " | {$p->status} | {$p->created_at} | notes: {$p->notes}";
+        $log[] = "  • ID#{$p->id} | Rp " . number_format($p->amount, 0, ',', '.') . " | Net: Rp " . number_format($p->net_amount, 0, ',', '.') . " | Status: {$p->status} | {$p->created_at} | Bank: {$p->bank_name} {$p->bank_account_number}";
     }
 
-    return response('<pre style="font-family:monospace;padding:20px;background:#0f172a;color:#4ade80;line-height:1.6">'
-        . '<h2 style="color:#f8fafc">🔄 Transaction Reset Complete</h2>'
+    return response('<pre style="font-family:monospace;padding:24px;background:#0f172a;color:#4ade80;line-height:1.6;border-radius:12px;">'
+        . '<h2 style="color:#f8fafc;margin-top:0">🔄 Buyle.id Transaction Reset Completed</h2>'
         . implode("\n", $log)
         . '</pre>');
 })->name('reset.transactions');
