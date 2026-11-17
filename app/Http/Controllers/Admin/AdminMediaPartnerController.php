@@ -46,10 +46,16 @@ class AdminMediaPartnerController extends Controller
         $totalBalanceOverall = (float) $allPartners->sum('balance');
 
         // Tarik list semua creator/user untuk fitur sinkronisasi profil & rekening
-        $creatorsList = User::select('id', 'name', 'username', 'email', 'phone', 'avatar', 'bank_name', 'bank_account_number', 'bank_account_name')
+        $creatorsList = User::with(['creatorProfile:id,user_id,store_slug'])
+            ->select('id', 'name', 'username', 'email', 'phone', 'avatar', 'bank_name', 'bank_account_number', 'bank_account_name')
             ->orderBy('name')
             ->get()
             ->map(function ($u) {
+                // Samakan slug alias username saat ini: prioritaskan slug toko/bio publik aktif (store_slug), lalu username
+                $effectiveSlug = !empty($u->creatorProfile?->store_slug)
+                    ? trim($u->creatorProfile->store_slug)
+                    : (!empty($u->username) ? trim($u->username) : Str::slug($u->name, ''));
+
                 $avatarUrl = null;
                 if ($u->avatar) {
                     $avatarUrl = filter_var($u->avatar, FILTER_VALIDATE_URL) ? $u->avatar : Storage::url($u->avatar);
@@ -57,7 +63,8 @@ class AdminMediaPartnerController extends Controller
                 return [
                     'id'                  => $u->id,
                     'name'                => $u->name,
-                    'username'            => $u->username ?? '',
+                    'username'            => $effectiveSlug,
+                    'slug'                => $effectiveSlug,
                     'email'               => $u->email,
                     'phone'               => $u->phone ?? '',
                     'avatar_url'          => $avatarUrl,
@@ -128,11 +135,15 @@ class AdminMediaPartnerController extends Controller
             'balance'                 => 0,
         ]);
 
-        // Sinkronisasi dua arah jika akun User dipilih dan rekening di User masih kosong
+        // Sinkronisasi dua arah jika akun User dipilih: username, store_slug, dan rekening
         if (!empty($validated['user_id'])) {
-            $linkedUser = User::find($validated['user_id']);
+            $linkedUser = User::with('creatorProfile')->find($validated['user_id']);
             if ($linkedUser) {
                 $userUpdates = [];
+                if ($linkedUser->username !== $code) {
+                    $userUpdates['username'] = $code;
+                    $userUpdates['referral_code'] = $code;
+                }
                 if (empty($linkedUser->bank_name) && !empty($validated['bank_name'])) {
                     $userUpdates['bank_name'] = $validated['bank_name'];
                 }
@@ -144,6 +155,9 @@ class AdminMediaPartnerController extends Controller
                 }
                 if (!empty($userUpdates)) {
                     $linkedUser->update($userUpdates);
+                }
+                if ($linkedUser->creatorProfile && $linkedUser->creatorProfile->store_slug !== $code) {
+                    $linkedUser->creatorProfile->update(['store_slug' => $code]);
                 }
             }
         }
@@ -206,6 +220,33 @@ class AdminMediaPartnerController extends Controller
             'bank_account_name'   => $validated['bank_account_name'] ?? null,
             'notes'               => $validated['notes'] ?? null,
         ]);
+
+        $targetUserId = $validated['user_id'] ?? $mediaPartner->user_id;
+        if (!empty($targetUserId)) {
+            $linkedUser = User::with('creatorProfile')->find($targetUserId);
+            if ($linkedUser) {
+                $userUpdates = [];
+                if ($linkedUser->username !== $mediaPartner->code) {
+                    $userUpdates['username'] = $mediaPartner->code;
+                    $userUpdates['referral_code'] = $mediaPartner->code;
+                }
+                if (empty($linkedUser->bank_name) && !empty($validated['bank_name'])) {
+                    $userUpdates['bank_name'] = $validated['bank_name'];
+                }
+                if (empty($linkedUser->bank_account_number) && !empty($validated['bank_account_number'])) {
+                    $userUpdates['bank_account_number'] = $validated['bank_account_number'];
+                }
+                if (empty($linkedUser->bank_account_name) && !empty($validated['bank_account_name'])) {
+                    $userUpdates['bank_account_name'] = $validated['bank_account_name'];
+                }
+                if (!empty($userUpdates)) {
+                    $linkedUser->update($userUpdates);
+                }
+                if ($linkedUser->creatorProfile && $linkedUser->creatorProfile->store_slug !== $mediaPartner->code) {
+                    $linkedUser->creatorProfile->update(['store_slug' => $mediaPartner->code]);
+                }
+            }
+        }
 
         return back()->with('success', 'Data Media Partner ' . $mediaPartner->name . ' berhasil diperbarui.');
     }

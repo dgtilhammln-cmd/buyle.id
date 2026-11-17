@@ -505,7 +505,7 @@
                 <h1 class="mp-title">Media Partner &amp; Komisi Buyletix</h1>
                 <p class="mp-sub">
                     Atur promotor digital, persentase komisi fleksibel, tracking referal EO seumur hidup, dan integrasi
-                    profil creator. Ditemukan <strong>{{ $totalPartnersCount }}</strong> mitra.
+                    profil creator. Ditemukan <strong>{{ $totalPartnersCount }}</strong> partner.
                 </p>
             </div>
             <div>
@@ -565,7 +565,7 @@
                 @endif
             </form>
             <div style="font-size:0.75rem; color:#64748B; font-weight:600;">
-                Menampilkan {{ $mediaPartners->count() }} dari {{ $mediaPartners->total() }} mitra
+                Menampilkan {{ $mediaPartners->count() }} dari {{ $mediaPartners->total() }} partner
             </div>
         </div>
 
@@ -693,7 +693,7 @@
                             <tr>
                                 <td colspan="10" style="text-align:center; padding:3rem; color:#94A3B8;">
                                     Belum ada Media Partner terdaftar. Klik tombol <strong>Tambah Media Partner</strong> di
-                                    kanan atas untuk mendaftarkan mitra pertama.
+                                    kanan atas untuk mendaftarkan partner pertama.
                                 </td>
                             </tr>
                         @endforelse
@@ -846,7 +846,7 @@
                 </div>
                 <div class="mp-modal-footer">
                     <button type="button" onclick="closeModal('modalCreate')" class="mp-btn-cancel">Batal</button>
-                    <button type="submit" class="mp-btn-submit">Daftarkan Mitra</button>
+                    <button type="submit" class="mp-btn-submit">Daftarkan Partner</button>
                 </div>
             </form>
         </div>
@@ -997,7 +997,7 @@
                     <div
                         style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
                         <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
-                            <span style="font-size:0.75rem; color:#64748B;">Mitra:</span>
+                            <span style="font-size:0.75rem; color:#64748B;">Partner:</span>
                             <strong id="payoutPartnerName" style="color:#0F172A;"></strong>
                         </div>
                         <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
@@ -1063,7 +1063,8 @@
 
             let html = '';
             matches.slice(0, 30).forEach(c => {
-                const usernameText = c.username ? '@' + c.username : 'user';
+                const activeSlug = c.slug || c.username || '';
+                const usernameText = activeSlug ? '@' + activeSlug : 'user';
                 const avHtml = c.avatar_url
                     ? `<img src="${c.avatar_url}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #BBF7D0; flex-shrink:0;">`
                     : `<div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">${(c.name || 'C').charAt(0).toUpperCase()}</div>`;
@@ -1107,10 +1108,11 @@
             document.getElementById(mode + 'CreatorDropdown').style.display = 'none';
 
             if (mode === 'create') {
-                document.getElementById('createCreatorSearch').value = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
+                const activeSlug = creator.slug || creator.username || (creator.name ? creator.name.toLowerCase().replace(/[^a-z0-9]/g, '') : '');
+                document.getElementById('createCreatorSearch').value = creator.name + (activeSlug ? ' (@' + activeSlug + ')' : '');
                 document.getElementById('createUserId').value = creator.id;
                 document.getElementById('createName').value = creator.name || '';
-                document.getElementById('createCode').value = creator.username || (creator.name ? creator.name.toLowerCase().replace(/[^a-z0-9]/g, '') : '');
+                document.getElementById('createCode').value = activeSlug;
                 document.getElementById('createPicName').value = creator.name || '';
                 document.getElementById('createPicPhone').value = creator.phone || '';
                 document.getElementById('createPicEmail').value = creator.email || '';
@@ -1122,7 +1124,7 @@
                 const preview = document.getElementById('createCreatorPreview');
                 const avImg = document.getElementById('createCreatorAvatar');
                 const avInit = document.getElementById('createCreatorAvatarInit');
-                document.getElementById('createCreatorName').innerText = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
+                document.getElementById('createCreatorName').innerText = creator.name + (activeSlug ? ' (@' + activeSlug + ')' : '');
                 document.getElementById('createCreatorMeta').innerText = creator.email + (creator.phone ? ' | ' + creator.phone : '') + (creator.bank_name ? ' | ' + creator.bank_name : '');
 
                 if (creator.avatar_url) {
@@ -1136,9 +1138,11 @@
                 }
                 preview.style.display = 'flex';
             } else if (mode === 'edit') {
-                document.getElementById('editCreatorSearch').value = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
+                const activeSlug = creator.slug || creator.username || '';
+                document.getElementById('editCreatorSearch').value = creator.name + (activeSlug ? ' (@' + activeSlug + ')' : '');
                 document.getElementById('editUserId').value = creator.id;
                 if (!document.getElementById('editName').value) document.getElementById('editName').value = creator.name || '';
+                if (!document.getElementById('editCode').value) document.getElementById('editCode').value = activeSlug;
                 if (!document.getElementById('editPicName').value) document.getElementById('editPicName').value = creator.name || '';
                 if (!document.getElementById('editPicPhone').value) document.getElementById('editPicPhone').value = creator.phone || '';
                 if (!document.getElementById('editPicEmail').value) document.getElementById('editPicEmail').value = creator.email || '';
@@ -1150,7 +1154,7 @@
                 const preview = document.getElementById('editCreatorPreview');
                 const avImg = document.getElementById('editCreatorAvatar');
                 const avInit = document.getElementById('editCreatorAvatarInit');
-                document.getElementById('editCreatorName').innerText = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
+                document.getElementById('editCreatorName').innerText = creator.name + (activeSlug ? ' (@' + activeSlug + ')' : '');
                 document.getElementById('editCreatorMeta').innerText = creator.email + (creator.phone ? ' | ' + creator.phone : '');
 
                 if (creator.avatar_url) {
