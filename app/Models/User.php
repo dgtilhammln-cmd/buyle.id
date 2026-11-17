@@ -82,10 +82,11 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
-            'last_seen_at'      => 'datetime',
-            'menu_permissions'  => 'array',
+            'email_verified_at'       => 'datetime',
+            'password'                => 'hashed',
+            'last_seen_at'            => 'datetime',
+            'onboarding_completed_at' => 'datetime',
+            'menu_permissions'        => 'array',
         ];
     }
 

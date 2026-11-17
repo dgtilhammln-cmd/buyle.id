@@ -187,7 +187,7 @@
         @if($user->onboarding_completed_at)
           <span style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .75rem;border-radius:50px;background:#DCFCE7;color:#15803D;font-size:.72rem;font-weight:700;">
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Selesai Onboarding ({{ $user->onboarding_completed_at->format('d M Y, H:i') }})
+            Selesai Onboarding ({{ \Carbon\Carbon::parse($user->onboarding_completed_at)->format('d M Y, H:i') }})
           </span>
         @else
           <span style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .75rem;border-radius:50px;background:#FEF3C7;color:#92400E;font-size:.72rem;font-weight:700;">

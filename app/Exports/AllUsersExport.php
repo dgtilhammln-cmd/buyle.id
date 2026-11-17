@@ -125,7 +125,7 @@ class AllUsersExport implements FromArray, WithHeadings, ShouldAutoSize, WithSty
 
             // Status Onboarding
             $onboardingStatus = $user->onboarding_completed_at ? 'Selesai' : 'Belum Selesai';
-            $onboardingTime = $user->onboarding_completed_at ? $user->onboarding_completed_at->format('d/m/Y H:i') : '-';
+            $onboardingTime = $user->onboarding_completed_at ? \Carbon\Carbon::parse($user->onboarding_completed_at)->format('d/m/Y H:i') : '-';
 
             // Transaksi
             $totalSpending = (float) ($user->orders_sum_total ?? 0);

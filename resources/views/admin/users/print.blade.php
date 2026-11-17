@@ -268,7 +268,7 @@
         </div>
         <div class="info-row">
           <span class="info-label">Waktu Onboarding</span>
-          <span class="info-val">{{ $user->onboarding_completed_at ? $user->onboarding_completed_at->format('d M Y H:i') : 'Belum Selesai' }}</span>
+          <span class="info-val">{{ $user->onboarding_completed_at ? \Carbon\Carbon::parse($user->onboarding_completed_at)->format('d M Y H:i') : 'Belum Selesai' }}</span>
         </div>
       </div>
     </div>

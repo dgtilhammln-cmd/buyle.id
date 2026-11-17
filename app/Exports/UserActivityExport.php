@@ -87,7 +87,7 @@ class UserActivityExport implements FromArray, ShouldAutoSize, WithStyles
         $data[] = ['Kode Referral Akun', $user->referral_code ?: '-'];
         $data[] = ['Direferensikan Oleh', $user->referrer ? $user->referrer->name . ' (' . $user->referrer->email . ')' : '-'];
         $data[] = ['Status Onboarding', $user->onboarding_completed_at ? 'Selesai' : 'Belum Selesai'];
-        $data[] = ['Waktu Selesai Onboarding', $user->onboarding_completed_at ? $user->onboarding_completed_at->format('d F Y, H:i') : '-'];
+        $data[] = ['Waktu Selesai Onboarding', $user->onboarding_completed_at ? \Carbon\Carbon::parse($user->onboarding_completed_at)->format('d F Y, H:i') : '-'];
         $data[] = [''];
         $currentRow += 11;
 
