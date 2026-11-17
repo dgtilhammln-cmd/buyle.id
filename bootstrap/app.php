@@ -45,6 +45,7 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
             \App\Http\Middleware\OptimizeResponseMiddleware::class,
             \App\Http\Middleware\TrackUserActivity::class,
             \App\Http\Middleware\CheckLicenseStatus::class,
+            \App\Http\Middleware\EnsureOnboardingCompleted::class,
         ]);
 
     })

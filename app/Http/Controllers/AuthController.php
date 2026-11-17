@@ -16,9 +16,11 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            $role = Auth::user()->role;
+            $user = Auth::user();
+            $role = $user->role;
             if ($role === 'super_admin' || $role === 'admin') return redirect()->route('admin.dashboard');
             if ($role === 'pos_cashier') return redirect()->route('creator.pos.index');
+            if (empty($user->onboarding_completed_at)) return redirect()->route('onboarding.index');
             if ($role === 'seller') return redirect()->route('creator.dashboard');
             return redirect()->route('account.overview');
         }
@@ -67,7 +69,8 @@ class AuthController extends Controller
                 \Log::warning('Merge guest cart error: ' . $e->getMessage());
             }
 
-            $role = Auth::user()->role;
+            $user = Auth::user();
+            $role = $user->role;
             $redirectRoute = url('/'); // default (buyer ke beranda/halaman awal)
             
             if ($role === 'super_admin' || $role === 'admin') {
@@ -81,6 +84,8 @@ class AuthController extends Controller
                 $redirectRoute = route('admin.dashboard');
             } elseif ($role === 'pos_cashier') {
                 $redirectRoute = route('creator.pos.index');
+            } elseif (empty($user->onboarding_completed_at)) {
+                $redirectRoute = route('onboarding.index');
             } elseif ($role === 'seller') {
                 $redirectRoute = route('creator.dashboard');
             }
@@ -104,8 +109,11 @@ class AuthController extends Controller
     public function showRegister()
     {
         if (Auth::check()) {
-            $role = Auth::user()->role;
+            $user = Auth::user();
+            $role = $user->role;
             if ($role === 'super_admin' || $role === 'admin') return redirect()->route('admin.dashboard');
+            if ($role === 'pos_cashier') return redirect()->route('creator.pos.index');
+            if (empty($user->onboarding_completed_at)) return redirect()->route('onboarding.index');
             if ($role === 'seller') return redirect()->route('creator.dashboard');
             return redirect()->route('account.overview');
         }
