@@ -548,6 +548,15 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">Transaksi Domain</span>
     </a>
+
+    @php $pendingPayoutsCount = \App\Models\PayoutRequest::where('status', 'pending')->count(); @endphp
+    <a href="{{ route('admin.payouts.index') }}" class="sb-link {{ request()->routeIs('admin.payouts*') ? 'active' : '' }}" title="Pencairan Dana (Payout)">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <span class="sb-link-text">Pencairan Dana</span>
+      @if($pendingPayoutsCount > 0)<span class="sb-badge" style="background:#d97706;">{{ $pendingPayoutsCount }}</span>@endif
+    </a>
     @endif
 
     @if(!$uPerm || $uPerm->hasMenuPermission('leads'))
