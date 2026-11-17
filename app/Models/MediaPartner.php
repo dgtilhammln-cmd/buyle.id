@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class MediaPartner extends Model
 {
     protected $table = 'media_partners';
 
     protected $fillable = [
+        'user_id',
         'name',
         'code',
         'pic_name',
@@ -37,6 +40,11 @@ class MediaPartner extends Model
         ];
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function creators(): HasMany
     {
         return $this->hasMany(User::class, 'media_partner_id');
@@ -50,5 +58,17 @@ class MediaPartner extends Model
     public function getReferralUrlAttribute(): string
     {
         return url('/register?ref=' . $this->code);
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if ($this->user && $this->user->avatar) {
+            $avatar = $this->user->avatar;
+            if (filter_var($avatar, FILTER_VALIDATE_URL)) {
+                return $avatar;
+            }
+            return Storage::url($avatar);
+        }
+        return null;
     }
 }

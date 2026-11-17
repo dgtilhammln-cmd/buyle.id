@@ -1,13 +1,11 @@
 @extends('layouts.admin')
 
 @section('title', 'Detail Media Partner: ' . $mediaPartner->name . ' - Admin')
+@section('page-title', 'Detail Media Partner')
 
 @section('content')
 <style>
     .mp-container {
-        padding: 1.5rem;
-        max-width: 1400px;
-        margin: 0 auto;
         font-family: 'Montserrat', sans-serif;
     }
     .mp-header {
@@ -19,25 +17,27 @@
         margin-bottom: 1.5rem;
     }
     .mp-title {
-        font-size: 1.35rem;
+        font-size: 1.5rem;
         font-weight: 800;
         color: #0F172A;
+        letter-spacing: -.03em;
         margin: 0;
     }
     .mp-sub {
         font-size: 0.8rem;
-        color: #64748B;
+        color: #94A3B8;
         margin-top: 0.25rem;
     }
     .mp-profile-card {
         background: #ffffff;
-        border: 1px solid #E2E8F0;
+        border: 1.5px solid #F1F5F9;
         border-radius: 16px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 1.25rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
     .mp-p-label {
         font-size: 0.68rem;
@@ -66,7 +66,7 @@
         font-weight: 700;
         color: #64748B;
         padding: 0.5rem 1rem;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
         font-family: inherit;
         transition: all 0.2s;
@@ -77,10 +77,10 @@
     }
     .mp-table-card {
         background: #ffffff;
-        border: 1px solid #E2E8F0;
+        border: 1.5px solid #F1F5F9;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
     .mp-table {
         width: 100%;
@@ -104,6 +104,36 @@
         vertical-align: middle;
         color: #1E293B;
     }
+    .mp-action-btn {
+        padding: .4rem .85rem;
+        border-radius: 10px;
+        font-size: .75rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        display: inline-block;
+        font-family: 'Montserrat', sans-serif;
+        transition: all .18s;
+    }
+    .mp-btn-main {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .58rem 1.1rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1eb349, #15803D);
+        color: #fff;
+        font-size: .8rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(30,179,73,0.25);
+        transition: all .2s;
+        font-family: 'Montserrat', sans-serif;
+    }
 </style>
 
 <div class="mp-container">
@@ -116,12 +146,22 @@
     </div>
 
     <div class="mp-header">
-        <div>
-            <h1 class="mp-title">{{ $mediaPartner->name }}</h1>
-            <p class="mp-sub">Kode Referral: <strong>{{ $mediaPartner->code }}</strong> &bull; Link: <code>{{ $mediaPartner->referral_url }}</code></p>
+        <div style="display:flex; align-items:center; gap:0.85rem;">
+            @if($mediaPartner->avatar_url)
+                <img src="{{ $mediaPartner->avatar_url }}" alt="{{ $mediaPartner->name }}" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #BBF7D0;">
+            @else
+                <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:800; font-size:1.1rem; display:flex; align-items:center; justify-content:center;">
+                    {{ strtoupper(substr($mediaPartner->name, 0, 1)) }}
+                </div>
+            @endif
+            <div>
+                <h1 class="mp-title">{{ $mediaPartner->name }}</h1>
+                <p class="mp-sub">Kode Referral: <strong>{{ $mediaPartner->code }}</strong> &bull; Link: <code>{{ $mediaPartner->referral_url }}</code></p>
+            </div>
         </div>
         <div style="display:flex; gap:0.5rem;">
-            <button type="button" onclick="navigator.clipboard.writeText('{{ $mediaPartner->referral_url }}'); alert('Link referral disalin!');" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:0.55rem 0.95rem; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer;">
+            <button type="button" onclick="navigator.clipboard.writeText('{{ $mediaPartner->referral_url }}'); alert('Link referral disalin:\n{{ $mediaPartner->referral_url }}');" class="mp-btn-main">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Salin Link Referral
             </button>
         </div>
@@ -217,7 +257,7 @@
                                 <div style="font-weight:700; color:#16A34A;">{{ $c->orders_count }} Pesanan</div>
                             </td>
                             <td style="text-align:right;">
-                                <a href="{{ route('admin.all-creator.show', $c) }}" style="padding:4px 10px; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:6px; font-size:0.7rem; font-weight:700; color:#475569; text-decoration:none;">
+                                <a href="{{ route('admin.all-creator.show', $c) }}" class="mp-action-btn" style="background:#F8FAFC; border:1px solid #E2E8F0; color:#475569;">
                                     Buka Detail
                                 </a>
                             </td>

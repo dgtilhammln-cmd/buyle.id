@@ -764,6 +764,10 @@
                                         <button type="button" onclick="openAssignMedpartModal({{ $user->id }}, '{{ addslashes($user->name) }}', {{ $user->media_partner_id ?: 'null' }})" style="border:none; background:transparent; color:#1eb349; font-size:0.65rem; font-weight:800; cursor:pointer; text-decoration:underline; padding:0;">
                                             Ubah
                                         </button>
+                                        <span style="color:#CBD5E1;">&bull;</span>
+                                        <a href="{{ route('admin.media-partners.index', ['sync_user_id' => $user->id]) }}" style="color:#0284C7; font-size:0.65rem; font-weight:800; text-decoration:none;" title="Jadikan Creator ini sebagai Media Partner (Tarik profil & rekening)">
+                                            + Jadi Medpart
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -960,9 +964,14 @@
                             </div>
                         @endif
 
-                        <button type="button" onclick="openAssignMedpartModal({{ $user->id }}, '{{ addslashes($user->name) }}', {{ $user->media_partner_id ?: 'null' }})" style="border:none; background:#ffffff; color:#1eb349; font-size:0.65rem; font-weight:800; border-radius:4px; padding:2px 6px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.05);" title="Atur Asosiasi Media Partner">
-                            Set Medpart
-                        </button>
+                        <div style="display:flex; align-items:center; gap:3px;">
+                            <button type="button" onclick="openAssignMedpartModal({{ $user->id }}, '{{ addslashes($user->name) }}', {{ $user->media_partner_id ?: 'null' }})" style="border:none; background:#ffffff; color:#1eb349; font-size:0.65rem; font-weight:800; border-radius:4px; padding:2px 6px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.05);" title="Atur Asosiasi Media Partner">
+                                Set Medpart
+                            </button>
+                            <a href="{{ route('admin.media-partners.index', ['sync_user_id' => $user->id]) }}" style="border:none; background:#ffffff; color:#0284C7; font-size:0.65rem; font-weight:800; border-radius:4px; padding:2px 6px; text-decoration:none; box-shadow:0 1px 3px rgba(0,0,0,0.05);" title="Jadikan Creator ini sebagai Media Partner (Tarik profil & rekening)">
+                                + Jadi Medpart
+                            </a>
+                        </div>
                     </div>
 
                     {{-- Compact Overview Stats Bar --}}

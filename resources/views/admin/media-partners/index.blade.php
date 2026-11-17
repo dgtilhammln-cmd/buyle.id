@@ -1,34 +1,65 @@
 @extends('layouts.admin')
 
-@section('title', 'Media Partner & Komisi Buyletix - Admin')
+@section('title', 'Media Partner & Komisi Buyletix')
+@section('page-title', 'Media Partner & Komisi Buyletix')
 
 @section('content')
 <style>
-    .mp-container {
-        padding: 1.5rem;
-        max-width: 1400px;
-        margin: 0 auto;
+    /* ── Montserrat Theme Consistency with Admin Users ── */
+    .mp-page {
         font-family: 'Montserrat', sans-serif;
     }
-    .mp-header {
+
+    /* Head Row */
+    .mp-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
+        gap: 1.25rem;
         margin-bottom: 1.5rem;
+        flex-wrap: wrap;
     }
     .mp-title {
-        font-size: 1.35rem;
+        font-size: 1.5rem;
         font-weight: 800;
         color: #0F172A;
-        margin: 0;
+        letter-spacing: -.03em;
+        margin: 0 0 .2rem;
     }
     .mp-sub {
-        font-size: 0.8rem;
-        color: #64748B;
-        margin-top: 0.25rem;
+        font-size: .8rem;
+        color: #94A3B8;
+        margin: 0;
+        font-weight: 500;
     }
+    .mp-sub strong {
+        color: #1eb349;
+    }
+
+    /* Primary Action Button (Identical to admin/users) */
+    .mp-btn-main {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .58rem 1.1rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1eb349, #15803D);
+        color: #fff;
+        font-size: .8rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(30,179,73,0.25);
+        transition: all .2s;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .mp-btn-main:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(30,179,73,0.35);
+    }
+
+    /* Stat Cards */
     .mp-stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -39,8 +70,8 @@
         background: #ffffff;
         border-radius: 16px;
         padding: 1.15rem;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        border: 1.5px solid #F1F5F9;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
     .mp-stat-label {
         font-size: 0.7rem;
@@ -61,57 +92,69 @@
     .mp-stat-val.amber {
         color: #D97706;
     }
-    .mp-filter-box {
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
+
+    /* Filter Card (Identical to admin/users ufilter-card) */
+    .mp-filter-card {
+        background: #fff;
         border-radius: 16px;
-        padding: 1rem;
+        border: 1.5px solid #F1F5F9;
+        padding: .9rem 1.25rem;
         margin-bottom: 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: .75rem;
         flex-wrap: wrap;
-        gap: 0.75rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
-    .mp-input {
-        padding: 0.55rem 0.85rem;
+    .mp-filter-form {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        flex-wrap: wrap;
+        flex: 1;
+    }
+    .mp-search-input {
+        padding: .55rem .95rem;
         border: 1.5px solid #E2E8F0;
         border-radius: 10px;
-        font-size: 0.78rem;
-        font-family: inherit;
+        font-size: .8rem;
         outline: none;
-        transition: all 0.2s;
-        min-width: 260px;
+        width: 260px;
+        font-family: 'Montserrat', sans-serif;
+        background: #F8FAFC;
+        transition: all .2s;
+        color: #0F172A;
+        box-sizing: border-box;
     }
-    .mp-input:focus {
-        border-color: #1eb349;
-        box-shadow: 0 0 0 3px rgba(30,179,73,0.1);
+    .mp-search-input:focus {
+        border-color: #bbf7d0;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.08);
     }
-    .mp-btn-primary {
-        background: #1eb349;
-        color: #ffffff;
+    .mp-search-btn {
+        background: #0F172A;
+        color: #fff;
         border: none;
-        padding: 0.6rem 1.1rem;
         border-radius: 10px;
-        font-size: 0.78rem;
+        padding: .55rem 1rem;
+        font-size: .8rem;
         font-weight: 700;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-family: inherit;
-        transition: all 0.2s;
-        text-decoration: none;
+        font-family: 'Montserrat', sans-serif;
+        transition: background .2s;
     }
-    .mp-btn-primary:hover {
-        background: #17933c;
+    .mp-search-btn:hover {
+        background: #1E293B;
     }
+
+    /* Table & Card */
     .mp-table-card {
         background: #ffffff;
-        border: 1px solid #E2E8F0;
+        border: 1.5px solid #F1F5F9;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
     .mp-table {
         width: 100%;
@@ -135,14 +178,39 @@
         vertical-align: middle;
         color: #1E293B;
     }
+
+    /* Avatars */
+    .mp-av {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #F1F5F9;
+        flex-shrink: 0;
+    }
+    .mp-av-init {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 2px solid #F1F5F9;
+    }
+
+    /* Badges & Pills */
     .mp-badge {
         display: inline-flex;
         align-items: center;
-        gap: 3px;
-        padding: 2px 7px;
-        border-radius: 6px;
-        font-size: 0.65rem;
-        font-weight: 800;
+        padding: .2rem .6rem;
+        border-radius: 50px;
+        font-size: .67rem;
+        font-weight: 700;
     }
     .mp-badge.active {
         background: #DCFCE7;
@@ -172,53 +240,112 @@
         font-family: monospace;
         font-size: 0.72rem;
     }
-    .btn-icon {
-        border: none;
-        background: transparent;
-        color: #64748B;
+
+    /* Action Buttons (Consistent with admin/users u-btn) */
+    .mp-action-btn {
+        padding: .4rem .85rem;
+        border-radius: 10px;
+        font-size: .75rem;
+        font-weight: 700;
         cursor: pointer;
-        padding: 3px;
-        border-radius: 4px;
-        transition: all 0.2s;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        display: inline-block;
+        font-family: 'Montserrat', sans-serif;
+        transition: all .18s;
     }
-    .btn-icon:hover {
-        color: #1eb349;
+    .mp-action-btn.secondary {
+        background: #F8FAFC;
+        color: #475569;
+        border: 1px solid #E2E8F0;
+    }
+    .mp-action-btn.secondary:hover {
+        background: #F1F5F9;
+        color: #0F172A;
+    }
+    .mp-action-btn.success {
         background: #F0FDF4;
+        color: #16A34A;
+        border: 1px solid #BBF7D0;
     }
-    /* Modal */
+    .mp-action-btn.success:hover {
+        background: #DCFCE7;
+    }
+
+    /* ── Modal (Anti Keluar Jalur / Box Sizing Safe) ── */
     .mp-modal-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(15,23,42,0.6);
+        background: rgba(15, 23, 42, 0.65);
         backdrop-filter: blur(4px);
         z-index: 9999;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 1rem;
+        box-sizing: border-box;
     }
     .mp-modal-box {
         background: #ffffff;
         border-radius: 20px;
         width: 100%;
-        max-width: 500px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        max-width: 600px;
+        box-shadow: 0 20px 45px rgba(0,0,0,0.2);
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-height: 90vh;
+        box-sizing: border-box;
+        border: 1.5px solid #F1F5F9;
     }
     .mp-modal-header {
-        padding: 1.15rem 1.35rem;
+        padding: 1.15rem 1.4rem;
         border-bottom: 1px solid #F1F5F9;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-shrink: 0;
+    }
+    .mp-modal-title {
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: #0F172A;
+        letter-spacing: -.02em;
+    }
+    .mp-modal-close {
+        border: none;
+        background: transparent;
+        font-size: 1.3rem;
+        cursor: pointer;
+        color: #64748B;
+        padding: 0;
+        line-height: 1;
+        transition: color .2s;
+    }
+    .mp-modal-close:hover {
+        color: #0F172A;
     }
     .mp-modal-body {
-        padding: 1.35rem;
-        max-height: 75vh;
+        padding: 1.4rem;
         overflow-y: auto;
+        box-sizing: border-box;
     }
+    .mp-modal-footer {
+        padding: 0.9rem 1.4rem;
+        background: #F8FAFC;
+        border-top: 1px solid #F1F5F9;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.6rem;
+        flex-shrink: 0;
+    }
+
+    /* Modal Form Elements */
     .mp-form-group {
-        margin-bottom: 1rem;
+        margin-bottom: 0.95rem;
+        box-sizing: border-box;
+        width: 100%;
     }
     .mp-form-label {
         display: block;
@@ -227,84 +354,140 @@
         color: #475569;
         margin-bottom: 0.35rem;
     }
-    .mp-modal-footer {
-        padding: 0.9rem 1.35rem;
+    .mp-input, .mp-select, .mp-textarea {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        padding: .55rem .95rem;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 10px;
+        font-size: .8rem;
+        outline: none;
+        font-family: 'Montserrat', sans-serif;
         background: #F8FAFC;
-        border-top: 1px solid #F1F5F9;
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
+        transition: all .2s;
+        color: #0F172A;
+    }
+    .mp-input:focus, .mp-select:focus, .mp-textarea:focus {
+        border-color: #bbf7d0;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.08);
+    }
+    .mp-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        box-sizing: border-box;
+        width: 100%;
+    }
+    @media (max-width: 580px) {
+        .mp-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    /* Modal Buttons */
+    .mp-btn-cancel {
+        background: #F1F5F9;
+        color: #475569;
+        border: none;
+        border-radius: 12px;
+        padding: .6rem 1.2rem;
+        font-weight: 700;
+        font-size: .8rem;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        transition: all .18s;
+    }
+    .mp-btn-cancel:hover {
+        background: #E2E8F0;
+        color: #0F172A;
+    }
+    .mp-btn-submit {
+        background: linear-gradient(135deg, #1eb349, #15803D);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: .6rem 1.4rem;
+        font-weight: 700;
+        font-size: .8rem;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(30,179,73,0.25);
+        font-family: 'Montserrat', sans-serif;
+        transition: all .18s;
+    }
+    .mp-btn-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(30,179,73,0.35);
     }
 </style>
 
-<div class="mp-container">
+<div class="mp-page">
 
-    {{-- Header --}}
-    <div class="mp-header">
+    {{-- Head Section --}}
+    <div class="mp-head">
         <div>
-            <h1 class="mp-title">Media Partner & Komisi Buyletix</h1>
-            <p class="mp-sub">Atur mitra promotor/media partner digital, persentase komisi fleksibel, dan tracking EO seumur hidup.</p>
+            <h1 class="mp-title">Media Partner &amp; Komisi Buyletix</h1>
+            <p class="mp-sub">
+                Atur promotor digital, persentase komisi fleksibel, tracking referal EO seumur hidup, dan integrasi profil creator. Ditemukan <strong>{{ $totalPartnersCount }}</strong> mitra.
+            </p>
         </div>
-        <div style="display:flex; gap:0.5rem;">
-            <button type="button" onclick="openCreateModal()" class="mp-btn-primary">
+        <div>
+            <button type="button" onclick="openCreateModal()" class="mp-btn-main">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Tambah Media Partner
             </button>
         </div>
     </div>
 
-    {{-- Feedback Alerts --}}
     @if(session('success'))
-        <div style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; padding:0.85rem 1.25rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.8rem; font-weight:700;">
-            ✓ {{ session('success') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div style="background:#FEF2F2; border:1px solid #FECACA; color:#DC2626; padding:0.85rem 1.25rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.8rem; font-weight:700;">
-            ✕ {{ session('error') }}
+        <div style="background:#F0FDF4; color:#15803D; padding:.875rem 1.25rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #BBF7D0; font-size:.8rem; font-weight:600;">
+            {{ session('success') }}
         </div>
     @endif
 
-    {{-- Stat Cards --}}
+    @if(session('error'))
+        <div style="background:#FEF2F2; color:#DC2626; padding:.875rem 1.25rem; border-radius:12px; margin-bottom:1.5rem; border:1px solid #FECACA; font-size:.8rem; font-weight:600;">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    {{-- Stats Grid --}}
     <div class="mp-stats-grid">
         <div class="mp-stat-card">
             <div class="mp-stat-label">Total Media Partner</div>
-            <div class="mp-stat-val">{{ number_format($totalPartnersCount) }} Mitra</div>
+            <div class="mp-stat-val">{{ $totalPartnersCount }}</div>
         </div>
         <div class="mp-stat-card">
-            <div class="mp-stat-label">EO Terbawa (Lifetime)</div>
-            <div class="mp-stat-val">{{ number_format($totalReferredCreators) }} Creator</div>
+            <div class="mp-stat-label">Total EO Terbawa</div>
+            <div class="mp-stat-val">{{ $totalReferredCreators }} EO</div>
         </div>
         <div class="mp-stat-card">
-            <div class="mp-stat-label">Total Akumulasi Komisi</div>
+            <div class="mp-stat-label">Total Komisi Terakumulasi</div>
             <div class="mp-stat-val green">Rp {{ number_format($totalEarnedOverall, 0, ',', '.') }}</div>
         </div>
         <div class="mp-stat-card">
-            <div class="mp-stat-label">Total Komisi Dicairkan</div>
-            <div class="mp-stat-val">Rp {{ number_format($totalPaidOverall, 0, ',', '.') }}</div>
-        </div>
-        <div class="mp-stat-card">
-            <div class="mp-stat-label">Saldo Pending Payout</div>
+            <div class="mp-stat-label">Saldo Belum Dicairkan</div>
             <div class="mp-stat-val amber">Rp {{ number_format($totalBalanceOverall, 0, ',', '.') }}</div>
         </div>
     </div>
 
-    {{-- Search & Filter --}}
-    <div class="mp-filter-box">
-        <form method="GET" action="{{ route('admin.media-partners.index') }}" style="display:flex; gap:0.5rem; align-items:center;">
-            <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama partner, kode, PIC, HP..." class="mp-input">
-            <button type="submit" class="mp-btn-primary" style="padding:0.55rem 0.85rem;">Cari</button>
-            @if($search)
-                <a href="{{ route('admin.media-partners.index') }}" style="font-size:0.75rem; color:#64748B; text-decoration:none; margin-left:0.25rem;">Reset</a>
+    {{-- Filter Card --}}
+    <div class="mp-filter-card">
+        <form method="GET" action="{{ route('admin.media-partners.index') }}" class="mp-filter-form">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Cari media partner, PIC, referral..." class="mp-search-input">
+            <button type="submit" class="mp-search-btn">Cari</button>
+            @if($search !== '')
+                <a href="{{ route('admin.media-partners.index') }}" style="font-size:0.75rem; color:#64748B; text-decoration:none; font-weight:600; padding:0.4rem 0.6rem;">Reset</a>
             @endif
         </form>
-
         <div style="font-size:0.75rem; color:#64748B; font-weight:600;">
-            Menampilkan {{ $mediaPartners->count() }} dari {{ $mediaPartners->total() }} mitra terdaftar
+            Menampilkan {{ $mediaPartners->count() }} dari {{ $mediaPartners->total() }} mitra
         </div>
     </div>
 
-    {{-- Media Partners Table --}}
+    {{-- Table Card --}}
     <div class="mp-table-card">
         <div style="overflow-x:auto;">
             <table class="mp-table">
@@ -326,15 +509,29 @@
                     @forelse($mediaPartners as $mp)
                         <tr>
                             <td>
-                                <div style="font-weight:800; color:#0F172A; font-size:0.85rem;">{{ $mp->name }}</div>
-                                @if($mp->notes)
-                                    <div style="font-size:0.68rem; color:#94A3B8; margin-top:2px;">{{ Str::limit($mp->notes, 35) }}</div>
-                                @endif
+                                <div style="display:flex; align-items:center; gap:0.65rem;">
+                                    @if($mp->avatar_url)
+                                        <img src="{{ $mp->avatar_url }}" alt="{{ $mp->name }}" class="mp-av">
+                                    @else
+                                        <div class="mp-av-init">{{ strtoupper(substr($mp->name, 0, 1)) }}</div>
+                                    @endif
+                                    <div>
+                                        <div style="font-weight:800; color:#0F172A; font-size:0.85rem;">{{ $mp->name }}</div>
+                                        @if($mp->user)
+                                            <a href="{{ route('admin.creator-resources.index', ['search' => $mp->user->username ?: $mp->user->name]) }}" style="font-size:0.68rem; font-weight:700; color:#15803D; text-decoration:none; background:#DCFCE7; padding:1px 6px; border-radius:4px; display:inline-block; margin-top:2px;">
+                                                Creator @{{ $mp->user->username ?: 'user' }}
+                                            </a>
+                                        @endif
+                                        @if($mp->notes)
+                                            <div style="font-size:0.68rem; color:#94A3B8; margin-top:2px;">{{ Str::limit($mp->notes, 30) }}</div>
+                                        @endif
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <div class="mp-ref-box">
                                     <span>{{ $mp->code }}</span>
-                                    <button type="button" class="btn-icon" onclick="copyRefLink('{{ $mp->referral_url }}')" title="Salin Link Pendaftaran">
+                                    <button type="button" onclick="copyRefLink('{{ $mp->referral_url }}')" style="border:none; background:transparent; color:#64748B; cursor:pointer; padding:2px;" title="Salin Link Pendaftaran EO">
                                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                                     </button>
                                 </div>
@@ -380,19 +577,14 @@
                             </td>
                             <td style="text-align:right;">
                                 <div style="display:inline-flex; gap:0.35rem; align-items:center;">
-                                    {{-- Detail --}}
-                                    <a href="{{ route('admin.media-partners.show', $mp) }}" class="btn-icon" style="padding:4px 8px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; font-weight:700; font-size:0.7rem; text-decoration:none; color:#475569;" title="Lihat Detail Transaksi">
+                                    <a href="{{ route('admin.media-partners.show', $mp) }}" class="mp-action-btn secondary" title="Lihat Detail Transaksi">
                                         Detail
                                     </a>
-
-                                    {{-- Edit --}}
-                                    <button type="button" onclick="openEditModal({{ json_encode($mp) }})" class="btn-icon" style="padding:4px 8px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; font-weight:700; font-size:0.7rem; color:#334155;" title="Edit Data & Komisi">
+                                    <button type="button" onclick="openEditModal({{ json_encode($mp) }})" class="mp-action-btn secondary" title="Edit Data &amp; Komisi">
                                         Edit
                                     </button>
-
-                                    {{-- Payout --}}
                                     @if($mp->balance > 0)
-                                        <button type="button" onclick="openPayoutModal({{ $mp->id }}, '{{ addslashes($mp->name) }}', {{ $mp->balance }}, '{{ addslashes($mp->bank_name . ' ' . $mp->bank_account_number . ' a/n ' . $mp->bank_account_name) }}')" style="padding:4px 8px; background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; border-radius:6px; font-weight:700; font-size:0.7rem; cursor:pointer;" title="Catat Pencairan Komisi">
+                                        <button type="button" onclick="openPayoutModal({{ $mp->id }}, '{{ addslashes($mp->name) }}', {{ $mp->balance }}, '{{ addslashes($mp->bank_name . ' ' . $mp->bank_account_number . ' a/n ' . $mp->bank_account_name) }}')" class="mp-action-btn success" title="Catat Pencairan Komisi">
                                             Cairkan
                                         </button>
                                     @endif
@@ -419,60 +611,105 @@
 
 </div>
 
-{{-- MODAL TAMBAH MEDIA PARTNER --}}
+{{-- MODAL TAMBAH MEDIA PARTNER (DENGAN INTEGRASI TARIK DATA DARI ALL CREATOR) --}}
 <div class="mp-modal-overlay" id="modalCreate" style="display:none;">
     <div class="mp-modal-box">
         <div class="mp-modal-header">
-            <div style="font-weight:800; font-size:0.95rem; color:#0F172A;">Daftarkan Media Partner Baru</div>
-            <button type="button" onclick="closeModal('modalCreate')" style="border:none; background:transparent; font-size:1.3rem; cursor:pointer; color:#64748B;">&times;</button>
+            <div class="mp-modal-title">Daftarkan Media Partner Baru</div>
+            <button type="button" onclick="closeModal('modalCreate')" class="mp-modal-close">&times;</button>
         </div>
         <form method="POST" action="{{ route('admin.media-partners.store') }}">
             @csrf
             <div class="mp-modal-body">
+
+                {{-- Fitur Tarik Data dari Creator (https://buyle.id/admin/all-creator) --}}
+                <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:14px; padding:0.85rem 1rem; margin-bottom:1rem; box-sizing:border-box;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem;">
+                        <label style="font-size:0.75rem; font-weight:800; color:#15803D;">
+                            Tarik Data dari Creator (All Creator)
+                        </label>
+                        <span style="font-size:0.65rem; background:#DCFCE7; color:#15803D; font-weight:700; padding:1px 6px; border-radius:4px;">
+                            Auto-Sync Profil &amp; Rekening
+                        </span>
+                    </div>
+                    <p style="font-size:0.7rem; color:#166534; margin:0 0 0.5rem 0; line-height:1.4;">
+                        Pilih profil Creator terdaftar agar nama, nomor WhatsApp, email, dan info rekening bank terisi instan dan saling tersinkronisasi.
+                    </p>
+                    <select id="selectCreatorCreate" onchange="pullCreatorData(this.value, 'create')" class="mp-select" style="background:#fff; font-weight:600;">
+                        <option value="">-- Pilih Creator Terdaftar (Opsional) --</option>
+                        @foreach($creatorsList as $c)
+                            <option value="{{ $c['id'] }}">{{ $c['name'] }} (@{{ $c['username'] ?: 'no-user' }}) - {{ $c['email'] }}</option>
+                        @endforeach
+                    </select>
+
+                    <input type="hidden" name="user_id" id="createUserId" value="">
+
+                    {{-- Live Preview Box saat Creator Terpilih --}}
+                    <div id="createCreatorPreview" style="display:none; margin-top:0.65rem; padding:0.6rem 0.75rem; background:#ffffff; border-radius:10px; border:1px solid #BBF7D0; align-items:center; gap:0.65rem;">
+                        <img id="createCreatorAvatar" src="" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1.5px solid #BBF7D0; display:none;">
+                        <div id="createCreatorAvatarInit" style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.85rem; flex-shrink:0;"></div>
+                        <div style="flex:1; min-width:0;">
+                            <div id="createCreatorName" style="font-size:0.78rem; font-weight:800; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+                            <div id="createCreatorMeta" style="font-size:0.68rem; color:#64748B;"></div>
+                        </div>
+                        <button type="button" onclick="clearCreatorPull('create')" style="border:none; background:#FEE2E2; color:#DC2626; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.68rem; font-weight:700; cursor:pointer;">
+                            Batal Tarik
+                        </button>
+                    </div>
+                </div>
+
                 <div class="mp-form-group">
                     <label class="mp-form-label">Nama Media Partner / Komunitas <span style="color:#ef4444">*</span></label>
-                    <input type="text" name="name" required placeholder="Contoh: Info Konser Jawa Timur" class="mp-input" style="width:100%;">
+                    <input type="text" name="name" id="createName" required placeholder="Contoh: Info Konser Jawa Timur" class="mp-input">
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+
+                <div class="mp-grid-2">
                     <div class="mp-form-group">
                         <label class="mp-form-label">Kode Unik / Slug Referral</label>
-                        <input type="text" name="code" placeholder="infokonser (opsional)" class="mp-input" style="width:100%;">
+                        <input type="text" name="code" id="createCode" placeholder="infokonser (opsional)" class="mp-input">
                     </div>
                     <div class="mp-form-group">
                         <label class="mp-form-label">Persentase Komisi (%) <span style="color:#ef4444">*</span></label>
-                        <input type="number" step="0.01" name="commission_rate" value="2.00" required class="mp-input" style="width:100%;">
+                        <input type="number" step="0.01" name="commission_rate" value="2.00" required class="mp-input">
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+
+                <div class="mp-grid-2">
                     <div class="mp-form-group">
                         <label class="mp-form-label">Nama PIC / Penanggung Jawab</label>
-                        <input type="text" name="pic_name" placeholder="Nama kontak PIC" class="mp-input" style="width:100%;">
+                        <input type="text" name="pic_name" id="createPicName" placeholder="Nama kontak PIC" class="mp-input">
                     </div>
                     <div class="mp-form-group">
                         <label class="mp-form-label">No. WhatsApp PIC</label>
-                        <input type="text" name="pic_phone" placeholder="08xxxxxxxx" class="mp-input" style="width:100%;">
+                        <input type="text" name="pic_phone" id="createPicPhone" placeholder="08xxxxxxxx" class="mp-input">
                     </div>
                 </div>
+
                 <div class="mp-form-group">
                     <label class="mp-form-label">Email PIC</label>
-                    <input type="email" name="pic_email" placeholder="partner@domain.com" class="mp-input" style="width:100%;">
+                    <input type="email" name="pic_email" id="createPicEmail" placeholder="partner@domain.com" class="mp-input">
                 </div>
-                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem;">
-                    <div style="font-size:0.7rem; font-weight:800; color:#334155; margin-bottom:0.5rem;">REKENING PENCAIRAN KOMISI (OPSIONAL)</div>
-                    <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:0.5rem; margin-bottom:0.5rem;">
-                        <input type="text" name="bank_name" placeholder="Bank / E-Wallet (BCA, DANA)" class="mp-input" style="width:100%;">
-                        <input type="text" name="bank_account_number" placeholder="Nomor Rekening" class="mp-input" style="width:100%;">
+
+                {{-- Rekening Section --}}
+                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
+                    <div style="font-size:0.7rem; font-weight:800; color:#334155; margin-bottom:0.5rem; text-transform:uppercase;">
+                        Rekening Pencairan Komisi (Opsional)
                     </div>
-                    <input type="text" name="bank_account_name" placeholder="Atas Nama Pemilik Rekening" class="mp-input" style="width:100%;">
+                    <div class="mp-grid-2" style="margin-bottom:0.5rem;">
+                        <input type="text" name="bank_name" id="createBankName" placeholder="Bank / E-Wallet (BCA, DANA)" class="mp-input">
+                        <input type="text" name="bank_account_number" id="createBankNumber" placeholder="Nomor Rekening" class="mp-input">
+                    </div>
+                    <input type="text" name="bank_account_name" id="createBankHolder" placeholder="Atas Nama Pemilik Rekening" class="mp-input">
                 </div>
-                <div class="mp-form-group">
+
+                <div class="mp-form-group" style="margin-bottom:0;">
                     <label class="mp-form-label">Catatan Tambahan</label>
-                    <textarea name="notes" rows="2" placeholder="Kesepakatan khusus atau MOU..." class="mp-input" style="width:100%; height:auto;"></textarea>
+                    <textarea name="notes" rows="2" placeholder="Kesepakatan khusus atau MOU..." class="mp-textarea"></textarea>
                 </div>
             </div>
             <div class="mp-modal-footer">
-                <button type="button" onclick="closeModal('modalCreate')" class="mp-input" style="background:#fff; cursor:pointer;">Batal</button>
-                <button type="submit" class="mp-btn-primary">Daftarkan Mitra</button>
+                <button type="button" onclick="closeModal('modalCreate')" class="mp-btn-cancel">Batal</button>
+                <button type="submit" class="mp-btn-submit">Daftarkan Mitra</button>
             </div>
         </form>
     </div>
@@ -482,57 +719,79 @@
 <div class="mp-modal-overlay" id="modalEdit" style="display:none;">
     <div class="mp-modal-box">
         <div class="mp-modal-header">
-            <div style="font-weight:800; font-size:0.95rem; color:#0F172A;">Edit Media Partner</div>
-            <button type="button" onclick="closeModal('modalEdit')" style="border:none; background:transparent; font-size:1.3rem; cursor:pointer; color:#64748B;">&times;</button>
+            <div class="mp-modal-title">Edit Media Partner</div>
+            <button type="button" onclick="closeModal('modalEdit')" class="mp-modal-close">&times;</button>
         </div>
         <form id="formEdit" method="POST" action="">
             @csrf
             @method('PUT')
             <div class="mp-modal-body">
+
+                {{-- Sinkronisasi Creator di Edit --}}
+                <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:14px; padding:0.85rem 1rem; margin-bottom:1rem; box-sizing:border-box;">
+                    <label style="display:block; font-size:0.75rem; font-weight:800; color:#15803D; margin-bottom:0.35rem;">
+                        Hubungkan dengan Akun Creator (All Creator)
+                    </label>
+                    <select id="selectCreatorEdit" onchange="pullCreatorData(this.value, 'edit')" class="mp-select" style="background:#fff; font-weight:600;">
+                        <option value="">-- Tidak Terhubung / Pilih Creator --</option>
+                        @foreach($creatorsList as $c)
+                            <option value="{{ $c['id'] }}">{{ $c['name'] }} (@{{ $c['username'] ?: 'no-user' }}) - {{ $c['email'] }}</option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="user_id" id="editUserId" value="">
+                </div>
+
                 <div class="mp-form-group">
                     <label class="mp-form-label">Nama Media Partner <span style="color:#ef4444">*</span></label>
-                    <input type="text" name="name" id="editName" required class="mp-input" style="width:100%;">
+                    <input type="text" name="name" id="editName" required class="mp-input">
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+
+                <div class="mp-grid-2">
                     <div class="mp-form-group">
                         <label class="mp-form-label">Kode Unik / Slug Referral <span style="color:#ef4444">*</span></label>
-                        <input type="text" name="code" id="editCode" required class="mp-input" style="width:100%;">
+                        <input type="text" name="code" id="editCode" required class="mp-input">
                     </div>
                     <div class="mp-form-group">
                         <label class="mp-form-label">Persentase Komisi (%) <span style="color:#ef4444">*</span></label>
-                        <input type="number" step="0.01" name="commission_rate" id="editRate" required class="mp-input" style="width:100%;">
+                        <input type="number" step="0.01" name="commission_rate" id="editRate" required class="mp-input">
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+
+                <div class="mp-grid-2">
                     <div class="mp-form-group">
                         <label class="mp-form-label">Nama PIC</label>
-                        <input type="text" name="pic_name" id="editPicName" class="mp-input" style="width:100%;">
+                        <input type="text" name="pic_name" id="editPicName" class="mp-input">
                     </div>
                     <div class="mp-form-group">
                         <label class="mp-form-label">No. WhatsApp PIC</label>
-                        <input type="text" name="pic_phone" id="editPicPhone" class="mp-input" style="width:100%;">
+                        <input type="text" name="pic_phone" id="editPicPhone" class="mp-input">
                     </div>
                 </div>
+
                 <div class="mp-form-group">
                     <label class="mp-form-label">Email PIC</label>
-                    <input type="email" name="pic_email" id="editPicEmail" class="mp-input" style="width:100%;">
+                    <input type="email" name="pic_email" id="editPicEmail" class="mp-input">
                 </div>
-                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem;">
-                    <div style="font-size:0.7rem; font-weight:800; color:#334155; margin-bottom:0.5rem;">REKENING PENCAIRAN KOMISI</div>
-                    <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:0.5rem; margin-bottom:0.5rem;">
-                        <input type="text" name="bank_name" id="editBankName" placeholder="Bank / E-Wallet" class="mp-input" style="width:100%;">
-                        <input type="text" name="bank_account_number" id="editBankNumber" placeholder="Nomor Rekening" class="mp-input" style="width:100%;">
+
+                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
+                    <div style="font-size:0.7rem; font-weight:800; color:#334155; margin-bottom:0.5rem; text-transform:uppercase;">
+                        Rekening Pencairan Komisi
                     </div>
-                    <input type="text" name="bank_account_name" id="editBankHolder" placeholder="Atas Nama Pemilik Rekening" class="mp-input" style="width:100%;">
+                    <div class="mp-grid-2" style="margin-bottom:0.5rem;">
+                        <input type="text" name="bank_name" id="editBankName" placeholder="Bank / E-Wallet" class="mp-input">
+                        <input type="text" name="bank_account_number" id="editBankNumber" placeholder="Nomor Rekening" class="mp-input">
+                    </div>
+                    <input type="text" name="bank_account_name" id="editBankHolder" placeholder="Atas Nama Pemilik Rekening" class="mp-input">
                 </div>
-                <div class="mp-form-group">
+
+                <div class="mp-form-group" style="margin-bottom:0;">
                     <label class="mp-form-label">Catatan</label>
-                    <textarea name="notes" id="editNotes" rows="2" class="mp-input" style="width:100%; height:auto;"></textarea>
+                    <textarea name="notes" id="editNotes" rows="2" class="mp-textarea"></textarea>
                 </div>
             </div>
             <div class="mp-modal-footer">
-                <button type="button" onclick="closeModal('modalEdit')" class="mp-input" style="background:#fff; cursor:pointer;">Batal</button>
-                <button type="submit" class="mp-btn-primary">Simpan Perubahan</button>
+                <button type="button" onclick="closeModal('modalEdit')" class="mp-btn-cancel">Batal</button>
+                <button type="submit" class="mp-btn-submit">Simpan Perubahan</button>
             </div>
         </form>
     </div>
@@ -542,13 +801,13 @@
 <div class="mp-modal-overlay" id="modalPayout" style="display:none;">
     <div class="mp-modal-box">
         <div class="mp-modal-header">
-            <div style="font-weight:800; font-size:0.95rem; color:#0F172A;">Pencairan Komisi Media Partner</div>
-            <button type="button" onclick="closeModal('modalPayout')" style="border:none; background:transparent; font-size:1.3rem; cursor:pointer; color:#64748B;">&times;</button>
+            <div class="mp-modal-title">Pencairan Komisi Media Partner</div>
+            <button type="button" onclick="closeModal('modalPayout')" class="mp-modal-close">&times;</button>
         </div>
         <form id="formPayout" method="POST" action="">
             @csrf
             <div class="mp-modal-body">
-                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem;">
+                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
                         <span style="font-size:0.75rem; color:#64748B;">Mitra:</span>
                         <strong id="payoutPartnerName" style="color:#0F172A;"></strong>
@@ -564,33 +823,99 @@
 
                 <div class="mp-form-group">
                     <label class="mp-form-label">Nominal Pencairan (Rp) <span style="color:#ef4444">*</span></label>
-                    <input type="number" name="amount" id="payoutAmountInput" required min="1000" class="mp-input" style="width:100%; font-size:1rem; font-weight:800; color:#0F172A;">
+                    <input type="number" name="amount" id="payoutAmountInput" required min="1000" class="mp-input" style="font-size:1rem; font-weight:800; color:#0F172A;">
                 </div>
 
                 <div class="mp-form-group">
                     <label class="mp-form-label">No. Referensi Transfer Bank (Opsional)</label>
-                    <input type="text" name="reference_number" placeholder="Contoh: REF893719BCA" class="mp-input" style="width:100%;">
+                    <input type="text" name="reference_number" placeholder="Contoh: REF893719BCA" class="mp-input">
                 </div>
 
-                <div class="mp-form-group">
+                <div class="mp-form-group" style="margin-bottom:0;">
                     <label class="mp-form-label">Catatan Admin</label>
-                    <textarea name="notes" rows="2" placeholder="Catatan internal..." class="mp-input" style="width:100%; height:auto;"></textarea>
+                    <textarea name="notes" rows="2" placeholder="Catatan internal..." class="mp-textarea"></textarea>
                 </div>
             </div>
             <div class="mp-modal-footer">
-                <button type="button" onclick="closeModal('modalPayout')" class="mp-input" style="background:#fff; cursor:pointer;">Batal</button>
-                <button type="submit" class="mp-btn-primary" style="background:#16A34A;">Konfirmasi Pencairan</button>
+                <button type="button" onclick="closeModal('modalPayout')" class="mp-btn-cancel">Batal</button>
+                <button type="submit" class="mp-btn-submit">Konfirmasi Pencairan</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-function openCreateModal() {
-    document.getElementById('modalCreate').style.display = 'flex';
+window.creatorsList = @json($creatorsList);
+
+function pullCreatorData(userId, mode) {
+    if (!userId) {
+        if (mode === 'create') clearCreatorPull('create');
+        return;
+    }
+
+    const creator = window.creatorsList.find(c => String(c.id) === String(userId));
+    if (!creator) return;
+
+    if (mode === 'create') {
+        document.getElementById('createUserId').value = creator.id;
+        document.getElementById('createName').value = creator.name || '';
+        document.getElementById('createCode').value = creator.username || (creator.name ? creator.name.toLowerCase().replace(/[^a-z0-9]/g, '') : '');
+        document.getElementById('createPicName').value = creator.name || '';
+        document.getElementById('createPicPhone').value = creator.phone || '';
+        document.getElementById('createPicEmail').value = creator.email || '';
+        document.getElementById('createBankName').value = creator.bank_name || '';
+        document.getElementById('createBankNumber').value = creator.bank_account_number || '';
+        document.getElementById('createBankHolder').value = creator.bank_account_name || creator.name || '';
+
+        // Tampilkan Preview Box
+        const preview = document.getElementById('createCreatorPreview');
+        const avImg = document.getElementById('createCreatorAvatar');
+        const avInit = document.getElementById('createCreatorAvatarInit');
+        document.getElementById('createCreatorName').innerText = creator.name + (creator.username ? ' (@' + creator.username + ')' : '');
+        document.getElementById('createCreatorMeta').innerText = creator.email + (creator.phone ? ' | ' + creator.phone : '') + (creator.bank_name ? ' | ' + creator.bank_name : '');
+
+        if (creator.avatar_url) {
+            avImg.src = creator.avatar_url;
+            avImg.style.display = 'block';
+            avInit.style.display = 'none';
+        } else {
+            avImg.style.display = 'none';
+            avInit.innerText = (creator.name || 'C').charAt(0).toUpperCase();
+            avInit.style.display = 'flex';
+        }
+        preview.style.display = 'flex';
+    } else if (mode === 'edit') {
+        document.getElementById('editUserId').value = creator.id;
+        if (!document.getElementById('editName').value) document.getElementById('editName').value = creator.name || '';
+        if (!document.getElementById('editPicName').value) document.getElementById('editPicName').value = creator.name || '';
+        if (!document.getElementById('editPicPhone').value) document.getElementById('editPicPhone').value = creator.phone || '';
+        if (!document.getElementById('editPicEmail').value) document.getElementById('editPicEmail').value = creator.email || '';
+        if (!document.getElementById('editBankName').value) document.getElementById('editBankName').value = creator.bank_name || '';
+        if (!document.getElementById('editBankNumber').value) document.getElementById('editBankNumber').value = creator.bank_account_number || '';
+        if (!document.getElementById('editBankHolder').value) document.getElementById('editBankHolder').value = creator.bank_account_name || creator.name || '';
+    }
 }
+
+function clearCreatorPull(mode) {
+    if (mode === 'create') {
+        document.getElementById('selectCreatorCreate').value = '';
+        document.getElementById('createUserId').value = '';
+        document.getElementById('createCreatorPreview').style.display = 'none';
+    }
+}
+
+function openCreateModal(selectedUserId = null) {
+    document.getElementById('modalCreate').style.display = 'flex';
+    if (selectedUserId) {
+        document.getElementById('selectCreatorCreate').value = selectedUserId;
+        pullCreatorData(selectedUserId, 'create');
+    }
+}
+
 function openEditModal(partner) {
     document.getElementById('formEdit').action = '/admin/media-partners/' + partner.id;
+    document.getElementById('editUserId').value = partner.user_id || '';
+    document.getElementById('selectCreatorEdit').value = partner.user_id || '';
     document.getElementById('editName').value = partner.name || '';
     document.getElementById('editCode').value = partner.code || '';
     document.getElementById('editRate').value = partner.commission_rate || '2.00';
@@ -603,6 +928,7 @@ function openEditModal(partner) {
     document.getElementById('editNotes').value = partner.notes || '';
     document.getElementById('modalEdit').style.display = 'flex';
 }
+
 function openPayoutModal(id, name, maxBalance, bankInfo) {
     document.getElementById('formPayout').action = '/admin/media-partners/' + id + '/payout';
     document.getElementById('payoutPartnerName').innerText = name;
@@ -613,12 +939,22 @@ function openPayoutModal(id, name, maxBalance, bankInfo) {
     amountInput.value = maxBalance;
     document.getElementById('modalPayout').style.display = 'flex';
 }
+
 function closeModal(id) {
     document.getElementById(id).style.display = 'none';
 }
+
 function copyRefLink(url) {
     navigator.clipboard.writeText(url);
     alert('Link referral disalin:\n' + url);
 }
+
+// Auto open jika diarahkan dari halaman All Creator dengan param sync_user_id
+document.addEventListener('DOMContentLoaded', function() {
+    const syncUserId = "{{ $syncUserId ?? '' }}";
+    if (syncUserId) {
+        openCreateModal(syncUserId);
+    }
+});
 </script>
 @endsection

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\MediaPartnerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AdminMediaPartnerController extends Controller
 {
@@ -18,8 +19,10 @@ class AdminMediaPartnerController extends Controller
     public function index(Request $request)
     {
         $search = trim($request->input('search', ''));
+        $syncUserId = $request->input('sync_user_id');
 
-        $query = MediaPartner::withCount('creators')
+        $query = MediaPartner::with(['user'])
+            ->withCount('creators')
             ->latest();
 
         if ($search !== '') {
@@ -42,6 +45,28 @@ class AdminMediaPartnerController extends Controller
         $totalPaidOverall = (float) $allPartners->sum('total_commission_paid');
         $totalBalanceOverall = (float) $allPartners->sum('balance');
 
+        // Tarik list semua creator/user untuk fitur sinkronisasi profil & rekening
+        $creatorsList = User::select('id', 'name', 'username', 'email', 'phone', 'avatar', 'bank_name', 'bank_account_number', 'bank_account_name')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($u) {
+                $avatarUrl = null;
+                if ($u->avatar) {
+                    $avatarUrl = filter_var($u->avatar, FILTER_VALIDATE_URL) ? $u->avatar : Storage::url($u->avatar);
+                }
+                return [
+                    'id'                  => $u->id,
+                    'name'                => $u->name,
+                    'username'            => $u->username ?? '',
+                    'email'               => $u->email,
+                    'phone'               => $u->phone ?? '',
+                    'avatar_url'          => $avatarUrl,
+                    'bank_name'           => $u->bank_name ?? '',
+                    'bank_account_number' => $u->bank_account_number ?? '',
+                    'bank_account_name'   => $u->bank_account_name ?? '',
+                ];
+            });
+
         return view('admin.media-partners.index', compact(
             'mediaPartners',
             'search',
@@ -49,7 +74,9 @@ class AdminMediaPartnerController extends Controller
             'totalReferredCreators',
             'totalEarnedOverall',
             'totalPaidOverall',
-            'totalBalanceOverall'
+            'totalBalanceOverall',
+            'creatorsList',
+            'syncUserId'
         ));
     }
 
@@ -59,6 +86,7 @@ class AdminMediaPartnerController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'user_id'             => 'nullable|exists:users,id',
             'name'                => 'required|string|max:120',
             'code'                => 'nullable|string|max:60|unique:media_partners,code',
             'pic_name'            => 'nullable|string|max:100',
@@ -82,7 +110,8 @@ class AdminMediaPartnerController extends Controller
             $code = $baseCode . '-' . $counter++;
         }
 
-        MediaPartner::create([
+        $mediaPartner = MediaPartner::create([
+            'user_id'             => $validated['user_id'] ?? null,
             'name'                => $validated['name'],
             'code'                => $code,
             'pic_name'            => $validated['pic_name'] ?? null,
@@ -99,6 +128,26 @@ class AdminMediaPartnerController extends Controller
             'balance'                 => 0,
         ]);
 
+        // Sinkronisasi dua arah jika akun User dipilih dan rekening di User masih kosong
+        if (!empty($validated['user_id'])) {
+            $linkedUser = User::find($validated['user_id']);
+            if ($linkedUser) {
+                $userUpdates = [];
+                if (empty($linkedUser->bank_name) && !empty($validated['bank_name'])) {
+                    $userUpdates['bank_name'] = $validated['bank_name'];
+                }
+                if (empty($linkedUser->bank_account_number) && !empty($validated['bank_account_number'])) {
+                    $userUpdates['bank_account_number'] = $validated['bank_account_number'];
+                }
+                if (empty($linkedUser->bank_account_name) && !empty($validated['bank_account_name'])) {
+                    $userUpdates['bank_account_name'] = $validated['bank_account_name'];
+                }
+                if (!empty($userUpdates)) {
+                    $linkedUser->update($userUpdates);
+                }
+            }
+        }
+
         return back()->with('success', 'Media Partner ' . $validated['name'] . ' berhasil didaftarkan dengan komisi ' . $validated['commission_rate'] . '%.');
     }
 
@@ -107,7 +156,7 @@ class AdminMediaPartnerController extends Controller
      */
     public function show(MediaPartner $mediaPartner)
     {
-        $mediaPartner->loadCount('creators');
+        $mediaPartner->load(['user'])->loadCount('creators');
 
         // Daftar creator / EO yang dibawa oleh media partner ini
         $creators = User::where('media_partner_id', $mediaPartner->id)
@@ -131,6 +180,7 @@ class AdminMediaPartnerController extends Controller
     public function update(Request $request, MediaPartner $mediaPartner)
     {
         $validated = $request->validate([
+            'user_id'             => 'nullable|exists:users,id',
             'name'                => 'required|string|max:120',
             'code'                => 'required|string|max:60|unique:media_partners,code,' . $mediaPartner->id,
             'pic_name'            => 'nullable|string|max:100',
@@ -144,6 +194,7 @@ class AdminMediaPartnerController extends Controller
         ]);
 
         $mediaPartner->update([
+            'user_id'             => $validated['user_id'] ?? $mediaPartner->user_id,
             'name'                => $validated['name'],
             'code'                => Str::slug($validated['code']),
             'pic_name'            => $validated['pic_name'] ?? null,
