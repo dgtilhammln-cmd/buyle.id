@@ -182,9 +182,17 @@
 
     {{-- Document Header --}}
     <div class="doc-header">
-      <div>
-        <h1 class="brand-title">buyle<span>.id</span></h1>
-        <div class="doc-subtitle">Dokumen Resmi Aktivitas Pengguna &amp; Data Onboarding</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        @php $navLogo = \App\Models\Setting::get('logo'); @endphp
+        @if($navLogo)
+          <img src="{{ asset('storage/' . $navLogo) }}" alt="buyle.id" style="height:42px;width:auto;max-height:46px;object-fit:contain;display:block;">
+        @else
+          <h1 class="brand-title">buyle<span>.id</span></h1>
+        @endif
+        <div style="border-left:1.5px solid #E2E8F0;padding-left:14px;">
+          <div style="font-size:13px;font-weight:800;color:#0F172A;letter-spacing:-0.01em;">Laporan Pengguna Resmi</div>
+          <div class="doc-subtitle" style="margin-top:2px;">Dokumen Aktivitas Akun, E-Tiket &amp; Data Onboarding</div>
+        </div>
       </div>
       <div class="doc-meta">
         <div>Nomor Akun: <strong>#BUY-{{ str_pad($user->id, 5, '0', STR_PAD_LEFT) }}</strong></div>
