@@ -14,7 +14,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'phone', 'avatar', 'google_id', 
+        'name', 'email', 'password', 'username', 'phone', 'nik', 'avatar', 'google_id', 
         'role', 'parent_seller_id', 'shift_hours', 'cashier_role_title',
         'menu_permissions', 'is_active', 'last_seen_at', 
         'bank_name', 'bank_account_number', 'bank_account_name',
@@ -173,5 +173,29 @@ class User extends Authenticatable
     public function weddings(): HasMany
     {
         return $this->hasMany(Wedding::class)->latest();
+    }
+
+    public function ticketPasses(): HasMany
+    {
+        return $this->hasMany(TicketPass::class, 'user_id');
+    }
+
+    /**
+     * Dapatkan NIK resmi (dari users.nik atau otomatis dari riwayat e-tiket)
+     */
+    public function getResolvedNikAttribute(): ?string
+    {
+        if (!empty($this->nik)) {
+            return $this->nik;
+        }
+        $ticketNik = $this->ticketPasses()->whereNotNull('holder_nik')->where('holder_nik', '!=', '')->latest()->value('holder_nik');
+        if ($ticketNik) {
+            if (str_contains($ticketNik, ':')) {
+                [, $ticketNik] = explode(':', $ticketNik, 2);
+                $ticketNik = trim($ticketNik);
+            }
+            return $ticketNik;
+        }
+        return null;
     }
 }

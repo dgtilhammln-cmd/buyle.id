@@ -1182,6 +1182,15 @@
                                             $defaultVal = $isFirstSlot && auth()->check() ? $authUserName : ($oldVals[$ticketIdx] ?? '');
                                             $defaultIdType = $oldIdTypes[$ticketIdx] ?? 'KTP';
                                             $defaultNik = $oldNiks[$ticketIdx] ?? '';
+
+                                            // Otomatis isi NIK jika pengguna sudah login dan punya NIK tersimpan / pernah beli tiket
+                                            if ($isFirstSlot && auth()->check() && empty($defaultNik)) {
+                                                $userAutoNik = auth()->user()->resolved_nik ?? auth()->user()->nik;
+                                                if (!empty($userAutoNik)) {
+                                                    $defaultNik = $userAutoNik;
+                                                    $defaultIdType = 'KTP';
+                                                }
+                                            }
                                             $inputId = "ticket_holder_{$pid}_{$ticketIdx}";
                                             $typeId = "ticket_id_type_{$pid}_{$ticketIdx}";
                                             $nikId = "ticket_nik_{$pid}_{$ticketIdx}";

@@ -897,8 +897,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/couriers/{courier}/toggle',    [AdminCourierController::class, 'toggleActive'])->name('admin.couriers.toggle');
         Route::delete('/couriers/{courier}',         [AdminCourierController::class, 'destroy'])->name('admin.couriers.destroy');
 
-        // User Management (Buyers & Creators)
+        // User Management (All Users: Buyers & Creators)
         Route::get('/users',                                    [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/export',                             [AdminUserController::class, 'exportAll'])->name('admin.users.export');
+        Route::get('/users/{user}/export',                      [AdminUserController::class, 'exportUser'])->name('admin.users.export.single');
+        Route::get('/users/{user}/print',                       [AdminUserController::class, 'printUser'])->name('admin.users.print');
         Route::get('/users/{user}',                             [AdminUserController::class, 'show'])->name('admin.users.show');
         Route::post('/users/{user}/password',                   [AdminUserController::class, 'updatePassword'])->name('admin.users.password');
         Route::post('/users/{user}/toggle',                     [AdminUserController::class, 'toggleActive'])->name('admin.users.toggle');

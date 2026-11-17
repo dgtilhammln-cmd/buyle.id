@@ -126,6 +126,22 @@ class TicketPass extends Model
                         'holder_nik'    => $finalNik,
                         'status'        => 'valid',
                     ]);
+
+                    // Auto-sync NIK ke akun pengguna jika belum terisi
+                    if ($order->user_id && !empty($customNik) && $slotIndex === 0) {
+                        $cleanNikNum = $customNik;
+                        if (str_contains($cleanNikNum, ':')) {
+                            [, $cleanNikNum] = explode(':', $cleanNikNum, 2);
+                        }
+                        $cleanNikNum = trim($cleanNikNum);
+                        if (!empty($cleanNikNum)) {
+                            \App\Models\User::where('id', $order->user_id)
+                                ->where(function ($q) {
+                                    $q->whereNull('nik')->orWhere('nik', '');
+                                })
+                                ->update(['nik' => $cleanNikNum]);
+                        }
+                    }
                 }
             }
         }

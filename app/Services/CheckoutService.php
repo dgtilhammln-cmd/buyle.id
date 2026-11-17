@@ -662,6 +662,22 @@ class CheckoutService
                             'holder_nik'    => $finalNik,
                             'status'        => 'valid',
                         ]);
+
+                        // Auto-sync NIK ke user jika belum ada
+                        if ($order->user_id && !empty($customNik) && $i === 0) {
+                            $cleanNikNum = $customNik;
+                            if (str_contains($cleanNikNum, ':')) {
+                                [, $cleanNikNum] = explode(':', $cleanNikNum, 2);
+                            }
+                            $cleanNikNum = trim($cleanNikNum);
+                            if (!empty($cleanNikNum)) {
+                                \App\Models\User::where('id', $order->user_id)
+                                    ->where(function ($q) {
+                                        $q->whereNull('nik')->orWhere('nik', '');
+                                    })
+                                    ->update(['nik' => $cleanNikNum]);
+                            }
+                        }
                     }
                 }
             }

@@ -300,12 +300,60 @@ ORDER BY total_conversions DESC;
 
 ---
 
-## 7. Riwayat File Terkait
+## 7. Integrasi Admin All User, Auto-NIK E-Tiket & Ekspor Laporan
 
-- **Migrasi:** `database/migrations/2026_11_17_005302_add_onboarding_and_attribution_to_users_table.php`
-- **Model:** `app/Models/User.php`
-- **Controller Onboarding:** `app/Http/Controllers/OnboardingController.php`
-- **Controller Auth:** `app/Http/Controllers/AuthController.php`
-- **Rute Web:** `routes/web.php`
-- **View Blade:** `resources/views/auth/onboarding.blade.php`
+### 7.1. Transformasi Menu Sidebar Admin "All User"
+- Menu sidebar diubah dari `Pengguna (Buyer)` menjadi **`All User`** (`resources/views/layouts/admin.blade.php`).
+- Halaman index (`/admin/users`) memuat seluruh data akun pengguna (baik pembeli maupun kreator) yang dilengkapi filter berdasarkan **Persona Bisnis** dan **Sumber Tahu**, pencarian terpadu (nama, email, no HP, NIK, username), serta indikator badge persona, NIK, dan jumlah e-tiket.
+
+### 7.2. Tampilan Data Onboarding di Detail Pengguna (`/admin/users/{id}`)
+Halaman detail pengguna dilengkapi kartu terpisah bergaya *luxury clean* khusus untuk data onboarding:
+1. **Tipe Bisnis / Persona:** Kategori yang dipilih user beserta penjelasannya.
+2. **Sumber Tahu Buyle & Media Partner:** Jenis saluran (Medsos, Media Partner, Teman, Iklan, Google) dan detail nama platform/mitra penyelenggara.
+3. **Tujuan Utama Penggunaan (Primary Goal):** Fokus fitur awal (Produk Digital, Landing Page, Kasir POS, E-Tiket Event, Undangan Digital).
+4. **Afiliasi & Referral Tracker:** Kode referral unik dan profil akun pengundang (*referrer*).
+5. **Status & Waktu Selesai:** Timestamp penyelesaian proses onboarding wizard.
+
+### 7.3. Logika Auto-NIK dan Integrasi E-Tiket
+1. **Kolom NIK pada Tabel `users`:** Ditambahkan kolom `nik VARCHAR(50) NULL` pada tabel `users` (`database/migrations/2026_11_17_142417_add_nik_to_users_table.php`).
+2. **Auto-Populate saat Pembelian Tiket:**
+   - Ketika pengguna membeli tiket event di halaman `/checkout` dan mengisi nomor identitas resmi (KTP/NIK), sistem melalui `CheckoutService` dan `TicketPass::generateForOrder` secara otomatis menyinkronkan NIK tersebut ke profil pengguna (`users.nik`).
+3. **Auto-Fill saat Checkout Berikutnya:**
+   - Jika pengguna yang sedang login kembali melakukan transaksi tiket, kolom input NIK pada slot tiket pertama akan **otomatis terisi** dengan NIK yang telah tersimpan di akunnya atau riwayat tiket sebelumnya, sehingga pembeli tidak perlu repot mengetik ulang.
+4. **Relasi Eloquent:**
+   - Ditambahkan relasi `User::ticketPasses()` ke model `TicketPass`.
+   - Ditambahkan accessor `User::getResolvedNikAttribute()` yang mengembalikan NIK tersimpan atau fallback ke NIK tiket terakhir milik pengguna.
+
+### 7.4. Sistem Ekspor Laporan Data Pengguna
+1. **Ekspor Seluruh Pengguna (All Users Export):**
+   - URL: `/admin/users/export?format=xlsx` atau `format=csv`.
+   - Class: `App\Exports\AllUsersExport`.
+   - Menyertakan data lengkap profil, NIK, seluruh detail onboarding, media partner, referral, status akun, jumlah transaksi, total spending, dan total tiket.
+2. **Ekspor Aktivitas Spesifik Per Pengguna:**
+   - URL: `/admin/users/{id}/export?format=xlsx` atau `format=csv`.
+   - Class: `App\Exports\UserActivityExport`.
+   - Berisi 5 blok data terstruktur: Informasi Akun, Data Onboarding, Riwayat Order Lengkap, Riwayat E-Tiket, dan Daftar Alamat Pengiriman.
+3. **Pratinjau Cetak & Simpan PDF:**
+   - URL: `/admin/users/{id}/print`.
+   - View: `resources/views/admin/users/print.blade.php`.
+   - Desain dokumen resmi siap cetak / PDF dengan tombol *1-click print* dan CSS `@media print` rapi.
+
+---
+
+## 8. Riwayat File Terkait
+
+- **Migrasi Onboarding:** `database/migrations/2026_11_17_005302_add_onboarding_and_attribution_to_users_table.php`
+- **Migrasi Referrer ID:** `database/migrations/2026_11_17_100455_add_referrer_id_to_users_table.php`
+- **Migrasi NIK User:** `database/migrations/2026_11_17_142417_add_nik_to_users_table.php`
+- **Model:** `app/Models/User.php`, `app/Models/TicketPass.php`
+- **Exports:** `app/Exports/AllUsersExport.php`, `app/Exports/UserActivityExport.php`
+- **Controller Admin User:** `app/Http/Controllers/Admin/AdminUserController.php`
+- **Service Checkout:** `app/Services/CheckoutService.php`
+- **View Admin User:**
+  - `resources/views/admin/users/index.blade.php` (All User list & filter)
+  - `resources/views/admin/users/show.blade.php` (Detail profil, onboarding card, tiket, orders)
+  - `resources/views/admin/users/print.blade.php` (Printable report / PDF)
+- **View Layout Admin:** `resources/views/layouts/admin.blade.php` (Sidebar All User)
+- **View Checkout:** `resources/views/ecommerce/checkout.blade.php` (Auto-fill NIK)
+- **View Onboarding Wizard:** `resources/views/auth/onboarding.blade.php`
 - **Dokumentasi Utama:** `onboarding-buyle.md`
