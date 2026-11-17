@@ -954,6 +954,12 @@ Route::prefix('admin')->group(function () {
         Route::get('/kyc/{kyc}/photo/{type}', [\App\Http\Controllers\Admin\AdminKycController::class, 'photo'])->name('admin.kyc.photo');
         Route::post('/kyc/{kyc}/approve',   [\App\Http\Controllers\Admin\AdminKycController::class, 'approve'])->name('admin.kyc.approve');
         Route::post('/kyc/{kyc}/reject',    [\App\Http\Controllers\Admin\AdminKycController::class, 'reject'])->name('admin.kyc.reject');
+
+        // Pencairan Dana (Payouts) Management
+        Route::get('/payouts',                       [\App\Http\Controllers\Admin\AdminPayoutController::class, 'index'])->name('admin.payouts.index');
+        Route::post('/payouts/{payout}/approve',      [\App\Http\Controllers\Admin\AdminPayoutController::class, 'approve'])->name('admin.payouts.approve');
+        Route::post('/payouts/{payout}/reject',       [\App\Http\Controllers\Admin\AdminPayoutController::class, 'reject'])->name('admin.payouts.reject');
+        Route::post('/payouts/{payout}/upload-proof', [\App\Http\Controllers\Admin\AdminPayoutController::class, 'uploadProof'])->name('admin.payouts.upload-proof');
     });
 });
 

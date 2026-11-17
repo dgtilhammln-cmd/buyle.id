@@ -18,8 +18,11 @@ class PayoutRequest extends Model
         'bank_account_name',
         'notes',
         'admin_notes',
+        'reference_number',
+        'proof_of_transfer',
         'processed_by',
         'processed_at',
+        'approved_at',
     ];
 
     protected function casts(): array
@@ -29,6 +32,7 @@ class PayoutRequest extends Model
             'admin_fee'    => 'decimal:2',
             'net_amount'   => 'decimal:2',
             'processed_at' => 'datetime',
+            'approved_at'  => 'datetime',
         ];
     }
 
@@ -55,10 +59,10 @@ class PayoutRequest extends Model
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'pending'   => '⏳ Menunggu',
-            'approved'  => '✅ Disetujui',
-            'rejected'  => '❌ Ditolak',
-            'processed' => '💸 Sudah Dicairkan',
+            'pending'   => 'Menunggu',
+            'approved'  => 'Disetujui',
+            'rejected'  => 'Ditolak',
+            'processed' => 'Sudah Dicairkan',
             default     => $this->status,
         };
     }

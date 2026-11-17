@@ -172,21 +172,23 @@
 .pw-creator {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.75rem;
+    min-width: 200px;
 }
 .pw-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #1eb349, #a5cf37);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-weight: 800;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     flex-shrink: 0;
     overflow: hidden;
+    box-shadow: 0 2px 6px rgba(30,179,73,0.25);
 }
 .pw-creator-name {
     font-weight: 700;
@@ -199,12 +201,36 @@
     color: #94A3B8;
     font-weight: 500;
 }
+.pw-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #1eb349;
+    background: #dcfce7;
+    padding: 0.1rem 0.4rem;
+    border-radius: 99px;
+}
+.pw-slug-link {
+    font-size: 0.7rem;
+    color: #1eb349;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+.pw-slug-link:hover {
+    text-decoration: underline;
+}
 
 /* ── Bank Cell ── */
 .pw-bank {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
+    min-width: 170px;
 }
 .pw-bank-name {
     font-weight: 700;
@@ -248,16 +274,6 @@
 }
 
 /* ── Amount Cell ── */
-.pw-amount-gross {
-    font-size: 0.82rem;
-    color: #475569;
-    font-weight: 600;
-}
-.pw-amount-fee {
-    font-size: 0.72rem;
-    color: #ef4444;
-    font-weight: 600;
-}
 .pw-amount-net {
     font-size: 1rem;
     font-weight: 800;
@@ -278,8 +294,8 @@
     letter-spacing: 0.05em;
     white-space: nowrap;
 }
-.pw-badge.pending  { background: #fef9c3; color: #854d0e; }
-.pw-badge.approved { background: #dcfce7; color: #166534; }
+.pw-badge.pending   { background: #fef9c3; color: #854d0e; }
+.pw-badge.approved  { background: #dcfce7; color: #166534; }
 .pw-badge.processed { background: #d1fae5; color: #065f46; }
 .pw-badge.rejected  { background: #fee2e2; color: #991b1b; }
 
@@ -290,8 +306,8 @@
     align-items: center;
 }
 .btn-acc {
-    height: 34px;
-    padding: 0 0.875rem;
+    height: 32px;
+    padding: 0 0.85rem;
     background: linear-gradient(135deg, #1eb349, #a5cf37);
     color: #fff;
     border: none;
@@ -311,7 +327,7 @@
     box-shadow: 0 4px 12px rgba(30,179,73,0.35);
 }
 .btn-reject {
-    height: 34px;
+    height: 32px;
     padding: 0 0.75rem;
     background: #FEF2F2;
     color: #DC2626;
@@ -330,6 +346,49 @@
 .btn-reject:hover {
     background: #FEE2E2;
     border-color: #F87171;
+}
+
+.btn-proof-preview {
+    height: 30px;
+    padding: 0 0.65rem;
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+    border-radius: 7px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.15s;
+    font-family: 'Montserrat', sans-serif;
+    white-space: nowrap;
+}
+.btn-proof-preview:hover {
+    background: #DBEAFE;
+}
+
+.btn-proof-upload {
+    height: 30px;
+    padding: 0 0.65rem;
+    background: #F8FAFC;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+    border-radius: 7px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.15s;
+    font-family: 'Montserrat', sans-serif;
+    white-space: nowrap;
+}
+.btn-proof-upload:hover {
+    background: #F1F5F9;
+    color: #0F172A;
 }
 
 /* ── Empty State ── */
@@ -357,7 +416,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0,0,0,0.5);
     z-index: 9999;
     align-items: center;
     justify-content: center;
@@ -374,6 +433,8 @@
     padding: 1.75rem;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     animation: modalIn 0.2s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 @keyframes modalIn {
     from { opacity: 0; transform: translateY(12px) scale(0.98); }
@@ -588,23 +649,23 @@
         </div>
         <div class="pw-card">
             <div class="pw-card-icon" style="background:#FFF7ED;">
-                <svg width="18" height="18" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
+                <svg width="18" height="18" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
-            <div class="pw-card-label">Biaya Pencairan</div>
-            <div class="pw-card-value" style="color:#16A34A">Rp 0 (Gratis)</div>
-            <div class="pw-card-sub">100% dana utuh untuk creator</div>
+            <div class="pw-card-label">Admin Fee</div>
+            <div class="pw-card-value" style="color:#EA580C">Rp {{ number_format($totalAdminFee, 0, ',', '.') }}</div>
+            <div class="pw-card-sub">Total fee admin transaksi</div>
         </div>
         <div class="pw-card" style="border-color:#bbf7d0; background: linear-gradient(135deg,#f0fdf4,#dcfce7);">
             <div class="pw-card-icon" style="background:#fff;">
                 <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
             </div>
             <div class="pw-card-label">Laba Bersih Buyle.id</div>
-            <div class="pw-card-value" style="color:#15803d">Rp {{ number_format($platformFee, 0, ',', '.') }}</div>
-            <div class="pw-card-sub">Platform Fee 5% transaksi</div>
+            <div class="pw-card-value" style="color:#15803d">Rp {{ number_format($netProfit, 0, ',', '.') }}</div>
+            <div class="pw-card-sub">Platform Fee + Admin Fee</div>
         </div>
         <div class="pw-card" style="border-color:#fed7aa;">
             <div class="pw-card-icon" style="background:#FFF7ED;">
-                <svg width="18" height="18" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg width="18" height="18" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
             </div>
             <div class="pw-card-label">Kewajiban Saldo Creator</div>
             <div class="pw-card-value" style="color:#EA580C">Rp {{ number_format($creatorLiability, 0, ',', '.') }}</div>
@@ -635,16 +696,24 @@
             <table class="pw-table">
                 <thead>
                     <tr>
-                        <th>Tanggal</th>
-                        <th>Creator</th>
+                        <th>Tanggal Pengajuan</th>
+                        <th>Profil Creator</th>
                         <th>Rekening Tujuan</th>
                         <th>Jumlah</th>
-                        <th>Status</th>
+                        <th>Status &amp; Persetujuan</th>
                         <th style="text-align:right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($requests as $req)
+                    @php
+                        $profile   = $req->seller?->creatorProfile;
+                        $storeName = $profile?->store_name ?: ($req->seller?->name ?? 'Creator');
+                        $storeSlug = $profile?->store_slug;
+                        $ownerName = $req->seller?->name ?? 'User';
+                        $ownerEmail = $req->seller?->email ?? '';
+                        $approvalDate = $req->approved_at ?? $req->processed_at;
+                    @endphp
                     <tr>
                         <td style="white-space:nowrap; color:#64748B; font-size:0.78rem;">
                             {{ $req->created_at->format('d M Y') }}<br>
@@ -653,15 +722,38 @@
                         <td>
                             <div class="pw-creator">
                                 <div class="pw-avatar">
-                                    @if($req->seller?->avatar)
+                                    @if($profile?->pos_logo)
+                                        <img src="{{ asset('storage/'.$profile->pos_logo) }}" style="width:100%;height:100%;object-fit:cover;" alt="">
+                                    @elseif($req->seller?->avatar)
                                         <img src="{{ asset('storage/'.$req->seller->avatar) }}" style="width:100%;height:100%;object-fit:cover;" alt="">
                                     @else
-                                        {{ strtoupper(substr($req->seller?->name ?? 'U', 0, 1)) }}
+                                        {{ strtoupper(substr($storeName, 0, 1)) }}
                                     @endif
                                 </div>
-                                <div>
-                                    <div class="pw-creator-name">{{ $req->seller?->name ?? 'Unknown' }}</div>
-                                    <div class="pw-creator-sub">{{ $req->seller?->email ?? '' }}</div>
+                                <div style="min-width:0;">
+                                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                        <span class="pw-creator-name">{{ $storeName }}</span>
+                                        @if($profile?->is_verified)
+                                            <span class="pw-verified-badge" title="Creator Terverifikasi">
+                                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                                Verified
+                                            </span>
+                                        @endif
+                                    </div>
+                                    @if($storeSlug)
+                                        <div style="margin-top:2px;">
+                                            <a href="{{ url('/b/' . $storeSlug) }}" target="_blank" class="pw-slug-link" title="Buka Toko Creator">
+                                                <span>{{ '@' . $storeSlug }}</span>
+                                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                            </a>
+                                        </div>
+                                    @endif
+                                    <div class="pw-creator-sub" style="margin-top:3px;">
+                                        <span style="color:#475569;font-weight:600;">{{ $ownerName }}</span>
+                                        @if($ownerEmail)
+                                            &bull; <a href="{{ route('admin.users.show', $req->seller_id) }}" target="_blank" style="color:#64748B;text-decoration:underline;" title="Buka Profil User">{{ $ownerEmail }}</a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -698,24 +790,49 @@
                                     Ditolak
                                 @endif
                             </span>
+
+                            @if(($req->status === 'processed' || $req->status === 'approved') && $approvalDate)
+                            <div style="font-size:0.68rem;color:#166534;font-weight:600;margin-top:4px;">
+                                Disetujui: {{ $approvalDate->format('d M Y, H:i') }}
+                            </div>
+                            @elseif($req->status === 'rejected' && $req->processed_at)
+                            <div style="font-size:0.68rem;color:#991b1b;font-weight:600;margin-top:4px;">
+                                Ditolak: {{ $req->processed_at->format('d M Y, H:i') }}
+                            </div>
+                            @endif
+
                             @if($req->admin_notes)
-                            <div style="font-size:0.67rem;color:#94A3B8;margin-top:0.3rem;max-width:150px;line-height:1.3;">{{ $req->admin_notes }}</div>
+                            <div style="font-size:0.67rem;color:#94A3B8;margin-top:0.3rem;max-width:180px;line-height:1.3;">{{ $req->admin_notes }}</div>
+                            @endif
+
+                            @if($req->proof_of_transfer)
+                            <div style="margin-top:5px;">
+                                <button type="button" class="btn-proof-preview" onclick="openProofModal('{{ asset('storage/'.$req->proof_of_transfer) }}', '{{ $req->reference_number ?? '-' }}', '{{ $storeName }}')">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Lihat Bukti TF
+                                </button>
+                            </div>
                             @endif
                         </td>
                         <td style="text-align:right">
                             @if($req->status === 'pending')
                             <div class="pw-actions" style="justify-content:flex-end">
-                                <button class="btn-acc" onclick="openAccModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}', '{{ $req->bank_name }} - {{ $req->bank_account_number }}', '{{ $req->bank_account_name }}')">
+                                <button class="btn-acc" onclick="openAccModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}', '{{ $req->bank_name }} - {{ $req->bank_account_number }}', '{{ $req->bank_account_name }}', '{{ addslashes($storeName) }}')">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                     ACC
                                 </button>
-                                <button class="btn-reject" onclick="openRejectModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}')">
+                                <button class="btn-reject" onclick="openRejectModal({{ $req->id }}, 'Rp {{ number_format($req->amount, 0, ',', '.') }}', '{{ addslashes($storeName) }}')">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                                     Tolak
                                 </button>
                             </div>
                             @else
-                            <span style="font-size:0.72rem;color:#94A3B8;">{{ $req->processed_at?->format('d M Y') ?? '' }}</span>
+                            <div class="pw-actions" style="justify-content:flex-end;flex-direction:column;align-items:flex-end;gap:4px;">
+                                <button type="button" class="btn-proof-upload" onclick="openUploadProofModal({{ $req->id }}, '{{ $req->reference_number ?? '' }}', '{{ addslashes($storeName) }}')">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    {{ $req->proof_of_transfer ? 'Ganti Bukti' : 'Upload Bukti' }}
+                                </button>
+                            </div>
                             @endif
                         </td>
                     </tr>
@@ -745,13 +862,21 @@
             <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             Konfirmasi Pencairan Dana
         </div>
-        <div class="pw-modal-sub">Pastikan kamu sudah transfer ke rekening di bawah sebelum klik Selesai.</div>
+        <div class="pw-modal-sub">Pastikan kamu sudah mentransfer ke rekening tujuan di bawah. Tanggal persetujuan dicatat otomatis secara real-time.</div>
         <div class="pw-modal-info" id="accInfo"></div>
-        <form id="formAcc" method="POST">
+        <form id="formAcc" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="pw-modal-group">
-                <label class="pw-modal-label">No. Referensi Transfer (Opsional)</label>
-                <input type="text" name="reference_number" class="pw-modal-input" placeholder="Contoh: 20241016123456">
+                <label class="pw-modal-label">No. Referensi Transfer / Mutasi Bank (Opsional)</label>
+                <input type="text" name="reference_number" class="pw-modal-input" placeholder="Contoh: 20261117123456 atau P783534337">
+            </div>
+            <div class="pw-modal-group">
+                <label class="pw-modal-label">Upload Bukti Transfer Bank (Opsional, Rekap Internal)</label>
+                <input type="file" name="proof_of_transfer" accept="image/*" class="pw-modal-input" style="padding-top:8px;" onchange="previewProofImage(this, 'accProofPreview')">
+                <div style="font-size:0.68rem;color:#64748B;margin-top:4px;">Disimpan untuk rekap data internal (otomatis dikompresi maksimal, tidak dikirim ke creator).</div>
+                <div id="accProofPreview" style="display:none;margin-top:8px;max-height:140px;border-radius:8px;overflow:hidden;border:1px solid #E2E8F0;">
+                    <img src="" style="width:100%;height:140px;object-fit:cover;">
+                </div>
             </div>
             <div class="pw-modal-group">
                 <label class="pw-modal-label">Catatan Admin (Opsional)</label>
@@ -775,29 +900,83 @@
             <svg width="20" height="20" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
             Tolak Permintaan Pencairan
         </div>
-        <div class="pw-modal-sub">Saldo creator akan <strong>otomatis dikembalikan</strong>. Isi alasan penolakan agar creator memahami situasinya.</div>
+        <div class="pw-modal-sub">Saldo creator akan <strong>otomatis dikembalikan</strong> ke saldo siap tarik. Isi alasan penolakan agar creator memahami situasinya.</div>
         <div class="pw-modal-info" id="rejectInfo"></div>
         <form id="formReject" method="POST">
             @csrf
             <div class="pw-modal-group">
                 <label class="pw-modal-label">Alasan Penolakan <span style="color:#ef4444">*</span></label>
-                <textarea name="admin_notes" class="pw-modal-textarea" placeholder="Contoh: Nomor rekening tidak aktif atau tidak terdaftar di BCA." required></textarea>
+                <textarea name="admin_notes" class="pw-modal-textarea" placeholder="Contoh: Nomor rekening tidak aktif atau nama rekening berbeda." required></textarea>
             </div>
             <div class="pw-modal-actions">
                 <button type="button" class="btn-modal-cancel" onclick="closeModal('modalReject')">Batal</button>
                 <button type="submit" class="btn-modal-confirm danger">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                    Tolak & Kembalikan Saldo
+                    Tolak &amp; Kembalikan Saldo
                 </button>
             </div>
         </form>
     </div>
 </div>
 
+{{-- Modal Upload / Update Bukti Transfer --}}
+<div class="pw-modal-overlay" id="modalUploadProof">
+    <div class="pw-modal">
+        <div class="pw-modal-title">
+            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Bukti Transfer Internal
+        </div>
+        <div class="pw-modal-sub">Bukti transfer khusus data rekap &amp; arsip internal. Otomatis dikompresi maksimal.</div>
+        <form id="formUploadProof" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="pw-modal-group">
+                <label class="pw-modal-label">No. Referensi Bank (Opsional)</label>
+                <input type="text" name="reference_number" id="uploadProofRefInput" class="pw-modal-input" placeholder="Contoh: P783534337">
+            </div>
+            <div class="pw-modal-group">
+                <label class="pw-modal-label">File Bukti Transfer (Gambar) <span style="color:#ef4444">*</span></label>
+                <input type="file" name="proof_of_transfer" accept="image/*" class="pw-modal-input" style="padding-top:8px;" required onchange="previewProofImage(this, 'proofUploadPreviewBox')">
+                <div id="proofUploadPreviewBox" style="display:none;margin-top:8px;max-height:140px;border-radius:8px;overflow:hidden;border:1px solid #E2E8F0;">
+                    <img src="" style="width:100%;height:140px;object-fit:cover;">
+                </div>
+            </div>
+            <div class="pw-modal-actions">
+                <button type="button" class="btn-modal-cancel" onclick="closeModal('modalUploadProof')">Batal</button>
+                <button type="submit" class="btn-modal-confirm">Simpan Bukti TF</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Modal Preview Bukti Transfer (Lightbox) --}}
+<div class="pw-modal-overlay" id="modalPreviewProof">
+    <div class="pw-modal" style="max-width:540px;text-align:center;">
+        <div class="pw-modal-title" style="justify-content:space-between;margin-bottom:0.5rem;">
+            <span>Bukti Transfer Internal</span>
+            <button type="button" onclick="closeModal('modalPreviewProof')" style="background:none;border:none;cursor:pointer;color:#64748B;font-size:1.4rem;line-height:1;">&times;</button>
+        </div>
+        <div id="previewProofMeta" style="font-size:0.75rem;color:#64748B;margin-bottom:0.75rem;text-align:left;"></div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid #E2E8F0;background:#0F172A;max-height:65vh;display:flex;align-items:center;justify-content:center;padding:6px;">
+            <img id="previewProofImg" src="" style="max-width:100%;max-height:60vh;object-fit:contain;border-radius:8px;">
+        </div>
+        <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;">
+            <button type="button" class="btn-modal-cancel" onclick="closeModal('modalPreviewProof')">Tutup</button>
+            <a id="previewProofDownload" href="" target="_blank" class="btn-modal-confirm" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;max-width:180px;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Lihat Ukuran Asli
+            </a>
+        </div>
+    </div>
+</div>
+
 <script>
-function openAccModal(id, netAmount, bank, holder) {
+function openAccModal(id, netAmount, bank, holder, storeName) {
     document.getElementById('formAcc').action = '/admin/payouts/' + id + '/approve';
     document.getElementById('accInfo').innerHTML = `
+        <div class="pw-modal-info-row">
+            <span class="pw-modal-info-key">Creator</span>
+            <span class="pw-modal-info-val">${storeName}</span>
+        </div>
         <div class="pw-modal-info-row">
             <span class="pw-modal-info-key">Rekening Tujuan</span>
             <span class="pw-modal-info-val">${bank}</span>
@@ -811,12 +990,18 @@ function openAccModal(id, netAmount, bank, holder) {
             <span class="pw-modal-info-val green" style="font-size:1.05rem;">${netAmount}</span>
         </div>
     `;
+    const previewBox = document.getElementById('accProofPreview');
+    if (previewBox) { previewBox.style.display = 'none'; previewBox.querySelector('img').src = ''; }
     document.getElementById('modalAcc').classList.add('open');
 }
 
-function openRejectModal(id, amount) {
+function openRejectModal(id, amount, storeName) {
     document.getElementById('formReject').action = '/admin/payouts/' + id + '/reject';
     document.getElementById('rejectInfo').innerHTML = `
+        <div class="pw-modal-info-row">
+            <span class="pw-modal-info-key">Creator</span>
+            <span class="pw-modal-info-val">${storeName}</span>
+        </div>
         <div class="pw-modal-info-row">
             <span class="pw-modal-info-key">Jumlah Dikembalikan</span>
             <span class="pw-modal-info-val green">${amount}</span>
@@ -824,6 +1009,36 @@ function openRejectModal(id, amount) {
     `;
     document.getElementById('formReject').querySelector('textarea').value = '';
     document.getElementById('modalReject').classList.add('open');
+}
+
+function openUploadProofModal(id, currentRef, storeName) {
+    document.getElementById('formUploadProof').action = '/admin/payouts/' + id + '/upload-proof';
+    document.getElementById('uploadProofRefInput').value = currentRef || '';
+    const previewBox = document.getElementById('proofUploadPreviewBox');
+    if (previewBox) { previewBox.style.display = 'none'; previewBox.querySelector('img').src = ''; }
+    document.getElementById('modalUploadProof').classList.add('open');
+}
+
+function openProofModal(imgUrl, refNo, storeName) {
+    document.getElementById('previewProofImg').src = imgUrl;
+    document.getElementById('previewProofDownload').href = imgUrl;
+    document.getElementById('previewProofMeta').innerHTML = `<strong>Creator:</strong> ${storeName} &bull; <strong>Ref:</strong> ${refNo}`;
+    document.getElementById('modalPreviewProof').classList.add('open');
+}
+
+function previewProofImage(input, previewContainerId) {
+    const box = document.getElementById(previewContainerId);
+    if (!box) return;
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            box.querySelector('img').src = e.target.result;
+            box.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        box.style.display = 'none';
+    }
 }
 
 function closeModal(id) {

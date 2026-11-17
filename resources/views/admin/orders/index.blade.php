@@ -439,9 +439,9 @@
             <div class="trx-kpi-sub">Total akumulasi pembayaran yang masuk ke payment gateway</div>
         </div>
 
-        {{-- Card 2: Hak Mitra / Penjual --}}
+        {{-- Card 2: Hak Creator --}}
         <div class="trx-kpi-card">
-            <div class="trx-kpi-label">Jatah Mitra / Penjual</div>
+            <div class="trx-kpi-label">Jatah Creator</div>
             <div class="trx-kpi-val">Rp {{ number_format($kpi['partner_net'], 0, ',', '.') }}</div>
             <div class="trx-kpi-sub">Hak bersih milik penjual, kreator, pengantin, atau merchant</div>
         </div>
@@ -547,7 +547,7 @@
                         <th>Toko / Mitra</th>
                         <th>Metode</th>
                         <th style="text-align:right;">Total Gross</th>
-                        <th style="text-align:right;">Jatah Mitra</th>
+                        <th style="text-align:right;">Jatah Creator</th>
                         <th style="text-align:right;">Profit Buyle</th>
                         <th>Status</th>
                         <th style="text-align:center;">Aksi</th>
