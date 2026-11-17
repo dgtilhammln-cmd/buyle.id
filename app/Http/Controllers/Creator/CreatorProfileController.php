@@ -15,6 +15,13 @@ class CreatorProfileController extends Controller
         $user = auth()->user();
         $profile = $user->creatorProfile ?? new CreatorProfile();
         
+        // Pastikan username user dan store_slug selalu sinkron dengan store_slug yang valid
+        if ($profile->exists && !empty($profile->store_slug) && $user->username !== $profile->store_slug) {
+            $user->username = $profile->store_slug;
+            $user->referral_code = $profile->store_slug;
+            $user->saveQuietly();
+        }
+
         return view('creator.profile', compact('user', 'profile'));
     }
 

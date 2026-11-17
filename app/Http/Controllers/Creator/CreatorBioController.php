@@ -25,6 +25,14 @@ class CreatorBioController extends Controller
     {
         $profile = $this->getProfile();
 
+        // Pastikan username user sinkron dengan store_slug (slug valid)
+        $user = auth()->user();
+        if ($user && $profile->exists && !empty($profile->store_slug) && $user->username !== $profile->store_slug) {
+            $user->username = $profile->store_slug;
+            $user->referral_code = $profile->store_slug;
+            $user->saveQuietly();
+        }
+
         if (!$profile->bio_role) {
             return view('creator.bio.role_picker', compact('profile'));
         }
@@ -585,9 +593,13 @@ class CreatorBioController extends Controller
         if ($request->has('theme5_contact_address'))       $config['theme5_contact_address']       = $request->theme5_contact_address;
         if ($request->has('theme5_contact_maps_embed'))    $config['theme5_contact_maps_embed']    = $request->theme5_contact_maps_embed;
 
-        // store_slug selalu terpusat mengikuti username akun
-        if (auth()->user()->username) {
-            $profile->store_slug = auth()->user()->username;
+        // store_slug selalu terpusat
+        $activeSlug = $profile->store_slug ?: auth()->user()->username;
+        if ($activeSlug) {
+            $profile->store_slug = $activeSlug;
+            if (auth()->user()->username !== $activeSlug) {
+                auth()->user()->update(['username' => $activeSlug, 'referral_code' => $activeSlug]);
+            }
         }
 
         $profile->bio_config = $config;

@@ -683,12 +683,12 @@
                             <div class="slug-wrap" style="{{ !$user->canChangeUsername() ? 'background:#F1F5F9; opacity:0.85;' : '' }}">
                                 <span class="slug-prefix">buyle.id/</span>
                                 <input type="text" name="username" class="slug-input"
-                                    value="{{ old('username', $user->username) }}" placeholder="username-anda"
+                                    value="{{ old('username', $profile->store_slug ?: $user->username) }}" placeholder="username-anda"
                                     maxlength="30"
                                     {{ !$user->canChangeUsername() ? 'readonly' : '' }}
                                     style="{{ !$user->canChangeUsername() ? 'cursor:not-allowed; color:#64748B;' : '' }}">
                             </div>
-                            <input type="hidden" name="store_slug" value="{{ $user->username }}">
+                            <input type="hidden" name="store_slug" value="{{ $profile->store_slug ?: $user->username }}">
                             
                             @if(!$user->canChangeUsername())
                                 <div style="margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:#B45309; background:#FEF3C7; padding:0.35rem 0.65rem; border-radius:8px;">

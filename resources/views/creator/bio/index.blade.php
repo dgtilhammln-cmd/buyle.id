@@ -2308,7 +2308,7 @@
                                                 <span
                                                     style="padding:0 0.75rem; color:#94a3b8; font-size:0.8rem; border-right:1.5px solid #e2e8f0; background:#f1f5f9; height:44px; display:flex; align-items:center;">buyle.id/</span>
                                                 <input type="text"
-                                                    value="{{ auth()->user()->username ?: $profile->store_slug }}"
+                                                    value="{{ $profile->store_slug ?: auth()->user()->username }}"
                                                     readonly
                                                     tabindex="-1"
                                                     style="height:44px; border:none; background:#f8fafc; padding:0 1rem; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#64748b; outline:none; flex:1; cursor:not-allowed;"
