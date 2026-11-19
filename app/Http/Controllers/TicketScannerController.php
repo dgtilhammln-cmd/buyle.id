@@ -221,7 +221,7 @@ class TicketScannerController extends Controller
             ->get();
 
         $allTicketEvents = Product::where('product_type', 'ticket')
-            ->where('status', 'active')
+            ->where('is_active', true)
             ->where(function ($q) {
                 $q->whereNull('event_date')
                   ->orWhere('event_date', '>=', now()->startOfDay());
