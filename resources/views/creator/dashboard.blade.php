@@ -590,9 +590,6 @@
                             </div>
                         </div>
                         <div class="nina-top-buttons">
-                            <a href="{{ route('creator.app.index') }}" class="nina-circle-btn" title="Semua Aplikasi">
-                                <i class="ph ph-squares-four"></i>
-                            </a>
                             <a href="{{ route('creator.sales.report') }}" class="nina-circle-btn" title="Notifikasi Order">
                                 <i class="ph ph-bell"></i>
                             </a>
@@ -637,21 +634,21 @@
                     <div class="nina-shortcut-box">
                         <div class="nina-row-title">Shortcut</div>
                         <div class="nina-mini-grid">
-                            <a href="{{ route('creator.products.index') }}" class="nina-mini-card" title="Kelola Produk">
-                                <i class="ph ph-tote"></i>
-                                <span>Produk</span>
+                            <a href="{{ route('creator.ticket.scanner') }}" class="nina-mini-card" title="Buyle TIX">
+                                <i class="ph ph-ticket"></i>
+                                <span>Buyle TIX</span>
                             </a>
-                            <a href="{{ route('creator.products.create') }}" class="nina-mini-card" title="Tambah Produk">
-                                <i class="ph ph-plus"></i>
-                                <span>Tambah</span>
+                            <a href="{{ route('creator.pos.index') }}" class="nina-mini-card" title="Kasir POS">
+                                <i class="ph ph-storefront"></i>
+                                <span>POS</span>
                             </a>
-                            <a href="{{ route('creator.payout.settings') }}" class="nina-mini-card" title="Pencairan Dana">
-                                <i class="ph ph-wallet"></i>
-                                <span>Saldo</span>
-                            </a>
-                            <a href="{{ route('creator.bio.index') }}" class="nina-mini-card" title="Web Toko / Bio">
+                            <a href="{{ route('creator.bio.index') }}" class="nina-mini-card" title="Website Toko">
                                 <i class="ph ph-globe"></i>
-                                <span>Web Bio</span>
+                                <span>Website</span>
+                            </a>
+                            <a href="{{ route('creator.sales.report') }}" class="nina-mini-card" title="Laporan Income">
+                                <i class="ph ph-chart-line-up"></i>
+                                <span>Income</span>
                             </a>
                         </div>
                     </div>

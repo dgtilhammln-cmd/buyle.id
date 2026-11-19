@@ -711,6 +711,48 @@
             cursor: pointer;
         }
 
+        .bio-mobile-top-header {
+            display: none;
+        }
+
+        @media (max-width: 991px) {
+            .bio-mobile-top-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.65rem 0 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .bmh-icon-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #ffffff;
+                border: 1.5px solid #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #0f172a;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+                text-decoration: none;
+                transition: all 0.2s ease;
+                cursor: pointer;
+            }
+
+            .bmh-icon-btn:active {
+                transform: scale(0.92);
+            }
+
+            .bmh-title {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.01em;
+            }
+        }
+
         @media(max-width:768px) {
             .bio-layout {
                 flex-direction: column;
@@ -723,7 +765,7 @@
             .bio-sidebar {
                 width: 100%;
                 position: sticky;
-                top: 64px;
+                top: 0.5rem;
                 z-index: 80;
                 padding: 0.25rem;
                 border-radius: 14px;
@@ -737,7 +779,7 @@
             .bio-sidebar-column {
                 width: 100% !important;
                 position: sticky !important;
-                top: 60px !important;
+                top: 0.5rem !important;
                 z-index: 90 !important;
                 margin-bottom: 0.75rem !important;
             }
@@ -1446,6 +1488,34 @@
         $roleLabels = ['content_creator' => 'Content Creator', 'affiliator' => 'Affiliator', 'business' => 'Business / Brand'];
         $bioUrl = $profile->store_slug ? url('/' . $profile->store_slug) : null;
     @endphp
+
+    {{-- ══ MOBILE TOP HEADER (Web Builder) ══ --}}
+    <div class="bio-mobile-top-header">
+        <a href="{{ route('creator.dashboard') }}" class="bmh-icon-btn" title="Kembali ke Dashboard">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </a>
+        <div style="text-align:center;">
+            <h2 class="bmh-title">Web Builder</h2>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.4rem;">
+            @if($bioUrl)
+                <a href="{{ $bioUrl }}" target="_blank" class="bmh-icon-btn" title="Buka Toko / Web Bio">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                </a>
+            @endif
+            <button type="button" onclick="openWebBuilderIntroModal(true)" class="bmh-icon-btn" title="Panduan Video">
+                <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+            </button>
+        </div>
+    </div>
 
     <div class="bio-layout">
 
