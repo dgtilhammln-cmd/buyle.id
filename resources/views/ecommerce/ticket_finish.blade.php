@@ -11,7 +11,7 @@
 
         $product = $firstTicketItem?->product;
 
-        // Foto Landscape (16:9) sesuai Image 2
+        // Foto Landscape (16:9)
         $landscapePoster = null;
         if (!empty($product?->og_image)) {
             $landscapePoster = \Illuminate\Support\Str::startsWith($product->og_image, 'http') ? $product->og_image : asset('storage/' . $product->og_image);
@@ -42,31 +42,68 @@
         // Lokasi Event
         $eventLocationStr = $product?->event_location ?: ($product?->event_platform ?: 'Venue Ditentukan Panitia');
 
-        // Seat / Kategori
+        // Kategori / Seat
         $seatOrCategory = $firstTicketItem?->variantValue?->name
             ?: ($firstTicketItem?->product?->short_desc ?: 'Reguler');
 
-        // Ticket Passes
+        // Multi-Pass Support
         $passes = $order->ticketPasses;
         if ($passes->isEmpty()) {
-            $passes = collect([(object)[
-                'id'          => 1,
-                'ticket_code' => $order->order_number,
-                'holder_name' => $order->user?->name ?? ($order->customer_name ?: 'Pemegang Tiket'),
-                'holder_nik'  => null,
-                'status'      => 'valid',
-            ]]);
+            try {
+                \App\Models\TicketPass::generateForOrder($order);
+                $passes = $order->fresh(['ticketPasses.product'])->ticketPasses;
+            } catch (\Throwable $e) {}
+        }
+
+        // Fallback jika tetap kosong / tidak ada di database
+        $totalTicketQty = $order->items->filter(function($i) {
+            $pType = $i->product?->product_type ?? '';
+            return in_array($pType, ['ticket', 'tiket', 'tiket event', 'ticket_event']) || !empty($i->product?->event_date);
+        })->sum('qty') ?: ($order->items->sum('qty') ?: 1);
+
+        if ($passes->isEmpty()) {
+            $defaultHolder = $order->user?->name ?? ($order->customer_name ?: 'Pemegang Tiket');
+            $defaultNik    = $order->user?->nik ?? null;
+            $mockPasses = [];
+            for ($q = 1; $q <= $totalTicketQty; $q++) {
+                $code = $totalTicketQty > 1 ? ($order->order_number . '-' . $q) : $order->order_number;
+                $mockPasses[] = (object)[
+                    'id'          => $q,
+                    'ticket_code' => $code,
+                    'holder_name' => $defaultHolder,
+                    'holder_nik'  => $defaultNik,
+                    'created_at'  => $order->created_at,
+                    'status'      => 'valid',
+                ];
+            }
+            $passes = collect($mockPasses);
         }
 
         $activePass = $passes->first();
 
-        $passesData = $passes->map(function($p) use ($order) {
-            $code = $p->ticket_code ?? $order->order_number;
+        // Siapkan array data tiket untuk frontend JS
+        $passesData = $passes->map(function($p, $idx) use ($order, $passes, $seatOrCategory) {
+            $code = $p->ticket_code ?? ($order->order_number . (count($passes) > 1 ? '-' . ($idx + 1) : ''));
+            $rawNik = $p->holder_nik ?: ($order->user?->nik ?: null);
+            $maskedNik = \App\Models\TicketPass::maskNik($rawNik);
+            
+            $createdAt = $p->created_at ?? $order->created_at;
+            $printedAt = $createdAt 
+                ? \Carbon\Carbon::parse($createdAt)->locale('id')->translatedFormat('d F Y H.i.s') 
+                : date('d F Y H.i.s');
+
+            $passCat = $p->orderItem?->variantValue?->name 
+                ?: ($p->product?->short_desc ?: $seatOrCategory);
+
             return [
-                'id'          => $p->id,
+                'id'          => $p->id ?? ($idx + 1),
+                'index'       => $idx + 1,
                 'ticket_code' => $code,
                 'holder_name' => $p->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket'),
+                'holder_nik'  => $maskedNik,
+                'category'    => $passCat,
                 'qr_image'    => \App\Services\SimpleQrCode::base64($code),
+                'printed_at'  => $printedAt,
             ];
         })->values()->toArray();
 
@@ -80,7 +117,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -102,6 +139,7 @@
             font-family: 'Montserrat', sans-serif !important;
             color: var(--tix-text-dark);
             min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
             display: flex;
             justify-content: center;
@@ -117,31 +155,31 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding-top: max(1.5rem, calc(env(safe-area-inset-top) + 0.6rem));
-            padding-bottom: max(3rem, calc(env(safe-area-inset-bottom) + 1.25rem));
-            padding-left: max(1rem, env(safe-area-inset-left));
-            padding-right: max(1rem, env(safe-area-inset-right));
+            padding-top: max(1.15rem, calc(env(safe-area-inset-top) + 0.45rem));
+            padding-bottom: max(1.75rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+            padding-left: max(0.85rem, env(safe-area-inset-left));
+            padding-right: max(0.85rem, env(safe-area-inset-right));
             box-sizing: border-box;
             position: relative;
         }
 
-        /* Ambient glow & bokeh */
+        /* Ambient glow */
         .tix-page-viewport::before {
             content: '';
             position: absolute;
             top: -100px;
             left: 50%;
             transform: translateX(-50%);
-            width: 600px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0) 70%);
+            width: 500px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 70%);
             pointer-events: none;
             z-index: 1;
         }
 
         .tix-phone-frame {
             width: 100%;
-            max-width: 390px;
+            max-width: 385px;
             position: relative;
             z-index: 2;
             display: flex;
@@ -154,13 +192,13 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            margin-bottom: 1.25rem;
-            padding: 0 0.25rem;
+            margin-bottom: 0.65rem;
+            padding: 0 0.15rem;
         }
 
         .tix-nav-btn {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(8px);
@@ -174,92 +212,104 @@
             cursor: pointer;
             transition: all 0.2s ease;
             padding: 0;
+            flex-shrink: 0;
         }
         .tix-nav-btn:hover {
             background: rgba(0, 0, 0, 0.35);
-            transform: scale(1.05);
+            transform: scale(1.04);
             color: #ffffff;
         }
 
-        .tix-nav-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: 0.3px;
-            margin: 0;
-        }
-
-        /* ── Ticket Tabs (Multiple Attendees) ── */
-        .tix-tabs-wrap {
+        /* ── Pager Badge (Image 3: 1/1 atau 1/N) ── */
+        .tix-pager-bar {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            overflow-x: auto;
-            padding-bottom: 0.65rem;
-            margin-bottom: 0.5rem;
-            scrollbar-width: none;
+            justify-content: center;
+            gap: 0.45rem;
+            margin-bottom: 0.6rem;
         }
-        .tix-tabs-wrap::-webkit-scrollbar { display: none; }
 
-        .tix-tab-pill {
-            padding: 0.38rem 0.85rem;
-            font-size: 0.72rem;
-            font-weight: 600;
-            border-radius: 999px;
+        .tix-pager-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.26rem 0.95rem;
+            background: rgba(0, 0, 0, 0.22);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.16);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 700;
             color: #ffffff;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.15s ease;
-            font-family: inherit;
-        }
-        .tix-tab-pill.active {
-            background: #ffffff;
-            color: #15803d;
-            border-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            user-select: none;
         }
 
-        /* ── The Ticket Card ── */
-        .tix-card-container {
-            background: var(--tix-card-bg);
-            border-radius: 28px;
-            padding: 1.15rem 1.25rem 1.4rem;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 4px 16px rgba(0, 0, 0, 0.08);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* ── Cutout Ticket Notches on Left & Right ── */
-        .tix-notch-left,
-        .tix-notch-right {
-            position: absolute;
+        .tix-pager-btn {
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: var(--tix-bg-gradient);
-            z-index: 5;
-            top: 55%;
-            margin-top: -14px;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.18);
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            padding: 0;
         }
-        .tix-notch-left {
-            left: -14px;
+        .tix-pager-btn:hover {
+            background: rgba(0, 0, 0, 0.4);
+            transform: scale(1.08);
         }
-        .tix-notch-right {
-            right: -14px;
+        .tix-pager-btn:active {
+            transform: scale(0.95);
         }
 
-        /* ── 16:9 Landscape Poster ── */
+        /* ── The White Ticket Card ── */
+        .tix-card-container {
+            background: var(--tix-card-bg);
+            border-radius: 24px;
+            padding: 0.95rem 1.15rem 1.1rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22), 0 4px 16px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Cutout Ticket Notches */
+        .tix-notch-left,
+        .tix-notch-right {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--tix-bg-gradient);
+            z-index: 5;
+            top: 48%;
+            margin-top: -12px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.16);
+        }
+        .tix-notch-left {
+            left: -12px;
+        }
+        .tix-notch-right {
+            right: -12px;
+        }
+
+        /* 16:9 Landscape Poster */
         .tix-poster-box {
             width: 100%;
             aspect-ratio: 16 / 9;
-            border-radius: 20px;
+            max-height: 160px;
+            border-radius: 16px;
             overflow: hidden;
             background: #0f172a;
             position: relative;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
         }
         .tix-poster-box img {
             width: 100%;
@@ -268,32 +318,32 @@
             display: block;
         }
 
-        /* ── Event Title ── */
+        /* Event Title */
         .tix-event-title {
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 600;
             color: #0f172a;
             text-align: center;
-            margin: 0.95rem 0 0.85rem;
-            line-height: 1.35;
+            margin: 0.65rem 0 0.55rem;
+            line-height: 1.32;
             letter-spacing: -0.2px;
         }
 
-        /* ── Dashed Divider Line ── */
+        /* Dashed Line Divider */
         .tix-dashed-divider {
             border: none;
             border-top: 2px dashed #cbd5e1;
-            margin: 0.25rem 0 1.15rem;
+            margin: 0.2rem 0 0.8rem;
             width: 100%;
         }
 
-        /* ── Details Grid (2x2) ── */
+        /* Details Grid (2x2) */
         .tix-details-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            row-gap: 1rem;
-            column-gap: 1.25rem;
-            margin-bottom: 1.15rem;
+            row-gap: 0.65rem;
+            column-gap: 1.1rem;
+            margin-bottom: 0.8rem;
         }
 
         .tix-grid-col.right {
@@ -301,243 +351,123 @@
         }
 
         .tix-detail-label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 500;
             color: var(--tix-text-muted);
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.15rem;
             letter-spacing: 0.2px;
         }
 
         .tix-detail-value {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: #0f172a;
-            line-height: 1.3;
+            line-height: 1.28;
             word-break: break-word;
         }
 
-        /* ── Attendee Badge (Clean & Subtle) ── */
+        /* Info Pemegang & No Identitas (Sensor) */
         .tix-attendee-row {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            padding: 0.45rem 0.75rem;
+            padding: 0.42rem 0.75rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.75rem;
-            color: #475569;
-            margin-bottom: 1rem;
-        }
-        .tix-attendee-name {
-            font-weight: 600;
-            color: #0f172a;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
-        /* ── Barcode Section ── */
-        .tix-barcode-wrap {
+        .tix-attendee-col {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            min-width: 0;
+        }
+        .tix-attendee-col.right {
+            text-align: right;
+        }
+
+        .tix-attendee-label {
+            font-size: 0.64rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 1px;
+            letter-spacing: 0.15px;
+        }
+
+        .tix-attendee-val {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: 0.2px;
+        }
+
+        /* ── Image 2: QR Gate Pass Section ── */
+        .tix-qr-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding-top: 0.25rem;
-        }
-
-        .tix-code-text {
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-            font-size: 0.72rem;
-            color: #64748b;
-            letter-spacing: 1px;
-            margin-bottom: 0.35rem;
-            font-weight: 500;
             text-align: center;
+            padding-top: 0.1rem;
         }
 
-        .tix-barcode-svg-box {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        .tix-barcode-svg-box svg {
-            max-width: 100%;
-            height: 56px;
-            display: block;
+        .tix-qr-title {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.2px;
         }
 
-        /* ── Bottom Floating Controls ── */
-        .tix-controls-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-top: 1.35rem;
-            width: 100%;
-        }
-
-        /* Save / Download Circle Button */
-        .tix-save-btn {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .tix-qr-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 0.45rem;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            text-decoration: none;
-        }
-        .tix-save-btn:hover {
-            background: #1e293b;
-            transform: translateY(-2px);
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
-            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            margin-bottom: 0.45rem;
         }
 
-        /* Show QR Code Pill Button */
-        .tix-qr-pill-btn {
-            flex: 1;
-            height: 52px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.22);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1.5px solid rgba(255, 255, 255, 0.38);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.25rem 0 0.45rem;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 0.88rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            font-family: inherit;
-        }
-        .tix-qr-pill-btn:hover {
-            background: rgba(255, 255, 255, 0.32);
-            border-color: rgba(255, 255, 255, 0.6);
-            transform: translateY(-2px);
-            color: #ffffff;
-        }
-
-        .tix-qr-icon-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #d9f99d;
-            color: #166534;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        }
-
-        .tix-qr-arrow {
-            font-size: 0.95rem;
-            font-weight: 800;
-            opacity: 0.85;
-            letter-spacing: -1px;
-        }
-
-        /* ── Modal QR Code (Gate Pass) ── */
-        .tix-modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 99999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.25rem;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-        }
-        .tix-modal-backdrop.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .tix-modal-card {
-            background: #ffffff;
-            border-radius: 28px;
-            width: 100%;
-            max-width: 360px;
-            padding: 1.75rem 1.5rem 1.5rem;
-            text-align: center;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
-            transform: translateY(20px) scale(0.96);
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-        .tix-modal-backdrop.open .tix-modal-card {
-            transform: translateY(0) scale(1);
-        }
-
-        .tix-modal-close {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: #f1f5f9;
-            border: none;
-            color: #64748b;
-            font-size: 1.2rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .tix-modal-qr-box {
-            background: #f8fafc;
-            border: 1.5px dashed #cbd5e1;
-            border-radius: 20px;
-            padding: 1rem;
-            margin: 1rem auto 1.25rem;
-            display: inline-block;
-        }
-        .tix-modal-qr-box img {
-            width: 200px;
-            height: 200px;
+        .tix-qr-box img {
+            width: 155px;
+            height: 155px;
             display: block;
+            image-rendering: pixelated;
         }
 
-        /* Toast */
-        .tix-toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(40px);
-            background: #0f172a;
-            color: #ffffff;
-            padding: 0.75rem 1.4rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            z-index: 999999;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .tix-qr-code-text {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.15rem;
         }
-        .tix-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
+
+        .tix-qr-printed-text {
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: #64748b;
+            letter-spacing: 0.15px;
+        }
+
+        /* Swipe Hint (hanya jika tiket > 1) */
+        .tix-swipe-hint {
+            text-align: center;
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
     </style>
 </head>
@@ -548,56 +478,65 @@
         
         {{-- Top Navigation Bar --}}
         <div class="tix-nav-bar">
+            {{-- Tombol Home Kiri Atas -> buyle.id/tix --}}
             <a href="{{ route('tix.index') }}" class="tix-nav-btn" title="Ke Beranda BuyleTIX">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
             </a>
+
+            {{-- Logo Resmi BuyleTIX --}}
             <a href="{{ route('tix.index') }}" title="Buyle TIX" style="display:inline-flex; align-items:center; text-decoration:none;">
                 <picture>
                     <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
                     <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" style="height:28px; width:auto; max-width:140px; object-fit:contain; display:block;">
                 </picture>
             </a>
-            <button type="button" class="tix-nav-btn" onclick="shareTicket()" title="Bagikan Tiket">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <circle cx="18" cy="5" r="3"/>
-                    <circle cx="6" cy="12" r="3"/>
-                    <circle cx="18" cy="19" r="3"/>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+
+            {{-- Tombol Download Pojok Kanan Atas (Only Icon) --}}
+            <a href="{{ $ticketPdfUrl }}" class="tix-nav-btn" title="Unduh E-Tiket PDF" target="_blank" download>
+                <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
-            </button>
+            </a>
         </div>
 
-        {{-- Multiple Attendees Tab (Jika pemesanan lebih dari 1 tiket) --}}
-        @if($passes->count() > 1)
-            <div class="tix-tabs-wrap">
-                @foreach($passes as $idx => $pass)
-                    <button type="button" 
-                        class="tix-tab-pill {{ $idx === 0 ? 'active' : '' }}" 
-                        onclick="switchTicketPass({{ $idx }})">
-                        Tiket {{ $idx + 1 }}
-                    </button>
-                @endforeach
+        {{-- Pager Counter 1/1 atau 1/N (Image 3) --}}
+        <div class="tix-pager-bar">
+            @if(count($passesData) > 1)
+                <button type="button" class="tix-pager-btn" onclick="prevTicketPass()" title="Tiket Sebelumnya" aria-label="Tiket Sebelumnya">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+            @endif
+
+            <div class="tix-pager-pill">
+                <span id="tixCurrentIndexDisplay">1</span> / <span id="tixTotalCountDisplay">{{ count($passesData) }}</span>
             </div>
-        @endif
+
+            @if(count($passesData) > 1)
+                <button type="button" class="tix-pager-btn" onclick="nextTicketPass()" title="Tiket Selanjutnya" aria-label="Tiket Selanjutnya">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            @endif
+        </div>
 
         {{-- The White Ticket Card --}}
-        <div class="tix-card-container">
-            {{-- Ticket Notches (Cutouts on Left & Right) --}}
+        <div class="tix-card-container" id="tixCardContainer">
+            {{-- Ticket Notches (Cutouts) --}}
             <div class="tix-notch-left"></div>
             <div class="tix-notch-right"></div>
 
             {{-- Landscape Poster (16:9) --}}
             <div class="tix-poster-box">
-                <img src="{{ $landscapePoster }}" alt="{{ $product->name ?? 'Poster Event' }}" loading="lazy">
+                <img src="{{ $landscapePoster }}" alt="{{ $product->name ?? 'Poster Event' }}" loading="eager">
             </div>
 
             {{-- Event Title --}}
             <div class="tix-event-title">
-                {{ $product->name ?? 'Jazz & Blues Festival' }}
+                {{ $product->name ?? 'Tiket Event' }}
             </div>
 
             {{-- Dashed Line Divider --}}
@@ -623,206 +562,130 @@
                     <div class="tix-detail-value">{{ $eventLocationStr }}</div>
                 </div>
 
-                {{-- Seat / Kategori --}}
+                {{-- Kategori --}}
                 <div class="tix-grid-col right">
                     <div class="tix-detail-label">Kategori</div>
-                    <div class="tix-detail-value" id="tixSeatDisplay">{{ $seatOrCategory }}</div>
+                    <div class="tix-detail-value" id="tixSeatDisplay">{{ $passesData[0]['category'] ?? $seatOrCategory }}</div>
                 </div>
             </div>
 
-            {{-- Info Pemegang Tiket --}}
+            {{-- Info Pemegang Tiket (Kiri) & No Identitas Sensor (Kanan) --}}
             <div class="tix-attendee-row">
-                <span>Pemegang:</span>
-                <span class="tix-attendee-name" id="tixHolderDisplay">
-                    {{ $activePass->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket') }}
-                </span>
+                <div class="tix-attendee-col">
+                    <span class="tix-attendee-label">Pemegang:</span>
+                    <span class="tix-attendee-val" id="tixHolderDisplay">
+                        {{ $passesData[0]['holder_name'] ?? 'Pemegang Tiket' }}
+                    </span>
+                </div>
+                <div class="tix-attendee-col right">
+                    <span class="tix-attendee-label">No. Identitas:</span>
+                    <span class="tix-attendee-val" id="tixNikDisplay">
+                        {{ $passesData[0]['holder_nik'] ?? '—' }}
+                    </span>
+                </div>
             </div>
 
-            {{-- Barcode Section (Selalu Tampil di Center di Bawah Pemegang) --}}
-            <div class="tix-barcode-wrap" onclick="openQrModal()" style="cursor:pointer;" title="Ketuk untuk perbesar QR Masuk Gate">
-                <div class="tix-code-text" id="tixCodeDisplay">
-                    {{ $activePass->ticket_code ?? $order->order_number }}
+            {{-- Image 2: Pindai kode ini di Gerbang + QR Code + Code + Dicetak --}}
+            <div class="tix-qr-section">
+                <div class="tix-qr-title">Pindai kode ini di Gerbang</div>
+                <div class="tix-qr-box">
+                    <img id="tixQrImageDisplay" src="{{ $passesData[0]['qr_image'] ?? '' }}" alt="QR Code Gate Pass">
                 </div>
-                <div class="tix-barcode-svg-box">
-                    <svg id="ticketBarcodeSvg"></svg>
+                <div class="tix-qr-code-text" id="tixCodeDisplay">
+                    {{ $passesData[0]['ticket_code'] ?? $order->order_number }}
                 </div>
-                <div style="font-size:0.68rem; color:#94a3b8; margin-top:0.35rem; font-weight:500; letter-spacing:0.2px;">
-                    Ketuk barcode untuk QR Masuk &raquo;
+                <div class="tix-qr-printed-text" id="tixPrintDateDisplay">
+                    Dicetak : {{ $passesData[0]['printed_at'] ?? date('d F Y H.i.s') }}
                 </div>
             </div>
         </div>
 
-        {{-- Bottom Floating Controls --}}
-        <div class="tix-controls-bar" style="justify-content:center;">
-            {{-- Save / Download PDF Button --}}
-            <a href="{{ $ticketPdfUrl }}" class="tix-save-btn" title="Simpan / Unduh E-Tiket PDF" target="_blank" download style="width:auto; border-radius:999px; padding:0 1.5rem; gap:0.6rem; font-size:0.88rem; font-weight:600; font-family:inherit; text-decoration:none;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                <span>Simpan Tiket</span>
-            </a>
-        </div>
+        @if(count($passesData) > 1)
+            <div class="tix-swipe-hint">
+                Geser tiket atau ketuk panah untuk melihat tiket lainnya
+            </div>
+        @endif
 
     </div>
 </div>
-
-{{-- ── Modal Gate Pass QR Code ── --}}
-<div class="tix-modal-backdrop" id="qrModalBackdrop" onclick="closeQrModal(event)">
-    <div class="tix-modal-card" onclick="event.stopPropagation()">
-        <button type="button" class="tix-modal-close" onclick="closeQrModal()">&times;</button>
-        <div style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem;">
-            Gate Pass QR Code
-        </div>
-        <div style="font-size:0.78rem; color:#64748b;">
-            Tunjukkan kode ini kepada petugas di gate masuk
-        </div>
-
-        <div class="tix-modal-qr-box">
-            @php
-                $qrBase64 = \App\Services\SimpleQrCode::base64($activePass->ticket_code ?? $order->order_number);
-            @endphp
-            <img id="tixModalQrImg" src="{{ $qrBase64 }}" alt="Gate QR Code">
-        </div>
-
-        <div style="font-family:monospace; font-size:0.88rem; font-weight:800; color:#0f172a; letter-spacing:1px; margin-bottom:0.4rem;" id="tixModalCode">
-            {{ $activePass->ticket_code ?? $order->order_number }}
-        </div>
-
-        <div style="font-size:0.82rem; color:#475569; margin-bottom:1rem;" id="tixModalHolder">
-            {{ $activePass->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket') }}
-        </div>
-
-        <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:0.75rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:999px;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Siap Dipindai di Gate Event
-        </div>
-    </div>
-</div>
-
-{{-- Toast Notification --}}
-<div class="tix-toast" id="tixToast">Tautan tiket berhasil disalin!</div>
-
-{{-- JsBarcode Library --}}
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
 <script>
     // Data Tiket untuk Multi-Pass
     const ticketPasses = @json($passesData);
-
     let currentPassIndex = 0;
 
-    function renderBarcode(code) {
-        try {
-            if (window.JsBarcode) {
-                JsBarcode("#ticketBarcodeSvg", code, {
-                    format: "CODE128",
-                    width: 2.1,
-                    height: 56,
-                    displayValue: false,
-                    lineColor: "#0f172a",
-                    margin: 0,
-                    background: "transparent"
-                });
-            } else {
-                renderFallbackBarcode(code);
-            }
-        } catch (e) {
-            renderFallbackBarcode(code);
-        }
-    }
-
-    // Fallback Barcode SVG jika CDN offline / terhalang
-    function renderFallbackBarcode(code) {
-        const svg = document.getElementById('ticketBarcodeSvg');
-        if (!svg) return;
-        let rects = '';
-        let x = 4;
-        for (let i = 0; i < code.length; i++) {
-            const charCode = code.charCodeAt(i);
-            const w1 = (charCode % 3) + 1.8;
-            const w2 = ((charCode * 2) % 3) + 1.5;
-            rects += `<rect x="${x}" y="0" width="${w1}" height="56" fill="#0f172a" />`;
-            x += w1 + 2.2;
-            rects += `<rect x="${x}" y="0" width="${w2}" height="56" fill="#0f172a" />`;
-            x += w2 + 2.5;
-        }
-        svg.setAttribute('viewBox', `0 0 ${Math.max(x + 4, 220)} 56`);
-        svg.innerHTML = rects;
-    }
-
-    function switchTicketPass(index) {
-        if (!ticketPasses[index]) return;
+    function updateTicketPass(index) {
+        if (!ticketPasses || !ticketPasses[index]) return;
         currentPassIndex = index;
-
-        // Update pills
-        document.querySelectorAll('.tix-tab-pill').forEach((btn, i) => {
-            btn.classList.toggle('active', i === index);
-        });
-
         const pass = ticketPasses[index];
-        document.getElementById('tixHolderDisplay').textContent = pass.holder_name;
-        document.getElementById('tixCodeDisplay').textContent = pass.ticket_code;
-        document.getElementById('tixModalCode').textContent = pass.ticket_code;
-        document.getElementById('tixModalHolder').textContent = pass.holder_name;
-        document.getElementById('tixModalQrImg').src = pass.qr_image;
 
-        renderBarcode(pass.ticket_code);
+        // Update Counter Pager "1 / N"
+        const currEl = document.getElementById('tixCurrentIndexDisplay');
+        if (currEl) currEl.textContent = (index + 1);
+
+        // Update Holder Name
+        const holderEl = document.getElementById('tixHolderDisplay');
+        if (holderEl) holderEl.textContent = pass.holder_name;
+
+        // Update Masked NIK
+        const nikEl = document.getElementById('tixNikDisplay');
+        if (nikEl) nikEl.textContent = pass.holder_nik || '—';
+
+        // Update Kategori
+        const catEl = document.getElementById('tixSeatDisplay');
+        if (catEl && pass.category) catEl.textContent = pass.category;
+
+        // Update QR Image
+        const qrEl = document.getElementById('tixQrImageDisplay');
+        if (qrEl && pass.qr_image) qrEl.src = pass.qr_image;
+
+        // Update Ticket Code Text
+        const codeEl = document.getElementById('tixCodeDisplay');
+        if (codeEl) codeEl.textContent = pass.ticket_code;
+
+        // Update Printed Date
+        const printEl = document.getElementById('tixPrintDateDisplay');
+        if (printEl && pass.printed_at) printEl.textContent = 'Dicetak : ' + pass.printed_at;
     }
 
-    function handleGoBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = "{{ route('home') }}";
-        }
+    function prevTicketPass() {
+        if (!ticketPasses || ticketPasses.length <= 1) return;
+        const newIdx = (currentPassIndex - 1 + ticketPasses.length) % ticketPasses.length;
+        updateTicketPass(newIdx);
     }
 
-    function shareTicket() {
-        const shareData = {
-            title: 'Tiket Event: {{ addslashes($product->name ?? "E-Tiket") }}',
-            text: 'Akses e-tiket resmi {{ addslashes($product->name ?? "") }} di buyle.id',
-            url: window.location.href
-        };
+    function nextTicketPass() {
+        if (!ticketPasses || ticketPasses.length <= 1) return;
+        const newIdx = (currentPassIndex + 1) % ticketPasses.length;
+        updateTicketPass(newIdx);
+    }
 
-        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-            navigator.share(shareData).catch(() => {});
-        } else {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    showToast('Tautan tiket berhasil disalin!');
-                });
+    // Touch Swipe Gesture pada Ticket Card
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const cardContainer = document.getElementById('tixCardContainer');
+    if (cardContainer) {
+        cardContainer.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        cardContainer.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleCardSwipe();
+        }, { passive: true });
+    }
+
+    function handleCardSwipe() {
+        if (!ticketPasses || ticketPasses.length <= 1) return;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+            if (diff < 0) {
+                nextTicketPass();
             } else {
-                showToast('Tautan: ' + window.location.href);
+                prevTicketPass();
             }
         }
     }
-
-    function showToast(msg) {
-        const toast = document.getElementById('tixToast');
-        if (!toast) return;
-        toast.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2800);
-    }
-
-    function openQrModal() {
-        const modal = document.getElementById('qrModalBackdrop');
-        if (modal) modal.classList.add('open');
-    }
-
-    function closeQrModal(e) {
-        if (!e || e.target.id === 'qrModalBackdrop' || e.classList?.contains('tix-modal-close')) {
-            const modal = document.getElementById('qrModalBackdrop');
-            if (modal) modal.classList.remove('open');
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const initialCode = ticketPasses[0]?.ticket_code || '{{ $activePass->ticket_code ?? $order->order_number }}';
-        renderBarcode(initialCode);
-    });
 </script>
 
 </body>
