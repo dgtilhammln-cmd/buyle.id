@@ -34,8 +34,8 @@
         }
 
         /* ═══════════════════════════════════════
-                                                                                                                       PAGE HERO — 100% sama dengan /products
-                                                                                                                    ═══════════════════════════════════════ */
+                                                                                                                               PAGE HERO — 100% sama dengan /products
+                                                                                                                            ═══════════════════════════════════════ */
         .sv-hero-premium {
             position: relative;
             padding: 9rem 1.5rem 5rem;
@@ -446,8 +446,8 @@
         }
 
         /* ══════════════════════════════════════════════════════
-                                                                                                                           PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
-                                                                                                                        ══════════════════════════════════════════════════════ */
+                                                                                                                                   PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
+                                                                                                                                ══════════════════════════════════════════════════════ */
         .buyle-orbit-section {
             position: relative;
             padding: 8.5rem 1.5rem 5rem;
@@ -1145,10 +1145,10 @@
         }
 
         /* ── Flow Panels Wrapper – CSS Grid Stacking ──
-                                                                                                                   Kedua panel menempati cell yang sama (grid-area: 1/1)
-                                                                                                                   sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
-                                                                                                                   Visibility dikendalikan via opacity + pointer-events agar
-                                                                                                                   CSS transition dapat berjalan (display:none tidak bisa di-animate). */
+                                                                                                                           Kedua panel menempati cell yang sama (grid-area: 1/1)
+                                                                                                                           sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
+                                                                                                                           Visibility dikendalikan via opacity + pointer-events agar
+                                                                                                                           CSS transition dapat berjalan (display:none tidak bisa di-animate). */
         .buyle-flow-panels-wrap {
             display: grid;
             grid-template-columns: 1fr;
@@ -5253,8 +5253,8 @@
                     </div>
                     <div class="cv-adv-card-num">⚡</div>
                     <div class="cv-adv-card-title">Web & Bio Link Builder</div>
-                    <div class="cv-adv-card-desc">Bikin landing page dan bio link toko online kustom instan tanpa koding.
-                        Dukungan kustom domain, tema estetik, formulir order, dan analitik pengunjung.</div>
+                    <div class="cv-adv-card-desc">Bikin landing page dan link in bio kustom instan tanpa koding.
+                        Dukungan kustom domain, tema premium, dan analitik pengunjung.</div>
                 </div>
 
                 {{-- Card 3: Whitelabel & Jual Produk Orang (Affiliate / Reseller) — Gray --}}

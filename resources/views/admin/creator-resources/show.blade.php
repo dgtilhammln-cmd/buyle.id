@@ -536,7 +536,7 @@
                     Pengaturan Custom Domain & Verifikasi Site (Centralized Control)
                 </div>
                 <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
-                    Seluruh kontrol domain, pemetaan toko, verifikasi TXT, dan pemeriksaan SSL dikelola penuh di sini.
+                    Seluruh kontrol domain, pemetaan creator, verifikasi TXT, dan pemeriksaan SSL dikelola penuh di sini.
                 </div>
             </div>
             <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">

@@ -24,7 +24,9 @@
         $incomeThisMonth = $gmv;
     }
 
-    $bioUrl = url('/' . $seller->username);
+    $storeUrl = url('/' . ($seller->username ?? ''));
+    $websiteUrl = url('/c/' . ($seller->username ?? ''));
+    $bioUrl = $storeUrl;
 
     $tierInfo = $creatorProfile ? $creatorProfile->getTierInfo($gmv ?? null) : [
         'name' => 'PERINTIS',
@@ -711,51 +713,75 @@
             margin-top: 2px;
         }
     </style>
-    {{-- Interactive Share Modal (Tanpa Alert Browser) --}}
+    {{-- Interactive Share Modal (Compact 2 URL Cards: Digital Store & Website) --}}
     <div id="shareStoreModal"
-        style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;">
+        style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;"
+        onclick="if(event.target===this) closeShareStoreModal()">
         <div
-            style="background:#ffffff; border-radius:26px; max-width:400px; width:100%; padding:1.75rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; animation:modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+            style="background:#ffffff; border-radius:26px; max-width:410px; width:100%; padding:1.75rem 1.5rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; animation:modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+            
+            {{-- Tombol X di Pojok Kanan Atas --}}
+            <button type="button" onclick="closeShareStoreModal()"
+                style="position:absolute; top:1.1rem; right:1.1rem; width:34px; height:34px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:1.15rem; cursor:pointer; transition:all 0.15s ease;"
+                onmouseover="this.style.background='#fee2e2'; this.style.color='#ef4444'; this.style.borderColor='#fca5a5';"
+                onmouseout="this.style.background='#f8fafc'; this.style.color='#64748b'; this.style.borderColor='#e2e8f0';"
+                title="Tutup Modal">
+                <i class="ph-bold ph-x"></i>
+            </button>
+
             <div
                 style="width:48px; height:48px; border-radius:50%; background:#ecfdf5; color:#1eb349; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.4rem;">
                 <i class="ph-bold ph-share-network"></i>
             </div>
-            <h3 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.35rem;">Bagikan Digital Store</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem; line-height:1.4;">
-                Salin tautan atau bagikan langsung ke media sosial untuk menjangkau calon pembeli.
+            <h3 style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0 0 0.35rem;">Bagikan Digital Store</h3>
+            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.35rem; line-height:1.4;">
+                Salin tautan atau buka langsung Digital Store dan Website Anda.
             </p>
 
-            {{-- Link Box --}}
-            <div
-                style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; margin-bottom:1.25rem; gap:0.5rem;">
-                <input type="text" id="shareStoreUrlInput" value="{{ $bioUrl }}" readonly
-                    style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.78rem; color:#334155; outline:none; text-overflow:ellipsis;">
-                <button type="button" id="copyShareBtn" onclick="copyStoreUrl()"
-                    style="padding:0.5rem 0.9rem; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
-                    <i class="ph-bold ph-copy" id="copyIcon"></i>
-                    <span id="copyBtnText">Salin</span>
-                </button>
+            {{-- CARD 1: DIGITAL STORE (https://buyle.id/username) --}}
+            <div style="text-align:left; margin-bottom:1rem;">
+                <label style="display:block; font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem;">
+                    Digital Store
+                </label>
+                <div style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; gap:0.45rem;">
+                    <input type="text" id="shareStoreUrlInput" value="{{ $storeUrl }}" readonly
+                        style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.8rem; color:#334155; font-weight:600; outline:none; text-overflow:ellipsis; min-width:0;">
+                    
+                    {{-- Icon Salin --}}
+                    <button type="button" onclick="copyStoreLink('shareStoreUrlInput', this)" title="Salin Link Digital Store"
+                        style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s ease;">
+                        <i class="ph-bold ph-copy" style="font-size:1.05rem;"></i>
+                    </button>
+                    {{-- Icon Buka --}}
+                    <a href="{{ $storeUrl }}" target="_blank" title="Buka Digital Store"
+                        style="width:34px; height:34px; border-radius:10px; background:#0f172a; border:1px solid #0f172a; color:#ffffff; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0; transition:all 0.15s ease;">
+                        <i class="ph-bold ph-arrow-square-out" style="font-size:1.05rem;"></i>
+                    </a>
+                </div>
             </div>
 
-            {{-- Social Share Buttons --}}
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:1.25rem;">
-                <a href="https://api.whatsapp.com/send?text={{ urlencode('Halo! Kunjungi katalog dan toko resmi saya di: ' . $bioUrl) }}"
-                    target="_blank"
-                    style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#25d366; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none; box-shadow:0 3px 10px rgba(37,211,102,0.25);">
-                    <i class="ph-bold ph-whatsapp-logo" style="font-size:1.1rem;"></i>
-                    WhatsApp
-                </a>
-                <a href="{{ $bioUrl }}" target="_blank"
-                    style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#0f172a; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none;">
-                    <i class="ph-bold ph-arrow-square-out" style="font-size:1.1rem;"></i>
-                    Buka Store
-                </a>
+            {{-- CARD 2: WEBSITE (https://buyle.id/c/username) --}}
+            <div style="text-align:left; margin-bottom:0.5rem;">
+                <label style="display:block; font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem;">
+                    Website
+                </label>
+                <div style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; gap:0.45rem;">
+                    <input type="text" id="shareWebsiteUrlInput" value="{{ $websiteUrl }}" readonly
+                        style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.8rem; color:#334155; font-weight:600; outline:none; text-overflow:ellipsis; min-width:0;">
+                    
+                    {{-- Icon Salin --}}
+                    <button type="button" onclick="copyStoreLink('shareWebsiteUrlInput', this)" title="Salin Link Website"
+                        style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s ease;">
+                        <i class="ph-bold ph-copy" style="font-size:1.05rem;"></i>
+                    </button>
+                    {{-- Icon Buka --}}
+                    <a href="{{ $websiteUrl }}" target="_blank" title="Buka Website"
+                        style="width:34px; height:34px; border-radius:10px; background:#0f172a; border:1px solid #0f172a; color:#ffffff; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0; transition:all 0.15s ease;">
+                        <i class="ph-bold ph-arrow-square-out" style="font-size:1.05rem;"></i>
+                    </a>
+                </div>
             </div>
 
-            <button type="button" onclick="closeShareStoreModal()"
-                style="width:100%; padding:0.7rem; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:600; font-size:0.8rem; cursor:pointer;">
-                Tutup
-            </button>
         </div>
     </div>
 
@@ -768,22 +794,25 @@
             const m = document.getElementById('shareStoreModal');
             if (m) m.style.display = 'none';
         }
-        function copyStoreUrl() {
-            const input = document.getElementById('shareStoreUrlInput');
-            if (input) {
-                navigator.clipboard.writeText(input.value);
-                const btn = document.getElementById('copyShareBtn');
-                const text = document.getElementById('copyBtnText');
-                const icon = document.getElementById('copyIcon');
-                if (text) text.innerText = 'Tersalin!';
-                if (icon) icon.className = 'ph-bold ph-check';
-                if (btn) btn.style.background = '#059669';
-                setTimeout(() => {
-                    if (text) text.innerText = 'Salin';
-                    if (icon) icon.className = 'ph-bold ph-copy';
-                    if (btn) btn.style.background = 'linear-gradient(135deg,#1eb349,#16a34a)';
-                }, 2000);
-            }
+        function copyStoreLink(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            navigator.clipboard.writeText(input.value).then(() => {
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    icon.className = 'ph-bold ph-check';
+                    btn.style.background = '#16a34a';
+                    btn.style.color = '#ffffff';
+                    setTimeout(() => {
+                        icon.className = 'ph-bold ph-copy';
+                        btn.style.background = '#f0fdf4';
+                        btn.style.color = '#16a34a';
+                    }, 1800);
+                }
+            }).catch(() => {
+                input.select();
+                document.execCommand('copy');
+            });
         }
     </script>
 @endsection

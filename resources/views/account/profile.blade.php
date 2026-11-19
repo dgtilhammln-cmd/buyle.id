@@ -51,7 +51,7 @@
                     </div>
                     <input type="text" id="username" class="form-input" value="{{ $user->username }}" readonly disabled
                            style="background:#F1F5F9; color:#64748B; font-weight:600; cursor:not-allowed; border-color:#E2E8F0;">
-                    <p style="font-size:0.72rem; color:#94A3B8; margin-top:0.25rem;">Username permanen dan terhubung dengan slug link Web Toko &amp; Bio Anda (<strong>buyle.id/{{ $user->username }}</strong>).</p>
+                    <p style="font-size:0.72rem; color:#94A3B8; margin-top:0.25rem;">Username permanen dan terhubung dengan slug link Web &amp; Bio Anda (<strong>buyle.id/{{ $user->username }}</strong>).</p>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="email">Email <span>*</span></label>
