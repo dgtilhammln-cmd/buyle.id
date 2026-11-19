@@ -6,63 +6,49 @@
     <style>
 
         /* ════════════════════════════════════════
-           Mobile Sticky Header – Payout Settings
-           (sama persis creator/products, iOS safe zone)
+           Mobile Header – Rekening & Penarikan
+           100% SAMA PERSIS dengan Kelola Produk
         ════════════════════════════════════════ */
         .cr-mob-page-header {
-            display: none; /* hidden on desktop */
+            display: none;
         }
 
-        @media (max-width: 1024px) {
-            /* Tampilkan header mobile */
+        @media (max-width: 991px) {
             .cr-mob-page-header {
-                display: flex;
+                display: flex !important;
                 align-items: center;
                 justify-content: space-between;
-                position: sticky;
-                top: 0;
-                z-index: 998;
-                width: 100%;
-                background: #ffffff;
-                border-bottom: 1px solid #e2e8f0;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-                padding: max(0.8rem, calc(0.6rem + env(safe-area-inset-top, 0px))) 1rem 0.75rem;
-                box-sizing: border-box;
-                margin-bottom: 1rem;
-                gap: 0.5rem;
+                padding: max(0.65rem, calc(0.5rem + env(safe-area-inset-top, 0px))) 0 1rem;
+                margin-bottom: 0.25rem;
             }
 
-            .cr-mob-page-header .mph-btn {
-                width: 36px;
-                height: 36px;
+            .cr-mob-page-header .prod-mobile-btn {
+                width: 40px;
+                height: 40px;
                 border-radius: 50%;
-                background: #f8fafc;
-                border: 1px solid #e2e8f0;
+                background: #ffffff;
+                border: 1.5px solid #f1ece4;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: #334155;
-                text-decoration: none;
-                cursor: pointer;
-                flex-shrink: 0;
-                transition: background 0.18s, border-color 0.18s;
-            }
-
-            .cr-mob-page-header .mph-btn:hover {
-                background: #f1f5f9;
-                border-color: #cbd5e1;
-            }
-
-            .cr-mob-page-header .mph-title {
-                font-size: 0.95rem;
-                font-weight: 700;
                 color: #0f172a;
-                text-align: center;
-                flex: 1;
-                padding: 0 0.25rem;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+                cursor: pointer;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .cr-mob-page-header .prod-mobile-btn:active {
+                transform: scale(0.92);
+            }
+
+            .cr-mob-page-header .prod-mobile-title {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.01em;
                 font-family: 'Montserrat', sans-serif;
             }
 
@@ -71,7 +57,7 @@
                 display: none !important;
             }
 
-            /* Kompres padding atas konten karena sudah ada sticky header */
+            /* Kompres padding atas konten */
             .cr-main-canvas {
                 padding-top: 0 !important;
             }
@@ -1095,26 +1081,34 @@
 
 @section('content')
 
-    {{-- ════ Mobile Sticky Header (sama persis creator/products, iOS safe zone) ════ --}}
+    {{-- ════ Mobile Header (100% sama persis Kelola Produk) ════ --}}
     <div class="cr-mob-page-header">
-        {{-- Kiri: Tombol Back --}}
-        <a href="{{ url()->previous() }}" class="mph-btn" title="Kembali">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <polyline points="15 18 9 12 15 6"></polyline>
+        {{-- Kiri: Back button (line + polyline persis sama) --}}
+        <button type="button" class="prod-mobile-btn" onclick="handlePayoutMobileBack()" title="Kembali">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-        </a>
-
+        </button>
         {{-- Tengah: Judul --}}
-        <span class="mph-title">Rekening & Penarikan</span>
-
-        {{-- Kanan: Tombol Home buyle --}}
-        <a href="{{ url('/') }}" class="mph-btn" title="Ke beranda buyle.id">
-            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        <h2 class="prod-mobile-title">Rekening & Penarikan</h2>
+        {{-- Kanan: Bell notif (sama persis) --}}
+        <button type="button" class="prod-mobile-btn" onclick="window.location.href='{{ route('creator.app.index') }}'" title="Notifikasi">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
             </svg>
-        </a>
+        </button>
     </div>
+    <script>
+    function handlePayoutMobileBack() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "{{ route('creator.app.index') }}";
+        }
+    }
+    </script>
 
     @php
         $banks = [
