@@ -436,8 +436,11 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
 });
 
 Route::get('/profile', function() {
-    if (auth()->check() && (auth()->user()->isSeller() || auth()->user()->hasRole('seller'))) {
-        return redirect()->route('creator.profile.edit');
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->role === 'seller' || $user->role === 'admin') {
+            return redirect()->route('creator.profile.edit');
+        }
     }
     return redirect()->route('profile');
 });

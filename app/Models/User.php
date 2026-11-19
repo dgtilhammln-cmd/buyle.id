@@ -33,6 +33,11 @@ class User extends Authenticatable
         return $this->role === 'pos_cashier' || !is_null($this->parent_seller_id);
     }
 
+    public function isSeller(): bool
+    {
+        return $this->role === 'seller' || $this->role === 'admin';
+    }
+
     public function parentSeller()
     {
         return $this->belongsTo(User::class, 'parent_seller_id');
