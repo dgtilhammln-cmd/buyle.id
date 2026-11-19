@@ -9,9 +9,9 @@
         rel="stylesheet">
     <style>
         /* ════════════════════════════════════════
-           Mobile Header – Profil & Toko
-           100% SAMA PERSIS dengan Kelola Produk
-        ════════════════════════════════════════ */
+                           Mobile Header – Profil & Toko
+                           100% SAMA PERSIS dengan Kelola Produk
+                        ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
@@ -35,7 +35,7 @@
                 align-items: center;
                 justify-content: center;
                 color: #0f172a;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
                 cursor: pointer;
                 text-decoration: none;
                 transition: all 0.2s ease;
@@ -663,6 +663,140 @@
         .switch-box input:checked+.switch-slider:before {
             transform: translateX(24px);
         }
+
+        /* ── Searchable Role Selector ── */
+        .role-searchable-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .role-selected-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.65rem 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .role-selected-trigger:hover, .role-selected-trigger.active {
+            border-color: #1eb349;
+            box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
+        }
+        .role-trigger-left {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            min-width: 0;
+            flex: 1;
+        }
+        .role-trigger-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #f0fdf4;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .role-trigger-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .role-trigger-sub {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .role-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 16px 36px rgba(15,23,42,0.12);
+            z-index: 9999;
+            padding: 0.75rem;
+            display: none;
+        }
+        .role-search-box {
+            position: relative;
+            margin-bottom: 0.65rem;
+        }
+        .role-search-input {
+            width: 100%;
+            height: 38px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0 0.75rem 0 2.2rem;
+            font-size: 0.82rem;
+            color: #0f172a;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+        }
+        .role-search-input:focus {
+            border-color: #1eb349;
+            background: #ffffff;
+        }
+        .role-search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+        .role-options-list {
+            max-height: 250px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-right: 2px;
+            scrollbar-width: thin;
+        }
+        .role-option-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.55rem 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .role-option-item:hover {
+            background: #f1f5f9;
+        }
+        .role-option-item.selected {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        .role-option-item.selected .role-option-name {
+            color: #166534;
+        }
+        .role-option-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .role-option-desc {
+            font-size: 0.7rem;
+            color: #64748b;
+            font-weight: 500;
+        }
     </style>
 @endsection
 
@@ -680,7 +814,8 @@
         {{-- Tengah: Judul --}}
         <h2 class="prod-mobile-title">Profil & Toko</h2>
         {{-- Kanan: Bell notif (sama persis) --}}
-        <button type="button" class="prod-mobile-btn" onclick="window.location.href='{{ route('creator.app.index') }}'" title="Notifikasi">
+        <button type="button" class="prod-mobile-btn" onclick="window.location.href='{{ route('creator.app.index') }}'"
+            title="Notifikasi">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -688,13 +823,13 @@
         </button>
     </div>
     <script>
-    function handleProfileMobileBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = "{{ route('creator.app.index') }}";
+        function handleProfileMobileBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "{{ route('creator.app.index') }}";
+            }
         }
-    }
     </script>
 
     <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
@@ -761,25 +896,74 @@
                             @error('store_name')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 
+                        {{-- Nama Pemilik Sesuai Kartu Identitas --}}
                         <div class="form-group full">
-                            <label class="form-label">Username &amp; Slug URL Toko (Terpusat) <span style="color:#ef4444">*</span></label>
-                            <div class="slug-wrap" style="{{ !$user->canChangeUsername() ? 'background:#F1F5F9; opacity:0.85;' : '' }}">
+                            <label class="form-label">Nama Pemilik (Sesuai Kartu Identitas / KTP)</label>
+                            <input type="text" name="owner_name" value="{{ old('owner_name', $profile->owner_name ?? '') }}"
+                                class="form-input" placeholder="Nama lengkap sesuai KTP / Paspor">
+                            <span class="form-hint">Digunakan untuk verifikasi identitas resmi, penarikan saldo, dan legalitas akun.</span>
+                            @error('owner_name')<span class="form-error">{{ $message }}</span>@enderror
+                        </div>
+
+                        {{-- Usia & Status Pekerjaan (Grid 2 Kolom) --}}
+                        <div class="form-group full" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+                            <div>
+                                <label class="form-label">Usia (Tahun)</label>
+                                <input type="number" name="age" value="{{ old('age', $profile->age ?? '') }}"
+                                    class="form-input" placeholder="Contoh: 24" min="10" max="100">
+                                @error('age')<span class="form-error">{{ $message }}</span>@enderror
+                            </div>
+                            <div>
+                                <label class="form-label">Status Aktivitas / Profesi</label>
+                                @php
+                                    $statuses = [
+                                        'Pelajar / Mahasiswa' => 'Pelajar / Mahasiswa',
+                                        'Pekerja / Karyawan' => 'Pekerja / Karyawan',
+                                        'Freelancer / Pekerja Lepas' => 'Freelancer / Pekerja Lepas',
+                                        'Wirausaha / Pebisnis' => 'Wirausaha / Pebisnis',
+                                        'Profesional / Praktisi' => 'Profesional / Praktisi',
+                                        'Lainnya' => 'Lainnya / Belum Bekerja',
+                                    ];
+                                    $selectedStatus = old('occupation_status', $profile->occupation_status ?? '');
+                                @endphp
+                                <select name="occupation_status" class="form-input">
+                                    <option value="">— Pilih Status —</option>
+                                    @foreach($statuses as $stKey => $stLabel)
+                                        <option value="{{ $stKey }}" {{ $selectedStatus === $stKey ? 'selected' : '' }}>{{ $stLabel }}</option>
+                                    @endforeach
+                                </select>
+                                @error('occupation_status')<span class="form-error">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group full">
+                            <label class="form-label">Username &amp; Slug URL Toko (Terpusat) <span
+                                    style="color:#ef4444">*</span></label>
+                            <div class="slug-wrap"
+                                style="{{ !$user->canChangeUsername() ? 'background:#F1F5F9; opacity:0.85;' : '' }}">
                                 <span class="slug-prefix">buyle.id/</span>
                                 <input type="text" name="username" class="slug-input"
-                                    value="{{ old('username', $profile->store_slug ?: $user->username) }}" placeholder="username-anda"
-                                    maxlength="30"
-                                    {{ !$user->canChangeUsername() ? 'readonly' : '' }}
+                                    value="{{ old('username', $profile->store_slug ?: $user->username) }}"
+                                    placeholder="username-anda" maxlength="30" {{ !$user->canChangeUsername() ? 'readonly' : '' }}
                                     style="{{ !$user->canChangeUsername() ? 'cursor:not-allowed; color:#64748B;' : '' }}">
                             </div>
                             <input type="hidden" name="store_slug" value="{{ $profile->store_slug ?: $user->username }}">
-                            
+
                             @if(!$user->canChangeUsername())
-                                <div style="margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:#B45309; background:#FEF3C7; padding:0.35rem 0.65rem; border-radius:8px;">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                    <span>Username terkunci (aturan platform: hanya boleh diganti 1x dalam 30 hari). Bisa diganti kembali pada <strong>{{ $user->nextUsernameChangeDate() }}</strong> ({{ $user->daysUntilUsernameChange() }} hari lagi).</span>
+                                <div
+                                    style="margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:#B45309; background:#FEF3C7; padding:0.35rem 0.65rem; border-radius:8px;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                    <span>Username terkunci (aturan platform: hanya boleh diganti 1x dalam 30 hari). Bisa
+                                        diganti kembali pada <strong>{{ $user->nextUsernameChangeDate() }}</strong>
+                                        ({{ $user->daysUntilUsernameChange() }} hari lagi).</span>
                                 </div>
                             @else
-                                <span class="form-hint">Username minimal 3 karakter &amp; maksimal 30 karakter. Slug URL toko (buyle.id/c/...) dan bio page (buyle.id/...) otomatis mengikuti username ini. <strong>Catatan: Mengganti username hanya diperbolehkan 1x dalam 1 bulan.</strong></span>
+                                <span class="form-hint">Slug URL Digital Store dan Web otomatis mengikuti username ini.
+                                    <strong>Catatan: Hanya boleh diganti 1x dalam 1 bulan.</strong></span>
                             @endif
                             @error('username')<span class="form-error">{{ $message }}</span>@enderror
                             @error('store_slug')<span class="form-error">{{ $message }}</span>@enderror
@@ -792,7 +976,8 @@
                                     style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
                                     <div style="display:flex; align-items:center; gap:0.5rem;">
                                         <span
-                                            style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 500; padding:0.2rem 0.5rem; border-radius:6px;">ACTIVE DOMAIN</span>
+                                            style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 500; padding:0.2rem 0.5rem; border-radius:6px;">ACTIVE
+                                            DOMAIN</span>
                                         <strong
                                             style="color:#166534; font-size:0.875rem;">https://{{ $profile->custom_domain }}</strong>
                                     </div>
@@ -802,34 +987,174 @@
                             </div>
                         @endif
 
+                        {{-- TIPE / PERAN CREATOR (SEARCHABLE & SINKRON DENGAN ONBOARDING) --}}
                         <div class="form-group full">
                             <label class="form-label">Tipe / Peran Creator</label>
                             @php
-                                $creatorTypes = [
-                                    'Content Creator' => 'Content Creator (Video, Edukasi & Lifestyle)',
-                                    'Affiliate Marketer' => 'Affiliate Marketer / Affiliator Digital',
-                                    'Graphic & UI/UX Designer' => 'Graphic, UI/UX & Visual Designer',
-                                    'Video Editor & Motion' => 'Video Editor, Animator & 3D Artist',
-                                    'Software Developer' => 'Software Developer / Programmer & Web Creator',
-                                    'Course Creator' => 'Course Creator & Instruktur / Mentor Online',
-                                    'Copywriter & Writer' => 'Copywriter, Penulis & Prompt Engineer',
-                                    'Digital Marketer' => 'Digital Marketer & Agency Kreatif',
-                                    'Konsultan & Coach' => 'Konsultan Bisnis / Digital Coach',
-                                    'Kreator Template & Aset' => 'Kreator Template (Notion, Canva, Figma, Spreadsheet, dll)',
-                                    'Fotografer & Videografer' => 'Fotografer & Kreator Media Visual',
-                                    'Audio & Music Producer' => 'Musisi, Sound Engineer & Audio Creator',
-                                    'Supplier / Vendor Digital' => 'Supplier / Vendor Produk Digital',
-                                    'Lainnya' => 'Lainnya / General Digital Creator',
+                                $creatorRoles = [
+                                    'event_organizer' => [
+                                        'name' => 'Event Organizer / Promotor',
+                                        'desc' => 'Konser, Festival, Acara, Seminar & Pengelola Tiket',
+                                        'icon' => 'ph-ticket',
+                                    ],
+                                    'vendor' => [
+                                        'name' => 'Vendor Acara & Perlengkapan',
+                                        'desc' => 'Vendor Sound, Panggung, Percetakan, Souvenir & Supplier',
+                                        'icon' => 'ph-storefront',
+                                    ],
+                                    'wedding_organizer' => [
+                                        'name' => 'Wedding Organizer & Planner',
+                                        'desc' => 'Perencana Pernikahan, MUA, Dekorasi & Undangan Digital',
+                                        'icon' => 'ph-heart',
+                                    ],
+                                    'creator_digital' => [
+                                        'name' => 'Produk Digital & Template',
+                                        'desc' => 'E-book, Template Notion/Canva, Preset, Software & Aset Digital',
+                                        'icon' => 'ph-file-code',
+                                    ],
+                                    'content_creator' => [
+                                        'name' => 'Content Creator & Influencer',
+                                        'desc' => 'Kreator Video, YouTuber, TikToker, Podcaster & Bio Link',
+                                        'icon' => 'ph-video-camera',
+                                    ],
+                                    'musisi_artis' => [
+                                        'name' => 'Musisi, Band & Artis',
+                                        'desc' => 'Musisi, Band Musik, Penyanyi, DJ, Audio Producer & Lagu',
+                                        'icon' => 'ph-music-notes',
+                                    ],
+                                    'fotografer_videografer' => [
+                                        'name' => 'Fotografer & Videografer',
+                                        'desc' => 'Jasa Dokumentasi Foto, Video Shooting, Studio & Editing',
+                                        'icon' => 'ph-camera',
+                                    ],
+                                    'jasa_digital' => [
+                                        'name' => 'Jasa & Freelance Kreatif',
+                                        'desc' => 'Desainer Grafis, UI/UX, Video Editor, Copywriter & Translator',
+                                        'icon' => 'ph-briefcase',
+                                    ],
+                                    'developer_software' => [
+                                        'name' => 'Software & Web Developer',
+                                        'desc' => 'Programmer, Web Developer, Pembuat Aplikasi & IT Consultant',
+                                        'icon' => 'ph-code',
+                                    ],
+                                    'penulis_edukator' => [
+                                        'name' => 'Penulis, Edukator & Mentor',
+                                        'desc' => 'Penulis Buku, Pengajar Kursus Online, Guru, Dosen & Coach',
+                                        'icon' => 'ph-graduation-cap',
+                                    ],
+                                    'fnb_resto' => [
+                                        'name' => 'F&B, Kafe & Restoran',
+                                        'desc' => 'Resto, Kafe, Katering, Kasir POS & Menu Pesanan Digital',
+                                        'icon' => 'ph-fork-knife',
+                                    ],
+                                    'umkm_brand' => [
+                                        'name' => 'UMKM & Brand Owner',
+                                        'desc' => 'Pemilik Brand Fisik, Fashion, Retail, Merchandise & Kerajinan',
+                                        'icon' => 'ph-tag',
+                                    ],
+                                    'agency_studio' => [
+                                        'name' => 'Agensi & Studio Kreatif',
+                                        'desc' => 'Creative Agency, Production House, Digital Agency & Advertising',
+                                        'icon' => 'ph-buildings',
+                                    ],
+                                    'media_partner' => [
+                                        'name' => 'Media Partner & Publikasi',
+                                        'desc' => 'Media Info Kota, Portal Berita, Radio & Media Publikasi Event',
+                                        'icon' => 'ph-broadcast',
+                                    ],
+                                    'komunitas_organisasi' => [
+                                        'name' => 'Komunitas & Organisasi',
+                                        'desc' => 'Komunitas Kreatif, Hobi, Komunitas Musik, Fans Club & Yayasan',
+                                        'icon' => 'ph-users-three',
+                                    ],
+                                    'affiliate_marketer' => [
+                                        'name' => 'Affiliate Marketer',
+                                        'desc' => 'Affiliator Digital, Reviewer Produk & Digital Marketer',
+                                        'icon' => 'ph-chart-line-up',
+                                    ],
+                                    'b2b_corporate' => [
+                                        'name' => 'B2B & Korporasi',
+                                        'desc' => 'Perusahaan, Distributor, Grosir & Penyedia Solusi Bisnis',
+                                        'icon' => 'ph-cube',
+                                    ],
+                                    'lainnya' => [
+                                        'name' => 'Lainnya / Umum',
+                                        'desc' => 'Kreator atau Model Bisnis Lainnya',
+                                        'icon' => 'ph-sparkle',
+                                    ],
                                 ];
-                                $selectedType = old('creator_type', $profile->creator_type ?? '');
+
+                                $selectedRoleKey = old('creator_type', $profile->creator_type ?: ($user->business_persona ?? ''));
+                                if (!isset($creatorRoles[$selectedRoleKey])) {
+                                    foreach ($creatorRoles as $k => $info) {
+                                        if (strcasecmp($selectedRoleKey, $info['name']) === 0 || strcasecmp($selectedRoleKey, $k) === 0) {
+                                            $selectedRoleKey = $k;
+                                            break;
+                                        }
+                                    }
+                                }
+                                $currentRole = $creatorRoles[$selectedRoleKey] ?? null;
                             @endphp
-                            <select name="creator_type" class="form-input">
-                                <option value="">— Pilih Kategori Creator —</option>
-                                @foreach($creatorTypes as $key => $label)
-                                    <option value="{{ $key }}" {{ $selectedType === $key ? 'selected' : '' }}>{{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
+
+                            {{-- Hidden Input yang disubmit --}}
+                            <input type="hidden" name="creator_type" id="creatorTypeInput" value="{{ $selectedRoleKey }}">
+
+                            {{-- Searchable Dropdown Trigger & Panel --}}
+                            <div class="role-searchable-wrap" id="roleSearchableWrap">
+                                <div class="role-selected-trigger" id="roleTriggerBtn" onclick="toggleRoleDropdown(event)">
+                                    <div class="role-trigger-left">
+                                        <div class="role-trigger-icon" id="roleTriggerIcon">
+                                            <i class="ph-bold {{ $currentRole['icon'] ?? 'ph-user' }}"></i>
+                                        </div>
+                                        <div style="min-width: 0;">
+                                            <div class="role-trigger-text" id="roleTriggerTitle">
+                                                {{ $currentRole['name'] ?? '— Pilih Tipe / Peran Creator —' }}
+                                            </div>
+                                            <div class="role-trigger-sub" id="roleTriggerDesc">
+                                                {{ $currentRole['desc'] ?? 'Klik untuk mencari dan memilih peran Anda' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: #64748b; font-size: 0.9rem; flex-shrink: 0; margin-left: 0.5rem;">
+                                        <i class="ph-bold ph-caret-down" id="roleCaretIcon"></i>
+                                    </div>
+                                </div>
+
+                                {{-- Dropdown Search Menu --}}
+                                <div class="role-dropdown-menu" id="roleDropdownMenu">
+                                    <div class="role-search-box">
+                                        <i class="ph-bold ph-magnifying-glass role-search-icon"></i>
+                                        <input type="text" id="roleSearchInput" class="role-search-input"
+                                            placeholder="Ketik cari peran (misal: event, vendor, musik, desain...)"
+                                            oninput="filterRoleOptions(this.value)" autocomplete="off">
+                                    </div>
+                                    <div class="role-options-list" id="roleOptionsList">
+                                        @foreach($creatorRoles as $rKey => $rInfo)
+                                            <div class="role-option-item {{ $selectedRoleKey === $rKey ? 'selected' : '' }}"
+                                                data-key="{{ $rKey }}"
+                                                data-name="{{ $rInfo['name'] }}"
+                                                data-desc="{{ $rInfo['desc'] }}"
+                                                data-icon="{{ $rInfo['icon'] }}"
+                                                onclick="selectCreatorRole('{{ $rKey }}', '{{ addslashes($rInfo['name']) }}', '{{ addslashes($rInfo['desc']) }}', '{{ $rInfo['icon'] }}')">
+                                                <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex: 1;">
+                                                    <div style="width: 28px; height: 28px; border-radius: 7px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #16a34a; font-size: 0.95rem; flex-shrink: 0;">
+                                                        <i class="ph-bold {{ $rInfo['icon'] }}"></i>
+                                                    </div>
+                                                    <div style="min-width: 0;">
+                                                        <div class="role-option-name">{{ $rInfo['name'] }}</div>
+                                                        <div class="role-option-desc">{{ $rInfo['desc'] }}</div>
+                                                    </div>
+                                                </div>
+                                                @if($selectedRoleKey === $rKey)
+                                                    <span style="color: #16a34a; font-size: 0.9rem; flex-shrink: 0; margin-left: 0.5rem;">
+                                                        <i class="ph-bold ph-check"></i>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group full"
                                 style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
                                 <div
@@ -1001,8 +1326,13 @@
                 </div>
                 <div class="prof-card-body">
                     @error('social_links')
-                        <div style="background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.25rem; font-size:0.82rem; font-weight:700; display:flex; align-items:center; gap:0.6rem;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <div
+                            style="background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.25rem; font-size:0.82rem; font-weight:700; display:flex; align-items:center; gap:0.6rem;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
                             <span>{{ $message }}</span>
                         </div>
                     @enderror
@@ -1025,9 +1355,10 @@
                                     <path d="M9 18h6" />
                                     <path d="M10 22h4" />
                                 </svg>
-                                Aturan Pengisian Sosial Media:
+                                Penting!
                             </strong>
-                            Akun media sosial <strong>wajib diisi minimal 1 dan maksimal 3 akun utama</strong> (rekomendasi terbaik: WhatsApp, Instagram, dan TikTok).
+                            <strong>wajib diisi minimal 1 dan maksimal 3 akun utama</strong> (rekomendasi
+                            terbaik: WhatsApp, Instagram, dan TikTok).
                         </div>
                     </div>
 
@@ -1250,7 +1581,7 @@
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                         <circle cx="12" cy="10" r="3" />
                     </svg>
-                    Lokasi & Alamat Toko
+                    Lokasi & Alamat Anda
                 </div>
                 <div class="prof-card-body">
 
@@ -1267,7 +1598,7 @@
                                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                         <circle cx="12" cy="10" r="3" />
                                     </svg>
-                                    Isi Alamat Toko Otomatis
+                                    Isi Otomatis
                                 </div>
                                 <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
                                     Izinkan lokasi browser untuk mengisi Provinsi, Kabupaten/Kota, dan Alamat toko Anda
@@ -1465,7 +1796,7 @@
             const tabAliases = { 'lokasi': 'tab-location', 'identitas': 'tab-identity', 'seo': 'tab-seo', 'bio': 'tab-bio', 'pengiriman': 'tab-location', 'location': 'tab-location' };
             const resolvedTab = tabFromUrl ? (tabAliases[tabFromUrl] || `tab-${tabFromUrl}`) : null;
             const savedTab = resolvedTab || localStorage.getItem('prof_active_tab') || 'tab-identity';
-            
+
             @if($errors->has('username') || $errors->has('store_name') || $errors->has('store_description'))
                 activateTab('tab-identity');
             @elseif($errors->has('social_links'))
@@ -1487,6 +1818,71 @@
                 tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
                 tabPanes.forEach(p => p.classList.toggle('active', p.id === id));
             }
+
+            // ── Searchable Role Selector Functions ──
+            window.toggleRoleDropdown = function (e) {
+                if (e) e.stopPropagation();
+                const menu = document.getElementById('roleDropdownMenu');
+                const trigger = document.getElementById('roleTriggerBtn');
+                if (!menu) return;
+                const isOpen = menu.style.display === 'block';
+                menu.style.display = isOpen ? 'none' : 'block';
+                if (trigger) trigger.classList.toggle('active', !isOpen);
+                if (!isOpen) {
+                    const searchInput = document.getElementById('roleSearchInput');
+                    if (searchInput) {
+                        searchInput.value = '';
+                        filterRoleOptions('');
+                        setTimeout(() => searchInput.focus(), 60);
+                    }
+                    setTimeout(() => {
+                        document.addEventListener('click', function closeRoleMenu(ev) {
+                            const wrap = document.getElementById('roleSearchableWrap');
+                            if (wrap && !wrap.contains(ev.target)) {
+                                menu.style.display = 'none';
+                                if (trigger) trigger.classList.remove('active');
+                                document.removeEventListener('click', closeRoleMenu);
+                            }
+                        });
+                    }, 20);
+                }
+            };
+
+            window.filterRoleOptions = function (query) {
+                const q = (query || '').toLowerCase().trim();
+                const items = document.querySelectorAll('#roleOptionsList .role-option-item');
+                let found = 0;
+                items.forEach(item => {
+                    const name = (item.dataset.name || '').toLowerCase();
+                    const desc = (item.dataset.desc || '').toLowerCase();
+                    const key = (item.dataset.key || '').toLowerCase();
+                    const match = !q || name.includes(q) || desc.includes(q) || key.includes(q);
+                    item.style.display = match ? 'flex' : 'none';
+                    if (match) found++;
+                });
+            };
+
+            window.selectCreatorRole = function (key, name, desc, icon) {
+                const hiddenInput = document.getElementById('creatorTypeInput');
+                if (hiddenInput) hiddenInput.value = key;
+                const titleEl = document.getElementById('roleTriggerTitle');
+                if (titleEl) titleEl.textContent = name;
+                const descEl = document.getElementById('roleTriggerDesc');
+                if (descEl) descEl.textContent = desc;
+                const iconEl = document.getElementById('roleTriggerIcon');
+                if (iconEl) iconEl.innerHTML = `<i class="ph-bold ${icon}"></i>`;
+
+                // Update selected class di item list
+                document.querySelectorAll('#roleOptionsList .role-option-item').forEach(el => {
+                    el.classList.toggle('selected', el.dataset.key === key);
+                });
+
+                // Tutup dropdown
+                const menu = document.getElementById('roleDropdownMenu');
+                const trigger = document.getElementById('roleTriggerBtn');
+                if (menu) menu.style.display = 'none';
+                if (trigger) trigger.classList.remove('active');
+            };
 
             // ── SEO Live Preview ───────────────────────────────────────────────
             const titleInput = document.getElementById('metaTitle');
@@ -1869,103 +2265,94 @@
                 }
 
                 // ═══════════════════════════════════════════════════════════════════
-                // STEP 1: IP Geolocation dulu (instant, tanpa minta izin apapun)
-                //         → isi dropdown Provinsi & Kota langsung
+                // DETEKSI LOKASI GPS (WAJIB MINTA IZIN AKSES GPS BROWSER)
                 // ═══════════════════════════════════════════════════════════════════
-                let ipDone = false;
-                try {
-                    const ip = await fetch('https://ipapi.co/json/').then(r => r.json());
-                    if (ip?.latitude) {
-                        // Simpan koordinat & IP
-                        if (document.getElementById('latitude')) document.getElementById('latitude').value = ip.latitude;
-                        if (document.getElementById('longitude')) document.getElementById('longitude').value = ip.longitude;
-                        if (document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ip.ip || '';
-
-                        // Isi alamat sementara (akan di-upgrade GPS jika diizinkan)
-                        const af = document.querySelector('textarea[name="address"]');
-                        if (af && !af.value) af.value = [ip.city, ip.region, ip.country_name].filter(Boolean).join(', ');
-
-                        // Isi dropdown Provinsi & Kota dari IP
-                        await fillDropdowns(ip.region || '', ip.city || '');
-                        ipDone = true;
-
-                        // Tampilkan sukses
-                        setBadge('#F0FDF4', '#15803D', '#BBF7D0',
-                            '✔ <strong>Alamat Berhasil Terisi!</strong> Anda dapat mengeditnya jika diperlukan.');
-                        setBtn('Isi Ulang Alamat Otomatis');
-                    }
-                } catch (e) {
-                    // ipapi.co gagal → coba ipify untuk simpan IP saja
-                    fetch('https://api.ipify.org?format=json').then(r => r.json())
-                        .then(d => { if (d?.ip && document.getElementById('detected_ip')) document.getElementById('detected_ip').value = d.ip; })
-                        .catch(() => { });
-                }
-
-                if (!ipDone) {
-                    setBadge('#FEF2F2', '#991B1B', '#FECACA', '✕ Gagal mendeteksi lokasi. Periksa koneksi internet.');
+                if (!navigator.geolocation) {
+                    setBadge('#FEF2F2', '#991B1B', '#FECACA', '✕ Browser ini tidak mendukung fitur lokasi GPS.');
                     setBtn('Coba Lagi');
+                    return;
                 }
 
-                // ═══════════════════════════════════════════════════════════════════
-                // STEP 2: GPS di background (silent, tidak blokir user)
-                //         → kalau diizinkan, upgrade alamat ke level jalan
-                //         → kalau ditolak, tidak ada error, IP sudah cukup
-                // ═══════════════════════════════════════════════════════════════════
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        async function (pos) {
-                            // GPS berhasil! Upgrade koordinat ke akurat
-                            const lat = pos.coords.latitude;
-                            const lng = pos.coords.longitude;
-                            if (document.getElementById('latitude')) document.getElementById('latitude').value = lat;
-                            if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
+                // Tampilkan status meminta izin GPS
+                setBadge('#EFF6FF', '#1D4ED8', '#BFDBFE',
+                    '📡 <strong>Meminta Izin Lokasi GPS...</strong> Harap klik "Allow" atau "Izinkan" pada pop-up izin lokasi browser Anda.');
 
-                            try {
-                                // Nominatim Bahasa Indonesia → nama provinsi/kota cocok emsifa API
-                                const res = await fetch(
-                                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id&zoom=18&addressdetails=1`
-                                );
-                                const data = await res.json();
-                                if (data?.address) {
-                                    const a = data.address;
-                                    const stateName = a.state || a.province || a.region || '';
-                                    const cityName = a.city || a.regency || a.county || a.town || '';
-                                    const distName = a.suburb || a.quarter || a.neighbourhood || '';
-                                    const villName = a.village || a.hamlet || '';
-                                    const postCode = a.postcode || '';
+                navigator.geolocation.getCurrentPosition(
+                    async function (pos) {
+                        // GPS DISETUJUI & BERHASIL DIDAPATKAN
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        if (document.getElementById('latitude')) document.getElementById('latitude').value = lat;
+                        if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
 
-                                    // Upgrade Alamat Lengkap ke level jalan (akurat GPS)
-                                    const parts = [
-                                        a.road,
-                                        a.house_number ? 'No.' + a.house_number : null,
-                                        a.suburb,
-                                        villName,
-                                        cityName,
-                                        stateName
-                                    ].filter(Boolean);
-                                    const fullAddr = parts.length ? parts.join(', ') : (data.display_name || '');
-                                    const af = document.querySelector('textarea[name="address"]');
-                                    if (af && fullAddr) af.value = fullAddr;
+                        setBadge('#EFF6FF', '#1E40AF', '#BFDBFE',
+                            '📍 <strong>Koordinat GPS Diterima!</strong> Sedang menyinkronkan nama jalan, kelurahan, kecamatan, dan kota...');
 
-                                    // Isi Kode Pos dari GPS jika ada
-                                    if (postCode) {
-                                        const pcEl = document.getElementById('postal_code');
-                                        if (pcEl && !pcEl.value) pcEl.value = postCode;
-                                    }
+                        try {
+                            // Reverse geocoding presisi Bahasa Indonesia
+                            const res = await fetch(
+                                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id&zoom=18&addressdetails=1`
+                            );
+                            const data = await res.json();
+                            if (data?.address) {
+                                const a = data.address;
+                                const stateName = a.state || a.province || a.region || '';
+                                const cityName = a.city || a.regency || a.county || a.town || '';
+                                const distName = a.suburb || a.quarter || a.neighbourhood || '';
+                                const villName = a.village || a.hamlet || '';
+                                const postCode = a.postcode || '';
 
-                                    // Upgrade dropdown jika nama dari GPS lebih akurat (Bahasa Indonesia)
-                                    await fillDropdowns(stateName, cityName, distName, villName);
+                                // Susun alamat lengkap detail level jalan
+                                const parts = [
+                                    a.road,
+                                    a.house_number ? 'No. ' + a.house_number : null,
+                                    a.suburb,
+                                    villName,
+                                    cityName,
+                                    stateName
+                                ].filter(Boolean);
+                                const fullAddr = parts.length ? parts.join(', ') : (data.display_name || '');
+                                const af = document.querySelector('textarea[name="address"]');
+                                if (af && fullAddr) af.value = fullAddr;
 
-                                    // Update badge jadi GPS-verified
-                                    setBadge('#F0FDF4', '#15803D', '#BBF7D0',
-                                        '✔ <strong>Alamat Terisi dari GPS!</strong> Termasuk nama jalan &amp; kelurahan. Anda dapat mengeditnya.');
+                                // Isi Kode Pos
+                                if (postCode) {
+                                    const pcEl = document.getElementById('postal_code');
+                                    if (pcEl) pcEl.value = postCode;
                                 }
-                            } catch (e) { /* Nominatim error — koordinat tetap tersimpan */ }
-                        },
-                        function () { /* GPS ditolak — tidak perlu error, IP sudah mengisi dropdown */ },
-                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                    );
-                }
+
+                                // Sinkronkan dropdown wilayah otomatis
+                                await fillDropdowns(stateName, cityName, distName, villName);
+
+                                setBadge('#F0FDF4', '#15803D', '#BBF7D0',
+                                    '✔ <strong>Alamat Berhasil Terisi Akurat via GPS!</strong> (Provinsi, Kota, Kecamatan, Kelurahan &amp; Alamat jalan telah disinkronkan). Anda dapat mengeditnya jika diperlukan.');
+                                setBtn('Isi Ulang Alamat Otomatis');
+                            } else {
+                                throw new Error('Data alamat tidak ditemukan');
+                            }
+                        } catch (err) {
+                            // Fallback jika reverse nominatim terkendala rate-limit
+                            setBadge('#FEF3C7', '#92400E', '#FDE68A',
+                                '✔ Koordinat GPS perangkat Anda berhasil disimpan (' + lat.toFixed(5) + ', ' + lng.toFixed(5) + '). Silakan periksa dropdown kota/kabupaten.');
+                            setBtn('Isi Ulang Alamat Otomatis');
+                        }
+                    },
+                    function (error) {
+                        // JIKA IZIN DITOLAK ATAU GPS NONAKTIF
+                        if (error.code === error.PERMISSION_DENIED) {
+                            setBadge('#FEF2F2', '#991B1B', '#FECACA',
+                                '✕ <strong>Izin Akses Lokasi GPS Ditolak!</strong> Harap izinkan akses lokasi pada ikon gembok / pengaturan browser Anda, lalu klik tombol ini kembali.');
+                        } else if (error.code === error.TIMEOUT) {
+                            setBadge('#FEF2F2', '#991B1B', '#FECACA',
+                                '✕ <strong>Waktu Pencarian GPS Habis.</strong> Pastikan GPS pada perangkat HP / laptop Anda telah diaktifkan, lalu coba lagi.');
+                        } else {
+                            setBadge('#FEF2F2', '#991B1B', '#FECACA',
+                                '✕ <strong>Gagal Mengakses GPS:</strong> ' + (error.message || 'Perangkat tidak merespons. Periksa pengaturan lokasi perangkat Anda.'));
+                        }
+                        setBtn('Coba Lagi');
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                );
             };
 
 

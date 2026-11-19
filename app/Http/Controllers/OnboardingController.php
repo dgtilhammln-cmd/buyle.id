@@ -170,9 +170,13 @@ class OnboardingController extends Controller
             $user->update(['role' => 'seller']);
         }
 
-        // Pastikan CreatorProfile terbuat
+        // Pastikan CreatorProfile terbuat dan tersinkron peran creator
         try {
-            CreatorProfile::getOrCreateForUser($user);
+            $creatorProfile = CreatorProfile::getOrCreateForUser($user);
+            if ($creatorProfile) {
+                $creatorProfile->creator_type = $validated['business_persona'];
+                $creatorProfile->save();
+            }
         } catch (\Throwable $e) {
             \Log::warning('CreatorProfile auto-create on onboarding error: ' . $e->getMessage());
         }

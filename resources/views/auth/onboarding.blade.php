@@ -984,8 +984,8 @@
                         </div>
                     </div>
 
-                    <!-- 4. Event Creator & Ticketing -->
-                    <div class="persona-card" onclick="selectPersona('event_creator', this)">
+                    <!-- 4. Event Organizer & Promotor -->
+                    <div class="persona-card" onclick="selectPersona('event_organizer', this)">
                         <div class="check-badge">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                         </div>
@@ -998,8 +998,61 @@
                             </svg>
                         </div>
                         <div class="card-info">
-                            <div class="card-title">Event & Tiket</div>
-                            <div class="card-desc">Konser, seminar, festival, workshop</div>
+                            <div class="card-title">Event Organizer & Promotor</div>
+                            <div class="card-desc">Konser, festival, seminar & tiket online</div>
+                        </div>
+                    </div>
+
+                    <!-- Vendor Acara & Perlengkapan -->
+                    <div class="persona-card" onclick="selectPersona('vendor', this)">
+                        <div class="check-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="card-icon-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3h18v18H3z"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">Vendor & Supplier</div>
+                            <div class="card-desc">Sound, panggung, souvenir, persewaan & perlengkapan</div>
+                        </div>
+                    </div>
+
+                    <!-- Musisi & Artis -->
+                    <div class="persona-card" onclick="selectPersona('musisi_artis', this)">
+                        <div class="check-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="card-icon-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18V5l12-2v13"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <circle cx="18" cy="16" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">Musisi, Band & Artis</div>
+                            <div class="card-desc">Lagu, konser, DJ, merchandise band & audio</div>
+                        </div>
+                    </div>
+
+                    <!-- Fotografer & Videografer -->
+                    <div class="persona-card" onclick="selectPersona('fotografer_videografer', this)">
+                        <div class="check-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="card-icon-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                <circle cx="12" cy="13" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">Fotografer & Videografer</div>
+                            <div class="card-desc">Dokumentasi event, foto studio, shooting & editing</div>
                         </div>
                     </div>
 
@@ -1051,6 +1104,76 @@
                         <div class="card-info">
                             <div class="card-title">Media Partner</div>
                             <div class="card-desc">Media info, promotor, agency event</div>
+                        </div>
+                    </div>
+
+                    <!-- Penulis & Edukator -->
+                    <div class="persona-card" onclick="selectPersona('penulis_edukator', this)">
+                        <div class="check-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="card-icon-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">Penulis & Edukator</div>
+                            <div class="card-desc">Buku, kursus online, mentor & coach</div>
+                        </div>
+                    </div>
+
+                    <!-- UMKM & Brand Owner -->
+                    <div class="persona-card" onclick="selectPersona('umkm_brand', this)">
+                        <div class="check-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="card-icon-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                                <line x1="7" y1="7" x2="7.01" y2="7"/>
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">UMKM & Brand Owner</div>
+                            <div class="card-desc">Fashion, retail, craft & produk fisik</div>
+                        </div>
+                    </div>
+
+                    <!-- Komunitas & Organisasi -->
+                    <div class="persona-card" onclick="selectPersona('komunitas_organisasi', this)">
+                        <div class="check-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="card-icon-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">Komunitas & Organisasi</div>
+                            <div class="card-desc">Komunitas kreatif, hobi, yayasan & club</div>
+                        </div>
+                    </div>
+
+                    <!-- Affiliate Marketer -->
+                    <div class="persona-card" onclick="selectPersona('affiliate_marketer', this)">
+                        <div class="check-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="card-icon-wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">Affiliate Marketer</div>
+                            <div class="card-desc">Afiliasi, reviewer produk & komisi</div>
                         </div>
                     </div>
 

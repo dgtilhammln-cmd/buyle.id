@@ -15,6 +15,11 @@ class CreatorProfileController extends Controller
         $user = auth()->user();
         $profile = $user->creatorProfile ?? new CreatorProfile();
         
+        // Auto-sync peran creator dari business_persona jika creator_type belum terisi
+        if (empty($profile->creator_type) && !empty($user->business_persona)) {
+            $profile->creator_type = $user->business_persona;
+        }
+
         // Pastikan username user dan store_slug selalu sinkron dengan store_slug yang valid
         if ($profile->exists && !empty($profile->store_slug) && $user->username !== $profile->store_slug) {
             $user->username = $profile->store_slug;
@@ -119,6 +124,9 @@ class CreatorProfileController extends Controller
 
         $request->validate([
             'store_name' => 'nullable|string|max:100',
+            'owner_name' => 'nullable|string|max:150',
+            'age' => 'nullable|integer|min:1|max:120',
+            'occupation_status' => 'nullable|string|max:60',
             'store_slug' => 'required|string|max:100|regex:/^[a-z0-9\._\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
             'store_description' => 'required|string|min:40|max:300',
             'creator_type' => 'nullable|string|max:100',
@@ -160,7 +168,7 @@ class CreatorProfileController extends Controller
             ['user_id' => $user->id],
             array_merge(
                 $request->only([
-                    'store_name', 'store_slug', 'store_description',
+                    'store_name', 'owner_name', 'age', 'occupation_status', 'store_slug', 'store_description',
                     'creator_type',
                     'address', 'province_id', 'city_id', 'raja_city_id',
                     'subdistrict_id', 'raja_district_id',
@@ -174,6 +182,12 @@ class CreatorProfileController extends Controller
                 ]
             )
         );
+
+        // Sinkronkan peran ke tabel users (business_persona) agar sinkron dengan onboarding
+        if ($request->filled('creator_type')) {
+            $user->business_persona = $request->input('creator_type');
+            $user->save();
+        }
 
         // Server-side IP Geolocation fallback if lat/lon is missing
         if (empty($profile->latitude) || empty($profile->longitude)) {

@@ -9,6 +9,9 @@ class CreatorProfile extends Model
     protected $fillable = [
         'user_id',
         'store_name',
+        'owner_name',
+        'age',
+        'occupation_status',
         'pos_logo',
         'pos_store_address',
         'pos_store_phone',

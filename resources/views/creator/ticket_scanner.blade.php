@@ -944,10 +944,21 @@
 
         /* ─── FILTER 1-ROW GRID ─── */
         .filter-selects-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            width: 100%;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.5rem !important;
+            width: 100% !important;
+        }
+        .filter-selects-row .filter-select-wrap {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+        .filter-selects-row .filter-select {
+            width: 100% !important;
+            min-width: 0 !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
         }
 
         .filter-grid {
@@ -1566,9 +1577,27 @@
                 flex: unset !important;
             }
 
-            .filter-select-wrap {
+            .filter-selects-row {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.4rem !important;
                 width: 100% !important;
+            }
+
+            .filter-selects-row .filter-select-wrap {
+                width: 100% !important;
+                min-width: 0 !important;
                 flex: unset !important;
+            }
+
+            .filter-selects-row .filter-select {
+                width: 100% !important;
+                min-width: 0 !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                font-size: 0.72rem !important;
+                padding: 0 0.4rem 0 1.6rem !important;
             }
 
             .filter-select,
@@ -5341,6 +5370,13 @@
             const modal = document.getElementById('ticketDetailModal');
             if (modal) modal.style.display = 'none';
         }
+
+        // Expose modal and export handlers explicitly to window
+        window.toggleExportMenu = toggleExportMenu;
+        window.openTicketDetailModal = openTicketDetailModal;
+        window.closeTicketDetailModal = closeTicketDetailModal;
+        window.fillTicketModal = fillTicketModal;
+        window.toggleCheckinStatus = toggleCheckinStatus;
 
         // ══════════════════════════════════════════════════════════════════════
         // TOGGLE CHECKIN STATUS VIA ICON BUTTON (di card pengunjung)
