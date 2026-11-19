@@ -20,6 +20,9 @@ class TicketScannerController extends Controller
     public function index(Request $request)
     {
         $sellerId = auth()->id();
+        $kyc = \App\Models\CreatorKyc::where('user_id', $sellerId)->first();
+        $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
+
         $selectedEventId = $request->input('event_id');
         $statusFilter = $request->input('status');
         $search = trim($request->input('search', ''));
@@ -27,6 +30,10 @@ class TicketScannerController extends Controller
         if (in_array($rawTab, ['settings', 'rekening', 'profile'])) {
             return redirect()->route('creator.ticket.profile');
         } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
+            // Unverified KYC user cannot access data or gate tab
+            if (!$isKycVerified && in_array($rawTab, ['data', 'gate'])) {
+                return redirect()->route('creator.ticket.scanner', ['tab' => 'home']);
+            }
             $activeTab = $rawTab;
         } else {
             $activeTab = 'home';
@@ -213,6 +220,16 @@ class TicketScannerController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        $allTicketEvents = Product::where('product_type', 'ticket')
+            ->where('status', 'active')
+            ->where(function ($q) {
+                $q->whereNull('event_date')
+                  ->orWhere('event_date', '>=', now()->startOfDay());
+            })
+            ->with(['seller.creatorProfile'])
+            ->orderBy('event_date', 'asc')
+            ->get();
+
         return view('creator.ticket_scanner', compact(
             'seo',
             'events',
@@ -230,7 +247,8 @@ class TicketScannerController extends Controller
             'gateStaffList',
             'primaryEvent',
             'daysUntilEvent',
-            'eventDates'
+            'eventDates',
+            'allTicketEvents'
         ));
     }
 

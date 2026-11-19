@@ -1128,6 +1128,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::delete('/scanner/staff/{product}/{gateStaff}', [\App\Http\Controllers\GateStaffController::class, 'destroy'])->name('ticket.scanner.staff.destroy');
 
     // Creator e-KYC Verification
+    Route::get('/kyc',              [\App\Http\Controllers\Creator\CreatorKycController::class, 'index'])->name('kyc.index');
     Route::get('/kyc/status',       [\App\Http\Controllers\Creator\CreatorKycController::class, 'status'])->name('kyc.status');
     Route::post('/kyc/parse-nik',   [\App\Http\Controllers\Creator\CreatorKycController::class, 'parseNik'])->name('kyc.parse-nik');
     Route::post('/kyc/extract-ktp', [\App\Http\Controllers\Creator\CreatorKycController::class, 'extractKtp'])->name('kyc.extract-ktp');

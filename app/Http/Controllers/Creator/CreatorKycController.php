@@ -11,6 +11,18 @@ use Illuminate\Support\Str;
 
 class CreatorKycController extends Controller
 {
+    public function index()
+    {
+        $seller = auth()->user();
+        $kyc = CreatorKyc::where('user_id', $seller->id)->first();
+        $creatorProfile = $seller->creatorProfile;
+        $seo = [
+            'title'  => 'Verifikasi Identitas e-KYC · Creator Studio',
+            'robots' => 'noindex, nofollow',
+        ];
+        return view('creator.kyc.index', compact('seller', 'kyc', 'creatorProfile', 'seo'));
+    }
+
     public function status()
     {
         $kyc = CreatorKyc::where('user_id', auth()->id())->first();

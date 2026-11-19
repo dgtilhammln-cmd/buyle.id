@@ -3115,6 +3115,7 @@
                     <span class="tab-text-full">Home Event</span>
                     <small class="tab-text-mob">Home</small>
                 </button>
+                @if(isset($kyc) && $kyc && $kyc->status === 'verified')
                 <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}"
                     onclick="switchTab('tab-data', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -3126,6 +3127,7 @@
                     <span class="tab-text-full">Data Pengunjung</span>
                     <small class="tab-text-mob">Pengunjung</small>
                 </button>
+                @endif
                 <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}"
                     onclick="switchTab('tab-scanner', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -3136,6 +3138,7 @@
                     <span class="tab-text-full">Quick Scanner</span>
                     <small class="tab-text-mob">Scanner</small>
                 </button>
+                @if(isset($kyc) && $kyc && $kyc->status === 'verified')
                 <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}"
                     onclick="switchTab('tab-gate', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -3147,6 +3150,7 @@
                     <span class="tab-text-full">Akses Gate Panitia</span>
                     <small class="tab-text-mob">Gate Staff</small>
                 </button>
+                @endif
                 <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil Penyelenggara">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -3203,16 +3207,26 @@
             <div id="tab-home" class="payout-tab-pane" style="display: {{ $activeTab === 'home' ? 'block' : 'none' }};">
 
                 {{-- 1. Mobile Superapp Profile & Greeting Header --}}
+                @php
+                    $homeUserAvatar = auth()->user()->avatar ?? auth()->user()->creatorProfile?->avatar ?? null;
+                    $homeAvatarUrl = null;
+                    if ($homeUserAvatar) {
+                        $homeAvatarUrl = \Illuminate\Support\Str::startsWith($homeUserAvatar, ['http://','https://'])
+                            ? $homeUserAvatar
+                            : asset('storage/' . $homeUserAvatar);
+                    }
+                    $homeStoreName = auth()->user()->creatorProfile?->store_name ?? auth()->user()->name;
+                @endphp
                 <div class="home-user-header-card"
                     style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.15rem; padding:0.25rem 0.2rem;">
                     <div style="display:flex; align-items:center; gap:0.75rem;">
                         <div
                             style="width:46px; height:46px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1.1rem; border:2.5px solid #fff; box-shadow:0 3px 10px rgba(30,179,73,0.25); flex-shrink:0;">
-                            @if(auth()->user()->avatar)
-                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}"
+                            @if($homeAvatarUrl)
+                                <img src="{{ $homeAvatarUrl }}" alt="{{ $homeStoreName }}"
                                     style="width:100%; height:100%; object-fit:cover;">
                             @else
-                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                {{ strtoupper(substr($homeStoreName, 0, 2)) }}
                             @endif
                         </div>
                         <div>
@@ -3224,7 +3238,7 @@
                             </span>
                             <h3
                                 style="font-size:1.05rem; font-weight:700; color:#0f172a; margin:0; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px;">
-                                {{ auth()->user()->name }}
+                                {{ $homeStoreName }}
                             </h3>
                         </div>
                     </div>
@@ -3265,18 +3279,19 @@
                                 </svg>
                             </div>
                             <div>
-                                <strong style="font-size:0.8rem; color:#92400e; display:block;">Verifikasi Identitas
-                                    e-KYC</strong>
-                                <span style="font-size:0.72rem; color:#b45309;">Selesaikan verifikasi untuk akses penuh Scanner
-                                    & Pencairan.</span>
+                                <strong style="font-size:0.82rem; color:#92400e; display:block; font-weight:800;">Verifikasi Identitas e-KYC</strong>
+                                <span style="font-size:0.72rem; color:#b45309; line-height:1.4; display:block;">Wajib untuk menjual tiket event, konser, pameran, dll, atau aktif sebagai crew/volunteer.</span>
                             </div>
                         </div>
-                        <a href="{{ route('creator.ticket.profile') }}"
+                        <a href="{{ route('creator.kyc.index') }}"
                             style="background:#d97706; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.72rem; font-weight:700; text-decoration:none; display:inline-block; flex-shrink:0;">
                             Verifikasi
                         </a>
                     </div>
                 @endif
+
+                {{-- Cards khusus KYC verified --}}
+                @if(isset($kyc) && $kyc->status === 'verified')
 
                 {{-- 2. Highlight Card (Your Weekly Progress style from Image 2) --}}
                 <div class="home-highlight-card"
@@ -3554,6 +3569,69 @@
                         </div>
                     </div>
                 </div>
+
+                @else
+                {{-- Card: Belum KYC - Jelajahi Semua Event Tersedia + Apply Volunteer --}}
+                @if(isset($allTicketEvents) && $allTicketEvents->count() > 0)
+                <div style="margin-bottom:1.25rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                            <span style="font-size:1.1rem;">🎪</span>
+                            <h5 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Eksplor Event & Lowongan Kru</h5>
+                        </div>
+                        <span style="font-size:0.72rem; color:#64748b; font-weight:600;">Swipe &rarr;</span>
+                    </div>
+                    <div style="display:flex; gap:0.85rem; overflow-x:auto; padding-bottom:0.5rem; scrollbar-width:none; -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory;">
+                        @foreach($allTicketEvents as $ev)
+                        @php
+                            $evImg = null;
+                            if (!empty($ev->og_image)) {
+                                $evImg = \Illuminate\Support\Str::startsWith($ev->og_image, 'http') ? $ev->og_image : asset('storage/' . $ev->og_image);
+                            } elseif (!empty($ev->featured_image)) {
+                                $evImg = \Illuminate\Support\Str::startsWith($ev->featured_image, 'http') ? $ev->featured_image : asset('storage/' . $ev->featured_image);
+                            } elseif (!empty($ev->image)) {
+                                $evImg = \Illuminate\Support\Str::startsWith($ev->image, 'http') ? $ev->image : asset('storage/' . $ev->image);
+                            }
+                            $orgName = $ev->seller?->creatorProfile?->store_name ?: ($ev->seller?->name ?? 'Penyelenggara');
+                        @endphp
+                        <div style="flex:0 0 250px; scroll-snap-align:start; background:#ffffff; border:1px solid #e2e8f0; border-radius:20px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.04); display:flex; flex-direction:column; justify-content:space-between;">
+                            <div>
+                                <div style="position:relative; height:120px; background:linear-gradient(135deg,#052e16,#15803d); overflow:hidden;">
+                                    @if($evImg)
+                                        <img src="{{ $evImg }}" alt="{{ $ev->name }}" style="width:100%;height:100%;object-fit:cover;opacity:0.9;">
+                                    @else
+                                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+                                            <svg width="36" height="36" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+                                        </div>
+                                    @endif
+                                    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.7) 100%);"></div>
+                                    <span style="position:absolute;top:8px;left:8px;background:rgba(16,185,129,0.95);backdrop-filter:blur(4px);color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:999px;">Open Crew / Volunteer</span>
+                                    @if($ev->event_date)
+                                        <span style="position:absolute;bottom:8px;left:10px;font-size:0.68rem;font-weight:700;color:#fff;">📅 {{ $ev->event_date->translatedFormat('d M Y') }}</span>
+                                    @endif
+                                </div>
+                                <div style="padding:0.75rem 0.9rem 0.4rem;">
+                                    <div style="font-size:0.84rem;font-weight:700;color:#0f172a;line-height:1.3;margin-bottom:0.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="{{ $ev->name }}">{{ $ev->name }}</div>
+                                    <div style="font-size:0.68rem;color:#64748b;margin-bottom:0.25rem;">📍 {{ $ev->event_location ?? 'Venue TBA' }}</div>
+                                    <div style="font-size:0.68rem;color:#059669;font-weight:600;margin-bottom:0.65rem;">
+                                        Penyelenggara: {{ $orgName }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="padding:0 0.9rem 0.85rem;">
+                                <a href="mailto:creator@buyle.id?subject={{ urlencode('Pendaftaran Volunteer / Kru Event - ' . $ev->name) }}&body={{ urlencode('Halo Admin & Penyelenggara ' . $orgName . ',' . "\n\n" . 'Saya tertarik untuk mengajukan diri sebagai volunteer / kru resmi pada event: ' . $ev->name . '.' . "\n\n" . 'Nama: ' . (auth()->user()->name ?? '') . "\n" . 'Email: ' . (auth()->user()->email ?? '')) }}"
+                                   style="display:inline-flex;align-items:center;gap:0.35rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;font-size:0.72rem;font-weight:700;padding:0.45rem 0.75rem;border-radius:10px;text-decoration:none;width:100%;justify-content:center;box-shadow:0 3px 8px rgba(30,179,73,0.25);">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                                    <span>Apply Volunteer / Crew</span>
+                                </a>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+                @endif
+                {{-- End KYC conditional --}}
 
             </div>
 
@@ -4363,8 +4441,11 @@
     </div> {{-- Close .bio-layout --}}
 
     {{-- ══ MOBILE BOTTOM NAVIGATION BAR (like /pos page) ══ --}}
+    @php
+        $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
+    @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
-        <div class="scanner-bottom-nav-bar">
+        <div class="scanner-bottom-nav-bar" style="{{ !$isKycVerified ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
             {{-- 1. Home (Pojok Kiri) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'home' ? 'active' : '' }}" id="scanNavHome"
                 onclick="switchTab('tab-home', this); updateBottomNav('home')" title="Home">
@@ -4374,6 +4455,7 @@
                 </svg>
             </button>
 
+            @if($isKycVerified)
             {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'data' ? 'active' : '' }}" id="scanNavData"
                 onclick="switchTab('tab-data', this); updateBottomNav('data')" title="Data Kehadiran">
@@ -4383,6 +4465,7 @@
                     <path d="m9 14 2 2 4-4" />
                 </svg>
             </button>
+            @endif
 
             {{-- 3. Center Scanner (Larger Prominent Floating Circle Button) --}}
             <button type="button" class="scanner-nav-item scanner-nav-center {{ $activeTab === 'scanner' ? 'active' : '' }}"
@@ -4395,6 +4478,7 @@
                 </svg>
             </button>
 
+            @if($isKycVerified)
             {{-- 4. Gate Staff (Gate Door) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'gate' ? 'active' : '' }}" id="scanNavGate"
                 onclick="switchTab('tab-gate', this); updateBottomNav('gate')" title="Gate Staff">
@@ -4404,6 +4488,7 @@
                     <circle cx="14" cy="12" r="1" fill="currentColor" />
                 </svg>
             </button>
+            @endif
 
             {{-- 5. Profil Event (Pojok Kanan - Direct ke /creator/ticketing/profile) --}}
             <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item" id="scanNavProfile"

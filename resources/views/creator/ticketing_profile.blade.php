@@ -747,7 +747,7 @@
                         <p style="margin:0 0 0.85rem; font-size:0.76rem; color:#b91c1c; line-height:1.5;">
                             Untuk melindungi transaksi pembeli dan mengaktifkan pencairan saldo penjualan tiket, silakan lengkapi verifikasi KTP resmi Anda.
                         </p>
-                        <a href="{{ route('creator.profile.edit') }}#kyc" style="display:inline-flex; align-items:center; gap:0.4rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; font-size:0.78rem; font-weight:700; padding:0.5rem 1rem; border-radius:10px; text-decoration:none; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
+                        <a href="{{ route('creator.kyc.index') }}" style="display:inline-flex; align-items:center; gap:0.4rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; font-size:0.78rem; font-weight:700; padding:0.5rem 1rem; border-radius:10px; text-decoration:none; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                             <span>Lengkapi e-KYC Sekarang</span>
                         </a>
@@ -925,8 +925,11 @@
     </div>
 
     {{-- ── 5-BUTTON BOTTOM NAVIGATION BAR (IDENTICAL TO /creator/event-attendance) ── --}}
+    @php
+        $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
+    @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
-        <div class="scanner-bottom-nav-bar">
+        <div class="scanner-bottom-nav-bar" style="{{ !$isKycVerified ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
             {{-- 1. Home --}}
             <a href="{{ route('creator.ticket.scanner', ['tab' => 'home']) }}" class="scanner-nav-item" title="Home">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -935,6 +938,7 @@
                 </svg>
             </a>
 
+            @if($isKycVerified)
             {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
             <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" class="scanner-nav-item" title="Data Kehadiran">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -943,6 +947,7 @@
                     <path d="m9 14 2 2 4-4"/>
                 </svg>
             </a>
+            @endif
 
             {{-- 3. Center Scanner (Floating Circle) --}}
             <a href="{{ route('creator.ticket.scanner', ['tab' => 'scanner']) }}" class="scanner-nav-item scanner-nav-center" title="Live QR Scanner">
@@ -952,6 +957,7 @@
                 </svg>
             </a>
 
+            @if($isKycVerified)
             {{-- 4. Gate Staff (Gate Door) --}}
             <a href="{{ route('creator.ticket.scanner', ['tab' => 'gate']) }}" class="scanner-nav-item" title="Gate Staff">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -960,6 +966,7 @@
                     <circle cx="14" cy="12" r="1" fill="currentColor"/>
                 </svg>
             </a>
+            @endif
 
             {{-- 5. Profile (ACTIVE dengan Dot Indicator) --}}
             <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item active" title="Profil Organizer">
