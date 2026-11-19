@@ -54,7 +54,7 @@ class SellerNewOrderNotification extends Notification
 
         $title = $isFreeOrder ? 'Hore! Ada Pesanan Baru Masuk' : 'Hore! Ada Cuan Baru Masuk';
         $subtitle = $isFreeOrder ? "Pembeli baru saja mengklaim pesanan gratis #{$orderNumber}" : "Pembeli baru saja menyelesaikan pembayaran #{$orderNumber}";
-        $introText = $isFreeOrder ? "Kabar gembira! Pembeli baru saja mengklaim produk dari toko kamu." : "Kabar gembira! Pembeli baru saja melunasi pembayaran untuk produk toko kamu.";
+        $introText = $isFreeOrder ? "Kabar gembira! Pembeli baru saja mengklaim produk dari store kamu." : "Kabar gembira! Pembeli baru saja melunasi pembayaran untuk produk kamu.";
 
         return (new MailMessage)
             ->subject("Hore! Ada Pesanan Baru #{$orderNumber} | buyle.id")

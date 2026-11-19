@@ -208,7 +208,7 @@ class AdminCreatorResourceController extends Controller
                         if (Str::startsWith($cleanP, '0')) $cleanP = '62' . substr($cleanP, 1);
                         if (!Str::startsWith($cleanP, '62') && strlen($cleanP) >= 9) $cleanP = '62' . $cleanP;
                         $storeName = $creatorProfile->store_name ?? $user->name;
-                        $msg = urlencode("Halo kak {$bName}, produk '{$pName}' masih tersimpan di keranjang belanja kamu di toko {$storeName} (buyle.id). Selesaikan pembelianmu sekarang sebelum kehabisan!");
+                        $msg = urlencode("Halo kak {$bName}, produk '{$pName}' masih tersimpan di keranjang belanja kamu di Creator {$storeName} (buyle.id). Selesaikan pembelianmu sekarang sebelum kehabisan!");
                         $waLink = "https://wa.me/{$cleanP}?text={$msg}";
                     }
 
@@ -270,7 +270,7 @@ class AdminCreatorResourceController extends Controller
                 }
                 $waNumber = $cleanPhone;
                 $storeTitle = $creatorProfile->store_name ?? $user->name;
-                $msg = urlencode("Halo kak {$user->name} ({$storeTitle}), kami dari tim Buyle.id ingin menyapa & membantu optimasi toko online kamu agar omset penjualan makin meningkat! 🚀");
+                $msg = urlencode("Halo kak {$user->name} ({$storeTitle}), kami dari tim Buyle.id ingin menyapa & membantu optimasi Digital Store kamu agar Revenue penjualan makin meningkat! 🚀");
                 $waLink = "https://wa.me/{$cleanPhone}?text={$msg}";
             }
 
@@ -457,10 +457,10 @@ class AdminCreatorResourceController extends Controller
             }
             if (!empty($creatorProfile->store_banner_2)) {
                 $assets[] = [
-                    'type'       => 'Banner Toko (Sekunder)',
+                    'type'       => 'Banner Creator (Sekunder)',
                     'raw_path'   => $creatorProfile->store_banner_2,
                     'used_in'    => [
-                        ['label' => 'Halaman Bio Toko', 'sub' => 'Banner Header 2', 'url' => url('/' . $creatorProfile->store_slug)]
+                        ['label' => 'Halaman Bio Creator', 'sub' => 'Banner Header 2', 'url' => url('/' . $creatorProfile->store_slug)]
                     ],
                     'product_id' => null,
                     'block_id'   => null,
@@ -1362,7 +1362,7 @@ class AdminCreatorResourceController extends Controller
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff;'>
                     <h2 style='color: #0f172a; margin-top: 0;'>Halo {$buyerName},</h2>
                     <p style='color: #475569; font-size: 15px; line-height: 1.6;'>
-                        Produk digital <strong>{$productName}</strong> dari toko <strong>{$creatorName}</strong> masih tersimpan di keranjang belanja kamu di <strong>buyle.id</strong>.
+                        Produk digital <strong>{$productName}</strong> dari creator <strong>{$creatorName}</strong> masih tersimpan di keranjang belanja kamu di <strong>buyle.id</strong>.
                     </p>
                     <p style='color: #475569; font-size: 15px; line-height: 1.6;'>
                         Selesaikan transaksi pesananmu sekarang agar kamu bisa langsung mengakses berkas/resource digital ini secara instant!
@@ -1444,7 +1444,7 @@ class AdminCreatorResourceController extends Controller
 
                     <p style='font-size:14px; color:#0F172A; line-height:1.6;'>Halo <strong>{$user->name}</strong>,</p>
                     <p style='font-size:14px; color:#334155; line-height:1.6;'>
-                        Kami ingin mengabarkan bahwa proses konfigurasi dan pemetaan custom domain <strong>{$domain}</strong> untuk halaman Link in Bio toko Anda telah <strong>SELESAI dan AKTIF</strong>.
+                        Kami ingin mengabarkan bahwa proses konfigurasi dan pemetaan custom domain <strong>{$domain}</strong> untuk halaman Link in Bio store Anda telah <strong>SELESAI dan AKTIF</strong>.
                     </p>
 
                     <div style='background:#F0FDF4; border:1.5px solid #BBF7D0; padding:18px; border-radius:12px; margin:20px 0; text-align:center;'>

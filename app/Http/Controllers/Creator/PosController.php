@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Mail;
 class PosController extends Controller
 {
     /**
-     * Helper privat mengambil seluruh produk untuk Kasir Digital (POS) dari Link in Bio & Katalog Toko.
+     * Helper privat mengambil seluruh produk untuk Kasir Digital (POS) dari Link in Bio & Katalog.
      */
     private function getPosProducts(int $sellerId)
     {
@@ -211,7 +211,7 @@ class PosController extends Controller
         $seller = $isStaff ? (\App\Models\User::find($authUser->parent_seller_id) ?? $authUser) : $authUser;
         $currentCashier = $isStaff ? $authUser : null;
 
-        // 1. Ambil profil toko creator
+        // 1. Ambil profil digital store creator
         $profile = CreatorProfile::where('user_id', $seller->id)->first();
         if ($profile) {
             $profile->update(['pos_last_online_at' => now()]);
@@ -286,14 +286,14 @@ class PosController extends Controller
                 ->get()
             : collect();
 
-        // 8. Saldo Toko Siap Ditarik (untuk fitur alihkan saldo langsung ke deposit)
+        // 8. Saldo creator Siap Ditarik (untuk fitur alihkan saldo langsung ke deposit)
         $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
         $availableStoreBalance = (float) ($balanceData['available_balance'] ?? 0);
 
-        // 9. Logo Struk POS Toko
+        // 9. Logo Struk POS Creator
         $posLogoUrl = $profile?->pos_logo ? asset('storage/' . $profile->pos_logo) : null;
 
-        // 10. Pengaturan Alamat & Telepon Toko untuk Struk
+        // 10. Pengaturan Alamat & Telepon Creator untuk Struk
         $posStoreAddress = $profile?->pos_store_address ?? $profile?->address ?? '';
         $posStorePhone   = $profile?->pos_store_phone ?? $seller?->phone ?? '';
 
@@ -1152,7 +1152,7 @@ class PosController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Logo struk dihapus. Struk kini kembali menggunakan nama toko.',
+            'message' => 'Logo struk dihapus. Struk kini kembali menggunakan nama Store.',
         ]);
     }
 

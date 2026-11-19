@@ -1118,6 +1118,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/scanner/update-pin/{product}', [\App\Http\Controllers\TicketScannerController::class, 'updateGatePin'])->name('ticket.scanner.update-pin');
     // Bank / Payout Account (dari halaman event-attendance)
     Route::post('/event-attendance/bank', [\App\Http\Controllers\TicketScannerController::class, 'updateBankAccount'])->name('ticket.bank.update');
+    // Ticket Detail JSON (untuk modal)
+    Route::get('/scanner/ticket-detail/{ticket}', [\App\Http\Controllers\TicketScannerController::class, 'ticketDetail'])->name('creator.ticket.scanner.detail');
     // Gate Staff CRUD (Creator only)
     Route::get('/scanner/all-staff', [\App\Http\Controllers\GateStaffController::class, 'allStaff'])->name('ticket.scanner.staff.all');
     Route::get('/scanner/staff/{product}', [\App\Http\Controllers\GateStaffController::class, 'index'])->name('ticket.scanner.staff.index');

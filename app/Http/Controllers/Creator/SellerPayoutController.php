@@ -182,7 +182,7 @@ class SellerPayoutController extends Controller
     }
 
     /**
-     * Pindahkan saldo toko yang siap ditarik ke Saldo Deposit Kasir POS secara instan & aman.
+     * Pindahkan saldo Store yang siap ditarik ke Saldo Deposit Kasir POS secara instan & aman.
      * Mencegah double spend: langsung tercatat di payout_requests (status: processed)
      * dan mengkredit pos_balance + mencatat PosBalanceMutation.
      */
@@ -204,7 +204,7 @@ class SellerPayoutController extends Controller
                 // 1. Kunci profil creator
                 $profile = CreatorProfile::where('user_id', $seller->id)->lockForUpdate()->first();
                 if (!$profile) {
-                    return back()->with('error', 'Profil toko Anda belum dikonfigurasi.');
+                    return back()->with('error', 'Profil Anda belum dikonfigurasi.');
                 }
 
                 // 2. Hitung saldo tersedia secara realtime (anti-race condition)
@@ -230,8 +230,8 @@ class SellerPayoutController extends Controller
                     'bank_name'           => 'Deposit Kasir POS (Transfer Internal)',
                     'bank_account_number' => 'POS-DEPOSIT',
                     'bank_account_name'   => $profile->store_name ?? $seller->name,
-                    'notes'               => 'Pengalihan Saldo Toko ke Deposit Kasir POS',
-                    'admin_notes'         => 'Transfer internal instan via Saldo Toko',
+                    'notes'               => 'Pengalihan Saldo Store ke Deposit Kasir POS',
+                    'admin_notes'         => 'Transfer internal instan via Saldo Store',
                     'processed_by'        => $seller->id,
                     'processed_at'        => now(),
                 ]);
@@ -249,10 +249,10 @@ class SellerPayoutController extends Controller
                     'balance_before'   => $balanceBefore,
                     'balance_after'    => $balanceAfter,
                     'reference_number' => 'TRF-POS-' . strtoupper(Str::random(8)),
-                    'notes'            => 'Top-up dari Saldo Toko Siap Ditarik (Ref: PR-' . $payout->id . ')',
+                    'notes'            => 'Top-up dari Saldo Store Siap Ditarik (Ref: PR-' . $payout->id . ')',
                 ]);
 
-                Log::info('Transfer Saldo Toko ke Deposit POS Sukses', [
+                Log::info('Transfer Saldo Store ke Deposit POS Sukses', [
                     'seller_id'      => $seller->id,
                     'amount'         => $amount,
                     'payout_id'      => $payout->id,

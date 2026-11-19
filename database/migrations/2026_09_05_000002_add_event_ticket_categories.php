@@ -71,7 +71,7 @@ return new class extends Migration
                 'sub'         => [
                     ['name' => 'Reservasi Sesi & Konsultasi 1-on-1', 'slug' => 'reservasi-sesi-1on1',  'order' => 1, 'description' => 'Booking slot waktu konsultasi privat', 'contoh_produk' => 'Booking 1 Hour Private Coaching, Konsultasi Legal/Kesehatan'],
                     ['name' => 'Sewa Lapangan & Studio',             'slug' => 'sewa-lapangan-studio', 'order' => 2, 'description' => 'Booking slot waktu tempat / studio',    'contoh_produk' => 'Booking Studio Foto, Lapangan Badminton/Futsal, Podcast Room'],
-                    ['name' => 'Voucher Belanja & E-Gift Card',       'slug' => 'voucher-egift-card',   'order' => 3, 'description' => 'Voucher promo & hadiah digital',         'contoh_produk' => 'Voucher Diskon Toko, Gift Card Event, Pass Member'],
+                    ['name' => 'Voucher Belanja & E-Gift Card',       'slug' => 'voucher-egift-card',   'order' => 3, 'description' => 'Voucher promo & hadiah digital',         'contoh_produk' => 'Voucher Diskon, Gift Card Event, Pass Member'],
                 ],
             ],
         ];

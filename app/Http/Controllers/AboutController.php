@@ -46,7 +46,7 @@ class AboutController extends Controller
                     'key'         => 'web_builder',
                     'badge'       => 'No-Code',
                     'title'       => 'Web & Bio Link Builder',
-                    'desc'        => 'Bangun landing page dan link-in-bio toko kustom instan tanpa koding. Mendukung kustom domain, tema fleksibel, formulir pemesanan, dan analytics pengunjung langsung.',
+                    'desc'        => 'Bangun landing page dan link-in-bio kustom instan tanpa koding. Mendukung kustom domain, tema fleksibel, formulir pemesanan, dan analytics pengunjung langsung.',
                     'icon'        => 'layout',
                     'style_class' => '',
                 ],

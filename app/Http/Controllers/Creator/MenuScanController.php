@@ -19,7 +19,7 @@ class MenuScanController extends Controller
         if (!$profile) {
             return response()->json([
                 'success' => false,
-                'message' => 'Profil Toko belum dikonfigurasi.'
+                'message' => 'Profil Creator belum dikonfigurasi.'
             ], 403);
         }
 

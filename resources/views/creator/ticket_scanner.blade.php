@@ -811,25 +811,138 @@
 
         @media (max-width: 640px) {
             .visitor-card {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-                padding: 0.85rem 1rem;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.5rem;
+                padding: 0.65rem 0.85rem;
             }
             .visitor-card-main {
-                width: 100%;
+                min-width: 0;
+                flex: 1;
             }
             .visitor-card-actions {
-                width: 100%;
-                justify-content: space-between;
-                padding-top: 0.6rem;
-                border-top: 1px solid #f1f5f9;
+                flex-shrink: 0;
+                gap: 0.4rem;
+                border-top: none;
+                padding-top: 0;
+                width: auto;
             }
             .btn-view-visitor {
-                flex: 1;
+                width: 34px;
+                height: 34px;
+                padding: 0;
+                border-radius: 10px;
                 justify-content: center;
-                padding: 0.5rem 0.75rem;
             }
+            .btn-view-visitor span { display: none; }
+        }
+
+        /* ─── ICON-ONLY STATUS BUTTON ─── */
+        .btn-status-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafc;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: 'Montserrat', sans-serif;
+            padding: 0;
+        }
+        .btn-status-icon.hadir {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #16a34a;
+        }
+        .btn-status-icon.belum {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            color: #ea580c;
+        }
+        .btn-status-icon.cancelled {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+        .btn-detail-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e8f0;
+            background: #0f172a;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            padding: 0;
+        }
+        .btn-detail-icon:hover {
+            background: #1e293b;
+        }
+
+        /* ─── VARIANT STATS CARDS ─── */
+        .variant-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .variant-stat-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 0.9rem 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .variant-stat-card-name {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 0.4rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .variant-stat-card-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+        }
+        .variant-stat-card-sub {
+            font-size: 0.7rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 0.3rem;
+        }
+        .variant-progress-bar {
+            margin-top: 0.5rem;
+            height: 5px;
+            background: #f1f5f9;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .variant-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1eb349, #15803d);
+            border-radius: 99px;
+            transition: width 0.3s ease;
+        }
+
+        /* ─── FILTER 1-ROW GRID ─── */
+        .filter-selects-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            width: 100%;
         }
 
         .filter-grid {
@@ -3806,6 +3919,7 @@
                                 </div>
 
                                 {{-- Event Selector --}}
+                                <div class="filter-selects-row">
                                 <div class="input-icon-wrap filter-select-wrap">
                                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24" class="icon-left">
@@ -3840,17 +3954,82 @@
                                             Dibatalkan</option>
                                     </select>
                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {{-- CARD STATISTIK PER VARIASI TIKET --}}
+                @if($events->isNotEmpty())
+                <div style="margin-bottom: 1.25rem;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.65rem; padding: 0 0.1rem;">
+                        Stok &amp; Penjualan per Variasi
+                    </div>
+                    <div class="variant-stats-grid">
+                        @php
+                            $variantRows = [];
+                            foreach($events as $ev) {
+                                $evSoldTotal = $allTicketsCached->where('product_id', $ev->id)->whereNotIn('status', ['cancelled'])->count();
+                                if ($ev->variantOptions->isNotEmpty()) {
+                                    foreach ($ev->variantOptions as $opt) {
+                                        foreach ($opt->values as $val) {
+                                            $stock = (int)($val->stock ?? 0);
+                                            // Sold for this variant: approximate by ticket_code prefix or variant_label match
+                                            // We'll show per-event capacity split proportionally if no direct variant sold data
+                                            $variantRows[] = [
+                                                'label'    => ($events->count() > 1 ? $ev->name . ' · ' : '') . ($val->value ?? $opt->name),
+                                                'stock'    => $stock,
+                                                'sold'     => 0, // updated via JS
+                                                'event_id' => $ev->id,
+                                                'opt_name' => $opt->name,
+                                                'val_name' => $val->value ?? $opt->name,
+                                            ];
+                                        }
+                                    }
+                                } else {
+                                    $stock = (int)($ev->stock ?? 0);
+                                    $variantRows[] = [
+                                        'label'    => $ev->name,
+                                        'stock'    => $stock,
+                                        'sold'     => $evSoldTotal,
+                                        'event_id' => $ev->id,
+                                        'opt_name' => '',
+                                        'val_name' => '',
+                                    ];
+                                }
+                            }
+                        @endphp
+                        @forelse($variantRows as $vr)
+                            @php
+                                $totalCap = $vr['stock'];
+                                $sold = $vr['sold'];
+                                $remaining = max(0, $totalCap - $sold);
+                                $pct = $totalCap > 0 ? min(100, round($sold / $totalCap * 100)) : 0;
+                            @endphp
+                            <div class="variant-stat-card">
+                                <div class="variant-stat-card-name" title="{{ $vr['label'] }}">{{ $vr['label'] }}</div>
+                                <div class="variant-stat-card-val">
+                                    {{ number_format($sold) }}<span style="font-size: 0.72em; font-weight: 600; color: #64748b;">/{{ number_format($remaining) }}</span>
+                                </div>
+                                <div class="variant-stat-card-sub">Terjual / Sisa Stok</div>
+                                <div class="variant-progress-bar">
+                                    <div class="variant-progress-fill" style="width: {{ $pct }}%;"></div>
+                                </div>
+                            </div>
+                        @empty
+                            <div style="grid-column: span 2; text-align: center; color: #94a3b8; font-size: 0.8rem; padding: 1rem;">Belum ada variasi tiket.</div>
+                        @endforelse
+                    </div>
+                </div>
+                @endif
 
                 {{-- CARD 2: RINGKASAN STATISTIK --}}
                 <div class="stat-grid" style="margin-bottom: 1.25rem;">
                     {{-- Card 1: Total Tiket --}}
                     <div class="stat-card">
                         <div class="stat-head">
-                            <span class="stat-title">Total Tiket Terbit</span>
+                            <span class="stat-title">Total Tiket Terjual</span>
                             <div class="stat-icon-bubble">
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
@@ -3860,9 +4039,11 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="stat-val" id="statTotalVal">{{ number_format($stats['total']) }}</div>
+                        <div class="stat-val" id="statTotalVal">
+                            {{ number_format($stats['total_sold']) }}<span id="statRemainingVal" style="font-size: 0.55em; font-weight: 600; color: #64748b;">/{{ number_format($stats['remaining']) }}</span>
+                        </div>
                         <div class="stat-sub">
-                            <span>Tiket Terjual / Terdaftar</span>
+                            <span>Tiket Terjual / Sisa Stok</span>
                         </div>
                     </div>
 
@@ -3962,21 +4143,20 @@
                                     </div>
                                     <div class="visitor-card-actions">
                                         @if($ticket->status === 'used')
-                                            <span class="badge-status badge-used">
-                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"/></svg>
-                                                Hadir
-                                            </span>
+                                            <button type="button" class="btn-status-icon hadir" title="Hadir (Checked-In)" onclick="toggleCheckinStatus({{ $ticket->id }}, this)">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                            </button>
                                         @elseif($ticket->status === 'cancelled')
-                                            <span class="badge-status badge-cancelled">Dibatalkan</span>
+                                            <button type="button" class="btn-status-icon cancelled" title="Dibatalkan">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                                            </button>
                                         @else
-                                            <span class="badge-status badge-valid">Belum Hadir</span>
+                                            <button type="button" class="btn-status-icon belum" title="Belum Hadir" onclick="toggleCheckinStatus({{ $ticket->id }}, this)">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                            </button>
                                         @endif
-                                        <button type="button" class="btn-view-visitor" onclick="openTicketDetailModal({{ $ticket->id }})" title="Lihat Data Lengkap">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                                <circle cx="12" cy="12" r="3"/>
-                                            </svg>
-                                            <span>Detail</span>
+                                        <button type="button" class="btn-detail-icon" onclick="openTicketDetailModal({{ $ticket->id }})" title="Lihat Detail">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                                         </button>
                                     </div>
                                 </div>
@@ -4586,7 +4766,7 @@
             url.searchParams.set('tab', tabName);
             window.history.pushState({}, '', url);
 
-            if (openModalFn) {
+            if (typeof openModalFn === 'function') {
                 setTimeout(openModalFn, 100);
             }
 
@@ -5084,6 +5264,250 @@
             } catch (e) {
                 alert('Terjadi kesalahan jaringan.');
             }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // EXPORT MENU DROPDOWN
+        // ══════════════════════════════════════════════════════════════════════
+        function toggleExportMenu(e) {
+            if (e) e.stopPropagation();
+            const menu = document.getElementById('exportMenuDropdown');
+            if (!menu) return;
+            const isOpen = menu.style.display === 'block';
+            menu.style.display = isOpen ? 'none' : 'block';
+            if (!isOpen) {
+                setTimeout(() => {
+                    document.addEventListener('click', function closeMenu(ev) {
+                        if (!menu.contains(ev.target)) {
+                            menu.style.display = 'none';
+                            document.removeEventListener('click', closeMenu);
+                        }
+                    });
+                }, 10);
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // MODAL DETAIL TIKET
+        // ══════════════════════════════════════════════════════════════════════
+        async function openTicketDetailModal(ticketId) {
+            const modal = document.getElementById('ticketDetailModal');
+            if (!modal) return;
+
+            // Reset fields
+            document.getElementById('modalTicketCode').textContent = '...';
+            document.getElementById('modalHolderName').textContent = '...';
+            document.getElementById('modalHolderNik').textContent = '...';
+            document.getElementById('modalHolderPhone').textContent = '...';
+            document.getElementById('modalHolderEmail').textContent = '...';
+            document.getElementById('modalEventName').textContent = '...';
+            document.getElementById('modalEventDate').textContent = '';
+            document.getElementById('modalOrderNumber').textContent = '...';
+            document.getElementById('modalStatusBadge').innerHTML = '';
+            document.getElementById('modalCheckinTimeBox').style.display = 'none';
+            document.getElementById('modalTicketQrImg').src = '';
+
+            modal.style.display = 'flex';
+
+            // Try local cache first
+            const cached = (window.ALL_TICKETS || []).find(t => String(t.id) === String(ticketId));
+            if (cached) {
+                fillTicketModal(cached);
+            }
+
+            // Fetch fresh from server
+            try {
+                const res = await fetch(`/creator/scanner/ticket-detail/${ticketId}`, {
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.ticket) fillTicketModal(data.ticket);
+                }
+            } catch (e) {
+                if (!cached) {
+                    document.getElementById('modalHolderName').textContent = 'Gagal memuat data.';
+                }
+            }
+        }
+
+        function fillTicketModal(t) {
+            const codeEl = document.getElementById('modalTicketCode');
+            const nameEl = document.getElementById('modalHolderName');
+            const nikEl = document.getElementById('modalHolderNik');
+            const phoneEl = document.getElementById('modalHolderPhone');
+            const emailEl = document.getElementById('modalHolderEmail');
+            const eventEl = document.getElementById('modalEventName');
+            const eventDateEl = document.getElementById('modalEventDate');
+            const orderEl = document.getElementById('modalOrderNumber');
+            const statusEl = document.getElementById('modalStatusBadge');
+            const checkinBox = document.getElementById('modalCheckinTimeBox');
+            const checkinTimeEl = document.getElementById('modalCheckinTime');
+            const scannedByEl = document.getElementById('modalScannedBy');
+            const qrImg = document.getElementById('modalTicketQrImg');
+
+            if (codeEl) codeEl.textContent = t.code || t.ticket_code || '—';
+            if (nameEl) nameEl.textContent = t.holder_name || '—';
+            if (nikEl) nikEl.textContent = t.holder_nik || t.nik || '—';
+            if (phoneEl) phoneEl.textContent = t.holder_phone || '—';
+            if (emailEl) emailEl.textContent = t.holder_email || '—';
+            if (eventEl) eventEl.textContent = t.event_name || (t.product ? t.product.name : '—');
+            if (eventDateEl) eventDateEl.textContent = t.event_date || '';
+            if (orderEl) orderEl.textContent = t.order_number || t.order_id || '—';
+
+            const status = t.status || 'valid';
+            if (statusEl) {
+                if (status === 'used') {
+                    statusEl.innerHTML = `<span class="badge-status badge-used"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"/></svg>Checked-In (Hadir)</span>`;
+                } else if (status === 'cancelled') {
+                    statusEl.innerHTML = `<span class="badge-status badge-cancelled">Dibatalkan</span>`;
+                } else {
+                    statusEl.innerHTML = `<span class="badge-status badge-valid">Belum Hadir</span>`;
+                }
+            }
+
+            if (status === 'used' && t.checked_in_at) {
+                if (checkinBox) checkinBox.style.display = 'block';
+                if (checkinTimeEl) checkinTimeEl.textContent = t.checked_in_at;
+                if (scannedByEl) scannedByEl.textContent = t.scanned_by ? ('Oleh: ' + t.scanned_by) : '';
+            } else {
+                if (checkinBox) checkinBox.style.display = 'none';
+            }
+
+            const code = t.code || t.ticket_code || '';
+            if (qrImg && code) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(code)}`;
+            }
+        }
+
+        function closeTicketDetailModal() {
+            const modal = document.getElementById('ticketDetailModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // TOGGLE CHECKIN STATUS VIA ICON BUTTON (di card pengunjung)
+        // ══════════════════════════════════════════════════════════════════════
+        async function toggleCheckinStatus(ticketId, btn) {
+            btn.disabled = true;
+            try {
+                const res = await fetch(`/creator/scanner/toggle-checkin/${ticketId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // Refresh halaman agar data terkini
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Gagal mengubah status kehadiran.');
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                alert('Terjadi kesalahan jaringan.');
+                btn.disabled = false;
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // INSTANT FILTER \u0026 STATS UI (DATA TAB)
+        // ══════════════════════════════════════════════════════════════════════
+        const EVENT_STOCK_MAP = {!! json_encode($eventStockMap ?? []) !!};
+
+        function runInstantFilter() {
+            const searchVal   = (document.getElementById('instantSearchInput')?.value || '').toLowerCase().trim();
+            const eventFilter = document.getElementById('instantEventFilter')?.value || '';
+            const statFilter  = document.getElementById('instantStatusFilter')?.value || '';
+
+            // Update export link hrefs
+            const csvBtn = document.getElementById('btnExportExcel');
+            const pdfBtn = document.getElementById('btnExportPdfWristbands');
+            if (csvBtn) {
+                const u = new URL(csvBtn.href || '{{ route("creator.ticket.scanner.export") }}', window.location.origin);
+                if (eventFilter) u.searchParams.set('event_id', eventFilter); else u.searchParams.delete('event_id');
+                if (statFilter) u.searchParams.set('status', statFilter); else u.searchParams.delete('status');
+                csvBtn.href = u.toString();
+            }
+            if (pdfBtn) {
+                const u2 = new URL(pdfBtn.href || '{{ route("creator.ticket.scanner.export-wristbands-pdf") }}', window.location.origin);
+                if (eventFilter) u2.searchParams.set('event_id', eventFilter); else u2.searchParams.delete('event_id');
+                if (statFilter) u2.searchParams.set('status', statFilter); else u2.searchParams.delete('status');
+                pdfBtn.href = u2.toString();
+            }
+
+            updateStatsUI(eventFilter);
+
+            // Client-side card filter
+            const cards = document.querySelectorAll('#attendanceCardsList .visitor-card');
+            let visibleCount = 0;
+            cards.forEach(card => {
+                const text    = card.dataset.search || card.textContent.toLowerCase();
+                const evId    = card.dataset.eventId || '';
+                const status  = card.dataset.status || '';
+
+                const matchSearch = !searchVal || text.includes(searchVal);
+                const matchEvent  = !eventFilter || evId === eventFilter;
+                const matchStatus = !statFilter || status === statFilter;
+
+                const show = matchSearch && matchEvent && matchStatus;
+                card.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
+            });
+
+            const subtitle = document.getElementById('cardListTotalSubtitle');
+            if (subtitle && cards.length > 0) {
+                subtitle.textContent = visibleCount + ' Pengunjung';
+            }
+        }
+
+        function updateStatsUI(eventFilter) {
+            eventFilter = eventFilter !== undefined ? eventFilter : (document.getElementById('instantEventFilter')?.value || '');
+
+            const src = window.ALL_TICKETS || [];
+            const filtered = eventFilter ? src.filter(t => String(t.product_id) === String(eventFilter)) : src;
+
+            const totalSold    = filtered.filter(t => t.status !== 'cancelled').length;
+            const checkedIn    = filtered.filter(t => t.status === 'used').length;
+            const unchecked    = filtered.filter(t => t.status === 'valid').length;
+            const cancelled    = filtered.filter(t => t.status === 'cancelled').length;
+            const rate         = totalSold > 0 ? Math.round(checkedIn / totalSold * 100 * 10) / 10 : 0;
+
+            // Remaining stock
+            let remaining = 0;
+            if (eventFilter && EVENT_STOCK_MAP[eventFilter]) {
+                remaining = EVENT_STOCK_MAP[eventFilter].remaining ?? 0;
+            } else {
+                Object.values(EVENT_STOCK_MAP).forEach(v => { remaining += (v.remaining ?? 0); });
+            }
+
+            const soldEl = document.getElementById('statTotalVal');
+            if (soldEl) {
+                soldEl.innerHTML = `${totalSold}<span id="statRemainingVal" style="font-size:0.55em;font-weight:600;color:#64748b;">/${remaining}</span>`;
+            }
+
+            const ciEl   = document.getElementById('statCheckedInVal');
+            const rateEl = document.getElementById('statCheckedInRate');
+            const ucEl   = document.getElementById('statUncheckedVal');
+            const caEl   = document.getElementById('statCancelledVal');
+
+            if (ciEl)   ciEl.textContent   = checkedIn;
+            if (rateEl) rateEl.textContent  = `Tingkat Kehadiran: ${rate}%`;
+            if (ucEl)   ucEl.textContent    = unchecked;
+            if (caEl)   caEl.textContent    = cancelled;
+        }
+
+        function resetInstantFilter() {
+            const si = document.getElementById('instantSearchInput');
+            const ef = document.getElementById('instantEventFilter');
+            const sf = document.getElementById('instantStatusFilter');
+            if (si) si.value = '';
+            if (ef) ef.value = '';
+            if (sf) sf.value = '';
+            runInstantFilter();
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -6344,146 +6768,8 @@
 
         // ══════════════════════════════════════════════════════════════════════
         // PENCARIAN & FILTERING INSTAN 0ms (NO PAGE RELOAD / OFFLINE CACHE)
+        // Legacy functions replaced by new ones above — keeping toggleCheckinInstant
         // ══════════════════════════════════════════════════════════════════════
-        function runInstantFilter() {
-            const searchVal = (document.getElementById('instantSearchInput')?.value || '').toLowerCase().trim();
-            const eventVal = document.getElementById('instantEventFilter')?.value || '';
-            const statusVal = document.getElementById('instantStatusFilter')?.value || '';
-
-            const tbody = document.getElementById('attendanceTableBody');
-            const pagWrap = document.getElementById('tablePaginationWrap');
-            if (!tbody) return;
-
-            // Filter dari in-memory dataset
-            const filtered = ALL_TICKETS.filter(t => {
-                if (eventVal && String(t.product_id) !== String(eventVal)) return false;
-                if (statusVal && t.status !== statusVal) return false;
-                if (searchVal) {
-                    const combined = [
-                        t.code || '',
-                        t.holder_name || '',
-                        t.holder_email || '',
-                        t.holder_phone || '',
-                        t.event_name || ''
-                    ].join(' ').toLowerCase();
-                    return combined.includes(searchVal);
-                }
-                return true;
-            });
-
-            // Sembunyikan pagination server saat filter aktif
-            if (pagWrap) {
-                pagWrap.style.display = (searchVal || eventVal || statusVal) ? 'none' : 'block';
-            }
-
-            // Render rows instan
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr>
-                                                                <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
-                                                                    <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.92rem;">Tidak Ada Tiket yang Cocok</div>
-                                                                    <div style="font-size: 0.78rem; color: #64748b;">Pencarian instan tidak menemukan data untuk filter yang dipilih.</div>
-                                                                </td>
-                                                            </tr>`;
-            } else {
-                let html = '';
-                filtered.forEach((t, index) => {
-                    let badgeClass = 'badge-valid';
-                    let statusLabel = 'Belum Hadir';
-                    let btnHtml = '';
-
-                    if (t.status === 'used') {
-                        badgeClass = 'badge-used';
-                        statusLabel = 'Hadir (Checked-In)';
-                        btnHtml = `<button type="button" class="btn-action-sm btn-toggle-undo" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
-                                                                    </button>`;
-                    } else if (t.status === 'cancelled') {
-                        badgeClass = 'badge-cancelled';
-                        statusLabel = 'Dibatalkan';
-                        btnHtml = `<span style="font-size: 0.75rem; color: #94a3b8;">Tidak Aktif</span>`;
-                    } else {
-                        btnHtml = `<button type="button" class="btn-action-sm btn-toggle-checkin" onclick="toggleCheckinInstant(${t.id}, '${t.toggle_url}', this)">
-                                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Check-In
-                                                                    </button>`;
-                    }
-
-                    const timeDisplay = t.checked_in_at
-                        ? `<span style="font-weight: 700; color: #166534; display: block; font-size: 0.8rem;">${t.checked_in_at}</span>`
-                        : `<span style="color: #94a3b8; font-style: italic; font-size: 0.8rem;">— Belum —</span>`;
-
-                    html += `<tr id="row-ticket-${t.id}">
-                                                                    <td class="row-index">${index + 1}</td>
-                                                                    <td class="row-code">
-                                                                        <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                                                            ${t.code}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td class="row-event">
-                                                                        <strong style="color: #0f172a; display: block; font-size: 0.84rem;">${t.event_name}</strong>
-                                                                        <span style="font-size: 0.73rem; color: #64748b;">${t.event_date}</span>
-                                                                    </td>
-                                                                    <td class="row-holder">
-                                                                        <strong style="color: #0f172a; display: block; font-size: 0.85rem;">${t.holder_name}</strong>
-                                                                        <span style="font-size: 0.74rem; color: #64748b; display: block;">${t.holder_email}</span>
-                                                                        <span style="font-size: 0.74rem; color: #64748b;">${t.holder_phone || ''}</span>
-                                                                        ${t.holder_nik ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
-                                                                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                                                            ${t.holder_nik}
-                                                                        </span>` : ''}
-                                                                    </td>
-                                                                    <td class="row-status">
-                                                                        <span class="badge-status ${badgeClass}">${statusLabel}</span>
-                                                                    </td>
-                                                                    <td class="row-time">${timeDisplay}${t.scanned_by ? `<span style="font-size: 0.71rem; color: #475569; display: flex; align-items: center; gap: 3px; margin-top: 2px; font-weight: 600;"><svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.scanned_by}</span>` : ''}</td>
-                                                                    <td style="text-align: center;" class="row-action">${btnHtml}</td>
-                                                                </tr>`;
-                });
-                tbody.innerHTML = html;
-            }
-
-            // Update ringkasan stats secara instan
-            updateStatsUI();
-        }
-
-        function resetInstantFilter() {
-            const searchInput = document.getElementById('instantSearchInput');
-            const eventSelect = document.getElementById('instantEventFilter');
-            const statusSelect = document.getElementById('instantStatusFilter');
-            if (searchInput) searchInput.value = '';
-            if (eventSelect) eventSelect.value = '';
-            if (statusSelect) statusSelect.value = '';
-
-            runInstantFilter();
-        }
-
-        function updateStatsUI() {
-            const eventVal = document.getElementById('instantEventFilter')?.value || '';
-            const source = eventVal ? ALL_TICKETS.filter(t => String(t.product_id) === String(eventVal)) : ALL_TICKETS;
-
-            const total = source.length;
-            const checkedIn = source.filter(t => t.status === 'used').length;
-            const unchecked = source.filter(t => t.status === 'valid').length;
-            const cancelled = source.filter(t => t.status === 'cancelled').length;
-            const rate = total > 0 ? (checkedIn / total * 100).toFixed(1) : 0;
-
-            const totalEl = document.getElementById('statTotalVal');
-            const checkedEl = document.getElementById('statCheckedInVal');
-            const rateEl = document.getElementById('statCheckedInRate');
-            const uncheckedEl = document.getElementById('statUncheckedVal');
-            const cancelledEl = document.getElementById('statCancelledVal');
-
-            const smCheckedEl = document.getElementById('smStatCheckedIn');
-            const smTotalEl = document.getElementById('smStatTotal');
-
-            if (totalEl) totalEl.textContent = total.toLocaleString('id-ID');
-            if (checkedEl) checkedEl.textContent = checkedIn.toLocaleString('id-ID');
-            if (rateEl) rateEl.textContent = `Tingkat Kehadiran: ${rate}%`;
-            if (uncheckedEl) uncheckedEl.textContent = unchecked.toLocaleString('id-ID');
-            if (cancelledEl) cancelledEl.textContent = cancelled.toLocaleString('id-ID');
-
-            if (smCheckedEl) smCheckedEl.textContent = checkedIn.toLocaleString('id-ID');
-            if (smTotalEl) smTotalEl.textContent = total.toLocaleString('id-ID');
-        }
 
         // ══════════════════════════════════════════════════════════════════════
         // CHECK-IN MANUAL INSTAN (OPTIMISTIC UI UPDATE)

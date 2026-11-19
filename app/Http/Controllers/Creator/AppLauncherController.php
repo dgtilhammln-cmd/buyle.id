@@ -18,7 +18,7 @@ class AppLauncherController extends Controller
                 'id'          => 'webbuilder',
                 'name'        => 'Web Builder',
                 'badge'       => 'Halaman Digital & Bio Link',
-                'description' => 'Bangun semua aset digital bisnis Anda — dari Link in Bio interaktif, Website Company Profile, hingga toko E-Commerce — lengkap dengan sistem Affiliate & Whitelabel.',
+                'description' => 'Bangun semua aset digital bisnis Anda — dari Link in Bio interaktif, Website Company Profile, hingga E-Commerce — lengkap dengan sistem Affiliate & Whitelabel.',
                 'features'    => [
                     ['icon' => 'link',    'label' => 'Link in Bio'],
                     ['icon' => 'globe',   'label' => 'Company Profile'],

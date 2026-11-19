@@ -1328,7 +1328,7 @@ Panel review admin diperkaya dengan data kreator yang sinkron:
 - Nama Store & avatar creator
 - Bio singkat
 - Total produk & kategori
-- Status verifikasi toko
+- Status verifikasi store
 
 **Card Finansial & Transaksi (baru)**
 - Total pendapatan GMV creator

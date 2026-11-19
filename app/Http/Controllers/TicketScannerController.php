@@ -35,6 +35,7 @@ class TicketScannerController extends Controller
         // Ambil daftar event/produk bertipe ticket milik creator ini (menggunakan seller_id)
         $events = Product::where('seller_id', $sellerId)
             ->where('product_type', 'ticket')
+            ->with(['variantOptions.values'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -97,6 +98,28 @@ class TicketScannerController extends Controller
         $filteredTickets = (clone $ticketsQuery)->get();
         $tickets = $ticketsQuery->orderBy('updated_at', 'desc')->paginate(25)->withQueryString();
 
+        // Hitung kapasitas total stok tiket (dari variasi tiket atau kolom stock produk)
+        $eventStockMap = [];
+        $totalCreatorCapacity = 0;
+
+        foreach ($events as $ev) {
+            $cap = 0;
+            if ($ev->relationLoaded('variantOptions') && $ev->variantOptions->isNotEmpty()) {
+                $variantSum = (int) $ev->variantOptions->flatMap->values->sum('stock');
+                $cap = $variantSum > 0 ? $variantSum : (int) ($ev->stock ?? 0);
+            } else {
+                $cap = (int) ($ev->stock ?? 0);
+            }
+            $eventSold = $allCreatorTickets->where('product_id', $ev->id)->where('status', '!=', 'cancelled')->count();
+            $eventRemaining = max(0, $cap - $eventSold);
+            $eventStockMap[$ev->id] = [
+                'capacity'  => $cap,
+                'sold'      => $eventSold,
+                'remaining' => $eventRemaining,
+            ];
+            $totalCreatorCapacity += $cap;
+        }
+
         // Stats Ringkasan (dihitung dari seluruh tiket creator atau per event terpilih)
         $statSource = $selectedEventId ? $allCreatorTickets->where('product_id', $selectedEventId) : $allCreatorTickets;
         $totalTickets   = $statSource->count();
@@ -105,12 +128,26 @@ class TicketScannerController extends Controller
         $totalCancelled = $statSource->where('status', 'cancelled')->count();
         $attendanceRate = $totalTickets > 0 ? round(($totalCheckedIn / $totalTickets) * 100, 1) : 0;
 
+        $activeTicketsCount = $statSource->where('status', '!=', 'cancelled')->count();
+        if ($selectedEventId && isset($eventStockMap[$selectedEventId])) {
+            $totalCapacity  = $eventStockMap[$selectedEventId]['capacity'];
+            $totalSold      = $eventStockMap[$selectedEventId]['sold'];
+            $remainingStock = $eventStockMap[$selectedEventId]['remaining'];
+        } else {
+            $totalCapacity  = $totalCreatorCapacity;
+            $totalSold      = $activeTicketsCount;
+            $remainingStock = max(0, $totalCapacity - $totalSold);
+        }
+
         $stats = [
-            'total'         => $totalTickets,
-            'checked_in'    => $totalCheckedIn,
-            'unchecked'     => $totalUnchecked,
-            'cancelled'     => $totalCancelled,
-            'rate'          => $attendanceRate,
+            'total'          => $totalTickets,
+            'total_sold'     => $totalSold,
+            'total_capacity' => $totalCapacity,
+            'remaining'      => $remainingStock,
+            'checked_in'     => $totalCheckedIn,
+            'unchecked'      => $totalUnchecked,
+            'cancelled'      => $totalCancelled,
+            'rate'           => $attendanceRate,
         ];
 
         if ($request->wantsJson()) {
@@ -157,6 +194,8 @@ class TicketScannerController extends Controller
             'search',
             'activeTab',
             'stats',
+            'eventStockMap',
+            'totalCreatorCapacity',
             'allTicketsCached',
             'kyc',
             'gateStaffList',
@@ -419,6 +458,37 @@ class TicketScannerController extends Controller
     }
 
     /**
+     * JSON detail satu tiket untuk modal pengunjung.
+     */
+    public function ticketDetail(TicketPass $ticket): JsonResponse
+    {
+        $sellerId = auth()->id();
+        if ($ticket->seller_id != $sellerId && $ticket->product?->seller_id != $sellerId) {
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        return response()->json([
+            'success' => true,
+            'ticket'  => [
+                'id'            => $ticket->id,
+                'code'          => $ticket->ticket_code,
+                'holder_name'   => $ticket->holder_name ?? '—',
+                'holder_nik'    => TicketPass::maskNik($ticket->holder_nik),
+                'holder_phone'  => $ticket->holder_phone ?? '—',
+                'holder_email'  => $ticket->holder_email ?? '—',
+                'event_name'    => $ticket->product?->name ?? '—',
+                'event_date'    => $ticket->product?->event_date ? $ticket->product->event_date->format('d M Y') : '—',
+                'order_number'  => $ticket->order?->order_number ?? '—',
+                'status'        => $ticket->status,
+                'checked_in_at' => $ticket->checked_in_at ? $ticket->checked_in_at->format('H:i:s · d M Y') : null,
+                'scanned_by'    => $ticket->scanned_by_staff_name
+                    ? ($ticket->scanned_by_staff_name . ' · Gate ' . $ticket->scanned_at_gate)
+                    : ($ticket->checked_in_by ? 'Creator Studio' : null),
+            ],
+        ]);
+    }
+
+    /**
      * Export data kehadiran event ke file CSV.
      */
     public function exportCsv(Request $request): StreamedResponse
@@ -429,7 +499,12 @@ class TicketScannerController extends Controller
         $search = trim($request->input('search', ''));
 
         $ticketsQuery = TicketPass::with(['product', 'order'])
-            ->where('seller_id', $sellerId);
+            ->where(function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId)
+                  ->orWhereHas('product', function ($pq) use ($sellerId) {
+                      $pq->where('seller_id', $sellerId);
+                  });
+            });
 
         if ($selectedEventId) {
             $ticketsQuery->where('product_id', $selectedEventId);
@@ -520,7 +595,12 @@ class TicketScannerController extends Controller
         $search = trim($request->input('search', ''));
 
         $ticketsQuery = TicketPass::with(['product', 'order'])
-            ->where('seller_id', $sellerId);
+            ->where(function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId)
+                  ->orWhereHas('product', function ($pq) use ($sellerId) {
+                      $pq->where('seller_id', $sellerId);
+                  });
+            });
 
         if ($selectedEventId) {
             $ticketsQuery->where('product_id', $selectedEventId);

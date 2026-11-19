@@ -63,7 +63,7 @@ class CreatorProfileController extends Controller
                     ->exists();
                 if ($slugConflict) {
                     return back()->withErrors([
-                        'username' => 'Username ini sudah dipakai oleh creator lain sebagai URL toko.'
+                        'username' => 'Username ini sudah digunakan.'
                     ])->withInput();
                 }
 
@@ -145,9 +145,9 @@ class CreatorProfileController extends Controller
             'store_banner_1' => 'nullable|image|max:10240',
             'store_banner_2' => 'nullable|image|max:10240',
         ], [
-            'store_description.required' => 'Deskripsi toko wajib diisi (minimal 40 karakter).',
-            'store_description.min' => 'Deskripsi toko minimal 40 karakter.',
-            'store_description.max' => 'Deskripsi toko maksimal 300 karakter.',
+            'store_description.required' => 'Deskripsi wajib diisi (minimal 40 karakter).',
+            'store_description.min' => 'Deskripsi minimal 40 karakter.',
+            'store_description.max' => 'Deskripsi maksimal 300 karakter.',
             'address.required' => 'Alamat lengkap wajib diisi.',
             'address.min' => 'Alamat lengkap minimal 5 karakter.',
             'province_name.required' => 'Provinsi wajib dipilih.',

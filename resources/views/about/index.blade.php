@@ -34,8 +34,8 @@
         }
 
         /* ═══════════════════════════════════════
-                                                               PAGE HERO — 100% sama dengan /products
-                                                            ═══════════════════════════════════════ */
+                                                                                                                       PAGE HERO — 100% sama dengan /products
+                                                                                                                    ═══════════════════════════════════════ */
         .sv-hero-premium {
             position: relative;
             padding: 9rem 1.5rem 5rem;
@@ -446,8 +446,8 @@
         }
 
         /* ══════════════════════════════════════════════════════
-                                                                   PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
-                                                                ══════════════════════════════════════════════════════ */
+                                                                                                                           PROFIL PLATFORM — 3D ORBIT EKOSISTEM HERO (REFERENCE)
+                                                                                                                        ══════════════════════════════════════════════════════ */
         .buyle-orbit-section {
             position: relative;
             padding: 8.5rem 1.5rem 5rem;
@@ -1145,10 +1145,10 @@
         }
 
         /* ── Flow Panels Wrapper – CSS Grid Stacking ──
-                                                           Kedua panel menempati cell yang sama (grid-area: 1/1)
-                                                           sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
-                                                           Visibility dikendalikan via opacity + pointer-events agar
-                                                           CSS transition dapat berjalan (display:none tidak bisa di-animate). */
+                                                                                                                   Kedua panel menempati cell yang sama (grid-area: 1/1)
+                                                                                                                   sehingga tidak pernah berjejer vertikal / menumpuk antar konten.
+                                                                                                                   Visibility dikendalikan via opacity + pointer-events agar
+                                                                                                                   CSS transition dapat berjalan (display:none tidak bisa di-animate). */
         .buyle-flow-panels-wrap {
             display: grid;
             grid-template-columns: 1fr;
@@ -2049,7 +2049,7 @@
                                 </h3>
                                 <div class="buyle-hub-accent-bar"></div>
                                 <p class="buyle-hub-desc">
-                                    Apa yang membuat toko Anda dipercaya dan menghasilkan pendapatan konsisten?
+                                    Apa yang membuat Digital Store Anda dipercaya dan menghasilkan pendapatan konsisten?
                                 </p>
                             </div>
                         </div>
@@ -2083,7 +2083,7 @@
                                         </div>
                                         <h4 class="buyle-flow-card-title">Daftar Akun Kreator</h4>
                                     </div>
-                                    <p class="buyle-flow-card-desc">Registrasi cepat & gratis. Dapatkan URL toko eksklusif
+                                    <p class="buyle-flow-card-desc">Registrasi cepat & gratis. Dapatkan URL eksklusif
                                         buyle.id/nama-anda.</p>
                                 </div>
                             </div>
@@ -2244,7 +2244,7 @@
                                         </div>
                                         <h4 class="buyle-mobile-card-title">Daftar Akun Kreator</h4>
                                     </div>
-                                    <p class="buyle-mobile-card-desc">Registrasi cepat & gratis. Dapatkan URL toko eksklusif
+                                    <p class="buyle-mobile-card-desc">Registrasi cepat & gratis. Dapatkan URL eksklusif
                                         buyle.id/nama-anda.</p>
                                 </div>
                             </div>
@@ -2773,7 +2773,7 @@
                                         </div>
                                         <h4 class="buyle-flow-card-title">Rancang Web & Bio Link</h4>
                                     </div>
-                                    <p class="buyle-flow-card-desc">Rancang halaman biolink atau website toko personal Anda
+                                    <p class="buyle-flow-card-desc">Rancang halaman biolink atau website personal Anda
                                         dengan tampilan profesional.</p>
                                 </div>
                             </div>
@@ -2922,7 +2922,7 @@
                                         </div>
                                         <h4 class="buyle-mobile-card-title">Rancang Web & Bio Link</h4>
                                     </div>
-                                    <p class="buyle-mobile-card-desc">Rancang halaman link in bio atau website toko personal
+                                    <p class="buyle-mobile-card-desc">Rancang halaman link in bio atau website personal
                                         Anda dengan mudah.</p>
                                 </div>
                             </div>
@@ -3073,7 +3073,7 @@
                                         <h4 class="buyle-flow-card-title">Daftar & Buka Menu Web</h4>
                                     </div>
                                     <p class="buyle-flow-card-desc">Registrasi akun, lalu buka menu <strong>Web & Bio
-                                            Link</strong> untuk menyiapkan storefront toko online brand Anda.</p>
+                                            Link</strong> untuk menyiapkan Digital Store Anda.</p>
                                 </div>
                             </div>
 
@@ -3205,7 +3205,7 @@
                                         </div>
                                         <h4 class="buyle-flow-card-title">Promosikan & Raih Margin</h4>
                                     </div>
-                                    <p class="buyle-flow-card-desc">Sebar link toko Anda, terima pembayaran otomatis, dan
+                                    <p class="buyle-flow-card-desc">Sebar link, terima pembayaran otomatis, dan
                                         nikmati keuntungan margin penjualan secara utuh!</p>
                                 </div>
                             </div>
@@ -3242,7 +3242,7 @@
                                         <h4 class="buyle-mobile-card-title">Daftar & Buka Menu Web</h4>
                                     </div>
                                     <p class="buyle-mobile-card-desc">Registrasi akun, lalu buka menu <strong>Web & Bio
-                                            Link</strong> untuk menyiapkan storefront toko online brand Anda.</p>
+                                            Link</strong> untuk menyiapkan Digital Store online brand Anda.</p>
                                 </div>
                             </div>
 
@@ -3326,7 +3326,7 @@
                                         </div>
                                         <h4 class="buyle-mobile-card-title">Promosikan & Raih Margin</h4>
                                     </div>
-                                    <p class="buyle-mobile-card-desc">Sebar link toko Anda, terima pembayaran otomatis, dan
+                                    <p class="buyle-mobile-card-desc">Sebar link, terima pembayaran otomatis, dan
                                         nikmati keuntungan margin penjualan secara utuh!</p>
                                 </div>
                             </div>

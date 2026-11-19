@@ -2,7 +2,7 @@
   "id": "/login-pos",
   "name": "Buyle POS - Kasir Digital",
   "short_name": "Buyle POS",
-  "description": "Aplikasi Kasir Digital Super App Buyle.id untuk Penjualan Toko & Outlet",
+  "description": "Aplikasi Kasir Digital Super App Buyle.id untuk Penjualan",
   "start_url": "/login-pos",
   "scope": "/",
   "display": "standalone",
@@ -11,7 +11,11 @@
   "theme_color": "#1eb349",
   "lang": "id",
   "dir": "ltr",
-  "categories": ["business", "finance", "productivity"],
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
+  ],
   "prefer_related_applications": false,
   "icons": [
     {
@@ -53,7 +57,7 @@
     {
       "name": "Buka Kasir",
       "short_name": "Kasir",
-      "description": "Buka kasir digital transaksi toko",
+      "description": "Buka kasir digital transaksi",
       "url": "/creator/pos",
       "icons": [
         {

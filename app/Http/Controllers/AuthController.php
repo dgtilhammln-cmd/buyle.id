@@ -57,7 +57,7 @@ class AuthController extends Controller
             if (Auth::user()->is_active === false || Auth::user()->is_active === 0) {
                 Auth::logout();
                 return back()->withInput()->withErrors([
-                    'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi pemilik toko atau admin.',
+                    'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi creator atau admin.',
                 ]);
             }
 

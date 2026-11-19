@@ -36,7 +36,7 @@ class CreatorOnboardingController extends Controller
     {
         $user = Auth::user();
 
-        // Jika belum ada nama toko tapi sudah ada slug, biarkan divalidasi
+        // Jika belum ada nama digital store tapi sudah ada slug, biarkan divalidasi
         if (empty($request->store_slug) && !empty($request->store_name)) {
             $request->merge(['store_slug' => \Illuminate\Support\Str::slug($request->store_name)]);
         }
@@ -56,9 +56,9 @@ class CreatorOnboardingController extends Controller
             'subdistrict_id' => 'required|integer',
             'avatar' => 'nullable|image|max:10240',
         ], [
-            'store_description.required' => 'Deskripsi toko wajib diisi (minimal 40 karakter).',
-            'store_description.min' => 'Deskripsi toko minimal 40 karakter.',
-            'store_description.max' => 'Deskripsi toko maksimal 300 karakter.',
+            'store_description.required' => 'Deskripsi store wajib diisi (minimal 40 karakter).',
+            'store_description.min' => 'Deskripsi store minimal 40 karakter.',
+            'store_description.max' => 'Deskripsi store maksimal 300 karakter.',
             'creator_type.required' => 'Pilih peran / tipe Creator Anda.',
             'social_links.instagram.required' => 'Akun Instagram wajib diisi.',
             'social_links.tiktok.required' => 'Akun TikTok wajib diisi.',
@@ -102,6 +102,6 @@ class CreatorOnboardingController extends Controller
         $user->save();
         $profile->save();
 
-        return redirect()->route('creator.dashboard')->with('success', 'Selamat! Toko Anda berhasil dibuat. Silakan tambahkan produk pertama Anda.');
+        return redirect()->route('creator.dashboard')->with('success', 'Selamat! Anda berhasil menjadi creator!.');
     }
 }

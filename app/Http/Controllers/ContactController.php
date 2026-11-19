@@ -18,7 +18,7 @@ class ContactController extends Controller
         $seo = [
             'title'       => $settings['meta_title_contact'] ?? 'Hubungi Kami | ' . $siteName,
             'description' => $settings['meta_desc_contact'] ?? 'Hubungi ' . $siteName . ' untuk konsultasi produk, pemesanan, dan layanan jasa. Respon cepat via WhatsApp.',
-            'keywords'    => $settings['meta_keywords_contact'] ?? 'kontak buyle.id, hubungi toko, konsultasi produk',
+            'keywords'    => $settings['meta_keywords_contact'] ?? 'kontak buyle.id, nomor buyle, konsultasi produk',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
             'canonical'   => route('contact'),
         ];

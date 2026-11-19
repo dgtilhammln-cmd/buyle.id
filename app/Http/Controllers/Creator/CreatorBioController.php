@@ -88,7 +88,7 @@ class CreatorBioController extends Controller
             return redirect()->route('creator.bio.index')->with('success', 'Selamat! Profil Link in Bio Affiliator Anda siap dibuat. 🎉');
         }
 
-        return redirect()->route('creator.profile.edit')->with('success', 'Selamat datang! Silakan lengkapi profil toko Anda.');
+        return redirect()->route('creator.profile.edit')->with('success', 'Selamat datang! Silakan lengkapi profil Anda.');
     }
 
     /**

@@ -53,7 +53,7 @@ class PosAuthController extends Controller
             if ($user->is_active === false || $user->is_active === 0) {
                 Auth::logout();
                 return back()->withInput()->withErrors([
-                    'email' => 'Akun kasir Anda saat ini dinonaktifkan oleh pemilik toko.',
+                    'email' => 'Akun kasir Anda saat ini dinonaktifkan.',
                 ]);
             }
 
@@ -62,7 +62,7 @@ class PosAuthController extends Controller
                 return redirect()->intended(route('creator.pos.index'));
             }
 
-            // Jika role buyer biasa, tetap izinkan masuk ke POS jika toko aktif
+            // Jika role buyer biasa, tetap izinkan masuk ke POS jika Creator aktif
             return redirect()->route('creator.pos.index');
         }
 

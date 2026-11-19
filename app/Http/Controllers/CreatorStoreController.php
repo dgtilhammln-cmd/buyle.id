@@ -31,7 +31,7 @@ class CreatorStoreController extends Controller
                 ->first();
         }
 
-        // Jika bukan toko kreator, cek apakah ini ShortLink Automation (/c/{code})
+        // Jika bukan Store kreator, cek apakah ini ShortLink Automation (/c/{code})
         if (!$profile) {
             $shortLink = \App\Models\AutomationShortLink::where('code', $slug)->first();
             if ($shortLink) {
@@ -157,7 +157,7 @@ class CreatorStoreController extends Controller
 
         $seo = [
             'title'       => $profile->meta_title ?: ($profile->store_name . ' | Digital Creator — buyle.id'),
-            'description' => $profile->meta_desc  ?: ($profile->store_name . ' — ' . ($profile->store_description ?: 'Toko digital di buyle.id. Temukan produk dan layanan dari creator ini.')),
+            'description' => $profile->meta_desc  ?: ($profile->store_name . ' — ' . ($profile->store_description ?: 'Digital Store di buyle.id. Temukan produk dan layanan dari creator ini.')),
             'keywords'    => $profile->meta_keywords ?: $storeKeywords,
             'og_image'    => $seller->avatar ? asset('storage/' . $seller->avatar) : asset('images/og-default.jpg'),
             'canonical'   => route('store.show', array_filter(['slug' => $slug, 'groupSlug' => $activeGroupSlug])),

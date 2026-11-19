@@ -61,7 +61,7 @@ class RoleMiddleware
             $routeName = $request->route() ? $request->route()->getName() : '';
             
             if (!$isAffiliator && $isProfileIncomplete && !in_array($routeName, $allowedRoutes)) {
-                return redirect()->route('creator.profile.edit')->with('error', 'Anda wajib melengkapi profil (terutama Nama Toko) sebelum dapat mengakses halaman lain.');
+                return redirect()->route('creator.profile.edit')->with('error', 'Anda wajib melengkapi profil sebelum dapat mengakses halaman lain.');
             }
         }
 

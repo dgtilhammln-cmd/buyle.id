@@ -51,7 +51,7 @@ class AdminMediaPartnerController extends Controller
             ->orderBy('name')
             ->get()
             ->map(function ($u) {
-                // Samakan slug alias username saat ini: prioritaskan slug toko/bio publik aktif (store_slug), lalu username
+                // Samakan slug alias username saat ini: prioritaskan slug /bio publik aktif (store_slug), lalu username
                 $effectiveSlug = !empty($u->creatorProfile?->store_slug)
                     ? trim($u->creatorProfile->store_slug)
                     : (!empty($u->username) ? trim($u->username) : Str::slug($u->name, ''));

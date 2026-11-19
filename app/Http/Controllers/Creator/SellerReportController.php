@@ -454,7 +454,7 @@ class SellerReportController extends Controller
 
         $html .= "<div class='header'>";
         $html .= "<h2>LAPORAN KEUANGAN & DATA PEMBELI</h2>";
-        $html .= "<p>Toko / Creator: <strong>" . htmlspecialchars($storeName) . "</strong> | Tanggal Cetak: " . date('d/m/Y H:i') . "</p>";
+        $html .= "<p>Creator: <strong>" . htmlspecialchars($storeName) . "</strong> | Tanggal Cetak: " . date('d/m/Y H:i') . "</p>";
         $html .= "</div>";
 
         $html .= "<table class='report-table'>";
@@ -533,7 +533,7 @@ class SellerReportController extends Controller
 
         $html .= "<div class='header'>";
         $html .= "<h2>LAPORAN LEADS TRACKER & PESAN MASUK</h2>";
-        $html .= "<p>Toko / Creator: <strong>" . htmlspecialchars($storeName) . "</strong> | Tanggal Cetak: " . date('d/m/Y H:i') . "</p>";
+        $html .= "<p>Creator: <strong>" . htmlspecialchars($storeName) . "</strong> | Tanggal Cetak: " . date('d/m/Y H:i') . "</p>";
         $html .= "</div>";
 
         $html .= "<table class='report-table'>";
@@ -659,7 +659,7 @@ class SellerReportController extends Controller
         $format           = strtolower($request->query('format', 'csv'));
 
         $profile   = $seller->creatorProfile;
-        $storeName = $profile?->store_name ?? ('Toko ' . $seller->name);
+        $storeName = $profile?->store_name ?? ('Store' . $seller->name);
 
         $posQuery = Order::where('source', 'pos')
             ->where(function($q) use ($seller) {

@@ -37,7 +37,7 @@ class StorefrontController extends Controller
         }
 
         if (!$profile || !$profile->user) {
-            abort(404, 'Toko tidak ditemukan.');
+            abort(404, 'Creator tidak ditemukan.');
         }
 
         $seller = $profile->user;
@@ -75,7 +75,7 @@ class StorefrontController extends Controller
         $currentTime = $nowWib->format('H:i');
         $isOpen = ($currentTime >= $storeOpen && $currentTime <= $storeClose);
 
-        $storeName = $profile->store_name ?: ($seller->name ?: 'Toko Kami');
+        $storeName = $profile->store_name ?: ($seller->name ?: 'Digital store Kami');
         $posLogoUrl = $profile->pos_logo
             ? asset('storage/' . $profile->pos_logo)
             : ($seller->avatar ? (str_starts_with($seller->avatar, 'http') ? $seller->avatar : asset('storage/' . $seller->avatar)) : null);
@@ -182,7 +182,7 @@ class StorefrontController extends Controller
         }
 
         if (!$profile || !$profile->user) {
-            return response()->json(['success' => false, 'message' => 'Toko tidak ditemukan.'], 404);
+            return response()->json(['success' => false, 'message' => 'Digital Store tidak ditemukan.'], 404);
         }
 
         $isSellerOnline = (bool) ($profile->pos_last_online_at && $profile->pos_last_online_at->gt(now()->subMinutes(3)));
