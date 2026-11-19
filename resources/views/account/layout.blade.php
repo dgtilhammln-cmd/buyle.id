@@ -566,8 +566,13 @@
 
         /* ─── RESPONSIVE & MOBILE / IOS SAFEZONE OPTIMIZATIONS ─── */
         @media (max-width: 991px) {
+            /* Reset body padding-top yang di-set navbar ke 130px */
+            body {
+                padding-top: 0 !important;
+                background-color: #F8FAFC !important;
+            }
             /* Sembunyikan navbar web umum, footer, dan bottom-nav di mobile akun */
-            #mainNavbar, .skel-header-wrap, .mobile-bottom-nav {
+            #mainNavbar, .skel-header-wrap, .mobile-bottom-nav, .pill-navbar-wrapper {
                 display: none !important;
             }
             /* Sembunyikan footer di halaman akun pada mobile */

@@ -300,7 +300,30 @@
     $isBotSpeedTest = request()->has('disable_preloader') || preg_match('/Lighthouse|PageSpeed|Chrome-Lighthouse|GTmetrix|Google-InspectionTool/i', request()->userAgent() ?? '');
 @endphp
 
-<body class="{{ $isBotSpeedTest ? '' : 'cv-preloader-active' }}" style="overflow-x: hidden; margin: 0; padding: 0; background-color: #ffffff;">
+<body class="{{ $isBotSpeedTest ? '' : 'cv-preloader-active' }} {{ request()->is('akun*') ? 'is-acc-page' : '' }}" style="overflow-x: hidden; margin: 0; padding: 0; background-color: #ffffff;">
+
+<style>
+    @media (max-width: 991px) {
+        body.is-acc-page {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+            background-color: #F8FAFC !important;
+        }
+        body.is-acc-page main {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+            background-color: #F8FAFC !important;
+        }
+        body.is-acc-page .pill-navbar-wrapper,
+        body.is-acc-page #mainNavbar,
+        body.is-acc-page .skel-header-wrap,
+        body.is-acc-page .mobile-bottom-nav,
+        body.is-acc-page .cv-footer-v2,
+        body.is-acc-page footer {
+            display: none !important;
+        }
+    }
+</style>
 
 @if(!$isBotSpeedTest)
     {{-- Global Skeleton Loader --}}

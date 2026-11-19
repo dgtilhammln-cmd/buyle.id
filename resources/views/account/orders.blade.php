@@ -95,173 +95,236 @@
         }
 
         .order-card {
-            background: #fff;
-            border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            margin-bottom: 1.25rem;
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            margin-bottom: 0.85rem;
             overflow: hidden;
-            transition: box-shadow 0.2s;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
             display: block;
             text-decoration: none;
             color: inherit;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
         }
 
         .order-card:hover {
-            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.08);
-            border-color: #bbf7d0;
+            box-shadow: 0 6px 20px rgba(30, 179, 73, 0.09);
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .order-card:active {
+            transform: scale(0.99);
         }
 
         .order-card-header {
-            padding: 1rem 1.25rem;
+            padding: 0.65rem 0.95rem;
             border-bottom: 1px solid #F1F5F9;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            background: #FAFAFA;
         }
 
         .order-card-meta {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 0.85rem;
+            gap: 0.4rem;
+            font-size: 0.73rem;
             color: #64748B;
+            min-width: 0;
+        }
+
+        .order-meta-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #1eb349;
+            flex-shrink: 0;
+        }
+
+        .order-meta-date {
+            font-weight: 500;
+            color: #64748B;
+            white-space: nowrap;
+        }
+
+        .order-meta-dot {
+            color: #cbd5e1;
         }
 
         .order-card-id {
+            font-family: monospace;
             font-weight: 700;
             color: #0F172A;
+            font-size: 0.72rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .order-card-status {
-            font-size: 0.75rem;
+            font-size: 0.68rem;
             font-weight: 700;
-            padding: 0.35rem 0.75rem;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
             white-space: nowrap;
             flex-shrink: 0;
-            display: inline-block;
-        }
-
-        @media (max-width: 640px) {
-            .order-card-status {
-                font-size: 0.7rem;
-                padding: 0.25rem 0.55rem;
-            }
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
         }
 
         .order-card-status.pending {
-            background: #DCFCE7;
-            color: #15803D;
+            background: #FEF9C3;
+            color: #854D0E;
+            border: 1px solid #FEF08A;
         }
 
-        .order-card-status.confirmed {
-            background: #DCFCE7;
-            color: #15803D;
-        }
-
-        .order-card-status.processing {
-            background: #DCFCE7;
-            color: #15803D;
-        }
-
-        .order-card-status.shipped {
-            background: #DCFCE7;
-            color: #15803D;
-        }
-
+        .order-card-status.confirmed,
+        .order-card-status.processing,
+        .order-card-status.shipped,
         .order-card-status.delivered {
             background: #DCFCE7;
             color: #15803D;
+            border: 1px solid #BBF7D0;
         }
 
         .order-card-status.cancelled,
         .order-card-status.refunded {
             background: #FEE2E2;
             color: #DC2626;
+            border: 1px solid #FECACA;
         }
 
         .order-card-body {
-            padding: 1.25rem;
+            padding: 0.75rem 0.95rem;
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 1.25rem;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .order-item-main {
-            display: flex;
-            gap: 1rem;
-            flex: 1;
-            min-width: 260px;
-        }
-
-        .order-item-img {
-            width: 72px;
-            height: 72px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid #F1F5F9;
+        .order-item-img-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1.5px solid #F1F5F9;
+            background: #F8FAFC;
             flex-shrink: 0;
         }
 
+        .order-item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         .order-item-info {
+            flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            gap: 2px;
         }
 
         .order-item-title {
-            font-weight: 600;
+            font-weight: 700;
             color: #0F172A;
-            font-size: 0.95rem;
-            margin-bottom: 0.25rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            font-size: 0.83rem;
+            margin: 0;
+            line-height: 1.35;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .order-item-variant {
-            font-size: 0.8rem;
+        .order-item-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 1px;
+        }
+
+        .order-item-qty {
+            font-size: 0.72rem;
             color: #64748B;
-            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .order-item-variant-badge {
+            font-size: 0.68rem;
+            color: #0369a1;
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+            padding: 0 5px;
+            border-radius: 4px;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
         .order-item-more {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #1eb349;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #16a34a;
             background: #dcfce7;
-            padding: 0.2rem 0.6rem;
+            padding: 0 5px;
             border-radius: 4px;
-            display: inline-block;
-            align-self: flex-start;
+            white-space: nowrap;
         }
 
-        .order-card-price {
-            text-align: right;
+        .order-card-footer {
+            padding: 0.55rem 0.95rem;
+            border-top: 1px solid #F1F5F9;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-width: 120px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            background: #ffffff;
+        }
+
+        .order-card-price-block {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
         }
 
         .order-price-label {
-            font-size: 0.75rem;
-            color: #64748B;
-            margin-bottom: 0.25rem;
+            font-size: 0.72rem;
+            color: #94A3B8;
+            font-weight: 500;
         }
 
         .order-price-total {
             font-weight: 800;
-            color: #1eb349;
-            font-size: 1.1rem;
+            color: #0F172A;
+            font-size: 0.92rem;
+            line-height: 1;
+        }
+
+        .btn-order-view {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            color: #0F172A;
+            font-size: 0.72rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.15s ease;
+        }
+
+        .order-card:hover .btn-order-view {
+            background: #1eb349;
+            color: #ffffff;
+            border-color: #1eb349;
         }
 
         .empty-state {
@@ -392,42 +455,61 @@
                     @endphp
                     <a href="{{ route('account.orders.show', $order->id) }}" class="order-card" data-status="{{ $tabStatus }}"
                         data-search="{{ $searchString }}">
+                        {{-- Card Header: Meta & Status Badge --}}
                         <div class="order-card-header">
                             <div class="order-card-meta">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                                    <line x1="3" y1="6" x2="21" y2="6" />
-                                    <path d="M16 10a4 4 0 01-8 0" />
-                                </svg>
-                                <span>{{ $order->created_at->format('d M Y') }}</span>
-                                <span style="width:4px;height:4px;border-radius:50%;background:#CBD5E1;"></span>
+                                <span class="order-meta-icon">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                        <line x1="3" y1="6" x2="21" y2="6" />
+                                        <path d="M16 10a4 4 0 01-8 0" />
+                                    </svg>
+                                </span>
+                                <span class="order-meta-date">{{ $order->created_at->format('d M Y') }}</span>
+                                <span class="order-meta-dot">•</span>
                                 <span class="order-card-id">{{ $orderNo }}</span>
                             </div>
                             <div class="order-card-status {{ $statusEnum }}">
+                                @if(in_array($statusEnum, ['confirmed', 'delivered']))
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                @endif
                                 {{ $order->status->label() }}
                             </div>
                         </div>
+
+                        {{-- Card Body: Item Thumbnail & Title --}}
                         <div class="order-card-body">
-                            <div class="order-item-main">
+                            <div class="order-item-img-wrap">
                                 <img src="{{ $productImg }}" alt="Product" class="order-item-img"
                                     onerror="this.src='https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image'">
-                                <div class="order-item-info">
-                                    <div class="order-item-title">{{ $productName }}</div>
+                            </div>
+                            <div class="order-item-info">
+                                <h4 class="order-item-title">{{ $productName }}</h4>
+                                <div class="order-item-meta-row">
                                     @if($firstItem && ($firstItem->variant_name || ($firstItem->variantValue)))
-                                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-bottom:0.1rem;">
-                                            🏷
+                                        <span class="order-item-variant-badge">
                                             {{ $firstItem->variant_name ?: ($firstItem->variantValue ? ($firstItem->variantValue->variantOption->name ?? 'Varian') . ': ' . $firstItem->variantValue->value : '') }}
-                                        </div>
+                                        </span>
                                     @endif
-                                    <div class="order-item-variant">x {{ $qty }}</div>
+                                    <span class="order-item-qty">{{ $qty }} barang</span>
                                     @if($otherCount > 0)
-                                        <div class="order-item-more">+ {{ $otherCount }} produk lainnya</div>
+                                        <span class="order-item-more">+{{ $otherCount }} lainnya</span>
                                     @endif
                                 </div>
                             </div>
-                            <div class="order-card-price">
-                                <div class="order-price-label">Total Pesanan</div>
-                                <div class="order-price-total">Rp {{ number_format($order->total, 0, ',', '.') }}</div>
+                        </div>
+
+                        {{-- Card Footer: Compact Price & Action Button --}}
+                        <div class="order-card-footer">
+                            <div class="order-card-price-block">
+                                <span class="order-price-label">Total Pesanan:</span>
+                                <span class="order-price-total">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="btn-order-view">
+                                <span>Lihat Detail</span>
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
                             </div>
                         </div>
                     </a>
