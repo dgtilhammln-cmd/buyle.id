@@ -1766,8 +1766,8 @@
                 $isWarActive = $hasWarFeature && now()->lt($service->ticket_war_start);
                 $warTimestamp = $isWarActive ? $service->ticket_war_start->timestamp * 1000 : 0;
 
-                // Deteksi event expired — khusus tipe ticket
-                $eventRaw = $service->event_date ?: (!empty($service->data_json['event_date']) ? $service->data_json['event_date'] : null);
+                // Deteksi event expired — khusus tipe ticket (cek hingga tanggal berakhir jika multi-day)
+                $eventRaw = ($service->event_end_date ?: $service->event_date) ?: (!empty($service->data_json['event_date']) ? $service->data_json['event_date'] : null);
                 $isExpired = $isTicket && $eventRaw && \Carbon\Carbon::parse($eventRaw)->endOfDay()->isPast();
             @endphp
             <div class="pd-main-col">
@@ -1980,7 +1980,7 @@
                                                     <div>
                                                         <div
                                                             style="color:var(--text-main); font-weight:700; font-size:0.92rem; line-height:1.35;">
-                                                            {{ \Carbon\Carbon::parse($service->event_date)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                                            {{ $service->formatted_event_date_full ?: \Carbon\Carbon::parse($service->event_date)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                                                         </div>
                                                         @if($service->event_time)
                                                             <div

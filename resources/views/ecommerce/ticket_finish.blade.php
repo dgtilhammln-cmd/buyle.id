@@ -21,11 +21,27 @@
             $landscapePoster = asset('assets/images/default-ticket.webp');
         }
 
-        // Tanggal Event
+        // Tanggal Event (Mendukung 1 Hari maupun Berhari-hari / Rentang Tanggal)
         $eventDateStr = 'Sep 5, 2024';
         if (!empty($product?->event_date)) {
             try {
-                $eventDateStr = \Carbon\Carbon::parse($product->event_date)->locale('id')->translatedFormat('d M Y');
+                $start = \Carbon\Carbon::parse($product->event_date)->locale('id');
+                $end = !empty($product->event_end_date) ? \Carbon\Carbon::parse($product->event_end_date)->locale('id') : null;
+
+                if ($end && $end->gt($start)) {
+                    if ($start->format('Y-m') === $end->format('Y-m')) {
+                        // Contoh: 11 - 13 Des 2026
+                        $eventDateStr = $start->translatedFormat('d') . ' - ' . $end->translatedFormat('d M Y');
+                    } elseif ($start->format('Y') === $end->format('Y')) {
+                        // Contoh: 30 Okt - 2 Nov 2026
+                        $eventDateStr = $start->translatedFormat('d M') . ' - ' . $end->translatedFormat('d M Y');
+                    } else {
+                        // Contoh: 31 Des 2026 - 2 Jan 2027
+                        $eventDateStr = $start->translatedFormat('d M Y') . ' - ' . $end->translatedFormat('d M Y');
+                    }
+                } else {
+                    $eventDateStr = $start->translatedFormat('d M Y');
+                }
             } catch (\Exception $e) {
                 $eventDateStr = (string)$product->event_date;
             }

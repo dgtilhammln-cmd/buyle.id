@@ -48,6 +48,7 @@ class UpdateProductRequest extends FormRequest
             'height'              => ['nullable', 'numeric', 'min:0'],
             'volume'              => ['nullable', 'numeric', 'min:0'],
             'event_date'          => ['nullable', 'date'],
+            'event_end_date'      => ['nullable', 'date', 'after_or_equal:event_date'],
             'event_time'          => ['nullable', 'string', 'max:100'],
             'event_location'      => ['nullable', 'string', 'max:1000'],
             'event_type'          => ['nullable', 'string', 'in:online,offline'],

@@ -712,11 +712,30 @@
                                         </svg>
                                         Detail Informasi Event / Tiket
                                     </h5>
+                                    <div class="form-group full" style="margin-bottom: 0.75rem;">
+                                        <label class="form-label" style="margin-bottom:0.35rem;">Durasi Pelaksanaan Event <span>*</span></label>
+                                        <div style="display:flex; flex-wrap:wrap; gap:1.25rem; align-items:center;">
+                                            <label style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
+                                                <input type="radio" name="event_duration_mode" value="single" id="eventDurSingle" onchange="toggleEventDurationMode('single')" {{ empty(old('event_end_date')) ? 'checked' : '' }}>
+                                                <span>1 Hari (Single Day)</span>
+                                            </label>
+                                            <label style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
+                                                <input type="radio" name="event_duration_mode" value="multi" id="eventDurMulti" onchange="toggleEventDurationMode('multi')" {{ !empty(old('event_end_date')) ? 'checked' : '' }}>
+                                                <span>Berhari-hari / Rentang Tanggal (Multi Day)</span>
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="form-grid">
-                                        <div class="form-group">
-                                            <label class="form-label">Tanggal Pelaksanaan Event <span>*</span></label>
-                                            <input type="date" name="event_date" value="{{ old('event_date') }}"
-                                                class="form-input">
+                                        <div class="form-group" id="eventStartDateWrap">
+                                            <label class="form-label" id="eventStartDateLabel">{{ !empty(old('event_end_date')) ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }} <span>*</span></label>
+                                            <input type="date" name="event_date" id="eventDateInput" value="{{ old('event_date') }}"
+                                                class="form-input" onchange="handleEventStartDateChange(this.value)">
+                                        </div>
+                                        <div class="form-group" id="eventEndDateWrap" style="display: {{ !empty(old('event_end_date')) ? 'block' : 'none' }};">
+                                            <label class="form-label">Tanggal Berakhir Event <span>*</span></label>
+                                            <input type="date" name="event_end_date" id="eventEndDateInput" value="{{ old('event_end_date') }}"
+                                                class="form-input" min="{{ old('event_date') }}">
+                                            <span class="form-hint" style="font-size:0.75rem; color:#64748b; margin-top:2px; display:block;">Hari terakhir rangkaian acara</span>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label">Waktu Event (Jam) <span>*</span></label>
@@ -1761,6 +1780,37 @@
         // Init check
         const wlCheck = document.getElementById('isWhitelabelCheck');
         if (wlCheck) toggleWhitelabelFields(wlCheck.checked);
+
+        // Event Duration Mode Toggle (Single Day vs Multi Day)
+        function toggleEventDurationMode(mode) {
+            const endGroup = document.getElementById('eventEndDateWrap');
+            const startLabel = document.getElementById('eventStartDateLabel');
+            const endInput = document.getElementById('eventEndDateInput');
+            const startInput = document.getElementById('eventDateInput');
+
+            if (mode === 'multi') {
+                if (endGroup) endGroup.style.display = 'block';
+                if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
+                if (endInput && startInput && startInput.value) {
+                    endInput.min = startInput.value;
+                    if (!endInput.value) endInput.value = startInput.value;
+                }
+            } else {
+                if (endGroup) endGroup.style.display = 'none';
+                if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
+                if (endInput) endInput.value = '';
+            }
+        }
+
+        function handleEventStartDateChange(val) {
+            const endInput = document.getElementById('eventEndDateInput');
+            if (endInput) {
+                endInput.min = val;
+                if (endInput.value && endInput.value < val) {
+                    endInput.value = val;
+                }
+            }
+        }
 
         // Event Type Toggle (Offline vs Online)
         function toggleEventTypeFields(val) {

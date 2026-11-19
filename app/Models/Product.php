@@ -25,7 +25,7 @@ class Product extends Model
         'product_category_id', 'product_sub_category_id', 'is_featured', 'is_buyle_checkout',
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
-        'event_date', 'event_time', 'event_location', 'event_type', 'event_platform',
+        'event_date', 'event_end_date', 'event_time', 'event_location', 'event_type', 'event_platform',
         'terms_conditions', 'instagram_username', 'tiktok_username',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
@@ -64,6 +64,7 @@ class Product extends Model
         'max_order'      => 'integer',
         'rating'         => 'decimal:1',
         'event_date'     => 'date',
+        'event_end_date' => 'date',
         'ticket_war_start' => 'datetime',
         'max_tickets_per_order' => 'integer',
         'gate_scanner_enabled' => 'boolean',
@@ -112,13 +113,23 @@ class Product extends Model
         $currentTime = $now->format('H:i');
 
         if ($this->event_date) {
-            $eventDateStr = $this->event_date->format('Y-m-d');
-            $todayStr = $now->format('Y-m-d');
-            if ($todayStr < $eventDateStr) {
+            $startDateStr = $this->event_date->format('Y-m-d');
+            $endDateStr   = $this->event_end_date ? $this->event_end_date->format('Y-m-d') : $startDateStr;
+            $todayStr     = $now->format('Y-m-d');
+            
+            if ($todayStr < $startDateStr) {
                 return [
                     'is_open' => false,
                     'status'  => 'before_date',
-                    'reason'  => 'Event dijadwalkan pada ' . $this->event_date->format('d M Y') . '. Gate belum dibuka.'
+                    'reason'  => 'Event dijadwalkan pada ' . $this->formatted_event_date . '. Gate belum dibuka.'
+                ];
+            }
+
+            if ($todayStr > $endDateStr) {
+                return [
+                    'is_open' => false,
+                    'status'  => 'after_date',
+                    'reason'  => 'Rangkaian event telah berakhir pada ' . ($this->event_end_date ? $this->event_end_date->format('d M Y') : $this->event_date->format('d M Y')) . '.'
                 ];
             }
         }
@@ -144,6 +155,81 @@ class Product extends Model
             'status'  => 'open',
             'reason'  => 'Gate dibuka.'
         ];
+    }
+
+    /**
+     * Format tanggal event ringkas (misal: "11 Des 2026" atau "11 - 13 Des 2026").
+     */
+    public function getFormattedEventDateAttribute(): string
+    {
+        if (!$this->event_date) {
+            return '';
+        }
+
+        try {
+            $start = \Carbon\Carbon::parse($this->event_date)->locale('id');
+            $end = $this->event_end_date ? \Carbon\Carbon::parse($this->event_end_date)->locale('id') : null;
+
+            if ($end && $end->gt($start)) {
+                if ($start->format('Y-m') === $end->format('Y-m')) {
+                    // Contoh: 11 - 13 Des 2026
+                    return $start->translatedFormat('d') . ' - ' . $end->translatedFormat('d M Y');
+                } elseif ($start->format('Y') === $end->format('Y')) {
+                    // Contoh: 30 Okt - 2 Nov 2026
+                    return $start->translatedFormat('d M') . ' - ' . $end->translatedFormat('d M Y');
+                } else {
+                    // Contoh: 31 Des 2026 - 2 Jan 2027
+                    return $start->translatedFormat('d M Y') . ' - ' . $end->translatedFormat('d M Y');
+                }
+            }
+
+            return $start->translatedFormat('d M Y');
+        } catch (\Throwable $e) {
+            return (string)$this->event_date;
+        }
+    }
+
+    /**
+     * Format tanggal event lengkap (misal: "Jumat, 11 Desember 2026" atau "11 - 13 Desember 2026").
+     */
+    public function getFormattedEventDateFullAttribute(): string
+    {
+        if (!$this->event_date) {
+            return '';
+        }
+
+        try {
+            $start = \Carbon\Carbon::parse($this->event_date)->locale('id');
+            $end = $this->event_end_date ? \Carbon\Carbon::parse($this->event_end_date)->locale('id') : null;
+
+            if ($end && $end->gt($start)) {
+                if ($start->format('Y-m') === $end->format('Y-m')) {
+                    // Contoh: 11 - 13 Desember 2026
+                    return $start->translatedFormat('d') . ' - ' . $end->translatedFormat('d F Y');
+                } elseif ($start->format('Y') === $end->format('Y')) {
+                    // Contoh: 30 Oktober - 2 November 2026
+                    return $start->translatedFormat('d F') . ' - ' . $end->translatedFormat('d F Y');
+                } else {
+                    // Contoh: 31 Desember 2026 - 2 Januari 2027
+                    return $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
+                }
+            }
+
+            return $start->translatedFormat('l, d F Y');
+        } catch (\Throwable $e) {
+            return (string)$this->event_date;
+        }
+    }
+
+    /**
+     * Cek apakah event berlangsung lebih dari 1 hari.
+     */
+    public function getIsMultiDayEventAttribute(): bool
+    {
+        if (!$this->event_date || !$this->event_end_date) {
+            return false;
+        }
+        return \Carbon\Carbon::parse($this->event_end_date)->gt(\Carbon\Carbon::parse($this->event_date));
     }
 
     /**

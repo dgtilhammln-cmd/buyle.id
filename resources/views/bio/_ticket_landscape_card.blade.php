@@ -22,20 +22,26 @@
     }
 
     // ── Event Date
-    $tixRawDate = null;
-    if (!empty($prod->event_date)) $tixRawDate = $prod->event_date;
-    elseif (!empty($block->data_json['event_date'])) $tixRawDate = $block->data_json['event_date'];
-    if ($tixRawDate) {
-        try {
-            $tixDateCarbon = \Carbon\Carbon::parse($tixRawDate)->locale('id');
-            $tixDate = $tixDateCarbon->isoFormat('ddd, D MMM Y');
-            $tixTime = !empty($prod->event_time) ? substr($prod->event_time, 0, 5) . ' WIB' : null;
-            $tixIsExpired = $tixDateCarbon->endOfDay()->isPast();
-        } catch (\Exception $e) {
-            $tixDate = null; $tixTime = null; $tixIsExpired = false;
-        }
+    $tixDate = null; $tixTime = null; $tixIsExpired = false;
+    if ($prod && method_exists($prod, 'getFormattedEventDateAttribute') && $prod->formatted_event_date) {
+        $tixDate = $prod->formatted_event_date;
+        $effectiveEnd = $prod->event_end_date ?: $prod->event_date;
+        $tixIsExpired = \Carbon\Carbon::parse($effectiveEnd)->endOfDay()->isPast();
+        $tixTime = !empty($prod->event_time) ? substr($prod->event_time, 0, 5) . ' WIB' : null;
     } else {
-        $tixDate = null; $tixTime = null; $tixIsExpired = false;
+        $tixRawDate = null;
+        if (!empty($prod->event_date)) $tixRawDate = $prod->event_date;
+        elseif (!empty($block->data_json['event_date'])) $tixRawDate = $block->data_json['event_date'];
+        if ($tixRawDate) {
+            try {
+                $tixDateCarbon = \Carbon\Carbon::parse($tixRawDate)->locale('id');
+                $tixDate = $tixDateCarbon->isoFormat('ddd, D MMM Y');
+                $tixTime = !empty($prod->event_time) ? substr($prod->event_time, 0, 5) . ' WIB' : null;
+                $tixIsExpired = $tixDateCarbon->endOfDay()->isPast();
+            } catch (\Exception $e) {
+                $tixDate = null; $tixTime = null; $tixIsExpired = false;
+            }
+        }
     }
 
     // ── Location

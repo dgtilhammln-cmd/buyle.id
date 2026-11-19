@@ -544,7 +544,7 @@
                             <div class="field-row">
                                 <div class="field-cell">
                                     <div class="field-label">Tanggal Pelaksanaan</div>
-                                    <div class="field-value">{{ $pass->product?->event_date?->translatedFormat('l, d F Y') ?? ($pass->product?->event_date?->format('d M Y') ?? 'Sesuai Jadwal') }}</div>
+                                    <div class="field-value">{{ $pass->product?->formatted_event_date_full ?: ($pass->product?->event_date?->translatedFormat('l, d F Y') ?? ($pass->product?->event_date?->format('d M Y') ?? 'Sesuai Jadwal')) }}</div>
                                 </div>
                                 <div class="field-cell">
                                     <div class="field-label">Waktu &amp; Open Gate</div>
