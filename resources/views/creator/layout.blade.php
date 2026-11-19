@@ -1702,8 +1702,8 @@
                 @endif
             </div>
         </div>
-    @elseif(!request()->is('creator/pos*') && !request()->is('creator/event-attendance*') && !request()->routeIs('creator.event.attendance'))
-        {{-- Jika bukan POS dan bukan event-attendance, tampilkan navbar reguler Super App --}}
+    @elseif(!request()->is('creator/pos*') && !request()->is('creator/event-attendance*') && !request()->routeIs('creator.event.attendance') && !request()->is('creator/bio*'))
+        {{-- Jika bukan POS, bukan event-attendance, dan bukan Web Builder, tampilkan navbar reguler Super App --}}
         <nav class="superapp-bottom-nav" id="superappBottomNav">
             @php
                 $bottomNavIsBuyer = auth()->user()->role === 'buyer';
@@ -1769,16 +1769,6 @@
                     </svg>
                 </a>
 
-                {{-- 4. Web Builder (Bio Link) --}}
-                <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.bio.index') }}"
-                    onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-                    class="superapp-nav-item {{ request()->routeIs('creator.bio*') ? 'active' : '' }}" title="Web Builder">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="2" y1="12" x2="22" y2="12" />
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>
-                </a>
 
                 {{-- 5. Saldo --}}
                 <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.payout.settings') }}"

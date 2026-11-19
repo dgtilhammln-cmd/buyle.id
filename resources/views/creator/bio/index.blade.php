@@ -715,7 +715,15 @@
             display: none;
         }
 
+        .bio-mobile-desktop-notice {
+            display: none;
+        }
+
         @media (max-width: 991px) {
+            .bio-layout {
+                display: none !important;
+            }
+
             .bio-mobile-top-header {
                 display: flex !important;
                 align-items: center;
@@ -750,6 +758,189 @@
                 font-weight: 800;
                 color: #0f172a;
                 letter-spacing: -0.01em;
+            }
+
+            .bio-mobile-desktop-notice {
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 1.25rem 0.25rem 2.5rem;
+                box-sizing: border-box;
+            }
+
+            .bmd-card {
+                background: #ffffff;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 24px;
+                padding: 2.25rem 1.4rem;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+                max-width: 440px;
+                width: 100%;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .bmd-icon-circle {
+                width: 76px;
+                height: 76px;
+                border-radius: 50%;
+                background: #f0fdf4;
+                border: 2px solid #bbf7d0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.15rem;
+                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.12);
+            }
+
+            .bmd-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                color: #475569;
+                font-size: 0.72rem;
+                font-weight: 700;
+                padding: 0.3rem 0.8rem;
+                border-radius: 999px;
+                margin-bottom: 0.85rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .bmd-title {
+                font-size: 1.15rem;
+                font-weight: 800;
+                color: #0f172a;
+                margin: 0 0 0.65rem;
+                line-height: 1.35;
+                letter-spacing: -0.01em;
+            }
+
+            .bmd-desc {
+                font-size: 0.84rem;
+                color: #64748b;
+                line-height: 1.6;
+                margin: 0 0 1.35rem;
+                font-weight: 500;
+            }
+
+            .bmd-url-box {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 16px;
+                padding: 0.95rem;
+                width: 100%;
+                box-sizing: border-box;
+                margin-bottom: 1.35rem;
+                text-align: left;
+            }
+
+            .bmd-url-label {
+                font-size: 0.7rem;
+                font-weight: 700;
+                color: #94a3b8;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 0.25rem;
+            }
+
+            .bmd-url-val {
+                font-size: 0.84rem;
+                font-weight: 700;
+                color: #1eb349;
+                word-break: break-all;
+                margin-bottom: 0.65rem;
+            }
+
+            .bmd-url-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .bmd-btn-open,
+            .bmd-btn-copy {
+                flex: 1;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.35rem;
+                padding: 0.52rem 0.6rem;
+                font-size: 0.75rem;
+                font-weight: 700;
+                border-radius: 10px;
+                text-decoration: none;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                font-family: inherit;
+            }
+
+            .bmd-btn-open {
+                background: #1eb349;
+                color: #ffffff;
+                border: none;
+            }
+
+            .bmd-btn-copy {
+                background: #ffffff;
+                color: #334155;
+                border: 1px solid #cbd5e1;
+            }
+
+            .bmd-actions {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.65rem;
+            }
+
+            .bmd-primary-btn {
+                width: 100%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.45rem;
+                background: #0f172a;
+                color: #ffffff;
+                padding: 0.82rem 1.25rem;
+                border-radius: 14px;
+                font-size: 0.85rem;
+                font-weight: 700;
+                text-decoration: none;
+                transition: all 0.15s ease;
+                box-sizing: border-box;
+            }
+
+            .bmd-primary-btn:active {
+                transform: scale(0.97);
+            }
+
+            .bmd-secondary-btn {
+                width: 100%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.45rem;
+                background: #ffffff;
+                color: #475569;
+                padding: 0.75rem 1.25rem;
+                border-radius: 14px;
+                border: 1.5px solid #e2e8f0;
+                font-size: 0.82rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                box-sizing: border-box;
+                font-family: inherit;
+            }
+
+            .bmd-secondary-btn:active {
+                transform: scale(0.97);
             }
         }
 
@@ -1514,6 +1705,73 @@
                     <polygon points="5 3 19 12 5 21 5 3" />
                 </svg>
             </button>
+        </div>
+    </div>
+
+    {{-- ══ MOBILE NOTICE: BUKA DI LAPTOP / DESKTOP UNTUK PENGALAMAN MAKSIMAL ══ --}}
+    <div class="bio-mobile-desktop-notice">
+        <div class="bmd-card">
+            <div class="bmd-icon-circle">
+                <svg width="36" height="36" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+            </div>
+
+            <div class="bmd-badge">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                Disarankan Layar Lebar
+            </div>
+
+            <h3 class="bmd-title">Pengalaman Lebih Maksimal di Laptop / Komputer</h3>
+
+            <p class="bmd-desc">
+                Fitur <strong>Web Builder</strong> dirancang khusus dengan kanvas visual, penataan blok, dan <em>live preview</em> interaktif. Untuk kenyamanan mendesain toko Anda, silakan akses halaman ini menggunakan laptop atau komputer.
+            </p>
+
+            @if($bioUrl)
+                <div class="bmd-url-box">
+                    <div class="bmd-url-label">Alamat Web Toko Anda:</div>
+                    <div class="bmd-url-val">{{ $bioUrl }}</div>
+                    <div class="bmd-url-actions">
+                        <a href="{{ $bioUrl }}" target="_blank" class="bmd-btn-open">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                            Kunjungi Web Toko
+                        </a>
+                        <button type="button" class="bmd-btn-copy" onclick="navigator.clipboard.writeText('{{ $bioUrl }}'); alert('Link web toko berhasil disalin!');">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            Salin Link
+                        </button>
+                    </div>
+                </div>
+            @endif
+
+            <div class="bmd-actions">
+                <a href="{{ route('creator.dashboard') }}" class="bmd-primary-btn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Kembali ke Dashboard
+                </a>
+                <button type="button" onclick="openWebBuilderIntroModal(true)" class="bmd-secondary-btn">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    Tonton Panduan Video
+                </button>
+            </div>
         </div>
     </div>
 
