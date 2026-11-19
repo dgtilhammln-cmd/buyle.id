@@ -136,9 +136,15 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::post('/keranjang/hapus',    [CartController::class, 'remove'])->name('cart.remove');
 
     // E-commerce: Checkout (bisa guest, auto register)
-    Route::get('/checkout/login', function () {
-        session()->put('url.intended', route('checkout.index'));
-        return redirect()->route('login');
+    Route::get('/checkout/login', function (\Illuminate\Http\Request $request) {
+        $returnUrl = $request->query('redirect', url()->previous());
+        if (!$returnUrl || \Illuminate\Support\Str::contains($returnUrl, ['/login', '/register', '/checkout/login', '/auth/google'])) {
+            $returnUrl = route('checkout.index');
+        }
+        if (Auth::check()) {
+            return redirect()->to($returnUrl);
+        }
+        return redirect()->route('auth.google', ['redirect' => $returnUrl]);
     })->name('checkout.login');
     Route::get('/checkout',                [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store')->middleware('throttle:checkout-limit');

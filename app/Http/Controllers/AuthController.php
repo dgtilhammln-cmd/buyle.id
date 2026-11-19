@@ -601,18 +601,22 @@ class AuthController extends Controller
             \Log::warning('Link guest orders on Google callback failed: ' . $e->getMessage());
         }
 
-        $fallback = url('/');
-        if ($user->role === 'super_admin' || $user->role === 'admin') {
-            $fallback = route('admin.dashboard');
+        if ($target) {
+            // Jika target adalah area creator dan user belum menyelesaikan onboarding, arahkan ke onboarding
+            if (Str::contains($target, ['/creator']) && $user->onboarding_completed_at === null && !in_array($user->role, ['super_admin', 'admin', 'pos_cashier'])) {
+                $destination = route('onboarding.index');
+            } else {
+                $destination = $target;
+            }
+        } elseif ($user->role === 'super_admin' || $user->role === 'admin') {
+            $destination = route('admin.dashboard');
         } elseif ($user->onboarding_completed_at === null && !in_array($user->role, ['super_admin', 'admin', 'pos_cashier'])) {
-            $fallback = route('onboarding.index');
+            $destination = route('onboarding.index');
         } elseif ($user->role === 'seller') {
-            $fallback = ($roleRequested === 'seller') ? route('creator.ticket.scanner') : route('creator.dashboard');
+            $destination = ($roleRequested === 'seller') ? route('creator.ticket.scanner') : route('creator.dashboard');
+        } else {
+            $destination = url('/');
         }
-
-        $destination = ($user->onboarding_completed_at === null && !in_array($user->role, ['super_admin', 'admin', 'pos_cashier']))
-            ? route('onboarding.index')
-            : ($target ?: $fallback);
 
         return redirect()->to($destination)
             ->with('success', 'Selamat datang, ' . $user->name . '!');

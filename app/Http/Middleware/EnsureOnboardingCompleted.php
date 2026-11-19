@@ -33,6 +33,15 @@ class EnsureOnboardingCompleted
         if (
             $request->is('onboarding*') ||
             $request->is('creator/onboarding*') ||
+            $request->is('checkout*') ||
+            $request->is('keranjang*') ||
+            $request->is('cart*') ||
+            $request->is('pesanan*') ||
+            $request->is('orders*') ||
+            $request->is('order*') ||
+            $request->is('payment*') ||
+            $request->is('p/*') ||
+            $request->is('c/*') ||
             $request->is('logout') ||
             $request->is('deploy-hostinger') ||
             $request->is('payment/callback') ||

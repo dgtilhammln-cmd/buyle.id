@@ -695,7 +695,7 @@
                                     <strong>Punya akun?</strong> <span style="color: #64748B;">Masuk agar file tersimpan</span>
                                 </div>
                             </div>
-                            <a href="{{ route('checkout.login') }}"
+                            <a href="{{ route('checkout.login', ['redirect' => request()->fullUrl()]) }}"
                                 style="padding: 0.38rem 0.75rem; font-size: 0.72rem; font-weight: 700; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border-radius: 7px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(30,179,73,0.2); white-space: nowrap;">
                                 <span>Masuk</span>
                                 <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -756,7 +756,7 @@
                                 </div>
                                 <div
                                     style="display:flex; flex-direction:column; gap:0.4rem; width:100%; max-width:180px; align-self:center;">
-                                    <a href="{{ route('checkout.login') }}"
+                                    <a href="{{ route('checkout.login', ['redirect' => request()->fullUrl()]) }}"
                                         style="display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; background: linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:800; font-size:0.85rem; padding:0.7rem 1rem; border-radius:10px; text-decoration:none; text-align:center; box-shadow:0 4px 12px rgba(30,179,73,0.3); transition:all 0.2s;"
                                         onmouseover="this.style.transform='translateY(-2px)'"
                                         onmouseout="this.style.transform='none'">
@@ -1747,7 +1747,7 @@
                             </div>
                             @if($summary['subtotal'] <= 0)
                                 @if($hasFreeRequirements && auth()->guest())
-                                    <a href="{{ route('checkout.login') }}" id="btn-claim-free"
+                                    <a href="{{ route('checkout.login', ['redirect' => request()->fullUrl()]) }}" id="btn-claim-free"
                                         style="display:flex;align-items:center;justify-content:center;gap:0.5rem;width:100%;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:12px;padding:0.9rem;font-size:0.95rem;font-weight:800;text-decoration:none;text-align:center;box-shadow:0 4px 15px rgba(245,158,11,0.25);">
                                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
                                             viewBox="0 0 24 24">
