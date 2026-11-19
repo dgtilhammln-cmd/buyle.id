@@ -88,12 +88,84 @@ class SellerController extends Controller
             ->limit(5)
             ->get();
 
+        // ── Data Traffic Filterable (Minggu Ini, Bulan Ini, Tahun Ini) ──
+        $now = now();
+        $startOfWeek     = $now->copy()->startOfWeek();
+        $endOfWeek       = $now->copy()->endOfWeek();
+        $startOfPrevWeek = $now->copy()->subWeek()->startOfWeek();
+        $endOfPrevWeek   = $now->copy()->subWeek()->endOfWeek();
+
+        $startOfMonth     = $now->copy()->startOfMonth();
+        $endOfMonth       = $now->copy()->endOfMonth();
+        $startOfPrevMonth = $now->copy()->subMonth()->startOfMonth();
+        $endOfPrevMonth   = $now->copy()->subMonth()->endOfMonth();
+
+        $startOfYear     = $now->copy()->startOfYear();
+        $endOfYear       = $now->copy()->endOfYear();
+        $startOfPrevYear = $now->copy()->subYear()->startOfYear();
+        $endOfPrevYear   = $now->copy()->subYear()->endOfYear();
+
+        $calcTraffic = function($startDate, $endDate) use ($seller, $cp) {
+            $visits = 0;
+            if (\Illuminate\Support\Facades\Schema::hasTable('product_visits')) {
+                $visits = (int) \App\Models\ProductVisit::where('seller_id', $seller->id)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->count();
+            }
+            $bioClicks = 0;
+            if ($cp && \Illuminate\Support\Facades\Schema::hasColumn('analytics_events', 'bio_creator_id')) {
+                $bioClicks = (int) \App\Models\AnalyticsEvent::where('event_type', 'bio_link_click')
+                    ->where('bio_creator_id', $cp->id)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->count();
+            }
+            return $visits + $bioClicks;
+        };
+
+        $trafficWeek     = $calcTraffic($startOfWeek, $endOfWeek);
+        $trafficPrevWeek = $calcTraffic($startOfPrevWeek, $endOfPrevWeek);
+
+        $trafficMonth     = $calcTraffic($startOfMonth, $endOfMonth);
+        $trafficPrevMonth = $calcTraffic($startOfPrevMonth, $endOfPrevMonth);
+
+        $trafficYear     = $calcTraffic($startOfYear, $endOfYear);
+        $trafficPrevYear = $calcTraffic($startOfPrevYear, $endOfPrevYear);
+
+        $calcGrowth = function($current, $prev) {
+            if ($prev > 0) {
+                $pct = round((($current - $prev) / $prev) * 100);
+                return ($pct >= 0 ? '+' : '') . $pct . '%';
+            }
+            return $current > 0 ? '+100%' : '0%';
+        };
+
+        $trafficData = [
+            'week' => [
+                'label'  => 'Minggu Ini',
+                'count'  => $trafficWeek,
+                'growth' => $calcGrowth($trafficWeek, $trafficPrevWeek),
+                'is_up'  => ($trafficWeek >= $trafficPrevWeek),
+            ],
+            'month' => [
+                'label'  => 'Bulan Ini',
+                'count'  => $trafficMonth,
+                'growth' => $calcGrowth($trafficMonth, $trafficPrevMonth),
+                'is_up'  => ($trafficMonth >= $trafficPrevMonth),
+            ],
+            'year' => [
+                'label'  => 'Tahun Ini',
+                'count'  => $trafficYear,
+                'growth' => $calcGrowth($trafficYear, $trafficPrevYear),
+                'is_up'  => ($trafficYear >= $trafficPrevYear),
+            ],
+        ];
+
         return view('creator.dashboard', compact(
             'seller', 'gmv', 'platformFee', 'platformFeeRate',
             'totalPayout', 'availableBalance', 'holdBalance', 'ticketEscrowBalance',
             'totalProducts', 'activeProducts',
             'totalTransactions', 'recentSales', 'recentProducts',
-            'tierInfo'
+            'tierInfo', 'trafficData'
         ));
     }
 
@@ -271,7 +343,7 @@ class SellerController extends Controller
 
         if ($totalTransactions >= 10) {
             $cp->update(['is_verified' => true]);
-            return redirect()->back()->with('success', 'Selamat! Toko Anda telah berhasil terverifikasi sebagai Verified Creator!');
+            return redirect()->back()->with('success', 'Selamat! Anda telah menjadi Verified Creator!');
         }
 
         $remaining = 10 - $totalTransactions;

@@ -1,14 +1,18 @@
 @extends('creator.layout')
 
-@section('title', 'Overview – Creator Studio')
-@section('page_title', 'Overview')
-@section('page_subtitle', 'Ringkasan performa toko, saldo real-time, dan transaksi terbaru.')
+@section('title', 'Creator Dashboard – buyle.id')
 
 @php
     $storeName = $seller->name;
     $creatorProfile = $seller->creatorProfile;
     if ($creatorProfile && !empty($creatorProfile->store_name)) {
         $storeName = $creatorProfile->store_name;
+    }
+
+    $crAvatar = $seller->avatar ?? ($creatorProfile->avatar ?? null);
+    $crAvatarUrl = null;
+    if ($crAvatar) {
+        $crAvatarUrl = \Illuminate\Support\Str::startsWith($crAvatar, ['http://', 'https://']) ? $crAvatar : asset('storage/' . $crAvatar);
     }
 
     // Pendapatan bulan ini
@@ -23,9 +27,9 @@
     $bioUrl = url('/' . $seller->username);
 
     $tierInfo = $creatorProfile ? $creatorProfile->getTierInfo($gmv ?? null) : [
-        'name'     => 'PERINTIS',
-        'badge'    => 'Perintis',
-        'level'    => 1,
+        'name' => 'PERINTIS',
+        'badge' => 'Perintis',
+        'level' => 1,
         'subtitle' => 'Matte Silver / Brushed Steel'
     ];
     $tierBadge = $tierInfo['badge'] ?? $tierInfo['name'] ?? 'Perintis';
@@ -42,6 +46,11 @@
             --dark-pill: #181d27;
             --border-color: #e2e8f0;
             --text-muted: #64748b;
+        }
+
+        /* ── Sembunyikan Desktop Topbar Header Row (Overview + Subtitle) di Dashboard ── */
+        .cr-topbar-header-row {
+            display: none !important;
         }
 
         .nina-dash-root {
@@ -81,7 +90,7 @@
             box-shadow: 0 4px 20px rgba(30, 179, 73, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
             border: 1px solid rgba(187, 247, 208, 0.7);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         /* Baris Sapaan & Ikon Aksi Minimalist */
@@ -90,6 +99,147 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.1rem;
+            position: relative;
+        }
+
+        .nina-greeting-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            position: relative;
+        }
+
+        .nina-avatar-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .nina-avatar-trigger {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background: #0f172a;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            outline: none;
+        }
+
+        .nina-avatar-trigger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
+        }
+
+        .nina-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .nina-avatar-initial {
+            color: #ffffff;
+            font-size: 0.92rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── Dropdown Mirip 100% Image 2 ── */
+        .nina-dropdown-card {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            width: 235px;
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 18px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 10px rgba(0, 0, 0, 0.04);
+            z-index: 9999;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            font-family: inherit;
+        }
+
+        .ndc-header {
+            padding: 0.85rem 1.1rem 0.65rem;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .ndc-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #0F172A;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ndc-email {
+            font-size: 0.76rem;
+            color: #64748B;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ndc-body {
+            padding: 0.4rem 0.35rem;
+        }
+
+        .ndc-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.6rem 0.85rem;
+            color: #334155;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background 0.15s;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .ndc-item:hover {
+            background: #F8FAFC;
+            color: #0f172a;
+        }
+
+        .ndc-divider {
+            height: 1px;
+            background: #F1F5F9;
+            margin: 0.3rem 0.5rem;
+        }
+
+        .ndc-logout {
+            color: #ef4444 !important;
+            font-weight: 700 !important;
+        }
+
+        .ndc-logout:hover {
+            background: #fef2f2 !important;
         }
 
         .nina-greeting-title {
@@ -348,9 +498,66 @@
             align-items: center;
             gap: 3px;
             background: #f8fafc;
-            padding: 2px 7px;
+            padding: 3px 8px;
             border-radius: 999px;
             border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            outline: none;
+        }
+
+        .nina-income-period:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+
+        /* ── Traffic Period Picker Dropdown ── */
+        .traffic-period-picker {
+            position: relative;
+        }
+
+        .traffic-period-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            padding: 4px;
+            z-index: 100;
+            min-width: 105px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .tpm-item {
+            background: transparent;
+            border: none;
+            padding: 5px 9px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #475569;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: 100%;
+            display: block;
+            font-family: inherit;
+        }
+
+        .tpm-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .tpm-item.active {
+            background: #f0fdf4;
+            color: #1eb349;
+            font-weight: 700;
         }
 
         .nina-income-wave {
@@ -505,20 +712,26 @@
         }
     </style>
     {{-- Interactive Share Modal (Tanpa Alert Browser) --}}
-    <div id="shareStoreModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;">
-        <div style="background:#ffffff; border-radius:26px; max-width:400px; width:100%; padding:1.75rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; animation:modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);">
-            <div style="width:48px; height:48px; border-radius:50%; background:#ecfdf5; color:#1eb349; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.4rem;">
+    <div id="shareStoreModal"
+        style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;">
+        <div
+            style="background:#ffffff; border-radius:26px; max-width:400px; width:100%; padding:1.75rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; animation:modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+            <div
+                style="width:48px; height:48px; border-radius:50%; background:#ecfdf5; color:#1eb349; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.4rem;">
                 <i class="ph-bold ph-share-network"></i>
             </div>
-            <h3 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.35rem;">Bagikan Halaman Toko</h3>
+            <h3 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.35rem;">Bagikan Digital Store</h3>
             <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem; line-height:1.4;">
                 Salin tautan atau bagikan langsung ke media sosial untuk menjangkau calon pembeli.
             </p>
 
             {{-- Link Box --}}
-            <div style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; margin-bottom:1.25rem; gap:0.5rem;">
-                <input type="text" id="shareStoreUrlInput" value="{{ $bioUrl }}" readonly style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.78rem; color:#334155; outline:none; text-overflow:ellipsis;">
-                <button type="button" id="copyShareBtn" onclick="copyStoreUrl()" style="padding:0.5rem 0.9rem; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
+            <div
+                style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; margin-bottom:1.25rem; gap:0.5rem;">
+                <input type="text" id="shareStoreUrlInput" value="{{ $bioUrl }}" readonly
+                    style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.78rem; color:#334155; outline:none; text-overflow:ellipsis;">
+                <button type="button" id="copyShareBtn" onclick="copyStoreUrl()"
+                    style="padding:0.5rem 0.9rem; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
                     <i class="ph-bold ph-copy" id="copyIcon"></i>
                     <span id="copyBtnText">Salin</span>
                 </button>
@@ -526,17 +739,21 @@
 
             {{-- Social Share Buttons --}}
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:1.25rem;">
-                <a href="https://api.whatsapp.com/send?text={{ urlencode('Halo! Kunjungi katalog dan toko resmi saya di: ' . $bioUrl) }}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#25d366; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none; box-shadow:0 3px 10px rgba(37,211,102,0.25);">
+                <a href="https://api.whatsapp.com/send?text={{ urlencode('Halo! Kunjungi katalog dan toko resmi saya di: ' . $bioUrl) }}"
+                    target="_blank"
+                    style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#25d366; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none; box-shadow:0 3px 10px rgba(37,211,102,0.25);">
                     <i class="ph-bold ph-whatsapp-logo" style="font-size:1.1rem;"></i>
                     WhatsApp
                 </a>
-                <a href="{{ $bioUrl }}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#0f172a; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none;">
+                <a href="{{ $bioUrl }}" target="_blank"
+                    style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.7rem; background:#0f172a; color:#ffffff; border-radius:12px; font-weight:600; font-size:0.78rem; text-decoration:none;">
                     <i class="ph-bold ph-arrow-square-out" style="font-size:1.1rem;"></i>
-                    Buka Toko
+                    Buka Store
                 </a>
             </div>
 
-            <button type="button" onclick="closeShareStoreModal()" style="width:100%; padding:0.7rem; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:600; font-size:0.8rem; cursor:pointer;">
+            <button type="button" onclick="closeShareStoreModal()"
+                style="width:100%; padding:0.7rem; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:600; font-size:0.8rem; cursor:pointer;">
                 Tutup
             </button>
         </div>
@@ -584,7 +801,63 @@
 
                     {{-- Topbar: Sapaan Creator & Ikon Aksi Minimalist --}}
                     <div class="nina-card-topbar">
-                        <div>
+                        <div class="nina-greeting-wrap">
+                            {{-- Icon Avatar Bulat Mirip Image 2 --}}
+                            <div class="nina-avatar-container">
+                                <button type="button" class="nina-avatar-trigger" id="ninaAvatarBtn" onclick="toggleNinaDropdown(event)" title="Menu Profil">
+                                    @if($crAvatarUrl)
+                                        <img src="{{ $crAvatarUrl }}" alt="{{ $storeName }}" class="nina-avatar-img">
+                                    @else
+                                        <div class="nina-avatar-initial">
+                                            {{ strtoupper(substr($storeName, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                </button>
+
+                                {{-- Dropdown Mirip 100% Image 2 (Profil, Pesanan Saya, Logout) --}}
+                                <div id="ninaDropdownMenu" class="nina-dropdown-card" style="display: none;">
+                                    <div class="ndc-header">
+                                        <div class="ndc-name">{{ $seller->name }}</div>
+                                        <div class="ndc-email">{{ $seller->email }}</div>
+                                    </div>
+                                    <div class="ndc-body">
+                                        {{-- 1. Profil -> /profile --}}
+                                        <a href="{{ url('/profile') }}" class="ndc-item">
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <circle cx="12" cy="8" r="4" />
+                                                <path d="M20 21a8 8 0 1 0-16 0" />
+                                            </svg>
+                                            <span>Profil</span>
+                                        </a>
+
+                                        {{-- 2. Pesanan Saya -> /akun/pesanan --}}
+                                        <a href="{{ route('account.orders') }}" class="ndc-item">
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                            </svg>
+                                            <span>Pesanan Saya</span>
+                                        </a>
+
+                                        <div class="ndc-divider"></div>
+
+                                        {{-- 3. Logout --}}
+                                        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                                            @csrf
+                                            <button type="submit" class="ndc-item ndc-logout">
+                                                <svg width="17" height="17" fill="none" stroke="#ef4444" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                                </svg>
+                                                <span>Logout</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="nina-greeting-title">
                                 Halo, {{ $storeName }}!
                             </div>
@@ -653,12 +926,21 @@
                         </div>
                     </div>
 
-                    {{-- Kanan: Your Income (Card dengan Gelombang Hijau) --}}
+                    {{-- Kanan: Traffic (Card dengan Gelombang Hijau & Filter Periode) --}}
                     <div class="nina-income-box">
                         <div class="nina-income-header">
-                            <span class="nina-income-title">Your Income</span>
-                            <span class="nina-income-period">Bulan Ini <i class="ph ph-caret-down"
-                                    style="font-size:0.7rem;"></i></span>
+                            <span class="nina-income-title">Traffic</span>
+                            <div class="traffic-period-picker">
+                                <button type="button" class="nina-income-period" id="trafficPeriodBtn" onclick="toggleTrafficPeriod(event)">
+                                    <span id="trafficPeriodLabel">Bulan Ini</span>
+                                    <i class="ph ph-caret-down" style="font-size:0.7rem;"></i>
+                                </button>
+                                <div id="trafficPeriodMenu" class="traffic-period-menu" style="display: none;">
+                                    <button type="button" class="tpm-item" onclick="setTrafficPeriod('week', 'Minggu Ini')">Minggu Ini</button>
+                                    <button type="button" class="tpm-item active" onclick="setTrafficPeriod('month', 'Bulan Ini')">Bulan Ini</button>
+                                    <button type="button" class="tpm-item" onclick="setTrafficPeriod('year', 'Tahun Ini')">Tahun Ini</button>
+                                </div>
+                            </div>
                         </div>
 
                         {{-- Smooth Delicate Wave Curve --}}
@@ -675,12 +957,12 @@
                         </svg>
 
                         <div class="nina-income-bottom">
-                            <div class="nina-income-amount">
-                                Rp {{ number_format($incomeThisMonth, 0, ',', '.') }}
+                            <div class="nina-income-amount" id="trafficCount">
+                                {{ number_format($trafficData['month']['count'] ?? 0, 0, ',', '.') }}
                             </div>
-                            <div class="nina-income-badge">
+                            <div class="nina-income-badge" id="trafficBadge">
                                 <i class="ph ph-trend-up"></i>
-                                <span>+100%</span>
+                                <span id="trafficGrowth">{{ $trafficData['month']['growth'] ?? '+100%' }}</span>
                             </div>
                         </div>
                     </div>
@@ -747,4 +1029,69 @@
         </div>
 
     </div>
+
+    <script>
+        // ── Traffic Stats Interactive Filter ──
+        const trafficStats = @json($trafficData ?? [
+            'week'  => ['label' => 'Minggu Ini', 'count' => 0, 'growth' => '+100%'],
+            'month' => ['label' => 'Bulan Ini',  'count' => 0, 'growth' => '+100%'],
+            'year'  => ['label' => 'Tahun Ini',  'count' => 0, 'growth' => '+100%']
+        ]);
+
+        function toggleTrafficPeriod(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('trafficPeriodMenu');
+            if (!menu) return;
+            const isShown = menu.style.display === 'block';
+            menu.style.display = isShown ? 'none' : 'block';
+        }
+
+        function setTrafficPeriod(key, label) {
+            const item = trafficStats[key];
+            if (item) {
+                document.getElementById('trafficPeriodLabel').textContent = label;
+                document.getElementById('trafficCount').textContent = new Intl.NumberFormat('id-ID').format(item.count);
+                document.getElementById('trafficGrowth').textContent = item.growth;
+                document.querySelectorAll('.tpm-item').forEach(el => {
+                    el.classList.toggle('active', el.textContent.trim() === label);
+                });
+            }
+            const menu = document.getElementById('trafficPeriodMenu');
+            if (menu) menu.style.display = 'none';
+        }
+
+        // ── Nina Creator Profile Dropdown (100% Mirip Image 2) ──
+        function toggleNinaDropdown(e) {
+            e.stopPropagation();
+            const dd = document.getElementById('ninaDropdownMenu');
+            if (!dd) return;
+            const isHidden = dd.style.display === 'none' || dd.style.display === '';
+            if (isHidden) {
+                dd.style.display = 'block';
+                requestAnimationFrame(() => {
+                    dd.style.opacity = '1';
+                    dd.style.transform = 'translateY(0)';
+                });
+            } else {
+                dd.style.opacity = '0';
+                dd.style.transform = 'translateY(-8px)';
+                setTimeout(() => { dd.style.display = 'none'; }, 180);
+            }
+        }
+
+        // Global click listener to close dropdowns when clicking outside
+        window.addEventListener('click', function(e) {
+            const ninaDd = document.getElementById('ninaDropdownMenu');
+            if (ninaDd && !e.target.closest('.nina-avatar-container')) {
+                ninaDd.style.opacity = '0';
+                ninaDd.style.transform = 'translateY(-8px)';
+                setTimeout(() => { ninaDd.style.display = 'none'; }, 180);
+            }
+
+            const tpMenu = document.getElementById('trafficPeriodMenu');
+            if (tpMenu && !e.target.closest('.traffic-period-picker')) {
+                tpMenu.style.display = 'none';
+            }
+        });
+    </script>
 @endsection

@@ -435,6 +435,13 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
     Route::redirect('/cart', '/akun/pesanan')->name('cart');
 });
 
+Route::get('/profile', function() {
+    if (auth()->check() && (auth()->user()->isSeller() || auth()->user()->hasRole('seller'))) {
+        return redirect()->route('creator.profile.edit');
+    }
+    return redirect()->route('profile');
+});
+
 Route::middleware(['auth'])->group(function () {
     // ── Onboarding Super App Wizard (3-Step Progressive Profiling) ──
     Route::get('/onboarding', [\App\Http\Controllers\OnboardingController::class, 'index'])->name('onboarding.index');
