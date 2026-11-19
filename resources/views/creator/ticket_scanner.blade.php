@@ -886,55 +886,60 @@
             background: #1e293b;
         }
 
-        /* ─── VARIANT STATS CARDS ─── */
-        .variant-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
+        /* ─── VARIANT MINI CHIPS (COMPACT & REAKTIF) ─── */
+        .variant-chips-wrap {
+            margin-top: 0.75rem;
+            padding-top: 0.65rem;
+            border-top: 1px dashed #e2e8f0;
         }
-        .variant-stat-card {
+        .variant-chips-scroll {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .variant-chips-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .variant-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
             background: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 0.9rem 1rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-        }
-        .variant-stat-card-name {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            margin-bottom: 0.4rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            padding: 0.3rem 0.65rem;
+            font-size: 0.75rem;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: all 0.15s ease;
         }
-        .variant-stat-card-val {
-            font-size: 1.5rem;
-            font-weight: 800;
+        .variant-chip-name {
+            font-weight: 700;
             color: #0f172a;
-            line-height: 1.1;
         }
-        .variant-stat-card-sub {
+        .variant-chip-badge {
+            background: #f1f5f9;
+            color: #0f172a;
+            font-weight: 800;
             font-size: 0.7rem;
+            padding: 1px 6px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .variant-chip-badge.has-sold {
+            background: #f0fdf4;
+            color: #16a34a;
+            border-color: #bbf7d0;
+        }
+        .variant-chip-rem {
+            font-size: 0.68rem;
             color: #64748b;
             font-weight: 500;
-            margin-top: 0.3rem;
-        }
-        .variant-progress-bar {
-            margin-top: 0.5rem;
-            height: 5px;
-            background: #f1f5f9;
-            border-radius: 99px;
-            overflow: hidden;
-        }
-        .variant-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #1eb349, #15803d);
-            border-radius: 99px;
-            transition: width 0.3s ease;
         }
 
         /* ─── FILTER 1-ROW GRID ─── */
@@ -3956,73 +3961,22 @@
                                 </div>
                                 </div>
                             </div>
+
+                            {{-- MINI CHIPS VARIASI TIKET (COMPACT & HANYA MUNCUL KETIKA EVENT DIPILIH) --}}
+                            <div id="eventVariantChipsWrap" class="variant-chips-wrap" style="display: none;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.45rem;">
+                                    <span style="font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em;">
+                                        Variasi Tiket
+                                    </span>
+                                    <span id="variantChipsEventName" style="font-size: 0.7rem; font-weight: 600; color: #16a34a;"></span>
+                                </div>
+                                <div id="eventVariantChipsList" class="variant-chips-scroll">
+                                    {{-- Diisi secara dinamis via JS sesuai event yang dipilih --}}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                {{-- CARD STATISTIK PER VARIASI TIKET --}}
-                @if($events->isNotEmpty())
-                <div style="margin-bottom: 1.25rem;">
-                    <div style="font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.65rem; padding: 0 0.1rem;">
-                        Stok &amp; Penjualan per Variasi
-                    </div>
-                    <div class="variant-stats-grid">
-                        @php
-                            $variantRows = [];
-                            foreach($events as $ev) {
-                                $evSoldTotal = $allTicketsCached->where('product_id', $ev->id)->whereNotIn('status', ['cancelled'])->count();
-                                if ($ev->variantOptions->isNotEmpty()) {
-                                    foreach ($ev->variantOptions as $opt) {
-                                        foreach ($opt->values as $val) {
-                                            $stock = (int)($val->stock ?? 0);
-                                            // Sold for this variant: approximate by ticket_code prefix or variant_label match
-                                            // We'll show per-event capacity split proportionally if no direct variant sold data
-                                            $variantRows[] = [
-                                                'label'    => ($events->count() > 1 ? $ev->name . ' · ' : '') . ($val->value ?? $opt->name),
-                                                'stock'    => $stock,
-                                                'sold'     => 0, // updated via JS
-                                                'event_id' => $ev->id,
-                                                'opt_name' => $opt->name,
-                                                'val_name' => $val->value ?? $opt->name,
-                                            ];
-                                        }
-                                    }
-                                } else {
-                                    $stock = (int)($ev->stock ?? 0);
-                                    $variantRows[] = [
-                                        'label'    => $ev->name,
-                                        'stock'    => $stock,
-                                        'sold'     => $evSoldTotal,
-                                        'event_id' => $ev->id,
-                                        'opt_name' => '',
-                                        'val_name' => '',
-                                    ];
-                                }
-                            }
-                        @endphp
-                        @forelse($variantRows as $vr)
-                            @php
-                                $totalCap = $vr['stock'];
-                                $sold = $vr['sold'];
-                                $remaining = max(0, $totalCap - $sold);
-                                $pct = $totalCap > 0 ? min(100, round($sold / $totalCap * 100)) : 0;
-                            @endphp
-                            <div class="variant-stat-card">
-                                <div class="variant-stat-card-name" title="{{ $vr['label'] }}">{{ $vr['label'] }}</div>
-                                <div class="variant-stat-card-val">
-                                    {{ number_format($sold) }}<span style="font-size: 0.72em; font-weight: 600; color: #64748b;">/{{ number_format($remaining) }}</span>
-                                </div>
-                                <div class="variant-stat-card-sub">Terjual / Sisa Stok</div>
-                                <div class="variant-progress-bar">
-                                    <div class="variant-progress-fill" style="width: {{ $pct }}%;"></div>
-                                </div>
-                            </div>
-                        @empty
-                            <div style="grid-column: span 2; text-align: center; color: #94a3b8; font-size: 0.8rem; padding: 1rem;">Belum ada variasi tiket.</div>
-                        @endforelse
-                    </div>
-                </div>
-                @endif
 
                 {{-- CARD 2: RINGKASAN STATISTIK --}}
                 <div class="stat-grid" style="margin-bottom: 1.25rem;">
@@ -4123,7 +4077,10 @@
                     <div class="form-body" style="padding-top: 1.15rem;">
                         <div id="attendanceCardsList" class="attendance-cards-wrap">
                             @forelse($tickets as $ticket)
-                                <div class="visitor-card">
+                                <div class="visitor-card"
+                                     data-event-id="{{ $ticket->product_id }}"
+                                     data-status="{{ $ticket->status }}"
+                                     data-search="{{ strtolower(($ticket->holder_name ?? '') . ' ' . ($ticket->ticket_code ?? '') . ' ' . ($ticket->holder_email ?? '') . ' ' . ($ticket->holder_phone ?? '') . ' ' . ($ticket->product?->name ?? '')) }}">
                                     <div class="visitor-card-main">
                                         <div class="visitor-avatar">
                                             {{ strtoupper(substr($ticket->holder_name ?? 'P', 0, 1)) }}
@@ -5417,11 +5374,52 @@
         // INSTANT FILTER \u0026 STATS UI (DATA TAB)
         // ══════════════════════════════════════════════════════════════════════
         const EVENT_STOCK_MAP = {!! json_encode($eventStockMap ?? []) !!};
+        const EVENT_VARIANTS_MAP = {!! json_encode($eventVariantsMap ?? []) !!};
+
+        function renderVariantChips(eventId) {
+            const wrap = document.getElementById('eventVariantChipsWrap');
+            const list = document.getElementById('eventVariantChipsList');
+            const nameEl = document.getElementById('variantChipsEventName');
+            if (!wrap || !list) return;
+
+            // Sembunyikan jika "Semua Event" atau event tidak punya variasi
+            if (!eventId || !EVENT_VARIANTS_MAP[eventId] || EVENT_VARIANTS_MAP[eventId].length === 0) {
+                wrap.style.display = 'none';
+                list.innerHTML = '';
+                return;
+            }
+
+            const variants = EVENT_VARIANTS_MAP[eventId];
+            const eventSelect = document.getElementById('instantEventFilter');
+            const selectedOpt = eventSelect ? eventSelect.options[eventSelect.selectedIndex] : null;
+            if (nameEl && selectedOpt) {
+                nameEl.textContent = selectedOpt.text;
+            }
+
+            let html = '';
+            variants.forEach(v => {
+                const hasSold = v.sold > 0;
+                const badgeClass = hasSold ? 'has-sold' : '';
+                html += `
+                    <div class="variant-chip">
+                        <span class="variant-chip-name">${v.name}</span>
+                        <span class="variant-chip-badge ${badgeClass}">${v.sold}<span style="font-size:0.85em;color:#64748b;font-weight:600;">/${v.remaining}</span></span>
+                        <span class="variant-chip-rem">sisa ${v.remaining}</span>
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html;
+            wrap.style.display = 'block';
+        }
 
         function runInstantFilter() {
             const searchVal   = (document.getElementById('instantSearchInput')?.value || '').toLowerCase().trim();
             const eventFilter = document.getElementById('instantEventFilter')?.value || '';
             const statFilter  = document.getElementById('instantStatusFilter')?.value || '';
+
+            // Render mini-chips variasi untuk event terpilih
+            renderVariantChips(eventFilter);
 
             // Update export link hrefs
             const csvBtn = document.getElementById('btnExportExcel');

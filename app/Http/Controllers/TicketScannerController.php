@@ -120,6 +120,34 @@ class TicketScannerController extends Controller
             $totalCreatorCapacity += $cap;
         }
 
+        // Siapkan map variasi per event untuk mini-chips compact & reaktif
+        $eventVariantsMap = [];
+        foreach ($events as $ev) {
+            $evVariants = [];
+            if ($ev->relationLoaded('variantOptions') && $ev->variantOptions->isNotEmpty()) {
+                foreach ($ev->variantOptions as $opt) {
+                    foreach ($opt->values as $val) {
+                        $soldCount = TicketPass::where('product_id', $ev->id)
+                            ->where('status', '!=', 'cancelled')
+                            ->whereHas('orderItem', function($q) use ($val) {
+                                $q->where('variant_value_id', $val->id)
+                                  ->orWhere('variant_name', $val->value);
+                            })->count();
+
+                        $stock = (int) ($val->stock ?? 0);
+                        $remaining = max(0, $stock - $soldCount);
+                        $evVariants[] = [
+                            'name'      => $val->value ?? $opt->name,
+                            'capacity'  => $stock,
+                            'sold'      => $soldCount,
+                            'remaining' => $remaining,
+                        ];
+                    }
+                }
+            }
+            $eventVariantsMap[$ev->id] = $evVariants;
+        }
+
         // Stats Ringkasan (dihitung dari seluruh tiket creator atau per event terpilih)
         $statSource = $selectedEventId ? $allCreatorTickets->where('product_id', $selectedEventId) : $allCreatorTickets;
         $totalTickets   = $statSource->count();
@@ -195,6 +223,7 @@ class TicketScannerController extends Controller
             'activeTab',
             'stats',
             'eventStockMap',
+            'eventVariantsMap',
             'totalCreatorCapacity',
             'allTicketsCached',
             'kyc',
