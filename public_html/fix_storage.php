@@ -103,9 +103,31 @@ foreach (['settings', 'avatars', 'hero_slides', 'products'] as $dir) {
     if (is_dir($p)) {
         $files = array_diff(scandir($p), ['.', '..']);
         out("$dir/ : " . count($files) . " file(s)");
+        if ($dir === 'products') {
+            out("Sample products files: " . implode(', ', array_slice($files, 0, 10)));
+        }
     } else {
         out("$dir/ : NOT FOUND");
     }
+}
+
+// Check recent products from DB
+out("\n--- Checking DB products image paths ---");
+try {
+    require_once $appRoot . '/vendor/autoload.php';
+    $app = require_once $appRoot . '/bootstrap/app.php';
+    $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+    $kernel->bootstrap();
+
+    $dbProds = \App\Models\Product::latest()->limit(15)->get(['id', 'name', 'seller_id', 'image', 'product_type']);
+    foreach ($dbProds as $dp) {
+        $img = $dp->image ?? 'NULL';
+        $fullUrl = $dp->image_url;
+        $fileReal = $dp->image ? (file_exists($storageSrc . '/' . ltrim($dp->image, '/')) ? 'EXISTS' : 'NOT_FOUND') : 'NO_IMG';
+        out("ID: {$dp->id} | {$dp->name} | Raw: $img | Status: $fileReal | URL: $fullUrl");
+    }
+} catch (\Throwable $e) {
+    out("DB check failed: " . $e->getMessage());
 }
 
 // Reset OPcache and clear compiled view files
