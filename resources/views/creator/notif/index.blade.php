@@ -110,16 +110,14 @@
                     @endif
                 </div>
 
-                {{-- Konten: 2 baris — Judul lebar penuh, Pesan, Waktu di bawah judul --}}
+                {{-- Konten compact: judul + jam sejajar 1 baris, pesan di bawah --}}
                 <div class="cr-ni-body">
                     <div class="cr-ni-title-row">
                         <span class="cr-ni-title">{{ $item->title }}</span>
-                        @if($isUnread)
-                            <span class="cr-ni-unread-dot"></span>
-                        @endif
+                        <span class="cr-ni-time">{{ $timeLabel }}</span>
+                        @if($isUnread)<span class="cr-ni-unread-dot"></span>@endif
                     </div>
                     <p class="cr-ni-desc">{{ $item->message }}</p>
-                    <span class="cr-ni-time">{{ $timeLabel }}</span>
                 </div>
 
                 {{-- Arrow --}}
@@ -341,9 +339,9 @@ try {
 
 .cr-notif-item {
     display: flex;
-    align-items: flex-start;
-    gap: .9rem;
-    padding: .95rem 1rem;
+    align-items: center;
+    gap: .75rem;
+    padding: .7rem .95rem;
     border-bottom: 1px solid #f1f5f9;
     text-decoration: none;
     transition: background .15s;
@@ -353,24 +351,24 @@ try {
 .cr-notif-item.is-unread  { background: #f0fdf4; }
 .cr-notif-item.is-unread:hover { background: #e8fdf4; }
 
-/* Icon bulat */
+/* Icon bulat — lebih kecil */
 .cr-ni-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 
-/* Body: 2 baris */
+/* Body */
 .cr-ni-body {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: .2rem;
+    gap: .08rem;
 }
 
 /* Baris 1: Judul + Dot unread */
@@ -378,42 +376,43 @@ try {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: .5rem;
+    gap: .4rem;
 }
 .cr-ni-title {
-    font-size: .88rem;
+    font-size: .84rem;
     font-weight: 700;
     color: #0f172a;
-    line-height: 1.3;
+    line-height: 1.25;
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .cr-ni-unread-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: #10b981;
     flex-shrink: 0;
-    box-shadow: 0 0 0 3px rgba(16,185,129,.22);
+    box-shadow: 0 0 0 2px rgba(16,185,129,.22);
 }
 
-/* Baris 2: Pesan ringkas */
+/* Baris 2: Pesan ringkas — 1 baris saja, truncated */
 .cr-ni-desc {
     margin: 0;
-    font-size: .8rem;
+    font-size: .76rem;
     color: #64748b;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    line-height: 1.35;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Baris 3: Jam kecil */
+/* Jam kecil inline */
 .cr-ni-time {
-    font-size: .7rem;
+    font-size: .68rem;
     color: #94a3b8;
     font-weight: 500;
-    margin-top: .1rem;
 }
 
 /* Arrow */
@@ -421,7 +420,6 @@ try {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    padding-top: 10px;
 }
 
 /* ───── Empty State ───── */

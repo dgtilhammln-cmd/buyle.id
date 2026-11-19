@@ -807,6 +807,11 @@
                         style="width:34px; height:34px; border-radius:10px; background:#0f172a; border:1px solid #0f172a; color:#ffffff; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0; transition:all 0.15s ease;">
                         <i class="ph-bold ph-arrow-square-out" style="font-size:1.05rem;"></i>
                     </a>
+                    {{-- Icon Gerigi → Kelola Bio & Profil --}}
+                    <a href="{{ route('creator.bio.index') }}" title="Kelola Bio & Profil Creator"
+                        style="width:34px; height:34px; border-radius:10px; background:#f8fafc; border:1.5px solid #e2e8f0; color:#475569; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0; transition:all 0.15s ease;">
+                        <i class="ph-bold ph-gear-six" style="font-size:1.05rem;"></i>
+                    </a>
                 </div>
             </div>
 
@@ -828,6 +833,11 @@
                     <a href="{{ $websiteUrl }}" target="_blank" title="Buka Website"
                         style="width:34px; height:34px; border-radius:10px; background:#0f172a; border:1px solid #0f172a; color:#ffffff; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0; transition:all 0.15s ease;">
                         <i class="ph-bold ph-arrow-square-out" style="font-size:1.05rem;"></i>
+                    </a>
+                    {{-- Icon Gerigi → Kelola Profil Creator --}}
+                    <a href="{{ route('creator.profile.edit') }}" title="Edit Profil Creator"
+                        style="width:34px; height:34px; border-radius:10px; background:#f8fafc; border:1.5px solid #e2e8f0; color:#475569; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0; transition:all 0.15s ease;">
+                        <i class="ph-bold ph-gear-six" style="font-size:1.05rem;"></i>
                     </a>
                 </div>
             </div>
