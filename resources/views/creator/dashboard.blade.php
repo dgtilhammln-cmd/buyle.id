@@ -842,7 +842,27 @@
 
                                         <div class="ndc-divider"></div>
 
-                                        {{-- 3. Logout --}}
+                                        {{-- 3. Beranda Buyle -> / --}}
+                                        <a href="{{ url('/') }}" class="ndc-item">
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                                <polyline points="9 22 9 12 15 12 15 22"/>
+                                            </svg>
+                                            <span>Beranda Buyle</span>
+                                        </a>
+
+                                        {{-- 4. Beranda BuyleTIX -> /creator/event-attendance --}}
+                                        <a href="{{ route('creator.ticket.scanner') }}" class="ndc-item">
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/>
+                                                <path d="M13 5v14"/>
+                                            </svg>
+                                            <span>Beranda BuyleTIX</span>
+                                        </a>
+
+                                        <div class="ndc-divider"></div>
+
+                                        {{-- 5. Logout --}}
                                         <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                             @csrf
                                             <button type="submit" class="ndc-item ndc-logout">
