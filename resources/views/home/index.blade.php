@@ -1873,13 +1873,13 @@
                 style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
                 <div>
                     <h2 class="responsive-section-title" id="retargetSectionTitle">
-                        Produk Terkait & Rekomendasi.
+                        Rekomendasi
                     </h2>
                 </div>
                 <a href="{{ route_locale('products') }}"
                     style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
                     onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                    Lihat Semua Produk
+                    Lihat Semua
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M5 12h14m-7-7l7 7-7 7" />
                     </svg>
@@ -2046,7 +2046,7 @@
                                 if (data.is_personalized) {
                                     var titleEl = document.getElementById('retargetSectionTitle');
                                     if (titleEl) {
-                                        titleEl.innerHTML = 'Produk Terkait & Rekomendasi <span style="background: #DEF7EC; color: #03543F; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 99px; vertical-align: middle; margin-left: 0.4rem; display: inline-flex; align-items: center; gap: 0.25rem;">✨ Untuk Anda</span>';
+                                        titleEl.innerHTML = 'Rekomendasi <span style="background: #DEF7EC; color: #03543F; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 99px; vertical-align: middle; margin-left: 0.4rem; display: inline-flex; align-items: center; gap: 0.25rem;">✨ Untuk Anda</span>';
                                     }
                                 }
                             }
@@ -2138,7 +2138,7 @@
                 <a href="{{ route_locale('products') }}?sort=terlaris"
                     style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
                     onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                    Lihat Semua Produk
+                    Lihat Semua
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M5 12h14m-7-7l7 7-7 7" />
                     </svg>
@@ -2292,7 +2292,7 @@
                     <a href="{{ route_locale('products') }}?sort=terbaru"
                         style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
                         onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                        Lihat Semua Produk
+                        Lihat Semua
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M5 12h14m-7-7l7 7-7 7" />
                         </svg>

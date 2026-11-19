@@ -704,31 +704,42 @@
                                         $hasEndDate = !empty(old('event_end_date', $product->event_end_date?->format('Y-m-d')));
                                     @endphp
                                     <div class="form-group full" style="margin-bottom: 0.75rem;">
-                                        <label class="form-label" style="margin-bottom:0.35rem;">Durasi Pelaksanaan Event <span>*</span></label>
+                                        <label class="form-label" style="margin-bottom:0.35rem;">Durasi Pelaksanaan Event
+                                            <span>*</span></label>
                                         <div style="display:flex; flex-wrap:wrap; gap:1.25rem; align-items:center;">
-                                            <label style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
-                                                <input type="radio" name="event_duration_mode" value="single" id="eventDurSingle" onchange="toggleEventDurationMode('single')" {{ !$hasEndDate ? 'checked' : '' }}>
+                                            <label
+                                                style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
+                                                <input type="radio" name="event_duration_mode" value="single"
+                                                    id="eventDurSingle" onchange="toggleEventDurationMode('single')" {{ !$hasEndDate ? 'checked' : '' }}>
                                                 <span>1 Hari (Single Day)</span>
                                             </label>
-                                            <label style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
-                                                <input type="radio" name="event_duration_mode" value="multi" id="eventDurMulti" onchange="toggleEventDurationMode('multi')" {{ $hasEndDate ? 'checked' : '' }}>
+                                            <label
+                                                style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
+                                                <input type="radio" name="event_duration_mode" value="multi"
+                                                    id="eventDurMulti" onchange="toggleEventDurationMode('multi')" {{ $hasEndDate ? 'checked' : '' }}>
                                                 <span>Berhari-hari / Rentang Tanggal (Multi Day)</span>
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-grid">
                                         <div class="form-group" id="eventStartDateWrap">
-                                            <label class="form-label" id="eventStartDateLabel">{{ $hasEndDate ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }} <span>*</span></label>
+                                            <label class="form-label"
+                                                id="eventStartDateLabel">{{ $hasEndDate ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }}
+                                                <span>*</span></label>
                                             <input type="date" name="event_date" id="eventDateInput"
                                                 value="{{ old('event_date', $product->event_date?->format('Y-m-d')) }}"
                                                 class="form-input" onchange="handleEventStartDateChange(this.value)">
                                         </div>
-                                        <div class="form-group" id="eventEndDateWrap" style="display: {{ $hasEndDate ? 'block' : 'none' }};">
+                                        <div class="form-group" id="eventEndDateWrap"
+                                            style="display: {{ $hasEndDate ? 'block' : 'none' }};">
                                             <label class="form-label">Tanggal Berakhir Event <span>*</span></label>
                                             <input type="date" name="event_end_date" id="eventEndDateInput"
                                                 value="{{ old('event_end_date', $product->event_end_date?->format('Y-m-d')) }}"
-                                                class="form-input" min="{{ old('event_date', $product->event_date?->format('Y-m-d')) }}">
-                                            <span class="form-hint" style="font-size:0.75rem; color:#64748b; margin-top:2px; display:block;">Hari terakhir rangkaian acara</span>
+                                                class="form-input"
+                                                min="{{ old('event_date', $product->event_date?->format('Y-m-d')) }}">
+                                            <span class="form-hint"
+                                                style="font-size:0.75rem; color:#64748b; margin-top:2px; display:block;">Hari
+                                                terakhir rangkaian acara</span>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label">Waktu Event (Jam) <span>*</span></label>
@@ -902,7 +913,7 @@
                                                     <circle cx="12" cy="12" r="10" />
                                                     <polyline points="12 6 12 12 16 14" />
                                                 </svg>
-                                                Jadwal Mulai Penjualan (Ticket War / Live Drop)
+                                                Jadwal War Tiket
                                             </label>
                                             <input type="datetime-local" name="ticket_war_start"
                                                 value="{{ old('ticket_war_start', $product->ticket_war_start?->format('Y-m-d\TH:i')) }}"
@@ -1213,7 +1224,8 @@
                                 </label>
                                 <div>
                                     <div class="form-label" style="font-size:0.9rem;">Status Produk: Aktif</div>
-                                    <div class="form-hint">Nyalakan agar produk tampil dan dapat dibeli di etalase toko. Matikan untuk mengarsipkan (sembunyikan dari pembeli).</div>
+                                    <div class="form-hint">Nyalakan agar produk tampil dan dapat dibeli di etalase toko.
+                                        Matikan untuk mengarsipkan (sembunyikan dari pembeli).</div>
                                 </div>
                             </div>
                         </div>
@@ -1413,8 +1425,7 @@
                                         {{-- Platform Selection Tabs --}}
                                         <div
                                             style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
-                                            <button type="button" id="btnPlatformYt"
-                                                onclick="setVideoPlatform('youtube')"
+                                            <button type="button" id="btnPlatformYt" onclick="setVideoPlatform('youtube')"
                                                 style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'youtube' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
                                                 <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
                                                     <path
@@ -1422,8 +1433,7 @@
                                                 </svg>
                                                 YouTube
                                             </button>
-                                            <button type="button" id="btnPlatformTt"
-                                                onclick="setVideoPlatform('tiktok')"
+                                            <button type="button" id="btnPlatformTt" onclick="setVideoPlatform('tiktok')"
                                                 style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'tiktok' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
                                                 <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
                                                     <path
@@ -1441,10 +1451,9 @@
                                             <input type="url" name="youtube_video_url" id="videoUrlInput"
                                                 value="{{ $ytPrefill }}" class="form-input"
                                                 placeholder="Paste link YouTube atau YouTube Shorts di sini..."
-                                                oninput="debounceVideoPreview(this.value)"
-                                                style="margin-bottom:0.5rem;">
-                                            <span class="form-hint"
-                                                style="display:block; margin-bottom:0.75rem;">Mendukung link video
+                                                oninput="debounceVideoPreview(this.value)" style="margin-bottom:0.5rem;">
+                                            <span class="form-hint" style="display:block; margin-bottom:0.75rem;">Mendukung
+                                                link video
                                                 YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
                                         </div>
 
@@ -1786,17 +1795,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                <div class="form-group">
-                                    <label class="form-label">Pertanyaan</label>
-                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Jawaban</label>
-                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                </div>
-                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                            </div>`;
+                                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                    <div class="form-group">
+                                        <label class="form-label">Pertanyaan</label>
+                                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Jawaban</label>
+                                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                    </div>
+                                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2477,18 +2486,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                    <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                        style="width:100%; height:100%; border:none; display:block;"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen loading="lazy"></iframe>
-                                </div>`;
+                                    <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                        <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                            style="width:100%; height:100%; border:none; display:block;"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen loading="lazy"></iframe>
+                                    </div>`;
                 } else {
                     html += `
-                                <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                    <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                    <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                </div>`;
+                                    <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                        <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                        <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                    </div>`;
                 }
             });
             html += '</div>';

@@ -34,36 +34,36 @@
             flex-wrap: wrap;
         }
 
-        /* ─── TABS NAV (Super App Capsule Pills - Persis Tab di Bio) ─── */
+        /* ─── TABS NAV (Super App Capsule Pills: 2 Balanced Tabs 50/50) ─── */
         .acc-tabs {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 0.45rem;
+            width: 100%;
+            gap: 0.4rem;
             margin-bottom: 2rem;
             padding: 0.35rem;
             background: #ffffff;
             border: 1.5px solid #E2E8F0;
             border-radius: 999px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            max-width: 100%;
+            box-sizing: border-box;
         }
-        .acc-tabs::-webkit-scrollbar { display: none; }
         .acc-tab {
+            flex: 1;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.45rem;
-            padding: 0.55rem 1.15rem;
-            font-size: 0.82rem;
-            font-weight: 600;
+            padding: 0.6rem 1.15rem;
+            font-size: 0.84rem;
+            font-weight: 700;
             color: #64748B;
             text-decoration: none;
             border-radius: 999px;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
             border: 1.5px solid transparent;
+            text-align: center;
         }
         .acc-tab:hover {
             color: #0f172a;
@@ -613,8 +613,9 @@
             .acc-title-row {
                 display: none !important;
             }
-            /* Tabs navigasi Overview/Pesanan/Profile — lebih compact di mobile */
+            /* Tabs navigasi Profile & Pesanan — Balanced 50/50 Full Width di mobile */
             .acc-tabs {
+                display: flex !important;
                 margin-bottom: 0.85rem !important;
                 width: 100% !important;
                 box-sizing: border-box !important;
@@ -622,9 +623,12 @@
                 gap: 0.25rem !important;
             }
             .acc-tab {
-                padding: 0.4rem 0.75rem !important;
-                font-size: 0.72rem !important;
-                gap: 0.3rem !important;
+                flex: 1 !important;
+                justify-content: center !important;
+                padding: 0.45rem 0.75rem !important;
+                font-size: 0.76rem !important;
+                gap: 0.35rem !important;
+                text-align: center !important;
             }
             .acc-tab svg {
                 width: 13px !important;
@@ -694,22 +698,17 @@
             </div>
         @endif
 
-        {{-- TAB NAV (Super App Pill Capsule) --}}
+        {{-- TAB NAV (Super App Pill Capsule: 2 Tabs Balanced Profile & Pesanan) --}}
         <nav class="acc-tabs">
-            <a href="{{ route('account.overview') }}"
-               class="acc-tab {{ request()->routeIs('account.overview') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                Overview
+            <a href="{{ route('account.profile') }}"
+               class="acc-tab {{ request()->routeIs('account.profile') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 1 21 12a10 10 0 0 1-1.93 7.07m-2.14 2.14A10 10 0 0 1 12 23a10 10 0 0 1-7.07-2.93m-2.14-2.14A10 10 0 0 1 1 12a10 10 0 0 1 2.93-7.07M4.93 4.93A10 10 0 0 1 12 1a10 10 0 0 1 7.07 2.93"/></svg>
+                Profile
             </a>
             <a href="{{ route('account.orders') }}"
                class="acc-tab {{ request()->routeIs('account.orders*') ? 'active' : '' }}">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                 Pesanan
-            </a>
-            <a href="{{ route('account.profile') }}"
-               class="acc-tab {{ request()->routeIs('account.profile') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 1 21 12a10 10 0 0 1-1.93 7.07m-2.14 2.14A10 10 0 0 1 12 23a10 10 0 0 1-7.07-2.93m-2.14-2.14A10 10 0 0 1 1 12a10 10 0 0 1 2.93-7.07M4.93 4.93A10 10 0 0 1 12 1a10 10 0 0 1 7.07 2.93"/></svg>
-                Profile
             </a>
         </nav>
 

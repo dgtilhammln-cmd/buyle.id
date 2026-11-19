@@ -119,6 +119,9 @@
             .pd-sidebar-col {
                 position: static;
             }
+            .pd-creator-card {
+                display: none !important;
+            }
         }
 
         .pd-container {

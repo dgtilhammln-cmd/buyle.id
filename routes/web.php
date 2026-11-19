@@ -417,7 +417,7 @@ Route::post('/keluar', [AuthController::class, 'logout'])->name('logout')->middl
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function () {
-    Route::get('/',          [AccountController::class, 'overview'])->name('overview');
+    Route::redirect('/', '/akun/profil')->name('overview');
     Route::redirect('/wishlist', '/akun/pesanan')->name('wishlist');
     Route::post('/wishlist/toggle', [AccountController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::get('/pesanan',   [AccountController::class, 'orders'])->name('orders');
