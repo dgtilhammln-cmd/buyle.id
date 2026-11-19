@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     @php
         $firstTicketItem = $order->items->first(function ($i) {
             $pType = $i->product?->product_type ?? '';
@@ -44,7 +44,7 @@
 
         // Seat / Kategori
         $seatOrCategory = $firstTicketItem?->variantValue?->name
-            ?: ($firstTicketItem?->product?->short_desc ?: 'No seat');
+            ?: ($firstTicketItem?->product?->short_desc ?: 'Reguler');
 
         // Ticket Passes
         $passes = $order->ticketPasses;
@@ -110,13 +110,17 @@
 
         .tix-page-viewport {
             min-height: 100vh;
+            min-height: 100dvh;
             width: 100%;
             background: var(--tix-bg-gradient);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 1.25rem 1rem 3rem;
+            padding-top: max(1.5rem, calc(env(safe-area-inset-top) + 0.6rem));
+            padding-bottom: max(3rem, calc(env(safe-area-inset-bottom) + 1.25rem));
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
             box-sizing: border-box;
             position: relative;
         }
@@ -178,8 +182,8 @@
         }
 
         .tix-nav-title {
-            font-size: 1.15rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
             color: #ffffff;
             letter-spacing: 0.3px;
             margin: 0;
@@ -200,7 +204,7 @@
         .tix-tab-pill {
             padding: 0.38rem 0.85rem;
             font-size: 0.72rem;
-            font-weight: 700;
+            font-weight: 600;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             background: rgba(0, 0, 0, 0.16);
@@ -266,11 +270,11 @@
 
         /* ── Event Title ── */
         .tix-event-title {
-            font-size: 1.25rem;
-            font-weight: 800;
+            font-size: 1.05rem;
+            font-weight: 600;
             color: #0f172a;
             text-align: center;
-            margin: 1.1rem 0 1rem;
+            margin: 0.95rem 0 0.85rem;
             line-height: 1.35;
             letter-spacing: -0.2px;
         }
@@ -279,7 +283,7 @@
         .tix-dashed-divider {
             border: none;
             border-top: 2px dashed #cbd5e1;
-            margin: 0.25rem 0 1.25rem;
+            margin: 0.25rem 0 1.15rem;
             width: 100%;
         }
 
@@ -287,9 +291,9 @@
         .tix-details-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            row-gap: 1.1rem;
-            column-gap: 1.5rem;
-            margin-bottom: 1.25rem;
+            row-gap: 1rem;
+            column-gap: 1.25rem;
+            margin-bottom: 1.15rem;
         }
 
         .tix-grid-col.right {
@@ -297,16 +301,16 @@
         }
 
         .tix-detail-label {
-            font-size: 0.72rem;
-            font-weight: 600;
+            font-size: 0.7rem;
+            font-weight: 500;
             color: var(--tix-text-muted);
-            margin-bottom: 0.25rem;
-            letter-spacing: 0.3px;
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.2px;
         }
 
         .tix-detail-value {
-            font-size: 0.95rem;
-            font-weight: 800;
+            font-size: 0.85rem;
+            font-weight: 600;
             color: #0f172a;
             line-height: 1.3;
             word-break: break-word;
@@ -317,16 +321,16 @@
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            padding: 0.5rem 0.75rem;
+            padding: 0.45rem 0.75rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             color: #475569;
-            margin-bottom: 1.15rem;
+            margin-bottom: 1rem;
         }
         .tix-attendee-name {
-            font-weight: 700;
+            font-weight: 600;
             color: #0f172a;
         }
 
@@ -341,11 +345,11 @@
 
         .tix-code-text {
             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-            font-size: 0.76rem;
+            font-size: 0.72rem;
             color: #64748b;
             letter-spacing: 1px;
-            margin-bottom: 0.4rem;
-            font-weight: 600;
+            margin-bottom: 0.35rem;
+            font-weight: 500;
             text-align: center;
         }
 
@@ -544,12 +548,18 @@
         
         {{-- Top Navigation Bar --}}
         <div class="tix-nav-bar">
-            <button type="button" class="tix-nav-btn" onclick="handleGoBack()" title="Kembali">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <polyline points="15 18 9 12 15 6"/>
+            <a href="{{ route('tix.index') }}" class="tix-nav-btn" title="Ke Beranda BuyleTIX">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
-            </button>
-            <h1 class="tix-nav-title">Ticket</h1>
+            </a>
+            <a href="{{ route('tix.index') }}" title="Buyle TIX" style="display:inline-flex; align-items:center; text-decoration:none;">
+                <picture>
+                    <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" style="height:28px; width:auto; max-width:140px; object-fit:contain; display:block;">
+                </picture>
+            </a>
             <button type="button" class="tix-nav-btn" onclick="shareTicket()" title="Bagikan Tiket">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <circle cx="18" cy="5" r="3"/>
@@ -615,7 +625,7 @@
 
                 {{-- Seat / Kategori --}}
                 <div class="tix-grid-col right">
-                    <div class="tix-detail-label">Seat</div>
+                    <div class="tix-detail-label">Kategori</div>
                     <div class="tix-detail-value" id="tixSeatDisplay">{{ $seatOrCategory }}</div>
                 </div>
             </div>
@@ -628,46 +638,31 @@
                 </span>
             </div>
 
-            {{-- Barcode Section --}}
-            <div class="tix-barcode-wrap">
+            {{-- Barcode Section (Selalu Tampil di Center di Bawah Pemegang) --}}
+            <div class="tix-barcode-wrap" onclick="openQrModal()" style="cursor:pointer;" title="Ketuk untuk perbesar QR Masuk Gate">
                 <div class="tix-code-text" id="tixCodeDisplay">
                     {{ $activePass->ticket_code ?? $order->order_number }}
                 </div>
                 <div class="tix-barcode-svg-box">
                     <svg id="ticketBarcodeSvg"></svg>
                 </div>
+                <div style="font-size:0.68rem; color:#94a3b8; margin-top:0.35rem; font-weight:500; letter-spacing:0.2px;">
+                    Ketuk barcode untuk QR Masuk &raquo;
+                </div>
             </div>
         </div>
 
         {{-- Bottom Floating Controls --}}
-        <div class="tix-controls-bar">
+        <div class="tix-controls-bar" style="justify-content:center;">
             {{-- Save / Download PDF Button --}}
-            <a href="{{ $ticketPdfUrl }}" class="tix-save-btn" title="Simpan / Unduh E-Tiket PDF" target="_blank" download>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+            <a href="{{ $ticketPdfUrl }}" class="tix-save-btn" title="Simpan / Unduh E-Tiket PDF" target="_blank" download style="width:auto; border-radius:999px; padding:0 1.5rem; gap:0.6rem; font-size:0.88rem; font-weight:600; font-family:inherit; text-decoration:none;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                     <polyline points="7 10 12 15 17 10"/>
                     <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
+                <span>Simpan Tiket</span>
             </a>
-
-            {{-- Show QR Code Pill Button (Icon Gate Pass / Scan) --}}
-            <button type="button" class="tix-qr-pill-btn" onclick="openQrModal()">
-                <div style="display:flex; align-items:center; gap:0.65rem;">
-                    <div class="tix-qr-icon-circle">
-                        {{-- Icon Modern Scan Frame / Gate Pass (Bukan sekadar QR biasa) --}}
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                            <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-                            <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-                            <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-                            <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                            <rect x="7" y="7" width="10" height="10" rx="2" stroke-width="2"/>
-                            <path d="M7 12h10" stroke-width="1.8"/>
-                        </svg>
-                    </div>
-                    <span>Tampilkan QR Masuk</span>
-                </div>
-                <span class="tix-qr-arrow">&gt;&gt;&gt;</span>
-            </button>
         </div>
 
     </div>

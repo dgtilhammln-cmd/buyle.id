@@ -1,545 +1,565 @@
-{{-- ══════════════════════════════════════════════════════════════════════════
-     BUYLETIX — DEDICATED TICKET FINISH VIEW (100% MATCH TO REFERENCE IMAGE 1)
-     Background: linear-gradient(135deg, #1db349 0%, #84ce00 100%)
-     Font: 'Montserrat', sans-serif (No Emoticons)
-     ══════════════════════════════════════════════════════════════════════════ --}}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    @php
+        $firstTicketItem = $order->items->first(function ($i) {
+            $pType = $i->product?->product_type ?? '';
+            return in_array($pType, ['ticket', 'tiket', 'tiket event', 'ticket_event']) || !empty($i->product?->event_date);
+        }) ?? $order->items->first();
 
-@php
-    $firstTicketItem = $order->items->first(function ($i) {
-        $pType = $i->product?->product_type ?? '';
-        return in_array($pType, ['ticket', 'tiket', 'tiket event', 'ticket_event']) || !empty($i->product?->event_date);
-    }) ?? $order->items->first();
+        $product = $firstTicketItem?->product;
 
-    $product = $firstTicketItem?->product;
-
-    // Foto Landscape (16:9) sesuai Image 2
-    $landscapePoster = null;
-    if (!empty($product?->og_image)) {
-        $landscapePoster = \Illuminate\Support\Str::startsWith($product->og_image, 'http') ? $product->og_image : asset('storage/' . $product->og_image);
-    } elseif (!empty($product?->image)) {
-        $landscapePoster = \Illuminate\Support\Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image);
-    } else {
-        $landscapePoster = asset('assets/images/default-ticket.webp');
-    }
-
-    // Tanggal Event
-    $eventDateStr = 'Sep 5, 2024';
-    if (!empty($product?->event_date)) {
-        try {
-            $eventDateStr = \Carbon\Carbon::parse($product->event_date)->locale('id')->translatedFormat('d M Y');
-        } catch (\Exception $e) {
-            $eventDateStr = (string)$product->event_date;
+        // Foto Landscape (16:9) sesuai Image 2
+        $landscapePoster = null;
+        if (!empty($product?->og_image)) {
+            $landscapePoster = \Illuminate\Support\Str::startsWith($product->og_image, 'http') ? $product->og_image : asset('storage/' . $product->og_image);
+        } elseif (!empty($product?->image)) {
+            $landscapePoster = \Illuminate\Support\Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image);
+        } else {
+            $landscapePoster = asset('assets/images/default-ticket.webp');
         }
-    } elseif ($order->created_at) {
-        $eventDateStr = $order->created_at->translatedFormat('d M Y');
-    }
 
-    // Waktu Event
-    $eventTimeStr = '15:00 WIB';
-    if (!empty($product?->event_time)) {
-        $eventTimeStr = substr(trim($product->event_time), 0, 5) . ' WIB';
-    }
+        // Tanggal Event
+        $eventDateStr = 'Sep 5, 2024';
+        if (!empty($product?->event_date)) {
+            try {
+                $eventDateStr = \Carbon\Carbon::parse($product->event_date)->locale('id')->translatedFormat('d M Y');
+            } catch (\Exception $e) {
+                $eventDateStr = (string)$product->event_date;
+            }
+        } elseif ($order->created_at) {
+            $eventDateStr = $order->created_at->translatedFormat('d M Y');
+        }
 
-    // Lokasi Event
-    $eventLocationStr = $product?->event_location ?: ($product?->event_platform ?: 'Venue Ditentukan Panitia');
+        // Waktu Event
+        $eventTimeStr = '15:00 WIB';
+        if (!empty($product?->event_time)) {
+            $eventTimeStr = substr(trim($product->event_time), 0, 5) . ' WIB';
+        }
 
-    // Seat / Kategori
-    $seatOrCategory = $firstTicketItem?->variantValue?->name
-        ?: ($firstTicketItem?->product?->short_desc ?: 'No seat');
+        // Lokasi Event
+        $eventLocationStr = $product?->event_location ?: ($product?->event_platform ?: 'Venue Ditentukan Panitia');
 
-    // Ticket Passes
-    $passes = $order->ticketPasses;
-    if ($passes->isEmpty()) {
-        $passes = collect([(object)[
-            'id'          => 1,
-            'ticket_code' => $order->order_number,
-            'holder_name' => $order->user?->name ?? ($order->customer_name ?: 'Pemegang Tiket'),
-            'holder_nik'  => null,
-            'status'      => 'valid',
-        ]]);
-    }
+        // Seat / Kategori
+        $seatOrCategory = $firstTicketItem?->variantValue?->name
+            ?: ($firstTicketItem?->product?->short_desc ?: 'Reguler');
 
-    $activePass = $passes->first();
+        // Ticket Passes
+        $passes = $order->ticketPasses;
+        if ($passes->isEmpty()) {
+            $passes = collect([(object)[
+                'id'          => 1,
+                'ticket_code' => $order->order_number,
+                'holder_name' => $order->user?->name ?? ($order->customer_name ?: 'Pemegang Tiket'),
+                'holder_nik'  => null,
+                'status'      => 'valid',
+            ]]);
+        }
 
-    $passesData = $passes->map(function($p) use ($order) {
-        $code = $p->ticket_code ?? $order->order_number;
-        return [
-            'id'          => $p->id,
-            'ticket_code' => $code,
-            'holder_name' => $p->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket'),
-            'qr_image'    => \App\Services\SimpleQrCode::base64($code),
-        ];
-    })->values()->toArray();
+        $activePass = $passes->first();
 
-    // PDF Download URL
-    $ticketPdfUrl = route('orders.ticket.download.public', [
-        'order' => $order->id,
-        'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))
-    ]);
-@endphp
+        $passesData = $passes->map(function($p) use ($order) {
+            $code = $p->ticket_code ?? $order->order_number;
+            return [
+                'id'          => $p->id,
+                'ticket_code' => $code,
+                'holder_name' => $p->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket'),
+                'qr_image'    => \App\Services\SimpleQrCode::base64($code),
+            ];
+        })->values()->toArray();
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+        // PDF Download URL
+        $ticketPdfUrl = route('orders.ticket.download.public', [
+            'order' => $order->id,
+            'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))
+        ]);
+    @endphp
+    <title>E-Tiket: {{ $product->name ?? 'Tiket Event' }} - {{ $order->order_number }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-:root {
-    --tix-bg-gradient: linear-gradient(135deg, #1db349 0%, #84ce00 100%);
-    --tix-card-bg: #ffffff;
-    --tix-text-dark: #0f172a;
-    --tix-text-muted: #94a3b8;
-}
+    <style>
+        :root {
+            --tix-bg-gradient: linear-gradient(135deg, #1db349 0%, #84ce00 100%);
+            --tix-card-bg: #ffffff;
+            --tix-text-dark: #0f172a;
+            --tix-text-muted: #94a3b8;
+        }
 
-body {
-    margin: 0;
-    padding: 0;
-    background: var(--tix-bg-gradient) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    color: var(--tix-text-dark);
-    min-height: 100vh;
-    overflow-x: hidden;
-}
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.tix-page-viewport {
-    min-height: 100vh;
-    background: var(--tix-bg-gradient);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 1.25rem 1rem 3rem;
-    box-sizing: border-box;
-    position: relative;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--tix-bg-gradient) !important;
+            font-family: 'Montserrat', sans-serif !important;
+            color: var(--tix-text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
 
-/* Ambient glow & bokeh effect */
-.tix-page-viewport::before {
-    content: '';
-    position: absolute;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 70%);
-    pointer-events: none;
-    z-index: 1;
-}
+        .tix-page-viewport {
+            min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
+            background: var(--tix-bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: max(1.5rem, calc(env(safe-area-inset-top) + 0.6rem));
+            padding-bottom: max(3rem, calc(env(safe-area-inset-bottom) + 1.25rem));
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+            box-sizing: border-box;
+            position: relative;
+        }
 
-.tix-phone-frame {
-    width: 100%;
-    max-width: 390px;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-}
+        /* Ambient glow & bokeh */
+        .tix-page-viewport::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
 
-/* ── Top Navigation Bar ── */
-.tix-nav-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 1.25rem;
-    padding: 0 0.25rem;
-    box-sizing: border-box;
-}
+        .tix-phone-frame {
+            width: 100%;
+            max-width: 390px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+        }
 
-.tix-nav-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.22);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 0;
-}
-.tix-nav-btn:hover {
-    background: rgba(0, 0, 0, 0.35);
-    transform: scale(1.05);
-    color: #ffffff;
-}
+        /* ── Top Navigation Bar ── */
+        .tix-nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1.25rem;
+            padding: 0 0.25rem;
+        }
 
-.tix-nav-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.3px;
-    margin: 0;
-}
+        .tix-nav-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+        .tix-nav-btn:hover {
+            background: rgba(0, 0, 0, 0.35);
+            transform: scale(1.05);
+            color: #ffffff;
+        }
 
-/* ── Ticket Tabs (Multiple Attendees) ── */
-.tix-tabs-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    overflow-x: auto;
-    padding-bottom: 0.65rem;
-    margin-bottom: 0.5rem;
-    scrollbar-width: none;
-}
-.tix-tabs-wrap::-webkit-scrollbar { display: none; }
+        .tix-nav-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            margin: 0;
+        }
 
-.tix-tab-pill {
-    padding: 0.35rem 0.75rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(0, 0, 0, 0.15);
-    color: #ffffff;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-}
-.tix-tab-pill.active {
-    background: #ffffff;
-    color: #15803d;
-    border-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+        /* ── Ticket Tabs (Multiple Attendees) ── */
+        .tix-tabs-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            overflow-x: auto;
+            padding-bottom: 0.65rem;
+            margin-bottom: 0.5rem;
+            scrollbar-width: none;
+        }
+        .tix-tabs-wrap::-webkit-scrollbar { display: none; }
 
-/* ── The Ticket Card ── */
-.tix-card-container {
-    background: var(--tix-card-bg);
-    border-radius: 28px;
-    padding: 1.15rem 1.25rem 1.4rem;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 4px 16px rgba(0, 0, 0, 0.08);
-    position: relative;
-    box-sizing: border-box;
-    overflow: hidden;
-}
+        .tix-tab-pill {
+            padding: 0.38rem 0.85rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.16);
+            color: #ffffff;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .tix-tab-pill.active {
+            background: #ffffff;
+            color: #15803d;
+            border-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
 
-/* ── Cutout Ticket Notches on Left & Right ── */
-.tix-notch-left,
-.tix-notch-right {
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--tix-bg-gradient);
-    z-index: 5;
-    top: 55%;
-    margin-top: -14px;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.18);
-}
-.tix-notch-left {
-    left: -14px;
-}
-.tix-notch-right {
-    right: -14px;
-}
+        /* ── The Ticket Card ── */
+        .tix-card-container {
+            background: var(--tix-card-bg);
+            border-radius: 28px;
+            padding: 1.15rem 1.25rem 1.4rem;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 4px 16px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
 
-/* ── 16:9 Landscape Poster ── */
-.tix-poster-box {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #0f172a;
-    position: relative;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-.tix-poster-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
+        /* ── Cutout Ticket Notches on Left & Right ── */
+        .tix-notch-left,
+        .tix-notch-right {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--tix-bg-gradient);
+            z-index: 5;
+            top: 55%;
+            margin-top: -14px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.18);
+        }
+        .tix-notch-left {
+            left: -14px;
+        }
+        .tix-notch-right {
+            right: -14px;
+        }
 
-/* ── Event Title ── */
-.tix-event-title {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: #0f172a;
-    text-align: center;
-    margin: 1.1rem 0 1rem;
-    line-height: 1.35;
-    letter-spacing: -0.2px;
-}
+        /* ── 16:9 Landscape Poster ── */
+        .tix-poster-box {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #0f172a;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        .tix-poster-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
-/* ── Dashed Divider Line ── */
-.tix-dashed-divider {
-    border: none;
-    border-top: 2px dashed #cbd5e1;
-    margin: 0.25rem 0 1.25rem;
-    width: 100%;
-}
+        /* ── Event Title ── */
+        .tix-event-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0f172a;
+            text-align: center;
+            margin: 0.95rem 0 0.85rem;
+            line-height: 1.35;
+            letter-spacing: -0.2px;
+        }
 
-/* ── Details Grid (2x2) ── */
-.tix-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 1.1rem;
-    column-gap: 1.5rem;
-    margin-bottom: 1.25rem;
-}
+        /* ── Dashed Divider Line ── */
+        .tix-dashed-divider {
+            border: none;
+            border-top: 2px dashed #cbd5e1;
+            margin: 0.25rem 0 1.15rem;
+            width: 100%;
+        }
 
-.tix-grid-col.right {
-    text-align: right;
-}
+        /* ── Details Grid (2x2) ── */
+        .tix-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            row-gap: 1rem;
+            column-gap: 1.25rem;
+            margin-bottom: 1.15rem;
+        }
 
-.tix-detail-label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--tix-text-muted);
-    margin-bottom: 0.25rem;
-    letter-spacing: 0.3px;
-}
+        .tix-grid-col.right {
+            text-align: right;
+        }
 
-.tix-detail-value {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: #0f172a;
-    line-height: 1.3;
-    word-break: break-word;
-}
+        .tix-detail-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--tix-text-muted);
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.2px;
+        }
 
-/* ── Attendee Badge (Clean & Subtle) ── */
-.tix-attendee-row {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 0.5rem 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.78rem;
-    color: #475569;
-    margin-bottom: 1.15rem;
-}
-.tix-attendee-name {
-    font-weight: 700;
-    color: #0f172a;
-}
+        .tix-detail-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0f172a;
+            line-height: 1.3;
+            word-break: break-word;
+        }
 
-/* ── Barcode Section ── */
-.tix-barcode-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: 0.25rem;
-}
+        /* ── Attendee Badge (Clean & Subtle) ── */
+        .tix-attendee-row {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.45rem 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+        .tix-attendee-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
 
-.tix-code-text {
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-    font-size: 0.76rem;
-    color: #64748b;
-    letter-spacing: 1px;
-    margin-bottom: 0.4rem;
-    font-weight: 600;
-    text-align: center;
-}
+        /* ── Barcode Section ── */
+        .tix-barcode-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 0.25rem;
+        }
 
-.tix-barcode-svg-box {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-.tix-barcode-svg-box svg {
-    max-width: 100%;
-    height: 56px;
-    display: block;
-}
+        .tix-code-text {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.72rem;
+            color: #64748b;
+            letter-spacing: 1px;
+            margin-bottom: 0.35rem;
+            font-weight: 500;
+            text-align: center;
+        }
 
-/* ── Bottom Floating Controls ── */
-.tix-controls-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 1.35rem;
-    width: 100%;
-}
+        .tix-barcode-svg-box {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .tix-barcode-svg-box svg {
+            max-width: 100%;
+            height: 56px;
+            display: block;
+        }
 
-/* Save / Download Circle Button */
-.tix-save-btn {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: #0f172a;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    text-decoration: none;
-}
-.tix-save-btn:hover {
-    background: #1e293b;
-    transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
-    color: #ffffff;
-}
+        /* ── Bottom Floating Controls ── */
+        .tix-controls-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.35rem;
+            width: 100%;
+        }
 
-/* Show QR Code Pill Button */
-.tix-qr-pill-btn {
-    flex: 1;
-    height: 52px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1.5px solid rgba(255, 255, 255, 0.38);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.25rem 0 0.45rem;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 0.88rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-sizing: border-box;
-}
-.tix-qr-pill-btn:hover {
-    background: rgba(255, 255, 255, 0.32);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-2px);
-    color: #ffffff;
-}
+        /* Save / Download Circle Button */
+        .tix-save-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+        }
+        .tix-save-btn:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+            color: #ffffff;
+        }
 
-.tix-qr-icon-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #d9f99d;
-    color: #166534;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
+        /* Show QR Code Pill Button */
+        .tix-qr-pill-btn {
+            flex: 1;
+            height: 52px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.38);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem 0 0.45rem;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+        }
+        .tix-qr-pill-btn:hover {
+            background: rgba(255, 255, 255, 0.32);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
 
-.tix-qr-arrow {
-    font-size: 0.95rem;
-    font-weight: 800;
-    opacity: 0.85;
-    letter-spacing: -1px;
-}
+        .tix-qr-icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #d9f99d;
+            color: #166534;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
 
-/* ── Modal QR Code (Gate Pass) ── */
-.tix-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.25rem;
-    box-sizing: border-box;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-}
-.tix-modal-backdrop.open {
-    opacity: 1;
-    pointer-events: auto;
-}
+        .tix-qr-arrow {
+            font-size: 0.95rem;
+            font-weight: 800;
+            opacity: 0.85;
+            letter-spacing: -1px;
+        }
 
-.tix-modal-card {
-    background: #ffffff;
-    border-radius: 28px;
-    width: 100%;
-    max-width: 360px;
-    padding: 1.75rem 1.5rem 1.5rem;
-    text-align: center;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
-    transform: translateY(20px) scale(0.96);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    box-sizing: border-box;
-    position: relative;
-}
-.tix-modal-backdrop.open .tix-modal-card {
-    transform: translateY(0) scale(1);
-}
+        /* ── Modal QR Code (Gate Pass) ── */
+        .tix-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        .tix-modal-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-.tix-modal-close {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: #f1f5f9;
-    border: none;
-    color: #64748b;
-    font-size: 1.2rem;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
+        .tix-modal-card {
+            background: #ffffff;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 360px;
+            padding: 1.75rem 1.5rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+            transform: translateY(20px) scale(0.96);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        .tix-modal-backdrop.open .tix-modal-card {
+            transform: translateY(0) scale(1);
+        }
 
-.tix-modal-qr-box {
-    background: #f8fafc;
-    border: 1.5px dashed #cbd5e1;
-    border-radius: 20px;
-    padding: 1rem;
-    margin: 1rem auto 1.25rem;
-    display: inline-block;
-}
-.tix-modal-qr-box img {
-    width: 200px;
-    height: 200px;
-    display: block;
-}
+        .tix-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: none;
+            color: #64748b;
+            font-size: 1.2rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
 
-/* Toast */
-.tix-toast {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(40px);
-    background: #0f172a;
-    color: #ffffff;
-    padding: 0.75rem 1.4rem;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    z-index: 999999;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.tix-toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-</style>
+        .tix-modal-qr-box {
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 1rem;
+            margin: 1rem auto 1.25rem;
+            display: inline-block;
+        }
+        .tix-modal-qr-box img {
+            width: 200px;
+            height: 200px;
+            display: block;
+        }
+
+        /* Toast */
+        .tix-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            background: #0f172a;
+            color: #ffffff;
+            padding: 0.75rem 1.4rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 999999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .tix-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
 
 <div class="tix-page-viewport">
     <div class="tix-phone-frame">
         
         {{-- Top Navigation Bar --}}
         <div class="tix-nav-bar">
-            <button type="button" class="tix-nav-btn" onclick="handleGoBack()" title="Kembali">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <polyline points="15 18 9 12 15 6"/>
+            <a href="{{ route('tix.index') }}" class="tix-nav-btn" title="Ke Beranda BuyleTIX">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
-            </button>
-            <h1 class="tix-nav-title">Ticket</h1>
+            </a>
+            <a href="{{ route('tix.index') }}" title="Buyle TIX" style="display:inline-flex; align-items:center; text-decoration:none;">
+                <picture>
+                    <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" style="height:28px; width:auto; max-width:140px; object-fit:contain; display:block;">
+                </picture>
+            </a>
             <button type="button" class="tix-nav-btn" onclick="shareTicket()" title="Bagikan Tiket">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <circle cx="18" cy="5" r="3"/>
@@ -551,7 +571,7 @@ body {
             </button>
         </div>
 
-        {{-- Multiple Attendees Tab (Jika lebih dari 1 tiket) --}}
+        {{-- Multiple Attendees Tab (Jika pemesanan lebih dari 1 tiket) --}}
         @if($passes->count() > 1)
             <div class="tix-tabs-wrap">
                 @foreach($passes as $idx => $pass)
@@ -605,7 +625,7 @@ body {
 
                 {{-- Seat / Kategori --}}
                 <div class="tix-grid-col right">
-                    <div class="tix-detail-label">Seat</div>
+                    <div class="tix-detail-label">Kategori</div>
                     <div class="tix-detail-value" id="tixSeatDisplay">{{ $seatOrCategory }}</div>
                 </div>
             </div>
@@ -618,46 +638,31 @@ body {
                 </span>
             </div>
 
-            {{-- Barcode Section --}}
-            <div class="tix-barcode-wrap">
+            {{-- Barcode Section (Selalu Tampil di Center di Bawah Pemegang) --}}
+            <div class="tix-barcode-wrap" onclick="openQrModal()" style="cursor:pointer;" title="Ketuk untuk perbesar QR Masuk Gate">
                 <div class="tix-code-text" id="tixCodeDisplay">
                     {{ $activePass->ticket_code ?? $order->order_number }}
                 </div>
                 <div class="tix-barcode-svg-box">
                     <svg id="ticketBarcodeSvg"></svg>
                 </div>
+                <div style="font-size:0.68rem; color:#94a3b8; margin-top:0.35rem; font-weight:500; letter-spacing:0.2px;">
+                    Ketuk barcode untuk QR Masuk &raquo;
+                </div>
             </div>
         </div>
 
         {{-- Bottom Floating Controls --}}
-        <div class="tix-controls-bar">
+        <div class="tix-controls-bar" style="justify-content:center;">
             {{-- Save / Download PDF Button --}}
-            <a href="{{ $ticketPdfUrl }}" class="tix-save-btn" title="Simpan / Unduh E-Tiket PDF" target="_blank" download>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+            <a href="{{ $ticketPdfUrl }}" class="tix-save-btn" title="Simpan / Unduh E-Tiket PDF" target="_blank" download style="width:auto; border-radius:999px; padding:0 1.5rem; gap:0.6rem; font-size:0.88rem; font-weight:600; font-family:inherit; text-decoration:none;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                     <polyline points="7 10 12 15 17 10"/>
                     <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
+                <span>Simpan Tiket</span>
             </a>
-
-            {{-- Show QR Code Pill Button (Icon Gate Pass / Scan) --}}
-            <button type="button" class="tix-qr-pill-btn" onclick="openQrModal()">
-                <div style="display:flex; align-items:center; gap:0.65rem;">
-                    <div class="tix-qr-icon-circle">
-                        {{-- Icon Modern Scan Frame / Gate Pass (Bukan sekadar QR biasa) --}}
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                            <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-                            <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-                            <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-                            <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                            <rect x="7" y="7" width="10" height="10" rx="2" stroke-width="2"/>
-                            <path d="M7 12h10" stroke-width="1.8"/>
-                        </svg>
-                    </div>
-                    <span>Tampilkan QR Masuk</span>
-                </div>
-                <span class="tix-qr-arrow">&gt;&gt;&gt;</span>
-            </button>
         </div>
 
     </div>
@@ -728,7 +733,7 @@ body {
         }
     }
 
-    // Fallback Barcode SVG jika CDN lambat
+    // Fallback Barcode SVG jika CDN offline / terhalang
     function renderFallbackBarcode(code) {
         const svg = document.getElementById('ticketBarcodeSvg');
         if (!svg) return;
@@ -819,3 +824,6 @@ body {
         renderBarcode(initialCode);
     });
 </script>
+
+</body>
+</html>
