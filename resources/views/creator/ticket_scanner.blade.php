@@ -2806,17 +2806,15 @@
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
                         </a>
-                        {{-- Notification / Live Status Pill --}}
-                        <div style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#1eb349; position:relative; box-shadow:0 2px 6px rgba(0,0,0,0.03);"
-                            title="Sistem Aktif & Terhubung">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                        {{-- Back to Dashboard --}}
+                        <a href="{{ route('creator.dashboard') }}"
+                            style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.03); text-decoration:none; transition:all 0.15s ease;"
+                            title="Kembali ke Dashboard">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
                                 viewBox="0 0 24 24">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                                <polyline points="15 18 9 12 15 6"></polyline>
                             </svg>
-                            <span
-                                style="position:absolute; top:8px; right:8px; width:7px; height:7px; background:#22c55e; border-radius:50%; border:1.5px solid #fff;"></span>
-                        </div>
+                        </a>
                     </div>
                 </div>
 

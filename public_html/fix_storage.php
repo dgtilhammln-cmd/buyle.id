@@ -111,39 +111,6 @@ foreach (['settings', 'avatars', 'hero_slides', 'products'] as $dir) {
     }
 }
 
-// Check recent products from DB
-out("\n--- Checking DB products image paths ---");
-try {
-    require_once $appRoot . '/vendor/autoload.php';
-    $app = require_once $appRoot . '/bootstrap/app.php';
-    $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
-    $kernel->bootstrap();
-
-    $dbProds = \App\Models\Product::whereNull('image')->orWhere('image', '')->latest()->limit(20)->get(['id', 'name', 'seller_id', 'image', 'gallery', 'og_image', 'product_type']);
-    out("Products with NULL or empty image: " . count($dbProds));
-    foreach ($dbProds as $dp) {
-        // Check if there is bio block with this name or product_id
-        $bb = \App\Models\CreatorBioBlock::where('title', $dp->name)
-            ->orWhere('data_json->product_id', $dp->id)
-            ->first();
-        $bbImg = 'NO_BLOCK';
-        if ($bb) {
-            $data = $bb->data_json ?? [];
-            $bbImg = json_encode(array_filter([
-                'image' => $data['image'] ?? null,
-                'images' => $data['images'] ?? null,
-                'thumbnail' => $data['thumbnail'] ?? null,
-                'scraped_image' => $data['scraped_image'] ?? null,
-            ]));
-        }
-        $gallery = json_encode($dp->gallery);
-        $og = $dp->og_image ?? 'NULL';
-        out("ID: {$dp->id} | {$dp->name} | BioBlockImg: $bbImg | Gallery: $gallery | OG: $og");
-    }
-} catch (\Throwable $e) {
-    out("DB check failed: " . $e->getMessage());
-}
-
 // Reset OPcache and clear compiled view files
 out("\n--- Clearing view & OPcache cache ---");
 if (function_exists('opcache_reset')) {
