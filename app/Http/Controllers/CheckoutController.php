@@ -76,25 +76,50 @@ class CheckoutController extends Controller
      */
     public function finish(string $orderNumber)
     {
-        // Temukan order
-        $orderQuery = Order::with(['payment', 'items.product.seller', 'items.variantValue.option', 'user'])
+        $isTixOrder = \Illuminate\Support\Str::startsWith($orderNumber, 'TIX-');
+
+        // Temukan order beserta relasinya
+        $orderQuery = Order::with(['payment', 'items.product.seller', 'items.variantValue.option', 'user', 'ticketPasses.product'])
                           ->where('order_number', $orderNumber);
 
         if (auth()->check()) {
-            // User login: cari by user_id ATAU customer_email (jaga-jaga)
-            $orderQuery->where(function($q) {
-                $q->where('user_id', auth()->id())
-                  ->orWhere('customer_email', auth()->user()->email);
-            });
+            $user = auth()->user();
+            // User login: izinkan jika owner, admin, atau memiliki order_number resmi TIX
+            if ($user->role !== 'admin' && $user->role !== 'super_admin' && !$isTixOrder) {
+                $orderQuery->where(function($q) use ($user) {
+                    $q->where('user_id', $user->id)
+                      ->orWhere('customer_email', $user->email);
+                });
+            }
         } else {
-            // Guest: izinkan jika order_number tersimpan di session
+            // Guest: izinkan jika order_number tersimpan di session atau order TIX resmi
             $guestOrderNumber = session('guest_order_number');
-            if ($guestOrderNumber !== $orderNumber) {
+            if ($guestOrderNumber !== $orderNumber && !$isTixOrder) {
                 return redirect()->route('home')->with('error', 'Pesanan tidak ditemukan.');
             }
         }
 
-        $order = $orderQuery->firstOrFail();
+        $order = $orderQuery->first();
+        if (!$order) {
+            return redirect()->route('home')->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        session(['guest_order_number' => $order->order_number]);
+
+        // Auto-generate TicketPass jika order bertipe tiket dan belum dibuat
+        $hasTicket = $order->items->contains(function ($i) {
+            $type = $i->product?->product_type ?? '';
+            return in_array($type, ['ticket', 'tiket', 'tiket event', 'ticket_event']) || !empty($i->product?->event_date);
+        }) || $isTixOrder;
+
+        if ($hasTicket && $order->ticketPasses->isEmpty()) {
+            try {
+                \App\Models\TicketPass::generateForOrder($order);
+                $order->load('ticketPasses.product');
+            } catch (\Throwable $e) {
+                \Log::warning('Generate ticket passes on finish failed: ' . $e->getMessage());
+            }
+        }
 
         // Jika sudah gratis / confirmed, langsung tampilkan tanpa cek Midtrans
         $isFree = ($order->total <= 0 || ($order->payment && $order->payment->gateway === 'free'));
@@ -159,6 +184,10 @@ class CheckoutController extends Controller
             } catch (\Exception $e) {
                 \Log::warning("Auto-sync Midtrans status failed for order {$orderNumber}: " . $e->getMessage());
             }
+        }
+
+        if ($hasTicket) {
+            return view('ecommerce.ticket_finish', compact('order'));
         }
 
         return view('ecommerce.finish', compact('order'));

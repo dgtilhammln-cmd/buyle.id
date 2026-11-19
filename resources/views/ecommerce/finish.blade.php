@@ -177,7 +177,7 @@ body { background-color: #F8FAFC !important; }
         });
     @endphp
 
-    @if($isPaid)
+    @if($isPaid && !$hasTicket)
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
