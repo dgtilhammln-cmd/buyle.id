@@ -7,11 +7,14 @@
 @section('styles')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         /* ════════════════════════════════════════
-                           Mobile Header – Profil & Toko
-                           100% SAMA PERSIS dengan Kelola Produk
-                        ════════════════════════════════════════ */
+                                                                                           Mobile Header – Profil & Toko
+                                                                                           100% SAMA PERSIS dengan Kelola Produk
+                                                                                        ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
@@ -669,6 +672,7 @@
             position: relative;
             width: 100%;
         }
+
         .role-selected-trigger {
             display: flex;
             align-items: center;
@@ -679,12 +683,15 @@
             padding: 0.65rem 0.95rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
         }
-        .role-selected-trigger:hover, .role-selected-trigger.active {
+
+        .role-selected-trigger:hover,
+        .role-selected-trigger.active {
             border-color: #1eb349;
             box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
         }
+
         .role-trigger-left {
             display: flex;
             align-items: center;
@@ -692,6 +699,7 @@
             min-width: 0;
             flex: 1;
         }
+
         .role-trigger-icon {
             width: 32px;
             height: 32px;
@@ -704,6 +712,7 @@
             font-size: 1.1rem;
             flex-shrink: 0;
         }
+
         .role-trigger-text {
             font-size: 0.85rem;
             font-weight: 700;
@@ -712,11 +721,13 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .role-trigger-sub {
             font-size: 0.72rem;
             color: #64748b;
             font-weight: 500;
         }
+
         .role-dropdown-menu {
             position: absolute;
             top: calc(100% + 6px);
@@ -725,15 +736,17 @@
             background: #ffffff;
             border: 1.5px solid #e2e8f0;
             border-radius: 16px;
-            box-shadow: 0 16px 36px rgba(15,23,42,0.12);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
             z-index: 9999;
             padding: 0.75rem;
             display: none;
         }
+
         .role-search-box {
             position: relative;
             margin-bottom: 0.65rem;
         }
+
         .role-search-input {
             width: 100%;
             height: 38px;
@@ -747,10 +760,12 @@
             font-family: 'Montserrat', sans-serif;
             box-sizing: border-box;
         }
+
         .role-search-input:focus {
             border-color: #1eb349;
             background: #ffffff;
         }
+
         .role-search-icon {
             position: absolute;
             left: 0.75rem;
@@ -759,6 +774,7 @@
             color: #94a3b8;
             pointer-events: none;
         }
+
         .role-options-list {
             max-height: 250px;
             overflow-y: auto;
@@ -768,6 +784,7 @@
             padding-right: 2px;
             scrollbar-width: thin;
         }
+
         .role-option-item {
             display: flex;
             align-items: center;
@@ -777,21 +794,26 @@
             cursor: pointer;
             transition: all 0.15s ease;
         }
+
         .role-option-item:hover {
             background: #f1f5f9;
         }
+
         .role-option-item.selected {
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
         }
+
         .role-option-item.selected .role-option-name {
             color: #166534;
         }
+
         .role-option-name {
             font-size: 0.82rem;
             font-weight: 700;
             color: #0f172a;
         }
+
         .role-option-desc {
             font-size: 0.7rem;
             color: #64748b;
@@ -890,31 +912,32 @@
                 <div class="prof-card-body">
                     <div class="form-grid">
                         <div class="form-group full">
-                            <label class="form-label">Nama Creator / Toko</label>
+                            <label class="form-label">Nama Creator / Toko <span style="color:#ef4444">*</span></label>
                             <input type="text" name="store_name" value="{{ old('store_name', $profile->store_name) }}"
-                                class="form-input" placeholder="Misal: HVM Digital Studio">
+                                class="form-input" placeholder="Misal: HVM Digital Studio" required>
                             @error('store_name')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 
                         {{-- Nama Pemilik Sesuai Kartu Identitas --}}
                         <div class="form-group full">
-                            <label class="form-label">Nama Pemilik (Sesuai Kartu Identitas / KTP)</label>
+                            <label class="form-label">Nama Pemilik (Sesuai Kartu Identitas / KTP) <span style="color:#ef4444">*</span></label>
                             <input type="text" name="owner_name" value="{{ old('owner_name', $profile->owner_name ?? '') }}"
-                                class="form-input" placeholder="Nama lengkap sesuai KTP / Paspor">
-                            <span class="form-hint">Digunakan untuk verifikasi identitas resmi, penarikan saldo, dan legalitas akun.</span>
+                                class="form-input" placeholder="Nama lengkap sesuai KTP / Paspor" required>
+                            <span class="form-hint">Digunakan untuk verifikasi identitas resmi, penarikan saldo, dan
+                                legalitas akun.</span>
                             @error('owner_name')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 
                         {{-- Usia & Status Pekerjaan (Grid 2 Kolom) --}}
                         <div class="form-group full" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
                             <div>
-                                <label class="form-label">Usia (Tahun)</label>
+                                <label class="form-label">Usia (Tahun) <span style="color:#ef4444">*</span></label>
                                 <input type="number" name="age" value="{{ old('age', $profile->age ?? '') }}"
-                                    class="form-input" placeholder="Contoh: 24" min="10" max="100">
+                                    class="form-input" placeholder="Contoh: 24" min="10" max="100" required>
                                 @error('age')<span class="form-error">{{ $message }}</span>@enderror
                             </div>
                             <div>
-                                <label class="form-label">Status Aktivitas / Profesi</label>
+                                <label class="form-label">Status Aktivitas / Profesi <span style="color:#ef4444">*</span></label>
                                 @php
                                     $statuses = [
                                         'Pelajar / Mahasiswa' => 'Pelajar / Mahasiswa',
@@ -926,10 +949,12 @@
                                     ];
                                     $selectedStatus = old('occupation_status', $profile->occupation_status ?? '');
                                 @endphp
-                                <select name="occupation_status" class="form-input">
-                                    <option value="">— Pilih Status —</option>
+                                <select name="occupation_status" class="form-input" required>
+                                    <option value="" disabled {{ empty($selectedStatus) ? 'selected' : '' }}>— Pilih Status —</option>
                                     @foreach($statuses as $stKey => $stLabel)
-                                        <option value="{{ $stKey }}" {{ $selectedStatus === $stKey ? 'selected' : '' }}>{{ $stLabel }}</option>
+                                        <option value="{{ $stKey }}" {{ $selectedStatus === $stKey ? 'selected' : '' }}>
+                                            {{ $stLabel }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('occupation_status')<span class="form-error">{{ $message }}</span>@enderror
@@ -989,7 +1014,7 @@
 
                         {{-- TIPE / PERAN CREATOR (SEARCHABLE & SINKRON DENGAN ONBOARDING) --}}
                         <div class="form-group full">
-                            <label class="form-label">Tipe / Peran Creator</label>
+                            <label class="form-label">Tipe / Peran Creator <span style="color:#ef4444">*</span></label>
                             @php
                                 $creatorRoles = [
                                     'event_organizer' => [
@@ -1097,7 +1122,7 @@
                             @endphp
 
                             {{-- Hidden Input yang disubmit --}}
-                            <input type="hidden" name="creator_type" id="creatorTypeInput" value="{{ $selectedRoleKey }}">
+                            <input type="hidden" name="creator_type" id="creatorTypeInput" value="{{ $selectedRoleKey }}" required>
 
                             {{-- Searchable Dropdown Trigger & Panel --}}
                             <div class="role-searchable-wrap" id="roleSearchableWrap">
@@ -1131,13 +1156,13 @@
                                     <div class="role-options-list" id="roleOptionsList">
                                         @foreach($creatorRoles as $rKey => $rInfo)
                                             <div class="role-option-item {{ $selectedRoleKey === $rKey ? 'selected' : '' }}"
-                                                data-key="{{ $rKey }}"
-                                                data-name="{{ $rInfo['name'] }}"
-                                                data-desc="{{ $rInfo['desc'] }}"
-                                                data-icon="{{ $rInfo['icon'] }}"
+                                                data-key="{{ $rKey }}" data-name="{{ $rInfo['name'] }}"
+                                                data-desc="{{ $rInfo['desc'] }}" data-icon="{{ $rInfo['icon'] }}"
                                                 onclick="selectCreatorRole('{{ $rKey }}', '{{ addslashes($rInfo['name']) }}', '{{ addslashes($rInfo['desc']) }}', '{{ $rInfo['icon'] }}')">
-                                                <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex: 1;">
-                                                    <div style="width: 28px; height: 28px; border-radius: 7px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #16a34a; font-size: 0.95rem; flex-shrink: 0;">
+                                                <div
+                                                    style="display: flex; align-items: center; gap: 0.75rem; min-width: 0; flex: 1;">
+                                                    <div
+                                                        style="width: 32px; height: 32px; border-radius: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; color: #16a34a; font-size: 1.05rem; flex-shrink: 0;">
                                                         <i class="ph-bold {{ $rInfo['icon'] }}"></i>
                                                     </div>
                                                     <div style="min-width: 0;">
@@ -1146,7 +1171,8 @@
                                                     </div>
                                                 </div>
                                                 @if($selectedRoleKey === $rKey)
-                                                    <span style="color: #16a34a; font-size: 0.9rem; flex-shrink: 0; margin-left: 0.5rem;">
+                                                    <span
+                                                        style="color: #16a34a; font-size: 1rem; flex-shrink: 0; margin-left: 0.5rem;">
                                                         <i class="ph-bold ph-check"></i>
                                                     </span>
                                                 @endif
@@ -1601,8 +1627,8 @@
                                     Isi Otomatis
                                 </div>
                                 <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
-                                    Izinkan lokasi browser untuk mengisi Provinsi, Kabupaten/Kota, dan Alamat toko Anda
-                                    secara otomatis.
+                                    Izinkan lokasi browser untuk mengisi Provinsi, Kabupaten/Kota, dan Alamat secara
+                                    otomatis.
                                 </div>
                             </div>
                             <button type="button" id="btnDetectGps" onclick="detectGpsLocation()"
@@ -1707,7 +1733,7 @@
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    Metadata SEO Toko
+                    Metadata SEO Digital Store
                 </div>
                 <div class="prof-card-body">
                     <div class="form-group" style="margin-bottom:1.1rem;">
@@ -1715,16 +1741,16 @@
                                 karakter)</span></label>
                         <input type="text" name="meta_title" id="metaTitle"
                             value="{{ old('meta_title', $profile->meta_title) }}" class="form-input"
-                            placeholder="Nama Toko | Buyle.id" maxlength="70">
+                            placeholder="Nama Creator | Buyle.id" maxlength="70">
                         <span class="form-hint">Kosongkan untuk fallback ke nama Creator.</span>
                     </div>
                     <div class="form-group" style="margin-bottom:1.1rem;">
                         <label class="form-label">Meta Description <span style="font-weight:400;color:#94a3b8;">(maks 160
                                 karakter)</span></label>
                         <textarea name="meta_desc" id="metaDesc" class="form-input" rows="3"
-                            placeholder="Deskripsi singkat toko Anda yang muncul di hasil pencarian Google..."
+                            placeholder="Deskripsi singkat yang muncul di hasil pencarian Google..."
                             maxlength="160">{{ old('meta_desc', $profile->meta_desc) }}</textarea>
-                        <span class="form-hint">Kosongkan untuk fallback ke deskripsi toko.</span>
+                        <span class="form-hint">Kosongkan untuk fallback ke deskripsi Digital Store.</span>
                     </div>
                     <div class="form-group" style="margin-bottom:1.25rem;">
                         <label class="form-label">Meta Keywords</label>
@@ -1744,12 +1770,12 @@
                     </div>
                     <div class="seo-preview"
                         style="border-radius:0 0 12px 12px; border-top:none; margin: 0 -1.5rem -1.5rem; padding: 1rem 1.5rem;">
-                        <div class="seo-preview-url">buyle.id/c/{{ $profile->store_slug ?? 'nama-toko-anda' }}</div>
+                        <div class="seo-preview-url">buyle.id/c/{{ $profile->store_slug ?? 'nama-creator' }}</div>
                         <div class="seo-preview-title" id="seoPreviewTitle">
-                            {{ $profile->meta_title ?? $profile->store_name ?? 'Nama Toko Anda' }}
+                            {{ $profile->meta_title ?? $profile->store_name ?? 'Nama Creator' }}
                         </div>
                         <div class="seo-preview-desc" id="seoPreviewDesc">
-                            {{ $profile->meta_desc ?? $profile->store_description ?? 'Deskripsi toko Anda akan muncul di sini.' }}
+                            {{ $profile->meta_desc ?? $profile->store_description ?? 'Deskripsi Anda akan muncul di sini.' }}
                         </div>
                     </div>
                 </div>
@@ -1797,7 +1823,7 @@
             const resolvedTab = tabFromUrl ? (tabAliases[tabFromUrl] || `tab-${tabFromUrl}`) : null;
             const savedTab = resolvedTab || localStorage.getItem('prof_active_tab') || 'tab-identity';
 
-            @if($errors->has('username') || $errors->has('store_name') || $errors->has('store_description'))
+            @if($errors->has('username') || $errors->has('store_name') || $errors->has('store_description') || $errors->has('owner_name') || $errors->has('age') || $errors->has('occupation_status') || $errors->has('creator_type'))
                 activateTab('tab-identity');
             @elseif($errors->has('social_links'))
                 activateTab('tab-social');
@@ -1884,6 +1910,27 @@
                 if (trigger) trigger.classList.remove('active');
             };
 
+            // Client-side validation: pastikan peran creator dipilih sebelum submit
+            const profForm = document.getElementById('profileForm');
+            if (profForm) {
+                profForm.addEventListener('submit', function (e) {
+                    const creatorType = document.getElementById('creatorTypeInput')?.value;
+                    if (!creatorType) {
+                        e.preventDefault();
+                        activateTab('tab-identity');
+                        const trigger = document.getElementById('roleTriggerBtn');
+                        if (trigger) {
+                            trigger.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            trigger.classList.add('active');
+                        }
+                        const menu = document.getElementById('roleDropdownMenu');
+                        if (menu) menu.style.display = 'block';
+                        alert('Silakan pilih Tipe / Peran Creator Anda terlebih dahulu.');
+                        return false;
+                    }
+                });
+            }
+
             // ── SEO Live Preview ───────────────────────────────────────────────
             const titleInput = document.getElementById('metaTitle');
             const descInput = document.getElementById('metaDesc');
@@ -1892,10 +1939,10 @@
 
             function updateSeoPreview() {
                 if (titleInput && prevTitle) {
-                    prevTitle.textContent = titleInput.value || 'Nama Toko Anda';
+                    prevTitle.textContent = titleInput.value || 'Nama Creator';
                 }
                 if (descInput && prevDesc) {
-                    prevDesc.textContent = descInput.value || 'Deskripsi toko Anda akan muncul di sini.';
+                    prevDesc.textContent = descInput.value || 'Deskripsi akan muncul di sini.';
                 }
             }
             titleInput?.addEventListener('input', updateSeoPreview);
