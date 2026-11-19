@@ -911,11 +911,6 @@
                                 Halo, {{ $storeName }}!
                             </div>
                         </div>
-                        <div class="nina-top-buttons">
-                            <a href="{{ route('creator.sales.report') }}" class="nina-circle-btn" title="Notifikasi Order">
-                                <i class="ph ph-bell"></i>
-                            </a>
-                        </div>
                     </div>
 
                     {{-- Saldo Utama (Minimalist Clean Typography) --}}

@@ -22,7 +22,7 @@ class SellerReportController extends Controller
      */
     private function getDateRange(Request $request): array
     {
-        $filter  = $request->query('filter', '30');
+        $filter  = $request->query('filter', 'this_month');
         $endDate = Carbon::now()->endOfDay();
 
         $startDate = match ($filter) {
@@ -37,8 +37,8 @@ class SellerReportController extends Controller
             'all'        => Carbon::create(2020, 1, 1)->startOfDay(),
             'custom'     => $request->filled('start_date')
                             ? Carbon::parse($request->query('start_date'))->startOfDay()
-                            : Carbon::now()->subDays(30)->startOfDay(),
-            default      => Carbon::now()->subDays(30)->startOfDay(),
+                            : Carbon::now()->startOfMonth(),
+            default      => Carbon::now()->startOfMonth(),
         };
 
         if ($filter === 'custom' && $request->filled('end_date')) {
@@ -120,15 +120,22 @@ class SellerReportController extends Controller
             })
             ->toArray();
 
-        // ── 2. Visitor Stats ────────────────────────────────────────────────────
-        // Guard: tabel product_visits mungkin belum ada di server lama
-        $totalVisitors  = 0;
-        $uniqueVisitors = 0;
-        $visitorsByDate = [];
+        // ── 2. Visitor Stats (Sinkron 100% dengan Dashboard) ───────────────────
+        $sellerProductIds = Product::where('seller_id', $seller->id)->pluck('id');
+        $creatorProfile   = CreatorProfile::where('user_id', $seller->id)->first();
+        $totalVisitors    = 0;
+        $uniqueVisitors   = 0;
+        $visitorsByDate   = [];
+
         if (Schema::hasTable('product_visits')) {
-            $visitRows      = ProductVisit::where('seller_id', $seller->id)
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->get(['session_id', 'created_at']);
+            $visitRows = ProductVisit::where(function($q) use ($seller, $sellerProductIds) {
+                $q->where('seller_id', $seller->id);
+                if ($sellerProductIds->isNotEmpty()) {
+                    $q->orWhereIn('product_id', $sellerProductIds);
+                }
+            })->whereBetween('created_at', [$startDate, $endDate])
+              ->get(['session_id', 'created_at']);
+
             $totalVisitors  = $visitRows->count();
             $uniqueVisitors = $visitRows->pluck('session_id')->unique()->filter()->count();
             // Group by date for Traffic Wave chart
@@ -136,6 +143,21 @@ class SellerReportController extends Controller
                 ->groupBy(fn($v) => $v->created_at->format('Y-m-d'))
                 ->map(fn($g) => $g->count())
                 ->toArray();
+        }
+
+        // Include bio clicks/visits (sinkron 100% dengan Dashboard traffic calculation)
+        if ($creatorProfile && Schema::hasColumn('analytics_events', 'bio_creator_id')) {
+            $bioEvents = AnalyticsEvent::where('event_type', 'bio_link_click')
+                ->where('bio_creator_id', $creatorProfile->id)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get(['id', 'created_at']);
+
+            $totalVisitors += $bioEvents->count();
+            $uniqueVisitors += $bioEvents->count();
+            foreach ($bioEvents as $be) {
+                $d = $be->created_at->format('Y-m-d');
+                $visitorsByDate[$d] = ($visitorsByDate[$d] ?? 0) + 1;
+            }
         }
 
         // ── 3. Top Products (by visits count) ──────────────────────────────────

@@ -105,12 +105,17 @@ class SellerController extends Controller
         $startOfPrevYear = $now->copy()->subYear()->startOfYear();
         $endOfPrevYear   = $now->copy()->subYear()->endOfYear();
 
-        $calcTraffic = function($startDate, $endDate) use ($seller, $cp) {
+        $sellerProductIds = Product::where('seller_id', $seller->id)->pluck('id');
+
+        $calcTraffic = function($startDate, $endDate) use ($seller, $cp, $sellerProductIds) {
             $visits = 0;
             if (\Illuminate\Support\Facades\Schema::hasTable('product_visits')) {
-                $visits = (int) \App\Models\ProductVisit::where('seller_id', $seller->id)
-                    ->whereBetween('created_at', [$startDate, $endDate])
-                    ->count();
+                $visits = (int) \App\Models\ProductVisit::where(function($q) use ($seller, $sellerProductIds) {
+                    $q->where('seller_id', $seller->id);
+                    if ($sellerProductIds->isNotEmpty()) {
+                        $q->orWhereIn('product_id', $sellerProductIds);
+                    }
+                })->whereBetween('created_at', [$startDate, $endDate])->count();
             }
             $bioClicks = 0;
             if ($cp && \Illuminate\Support\Facades\Schema::hasColumn('analytics_events', 'bio_creator_id')) {

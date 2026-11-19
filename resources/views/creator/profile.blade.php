@@ -12,9 +12,9 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         /* ════════════════════════════════════════
-                                                                                                                                                           Mobile Header – Profil & Toko
-                                                                                                                                                           100% SAMA PERSIS dengan Kelola Produk
-                                                                                                                                                        ════════════════════════════════════════ */
+                                                                                                                                                                                           Mobile Header – Profil & Toko
+                                                                                                                                                                                           100% SAMA PERSIS dengan Kelola Produk
+                                                                                                                                                                                        ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
@@ -997,7 +997,7 @@
 
                         @if(!empty($profile->custom_domain))
                             <div class="form-group full">
-                                <label class="form-label">Custom Domain Toko / Bio Page</label>
+                                <label class="form-label">Custom Domain / Bio Page</label>
                                 <div
                                     style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
                                     <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -1217,7 +1217,7 @@
                             <label class="form-label">Deskripsikan Profil Anda <span style="color:#ef4444;">*</span></label>
                             <textarea name="store_description" id="storeDescTextarea" class="form-input" rows="4"
                                 minlength="40" maxlength="300"
-                                placeholder="Ceritakan tentang toko Anda, spesialisasi, dan produk unggulan... (min. 40 - 300 karakter)"
+                                placeholder="Ceritakan tentang Anda, spesialisasi, dan produk unggulan... (min. 40 - 300 karakter)"
                                 required>{{ old('store_description', $profile->store_description) }}</textarea>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
                                 <span class="form-hint" style="margin:0;">Minimal <strong>40</strong> karakter, maksimal
@@ -1287,7 +1287,7 @@
                         <circle cx="8.5" cy="8.5" r="1.5" />
                         <polyline points="21 15 16 10 5 21" />
                     </svg>
-                    Banner Toko (Maks 2 Slide)
+                    Banner (Maks 2 Slide)
                 </div>
                 <div class="prof-card-body">
                     <div class="banner-grid">
@@ -1306,7 +1306,7 @@
                             @endif
                             <input type="file" name="store_banner_1" class="form-input"
                                 style="height:auto;padding:0.5rem;font-size:0.75rem;" accept="image/*"
-                                onchange="initImageCropper(this, {aspectRatio: 3, width: 1200, height: 400, title: 'Crop Banner Toko Utama (3:1 Landscape)', previewTarget: '.banner-slot:nth-child(1) .banner-preview'})">
+                                onchange="initImageCropper(this, {aspectRatio: 3, width: 1200, height: 400, title: 'Crop Banner Utama (3:1 Landscape)', previewTarget: '.banner-slot:nth-child(1) .banner-preview'})">
                         </div>
                         <div class="banner-slot">
                             <div class="banner-label">
@@ -1323,7 +1323,7 @@
                             @endif
                             <input type="file" name="store_banner_2" class="form-input"
                                 style="height:auto;padding:0.5rem;font-size:0.75rem;" accept="image/*"
-                                onchange="initImageCropper(this, {aspectRatio: 3, width: 1200, height: 400, title: 'Crop Banner Toko Slide 2 (3:1 Landscape)', previewTarget: '.banner-slot:nth-child(2) .banner-preview'})">
+                                onchange="initImageCropper(this, {aspectRatio: 3, width: 1200, height: 400, title: 'Crop Banner Slide 2 (3:1 Landscape)', previewTarget: '.banner-slot:nth-child(2) .banner-preview'})">
                         </div>
                     </div>
                     <span class="form-hint" style="display:block;margin-top:0.75rem;">Rekomendasi: 1200×600 px (rasio 2:1).

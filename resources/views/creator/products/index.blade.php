@@ -1205,12 +1205,7 @@
       </svg>
     </button>
     <h2 class="prod-mobile-title">Kelola Produk</h2>
-    <button type="button" class="prod-mobile-btn" onclick="toggleMobileNotif()" title="Notifikasi">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-      </svg>
-    </button>
+    <div style="width: 38px;"></div>
   </div>
 
   <style>
@@ -1391,9 +1386,22 @@
     </form>
   </div>
 
-  {{-- 2. STATUS FILTER TAB: SEMUA / AKTIF / ARSIP (MINIMALIST MONOCHROME) --}}
-  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.75rem;">
-    <div style="display:inline-flex; align-items:center; gap:3px; background:#f1f5f9; padding:3px; border-radius:999px; border:1px solid #e2e8f0;">
+  {{-- 2. STATUS FILTER TAB & FILTER ICON TIPE (1 BARIS SETELAH DIARSIPKAN) --}}
+  @php
+    $typesMap = [
+      'makanan'       => ['name' => 'Makanan / Resto', 'svg' => '<path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line>'],
+      'external_link' => ['name' => 'Digital & Akses', 'svg' => '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'],
+      'physical'      => ['name' => 'Barang Fisik',    'svg' => '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>'],
+      'service'       => ['name' => 'Jasa Layanan',    'svg' => '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>'],
+      'ticket'        => ['name' => 'Tiket Event',     'svg' => '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"></path><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line>'],
+    ];
+    $activeType = request('type');
+    $activeTypeItem = $typesMap[$activeType] ?? null;
+  @endphp
+
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:1.15rem; position:relative;">
+    {{-- Kiri: Tabs Status (Semua, Aktif, Diarsipkan) --}}
+    <div style="display:inline-flex; align-items:center; gap:3px; background:#f1f5f9; padding:3px; border-radius:999px; border:1px solid #e2e8f0; overflow-x:auto; scrollbar-width:none;">
       <a href="{{ route('creator.products.index', array_merge(request()->except('status', 'page'))) }}"
          class="status-tab-btn {{ !request('status') ? 'active' : '' }}">
          Semua <span class="tab-badge">{{ $totalCount ?? $products->total() }}</span>
@@ -1408,46 +1416,65 @@
       </a>
     </div>
 
-    @if(request('status') === 'archived')
-      <div style="font-size:0.75rem; color:#64748b; display:flex; align-items:center; gap:0.35rem; background:#f8fafc; padding:0.3rem 0.65rem; border-radius:8px; border:1px solid #e2e8f0;">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Produk yang diarsipkan tidak tampil di storefront pembeli.
+    {{-- Pojok Kanan Setelah Diarsipkan: 1 Button Icon Filter Tipe --}}
+    <div style="position:relative; flex-shrink:0;">
+      <button type="button" id="btnTypeFilterDropdown" onclick="toggleTypeFilterDropdown(event)"
+        style="width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s ease; border:1.5px solid {{ $activeType ? '#0f172a' : '#e2e8f0' }}; background:{{ $activeType ? '#0f172a' : '#ffffff' }}; color:{{ $activeType ? '#ffffff' : '#475569' }}; position:relative; box-shadow:0 1px 3px rgba(0,0,0,0.02);"
+        title="{{ $activeTypeItem ? 'Filter Tipe: ' . $activeTypeItem['name'] : 'Filter Tipe Produk' }}">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        @if($activeType)
+          <span style="position:absolute; top:-3px; right:-3px; width:9px; height:9px; border-radius:50%; background:#10b981; border:2px solid #ffffff;"></span>
+        @endif
+      </button>
+
+      {{-- Dropdown Menu Pilihan Tipe --}}
+      <div id="typeFilterDropdownMenu"
+        style="display:none; position:absolute; top:calc(100% + 6px); right:0; min-width:210px; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; box-shadow:0 14px 35px rgba(15,23,42,0.12); z-index:9999; padding:0.45rem;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.4rem 0.65rem 0.35rem; border-bottom:1px solid #f1f5f9; margin-bottom:0.35rem;">
+          <span style="font-size:0.7rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em;">Filter Tipe</span>
+          @if($activeType)
+            <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}"
+               style="font-size:0.7rem; color:#ef4444; text-decoration:none; font-weight:600;">Reset</a>
+          @endif
+        </div>
+        <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}"
+           style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.5rem 0.65rem; border-radius:8px; text-decoration:none; font-size:0.78rem; font-weight:{{ !$activeType ? '700' : '500' }}; color:{{ !$activeType ? '#0f172a' : '#475569' }}; background:{{ !$activeType ? '#f1f5f9' : 'transparent' }}; transition:background 0.15s;"
+           onmouseover="if(this.style.background!=='rgb(241, 245, 249)') this.style.background='#f8fafc'"
+           onmouseout="if('{{ !$activeType }}'!=='1') this.style.background='transparent'">
+          <span>Semua Tipe</span>
+          @if(!$activeType)
+            <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          @endif
+        </a>
+
+        @foreach($typesMap as $tKey => $tData)
+          <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => $tKey])) }}"
+             style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.5rem 0.65rem; border-radius:8px; text-decoration:none; font-size:0.78rem; font-weight:{{ $activeType === $tKey ? '700' : '500' }}; color:{{ $activeType === $tKey ? '#0f172a' : '#475569' }}; background:{{ $activeType === $tKey ? '#f1f5f9' : 'transparent' }}; transition:background 0.15s;"
+             onmouseover="if(this.style.background!=='rgb(241, 245, 249)') this.style.background='#f8fafc'"
+             onmouseout="if('{{ $activeType === $tKey }}'!=='1') this.style.background='transparent'">
+            <div style="display:flex; align-items:center; gap:0.55rem;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                {!! $tData['svg'] !!}
+              </svg>
+              <span>{{ $tData['name'] }}</span>
+            </div>
+            @if($activeType === $tKey)
+              <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            @endif
+          </a>
+        @endforeach
       </div>
-    @endif
+    </div>
   </div>
 
-  {{-- 3. FILTER PILLS TIPE PRODUK (MINIMALIST SUPER APP CHIPS) --}}
-  <div style="display:flex; align-items:center; gap:0.45rem; overflow-x:auto; margin-bottom:1.15rem; padding-bottom:0.25rem; scrollbar-width:none;">
-    <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}" 
-       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ !request('type') ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ !request('type') ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
-       Semua Tipe
-    </a>
-    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'makanan'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'makanan' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'makanan' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
-       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-       Makanan / Resto
-    </a>
-    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'external_link'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'external_link' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'external_link' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
-       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-       Digital & Akses
-    </a>
-    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'physical'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'physical' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'physical' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
-       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-       Barang Fisik
-    </a>
-    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'service'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'service' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'service' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
-       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-       Jasa Layanan
-    </a>
-    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'ticket'])) }}" 
-       style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.9rem; border-radius:999px; font-size:0.76rem; font-weight:{{ request('type') == 'ticket' ? '600' : '500' }}; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'ticket' ? 'background:#0f172a; color:#ffffff; border:1px solid #0f172a;' : 'background:#ffffff; color:#475569; border:1px solid #e2e8f0;' }}">
-       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"></path><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line></svg>
-       Tiket Event
-    </a>
-  </div>
+  @if(request('status') === 'archived')
+    <div style="font-size:0.75rem; color:#64748b; display:flex; align-items:center; gap:0.35rem; background:#f8fafc; padding:0.35rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0; margin-top:-0.5rem; margin-bottom:1rem;">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Produk yang diarsipkan tidak tampil di storefront pembeli.
+    </div>
+  @endif
 
   {{-- TABLE CARD (LIST VIEW) --}}
   <div id="view-list" class="view-container"
@@ -1767,6 +1794,25 @@
   </div>
 
   <script>
+    function toggleTypeFilterDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('typeFilterDropdownMenu');
+      if (!menu) return;
+      const isShow = menu.style.display === 'block';
+      menu.style.display = isShow ? 'none' : 'block';
+      if (!isShow) {
+        setTimeout(() => {
+          document.addEventListener('click', function closeTypeFilter(ev) {
+            if (!menu.contains(ev.target) && ev.target.id !== 'btnTypeFilterDropdown' && !ev.target.closest('#btnTypeFilterDropdown')) {
+              menu.style.display = 'none';
+              document.removeEventListener('click', closeTypeFilter);
+            }
+          });
+        }, 20);
+      }
+    }
+    window.toggleTypeFilterDropdown = toggleTypeFilterDropdown;
+
     function switchView(type, isUserAction = false) {
       if (isUserAction) {
         localStorage.setItem('admin_services_view_user_toggled', 'true');

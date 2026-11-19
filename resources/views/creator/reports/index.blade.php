@@ -7,12 +7,14 @@
 @section('topbar_actions')
     @php $activeTab = request('tab', 'pembeli'); @endphp
     <div class="filter-bar">
+        <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => 'this_month', 'tab' => $activeTab])) }}"
+            class="filter-btn {{ $filter === 'this_month' ? 'active' : '' }}" id="filterBtnThisMonth">Bulan Ini</a>
         <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => '7', 'tab' => $activeTab])) }}"
             class="filter-btn {{ $filter === '7' ? 'active' : '' }}" id="filterBtn7">7 Hari</a>
         <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => '30', 'tab' => $activeTab])) }}"
             class="filter-btn {{ $filter === '30' ? 'active' : '' }}" id="filterBtn30">30 Hari</a>
-        <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => '90', 'tab' => $activeTab])) }}"
-            class="filter-btn {{ $filter === '90' ? 'active' : '' }}" id="filterBtn90">90 Hari</a>
+        <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => 'this_year', 'tab' => $activeTab])) }}"
+            class="filter-btn {{ $filter === 'this_year' ? 'active' : '' }}" id="filterBtnThisYear">Tahun Ini</a>
         <div class="filter-divider"></div>
         <button type="button" class="filter-custom-btn {{ $filter === 'custom' ? 'active' : '' }}" id="btnOpenCustomDate">
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -2020,13 +2022,7 @@
         </button>
         {{-- Tengah: Judul --}}
         <h2 class="prod-mobile-title">Laporan Penjualan</h2>
-        {{-- Kanan: Bell notif (sama persis) --}}
-        <button type="button" class="prod-mobile-btn" onclick="window.location.href='{{ route('creator.app.index') }}'" title="Notifikasi">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-        </button>
+        <div style="width: 38px;"></div>
     </div>
     <script>
     function handleMobileBack() {
@@ -3384,7 +3380,7 @@
                 url.searchParams.set('tab', currentTab);
                 window.history.replaceState(null, '', url.toString());
 
-                ['filterBtn7', 'filterBtn30', 'filterBtn90'].forEach(id => {
+                ['filterBtnThisMonth', 'filterBtn7', 'filterBtn30', 'filterBtnThisYear'].forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn && btn.href) {
                         const btnUrl = new URL(btn.href);

@@ -717,7 +717,7 @@
                                                 style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
                                                 <input type="radio" name="event_duration_mode" value="multi"
                                                     id="eventDurMulti" onchange="toggleEventDurationMode('multi')" {{ $hasEndDate ? 'checked' : '' }}>
-                                                <span>Berhari-hari / Rentang Tanggal (Multi Day)</span>
+                                                <span>Beberapa hari (Multi Day)</span>
                                             </label>
                                         </div>
                                     </div>
@@ -1795,17 +1795,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                    <div class="form-group">
-                                        <label class="form-label">Pertanyaan</label>
-                                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Jawaban</label>
-                                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                    </div>
-                                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                </div>`;
+                                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                <div class="form-group">
+                                                    <label class="form-label">Pertanyaan</label>
+                                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Jawaban</label>
+                                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                </div>
+                                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                            </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2486,18 +2486,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                    <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                        <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                            style="width:100%; height:100%; border:none; display:block;"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowfullscreen loading="lazy"></iframe>
-                                    </div>`;
+                                                <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                    <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                        style="width:100%; height:100%; border:none; display:block;"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowfullscreen loading="lazy"></iframe>
+                                                </div>`;
                 } else {
                     html += `
-                                    <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                        <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                        <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                    </div>`;
+                                                <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                    <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                    <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                </div>`;
                 }
             });
             html += '</div>';

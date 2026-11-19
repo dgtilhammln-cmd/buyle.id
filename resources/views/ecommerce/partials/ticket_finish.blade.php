@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     @php
         $firstTicketItem = $order->items->first(function ($i) {
             $pType = $i->product?->product_type ?? '';
@@ -43,7 +45,7 @@
                     $eventDateStr = $start->translatedFormat('d M Y');
                 }
             } catch (\Exception $e) {
-                $eventDateStr = (string)$product->event_date;
+                $eventDateStr = (string) $product->event_date;
             }
         } elseif ($order->created_at) {
             $eventDateStr = $order->created_at->translatedFormat('d M Y');
@@ -68,28 +70,29 @@
             try {
                 \App\Models\TicketPass::generateForOrder($order);
                 $passes = $order->fresh(['ticketPasses.product'])->ticketPasses;
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
         }
 
         // Fallback jika tetap kosong / tidak ada di database
-        $totalTicketQty = $order->items->filter(function($i) {
+        $totalTicketQty = $order->items->filter(function ($i) {
             $pType = $i->product?->product_type ?? '';
             return in_array($pType, ['ticket', 'tiket', 'tiket event', 'ticket_event']) || !empty($i->product?->event_date);
         })->sum('qty') ?: ($order->items->sum('qty') ?: 1);
 
         if ($passes->isEmpty()) {
             $defaultHolder = $order->user?->name ?? ($order->customer_name ?: 'Pemegang Tiket');
-            $defaultNik    = $order->user?->nik ?? null;
+            $defaultNik = $order->user?->nik ?? null;
             $mockPasses = [];
             for ($q = 1; $q <= $totalTicketQty; $q++) {
                 $code = $totalTicketQty > 1 ? ($order->order_number . '-' . $q) : $order->order_number;
-                $mockPasses[] = (object)[
-                    'id'          => $q,
+                $mockPasses[] = (object) [
+                    'id' => $q,
                     'ticket_code' => $code,
                     'holder_name' => $defaultHolder,
-                    'holder_nik'  => $defaultNik,
-                    'created_at'  => $order->created_at,
-                    'status'      => 'valid',
+                    'holder_nik' => $defaultNik,
+                    'created_at' => $order->created_at,
+                    'status' => 'valid',
                 ];
             }
             $passes = collect($mockPasses);
@@ -98,28 +101,28 @@
         $activePass = $passes->first();
 
         // Siapkan array data tiket untuk frontend JS
-        $passesData = $passes->map(function($p, $idx) use ($order, $passes, $seatOrCategory) {
+        $passesData = $passes->map(function ($p, $idx) use ($order, $passes, $seatOrCategory) {
             $code = $p->ticket_code ?? ($order->order_number . (count($passes) > 1 ? '-' . ($idx + 1) : ''));
             $rawNik = $p->holder_nik ?: ($order->user?->nik ?: null);
             $maskedNik = \App\Models\TicketPass::maskNik($rawNik);
-            
+
             $createdAt = $p->created_at ?? $order->created_at;
-            $printedAt = $createdAt 
-                ? \Carbon\Carbon::parse($createdAt)->locale('id')->translatedFormat('d F Y H.i.s') 
+            $printedAt = $createdAt
+                ? \Carbon\Carbon::parse($createdAt)->locale('id')->translatedFormat('d F Y H.i.s')
                 : date('d F Y H.i.s');
 
-            $passCat = $p->orderItem?->variantValue?->name 
+            $passCat = $p->orderItem?->variantValue?->name
                 ?: ($p->product?->short_desc ?: $seatOrCategory);
 
             return [
-                'id'          => $p->id ?? ($idx + 1),
-                'index'       => $idx + 1,
+                'id' => $p->id ?? ($idx + 1),
+                'index' => $idx + 1,
                 'ticket_code' => $code,
                 'holder_name' => $p->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket'),
-                'holder_nik'  => $maskedNik,
-                'category'    => $passCat,
-                'qr_image'    => \App\Services\SimpleQrCode::base64($code),
-                'printed_at'  => $printedAt,
+                'holder_nik' => $maskedNik,
+                'category' => $passCat,
+                'qr_image' => \App\Services\SimpleQrCode::base64($code),
+                'printed_at' => $printedAt,
             ];
         })->values()->toArray();
 
@@ -188,7 +191,7 @@
             transform: translateX(-50%);
             width: 500px;
             height: 350px;
-            background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
             pointer-events: none;
             z-index: 1;
         }
@@ -230,6 +233,7 @@
             padding: 0;
             flex-shrink: 0;
         }
+
         .tix-nav-btn:hover {
             background: rgba(0, 0, 0, 0.35);
             transform: scale(1.04);
@@ -277,10 +281,12 @@
             transition: all 0.15s ease;
             padding: 0;
         }
+
         .tix-pager-btn:hover {
             background: rgba(0, 0, 0, 0.4);
             transform: scale(1.08);
         }
+
         .tix-pager-btn:active {
             transform: scale(0.95);
         }
@@ -307,11 +313,13 @@
             z-index: 5;
             top: 48%;
             margin-top: -12px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.16);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.16);
         }
+
         .tix-notch-left {
             left: -12px;
         }
+
         .tix-notch-right {
             right: -12px;
         }
@@ -327,6 +335,7 @@
             position: relative;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
         }
+
         .tix-poster-box img {
             width: 100%;
             height: 100%;
@@ -401,6 +410,7 @@
             text-align: left;
             min-width: 0;
         }
+
         .tix-attendee-col.right {
             text-align: right;
         }
@@ -487,222 +497,239 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="tix-page-viewport">
-    <div class="tix-phone-frame">
-        
-        {{-- Top Navigation Bar --}}
-        <div class="tix-nav-bar">
-            {{-- Tombol Home Kiri Atas -> buyle.id/tix --}}
-            <a href="{{ route('tix.index') }}" class="tix-nav-btn" title="Ke Beranda BuyleTIX">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-            </a>
+    <div class="tix-page-viewport">
+        <div class="tix-phone-frame">
 
-            {{-- Logo Resmi BuyleTIX --}}
-            <a href="{{ route('tix.index') }}" title="Buyle TIX" style="display:inline-flex; align-items:center; text-decoration:none;">
-                <picture>
-                    <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" style="height:28px; width:auto; max-width:140px; object-fit:contain; display:block;">
-                </picture>
-            </a>
+            {{-- Top Navigation Bar --}}
+            <div class="tix-nav-bar">
+                {{-- Tombol Home Kiri Atas -> buyle.id/tix --}}
+                <a href="{{ route('tix.index') }}" class="tix-nav-btn" title="Ke Beranda BuyleTIX">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                        viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                </a>
 
-            {{-- Tombol Download Pojok Kanan Atas (Only Icon) --}}
-            <a href="{{ $ticketPdfUrl }}" class="tix-nav-btn" title="Unduh E-Tiket PDF" target="_blank" download>
-                <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-            </a>
-        </div>
+                {{-- Logo Resmi BuyleTIX --}}
+                <a href="{{ route('tix.index') }}" title="Buyle TIX"
+                    style="display:inline-flex; align-items:center; text-decoration:none;">
+                    <picture>
+                        <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
+                        <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX"
+                            style="height:28px; width:auto; max-width:140px; object-fit:contain; display:block;">
+                    </picture>
+                </a>
 
-        {{-- Pager Counter 1/1 atau 1/N (Image 3) --}}
-        <div class="tix-pager-bar">
-            @if(count($passesData) > 1)
-                <button type="button" class="tix-pager-btn" onclick="prevTicketPass()" title="Tiket Sebelumnya" aria-label="Tiket Sebelumnya">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-            @endif
+                {{-- Tombol Download Pojok Kanan Atas (Only Icon) --}}
+                <a href="{{ $ticketPdfUrl }}" class="tix-nav-btn" title="Unduh E-Tiket PDF" target="_blank" download>
+                    <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2"
+                        viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                </a>
+            </div>
 
-            <div class="tix-pager-pill">
-                <span id="tixCurrentIndexDisplay">1</span> / <span id="tixTotalCountDisplay">{{ count($passesData) }}</span>
+            {{-- Pager Counter 1/1 atau 1/N (Image 3) --}}
+            <div class="tix-pager-bar">
+                @if(count($passesData) > 1)
+                    <button type="button" class="tix-pager-btn" onclick="prevTicketPass()" title="Tiket Sebelumnya"
+                        aria-label="Tiket Sebelumnya">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                @endif
+
+                <div class="tix-pager-pill">
+                    <span id="tixCurrentIndexDisplay">1</span> / <span
+                        id="tixTotalCountDisplay">{{ count($passesData) }}</span>
+                </div>
+
+                @if(count($passesData) > 1)
+                    <button type="button" class="tix-pager-btn" onclick="nextTicketPass()" title="Tiket Selanjutnya"
+                        aria-label="Tiket Selanjutnya">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                @endif
+            </div>
+
+            {{-- The White Ticket Card --}}
+            <div class="tix-card-container" id="tixCardContainer">
+                {{-- Ticket Notches (Cutouts) --}}
+                <div class="tix-notch-left"></div>
+                <div class="tix-notch-right"></div>
+
+                {{-- Landscape Poster (16:9) --}}
+                <div class="tix-poster-box">
+                    <img src="{{ $landscapePoster }}" alt="{{ $product->name ?? 'Poster Event' }}" loading="eager">
+                </div>
+
+                {{-- Event Title --}}
+                <div class="tix-event-title">
+                    {{ $product->name ?? 'Tiket Event' }}
+                </div>
+
+                {{-- Dashed Line Divider --}}
+                <hr class="tix-dashed-divider">
+
+                {{-- Details Grid (2x2) --}}
+                <div class="tix-details-grid">
+                    {{-- Date --}}
+                    <div class="tix-grid-col">
+                        <div class="tix-detail-label">Date</div>
+                        <div class="tix-detail-value">{{ $eventDateStr }}</div>
+                    </div>
+
+                    {{-- Time --}}
+                    <div class="tix-grid-col right">
+                        <div class="tix-detail-label">Time</div>
+                        <div class="tix-detail-value">{{ $eventTimeStr }}</div>
+                    </div>
+
+                    {{-- Location --}}
+                    <div class="tix-grid-col">
+                        <div class="tix-detail-label">Location</div>
+                        <div class="tix-detail-value">{{ $eventLocationStr }}</div>
+                    </div>
+
+                    {{-- Kategori --}}
+                    <div class="tix-grid-col right">
+                        <div class="tix-detail-label">Kategori</div>
+                        <div class="tix-detail-value" id="tixSeatDisplay">
+                            {{ $passesData[0]['category'] ?? $seatOrCategory }}</div>
+                    </div>
+                </div>
+
+                {{-- Info Pemegang Tiket (Kiri) & No Identitas Sensor (Kanan) --}}
+                <div class="tix-attendee-row">
+                    <div class="tix-attendee-col">
+                        <span class="tix-attendee-label">Pemegang:</span>
+                        <span class="tix-attendee-val" id="tixHolderDisplay">
+                            {{ $passesData[0]['holder_name'] ?? 'Pemegang Tiket' }}
+                        </span>
+                    </div>
+                    <div class="tix-attendee-col right">
+                        <span class="tix-attendee-label">No. Identitas:</span>
+                        <span class="tix-attendee-val" id="tixNikDisplay">
+                            {{ $passesData[0]['holder_nik'] ?? '—' }}
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Image 2: Pindai kode ini di Gerbang + QR Code + Code + Dicetak --}}
+                <div class="tix-qr-section">
+                    <div class="tix-qr-title">Simpan & Tunjukan saat di Gate</div>
+                    <div class="tix-qr-box">
+                        <img id="tixQrImageDisplay" src="{{ $passesData[0]['qr_image'] ?? '' }}"
+                            alt="QR Code Gate Pass">
+                    </div>
+                    <div class="tix-qr-code-text" id="tixCodeDisplay">
+                        {{ $passesData[0]['ticket_code'] ?? $order->order_number }}
+                    </div>
+                    <div class="tix-qr-printed-text" id="tixPrintDateDisplay">
+                        Dicetak : {{ $passesData[0]['printed_at'] ?? date('d F Y H.i.s') }}
+                    </div>
+                </div>
             </div>
 
             @if(count($passesData) > 1)
-                <button type="button" class="tix-pager-btn" onclick="nextTicketPass()" title="Tiket Selanjutnya" aria-label="Tiket Selanjutnya">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
+                <div class="tix-swipe-hint">
+                    Geser tiket atau ketuk panah untuk melihat tiket lainnya
+                </div>
             @endif
+
         </div>
-
-        {{-- The White Ticket Card --}}
-        <div class="tix-card-container" id="tixCardContainer">
-            {{-- Ticket Notches (Cutouts) --}}
-            <div class="tix-notch-left"></div>
-            <div class="tix-notch-right"></div>
-
-            {{-- Landscape Poster (16:9) --}}
-            <div class="tix-poster-box">
-                <img src="{{ $landscapePoster }}" alt="{{ $product->name ?? 'Poster Event' }}" loading="eager">
-            </div>
-
-            {{-- Event Title --}}
-            <div class="tix-event-title">
-                {{ $product->name ?? 'Tiket Event' }}
-            </div>
-
-            {{-- Dashed Line Divider --}}
-            <hr class="tix-dashed-divider">
-
-            {{-- Details Grid (2x2) --}}
-            <div class="tix-details-grid">
-                {{-- Date --}}
-                <div class="tix-grid-col">
-                    <div class="tix-detail-label">Date</div>
-                    <div class="tix-detail-value">{{ $eventDateStr }}</div>
-                </div>
-
-                {{-- Time --}}
-                <div class="tix-grid-col right">
-                    <div class="tix-detail-label">Time</div>
-                    <div class="tix-detail-value">{{ $eventTimeStr }}</div>
-                </div>
-
-                {{-- Location --}}
-                <div class="tix-grid-col">
-                    <div class="tix-detail-label">Location</div>
-                    <div class="tix-detail-value">{{ $eventLocationStr }}</div>
-                </div>
-
-                {{-- Kategori --}}
-                <div class="tix-grid-col right">
-                    <div class="tix-detail-label">Kategori</div>
-                    <div class="tix-detail-value" id="tixSeatDisplay">{{ $passesData[0]['category'] ?? $seatOrCategory }}</div>
-                </div>
-            </div>
-
-            {{-- Info Pemegang Tiket (Kiri) & No Identitas Sensor (Kanan) --}}
-            <div class="tix-attendee-row">
-                <div class="tix-attendee-col">
-                    <span class="tix-attendee-label">Pemegang:</span>
-                    <span class="tix-attendee-val" id="tixHolderDisplay">
-                        {{ $passesData[0]['holder_name'] ?? 'Pemegang Tiket' }}
-                    </span>
-                </div>
-                <div class="tix-attendee-col right">
-                    <span class="tix-attendee-label">No. Identitas:</span>
-                    <span class="tix-attendee-val" id="tixNikDisplay">
-                        {{ $passesData[0]['holder_nik'] ?? '—' }}
-                    </span>
-                </div>
-            </div>
-
-            {{-- Image 2: Pindai kode ini di Gerbang + QR Code + Code + Dicetak --}}
-            <div class="tix-qr-section">
-                <div class="tix-qr-title">Pindai kode ini di Gerbang</div>
-                <div class="tix-qr-box">
-                    <img id="tixQrImageDisplay" src="{{ $passesData[0]['qr_image'] ?? '' }}" alt="QR Code Gate Pass">
-                </div>
-                <div class="tix-qr-code-text" id="tixCodeDisplay">
-                    {{ $passesData[0]['ticket_code'] ?? $order->order_number }}
-                </div>
-                <div class="tix-qr-printed-text" id="tixPrintDateDisplay">
-                    Dicetak : {{ $passesData[0]['printed_at'] ?? date('d F Y H.i.s') }}
-                </div>
-            </div>
-        </div>
-
-        @if(count($passesData) > 1)
-            <div class="tix-swipe-hint">
-                Geser tiket atau ketuk panah untuk melihat tiket lainnya
-            </div>
-        @endif
-
     </div>
-</div>
 
-<script>
-    // Data Tiket untuk Multi-Pass
-    const ticketPasses = @json($passesData);
-    let currentPassIndex = 0;
+    <script>
+        // Data Tiket untuk Multi-Pass
+        const ticketPasses = @json($passesData);
+        let currentPassIndex = 0;
 
-    function updateTicketPass(index) {
-        if (!ticketPasses || !ticketPasses[index]) return;
-        currentPassIndex = index;
-        const pass = ticketPasses[index];
+        function updateTicketPass(index) {
+            if (!ticketPasses || !ticketPasses[index]) return;
+            currentPassIndex = index;
+            const pass = ticketPasses[index];
 
-        // Update Counter Pager "1 / N"
-        const currEl = document.getElementById('tixCurrentIndexDisplay');
-        if (currEl) currEl.textContent = (index + 1);
+            // Update Counter Pager "1 / N"
+            const currEl = document.getElementById('tixCurrentIndexDisplay');
+            if (currEl) currEl.textContent = (index + 1);
 
-        // Update Holder Name
-        const holderEl = document.getElementById('tixHolderDisplay');
-        if (holderEl) holderEl.textContent = pass.holder_name;
+            // Update Holder Name
+            const holderEl = document.getElementById('tixHolderDisplay');
+            if (holderEl) holderEl.textContent = pass.holder_name;
 
-        // Update Masked NIK
-        const nikEl = document.getElementById('tixNikDisplay');
-        if (nikEl) nikEl.textContent = pass.holder_nik || '—';
+            // Update Masked NIK
+            const nikEl = document.getElementById('tixNikDisplay');
+            if (nikEl) nikEl.textContent = pass.holder_nik || '—';
 
-        // Update Kategori
-        const catEl = document.getElementById('tixSeatDisplay');
-        if (catEl && pass.category) catEl.textContent = pass.category;
+            // Update Kategori
+            const catEl = document.getElementById('tixSeatDisplay');
+            if (catEl && pass.category) catEl.textContent = pass.category;
 
-        // Update QR Image
-        const qrEl = document.getElementById('tixQrImageDisplay');
-        if (qrEl && pass.qr_image) qrEl.src = pass.qr_image;
+            // Update QR Image
+            const qrEl = document.getElementById('tixQrImageDisplay');
+            if (qrEl && pass.qr_image) qrEl.src = pass.qr_image;
 
-        // Update Ticket Code Text
-        const codeEl = document.getElementById('tixCodeDisplay');
-        if (codeEl) codeEl.textContent = pass.ticket_code;
+            // Update Ticket Code Text
+            const codeEl = document.getElementById('tixCodeDisplay');
+            if (codeEl) codeEl.textContent = pass.ticket_code;
 
-        // Update Printed Date
-        const printEl = document.getElementById('tixPrintDateDisplay');
-        if (printEl && pass.printed_at) printEl.textContent = 'Dicetak : ' + pass.printed_at;
-    }
+            // Update Printed Date
+            const printEl = document.getElementById('tixPrintDateDisplay');
+            if (printEl && pass.printed_at) printEl.textContent = 'Dicetak : ' + pass.printed_at;
+        }
 
-    function prevTicketPass() {
-        if (!ticketPasses || ticketPasses.length <= 1) return;
-        const newIdx = (currentPassIndex - 1 + ticketPasses.length) % ticketPasses.length;
-        updateTicketPass(newIdx);
-    }
+        function prevTicketPass() {
+            if (!ticketPasses || ticketPasses.length <= 1) return;
+            const newIdx = (currentPassIndex - 1 + ticketPasses.length) % ticketPasses.length;
+            updateTicketPass(newIdx);
+        }
 
-    function nextTicketPass() {
-        if (!ticketPasses || ticketPasses.length <= 1) return;
-        const newIdx = (currentPassIndex + 1) % ticketPasses.length;
-        updateTicketPass(newIdx);
-    }
+        function nextTicketPass() {
+            if (!ticketPasses || ticketPasses.length <= 1) return;
+            const newIdx = (currentPassIndex + 1) % ticketPasses.length;
+            updateTicketPass(newIdx);
+        }
 
-    // Touch Swipe Gesture pada Ticket Card
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const cardContainer = document.getElementById('tixCardContainer');
-    if (cardContainer) {
-        cardContainer.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
+        // Touch Swipe Gesture pada Ticket Card
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const cardContainer = document.getElementById('tixCardContainer');
+        if (cardContainer) {
+            cardContainer.addEventListener('touchstart', function (e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
 
-        cardContainer.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleCardSwipe();
-        }, { passive: true });
-    }
+            cardContainer.addEventListener('touchend', function (e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleCardSwipe();
+            }, { passive: true });
+        }
 
-    function handleCardSwipe() {
-        if (!ticketPasses || ticketPasses.length <= 1) return;
-        const diff = touchEndX - touchStartX;
-        if (Math.abs(diff) > 40) {
-            if (diff < 0) {
-                nextTicketPass();
-            } else {
-                prevTicketPass();
+        function handleCardSwipe() {
+            if (!ticketPasses || ticketPasses.length <= 1) return;
+            const diff = touchEndX - touchStartX;
+            if (Math.abs(diff) > 40) {
+                if (diff < 0) {
+                    nextTicketPass();
+                } else {
+                    prevTicketPass();
+                }
             }
         }
-    }
-</script>
+    </script>
 
 </body>
+
 </html>
