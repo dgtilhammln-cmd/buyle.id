@@ -772,11 +772,11 @@
             .bmd-card {
                 background: #ffffff;
                 border: 1.5px solid #e2e8f0;
-                border-radius: 24px;
-                padding: 2.25rem 1.4rem;
+                border-radius: 22px;
+                padding: 1.75rem 1.25rem;
                 text-align: center;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-                max-width: 440px;
+                max-width: 420px;
                 width: 100%;
                 box-sizing: border-box;
                 display: flex;
@@ -785,16 +785,16 @@
             }
 
             .bmd-icon-circle {
-                width: 76px;
-                height: 76px;
+                width: 64px;
+                height: 64px;
                 border-radius: 50%;
                 background: #f0fdf4;
                 border: 2px solid #bbf7d0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-bottom: 1.15rem;
-                box-shadow: 0 6px 18px rgba(30, 179, 73, 0.12);
+                margin-bottom: 1rem;
+                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.12);
             }
 
             .bmd-badge {
@@ -806,9 +806,9 @@
                 color: #475569;
                 font-size: 0.72rem;
                 font-weight: 700;
-                padding: 0.3rem 0.8rem;
+                padding: 0.25rem 0.75rem;
                 border-radius: 999px;
-                margin-bottom: 0.85rem;
+                margin-bottom: 0.75rem;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
             }
@@ -817,27 +817,27 @@
                 font-size: 1.15rem;
                 font-weight: 800;
                 color: #0f172a;
-                margin: 0 0 0.65rem;
+                margin: 0 0 0.5rem;
                 line-height: 1.35;
                 letter-spacing: -0.01em;
             }
 
             .bmd-desc {
-                font-size: 0.84rem;
+                font-size: 0.82rem;
                 color: #64748b;
-                line-height: 1.6;
-                margin: 0 0 1.35rem;
+                line-height: 1.5;
+                margin: 0 0 1.15rem;
                 font-weight: 500;
             }
 
             .bmd-url-box {
                 background: #f8fafc;
                 border: 1px solid #e2e8f0;
-                border-radius: 16px;
-                padding: 0.95rem;
+                border-radius: 14px;
+                padding: 0.85rem;
                 width: 100%;
                 box-sizing: border-box;
-                margin-bottom: 1.35rem;
+                margin-bottom: 1.15rem;
                 text-align: left;
             }
 
@@ -851,11 +851,11 @@
             }
 
             .bmd-url-val {
-                font-size: 0.84rem;
+                font-size: 0.82rem;
                 font-weight: 700;
                 color: #1eb349;
                 word-break: break-all;
-                margin-bottom: 0.65rem;
+                margin-bottom: 0.55rem;
             }
 
             .bmd-url-actions {
@@ -871,13 +871,14 @@
                 justify-content: center;
                 gap: 0.35rem;
                 padding: 0.52rem 0.6rem;
-                font-size: 0.75rem;
+                font-size: 0.78rem;
                 font-weight: 700;
                 border-radius: 10px;
                 text-decoration: none;
                 cursor: pointer;
                 transition: all 0.15s ease;
                 font-family: inherit;
+                white-space: nowrap;
             }
 
             .bmd-btn-open {
@@ -896,7 +897,7 @@
                 width: 100%;
                 display: flex;
                 flex-direction: column;
-                gap: 0.65rem;
+                gap: 0.6rem;
             }
 
             .bmd-primary-btn {
@@ -907,13 +908,14 @@
                 gap: 0.45rem;
                 background: #0f172a;
                 color: #ffffff;
-                padding: 0.82rem 1.25rem;
-                border-radius: 14px;
-                font-size: 0.85rem;
+                padding: 0.78rem 1.25rem;
+                border-radius: 12px;
+                font-size: 0.84rem;
                 font-weight: 700;
                 text-decoration: none;
                 transition: all 0.15s ease;
                 box-sizing: border-box;
+                white-space: nowrap;
             }
 
             .bmd-primary-btn:active {
@@ -928,8 +930,8 @@
                 gap: 0.45rem;
                 background: #ffffff;
                 color: #475569;
-                padding: 0.75rem 1.25rem;
-                border-radius: 14px;
+                padding: 0.72rem 1.25rem;
+                border-radius: 12px;
                 border: 1.5px solid #e2e8f0;
                 font-size: 0.82rem;
                 font-weight: 700;
@@ -937,6 +939,7 @@
                 transition: all 0.15s ease;
                 box-sizing: border-box;
                 font-family: inherit;
+                white-space: nowrap;
             }
 
             .bmd-secondary-btn:active {
@@ -1725,18 +1728,18 @@
                     <line x1="12" y1="16" x2="12" y2="12" />
                     <line x1="12" y1="8" x2="12.01" y2="8" />
                 </svg>
-                Disarankan Layar Lebar
+                Gunakan Laptop / PC
             </div>
 
-            <h3 class="bmd-title">Pengalaman Lebih Maksimal di Laptop / Komputer</h3>
+            <h3 class="bmd-title">Buka Lewat Laptop / PC</h3>
 
             <p class="bmd-desc">
-                Fitur <strong>Web Builder</strong> dirancang khusus dengan kanvas visual, penataan blok, dan <em>live preview</em> interaktif. Untuk kenyamanan mendesain toko Anda, silakan akses halaman ini menggunakan laptop atau komputer.
+                Fitur Web Builder dirancang khusus untuk layar desktop agar proses desain toko lebih leluasa dan maksimal.
             </p>
 
             @if($bioUrl)
                 <div class="bmd-url-box">
-                    <div class="bmd-url-label">Alamat Web Toko Anda:</div>
+                    <div class="bmd-url-label">Web Toko Anda:</div>
                     <div class="bmd-url-val">{{ $bioUrl }}</div>
                     <div class="bmd-url-actions">
                         <a href="{{ $bioUrl }}" target="_blank" class="bmd-btn-open">
@@ -1745,7 +1748,7 @@
                                 <line x1="2" y1="12" x2="22" y2="12" />
                                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                             </svg>
-                            Kunjungi Web Toko
+                            Lihat Web
                         </a>
                         <button type="button" class="bmd-btn-copy" onclick="navigator.clipboard.writeText('{{ $bioUrl }}'); alert('Link web toko berhasil disalin!');">
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1769,7 +1772,7 @@
                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
                         <polygon points="5 3 19 12 5 21 5 3" />
                     </svg>
-                    Tonton Panduan Video
+                    Panduan Video
                 </button>
             </div>
         </div>
