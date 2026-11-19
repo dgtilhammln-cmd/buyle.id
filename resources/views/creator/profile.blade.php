@@ -1,8 +1,8 @@
 @extends('creator.layout')
 
-@section('title', 'Profil & Pengaturan Toko')
-@section('page_title', 'Profil & Pengaturan Toko')
-@section('page_subtitle', 'Kelola identitas, media sosial, lokasi, dan metadata SEO toko Anda.')
+@section('title', 'Profil Creator')
+@section('page_title', 'Profil Creator')
+@section('page_subtitle', 'Kelola identitas, media sosial, lokasi, dan metadata SEO Anda.')
 
 @section('styles')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
@@ -12,9 +12,9 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         /* ════════════════════════════════════════
-                                                                                           Mobile Header – Profil & Toko
-                                                                                           100% SAMA PERSIS dengan Kelola Produk
-                                                                                        ════════════════════════════════════════ */
+                                                                                                                                                           Mobile Header – Profil & Toko
+                                                                                                                                                           100% SAMA PERSIS dengan Kelola Produk
+                                                                                                                                                        ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
@@ -834,7 +834,7 @@
             </svg>
         </button>
         {{-- Tengah: Judul --}}
-        <h2 class="prod-mobile-title">Profil & Toko</h2>
+        <h2 class="prod-mobile-title">Profil Creator</h2>
         {{-- Kanan: Bell notif (sama persis) --}}
         <button type="button" class="prod-mobile-btn" onclick="window.location.href='{{ route('creator.app.index') }}'"
             title="Notifikasi">
@@ -865,7 +865,7 @@
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                 </svg>
-                <span class="tab-label">Toko</span>
+                <span class="tab-label">Creator</span>
             </button>
             <button type="button" class="tab-btn" data-tab="tab-media">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -907,12 +907,12 @@
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                         <polyline points="9 22 9 12 15 12 15 22" />
                     </svg>
-                    Informasi Dasar Toko
+                    Informasi Profil
                 </div>
                 <div class="prof-card-body">
                     <div class="form-grid">
                         <div class="form-group full">
-                            <label class="form-label">Nama Creator / Toko <span style="color:#ef4444">*</span></label>
+                            <label class="form-label">Nama Creator / Perusahaan <span style="color:#ef4444">*</span></label>
                             <input type="text" name="store_name" value="{{ old('store_name', $profile->store_name) }}"
                                 class="form-input" placeholder="Misal: HVM Digital Studio" required>
                             @error('store_name')<span class="form-error">{{ $message }}</span>@enderror
@@ -920,7 +920,8 @@
 
                         {{-- Nama Pemilik Sesuai Kartu Identitas --}}
                         <div class="form-group full">
-                            <label class="form-label">Nama Pemilik (Sesuai Kartu Identitas / KTP) <span style="color:#ef4444">*</span></label>
+                            <label class="form-label">Nama Pemilik (Sesuai Kartu Identitas) <span
+                                    style="color:#ef4444">*</span></label>
                             <input type="text" name="owner_name" value="{{ old('owner_name', $profile->owner_name ?? '') }}"
                                 class="form-input" placeholder="Nama lengkap sesuai KTP / Paspor" required>
                             <span class="form-hint">Digunakan untuk verifikasi identitas resmi, penarikan saldo, dan
@@ -937,7 +938,7 @@
                                 @error('age')<span class="form-error">{{ $message }}</span>@enderror
                             </div>
                             <div>
-                                <label class="form-label">Status Aktivitas / Profesi <span style="color:#ef4444">*</span></label>
+                                <label class="form-label">Profesi <span style="color:#ef4444">*</span></label>
                                 @php
                                     $statuses = [
                                         'Pelajar / Mahasiswa' => 'Pelajar / Mahasiswa',
@@ -950,7 +951,8 @@
                                     $selectedStatus = old('occupation_status', $profile->occupation_status ?? '');
                                 @endphp
                                 <select name="occupation_status" class="form-input" required>
-                                    <option value="" disabled {{ empty($selectedStatus) ? 'selected' : '' }}>— Pilih Status —</option>
+                                    <option value="" disabled {{ empty($selectedStatus) ? 'selected' : '' }}>— Pilih Status
+                                        —</option>
                                     @foreach($statuses as $stKey => $stLabel)
                                         <option value="{{ $stKey }}" {{ $selectedStatus === $stKey ? 'selected' : '' }}>
                                             {{ $stLabel }}
@@ -962,8 +964,7 @@
                         </div>
 
                         <div class="form-group full">
-                            <label class="form-label">Username &amp; Slug URL Toko (Terpusat) <span
-                                    style="color:#ef4444">*</span></label>
+                            <label class="form-label">Username &amp; Slug URL <span style="color:#ef4444">*</span></label>
                             <div class="slug-wrap"
                                 style="{{ !$user->canChangeUsername() ? 'background:#F1F5F9; opacity:0.85;' : '' }}">
                                 <span class="slug-prefix">buyle.id/</span>
@@ -1122,7 +1123,8 @@
                             @endphp
 
                             {{-- Hidden Input yang disubmit --}}
-                            <input type="hidden" name="creator_type" id="creatorTypeInput" value="{{ $selectedRoleKey }}" required>
+                            <input type="hidden" name="creator_type" id="creatorTypeInput" value="{{ $selectedRoleKey }}"
+                                required>
 
                             {{-- Searchable Dropdown Trigger & Panel --}}
                             <div class="role-searchable-wrap" id="roleSearchableWrap">
@@ -1204,14 +1206,15 @@
                                         viewBox="0 0 24 24">
                                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                     </svg>
-                                    <span>Store & katalog anda akan tampil di pencarian marketplace Buyle.id.</span>
+                                    <span>Aktifkan jika anda Creator Produk/Jasa Digital, Content Creator, dan
+                                        Freelancer.</span>
                                 </div>
                             </div>
                             @error('creator_type')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
 
                         <div class="form-group full">
-                            <label class="form-label">Deskripsi Toko <span style="color:#ef4444;">*</span></label>
+                            <label class="form-label">Deskripsikan Profil Anda <span style="color:#ef4444;">*</span></label>
                             <textarea name="store_description" id="storeDescTextarea" class="form-input" rows="4"
                                 minlength="40" maxlength="300"
                                 placeholder="Ceritakan tentang toko Anda, spesialisasi, dan produk unggulan... (min. 40 - 300 karakter)"
