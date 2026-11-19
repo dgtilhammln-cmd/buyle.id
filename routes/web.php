@@ -1009,6 +1009,10 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 // 2. Seller Dashboard (Creator)
 Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Creator\SellerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/notif', [\App\Http\Controllers\Creator\CreatorNotificationController::class, 'index'])->name('notif.index');
+    Route::post('/notif/mark-all-read', [\App\Http\Controllers\Creator\CreatorNotificationController::class, 'markAllRead'])->name('notif.mark-all-read');
+    Route::post('/notif/delete-all', [\App\Http\Controllers\Creator\CreatorNotificationController::class, 'deleteAll'])->name('notif.delete-all');
+    Route::get('/notif/{id}/read', [\App\Http\Controllers\Creator\CreatorNotificationController::class, 'readAndRedirect'])->name('notif.read');
     Route::get('/menu', [\App\Http\Controllers\Creator\SellerController::class, 'menu'])->name('menu');
     Route::post('/push-subscription', [\App\Http\Controllers\Creator\SellerController::class, 'savePushSubscription'])->name('push.subscribe');
     Route::post('/pin/update', [\App\Http\Controllers\Creator\SellerController::class, 'updatePin'])->name('pin.update');

@@ -165,12 +165,17 @@ class SellerController extends Controller
             ],
         ];
 
+        // ── Notifikasi Unread Count (Cached 3 menit agar aman untuk database & hosting) ──
+        $unreadNotifCount = \Illuminate\Support\Facades\Cache::remember('creator_unread_notif_' . $seller->id, 180, function () use ($seller) {
+            return \App\Models\CreatorNotification::where('user_id', $seller->id)->where('is_read', false)->count();
+        });
+
         return view('creator.dashboard', compact(
             'seller', 'gmv', 'platformFee', 'platformFeeRate',
             'totalPayout', 'availableBalance', 'holdBalance', 'ticketEscrowBalance',
             'totalProducts', 'activeProducts',
             'totalTransactions', 'recentSales', 'recentProducts',
-            'tierInfo', 'trafficData'
+            'tierInfo', 'trafficData', 'unreadNotifCount'
         ));
     }
 

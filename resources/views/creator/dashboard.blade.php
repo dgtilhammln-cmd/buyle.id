@@ -104,6 +104,56 @@
             position: relative;
         }
 
+        /* Tombol Icon Lonceng Notifikasi Pojok Kanan Atas */
+        .nina-notif-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+        }
+
+        .nina-notif-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #0f172a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .nina-notif-btn:active {
+            transform: scale(0.93);
+        }
+
+        .nina-notif-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 4px;
+            background: #ef4444;
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+            line-height: 1;
+        }
+
         .nina-greeting-wrap {
             display: flex;
             align-items: center;
@@ -911,6 +961,17 @@
                                 Halo, {{ $storeName }}!
                             </div>
                         </div>
+
+                        {{-- Tombol Icon Lonceng Notifikasi Pojok Kanan Atas --}}
+                        <a href="{{ route('creator.notif.index') }}" class="nina-notif-btn" id="ninaNotifBtn" title="Notifikasi Toko">
+                            <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            @if(isset($unreadNotifCount) && $unreadNotifCount > 0)
+                                <span class="nina-notif-badge" id="ninaNotifBadge">{{ $unreadNotifCount > 99 ? '99+' : $unreadNotifCount }}</span>
+                            @endif
+                        </a>
                     </div>
 
                     {{-- Saldo Utama (Minimalist Clean Typography) --}}
@@ -1137,5 +1198,11 @@
                 tpMenu.style.display = 'none';
             }
         });
+
+        // Simpan cache unread notif ke perangkat user (tanpa request database berulang)
+        try {
+            const currentUnread = {{ (int)($unreadNotifCount ?? 0) }};
+            localStorage.setItem('buyle_cr_unread_notif', currentUnread);
+        } catch (e) {}
     </script>
 @endsection
