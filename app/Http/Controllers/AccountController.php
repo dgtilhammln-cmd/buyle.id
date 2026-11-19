@@ -84,7 +84,21 @@ class AccountController extends Controller
             }
         }
 
-        $order->load(['items.product', 'payment', 'shipment', 'couponUsage', 'ticketPasses.product']);
+        $order->load(['items.product.seller', 'items.variantValue.option', 'payment', 'shipment', 'couponUsage', 'ticketPasses.product', 'ticketPasses.orderItem.variantValue', 'user']);
+
+        // Deteksi apakah order ini merupakan pesanan tiket (E-Tiket Event)
+        $isTixOrder = \Illuminate\Support\Str::startsWith($order->order_number, 'TIX-');
+        $hasTicket = $isTixOrder
+            || ($order->ticketPasses && $order->ticketPasses->isNotEmpty())
+            || $order->items->contains(function ($i) {
+                $type = $i->product?->product_type ?? '';
+                return in_array($type, ['ticket', 'tiket', 'tiket event', 'ticket_event']) || !empty($i->product?->event_date);
+            });
+
+        // Wajib tampil sama dengan /checkout/selesai/{orderNumber} jika produk bertipe tiket
+        if ($hasTicket) {
+            return view('ecommerce.ticket_finish', compact('order'));
+        }
 
         // If there is a tracking number, fetch live tracking from RajaOngkir/Komerce
         $tracking = null;

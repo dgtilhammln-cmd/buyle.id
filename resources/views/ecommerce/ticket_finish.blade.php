@@ -494,13 +494,21 @@
         
         {{-- Top Navigation Bar --}}
         <div class="tix-nav-bar">
-            {{-- Tombol Home Kiri Atas -> buyle.id/tix --}}
-            <a href="{{ route('tix.index') }}" class="tix-nav-btn" title="Ke Beranda BuyleTIX">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-            </a>
+            {{-- Tombol Kiri Atas: Back jika dari menu Akun Saya / Home jika dari Checkout --}}
+            @if(request()->is('akun/*') || request()->is('akun'))
+                <a href="{{ route('account.orders') }}" class="tix-nav-btn" title="Kembali ke Riwayat Pesanan">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            @else
+                <a href="{{ route('tix.index') }}" class="tix-nav-btn" title="Ke Beranda BuyleTIX">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </a>
+            @endif
 
             {{-- Logo Resmi BuyleTIX --}}
             <a href="{{ route('tix.index') }}" title="Buyle TIX" style="display:inline-flex; align-items:center; text-decoration:none;">
