@@ -301,7 +301,8 @@ class TicketScannerController extends Controller
                         'holder_name'    => $ticket->holder_name ?? '-',
                         'holder_email'   => $ticket->holder_email ?? '-',
                         'holder_phone'   => $ticket->holder_phone ?? '-',
-                        'holder_nik'     => \App\Models\TicketPass::maskNik($ticket->holder_nik),
+                        'holder_nik'        => \App\Models\TicketPass::maskNik($ticket->holder_nik),
+                        'holder_nik_masked' => \App\Models\TicketPass::maskNik($ticket->holder_nik),
                         'checked_in_at'  => now()->format('H:i:s'),
                     ]
                 ]);
@@ -748,6 +749,7 @@ class TicketScannerController extends Controller
                         'holder_name'       => $ticket->holder_name ?? '-',
                         'holder_email'      => $ticket->holder_email ?? '-',
                         'holder_phone'      => $ticket->holder_phone ?? '-',
+                        'holder_nik'        => $maskedNik,
                         'holder_nik_masked' => $maskedNik,
                         'checked_in_at'     => now()->format('H:i:s (d M Y)'),
                         'scanned_by'        => $staffLabel,

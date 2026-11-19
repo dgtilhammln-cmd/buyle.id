@@ -1340,8 +1340,8 @@
                         <div id="fsCardTicketCode" class="fs-card-data-value" style="font-family:monospace; color:#1eb349;">—</div>
                     </div>
                     <div class="fs-card-data-item">
-                        <div class="fs-card-data-label">Email</div>
-                        <div id="fsCardEmail" class="fs-card-data-value" style="font-size:0.72rem;">—</div>
+                        <div class="fs-card-data-label">No. Identitas</div>
+                        <div id="fsCardNik" class="fs-card-data-value" style="font-size:0.72rem; letter-spacing:0.5px;">—</div>
                     </div>
                     <div class="fs-card-data-item">
                         <div class="fs-card-data-label">Waktu Check-In</div>
@@ -2110,7 +2110,7 @@
             const eventDateEl = document.getElementById('fsCardEventDate');
             const holderEl = document.getElementById('fsCardHolderName');
             const codeEl = document.getElementById('fsCardTicketCode');
-            const emailEl = document.getElementById('fsCardEmail');
+            const nikEl = document.getElementById('fsCardNik');
             const timeEl = document.getElementById('fsCardTime');
             const imgWrap = document.getElementById('fsCardEventImgWrap');
             const nextBtn = document.getElementById('fsCardNextBtn');
@@ -2130,7 +2130,7 @@
                 if (eventDateEl) eventDateEl.textContent = '';
                 if (holderEl) holderEl.textContent = '—';
                 if (codeEl) codeEl.textContent = '—';
-                if (emailEl) emailEl.textContent = '—';
+                if (nikEl) nikEl.textContent = '—';
                 if (timeEl) timeEl.textContent = '—';
                 return;
             }
@@ -2169,7 +2169,7 @@
                 codeEl.textContent = (data.ticket && data.ticket.code) ? data.ticket.code : (data.code || '—');
                 codeEl.style.color = isValid ? '#1eb349' : '#64748b';
             }
-            if (emailEl) emailEl.textContent = (data.ticket && data.ticket.holder_email) ? data.ticket.holder_email : (data.holder_email || '—');
+            if (nikEl) nikEl.textContent = (data.ticket && (data.ticket.holder_nik || data.ticket.holder_nik_masked)) ? (data.ticket.holder_nik || data.ticket.holder_nik_masked) : (data.holder_nik || data.holder_nik_masked || '—');
             if (timeEl) timeEl.textContent = (data.ticket && data.ticket.checked_in_at) ? data.ticket.checked_in_at : (isValid ? 'Baru saja' : '—');
 
             if (nextBtn) {

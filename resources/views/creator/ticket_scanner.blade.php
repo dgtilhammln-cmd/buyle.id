@@ -2754,17 +2754,6 @@
         {{-- CONTENT AREA --}}
         <div class="bio-content">
 
-            @if(session('success'))
-                <div
-                    style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.9rem 1.25rem; border-radius:16px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    {{ session('success') }}
-                </div>
-            @endif
-
             @if(session('error'))
                 <div
                     style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.9rem 1.25rem; border-radius:16px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
@@ -4130,8 +4119,8 @@
                             —</div>
                     </div>
                     <div class="fs-card-data-item">
-                        <div class="fs-card-data-label">Email</div>
-                        <div id="fsCardEmail" class="fs-card-data-value" style="font-size:0.72rem;">—</div>
+                        <div class="fs-card-data-label">No. Identitas</div>
+                        <div id="fsCardNik" class="fs-card-data-value" style="font-size:0.72rem; letter-spacing:0.5px;">—</div>
                     </div>
                     <div class="fs-card-data-item">
                         <div class="fs-card-data-label">Waktu Check-In</div>
@@ -5951,7 +5940,7 @@
             const eventDateEl = document.getElementById('fsCardEventDate');
             const holderEl = document.getElementById('fsCardHolderName');
             const codeEl = document.getElementById('fsCardTicketCode');
-            const emailEl = document.getElementById('fsCardEmail');
+            const nikEl = document.getElementById('fsCardNik');
             const timeEl = document.getElementById('fsCardTime');
             const imgWrap = document.getElementById('fsCardEventImgWrap');
             const nextBtn = document.getElementById('fsCardNextBtn');
@@ -5972,7 +5961,7 @@
                 if (eventDateEl) eventDateEl.textContent = '';
                 if (holderEl) holderEl.textContent = '—';
                 if (codeEl) codeEl.textContent = '—';
-                if (emailEl) emailEl.textContent = '—';
+                if (nikEl) nikEl.textContent = '—';
                 if (timeEl) timeEl.textContent = '—';
                 return;
             }
@@ -6014,7 +6003,7 @@
             if (eventDateEl) eventDateEl.textContent = (data.ticket && data.ticket.event_date) ? data.ticket.event_date : (data.message || '');
             if (holderEl) holderEl.textContent = (data.ticket && data.ticket.holder_name) ? data.ticket.holder_name : '—';
             if (codeEl) { codeEl.textContent = (data.ticket && data.ticket.code) ? data.ticket.code : '—'; codeEl.style.color = isValid ? '#1eb349' : '#64748b'; }
-            if (emailEl) emailEl.textContent = (data.ticket && data.ticket.holder_email) ? data.ticket.holder_email : '—';
+            if (nikEl) nikEl.textContent = (data.ticket && (data.ticket.holder_nik || data.ticket.holder_nik_masked)) ? (data.ticket.holder_nik || data.ticket.holder_nik_masked) : '—';
             if (timeEl) timeEl.textContent = (data.ticket && data.ticket.checked_in_at) ? data.ticket.checked_in_at : (isValid ? 'Baru saja' : '—');
 
             // Button
