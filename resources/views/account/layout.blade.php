@@ -525,12 +525,92 @@
         }
         .btn-save:hover { background: #16a34a; }
 
-        /* ─── RESPONSIVE ─── */
-        @media (max-width: 768px) {
-            .acc-wrap { padding: 1.25rem 1rem 2rem; }
+        /* ─── NATIVE HEADER (Persis /pos - Safezone Notch & Dynamic Island) ─── */
+        .acc-header-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            color: #0F172A;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+        }
+        .acc-header-btn:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            color: #1EB349;
+        }
+        .acc-header-btn:active {
+            transform: scale(0.92);
+            background: #F1F5F9;
+        }
+        .acc-header-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin: 0;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        /* Mobile Sticky Header */
+        .acc-mobile-header {
+            display: none;
+        }
+
+        /* ─── RESPONSIVE & MOBILE / IOS SAFEZONE OPTIMIZATIONS ─── */
+        @media (max-width: 991px) {
+            /* Sembunyikan navbar web umum di mobile akun agar native super app feeling */
+            #mainNavbar, .skel-header-wrap, .mobile-bottom-nav {
+                display: none !important;
+            }
+            .acc-mobile-header {
+                display: block !important;
+                position: sticky;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border-bottom: 1.5px solid #E2E8F0;
+                padding-top: max(12px, env(safe-area-inset-top, 0px));
+                padding-bottom: 12px;
+                padding-left: max(1rem, env(safe-area-inset-left, 0px));
+                padding-right: max(1rem, env(safe-area-inset-right, 0px));
+                box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            }
+            .acc-mobile-header-inner {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                width: 100%;
+            }
+            .acc-main-container {
+                padding-top: 0 !important;
+                padding-bottom: max(3rem, calc(env(safe-area-inset-bottom, 0px) + 2rem)) !important;
+            }
+            .acc-wrap {
+                padding: 1rem max(1rem, env(safe-area-inset-right, 0px)) 2rem max(1rem, env(safe-area-inset-left, 0px)) !important;
+            }
+            .acc-title-row {
+                display: none !important;
+            }
+            .acc-tabs {
+                margin-bottom: 1.25rem !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
             .acc-stat-grid { grid-template-columns: repeat(2, 1fr); }
             .form-grid { grid-template-columns: 1fr; }
-            .acc-title-row { flex-direction: column; }
             .modal-box { padding: 1.5rem 1.25rem; }
         }
         @media (max-width: 480px) {
@@ -541,15 +621,49 @@
         }
     </style>
 
-    
-    <div style="background: #F8FAFC; min-height: 100vh; padding-top: 80px; padding-bottom: 3rem;">
-    <main class="acc-wrap">
-        {{-- Title Row --}}
-        <div class="acc-title-row">
-            <div>
-                <h1 class="acc-page-title">Akun</h1>
-                <p class="acc-page-welcome">Selamat datang kembali, {{ Auth::user()->name }}</p>
+    {{-- Mobile Sticky Top Header (Persis /pos - Safezone Notch & Dynamic Island) --}}
+    <header class="acc-mobile-header">
+        <div class="acc-mobile-header-inner">
+            <a href="javascript:void(0)" onclick="if(window.history.length > 1){window.history.back();}else{window.location.href='{{ route('home') }}';}" class="acc-header-btn" title="Kembali">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </a>
+
+            <div style="text-align:center; flex:1; min-width:0;">
+                <h1 class="acc-header-title">Akun Saya</h1>
             </div>
+
+            <a href="{{ route('home') }}" class="acc-header-btn" title="Ke Home Buyle">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <div class="acc-main-container" style="background: #F8FAFC; min-height: 100vh; padding-top: 80px; padding-bottom: 3rem;">
+    <main class="acc-wrap">
+        {{-- Desktop Title Row --}}
+        <div class="acc-title-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.75rem; gap:1rem;">
+            <div style="display:flex; align-items:center; gap:14px;">
+                <a href="javascript:void(0)" onclick="if(window.history.length > 1){window.history.back();}else{window.location.href='{{ route('home') }}';}" class="acc-header-btn" title="Kembali">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="acc-page-title" style="margin:0;">Akun Saya</h1>
+                    <p class="acc-page-welcome" style="margin:2px 0 0;">Selamat datang kembali, {{ Auth::user()->name }}</p>
+                </div>
+            </div>
+            <a href="{{ route('home') }}" class="acc-header-btn" title="Ke Home Buyle">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </a>
         </div>
 
         @if(session('success'))

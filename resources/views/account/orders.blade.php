@@ -304,11 +304,6 @@
     </style>
 
     <div class="acc-card" style="background:transparent; border:none; box-shadow:none; padding:0;">
-        <div style="margin-bottom:1.5rem;">
-            <h2 style="font-size:1.4rem; font-weight:800; color:#0F172A; margin:0 0 0.25rem;">Riwayat Pesanan</h2>
-            <p style="color:#64748B; font-size:0.9rem; margin:0;">Semua transaksi pembelian Anda</p>
-        </div>
-
         <!-- TABS (Super App Capsule Pills) -->
         <div class="order-tabs" id="statusTabs">
             <div class="ord-tab ord-active" data-filter="all">

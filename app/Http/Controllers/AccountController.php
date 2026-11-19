@@ -330,7 +330,6 @@ class AccountController extends Controller
 
         $rules = [
             'name'     => 'required|string|max:100',
-            'username' => 'required|string|max:50|unique:users,username,' . $user->id,
             'phone'    => 'nullable|string|max:20',
             'avatar'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
@@ -342,11 +341,12 @@ class AccountController extends Controller
 
         $data = $request->validate($rules, [
             'name.required'      => 'Nama wajib diisi.',
-            'username.required'  => 'Username wajib diisi.',
-            'username.unique'    => 'Username sudah digunakan.',
             'password.min'       => 'Kata sandi minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
+
+        // Username is permanently locked & synced with Creator Bio/Web slug
+        unset($data['username']);
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {

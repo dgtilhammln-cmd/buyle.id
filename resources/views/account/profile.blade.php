@@ -42,8 +42,16 @@
                     <input type="text" id="name" name="name" class="form-input" value="{{ old('name', $user->name) }}" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="username">Username <span>*</span></label>
-                    <input type="text" id="username" name="username" class="form-input" value="{{ old('username', $user->username) }}" required>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.25rem;">
+                        <label class="form-label" for="username" style="margin:0;">Username</label>
+                        <span style="font-size:0.68rem; font-weight:700; color:#16a34a; background:#f0fdf4; border:1px solid #bbf7d0; padding:2px 8px; border-radius:999px; display:inline-flex; align-items:center; gap:3px;">
+                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            Terkunci &amp; Sinkron Bio
+                        </span>
+                    </div>
+                    <input type="text" id="username" class="form-input" value="{{ $user->username }}" readonly disabled
+                           style="background:#F1F5F9; color:#64748B; font-weight:600; cursor:not-allowed; border-color:#E2E8F0;">
+                    <p style="font-size:0.72rem; color:#94A3B8; margin-top:0.25rem;">Username permanen dan terhubung dengan slug link Web Toko &amp; Bio Anda (<strong>buyle.id/{{ $user->username }}</strong>).</p>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="email">Email <span>*</span></label>

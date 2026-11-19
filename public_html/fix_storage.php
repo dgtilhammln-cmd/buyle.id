@@ -132,44 +132,6 @@ if (is_dir($viewsDir)) {
     out("OK: Cleared $cnt compiled view file(s) from storage/framework/views");
 }
 
-// Diagnostic: Check products and bio blocks in DB
-out("\n--- Checking DB products and bio blocks ---");
-try {
-    require_once $appRoot . '/vendor/autoload.php';
-    $app = require_once $appRoot . '/bootstrap/app.php';
-    $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
-    $kernel->bootstrap();
-
-    $products = \App\Models\Product::orderBy('id', 'desc')->limit(40)->get();
-    out("Total recent products checked: " . count($products));
-    foreach ($products as $p) {
-        $rawImg = $p->image ?? 'NULL';
-        $imgUrl = $p->image_url;
-        $fileOnDisk = 'NO_RAW';
-        if ($p->image) {
-            $clean = ltrim($p->image, '/');
-            if (str_starts_with($clean, 'storage/')) $clean = substr($clean, 8);
-            if (str_starts_with($clean, 'public/')) $clean = substr($clean, 7);
-            $diskPath = $storageSrc . '/' . $clean;
-            $fileOnDisk = file_exists($diskPath) ? 'EXISTS' : ('NOT_FOUND (' . $clean . ')');
-        }
-        $gallery = !empty($p->gallery) ? json_encode($p->gallery) : '-';
-        $og = $p->og_image ?? '-';
-        out("ID: {$p->id} | Seller: {$p->seller_id} | Name: {$p->name} | Disk: {$fileOnDisk} | Raw: {$rawImg} | Gallery: {$gallery} | OG: {$og}");
-    }
-
-    $bioBlocks = \App\Models\CreatorBioBlock::whereIn('type', ['custom_product', 'buyle_product'])->orderBy('id', 'desc')->limit(20)->get();
-    out("\nTotal recent bio blocks: " . count($bioBlocks));
-    foreach ($bioBlocks as $bb) {
-        $data = $bb->data_json ?? [];
-        $pId = $data['product_id'] ?? 'NULL';
-        $bImg = $data['image'] ?? ($data['images'][0] ?? 'NULL');
-        out("Block ID: {$bb->id} | Title: {$bb->title} | Linked Product ID: {$pId} | Block Img: {$bImg}");
-    }
-} catch (\Throwable $e) {
-    out("DB check failed: " . $e->getMessage());
-}
-
 out("\n=== Done! ===");
 
 if (!$isCli) {
