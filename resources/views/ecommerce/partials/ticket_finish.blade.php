@@ -61,6 +61,16 @@
 
     $activePass = $passes->first();
 
+    $passesData = $passes->map(function($p) use ($order) {
+        $code = $p->ticket_code ?? $order->order_number;
+        return [
+            'id'          => $p->id,
+            'ticket_code' => $code,
+            'holder_name' => $p->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket'),
+            'qr_image'    => \App\Services\SimpleQrCode::base64($code),
+        ];
+    })->values()->toArray();
+
     // PDF Download URL
     $ticketPdfUrl = route('orders.ticket.download.public', [
         'order' => $order->id,
@@ -694,15 +704,7 @@ body {
 
 <script>
     // Data Tiket untuk Multi-Pass
-    const ticketPasses = @json($passes->map(function($p) use ($order) {
-        $code = $p->ticket_code ?? $order->order_number;
-        return [
-            'id'          => $p->id,
-            'ticket_code' => $code,
-            'holder_name' => $p->holder_name ?? ($order->user?->name ?? 'Pemegang Tiket'),
-            'qr_image'    => \App\Services\SimpleQrCode::base64($code),
-        ];
-    }));
+    const ticketPasses = @json($passesData);
 
     let currentPassIndex = 0;
 
