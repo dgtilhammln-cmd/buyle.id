@@ -1260,81 +1260,237 @@
 
     {{-- Floating Chat Widget REMOVED --}}
 
-    {{-- Mobile Bottom Navbar (Capsule Style) --}}
+    {{-- ══════════════════════════════════════════════════════════════════════════
+         BUYLE.ID SUPER APP MOBILE BOTTOM NAVIGATION BAR
+         Style: 100% Identik dengan Buyle POS (Floating Capsule with Expandable Active Pill)
+         Interaktif: Auto-Hide saat Scroll ke Bawah, Muncul kembali saat Scroll ke Atas
+         ══════════════════════════════════════════════════════════════════════════ --}}
+    @if(!request()->is('creator*') && !request()->is('admin*') && !request()->is('pos*') && !request()->is('checkout*'))
     <style>
-        .mobile-bottom-nav {
+        .buyle-bottom-nav-wrap {
+            display: none;
+            position: fixed;
+            bottom: max(14px, env(safe-area-inset-bottom, 14px));
+            left: 14px;
+            right: 14px;
+            max-width: 440px;
+            margin: 0 auto;
+            z-index: 10000;
+            pointer-events: none;
+            justify-content: center;
+            background: transparent;
+            padding: 0;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease;
+            will-change: transform, opacity;
+        }
+
+        .buyle-bottom-nav-bar {
+            pointer-events: auto;
+            width: 100%;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.35rem 0.6rem;
+            box-shadow: 0 12px 36px rgba(15, 23, 42, 0.13), 0 2px 10px rgba(15, 23, 42, 0.04);
+            border: 1.5px solid rgba(226, 232, 240, 0.85);
+            box-sizing: border-box;
+        }
+
+        .buyle-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #64748b;
+            padding: 0;
+            outline: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .buyle-nav-item:active {
+            transform: scale(0.92);
+            background: rgba(241, 245, 249, 0.7);
+        }
+
+        /* ── Active State: Identik dengan POS (Capsule Pill Gradient Hijau + Label) ── */
+        .buyle-nav-item.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            padding: 0.5rem 1.05rem !important;
+            border-radius: 999px !important;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
+            gap: 6px !important;
+            width: auto !important;
+        }
+
+        .buyle-nav-item.active .buyle-nav-label {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            font-family: 'Montserrat', sans-serif;
+            animation: buyleNavFadeIn 0.25s ease-out;
+        }
+
+        .buyle-nav-label {
             display: none;
         }
 
-        @media (max-width: 768px) {
-            .mobile-bottom-nav {
-                display: flex;
-                position: fixed;
-                bottom: 15px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 92%;
-                max-width: 400px;
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border-radius: 999px;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
-                padding: 0.5rem 1rem;
-                justify-content: space-between;
-                align-items: center;
-                z-index: 99999;
-                border: 1px solid rgba(255, 255, 255, 0.6);
-            }
+        /* ── State Disembunyikan saat Scroll ke Bawah ── */
+        .buyle-bottom-nav-wrap.nav-hidden {
+            transform: translateY(145%) scale(0.95) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
 
-            .nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-decoration: none;
-                color: #64748B;
-                font-size: 0.65rem;
-                font-weight: 600;
-                gap: 4px;
-                padding: 0.25rem 0.5rem;
-                transition: all 0.3s ease;
-                position: relative;
-                font-family: 'Montserrat', sans-serif;
+        @keyframes buyleNavFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-4px);
             }
-
-            .nav-item.active {
-                color: #1eb349;
-            }
-
-            .nav-item svg {
-                width: 22px;
-                height: 22px;
-                stroke-width: 2;
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            .nav-item.active svg {
-                transform: translateY(-3px);
-                stroke-width: 2.5;
-            }
-
-            .nav-badge {
-                position: absolute;
-                top: -2px;
-                right: 2px;
-                background: #EF4444;
-                color: white;
-                font-size: 0.55rem;
-                font-weight: bold;
-                padding: 0.1rem 0.3rem;
-                border-radius: 999px;
-                min-width: 14px;
-                text-align: center;
-                border: 1.5px solid white;
-                line-height: 1;
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
+
+        @media (max-width: 991px) {
+            .buyle-bottom-nav-wrap {
+                display: flex !important;
+            }
+            body {
+                padding-bottom: max(86px, calc(74px + env(safe-area-inset-bottom, 0px))) !important;
+            }
+        }
+    </style>
+
+    <div class="buyle-bottom-nav-wrap" id="buyleBottomNavWrap">
+        <div class="buyle-bottom-nav-bar">
+            {{-- 1. Beranda --}}
+            @php
+                $isHomeActive = request()->routeIs('home') && !request()->has('q');
+            @endphp
+            <a href="{{ route('home') }}" class="buyle-nav-item {{ $isHomeActive ? 'active' : '' }}" title="Beranda">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span class="buyle-nav-label">Beranda</span>
+            </a>
+
+            {{-- 2. Event & Tiket (BuyleTIX) --}}
+            @php
+                $isTixActive = request()->is('tix*') || request()->is('ticketing*');
+            @endphp
+            <a href="{{ route('tix.index') }}" class="buyle-nav-item {{ $isTixActive ? 'active' : '' }}" title="Event & BuyleTIX">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                </svg>
+                <span class="buyle-nav-label">BuyleTIX</span>
+            </a>
+
+            {{-- 3. Cari / Eksplor (Center Action Button) --}}
+            @php
+                $isExploreActive = (request()->routeIs('products') || request()->has('q') || request()->is('kategori*')) && !$isTixActive && !$isHomeActive;
+            @endphp
+            <a href="{{ route('products') }}" class="buyle-nav-item {{ $isExploreActive ? 'active' : '' }}" title="Eksplor & Cari">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <span class="buyle-nav-label">Eksplor</span>
+            </a>
+
+            {{-- 4. Pesanan Saya (Tiket & Transaksi) --}}
+            @php
+                $isOrdersActive = request()->is('akun/pesanan*') || request()->is('orders*');
+                $ordersUrl = auth()->check() ? route('account.orders') : route('login', ['redirect' => route('account.orders')]);
+            @endphp
+            <a href="{{ $ordersUrl }}" class="buyle-nav-item {{ $isOrdersActive ? 'active' : '' }}" title="Pesanan & Tiket Saya">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                <span class="buyle-nav-label">Pesanan</span>
+            </a>
+
+            {{-- 5. Akun Saya --}}
+            @php
+                $isAccountActive = request()->is('akun*') && !$isOrdersActive;
+                if (auth()->check()) {
+                    $accountUrl = (auth()->user()->role === 'seller' || auth()->user()->role === 'admin')
+                        ? route('creator.dashboard')
+                        : route('account.profile');
+                } else {
+                    $accountUrl = route('login');
+                }
+            @endphp
+            <a href="{{ $accountUrl }}" class="buyle-nav-item {{ $isAccountActive ? 'active' : '' }}" title="Akun Saya">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span class="buyle-nav-label">Akun</span>
+            </a>
+        </div>
+    </div>
+
+    {{-- Script Animasi Smooth: Sembunyi saat Scroll ke Bawah, Muncul saat Scroll ke Atas --}}
+    <script>
+        (function() {
+            let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            let ticking = false;
+            const navWrap = document.getElementById('buyleBottomNavWrap');
+            if (!navWrap) return;
+
+            const scrollThreshold = 10;
+
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+                        const diff = currentScrollY - lastScrollY;
+
+                        // Dekat puncak layar: selalu tampil
+                        if (currentScrollY <= 25) {
+                            navWrap.classList.remove('nav-hidden');
+                        }
+                        // Scroll ke bawah dengan jarak signifikan: sembunyikan agar tidak mengganggu
+                        else if (diff > scrollThreshold && currentScrollY > 80) {
+                            navWrap.classList.add('nav-hidden');
+                        }
+                        // Scroll ke atas: munculkan kembali dengan smooth
+                        else if (diff < -scrollThreshold) {
+                            navWrap.classList.remove('nav-hidden');
+                        }
+
+                        lastScrollY = currentScrollY;
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
+    </script>
+    @endif
 </body>
 
 </html>
