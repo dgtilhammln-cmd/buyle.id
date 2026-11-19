@@ -566,8 +566,12 @@
 
         /* ─── RESPONSIVE & MOBILE / IOS SAFEZONE OPTIMIZATIONS ─── */
         @media (max-width: 991px) {
-            /* Sembunyikan navbar web umum di mobile akun agar native super app feeling */
+            /* Sembunyikan navbar web umum, footer, dan bottom-nav di mobile akun */
             #mainNavbar, .skel-header-wrap, .mobile-bottom-nav {
+                display: none !important;
+            }
+            /* Sembunyikan footer di halaman akun pada mobile */
+            .cv-footer-v2, footer {
                 display: none !important;
             }
             .acc-mobile-header {
@@ -596,18 +600,30 @@
             }
             .acc-main-container {
                 padding-top: 0 !important;
-                padding-bottom: max(3rem, calc(env(safe-area-inset-bottom, 0px) + 2rem)) !important;
+                padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px)) !important;
             }
             .acc-wrap {
-                padding: 1rem max(1rem, env(safe-area-inset-right, 0px)) 2rem max(1rem, env(safe-area-inset-left, 0px)) !important;
+                padding: 0.85rem max(1rem, env(safe-area-inset-right, 0px)) 1.5rem max(1rem, env(safe-area-inset-left, 0px)) !important;
             }
             .acc-title-row {
                 display: none !important;
             }
+            /* Tabs navigasi Overview/Pesanan/Profile — lebih compact di mobile */
             .acc-tabs {
-                margin-bottom: 1.25rem !important;
+                margin-bottom: 0.85rem !important;
                 width: 100% !important;
                 box-sizing: border-box !important;
+                padding: 0.25rem !important;
+                gap: 0.25rem !important;
+            }
+            .acc-tab {
+                padding: 0.4rem 0.75rem !important;
+                font-size: 0.72rem !important;
+                gap: 0.3rem !important;
+            }
+            .acc-tab svg {
+                width: 13px !important;
+                height: 13px !important;
             }
             .acc-stat-grid { grid-template-columns: repeat(2, 1fr); }
             .form-grid { grid-template-columns: 1fr; }
@@ -643,7 +659,7 @@
         </div>
     </header>
 
-    <div class="acc-main-container" style="background: #F8FAFC; min-height: 100vh; padding-top: 80px; padding-bottom: 3rem;">
+    <div class="acc-main-container" style="background: #F8FAFC; min-height: 100vh; padding-top: 0; padding-bottom: 3rem;">
     <main class="acc-wrap">
         {{-- Desktop Title Row --}}
         <div class="acc-title-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.75rem; gap:1rem;">

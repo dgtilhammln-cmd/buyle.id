@@ -1099,6 +1099,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/scanner/verify', [\App\Http\Controllers\TicketScannerController::class, 'verify'])->name('ticket.scanner.verify');
     Route::post('/scanner/toggle-checkin/{ticket}', [\App\Http\Controllers\TicketScannerController::class, 'toggleCheckin'])->name('ticket.scanner.toggle-checkin');
     Route::get('/scanner/export', [\App\Http\Controllers\TicketScannerController::class, 'exportCsv'])->name('ticket.scanner.export');
+    Route::get('/scanner/export-wristbands-pdf', [\App\Http\Controllers\TicketScannerController::class, 'exportWristbandsPdf'])->name('ticket.scanner.export-wristbands-pdf');
     Route::post('/scanner/reset-gate-key/{product}', [\App\Http\Controllers\TicketScannerController::class, 'resetGateKey'])->name('ticket.scanner.reset-gate-key');
     Route::post('/scanner/toggle-gate-enabled/{product}', [\App\Http\Controllers\TicketScannerController::class, 'toggleGateEnabled'])->name('ticket.scanner.toggle-gate-enabled');
     Route::post('/scanner/update-schedule/{product}', [\App\Http\Controllers\TicketScannerController::class, 'updateGateSchedule'])->name('ticket.scanner.update-schedule');

@@ -7,9 +7,9 @@
         .order-tabs {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            padding: 0.2rem 0.1rem 0.5rem;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+            padding: 0.15rem 0.1rem 0.4rem;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
@@ -23,9 +23,9 @@
         .ord-tab {
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
-            padding: 0.55rem 1.05rem;
-            font-size: 0.82rem;
+            gap: 0.35rem;
+            padding: 0.38rem 0.75rem;
+            font-size: 0.74rem;
             font-weight: 600;
             color: #475569;
             background: #ffffff;
@@ -56,6 +56,8 @@
 
         .ord-tab svg {
             flex-shrink: 0;
+            width: 12px;
+            height: 12px;
             transition: stroke 0.2s ease, opacity 0.2s ease;
             stroke: currentColor;
             opacity: 0.75;
@@ -69,16 +71,18 @@
         .order-search-box {
             background: #F1F5F9;
             border-radius: 10px;
-            padding: 0.75rem 1rem;
+            padding: 0.55rem 0.85rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
         }
 
         .order-search-box svg {
             color: #94A3B8;
             flex-shrink: 0;
+            width: 16px;
+            height: 16px;
         }
 
         .order-search-box input {
@@ -86,7 +90,7 @@
             background: transparent;
             outline: none;
             width: 100%;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #334155;
         }
 

@@ -68,6 +68,8 @@ class TicketScannerController extends Controller
                 'scanned_by'    => $t->scanned_by_staff_name
                     ? ($t->scanned_by_staff_name . ' · Gate ' . $t->scanned_at_gate)
                     : ($t->checked_in_by ? 'Creator Studio' : null),
+                'order_number'  => $t->order?->order_number ?? '-',
+                'ticket_type'   => $t->product?->product_type === 'ticket' ? 'Tiket Event' : ($t->product?->product_type ?? 'Tiket Event'),
                 'toggle_url'    => route('creator.ticket.scanner.toggle-checkin', $t->id),
             ];
         });
@@ -504,6 +506,54 @@ class TicketScannerController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export Lembar Cetak Gelang Tiket Fisik (Wristbands) via PDF untuk Vendor Percetakan.
+     * Berisi: Barcode 1D (Code 128) + QR Code 2D + No. Tiket + Nama Event + No. Urut.
+     */
+    public function exportWristbandsPdf(Request $request)
+    {
+        $sellerId = auth()->id();
+        $selectedEventId = $request->input('event_id');
+        $statusFilter = $request->input('status');
+        $search = trim($request->input('search', ''));
+
+        $ticketsQuery = TicketPass::with(['product', 'order'])
+            ->where('seller_id', $sellerId);
+
+        if ($selectedEventId) {
+            $ticketsQuery->where('product_id', $selectedEventId);
+        }
+
+        // Secara default jangan sertakan tiket yang dibatalkan, kecuali difilter eksplisit
+        if ($statusFilter && in_array($statusFilter, ['valid', 'used', 'cancelled'])) {
+            $ticketsQuery->where('status', $statusFilter);
+        } else {
+            $ticketsQuery->where('status', '!=', 'cancelled');
+        }
+
+        if (!empty($search)) {
+            $ticketsQuery->where(function ($q) use ($search) {
+                $q->where('holder_name', 'like', "%{$search}%")
+                  ->orWhere('holder_email', 'like', "%{$search}%")
+                  ->orWhere('holder_phone', 'like', "%{$search}%")
+                  ->orWhere('ticket_code', 'like', "%{$search}%");
+            });
+        }
+
+        $tickets = $ticketsQuery->orderBy('id', 'asc')->get();
+
+        $event = $selectedEventId ? \App\Models\Product::find($selectedEventId) : null;
+        $eventSlug = $event ? \Illuminate\Support\Str::slug($event->name) : 'semua_event';
+        $filename = 'gelang_tiket_' . $eventSlug . '_' . date('Ymd_His') . '.pdf';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('creator.ticket_wristbands_pdf', compact('tickets', 'event'))
+            ->setPaper('a4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', true);
+
+        return $pdf->download($filename);
     }
 
     /**

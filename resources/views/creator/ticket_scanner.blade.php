@@ -546,6 +546,292 @@
             color: #0f172a;
         }
 
+        /* ─── EXPORT DROPDOWN MENU ─── */
+        .export-dropdown-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .export-menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 6px);
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12);
+            min-width: 250px;
+            z-index: 200;
+            overflow: hidden;
+            padding: 6px;
+            animation: exportFadeIn 0.18s ease-out;
+        }
+        @keyframes exportFadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .export-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #0f172a;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+        .export-menu-item:hover {
+            background: #f8fafc;
+        }
+
+        /* ─── VISITOR CARDS (CARD TERPISAH PER PENGUNJUNG) ─── */
+        .attendance-cards-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .visitor-card {
+            background: #ffffff;
+            border: 1.5px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 0.85rem 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .visitor-card:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+        }
+        .visitor-card-main {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 0;
+            flex: 1;
+        }
+        .visitor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1.5px solid #bbf7d0;
+            color: #16a34a;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .visitor-info {
+            min-width: 0;
+        }
+        .visitor-name {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .visitor-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 3px;
+            font-size: 0.75rem;
+            color: #64748b;
+            flex-wrap: wrap;
+        }
+        .visitor-code {
+            font-family: monospace;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f8fafc;
+            padding: 1px 6px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.72rem;
+        }
+        .visitor-dot {
+            color: #cbd5e1;
+        }
+        .visitor-event {
+            color: #64748b;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 220px;
+        }
+        .visitor-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+        .btn-view-visitor {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #ffffff;
+            color: #0f172a;
+            border: 1.5px solid #e2e8f0;
+            padding: 0.45rem 0.95rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .btn-view-visitor:hover {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 4px 10px rgba(15,23,42,0.15);
+        }
+        .btn-view-visitor:active {
+            transform: scale(0.95);
+        }
+
+        /* ─── MODAL DETAIL TIKET ─── */
+        .ticket-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 100050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: modalFadeIn 0.2s ease-out;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .ticket-modal-card {
+            background: #ffffff;
+            border-radius: 24px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.22);
+            padding: 1.5rem;
+            box-sizing: border-box;
+            animation: cardScaleIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes cardScaleIn {
+            from { transform: scale(0.94) translateY(12px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .ticket-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.9rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .ticket-modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .ticket-modal-close:hover {
+            background: #fee2e2;
+            color: #ef4444;
+            border-color: #fca5a5;
+        }
+        .detail-field-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.65rem 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .detail-field-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .detail-field-value {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #0f172a;
+            word-break: break-all;
+        }
+        .ticket-modal-footer {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f5f9;
+        }
+        .btn-modal-close-wide {
+            width: 100%;
+            height: 44px;
+            border-radius: 999px;
+            background: #0f172a;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.15s ease;
+        }
+        .btn-modal-close-wide:hover {
+            background: #1e293b;
+        }
+
+        @media (max-width: 640px) {
+            .visitor-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 0.85rem 1rem;
+            }
+            .visitor-card-main {
+                width: 100%;
+            }
+            .visitor-card-actions {
+                width: 100%;
+                justify-content: space-between;
+                padding-top: 0.6rem;
+                border-top: 1px solid #f1f5f9;
+            }
+            .btn-view-visitor {
+                flex: 1;
+                justify-content: center;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
         .filter-grid {
             display: flex;
             flex-wrap: wrap;
@@ -3429,40 +3715,76 @@
 
             {{-- TAB 2: DATA KEHADIRAN & EVENT --}}
             <div id="tab-data" class="payout-tab-pane" style="display: {{ $activeTab === 'data' ? 'block' : 'none' }};">
-                <div class="prof-card">
+                
+                {{-- CARD 1: FILTER & EXPORT --}}
+                <div class="prof-card" style="margin-bottom: 1.25rem;">
                     <div class="prof-card-head attendance-card-head">
                         <div class="att-head-left">
                             <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                             </svg>
-                            <span class="att-head-title">Data Kehadiran</span>
-                            <span class="att-head-extra">Pengunjung & Rekap</span>
+                            <span class="att-head-title">Filter & Ekspor Data</span>
+                            <span class="att-head-extra">Presensi & Percetakan</span>
                         </div>
                         <div class="att-head-actions">
                             <span id="cacheStatusBadge" class="att-cache-pill" title="Cache Cepat Aktif">
                                 <span class="cache-green-dot"></span>
                                 <span class="cache-pill-text">Cache Aktif</span>
                             </span>
-                            <a href="{{ route('creator.ticket.scanner.export', request()->all()) }}" class="btn-export-sm"
-                                title="Export Excel/CSV">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                    <polyline points="7 10 12 15 17 10" />
-                                    <line x1="12" y1="15" x2="12" y2="3" />
-                                </svg>
-                                <span>Export</span>
-                            </a>
+
+                            {{-- Dropdown Export Modern --}}
+                            <div class="export-dropdown-wrap">
+                                <button type="button" class="btn-export-sm" onclick="toggleExportMenu(event)" title="Pilihan Ekspor Data">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="7 10 12 15 17 10" />
+                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                    <span>Export Data</span>
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left: 2px;">
+                                        <polyline points="6 9 12 15 18 9"/>
+                                    </svg>
+                                </button>
+                                <div id="exportMenuDropdown" class="export-menu-dropdown">
+                                    <a id="btnExportExcel" href="{{ route('creator.ticket.scanner.export', request()->all()) }}" class="export-menu-item">
+                                        <div style="width: 28px; height: 28px; border-radius: 8px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                                <polyline points="14 2 14 8 20 8"/>
+                                                <line x1="8" y1="13" x2="16" y2="13"/>
+                                                <line x1="8" y1="17" x2="16" y2="17"/>
+                                            </svg>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="color: #0f172a; font-weight: 700; font-size: 0.8rem;">Export Excel / CSV</div>
+                                            <div style="color: #64748b; font-size: 0.7rem; font-weight: 500;">Rekap data pengunjung & presensi</div>
+                                        </div>
+                                    </a>
+                                    <a id="btnExportPdfWristbands" href="{{ route('creator.ticket.scanner.export-wristbands-pdf', request()->all()) }}" target="_blank" class="export-menu-item" style="border-top: 1px solid #f1f5f9;">
+                                        <div style="width: 28px; height: 28px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                                <line x1="7" y1="8" x2="7" y2="16"/>
+                                                <line x1="10" y1="8" x2="10" y2="16"/>
+                                                <line x1="14" y1="8" x2="14" y2="16"/>
+                                                <line x1="17" y1="8" x2="17" y2="16"/>
+                                            </svg>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="display: flex; align-items: center; gap: 5px;">
+                                                <span style="color: #0f172a; font-weight: 700; font-size: 0.8rem;">Export PDF Gelang Fisik</span>
+                                                <span style="background: #eff6ff; color: #2563eb; font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;">Vendor</span>
+                                            </div>
+                                            <div style="color: #64748b; font-size: 0.7rem; font-weight: 500;">Barcode 1D & No. Tiket cetak gelang</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-body">
-
-                        {{-- Modern Instant Filter Panel (0ms Latency & Offline Cache) --}}
-                        <div class="filter-panel">
+                    <div class="form-body" style="padding-top: 1rem;">
+                        <div class="filter-panel" style="margin-bottom: 0;">
                             <div class="filter-grid">
                                 {{-- Search Input (0ms Live Filter, Tanpa Loading Page) --}}
                                 <div class="filter-search-wrap">
@@ -3520,245 +3842,158 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        {{-- Clean Buyle Theme Stat Cards Grid --}}
-                        <div class="stat-grid">
-                            {{-- Card 1: Total Tiket --}}
-                            <div class="stat-card">
-                                <div class="stat-head">
-                                    <span class="stat-title">Total Tiket Terbit</span>
-                                    <div class="stat-icon-bubble">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
-                                            <path d="M13 5v14" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="stat-val" id="statTotalVal">{{ number_format($stats['total']) }}</div>
-                                <div class="stat-sub">
-                                    <span>Tiket Terjual / Terdaftar</span>
-                                </div>
-                            </div>
-
-                            {{-- Card 2: Checked-In --}}
-                            <div class="stat-card">
-                                <div class="stat-head">
-                                    <span class="stat-title">Checked-In (Hadir)</span>
-                                    <div class="stat-icon-bubble">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                            <polyline points="22 4 12 14.01 9 11.01" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="stat-val" id="statCheckedInVal">{{ number_format($stats['checked_in']) }}</div>
-                                <div class="stat-sub">
-                                    <span class="pill-badge" id="statCheckedInRate">Tingkat Kehadiran:
-                                        {{ $stats['rate'] }}%</span>
-                                </div>
-                            </div>
-
-                            {{-- Card 3: Belum Check-In --}}
-                            <div class="stat-card">
-                                <div class="stat-head">
-                                    <span class="stat-title">Belum Check-In</span>
-                                    <div class="stat-icon-bubble">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                                            viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <polyline points="12 6 12 12 16 14" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="stat-val" id="statUncheckedVal">{{ number_format($stats['unchecked']) }}</div>
-                                <div class="stat-sub">
-                                    <span>Tiket Belum Dipindai</span>
-                                </div>
-                            </div>
-
-                            {{-- Card 4: Dibatalkan --}}
-                            <div class="stat-card">
-                                <div class="stat-head">
-                                    <span class="stat-title">Tiket Dibatalkan</span>
-                                    <div class="stat-icon-bubble"
-                                        style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                                            viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <line x1="15" y1="9" x2="9" y2="15" />
-                                            <line x1="9" y1="9" x2="15" y2="15" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="stat-val" id="statCancelledVal">{{ number_format($stats['cancelled']) }}</div>
-                                <div class="stat-sub">
-                                    <span>Refund / Cancelled</span>
-                                </div>
+                {{-- CARD 2: RINGKASAN STATISTIK --}}
+                <div class="stat-grid" style="margin-bottom: 1.25rem;">
+                    {{-- Card 1: Total Tiket --}}
+                    <div class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-title">Total Tiket Terbit</span>
+                            <div class="stat-icon-bubble">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                                    <path d="M13 5v14" />
+                                </svg>
                             </div>
                         </div>
+                        <div class="stat-val" id="statTotalVal">{{ number_format($stats['total']) }}</div>
+                        <div class="stat-sub">
+                            <span>Tiket Terjual / Terdaftar</span>
+                        </div>
+                    </div>
 
-                        {{-- Table Attendance --}}
-                        <div class="table-container">
-                            <table class="custom-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50px;">No</th>
-                                        <th>Kode Tiket</th>
-                                        <th>Nama Event</th>
-                                        <th>Pemegang Tiket</th>
-                                        <th>Status Kehadiran</th>
-                                        <th>Waktu Check-In</th>
-                                        <th style="text-align: center;">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="attendanceTableBody">
-                                    @forelse($tickets as $index => $ticket)
-                                        <tr>
-                                            <td class="row-index">{{ $tickets->firstItem() + $index }}</td>
-                                            <td class="row-code">
-                                                <span
-                                                    style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                                    {{ $ticket->ticket_code }}
-                                                </span>
-                                            </td>
-                                            <td class="row-event">
-                                                <strong style="color: #0f172a; display: block; font-size: 0.84rem;">
-                                                    {{ $ticket->product?->name ?? 'Event' }}
-                                                </strong>
-                                                <span style="font-size: 0.73rem; color: #64748b;">
-                                                    {{ $ticket->product?->event_date ? $ticket->product->event_date->format('d M Y') : '' }}
-                                                </span>
-                                            </td>
-                                            <td class="row-holder">
-                                                <strong
-                                                    style="color: #0f172a; display: block; font-size: 0.85rem;">{{ $ticket->holder_name ?? '-' }}</strong>
-                                                <span
-                                                    style="font-size: 0.74rem; color: #64748b; display: block;">{{ $ticket->holder_email ?? '-' }}</span>
-                                                <span
-                                                    style="font-size: 0.74rem; color: #64748b;">{{ $ticket->holder_phone ?? '' }}</span>
-                                                @if($ticket->holder_nik)
-                                                    <span
-                                                        style="display:inline-flex;align-items:center;gap:3px;font-size:0.71rem;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:1px 6px;border-radius:4px;font-family:monospace;margin-top:2px;">
-                                                        <svg width="10" height="10" fill="none" stroke="currentColor"
-                                                            stroke-width="2" viewBox="0 0 24 24">
-                                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                                        </svg>
-                                                        {{ \App\Models\TicketPass::maskNik($ticket->holder_nik) }}
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td class="row-status">
-                                                @if($ticket->status === 'used')
-                                                    <span class="badge-status badge-used">
-                                                        <svg width="12" height="12" fill="none" stroke="currentColor"
-                                                            stroke-width="2.5" viewBox="0 0 24 24"
-                                                            style="display:inline-block;vertical-align:-1px;margin-right:2px;">
-                                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                                        </svg>
-                                                        Hadir (Checked-In)
-                                                    </span>
-                                                @elseif($ticket->status === 'cancelled')
-                                                    <span class="badge-status badge-cancelled">
-                                                        <svg width="12" height="12" fill="none" stroke="currentColor"
-                                                            stroke-width="2.5" viewBox="0 0 24 24"
-                                                            style="display:inline-block;vertical-align:-1px;margin-right:2px;">
-                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                        </svg>
-                                                        Dibatalkan
-                                                    </span>
-                                                @else
-                                                    <span class="badge-status badge-valid">
-                                                        Belum Hadir
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td class="row-time">
+                    {{-- Card 2: Checked-In --}}
+                    <div class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-title">Checked-In (Hadir)</span>
+                            <div class="stat-icon-bubble">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-val" id="statCheckedInVal">{{ number_format($stats['checked_in']) }}</div>
+                        <div class="stat-sub">
+                            <span class="pill-badge" id="statCheckedInRate">Tingkat Kehadiran:
+                                {{ $stats['rate'] }}%</span>
+                        </div>
+                    </div>
+
+                    {{-- Card 3: Belum Check-In --}}
+                    <div class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-title">Belum Check-In</span>
+                            <div class="stat-icon-bubble">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-val" id="statUncheckedVal">{{ number_format($stats['unchecked']) }}</div>
+                        <div class="stat-sub">
+                            <span>Tiket Belum Dipindai</span>
+                        </div>
+                    </div>
+
+                    {{-- Card 4: Dibatalkan --}}
+                    <div class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-title">Tiket Dibatalkan</span>
+                            <div class="stat-icon-bubble"
+                                style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="15" y1="9" x2="9" y2="15" />
+                                    <line x1="9" y1="9" x2="15" y2="15" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-val" id="statCancelledVal">{{ number_format($stats['cancelled']) }}</div>
+                        <div class="stat-sub">
+                            <span>Refund / Cancelled</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- CARD 3: DAFTAR PENGUNJUNG EVENT (CARD TERPISAH MURNI OVERVIEW + DETAIL) --}}
+                <div class="prof-card">
+                    <div class="prof-card-head attendance-card-head">
+                        <div class="att-head-left">
+                            <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                            <span class="att-head-title">Daftar Pengunjung Event</span>
+                            <span class="att-head-extra" id="cardListTotalSubtitle">{{ $tickets->total() }} Pengunjung</span>
+                        </div>
+                    </div>
+
+                    <div class="form-body" style="padding-top: 1.15rem;">
+                        <div id="attendanceCardsList" class="attendance-cards-wrap">
+                            @forelse($tickets as $ticket)
+                                <div class="visitor-card">
+                                    <div class="visitor-card-main">
+                                        <div class="visitor-avatar">
+                                            {{ strtoupper(substr($ticket->holder_name ?? 'P', 0, 1)) }}
+                                        </div>
+                                        <div class="visitor-info">
+                                            <div class="visitor-name">{{ $ticket->holder_name ?: 'Pengunjung' }}</div>
+                                            <div class="visitor-meta">
+                                                <span class="visitor-code">{{ $ticket->ticket_code }}</span>
+                                                <span class="visitor-dot">•</span>
+                                                <span class="visitor-event" title="{{ $ticket->product?->name }}">{{ $ticket->product?->name ?? 'Event' }}</span>
                                                 @if($ticket->checked_in_at)
-                                                    <span
-                                                        style="font-weight: 700; color: #166534; display: block; font-size: 0.8rem;">
-                                                        {{ $ticket->checked_in_at->format('H:i:s WIB') }}
-                                                    </span>
-                                                    <span style="font-size: 0.73rem; color: #64748b;">
-                                                        {{ $ticket->checked_in_at->format('d M Y') }}
-                                                    </span>
-                                                    @if($ticket->scanned_by_staff_name)
-                                                        <span
-                                                            style="font-size:0.71rem; color:#475569; display:flex; align-items:center; gap:3px; margin-top:2px; font-weight:600;">
-                                                            <svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.2"
-                                                                viewBox="0 0 24 24">
-                                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                                                <circle cx="12" cy="7" r="4" />
-                                                            </svg>
-                                                            {{ $ticket->scanned_by_staff_name }} · Gate {{ $ticket->scanned_at_gate }}
-                                                        </span>
-                                                    @elseif($ticket->checked_in_by)
-                                                        <span
-                                                            style="font-size:0.71rem; color:#64748b; display:flex; align-items:center; gap:3px; margin-top:2px;">
-                                                            Creator Studio
-                                                        </span>
-                                                    @endif
-                                                @else
-                                                    <span style="color: #94a3b8; font-style: italic; font-size: 0.8rem;">— Belum
-                                                        —</span>
+                                                    <span class="visitor-dot">•</span>
+                                                    <span style="color: #16a34a; font-weight: 600;">Hadir {{ $ticket->checked_in_at->format('H:i') }}</span>
                                                 @endif
-                                            </td>
-                                            <td style="text-align: center;" class="row-action">
-                                                @if($ticket->status !== 'cancelled')
-                                                    <form action="{{ route('creator.ticket.scanner.toggle-checkin', $ticket->id) }}"
-                                                        method="POST" style="display: inline-block;">
-                                                        @csrf
-                                                        @if($ticket->status === 'used')
-                                                            <button type="submit" class="btn-action-sm btn-toggle-undo"
-                                                                onclick="return confirm('Batalkan status check-in tiket ini?')">
-                                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                                                                    stroke="currentColor" stroke-width="2"
-                                                                    style="display:inline-block;vertical-align:-2px;margin-right:3px;">
-                                                                    <polyline points="9 14 4 9 9 4" />
-                                                                    <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
-                                                                </svg> Batalkan
-                                                            </button>
-                                                        @else
-                                                            <button type="submit" class="btn-action-sm btn-toggle-checkin">
-                                                                <svg width="12" height="12" fill="none" stroke="currentColor"
-                                                                    stroke-width="2.5" viewBox="0 0 24 24"
-                                                                    style="display:inline-block;vertical-align:-1px;margin-right:2px;">
-                                                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                                                </svg>
-                                                                Check-In
-                                                            </button>
-                                                        @endif
-                                                    </form>
-                                                @else
-                                                    <span style="font-size: 0.75rem; color: #94a3b8;">Tidak Aktif</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7" style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
-                                                <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"
-                                                    viewBox="0 0 24 24" style="margin-bottom: 0.75rem; opacity: 0.4;">
-                                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                                    <circle cx="9" cy="7" r="4" />
-                                                </svg>
-                                                <div
-                                                    style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.95rem;">
-                                                    Belum Ada Data Tiket / Kehadiran</div>
-                                                <div style="font-size: 0.8rem; color: #64748b;">Tiket pembeli yang sudah lunas
-                                                    akan otomatis tercantum pada daftar presensi ini.</div>
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="visitor-card-actions">
+                                        @if($ticket->status === 'used')
+                                            <span class="badge-status badge-used">
+                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"/></svg>
+                                                Hadir
+                                            </span>
+                                        @elseif($ticket->status === 'cancelled')
+                                            <span class="badge-status badge-cancelled">Dibatalkan</span>
+                                        @else
+                                            <span class="badge-status badge-valid">Belum Hadir</span>
+                                        @endif
+                                        <button type="button" class="btn-view-visitor" onclick="openTicketDetailModal({{ $ticket->id }})" title="Lihat Data Lengkap">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                            <span>Detail</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            @empty
+                                <div style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
+                                    <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 0.75rem; opacity: 0.4;">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                    </svg>
+                                    <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.95rem;">Belum Ada Data Tiket / Kehadiran</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">Tiket pembeli yang sudah lunas akan otomatis tercantum pada daftar pengunjung ini.</div>
+                                </div>
+                            @endforelse
                         </div>
 
                         @if($tickets->hasPages())
-                            <div style="margin-top: 1.25rem;">
+                            <div id="attendancePaginationWrap" style="margin-top: 1.25rem;">
                                 {{ $tickets->links() }}
                             </div>
                         @endif
@@ -4198,6 +4433,70 @@
                 style="width:100%; padding:0.75rem; background:#0f172a; color:#ffffff; border:none; border-radius:999px; font-weight:700; font-size:0.88rem; cursor:pointer;">
                 Tutup
             </button>
+        </div>
+    </div>
+
+    {{-- MODAL DETAIL DATA PENGUNJUNG --}}
+    <div id="ticketDetailModal" class="ticket-modal-overlay" style="display: none;" onclick="if(event.target === this) closeTicketDetailModal()">
+        <div class="ticket-modal-card">
+            <div class="ticket-modal-header">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #0f172a;">Detail Pengunjung & Tiket</h3>
+                    <p style="margin: 2px 0 0; font-size: 0.75rem; color: #64748b;">Informasi lengkap pemegang tiket</p>
+                </div>
+                <button type="button" class="ticket-modal-close" onclick="closeTicketDetailModal()" title="Tutup Modal">&times;</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 1.25rem;">
+                <div style="background: #ffffff; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 0.65rem;">
+                    <img id="modalTicketQrImg" src="" alt="QR Tiket" style="width: 140px; height: 140px; display: block; border-radius: 8px;">
+                </div>
+                <div id="modalTicketCode" style="font-family: monospace; font-size: 1.05rem; font-weight: 800; color: #0f172a; letter-spacing: 0.05em; background: #f8fafc; padding: 3px 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.5rem;">
+                    —
+                </div>
+                <div id="modalStatusBadge"></div>
+            </div>
+
+            {{-- Box Waktu Check-In bila sudah hadir --}}
+            <div id="modalCheckinTimeBox" class="detail-field-box" style="margin-bottom: 0.75rem; background: #f0fdf4; border-color: #bbf7d0; display: none;">
+                <span class="detail-field-label" style="color: #166534;">Waktu Presensi (Check-In)</span>
+                <span id="modalCheckinTime" class="detail-field-value" style="color: #15803d; font-size: 0.95rem;">-</span>
+                <span id="modalScannedBy" style="font-size: 0.72rem; color: #166534; margin-top: 1px;"></span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.65rem;">
+                <div class="detail-field-box">
+                    <span class="detail-field-label">Nama Pemegang Tiket</span>
+                    <span id="modalHolderName" class="detail-field-value">—</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+                    <div class="detail-field-box">
+                        <span class="detail-field-label">NIK (Masked)</span>
+                        <span id="modalHolderNik" class="detail-field-value" style="font-family: monospace;">—</span>
+                    </div>
+                    <div class="detail-field-box">
+                        <span class="detail-field-label">No. WhatsApp / HP</span>
+                        <span id="modalHolderPhone" class="detail-field-value">—</span>
+                    </div>
+                </div>
+                <div class="detail-field-box">
+                    <span class="detail-field-label">Email Pemegang</span>
+                    <span id="modalHolderEmail" class="detail-field-value">—</span>
+                </div>
+                <div class="detail-field-box">
+                    <span class="detail-field-label">Event & Tanggal</span>
+                    <span id="modalEventName" class="detail-field-value">—</span>
+                    <span id="modalEventDate" style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">—</span>
+                </div>
+                <div class="detail-field-box">
+                    <span class="detail-field-label">No. Pesanan (Order ID)</span>
+                    <span id="modalOrderNumber" class="detail-field-value" style="font-family: monospace;">—</span>
+                </div>
+            </div>
+
+            <div class="ticket-modal-footer">
+                <button type="button" class="btn-modal-close-wide" onclick="closeTicketDetailModal()">Tutup</button>
+            </div>
         </div>
     </div>
 
