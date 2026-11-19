@@ -17,10 +17,6 @@
         <div class="acc-stat-label">Total Belanja</div>
         <div class="acc-stat-value">Rp {{ number_format($totalSpent, 0, ',', '.') }}</div>
     </div>
-    <div class="acc-stat-card">
-        <div class="acc-stat-label">Item Wishlist</div>
-        <div class="acc-stat-value">{{ $totalWishlist ?? 0 }}</div>
-    </div>
 </div>
 
 {{-- RECENT ORDERS --}}

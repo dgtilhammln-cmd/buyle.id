@@ -418,7 +418,7 @@ Route::post('/keluar', [AuthController::class, 'logout'])->name('logout')->middl
 */
 Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function () {
     Route::get('/',          [AccountController::class, 'overview'])->name('overview');
-    Route::get('/wishlist',  [AccountController::class, 'wishlist'])->name('wishlist');
+    Route::redirect('/wishlist', '/akun/pesanan')->name('wishlist');
     Route::post('/wishlist/toggle', [AccountController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::get('/pesanan',   [AccountController::class, 'orders'])->name('orders');
     Route::get('/pesanan/{order}', [AccountController::class, 'showOrder'])->name('orders.show');
@@ -432,7 +432,7 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
     Route::post('/alamat/{address}/utama', [AccountController::class, 'setDefaultAddress'])->name('addresses.default');
     Route::get('/profil',    [AccountController::class, 'profile'])->name('profile');
     Route::post('/profil',   [AccountController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/cart',      [AccountController::class, 'cart'])->name('cart');
+    Route::redirect('/cart', '/akun/pesanan')->name('cart');
 });
 
 Route::middleware(['auth'])->group(function () {

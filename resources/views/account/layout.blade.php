@@ -34,44 +34,56 @@
             flex-wrap: wrap;
         }
 
-        /* ─── TABS NAV ─── */
+        /* ─── TABS NAV (Super App Capsule Pills - Persis Tab di Bio) ─── */
         .acc-tabs {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-            border-bottom: 2px solid #E2E8F0;
+            gap: 0.45rem;
             margin-bottom: 2rem;
+            padding: 0.35rem;
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 999px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            max-width: 100%;
         }
         .acc-tabs::-webkit-scrollbar { display: none; }
         .acc-tab {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.625rem 1rem;
-            font-size: 0.85rem;
+            gap: 0.45rem;
+            padding: 0.55rem 1.15rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: #64748B;
             text-decoration: none;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.2s;
+            border-radius: 999px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
+            border: 1.5px solid transparent;
         }
-        .acc-tab:hover { color: #1eb349; }
+        .acc-tab:hover {
+            color: #0f172a;
+            background: #F8FAFC;
+        }
         .acc-tab.active {
-            color: #1eb349;
-            border-bottom-color: #1eb349;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            font-weight: 700;
+            border-color: transparent !important;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
+            transform: translateY(-1px);
         }
-        .acc-tab svg { opacity: 0.7; }
-        .acc-tab.active svg { opacity: 1; }
+        .acc-tab svg { stroke: currentColor; opacity: 0.75; flex-shrink: 0; }
+        .acc-tab.active svg { stroke: #ffffff; opacity: 1; }
 
         /* ─── CARDS ─── */
         .acc-stat-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -547,20 +559,15 @@
             </div>
         @endif
 
-        {{-- TAB NAV --}}
+        {{-- TAB NAV (Super App Pill Capsule) --}}
         <nav class="acc-tabs">
             <a href="{{ route('account.overview') }}"
                class="acc-tab {{ request()->routeIs('account.overview') ? 'active' : '' }}">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Overview
             </a>
-            <a href="{{ route('account.wishlist') }}"
-               class="acc-tab {{ request()->routeIs('account.wishlist') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                Wishlist
-            </a>
             <a href="{{ route('account.orders') }}"
-               class="acc-tab {{ request()->routeIs('account.orders') ? 'active' : '' }}">
+               class="acc-tab {{ request()->routeIs('account.orders*') ? 'active' : '' }}">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                 Pesanan
             </a>
@@ -568,11 +575,6 @@
                class="acc-tab {{ request()->routeIs('account.profile') ? 'active' : '' }}">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 1 21 12a10 10 0 0 1-1.93 7.07m-2.14 2.14A10 10 0 0 1 12 23a10 10 0 0 1-7.07-2.93m-2.14-2.14A10 10 0 0 1 1 12a10 10 0 0 1 2.93-7.07M4.93 4.93A10 10 0 0 1 12 1a10 10 0 0 1 7.07 2.93"/></svg>
                 Profile
-            </a>
-            <a href="{{ route('account.cart') }}"
-               class="acc-tab {{ request()->routeIs('account.cart') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                Keranjang
             </a>
         </nav>
 

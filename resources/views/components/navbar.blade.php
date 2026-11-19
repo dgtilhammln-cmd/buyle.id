@@ -1482,27 +1482,6 @@
                             </svg>
                             Pesanan Saya
                         </a>
-                        <a href="{{ route('account.wishlist') }}"
-                            style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.875rem;border-radius:10px;text-decoration:none;color:#374151;font-size:0.85rem;font-weight:600;transition:background 0.15s;"
-                            onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path
-                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                            </svg>
-                            Wishlist
-                        </a>
-                        <a href="{{ route('account.cart') }}"
-                            style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.875rem;border-radius:10px;text-decoration:none;color:#374151;font-size:0.85rem;font-weight:600;transition:background 0.15s;"
-                            onmouseover="this.style.background='#F0F9FF'" onmouseout="this.style.background='transparent'">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <circle cx="9" cy="21" r="1" />
-                                <circle cx="20" cy="21" r="1" />
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                            </svg>
-                            Keranjang
-                        </a>
 
                         {{-- LABEL: CREATOR CENTER (For everyone logged in) --}}
                         <hr style="border:none;border-top:1px solid #F1F5F9;margin:0.4rem 0;">

@@ -3,10 +3,61 @@
 
 @section('acc_page')
 <style>
-.order-tabs { display:flex; gap:1.5rem; border-bottom:1px solid #E2E8F0; margin-bottom:1.25rem; overflow-x:auto; }
-.ord-tab { padding:0.75rem 0; font-weight:600; color:#64748B; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all 0.2s; font-size:0.9rem; }
-.ord-tab:hover { color:#1eb349; }
-.ord-tab.ord-active { color:#1eb349; border-bottom-color:#1eb349; }
+/* ─── ORDER FILTER TABS (Super App Compact Capsules - Persis Tab di Bio) ─── */
+.order-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.2rem 0.1rem 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: none;
+}
+.order-tabs::-webkit-scrollbar { display: none; }
+
+.ord-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+    background: #ffffff;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    user-select: none;
+}
+.ord-tab:hover {
+    color: #0f172a;
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+.ord-tab.ord-active {
+    background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    border-color: transparent !important;
+    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
+    transform: translateY(-1px);
+}
+.ord-tab svg {
+    flex-shrink: 0;
+    transition: stroke 0.2s ease, opacity 0.2s ease;
+    stroke: currentColor;
+    opacity: 0.75;
+}
+.ord-tab.ord-active svg {
+    stroke: #ffffff !important;
+    opacity: 1;
+}
 
 .order-search-box { background:#F1F5F9; border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; }
 .order-search-box svg { color:#94A3B8; flex-shrink:0; }
@@ -59,14 +110,32 @@
         <p style="color:#64748B; font-size:0.9rem; margin:0;">Semua transaksi pembelian Anda</p>
     </div>
 
-    <!-- TABS -->
+    <!-- TABS (Super App Capsule Pills) -->
     <div class="order-tabs" id="statusTabs">
-        <div class="ord-tab ord-active" data-filter="all">Semua</div>
-        <div class="ord-tab" data-filter="pending">Belum Bayar</div>
-        <div class="ord-tab" data-filter="processing">Sedang Dikemas</div>
-        <div class="ord-tab" data-filter="shipped">Dikirim</div>
-        <div class="ord-tab" data-filter="delivered">Selesai</div>
-        <div class="ord-tab" data-filter="cancelled">Dibatalkan</div>
+        <div class="ord-tab ord-active" data-filter="all">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+            Semua
+        </div>
+        <div class="ord-tab" data-filter="pending">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Belum Bayar
+        </div>
+        <div class="ord-tab" data-filter="processing">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            Sedang Dikemas
+        </div>
+        <div class="ord-tab" data-filter="shipped">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Dikirim
+        </div>
+        <div class="ord-tab" data-filter="delivered">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Selesai
+        </div>
+        <div class="ord-tab" data-filter="cancelled">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Dibatalkan
+        </div>
     </div>
 
     <!-- SEARCH -->
