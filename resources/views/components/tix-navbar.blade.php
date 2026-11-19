@@ -499,18 +499,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
     }
 
     /* ══════════════════════════════════════════════════════════════
-       MOBILE BOTTOM NAVIGATION BAR (Modern Floating Capsule Style)
-       Items: Home, About Buyle, Kerjasama, Profile (https://buyle.id/login-ticketing)
-       ══════════════════════════════════════════════════════════════ */
-    .tix-bottom-nav {
-        display: none;
-    }
-
-    .tix-bottom-nav-spacer {
-        display: none !important;
-    }
-
-    /* ══════════════════════════════════════════════════════════════
        SEARCH HIGHLIGHT RING — animasi ring pada search bar saat diklik dari header
        ══════════════════════════════════════════════════════════════ */
     .tix-search-bar-wrap.tix-search-highlight {
@@ -828,96 +816,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
             vertical-align: middle !important;
         }
 
-        /* ── MOBILE BOTTOM NAVBAR (Modern Floating Capsule Style) ── */
-        .tix-bottom-nav {
-            display: flex !important;
-            position: fixed !important;
-            bottom: 14px !important;
-            left: 14px !important;
-            right: 14px !important;
-            max-width: 360px !important;
-            margin: 0 auto !important;
-            height: 56px !important;
-            background: rgba(255, 255, 255, 0.96) !important;
-            backdrop-filter: blur(16px) !important;
-            -webkit-backdrop-filter: blur(16px) !important;
-            border-radius: 999px !important;
-            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
-            border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
-            z-index: 99998 !important;
-            align-items: center !important;
-            justify-content: space-around !important;
-            padding: 0 0.5rem !important;
-            box-sizing: border-box !important;
-            font-family: 'Montserrat', sans-serif !important;
-            pointer-events: auto !important;
-        }
-
-        .tix-bottom-nav-item {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 8px !important;
-            border-radius: 999px !important;
-            text-decoration: none !important;
-            color: #64748b !important;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            -webkit-tap-highlight-color: transparent !important;
-            flex: 1 !important;
-            max-width: 72px !important;
-            height: 42px !important;
-            box-sizing: border-box !important;
-            position: relative !important;
-        }
-
-        .tix-bottom-nav-item svg {
-            width: 22px !important;
-            height: 22px !important;
-            display: block !important;
-            transition: transform 0.2s ease, color 0.2s ease !important;
-            flex-shrink: 0 !important;
-            color: #64748b !important;
-        }
-
-        .tix-bottom-nav-item:hover {
-            color: #15803d !important;
-        }
-
-        .tix-bottom-nav-item:hover svg {
-            color: #15803d !important;
-        }
-
-        .tix-bottom-nav-item:active {
-            transform: scale(0.92) !important;
-        }
-
-        .tix-bottom-nav-item.active {
-            color: #15803d !important;
-        }
-
-        .tix-bottom-nav-item.active svg {
-            color: #16a34a !important;
-            stroke-width: 2.5 !important;
-            transform: translateY(-1px) !important;
-        }
-
-        .tix-bottom-nav-item.active::before {
-            content: '' !important;
-            position: absolute !important;
-            bottom: 4px !important;
-            width: 14px !important;
-            height: 3px !important;
-            background: linear-gradient(135deg, #1db349 0%, #84ce00 100%) !important;
-            border-radius: 999px !important;
-        }
-
-        .tix-bottom-nav-label {
-            display: none !important;
-        }
-
-        body {
-            padding-bottom: 78px !important;
-        }
     }
 
     @media (max-width: 420px) {
@@ -1090,57 +988,6 @@ Fixed Sticky (Always Stays at Top on Scroll)
 
 {{-- Spacer element so page content doesn't hide behind fixed header --}}
 <div class="tix-header-spacer"></div>
-
-{{-- ══════════════════════════════════════════════════════════════
-   MOBILE BOTTOM NAVIGATION BAR (Modern Floating Capsule Style)
-   Items: Home, About Buyle, Kerjasama, Profile (https://buyle.id/login-ticketing)
-   ══════════════════════════════════════════════════════════════ --}}
-<nav class="tix-bottom-nav" id="tixBottomNav" aria-label="Navigasi Bawah Buyle TIX">
-    {{-- 1. Home --}}
-    <a href="{{ route('tix.index') }}" 
-       class="tix-bottom-nav-item {{ (request()->routeIs('tix.index') && !request()->has('q')) ? 'active' : '' }}" 
-       title="Home Buyle TIX">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-    </a>
-
-    {{-- 2. About Buyle --}}
-    <a href="{{ route('tix.info') }}" 
-       class="tix-bottom-nav-item {{ (request()->routeIs('tix.info') || request()->is('tix/info*')) ? 'active' : '' }}" 
-       title="About Buyle TIX">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="16" x2="12" y2="12" />
-            <line x1="12" y1="8" x2="12.01" y2="8" />
-        </svg>
-    </a>
-
-    {{-- 3. Kerjasama --}}
-    <a href="{{ $waUrl }}" 
-       target="_blank" 
-       rel="noopener noreferrer" 
-       class="tix-bottom-nav-item" 
-       title="Kerjasama Event Organizer (WhatsApp)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-    </a>
-
-    {{-- 4. Profile --}}
-    <a href="{{ url('/tix/auth') }}" 
-       class="tix-bottom-nav-item {{ (request()->is('tix/auth*') || request()->is('login-ticketing*')) ? 'active' : '' }}" 
-       title="Profile / Portal Tiket Buyle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-        </svg>
-    </a>
-</nav>
 
 {{-- ══════════════════════════════════════════════════════════════
 MOBILE OFFCANVAS DRAWER
