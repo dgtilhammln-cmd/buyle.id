@@ -4,6 +4,79 @@
 
 @section('styles')
     <style>
+
+        /* ════════════════════════════════════════
+           Mobile Sticky Header – Payout Settings
+           (sama persis creator/products, iOS safe zone)
+        ════════════════════════════════════════ */
+        .cr-mob-page-header {
+            display: none; /* hidden on desktop */
+        }
+
+        @media (max-width: 1024px) {
+            /* Tampilkan header mobile */
+            .cr-mob-page-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: sticky;
+                top: 0;
+                z-index: 998;
+                width: 100%;
+                background: #ffffff;
+                border-bottom: 1px solid #e2e8f0;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+                padding: max(0.8rem, calc(0.6rem + env(safe-area-inset-top, 0px))) 1rem 0.75rem;
+                box-sizing: border-box;
+                margin-bottom: 1rem;
+                gap: 0.5rem;
+            }
+
+            .cr-mob-page-header .mph-btn {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #334155;
+                text-decoration: none;
+                cursor: pointer;
+                flex-shrink: 0;
+                transition: background 0.18s, border-color 0.18s;
+            }
+
+            .cr-mob-page-header .mph-btn:hover {
+                background: #f1f5f9;
+                border-color: #cbd5e1;
+            }
+
+            .cr-mob-page-header .mph-title {
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: #0f172a;
+                text-align: center;
+                flex: 1;
+                padding: 0 0.25rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-family: 'Montserrat', sans-serif;
+            }
+
+            /* Sembunyikan desktop topbar row di mobile */
+            .cr-topbar-header-row {
+                display: none !important;
+            }
+
+            /* Kompres padding atas konten karena sudah ada sticky header */
+            .cr-main-canvas {
+                padding-top: 0 !important;
+            }
+        }
+
         .bio-layout {
             display: flex;
             gap: 2rem;
@@ -1021,6 +1094,28 @@
 @endsection
 
 @section('content')
+
+    {{-- ════ Mobile Sticky Header (sama persis creator/products, iOS safe zone) ════ --}}
+    <div class="cr-mob-page-header">
+        {{-- Kiri: Tombol Back --}}
+        <a href="{{ url()->previous() }}" class="mph-btn" title="Kembali">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </a>
+
+        {{-- Tengah: Judul --}}
+        <span class="mph-title">Rekening & Penarikan</span>
+
+        {{-- Kanan: Tombol Home buyle --}}
+        <a href="{{ url('/') }}" class="mph-btn" title="Ke beranda buyle.id">
+            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+        </a>
+    </div>
+
     @php
         $banks = [
             'E-Wallet' => ['GoPay', 'OVO', 'Dana', 'ShopeePay', 'LinkAja', 'AstraPay'],
