@@ -1032,11 +1032,11 @@
 
     <script>
         // ── Traffic Stats Interactive Filter ──
-        const trafficStats = @json($trafficData ?? [
+        const trafficStats = {!! json_encode($trafficData ?? [
             'week'  => ['label' => 'Minggu Ini', 'count' => 0, 'growth' => '+100%'],
             'month' => ['label' => 'Bulan Ini',  'count' => 0, 'growth' => '+100%'],
             'year'  => ['label' => 'Tahun Ini',  'count' => 0, 'growth' => '+100%']
-        ]);
+        ]) !!};
 
         function toggleTrafficPeriod(e) {
             e.stopPropagation();

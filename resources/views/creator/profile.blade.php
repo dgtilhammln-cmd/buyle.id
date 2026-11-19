@@ -8,6 +8,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
+        /* ════════════════════════════════════════
+           Mobile Header – Profil & Toko
+           100% SAMA PERSIS dengan Kelola Produk
+        ════════════════════════════════════════ */
+        .cr-mob-page-header {
+            display: none;
+        }
+
+        @media (max-width: 991px) {
+            .cr-mob-page-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                padding: max(0.65rem, calc(0.5rem + env(safe-area-inset-top, 0px))) 0 1rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .cr-mob-page-header .prod-mobile-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #ffffff;
+                border: 1.5px solid #f1ece4;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #0f172a;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+                cursor: pointer;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .cr-mob-page-header .prod-mobile-btn:active {
+                transform: scale(0.92);
+            }
+
+            .cr-mob-page-header .prod-mobile-title {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.01em;
+                font-family: 'Montserrat', sans-serif;
+            }
+
+            /* Sembunyikan desktop topbar row di mobile */
+            .cr-topbar-header-row {
+                display: none !important;
+            }
+
+            /* Kompres padding atas konten */
+            .cr-main-canvas {
+                padding-top: 0 !important;
+            }
+        }
+
         * {
             font-family: 'Montserrat', sans-serif;
         }
@@ -610,9 +668,34 @@
 
 @section('content')
 
-
-
-
+    {{-- ════ Mobile Header (100% sama persis Kelola Produk, aman Notch & Dynamic Island) ════ --}}
+    <div class="cr-mob-page-header">
+        {{-- Kiri: Back button (line + polyline persis sama) --}}
+        <button type="button" class="prod-mobile-btn" onclick="handleProfileMobileBack()" title="Kembali">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        {{-- Tengah: Judul --}}
+        <h2 class="prod-mobile-title">Profil & Toko</h2>
+        {{-- Kanan: Bell notif (sama persis) --}}
+        <button type="button" class="prod-mobile-btn" onclick="window.location.href='{{ route('creator.app.index') }}'" title="Notifikasi">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+        </button>
+    </div>
+    <script>
+    function handleProfileMobileBack() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "{{ route('creator.app.index') }}";
+        }
+    }
+    </script>
 
     <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
         @csrf
