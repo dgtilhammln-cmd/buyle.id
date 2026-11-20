@@ -12,6 +12,100 @@
 @endsection
 
 @section('content')
+
+{{-- Mobile Top Header (100% Persis Produk Saya, Cuma Icon Back) --}}
+<div class="prod-mobile-header">
+    <button type="button" class="prod-mobile-btn" onclick="if(window.history.length > 1){window.history.back();}else{window.location.href='{{ route('creator.products.index') }}';}" title="Kembali">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+    </button>
+    <h2 class="prod-mobile-title">Kelompok Produk</h2>
+    <div style="width: 40px; height: 40px; flex-shrink: 0;"></div>
+</div>
+
+<style>
+    .prod-mobile-header,
+    .group-mobile-fab {
+        display: none;
+    }
+    @media (max-width: 991px) {
+        /* Sembunyikan bottom navbar di halaman groups */
+        .superapp-bottom-nav,
+        .cr-mobile-bottom-nav,
+        nav.superapp-bottom-nav {
+            display: none !important;
+        }
+        /* Sesuaikan canvas agar aman dari notch & tanpa navbar bawah */
+        .cr-main-canvas {
+            padding-top: 0 !important;
+            padding-bottom: max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px))) !important;
+        }
+        .prod-mobile-header {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: max(0.85rem, calc(0.45rem + env(safe-area-inset-top, 0px)));
+            padding-bottom: 0.85rem;
+            margin-bottom: 0.85rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: #f4f6f8;
+        }
+        .prod-mobile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .prod-mobile-btn:active {
+            transform: scale(0.92);
+        }
+        .prod-mobile-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.01em;
+            text-align: center;
+            flex: 1;
+        }
+        .group-mobile-fab {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: fixed;
+            bottom: max(20px, calc(12px + env(safe-area-inset-bottom, 0px)));
+            right: 18px;
+            background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 10px 18px;
+            border-radius: 999px;
+            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42);
+            text-decoration: none;
+            z-index: 50;
+        }
+        .group-mobile-fab:active {
+            transform: scale(0.95);
+        }
+    }
+</style>
+
 <div style="background:#fff; border-radius:16px; border:1px solid #e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.04); overflow-x:auto; -webkit-overflow-scrolling:touch;">
     <table style="width:100%; min-width:580px; border-collapse:collapse; font-size:0.875rem; text-align:left;">
         <thead>
@@ -66,4 +160,14 @@
         </tbody>
     </table>
 </div>
+
+{{-- Mobile FAB: Buat Kelompok Baru --}}
+<a href="{{ route('creator.groups.create') }}" class="group-mobile-fab" title="Buat Kelompok Baru">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    <span>Buat Kelompok</span>
+</a>
+
 @endsection

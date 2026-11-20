@@ -301,60 +301,168 @@
       }
     }
 
-        /* Floating Action Buttons (Mobile Only - 2 Minimalist Buttons) */
-    .prod-mobile-fab-group {
+        /* ══════════════════════════════════════════════════════════════
+       FLOATING ACTION BUTTON (SPEED DIAL) - MOBILE ONLY
+       ══════════════════════════════════════════════════════════════ */
+    .prod-speeddial-wrap {
       display: none;
     }
 
     @media (max-width: 1024px) {
-      .prod-mobile-fab-group {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
+      .prod-speeddial-wrap {
+        display: block;
         position: fixed;
-        right: 16px;
-        bottom: 82px;
-        z-index: 9990;
+        right: 18px;
+        bottom: max(82px, calc(72px + env(safe-area-inset-bottom, 0px)));
+        z-index: 9995;
+      }
+
+      .prod-speeddial-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: -1;
+      }
+
+      .prod-speeddial-wrap.open .prod-speeddial-backdrop {
+        opacity: 1;
         pointer-events: auto;
       }
 
-      .prod-fab-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border-radius: 999px;
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.78rem;
-        font-weight: 600;
-        padding: 8px 14px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
-        border: none;
-      }
-
-      .prod-fab-btn:active {
-        transform: scale(0.95);
-      }
-
-      .prod-fab-import {
-        background: #ffffff;
-        color: #0f172a;
-        border: 1px solid #e2e8f0;
-      }
-
-      .prod-fab-group {
-        background: #f0fdf4;
-        color: #15803d;
-        border: 1px solid #bbf7d0;
-      }
-
-      .prod-fab-add {
+      /* Trigger Round Button (+) */
+      .prod-speeddial-trigger {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
         background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
         color: #ffffff;
-        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.35);
+        border: none;
+        box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42), 0 3px 8px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background 0.2s ease;
+        position: relative;
+        z-index: 2;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .prod-speeddial-trigger:active {
+        transform: scale(0.92);
+      }
+
+      .prod-speeddial-plus-icon {
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: center;
+      }
+
+      .prod-speeddial-wrap.open .prod-speeddial-trigger {
+        background: #0f172a;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.4);
+      }
+
+      .prod-speeddial-wrap.open .prod-speeddial-plus-icon {
+        transform: rotate(135deg);
+      }
+
+      /* Menu items container */
+      .prod-speeddial-menu {
+        position: absolute;
+        bottom: 66px;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .prod-speeddial-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline: none;
+        opacity: 0;
+        transform: translateY(18px) scale(0.85);
+        transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.18s ease;
+        will-change: transform, opacity;
+      }
+
+      .prod-speeddial-wrap.open .prod-speeddial-item {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+        transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+      }
+
+      .prod-speeddial-wrap.open .prod-speeddial-item[style*="--item-index: 0"] {
+        transition-delay: 0.03s;
+      }
+      .prod-speeddial-wrap.open .prod-speeddial-item[style*="--item-index: 1"] {
+        transition-delay: 0.08s;
+      }
+      .prod-speeddial-wrap.open .prod-speeddial-item[style*="--item-index: 2"] {
+        transition-delay: 0.13s;
+      }
+
+      .prod-speeddial-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #0f172a;
+        background: #ffffff;
+        padding: 7px 14px;
+        border-radius: 999px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0;
+        white-space: nowrap;
+        line-height: 1.2;
+      }
+
+      .prod-speeddial-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+        transition: transform 0.15s ease;
+      }
+
+      .prod-speeddial-item:active .prod-speeddial-icon {
+        transform: scale(0.92);
+      }
+
+      .prod-icon-add {
+        background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+        color: #ffffff;
+      }
+
+      .prod-icon-group {
+        background: #ffffff;
+        color: #15803d;
+        border: 1.5px solid #bbf7d0;
+      }
+
+      .prod-icon-import {
+        background: #ffffff;
+        color: #0f172a;
+        border: 1.5px solid #e2e8f0;
       }
     }
 
@@ -2209,40 +2317,72 @@
 
   </div>
 </div>
-  {{-- FLOATING ACTION BUTTONS (MOBILE ONLY: 3 MINIMALIST BUTTONS) --}}
-  <div class="prod-mobile-fab-group">
-    {{-- 1. Smart Import FAB --}}
-    <button type="button" onclick="openSmartImport()" class="prod-fab-btn prod-fab-import" title="Smart Import Produk">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-        <polyline points="17 8 12 3 7 8" />
-        <line x1="12" y1="3" x2="12" y2="15" />
+  {{-- FLOATING ACTION BUTTON (SPEED DIAL - MOBILE ONLY) --}}
+  <div class="prod-speeddial-wrap" id="prodSpeedDial">
+    {{-- Backdrop overlay --}}
+    <div class="prod-speeddial-backdrop" onclick="toggleProdSpeedDial(false)"></div>
+
+    {{-- Menu Items (Slide up from behind FAB) --}}
+    <div class="prod-speeddial-menu">
+      {{-- 1. Smart Import --}}
+      <button type="button" onclick="toggleProdSpeedDial(false); openSmartImport();" class="prod-speeddial-item" style="--item-index: 2;" title="Smart Import Produk">
+        <span class="prod-speeddial-label">Smart Import</span>
+        <span class="prod-speeddial-icon prod-icon-import">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+        </span>
+      </button>
+
+      {{-- 2. Kelompok Produk --}}
+      <a href="{{ route('creator.groups.index') }}" class="prod-speeddial-item" style="--item-index: 1;" title="Kelompok Produk">
+        <span class="prod-speeddial-label">Kelompok Produk</span>
+        <span class="prod-speeddial-icon prod-icon-group">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+        </span>
+      </a>
+
+      {{-- 3. Tambah Produk --}}
+      <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}" class="prod-speeddial-item" style="--item-index: 0;" title="Tambah Produk">
+        <span class="prod-speeddial-label">Tambah Produk</span>
+        <span class="prod-speeddial-icon prod-icon-add">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </span>
+      </a>
+    </div>
+
+    {{-- Main Trigger Button (+) --}}
+    <button type="button" class="prod-speeddial-trigger" id="prodSpeedDialTrigger" onclick="toggleProdSpeedDial()" title="Menu Tambah & Kelola" aria-label="Menu Aksi">
+      <svg class="prod-speeddial-plus-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
       </svg>
-      <span>Smart Import</span>
     </button>
-
-    {{-- 2. Kelompok Produk FAB --}}
-    <a href="{{ route('creator.groups.index') }}" class="prod-fab-btn prod-fab-group" title="Kelompok Produk">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-      </svg>
-      <span>Kelompok</span>
-    </a>
-
-    {{-- 3. Tambah Produk FAB --}}
-    <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}" class="prod-fab-btn prod-fab-add" title="Tambah Produk">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <line x1="12" y1="5" x2="12" y2="19" />
-        <line x1="5" y1="12" x2="19" y2="12" />
-      </svg>
-      <span>Tambah Produk</span>
-    </a>
   </div>
 
 @endsection
 
 @section('scripts')
 <script>
+  // Speed Dial FAB
+  function toggleProdSpeedDial(forceState) {
+    var dial = document.getElementById('prodSpeedDial');
+    if (!dial) return;
+    if (typeof forceState === 'boolean') {
+      if (forceState) dial.classList.add('open');
+      else dial.classList.remove('open');
+    } else {
+      dial.classList.toggle('open');
+    }
+  }
+
   // Smart Import Modal
   function openSmartImport() {
     const el = document.getElementById('smartImportOverlay');
