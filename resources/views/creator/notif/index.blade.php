@@ -180,6 +180,10 @@ try {
     max-width: 680px;
     margin: 0 auto;
     padding: 0 1rem 5rem;
+    /* iOS Safari: cegah konten melebihi viewport */
+    box-sizing: border-box;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 /* ───── Header ───── */
@@ -339,54 +343,69 @@ try {
 
 .cr-notif-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;    /* align-items: center → flex-start agar icon rata atas */
     gap: .75rem;
-    padding: .7rem .95rem;
+    padding: .8rem .95rem;
     border-bottom: 1px solid #f1f5f9;
     text-decoration: none;
     transition: background .15s;
+    /* iOS: pastikan tidak overflow horizontal */
+    overflow: hidden;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 .cr-notif-item:last-child { border-bottom: none; }
-.cr-notif-item:hover      { background: #f8fafc; }
+.cr-notif-item:active     { background: #f1f5f9; }
 .cr-notif-item.is-unread  { background: #f0fdf4; }
-.cr-notif-item.is-unread:hover { background: #e8fdf4; }
+.cr-notif-item.is-unread:active { background: #e8fdf4; }
 
 /* Icon bulat — lebih kecil */
 .cr-ni-icon {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    margin-top: 2px;
 }
 
-/* Body */
+/* Body — KUNCI: min-width:0 wajib agar flex child bisa truncate di iOS */
 .cr-ni-body {
     flex: 1;
-    min-width: 0;
+    min-width: 0;           /* ← WAJIB untuk iOS Safari truncation */
     display: flex;
     flex-direction: column;
-    gap: .08rem;
+    gap: .12rem;
+    overflow: hidden;       /* ← cegah bleed keluar */
 }
 
-/* Baris 1: Judul + Dot unread */
+/* Baris 1: Judul + Jam (kanan) + Dot */
 .cr-ni-title-row {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: baseline;
     gap: .4rem;
+    min-width: 0;           /* ← juga perlu di sini */
 }
 .cr-ni-title {
     font-size: .84rem;
     font-weight: 700;
     color: #0f172a;
-    line-height: 1.25;
+    line-height: 1.3;
     flex: 1;
-    white-space: nowrap;
+    min-width: 0;           /* ← kunci truncation di iOS */
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.cr-ni-time {
+    font-size: .68rem;
+    color: #94a3b8;
+    font-weight: 500;
+    flex-shrink: 0;         /* ← jam tidak boleh ikut diperkecil */
+    white-space: nowrap;
 }
 .cr-ni-unread-dot {
     width: 7px;
@@ -397,22 +416,17 @@ try {
     box-shadow: 0 0 0 2px rgba(16,185,129,.22);
 }
 
-/* Baris 2: Pesan ringkas — 1 baris saja, truncated */
+/* Baris 2: Pesan ringkas — truncate 1 baris */
 .cr-ni-desc {
     margin: 0;
     font-size: .76rem;
     color: #64748b;
-    line-height: 1.35;
-    white-space: nowrap;
+    line-height: 1.4;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-/* Jam kecil inline */
-.cr-ni-time {
-    font-size: .68rem;
-    color: #94a3b8;
-    font-weight: 500;
+    white-space: nowrap;
+    display: block;         /* pastikan bukan flex item */
+    max-width: 100%;
 }
 
 /* Arrow */
@@ -420,6 +434,7 @@ try {
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    padding-top: 2px;
 }
 
 /* ───── Empty State ───── */
