@@ -1325,8 +1325,8 @@
         display: flex !important;
         align-items: center;
         justify-content: space-between;
-        padding: 0.65rem 0 1rem;
-        margin-bottom: 0.25rem;
+        padding: 0.25rem 0 0.35rem;
+        margin-bottom: 0;
       }
       .prod-mobile-btn {
         width: 40px;
@@ -1481,11 +1481,12 @@
         background: #f4f6f8;
         margin-left: -0.9rem;
         margin-right: -0.9rem;
-        padding: max(0.5rem, calc(0.2rem + env(safe-area-inset-top, 0px))) 0.9rem 0.5rem;
+        padding: 0.25rem 0.9rem 0.5rem;
         box-sizing: border-box;
-        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        transition: padding-top 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
       }
       .prod-sticky-bar.is-stuck {
+        padding-top: max(0.5rem, calc(0.25rem + env(safe-area-inset-top, 0px)));
         box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
         border-bottom: 1px solid #e2e8f0;
       }

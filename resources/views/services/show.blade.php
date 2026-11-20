@@ -1231,10 +1231,20 @@
                 display: none !important;
             }
 
-            /* push content up so sticky bar doesn't overlap */
+            /* push content up so sticky bar doesn't overlap, rapatkan jarak atas ke navbar */
             .pd-page {
-                padding-top: 68px;
+                padding-top: 0.25rem !important;
                 padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .pd-layout-grid {
+                margin-top: 0 !important;
+                margin-bottom: 1.5rem;
+                padding: 0 0.5rem;
+            }
+
+            .pd-product-block {
+                padding: 0.75rem !important;
             }
         }
 
