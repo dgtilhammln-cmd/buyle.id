@@ -1361,6 +1361,28 @@
   {{-- REAL PRODUCTS CONTENT CONTAINER --}}
   <div id="products-real-content" style="opacity: 0; transition: opacity 0.25s ease;">
 
+  {{-- 1. SEARCH INPUT BAR + TAB FILTER — Sticky on Mobile --}}
+  <div class="prod-sticky-bar">
+  <style>
+    .prod-sticky-bar {
+      /* desktop: normal flow */
+    }
+    @media (max-width: 991px) {
+      .prod-sticky-bar {
+        position: sticky;
+        top: 0;
+        z-index: 500;
+        background: #f8fafc;
+        padding: 0.6rem 0 0.5rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      }
+    }
+  </style>
+
   {{-- 1. SEARCH INPUT BAR (SUPER APP MODERN MINIMALIST) --}}
   <div class="prod-search-bar-wrap" style="margin-bottom: 0.75rem;">
     <form action="{{ route('creator.products.index') }}" method="GET" style="display:flex; align-items:center; position:relative; width:100%;">
@@ -1468,6 +1490,8 @@
       </div>
     </div>
   </div>
+
+  </div>{{-- /.prod-sticky-bar --}}
 
   @if(request('status') === 'archived')
     <div style="font-size:0.75rem; color:#64748b; display:flex; align-items:center; gap:0.35rem; background:#f8fafc; padding:0.35rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0; margin-top:-0.5rem; margin-bottom:1rem;">
