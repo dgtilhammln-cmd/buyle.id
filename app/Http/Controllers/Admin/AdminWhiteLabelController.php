@@ -60,7 +60,7 @@ class AdminWhiteLabelController extends Controller
         Cache::forget('whitelabel_catalog');
         Cache::forget("seller_products_{$product->seller_id}");
 
-        return back()->with('success', "Produk \"{$product->name}\" berhasil disetujui (Approved) sebagai White Label.");
+        return back()->with('success', "Produk \"{$product->name}\" berhasil disetujui sebagai White Label.");
     }
 
     /**
