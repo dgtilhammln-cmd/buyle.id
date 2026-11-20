@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('content')
 
     <style>
@@ -1503,7 +1503,7 @@
                     </svg>
                 </div>
 
-                <div class="sp-result-count">{{ $services->count() }} produk</div>
+                <div class="sp-result-count"></div>
 
                 <div class="sp-view-btns">
                     <button class="sp-view-btn active" id="btnGrid" onclick="setView('grid')" title="Grid">
@@ -1574,7 +1574,6 @@
                                                 </svg>
                                             </div>
                                             <span class="sp-cat-name">{{ $cat->name }}</span>
-                                            <span class="sp-cat-badge">{{ $cat->services_count ?? $cat->products_count }}</span>
                                         </a>
                                         @if($hasSubs)
                                             <button type="button" class="sp-subcat-toggle-btn" aria-label="Toggle Sub Kategori" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.sp-cat-group').classList.toggle('open');">
@@ -1599,9 +1598,6 @@
                                                        class="sp-subcat-item {{ $isSubActive ? 'active' : '' }}">
                                                         <span class="sp-subcat-dot"></span>
                                                         <span class="sp-subcat-name">{{ $sub->name }}</span>
-                                                        @if(isset($sub->products_count) && $sub->products_count > 0)
-                                                            <span class="sp-subcat-badge">{{ $sub->products_count }}</span>
-                                                        @endif
                                                     </a>
                                                 @endforeach
                                             </div>
@@ -1770,7 +1766,6 @@
                             @else
                                 Semua Creator Terverifikasi
                             @endif
-                            <span style="font-size:0.82rem; font-weight:600; color:var(--c-muted); margin-left:0.4rem;">({{ $allCreators->total() }})</span>
                         </div>
                     </div>
 
