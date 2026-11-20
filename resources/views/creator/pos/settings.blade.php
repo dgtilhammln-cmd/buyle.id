@@ -1056,7 +1056,7 @@
                                 style="width: 24px; height: 24px; border-radius: 6px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; flex-shrink: 0;">
                                 2</div>
                             <div style="font-size: 0.74rem;">
-                                <div style="font-weight: 700; color: #0f172a;">Pembayaran Digital (Snap Midtrans)</div>
+                                <div style="font-weight: 700; color: #0f172a;">Pembayaran Digital (Sitem Buyle)</div>
                                 <div style="color: #64748b;">Pelanggan bayar langsung via QRIS, GoPay, OVO, transfer bank
                                     secara online otomatis.</div>
                             </div>
@@ -1263,22 +1263,22 @@
                 return;
             }
             c.innerHTML = posFeesData.map((f, i) => `
-                    <div class="list-row-item">
-                        <div class="list-row-left">
-                            <div>
-                                <div class="list-row-name">${escapeHtml(f.name)}</div>
-                                <div class="list-row-sub">${f.type === 'percent' ? f.value + '%' : 'Rp ' + Number(f.value).toLocaleString('id-ID')}</div>
+                        <div class="list-row-item">
+                            <div class="list-row-left">
+                                <div>
+                                    <div class="list-row-name">${escapeHtml(f.name)}</div>
+                                    <div class="list-row-sub">${f.type === 'percent' ? f.value + '%' : 'Rp ' + Number(f.value).toLocaleString('id-ID')}</div>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:0.4rem;">
+                                <label class="switch-clean">
+                                    <input type="checkbox" ${f.is_active ? 'checked' : ''} onchange="toggleFeeItem(${i}, this.checked)">
+                                    <span class="slider-clean"></span>
+                                </label>
+                                <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeFeeItem(${i})">&times;</button>
                             </div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:0.4rem;">
-                            <label class="switch-clean">
-                                <input type="checkbox" ${f.is_active ? 'checked' : ''} onchange="toggleFeeItem(${i}, this.checked)">
-                                <span class="slider-clean"></span>
-                            </label>
-                            <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeFeeItem(${i})">&times;</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `).join('');
             document.getElementById('feesBadgeCount').innerText = posFeesData.length + ' Item';
         }
 
@@ -1327,24 +1327,24 @@
                 const isActive = d.is_active !== false;
                 const minQty = d.min_qty || 1;
                 return `
-                        <div class="list-row-item" style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem;">
-                            <div class="list-row-left" style="flex:1; min-width:0;">
-                                <div>
-                                    <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(d.name)}</div>
-                                    <div class="list-row-sub" style="font-size:0.72rem; color:#64748b;">
-                                        ${d.type === 'percent' ? d.value + '%' : 'Rp ' + Number(d.value).toLocaleString('id-ID')} &middot; Min. ${minQty} Qty &middot; ${d.scope === 'specific' ? 'Produk Tertentu' : 'Semua Produk'}
+                            <div class="list-row-item" style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem;">
+                                <div class="list-row-left" style="flex:1; min-width:0;">
+                                    <div>
+                                        <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(d.name)}</div>
+                                        <div class="list-row-sub" style="font-size:0.72rem; color:#64748b;">
+                                            ${d.type === 'percent' ? d.value + '%' : 'Rp ' + Number(d.value).toLocaleString('id-ID')} &middot; Min. ${minQty} Qty &middot; ${d.scope === 'specific' ? 'Produk Tertentu' : 'Semua Produk'}
+                                        </div>
                                     </div>
                                 </div>
+                                <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
+                                    <label class="switch-toggle" style="margin:0;">
+                                        <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleDiscountActiveItem(${i}, this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeDiscountItem(${i})">&times;</button>
+                                </div>
                             </div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
-                                <label class="switch-toggle" style="margin:0;">
-                                    <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleDiscountActiveItem(${i}, this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
-                                <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.5rem; height:28px;" onclick="removeDiscountItem(${i})">&times;</button>
-                            </div>
-                        </div>
-                    `;
+                        `;
             }).join('');
             document.getElementById('discountsBadgeCount').innerText = posDiscountsData.length + ' Preset';
         }
@@ -1420,25 +1420,25 @@
                 const name = (typeof t === 'object' && t !== null) ? (t.name || t.table_no || ('Meja ' + (i + 1))) : String(t);
                 const tableUrl = storefrontBaseUrl + '?meja=' + encodeURIComponent(name);
                 return `
-                        <div class="list-row-item" style="display:flex; align-items:center; padding:0.65rem 0.85rem; gap:0.75rem;">
-                            <div id="tableQrThumb_${i}" style="width:44px; height:44px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
-                            <div class="list-row-left" style="flex:1; min-width:0;">
-                                <div>
-                                    <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(name)}</div>
-                                    <div class="list-row-sub" style="font-size:0.72rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                        ${escapeHtml(tableUrl.replace('https://', ''))}
+                            <div class="list-row-item" style="display:flex; align-items:center; padding:0.65rem 0.85rem; gap:0.75rem;">
+                                <div id="tableQrThumb_${i}" style="width:44px; height:44px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
+                                <div class="list-row-left" style="flex:1; min-width:0;">
+                                    <div>
+                                        <div class="list-row-name" style="font-weight:700; color:#0f172a;">${escapeHtml(name)}</div>
+                                        <div class="list-row-sub" style="font-size:0.72rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                            ${escapeHtml(tableUrl.replace('https://', ''))}
+                                        </div>
                                     </div>
                                 </div>
+                                <div style="display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
+                                    <button type="button" class="btn-white-pill" style="font-size:0.72rem; padding:0.35rem 0.65rem; height:32px; display:flex; align-items:center; gap:4px;" onclick="downloadTableQr(${i})" title="Download Barcode / QR Meja">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        <span>Download QR</span>
+                                    </button>
+                                    <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.55rem; height:32px;" onclick="removeTableItem(${i})" title="Hapus Meja">&times;</button>
+                                </div>
                             </div>
-                            <div style="display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
-                                <button type="button" class="btn-white-pill" style="font-size:0.72rem; padding:0.35rem 0.65rem; height:32px; display:flex; align-items:center; gap:4px;" onclick="downloadTableQr(${i})" title="Download Barcode / QR Meja">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                    <span>Download QR</span>
-                                </button>
-                                <button type="button" class="btn-white-pill" style="color:#dc2626; border-color:#fecaca; padding:0 0.55rem; height:32px;" onclick="removeTableItem(${i})" title="Hapus Meja">&times;</button>
-                            </div>
-                        </div>
-                    `;
+                        `;
             }).join('');
 
             document.getElementById('tablesBadgeCount').innerText = posTablesData.length + ' Meja';

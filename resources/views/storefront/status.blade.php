@@ -520,7 +520,7 @@
             <div class="order-card-row">
                 <span class="order-label">Metode Bayar</span>
                 <span class="order-val"
-                    id="dispPayMethod">{{ $paymentMethod === 'cash' ? 'Bayar di Kasir (Cash)' : 'Digital (Snap Midtrans)' }}</span>
+                    id="dispPayMethod">{{ $paymentMethod === 'cash' ? 'Bayar di Kasir (Cash)' : 'Digital (Sistem Buyle)' }}</span>
             </div>
             <div class="order-card-row">
                 <span class="order-label">Status</span>

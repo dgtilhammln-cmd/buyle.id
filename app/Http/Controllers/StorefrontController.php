@@ -525,7 +525,7 @@ class StorefrontController extends Controller
             'snap_token'     => $snapToken,
             'message'        => ($target === 'cash')
                 ? 'Metode pembayaran berhasil diubah ke Bayar di Kasir (Cash).'
-                : 'Metode pembayaran berhasil diubah ke Pembayaran Digital (Snap Midtrans).'
+                : 'Metode pembayaran berhasil diubah ke Pembayaran Digital (Sistem Buyle).'
         ]);
     }
 }
