@@ -429,7 +429,7 @@
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
             </svg>
-            <input type="text" id="searchInput" placeholder="Kamu bisa cari berdasarkan No. Pesanan atau Nama Produk"
+            <input type="text" id="searchInput" placeholder="Cari No. Pesanan atau Nama Produk"
                 autocomplete="off">
         </div>
 

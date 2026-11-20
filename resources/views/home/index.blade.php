@@ -1696,34 +1696,42 @@
                         @php $firstSlide = $heroSlides->first(); @endphp
                         <div class="swiper-slide"><a href="{{ $firstSlide->button_url ?? '#' }}"
                                 aria-label="{{ $firstSlide->title }}"><img src="{{ asset('storage/' . $firstSlide->image) }}"
-                                    alt="{{ $firstSlide->title }}" width="600" height="300" fetchpriority="high" loading="eager" decoding="sync" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
+                                    alt="{{ $firstSlide->title }}" width="600" height="300" fetchpriority="high" loading="eager"
+                                    decoding="sync" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a>
+                        </div>
                     @elseif(!empty($settings['hero_main_image']))
                         <div class="swiper-slide"><a href="{{ route('products') }}"><img
-                                    src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Banner Utama"
-                                    width="600" height="300" fetchpriority="high" loading="eager" decoding="sync" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
+                                    src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Banner Utama" width="600"
+                                    height="300" fetchpriority="high" loading="eager" decoding="sync"
+                                    style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
                     @endif
                     {{-- Slide 2: Banner Kanan Atas --}}
                     @if(isset($utamaBanners) && $utamaBanners->count() > 0)
                         @php $utama = $utamaBanners->first(); @endphp
                         <div class="swiper-slide"><a href="{{ $utama->button_url ?? route('products') }}"><img
-                                    src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a>
+                                    src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" width="600"
+                                    height="300" fetchpriority="low" loading="lazy" decoding="async"
+                                    style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a>
                         </div>
                     @elseif(!empty($settings['hero_secondary_image']))
                         <div class="swiper-slide"><a href="{{ route('products') }}"><img
                                     src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Banner Promo"
-                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
+                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async"
+                                    style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
                     @endif
                     {{-- Slide 3: Banner Kanan Bawah --}}
                     @if(isset($sampingBanners) && $sampingBanners->count() > 0)
                         @php $samping = $sampingBanners->first(); @endphp
                         <div class="swiper-slide"><a href="{{ $samping->button_url ?? route('products') }}"><img
-                                    src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}"
-                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a>
+                                    src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" width="600"
+                                    height="300" fetchpriority="low" loading="lazy" decoding="async"
+                                    style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a>
                         </div>
                     @elseif(!empty($settings['hero_third_image']))
                         <div class="swiper-slide"><a href="{{ route('products') }}"><img
                                     src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Banner Samping"
-                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async" style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
+                                    width="600" height="300" fetchpriority="low" loading="lazy" decoding="async"
+                                    style="aspect-ratio:2/1; object-fit:cover; width:100%; height:auto;"></a></div>
                     @endif
                 </div>
                 <div class="swiper-pagination mob-banner-pg"></div>
@@ -1996,8 +2004,8 @@
                                             <span
                                                 style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                 class="retarget-btn-cta">
-                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none"
+                                                    stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                     <path d="M5 12h14m-7-7l7 7-7 7" />
                                                 </svg>
                                             </span>
@@ -2258,8 +2266,8 @@
                                             <span
                                                 style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                 class="retarget-btn-cta">
-                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none"
+                                                    stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                     <path d="M5 12h14m-7-7l7 7-7 7" />
                                                 </svg>
                                             </span>
@@ -2394,8 +2402,8 @@
                                             <span
                                                 style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                 class="retarget-btn-cta">
-                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none"
+                                                    stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                     <path d="M5 12h14m-7-7l7 7-7 7" />
                                                 </svg>
                                             </span>
@@ -2423,7 +2431,7 @@
                         <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M20 6L9 17l-5-5" />
                         </svg>
-                        Semua produk terbaru telah ditampilkan
+                        Semua produk telah ditampilkan
                     </span>
                 </div>
             </div>
@@ -3441,8 +3449,8 @@
         }
 
         /* Reset fixed widths from carousel styles when inside grid */
-        .grid-2-rows-responsive > a,
-        .grid-2-rows-responsive > .sp-card {
+        .grid-2-rows-responsive>a,
+        .grid-2-rows-responsive>.sp-card {
             flex: unset !important;
             width: 100% !important;
             min-width: 0 !important;
@@ -3548,26 +3556,26 @@
             : (isset($products) ? $products->filter(fn($p) => strtolower($p->product_type ?? $p->type ?? '') === 'ticket') : collect());
     @endphp
     @if($tProds->count() > 0)
-    <section
-        style="background: #F8FAFC; padding: 3.5rem 0 3.5rem; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+        <section
+            style="background: #F8FAFC; padding: 3.5rem 0 3.5rem; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
 
-            {{-- Header Headline --}}
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                <h2 class="responsive-section-title"
-                    style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                    Tiket Event & Konser
-                </h2>
-                <a href="{{ route_locale('products') }}?category=tiket"
-                    style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
-                    Lihat Semua Tiket <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M5 12h14m-7-7l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
+                {{-- Header Headline --}}
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <h2 class="responsive-section-title"
+                        style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        Tiket Event & Konser
+                    </h2>
+                    <a href="{{ route_locale('products') }}?category=tiket"
+                        style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                        Lihat Semua Tiket <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14m-7-7l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
 
-            <div class="swipe-cards-container">
+                <div class="swipe-cards-container">
                     @foreach($tProds as $tProd)
                         @php
                             $tPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->sale_price : $tProd->effective_price;
@@ -3741,8 +3749,8 @@
                                                 <span
                                                     style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
                                                     class="retarget-btn-cta">
-                                                    <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                        stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <span class="retarget-btn-text">Lihat</span> <svg width="11" height="11" fill="none"
+                                                        stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                         <path d="M5 12h14m-7-7l7 7-7 7" />
                                                     </svg>
                                                 </span>
@@ -3754,10 +3762,10 @@
                             </div>
                         </a>
                     @endforeach
-            </div>
+                </div>
 
-        </div>
-    </section>
+            </div>
+        </section>
     @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
@@ -4025,13 +4033,13 @@
                     let itemsHtml = '';
                     subs.forEach(s => {
                         itemsHtml += `
-                                                    <a href="${s.url}" class="cv-cat-dd-item">
-                                                        <span>${s.name}</span>
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M9 18l6-6-6-6"/>
-                                                        </svg>
-                                                    </a>
-                                                `;
+                                                        <a href="${s.url}" class="cv-cat-dd-item">
+                                                            <span>${s.name}</span>
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                                <path d="M9 18l6-6-6-6"/>
+                                                            </svg>
+                                                        </a>
+                                                    `;
                     });
                     bodyEl.innerHTML = itemsHtml;
 
@@ -4446,16 +4454,14 @@
                 </svg>
             </button>
             <div class="hpp-image-link" onclick="closeHomePopup()">
-                <img src="{{ asset('images/popup1.png') }}" 
-                     alt="Selamat Belanja" 
-                     class="hpp-image"
-                     onerror="this.src='{{ asset('storage/icon/popup1.png') }}'">
+                <img src="{{ asset('images/popup1.png') }}" alt="Selamat Belanja" class="hpp-image"
+                    onerror="this.src='{{ asset('storage/icon/popup1.png') }}'">
             </div>
         </div>
     </div>
 
     <script>
-        (function() {
+        (function () {
             // Never execute or show for automated bots / Lighthouse / PageSpeed
             var ua = navigator.userAgent || '';
             if (/Lighthouse|PageSpeed|HeadlessChrome|GTmetrix|bot|crawl/i.test(ua)) return;
@@ -4463,27 +4469,27 @@
             // Only show once per session for real visitors
             if (sessionStorage.getItem('buyle_home_popup_seen')) return;
 
-            setTimeout(function() {
+            setTimeout(function () {
                 var popup = document.getElementById('homeWelcomePopup');
                 if (popup) {
                     popup.style.display = 'flex';
-                    requestAnimationFrame(function() {
+                    requestAnimationFrame(function () {
                         popup.classList.add('active');
                     });
                 }
             }, 2500);
 
-            window.closeHomePopup = function() {
+            window.closeHomePopup = function () {
                 var popup = document.getElementById('homeWelcomePopup');
                 if (!popup) return;
                 popup.classList.remove('active');
                 sessionStorage.setItem('buyle_home_popup_seen', '1');
-                setTimeout(function() {
+                setTimeout(function () {
                     popup.style.display = 'none';
                 }, 300);
             };
 
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') {
                     closeHomePopup();
                 }
