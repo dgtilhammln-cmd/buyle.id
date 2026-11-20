@@ -764,11 +764,45 @@
         }
     </style>
     {{-- Interactive Share Modal (Compact 2 URL Cards: Digital Store & Website) --}}
+    <style>
+        /* ── Share Modal Smooth Animation ── */
+        #shareStoreModal {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                        backdrop-filter 0.28s ease;
+        }
+        #shareStoreModal.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #shareStoreModal .share-modal-card {
+            transform: translateY(28px) scale(0.95);
+            opacity: 0;
+            transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        #shareStoreModal.is-open .share-modal-card {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        #shareStoreModal.is-closing .share-modal-card {
+            transform: translateY(18px) scale(0.96);
+            opacity: 0;
+            transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1),
+                        opacity 0.18s cubic-bezier(0.4, 0, 1, 1);
+        }
+        #shareStoreModal.is-closing {
+            opacity: 0;
+            transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1);
+        }
+    </style>
     <div id="shareStoreModal"
-        style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;"
+        style="display:flex; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;"
         onclick="if(event.target===this) closeShareStoreModal()">
-        <div
-            style="background:#ffffff; border-radius:26px; max-width:410px; width:100%; padding:1.75rem 1.5rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; animation:modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+        <div class="share-modal-card"
+            style="background:#ffffff; border-radius:26px; max-width:410px; width:100%; padding:1.75rem 1.5rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative;">
             
             {{-- Tombol X di Pojok Kanan Atas --}}
             <button type="button" onclick="closeShareStoreModal()"
@@ -848,11 +882,21 @@
     <script>
         function openShareStoreModal() {
             const m = document.getElementById('shareStoreModal');
-            if (m) m.style.display = 'flex';
+            if (!m) return;
+            m.classList.remove('is-closing');
+            // Trigger reflow agar transisi berjalan dari state awal
+            void m.offsetWidth;
+            m.classList.add('is-open');
         }
         function closeShareStoreModal() {
             const m = document.getElementById('shareStoreModal');
-            if (m) m.style.display = 'none';
+            if (!m) return;
+            m.classList.remove('is-open');
+            m.classList.add('is-closing');
+            // Tunggu animasi selesai baru sembunyikan
+            setTimeout(() => {
+                m.classList.remove('is-closing');
+            }, 240);
         }
         function copyStoreLink(inputId, btn) {
             const input = document.getElementById(inputId);
