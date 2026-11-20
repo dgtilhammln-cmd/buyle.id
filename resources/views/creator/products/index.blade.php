@@ -1362,26 +1362,73 @@
   <div id="products-real-content" style="opacity: 0; transition: opacity 0.25s ease;">
 
   {{-- 1. SEARCH INPUT BAR + TAB FILTER — Sticky on Mobile --}}
-  <div class="prod-sticky-bar">
+  <div class="prod-sticky-bar" id="prodStickyBar">
+  <div id="prodStickyPlaceholder" style="display:none;"></div>
   <style>
+    /* ── Sticky Bar Mobile ── */
     .prod-sticky-bar {
       /* desktop: normal flow */
     }
     @media (max-width: 991px) {
-      .prod-sticky-bar {
-        position: sticky;
+      .prod-sticky-bar.is-floating {
+        position: fixed;
         top: 0;
-        z-index: 500;
+        left: 0;
+        right: 0;
+        z-index: 9000;
         background: #f8fafc;
-        padding: 0.6rem 0 0.5rem;
-        margin-left: -1rem;
-        margin-right: -1rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        padding: 0.6rem 1rem 0.5rem;
+        box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+        border-bottom: 1px solid #e9ecef;
+        /* Smooth drop in */
+        animation: stickySlideIn 0.22s cubic-bezier(0.16,1,0.3,1) forwards;
+      }
+      @keyframes stickySlideIn {
+        from { transform: translateY(-100%); opacity: 0.6; }
+        to   { transform: translateY(0);     opacity: 1; }
       }
     }
   </style>
+  <script>
+    (function() {
+      if (window.innerWidth > 991) return; // desktop: skip
+      var bar = document.getElementById('prodStickyBar');
+      var placeholder = document.getElementById('prodStickyPlaceholder');
+      var floating = false;
+      var triggered = false;
+
+      function checkSticky() {
+        if (!bar) return;
+        var rect = bar.getBoundingClientRect();
+        if (!floating && rect.top <= 0) {
+          // Mulai floating
+          var h = bar.offsetHeight;
+          placeholder.style.height = h + 'px';
+          placeholder.style.display = 'block';
+          bar.classList.add('is-floating');
+          floating = true;
+        } else if (floating && window.scrollY < (bar._origOffsetTop || 0)) {
+          // Kembali ke posisi normal
+          placeholder.style.display = 'none';
+          bar.classList.remove('is-floating');
+          floating = false;
+        }
+      }
+
+      // Simpan posisi awal setelah halaman siap
+      function init() {
+        bar._origOffsetTop = bar.getBoundingClientRect().top + window.scrollY;
+        window.addEventListener('scroll', checkSticky, { passive: true });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        // Tunggu opacity reveal dari skeleton
+        setTimeout(init, 400);
+      }
+    })();
+  </script>
 
   {{-- 1. SEARCH INPUT BAR (SUPER APP MODERN MINIMALIST) --}}
   <div class="prod-search-bar-wrap" style="margin-bottom: 0.75rem;">
