@@ -589,12 +589,10 @@
                 background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(14px);
                 -webkit-backdrop-filter: blur(14px);
-                border-bottom: 1.5px solid #E2E8F0;
                 padding-top: max(12px, env(safe-area-inset-top, 0px));
                 padding-bottom: 12px;
                 padding-left: max(1rem, env(safe-area-inset-left, 0px));
                 padding-right: max(1rem, env(safe-area-inset-right, 0px));
-                box-shadow: 0 2px 10px rgba(0,0,0,0.03);
             }
             .acc-mobile-header-inner {
                 display: flex;
@@ -616,6 +614,7 @@
             /* Tabs navigasi Profile & Pesanan — Balanced 50/50 Full Width di mobile */
             .acc-tabs {
                 display: flex !important;
+                margin-top: 0.75rem !important;
                 margin-bottom: 0.85rem !important;
                 width: 100% !important;
                 box-sizing: border-box !important;
@@ -659,15 +658,9 @@
                 <h1 class="acc-header-title">Akun Saya</h1>
             </div>
 
-            <a href="{{ route('home') }}" class="acc-header-btn" title="Ke Home Buyle">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-            </a>
+            <div style="width:42px;height:42px;flex-shrink:0;"></div>
         </div>
     </header>
-
     <div class="acc-main-container" style="background: #F8FAFC; min-height: 100vh; padding-top: 0; padding-bottom: 3rem;">
     <main class="acc-wrap">
         {{-- Desktop Title Row --}}
@@ -683,12 +676,6 @@
                     <p class="acc-page-welcome" style="margin:2px 0 0;">Selamat datang kembali, {{ Auth::user()->name }}</p>
                 </div>
             </div>
-            <a href="{{ route('home') }}" class="acc-header-btn" title="Ke Home Buyle">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-            </a>
         </div>
 
         @if(session('success'))

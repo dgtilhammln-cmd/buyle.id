@@ -4422,9 +4422,7 @@
                                         @else
                                             <a href="{{ route('login') }}" class="pd-btn pd-btn-outline"
                                                 style="width:100%;height:38px;font-size:0.82rem;border-radius:99px;">
-                                                Hanya pembeli yang sudah menyelesaikan pesanan produk ini yang dapat memberikan
-                                                rating & ulasan.
-
+                                                Login untuk beri ulasan
                                             </a>
                                         @endif
                                     </div>
