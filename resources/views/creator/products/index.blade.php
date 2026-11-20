@@ -1361,72 +1361,40 @@
   {{-- REAL PRODUCTS CONTENT CONTAINER --}}
   <div id="products-real-content" style="opacity: 0; transition: opacity 0.25s ease;">
 
-  {{-- 1. SEARCH INPUT BAR + TAB FILTER — Sticky on Mobile --}}
+  {{-- 1. SEARCH INPUT BAR + TAB FILTER (Sticky on Mobile) --}}
   <div class="prod-sticky-bar" id="prodStickyBar">
-  <div id="prodStickyPlaceholder" style="display:none;"></div>
   <style>
-    /* ── Sticky Bar Mobile ── */
-    .prod-sticky-bar {
-      /* desktop: normal flow */
-    }
-    @media (max-width: 991px) {
-      .prod-sticky-bar.is-floating {
-        position: fixed;
+    @media (max-width: 1024px) {
+      .prod-sticky-bar {
+        position: -webkit-sticky !important;
+        position: sticky !important;
         top: 0;
-        left: 0;
-        right: 0;
-        z-index: 9000;
-        background: #f8fafc;
-        padding: 0.6rem 1rem 0.5rem;
-        box-shadow: 0 2px 14px rgba(0,0,0,0.08);
-        border-bottom: 1px solid #e9ecef;
-        /* Smooth drop in */
-        animation: stickySlideIn 0.22s cubic-bezier(0.16,1,0.3,1) forwards;
+        z-index: 50;
+        background: #f4f6f8;
+        margin-left: -0.9rem;
+        margin-right: -0.9rem;
+        padding: max(0.5rem, calc(0.2rem + env(safe-area-inset-top, 0px))) 0.9rem 0.5rem;
+        box-sizing: border-box;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
       }
-      @keyframes stickySlideIn {
-        from { transform: translateY(-100%); opacity: 0.6; }
-        to   { transform: translateY(0);     opacity: 1; }
+      .prod-sticky-bar.is-stuck {
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+        border-bottom: 1px solid #e2e8f0;
       }
     }
   </style>
   <script>
     (function() {
-      if (window.innerWidth > 991) return; // desktop: skip
+      if (window.innerWidth > 1024) return;
       var bar = document.getElementById('prodStickyBar');
-      var placeholder = document.getElementById('prodStickyPlaceholder');
-      var floating = false;
-      var triggered = false;
-
-      function checkSticky() {
-        if (!bar) return;
-        var rect = bar.getBoundingClientRect();
-        if (!floating && rect.top <= 0) {
-          // Mulai floating
-          var h = bar.offsetHeight;
-          placeholder.style.height = h + 'px';
-          placeholder.style.display = 'block';
-          bar.classList.add('is-floating');
-          floating = true;
-        } else if (floating && window.scrollY < (bar._origOffsetTop || 0)) {
-          // Kembali ke posisi normal
-          placeholder.style.display = 'none';
-          bar.classList.remove('is-floating');
-          floating = false;
+      if (!bar) return;
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 30) {
+          bar.classList.add('is-stuck');
+        } else {
+          bar.classList.remove('is-stuck');
         }
-      }
-
-      // Simpan posisi awal setelah halaman siap
-      function init() {
-        bar._origOffsetTop = bar.getBoundingClientRect().top + window.scrollY;
-        window.addEventListener('scroll', checkSticky, { passive: true });
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        // Tunggu opacity reveal dari skeleton
-        setTimeout(init, 400);
-      }
+      }, { passive: true });
     })();
   </script>
 

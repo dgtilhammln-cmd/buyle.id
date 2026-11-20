@@ -606,8 +606,7 @@
                 display: block !important;
                 height: auto;
                 min-height: 100vh;
-                overflow-x: hidden;
-                overflow-y: auto;
+                overflow-x: clip;
                 padding-bottom: 0;
                 background: #f4f6f8;
             }
@@ -663,7 +662,7 @@
                 min-height: 100vh;
                 width: 100vw;
                 max-width: 100vw;
-                overflow-x: hidden;
+                overflow-x: clip;
                 overflow-y: visible;
                 box-sizing: border-box;
                 display: block;
@@ -678,7 +677,7 @@
                 width: 100%;
                 max-width: 100%;
                 box-sizing: border-box;
-                overflow-x: hidden;
+                overflow-x: clip;
                 background: #f4f6f8;
             }
 
