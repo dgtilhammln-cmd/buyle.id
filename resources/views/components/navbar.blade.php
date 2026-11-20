@@ -60,6 +60,7 @@
     ═══════════════════════════════════ */
     .pill-navbar-wrapper {
         position: fixed;
+        /* Desktop: top 1rem dari layar (aman, tidak ada Dynamic Island di desktop) */
         top: 1rem;
         left: 0;
         width: 100%;
@@ -805,7 +806,8 @@
             display: flex;
             justify-content: center;
             z-index: 999;
-            padding: 0.75rem 1rem;
+            /* ✅ Safe Area: Dynamic Island & Notch iPhone */
+            padding: max(0.75rem, calc(0.5rem + env(safe-area-inset-top, 0px))) 1rem 0.75rem;
             pointer-events: none;
         }
 
@@ -1066,7 +1068,8 @@
         }
 
         body {
-            padding-top: 130px !important;
+            /* ✅ Safe Area: tambahkan inset-top untuk Dynamic Island & notch */
+            padding-top: max(130px, calc(130px + env(safe-area-inset-top, 0px) - 0.75rem)) !important;
             background-color: #F8FAFC !important;
         }
     }
