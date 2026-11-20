@@ -2154,7 +2154,7 @@ class PosController extends Controller
         return response()->json([
             'success' => true,
             'notification' => [
-                'title' => '🔔 Buyle POS - Notifikasi Aktif',
+                'title' => '🔔',
                 'body'  => 'Notifikasi transaksi kasir, top up deposit, & penarikan saldo telah aktif dan berfungsi sempurna!',
                 'icon'  => '/buyle-logo.png',
                 'badge' => '/favicon.png',
