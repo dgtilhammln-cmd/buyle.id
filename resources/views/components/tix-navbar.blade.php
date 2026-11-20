@@ -54,6 +54,9 @@ Fixed Sticky (Always Stays at Top on Scroll)
         z-index: 99999;
         font-family: 'Montserrat', sans-serif !important;
         box-sizing: border-box;
+        /* Safe area: Dynamic Island & notch iPhone */
+        padding-top: env(safe-area-inset-top, 0px);
+        height: calc(var(--tix-h-desktop) + env(safe-area-inset-top, 0px));
     }
 
     .tix-main-header * {
@@ -65,7 +68,7 @@ Fixed Sticky (Always Stays at Top on Scroll)
     .tix-header-spacer {
         display: block;
         width: 100%;
-        height: var(--tix-h-desktop);
+        height: calc(var(--tix-h-desktop) + env(safe-area-inset-top, 0px));
         pointer-events: none;
         visibility: hidden;
     }
@@ -685,11 +688,12 @@ Fixed Sticky (Always Stays at Top on Scroll)
        ══════════════════════════════════════════════════════════════ */
     @media (max-width: 991px) {
         .tix-main-header {
-            height: var(--tix-h-mobile) !important;
+            height: calc(var(--tix-h-mobile) + env(safe-area-inset-top, 0px)) !important;
+            padding-top: env(safe-area-inset-top, 0px) !important;
         }
 
         .tix-header-spacer {
-            height: var(--tix-h-mobile) !important;
+            height: calc(var(--tix-h-mobile) + env(safe-area-inset-top, 0px)) !important;
         }
 
         .tix-header-container {
