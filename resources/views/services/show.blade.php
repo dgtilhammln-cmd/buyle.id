@@ -1219,19 +1219,138 @@
                 border-radius: 12px;
             }
 
+            /* 1. Sembunyikan breadcrumb pada mobile */
             .pd-breadcrumb {
-                padding: 0.65rem 1rem 0.4rem;
+                display: none !important;
+            }
+
+            /* 4. Sembunyikan bottom navbar buyle.id pada halaman show */
+            .buyle-bottom-nav-wrap,
+            #buyleBottomNavWrap,
+            .mobile-bottom-nav {
+                display: none !important;
             }
 
             /* push content up so sticky bar doesn't overlap */
             .pd-page {
-                padding-bottom: 80px;
+                padding-top: 68px;
+                padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
             }
+        }
 
-            /* move report button above sticky bar */
-            .buyle-report-btn {
-                bottom: 80px !important;
-                left: 12px !important;
+        /* Sembunyikan tombol report floating bawaan di halaman show */
+        .buyle-report-btn {
+            display: none !important;
+        }
+
+        /* ─── 2. TOP IMAGE OVERLAY ACTIONS (BACK, SHARE, LAPORKAN) ─── */
+        .pd-gallery-overlay-bar {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 25;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .pd-gallery-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .pd-gallery-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            color: #0F172A;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
+            outline: none;
+            padding: 0;
+            text-decoration: none;
+        }
+
+        .pd-gallery-action-btn:hover {
+            background: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+        }
+
+        .pd-gallery-action-btn:active {
+            transform: scale(0.92);
+        }
+
+        .pd-gallery-btn-back:hover {
+            color: #0F172A;
+        }
+
+        .pd-gallery-btn-share:hover {
+            color: #1eb349;
+        }
+
+        .pd-gallery-btn-report:hover {
+            color: #ef4444;
+        }
+
+        /* ─── 3. FLOATING SCROLL TO TOP BUTTON (DI ATAS BAR BELI/KERANJANG) ─── */
+        .pd-scroll-top-btn {
+            position: fixed;
+            right: 16px;
+            bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            color: #0F172A;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 220;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(12px) scale(0.85);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            outline: none;
+        }
+
+        .pd-scroll-top-btn.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        .pd-scroll-top-btn:hover {
+            background: #F8FAFC;
+            color: #1eb349;
+            border-color: #CBD5E1;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        }
+
+        .pd-scroll-top-btn:active {
+            transform: scale(0.92);
+        }
+
+        @media (min-width: 769px) {
+            .pd-scroll-top-btn {
+                bottom: 24px;
+                right: 24px;
             }
         }
 
@@ -1791,6 +1910,30 @@
                         @endphp
 
                         <div class="pd-gallery-main swiper" id="pd-swiper-main">
+                            {{-- Top Action Overlay (Back di kiri, Share & Laporkan di kanan) --}}
+                            <div class="pd-gallery-overlay-bar">
+                                <button type="button" class="pd-gallery-action-btn pd-gallery-btn-back" onclick="event.stopPropagation(); handleProductShowBack();" title="Kembali" aria-label="Kembali">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <div class="pd-gallery-right-actions">
+                                    <button type="button" class="pd-gallery-action-btn pd-gallery-btn-share" onclick="event.stopPropagation(); handleProductShare();" title="Bagikan" aria-label="Bagikan">
+                                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <circle cx="18" cy="5" r="3"></circle>
+                                            <circle cx="6" cy="12" r="3"></circle>
+                                            <circle cx="18" cy="19" r="3"></circle>
+                                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="pd-gallery-action-btn pd-gallery-btn-report" onclick="event.stopPropagation(); openBuyleReportModal();" title="Laporkan Produk" aria-label="Laporkan">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
                             @if($isExpired)
                                 <div
                                     style="position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; pointer-events: none; background: rgba(15,23,42,0.45); backdrop-filter: blur(2px);">
@@ -4814,6 +4957,14 @@
             </div>
         @endif
 
+        {{-- 3. FLOATING SCROLL TO TOP BUTTON (Auto scroll ke atas di atas tombol Beli/Keranjang) --}}
+        <button type="button" id="pdScrollTopBtn" class="pd-scroll-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Kembali ke atas" aria-label="Scroll to top">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
         {{-- 4. RELATED (Lainnya dari [namacreator]) --}}
         @if(isset($related) && $related->count() > 0)
             <div style="max-width:1200px; margin: 0 auto 4rem; padding: 0 1rem;">
@@ -5929,6 +6080,79 @@
                     localStorage.setItem('buyle_seller_interests', JSON.stringify(sellerMap));
                 }
             } catch (e) { }
+        })();
+    </script>
+
+    {{-- PRODUCT SHOW INTERACTIVE ACTIONS (BACK, SHARE, SCROLL TOP) --}}
+    <script>
+        function handleProductShowBack() {
+            if (window.history.length > 1 && document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                @if($isTicket)
+                    window.location.href = "{{ route('tix.index') }}";
+                @else
+                    window.location.href = "{{ route_locale('products') }}";
+                @endif
+            }
+        }
+
+        function handleProductShare() {
+            const shareTitle = {!! json_encode($service->name) !!};
+            const shareUrl = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: shareTitle,
+                    text: shareTitle,
+                    url: shareUrl
+                }).catch(function(err) {
+                    if (err.name !== 'AbortError') {
+                        copyProductShowLink();
+                    }
+                });
+            } else {
+                copyProductShowLink();
+            }
+        }
+
+        function copyProductShowLink() {
+            const shareUrl = window.location.href;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(shareUrl).then(function() {
+                    alert('Tautan produk berhasil disalin!');
+                }).catch(function() {
+                    fallbackCopyProductLink(shareUrl);
+                });
+            } else {
+                fallbackCopyProductLink(shareUrl);
+            }
+        }
+
+        function fallbackCopyProductLink(text) {
+            const temp = document.createElement('input');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                alert('Tautan produk berhasil disalin!');
+            } catch(e) {
+                alert('Gagal menyalin tautan: ' + text);
+            }
+            document.body.removeChild(temp);
+        }
+
+        // Scroll to top button visibility toggle
+        (function() {
+            const scrollBtn = document.getElementById('pdScrollTopBtn');
+            if (!scrollBtn) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 280) {
+                    scrollBtn.classList.add('is-visible');
+                } else {
+                    scrollBtn.classList.remove('is-visible');
+                }
+            }, { passive: true });
         })();
     </script>
 
