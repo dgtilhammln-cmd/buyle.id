@@ -1097,6 +1097,13 @@
             align-items: flex-end;
         }
 
+        /* ── DESKTOP: sembunyikan bottom navbar di layar lebar ── */
+        @media (min-width: 992px) {
+            .scanner-bottom-nav-wrap {
+                display: none !important;
+            }
+        }
+
         .staff-field-group {
             display: flex;
             flex-direction: column;
@@ -1110,6 +1117,12 @@
             color: #475569;
             margin-bottom: 0.35rem;
             font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+        }
+
+        .staff-btn-group {
+            /* Align button to bottom, matching the field height baseline */
+            padding-top: calc(0.74rem + 0.35rem + 2px); /* label height + margin */
         }
 
         .staff-form-control {

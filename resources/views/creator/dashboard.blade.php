@@ -780,26 +780,6 @@
             gap: 0.6rem;
         }
 
-        .nina-activity-item {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #f1f5f9;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
-        }
-
-        .nina-activity-item:hover {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        }
-
         .nina-act-left {
             display: flex;
             align-items: center;
@@ -856,6 +836,57 @@
             padding: 1px 7px;
             display: inline-block;
             margin-top: 2px;
+        }
+
+        /* ── Swipe-left Recent Activity ── */
+        .nina-swipe-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        .nina-activity-item {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #f1f5f9;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+            will-change: transform;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+            z-index: 1;
+        }
+        .nina-activity-item:hover {
+            background: #f8fafc;
+        }
+        .nina-swipe-action {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            border-radius: 0 16px 16px 0;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+            z-index: 0;
+        }
+        .nina-swipe-action a {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
         }
 
         /* ── iOS Safe Area Fix for Midtrans Snap (Notch & Dynamic Island) ── */
@@ -2152,21 +2183,28 @@
                                 $orderTime = \Carbon\Carbon::parse($order->created_at)->locale('id')->diffForHumans();
                                 $orderTotal = $order->items->sum('subtotal') ?: $order->total_amount;
                             @endphp
-                            <a href="{{ route('creator.sales.report') }}" class="nina-activity-item">
-                                <div class="nina-act-left">
-                                    <div class="nina-act-icon">
-                                        <i class="ph-bold ph-shopping-bag"></i>
+                            <div class="nina-swipe-wrapper">
+                                <div class="nina-activity-item" data-href="{{ route('creator.sales.report') }}">
+                                    <div class="nina-act-left">
+                                        <div class="nina-act-icon">
+                                            <i class="ph-bold ph-shopping-bag"></i>
+                                        </div>
+                                        <div>
+                                            <div class="nina-act-buyer">{{ $buyerName }}</div>
+                                            <div class="nina-act-sub">{{ Str::limit($prodName, 24) }} · {{ $orderTime }}</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div class="nina-act-buyer">{{ $buyerName }}</div>
-                                        <div class="nina-act-sub">{{ Str::limit($prodName, 24) }} · {{ $orderTime }}</div>
+                                    <div class="nina-act-right">
+                                        <div class="nina-act-amount">+Rp {{ number_format($orderTotal, 0, ',', '.') }}</div>
+                                        <span class="nina-act-status">Berhasil</span>
                                     </div>
                                 </div>
-                                <div class="nina-act-right">
-                                    <div class="nina-act-amount">+Rp {{ number_format($orderTotal, 0, ',', '.') }}</div>
-                                    <span class="nina-act-status">Berhasil</span>
+                                <div class="nina-swipe-action">
+                                    <a href="{{ route('creator.sales.report') }}">
+                                        <i class="ph-bold ph-eye" style="margin-right:5px;"></i>View
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         @empty
                             <div
                                 style="background:#f8fafc; border-radius:18px; padding:2rem 1.5rem; text-align:center; border:1px dashed #cbd5e1;">
@@ -2259,5 +2297,92 @@
             const currentUnread = {{ (int) ($unreadNotifCount ?? 0) }};
             localStorage.setItem('buyle_cr_unread_notif', currentUnread);
         } catch (e) { }
+
+        // ── Swipe-left Recent Activity ──
+        (function () {
+            const SWIPE_THRESHOLD = 55;
+            const ACTION_WIDTH = 90;
+
+            function setupSwipe(wrapper) {
+                const item = wrapper.querySelector('.nina-activity-item');
+                const action = wrapper.querySelector('.nina-swipe-action');
+                if (!item || !action) return;
+
+                let startX = 0, startY = 0, currentX = 0, dragging = false, opened = false, axis = null;
+
+                item.addEventListener('touchstart', function (e) {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                    dragging = true;
+                    axis = null;
+                    item.style.transition = 'none';
+                    action.style.transition = 'none';
+                }, { passive: true });
+
+                item.addEventListener('touchmove', function (e) {
+                    if (!dragging) return;
+                    const dx = e.touches[0].clientX - startX;
+                    const dy = e.touches[0].clientY - startY;
+
+                    if (!axis) {
+                        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+                    }
+                    if (axis !== 'x') return;
+
+                    e.preventDefault();
+                    currentX = dx;
+                    const base = opened ? -ACTION_WIDTH : 0;
+                    const newX = Math.min(0, Math.max(base + currentX, -ACTION_WIDTH));
+                    item.style.transform = 'translateX(' + newX + 'px)';
+                    action.style.transform = 'translateX(' + (100 + (newX / ACTION_WIDTH) * 100) + '%)';
+                }, { passive: false });
+
+                item.addEventListener('touchend', function () {
+                    dragging = false;
+                    item.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+                    action.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+                    const base = opened ? -ACTION_WIDTH : 0;
+                    const finalX = base + currentX;
+
+                    if (!opened && currentX < -SWIPE_THRESHOLD) {
+                        item.style.transform = 'translateX(-' + ACTION_WIDTH + 'px)';
+                        action.style.transform = 'translateX(0%)';
+                        opened = true;
+                    } else if (opened && currentX > SWIPE_THRESHOLD) {
+                        item.style.transform = '';
+                        action.style.transform = 'translateX(100%)';
+                        opened = false;
+                    } else {
+                        item.style.transform = opened ? 'translateX(-' + ACTION_WIDTH + 'px)' : '';
+                        action.style.transform = opened ? 'translateX(0%)' : 'translateX(100%)';
+                    }
+                    currentX = 0;
+                    axis = null;
+                });
+
+                // Desktop click still works
+                item.addEventListener('click', function () {
+                    if (opened) return;
+                    const href = item.dataset.href;
+                    if (href) window.location.href = href;
+                });
+            }
+
+            document.querySelectorAll('.nina-swipe-wrapper').forEach(setupSwipe);
+
+            // Close all on outside touch
+            document.addEventListener('touchstart', function (e) {
+                if (!e.target.closest('.nina-swipe-wrapper')) {
+                    document.querySelectorAll('.nina-activity-item').forEach(function (el) {
+                        el.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+                        el.style.transform = '';
+                    });
+                    document.querySelectorAll('.nina-swipe-action').forEach(function (el) {
+                        el.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+                        el.style.transform = 'translateX(100%)';
+                    });
+                }
+            }, { passive: true });
+        })();
     </script>
 @endsection
