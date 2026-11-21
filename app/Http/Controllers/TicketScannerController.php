@@ -39,6 +39,13 @@ class TicketScannerController extends Controller
         $isAssignedStaff = !empty($assignedEventIds);
         $hasKycBypass    = $isKycVerified || $isAssignedStaff;
 
+        // Detail penugasan staf untuk user saat ini (posisi/divisi & nomor gate)
+        $myStaffRecord   = \App\Models\GateStaff::where('user_id', $sellerId)
+            ->where('is_active', true)
+            ->first();
+        $myStaffPosition = $myStaffRecord?->role_position ?? 'Gate Scanner';
+        $isGateDivision  = stripos($myStaffPosition, 'gate') !== false || stripos($myStaffPosition, 'scan') !== false;
+
         // ── View Mode Switch ──────────────────────────────────────────────────
         // Default: kalau assigned crew → 'crew', kalau tidak → 'creator'
         // Bisa override via session (dari tombol switch mode di UI)
@@ -297,7 +304,10 @@ class TicketScannerController extends Controller
             'allTicketEvents',
             'myPersonalScanCount',
             'viewMode',
-            'isCrewMode'
+            'isCrewMode',
+            'myStaffRecord',
+            'myStaffPosition',
+            'isGateDivision'
         ));
     }
 

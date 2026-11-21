@@ -2327,7 +2327,7 @@
             const val = selectEl.value;
             if (val === 'ticket' && !IS_CREATOR_VERIFIED) {
                 selectEl.value = lastProductType;
-                window.location.href = 'https://buyle.id/creator/event-attendance?tab=settings';
+                window.location.href = '{{ route('creator.kyc.index') }}';
                 return;
             }
             lastProductType = val;

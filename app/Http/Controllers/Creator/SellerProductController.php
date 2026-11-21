@@ -26,6 +26,12 @@ class SellerProductController extends Controller
     {
         $seller = auth()->user();
 
+        // Jika mencoba mengelola/menambah produk via ticketing tanpa e-KYC, auto-redirect ke halaman verifikasi KYC
+        if ($request->input('from') === 'ticketing' && !$seller->isKycVerified()) {
+            return redirect()->route('creator.kyc.index')
+                ->with('error', 'Akun Creator Anda wajib diverifikasi e-KYC terlebih dahulu untuk mengelola tiket event.');
+        }
+
         $search = $request->input('search', $request->input('q'));
         $status = $request->input('status');
         $type   = $request->input('type');
@@ -60,6 +66,12 @@ class SellerProductController extends Controller
      */
     public function create()
     {
+        // Cegah pembuatan produk tiket event jika creator belum lolos verifikasi e-KYC
+        if ((request('from') === 'ticketing' || request('type') === 'ticket' || request('product_type') === 'ticket') && !auth()->user()->isKycVerified()) {
+            return redirect()->route('creator.kyc.index')
+                ->with('error', 'Akun Creator Anda wajib diverifikasi e-KYC terlebih dahulu sebelum membuat produk tiket event.');
+        }
+
         $groups         = \App\Models\CreatorProductGroup::where('seller_id', auth()->id())->where('is_active', true)->orderBy('order')->get(['id', 'name']);
         $categories     = ProductCategory::where('is_active', true)->with('subCategories:id,category_id,name')->orderBy('order', 'asc')->orderBy('name', 'asc')->get(['id', 'name', 'tab']);
         $allowedDomains = DigitalLinkValidator::getAllowedDomains();
@@ -128,7 +140,7 @@ class SellerProductController extends Controller
         $data['product_type'] = in_array($pt, $validTypes) ? $pt : 'physical';
 
         if ($data['product_type'] === 'ticket' && !auth()->user()->isKycVerified()) {
-            return redirect()->to(route('ticket.scanner', ['tab' => 'settings']))
+            return redirect()->route('creator.kyc.index')
                 ->with('error', 'Untuk membuat produk tipe Tiket Event, akun Creator Anda wajib terverifikasi e-KYC terlebih dahulu.');
         }
 
@@ -351,7 +363,7 @@ class SellerProductController extends Controller
         $data['product_type'] = in_array($pt, $validTypes) ? $pt : 'physical';
 
         if ($data['product_type'] === 'ticket' && !auth()->user()->isKycVerified()) {
-            return redirect()->to(route('ticket.scanner', ['tab' => 'settings']))
+            return redirect()->route('creator.kyc.index')
                 ->with('error', 'Untuk memilih produk tipe Tiket Event, akun Creator Anda wajib terverifikasi e-KYC terlebih dahulu.');
         }
         $data['stock']        = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '') ? (int) $request->input('stock') : null;

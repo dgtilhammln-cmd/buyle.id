@@ -3265,16 +3265,30 @@
                         </div>
                     </div>
                     <div style="display:flex; align-items:center; gap:0.5rem;">
-                        {{-- Add Ticket / Event Plus Button --}}
-                        <a href="{{ url('/creator/products?from=ticketing') }}"
-                            style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.03); text-decoration:none; transition:all 0.15s ease;"
-                            title="Tambah Tiket / Event Baru">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                        </a>
+                        @if(!($isCrewMode ?? false))
+                            {{-- Add Ticket / Event Plus Button (Hanya tampil di Mode Creator) --}}
+                            @if($isKycVerified ?? false)
+                                <a href="{{ route('creator.products.create', ['from' => 'ticketing', 'type' => 'ticket']) }}"
+                                    style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.03); text-decoration:none; transition:all 0.15s ease;"
+                                    title="Tambah Tiket / Event Baru">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </a>
+                            @else
+                                <a href="{{ route('creator.kyc.index') }}"
+                                    style="width:38px; height:38px; border-radius:50%; background:#fffbeb; border:1.5px solid #fcd34d; display:flex; align-items:center; justify-content:center; color:#d97706; box-shadow:0 2px 6px rgba(217,119,6,0.15); text-decoration:none; transition:all 0.15s ease;"
+                                    title="Verifikasi e-KYC Diperlukan untuk Tambah Tiket">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </a>
+                            @endif
+                        @endif
                         {{-- Back to Dashboard --}}
                         <a href="{{ route('creator.dashboard') }}"
                             style="width:38px; height:38px; border-radius:50%; background:#ffffff; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.03); text-decoration:none; transition:all 0.15s ease;"
@@ -3625,29 +3639,91 @@
                         </div>
 
                         {{-- Quick Action Buttons --}}
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
-                            <button type="button" onclick="switchTab('tab-scanner')"
-                                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                                    <rect x="7" y="7" width="10" height="10" rx="1" />
-                                </svg>
-                                <span>Buka Scanner</span>
-                            </button>
-                            <button type="button" onclick="switchTab('tab-data')"
-                                style="background:#f8fafc; color:#334155; border:1.5px solid #e2e8f0; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                                <span>Data Kehadiran</span>
-                            </button>
-                        </div>
+                        @if($isCrewMode ?? false)
+                            {{-- Mode Kru: Disesuaikan dengan divisi/penugasan panitia --}}
+                            @if($isGateDivision ?? true)
+                                {{-- Divisi Gate / Scanner: Tombol Buka Live Scanner Full Width & Info Gate --}}
+                                <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                                    <button type="button" onclick="switchTab('tab-scanner', document.querySelector('.tab-btn[onclick*=\'tab-scanner\']')); if(typeof updateBottomNav==='function') updateBottomNav('scanner');"
+                                        style="width:100%; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.75rem 1rem; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.45rem; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
+                                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                            <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                                            <rect x="7" y="7" width="10" height="10" rx="1" />
+                                        </svg>
+                                        <span>Buka Live Scanner</span>
+                                    </button>
+                                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.4rem 0.75rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; font-size:0.72rem; color:#166534;">
+                                        <span style="font-weight:700;">Tugas: {{ $myStaffPosition ?? 'Gate Scanner' }}</span>
+                                        <span style="background:#dcfce7; padding:2px 8px; border-radius:999px; font-weight:700;">Gate #{{ $myStaffRecord?->gate_number ?? 1 }}</span>
+                                    </div>
+                                </div>
+                            @else
+                                {{-- Bukan Divisi Gate (Keamanan/Konsumsi/Stage): Tampilkan Penugasan Resmi Clean & Elegant --}}
+                                <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
+                                        <div>
+                                            <div style="font-size:0.68rem; color:#64748b; font-weight:600;">Posisi Penugasan</div>
+                                            <div style="font-size:0.84rem; font-weight:800; color:#0f172a;">{{ $myStaffPosition ?? 'Kru Event' }}</div>
+                                        </div>
+                                        <span style="background:#e0f2fe; color:#0369a1; font-size:0.68rem; font-weight:700; padding:3px 9px; border-radius:999px;">
+                                            Kru Aktif
+                                        </span>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.45rem; padding:0.55rem 0.75rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; font-size:0.72rem; color:#15803d; font-weight:600;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                                        <span>Status operasional Anda terverifikasi oleh penyelenggara event.</span>
+                                    </div>
+                                </div>
+                            @endif
+                        @else
+                            {{-- Mode Creator Event --}}
+                            @if($isKycVerified ?? false)
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
+                                    <button type="button" onclick="switchTab('tab-scanner')"
+                                        style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                                            <rect x="7" y="7" width="10" height="10" rx="1" />
+                                        </svg>
+                                        <span>Buka Scanner</span>
+                                    </button>
+                                    <button type="button" onclick="switchTab('tab-data')"
+                                        style="background:#f8fafc; color:#334155; border:1.5px solid #e2e8f0; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                            <circle cx="9" cy="7" r="4" />
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                        </svg>
+                                        <span>Data Kehadiran</span>
+                                    </button>
+                                </div>
+                            @else
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
+                                    <button type="button" onclick="switchTab('tab-scanner')"
+                                        style="background:#f8fafc; color:#334155; border:1.5px solid #e2e8f0; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                                            <rect x="7" y="7" width="10" height="10" rx="1" />
+                                        </svg>
+                                        <span>Buka Scanner</span>
+                                    </button>
+                                    <a href="{{ route('creator.kyc.index') }}"
+                                        style="background:linear-gradient(135deg, #d97706 0%, #f59e0b 100%); color:#ffffff; border:none; padding:0.65rem 0.85rem; border-radius:12px; font-size:0.78rem; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 10px rgba(217,119,6,0.25);">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                            <circle cx="12" cy="11" r="3"/>
+                                        </svg>
+                                        <span>Verifikasi e-KYC</span>
+                                    </a>
+                                </div>
+                            @endif
+                        @endif
                     </div>
                 </div>
 
