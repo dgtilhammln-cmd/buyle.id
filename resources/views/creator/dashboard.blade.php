@@ -857,6 +857,43 @@
             display: inline-block;
             margin-top: 2px;
         }
+
+        /* ── iOS Safe Area Fix for Midtrans Snap (Notch & Dynamic Island) ── */
+        @media (max-width: 768px) {
+            #snap-midtrans,
+            iframe[id*="snap-midtrans"],
+            iframe[name^="popup_"],
+            div[id*="snap-container"] {
+                top: max(50px, env(safe-area-inset-top, 50px)) !important;
+                height: calc(100% - max(50px, env(safe-area-inset-top, 50px)) - max(16px, env(safe-area-inset-bottom, 16px))) !important;
+                max-height: calc(100dvh - max(50px, env(safe-area-inset-top, 50px)) - max(16px, env(safe-area-inset-bottom, 16px))) !important;
+                box-sizing: border-box !important;
+                border-radius: 18px 18px 0 0 !important;
+            }
+
+            .snap-safe-top-bar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: max(50px, env(safe-area-inset-top, 50px));
+                background: #ffffff;
+                z-index: 999998;
+                display: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            body.snap-open .snap-safe-top-bar {
+                display: block;
+            }
+
+            #pinRequiredModal,
+            #transferModal,
+            #topupModal {
+                padding-top: max(1.25rem, calc(env(safe-area-inset-top, 0px) + 0.75rem)) !important;
+                padding-bottom: max(1.25rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem)) !important;
+            }
+        }
     </style>
     {{-- Interactive Share Modal (Compact 2 URL Cards: Digital Store & Website) --}}
     <style>
@@ -1354,6 +1391,9 @@
         </div>
     </div>
 
+    {{-- Safe Area Top Bar for Midtrans Snap on iOS (Dynamic Island & Notch) --}}
+    <div class="snap-safe-top-bar" id="snapSafeTopBar"></div>
+
     @php
         $midtransService = app(\App\Services\MidtransService::class);
         $isMidtransProd = $midtransService->isProduction();
@@ -1431,20 +1471,44 @@
                     closeTopUpModal();
 
                     const triggerSnap = () => {
+                        document.body.classList.add('snap-open');
+
+                        // Enforce iOS Safe Area under Dynamic Island & Notch
+                        let snapInterval = null;
+                        const adjustSnapFrame = () => {
+                            const snapIframe = document.getElementById('snap-midtrans') || document.querySelector('iframe[name^="popup_"]');
+                            if (snapIframe) {
+                                snapIframe.style.setProperty('top', 'max(50px, env(safe-area-inset-top, 50px))', 'important');
+                                snapIframe.style.setProperty('height', 'calc(100% - max(50px, env(safe-area-inset-top, 50px)) - max(16px, env(safe-area-inset-bottom, 16px)))', 'important');
+                                snapIframe.style.setProperty('box-sizing', 'border-box', 'important');
+                            }
+                        };
+
+                        adjustSnapFrame();
+                        snapInterval = setInterval(adjustSnapFrame, 150);
+
+                        const cleanupSnap = () => {
+                            if (snapInterval) clearInterval(snapInterval);
+                            document.body.classList.remove('snap-open');
+                        };
+
                         window.snap.pay(data.snap_token, {
                             onSuccess: function (result) {
+                                cleanupSnap();
                                 alert('Top up saldo berhasil!');
                                 window.location.reload();
                             },
                             onPending: function (result) {
+                                cleanupSnap();
                                 alert('Menunggu pembayaran Anda selesaikan.');
                                 window.location.reload();
                             },
                             onError: function (result) {
+                                cleanupSnap();
                                 alert('Pembayaran gagal atau dibatalkan.');
                             },
                             onClose: function () {
-                                // Popup Snap ditutup user
+                                cleanupSnap();
                             }
                         });
                     };
