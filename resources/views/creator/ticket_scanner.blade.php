@@ -3124,7 +3124,7 @@
                     <span class="tab-text-full">Home Event</span>
                     <small class="tab-text-mob">Home</small>
                 </button>
-                @if(isset($kyc) && $kyc && $kyc->status === 'verified')
+                @if($hasKycBypass ?? (isset($kyc) && $kyc && $kyc->status === 'verified'))
                 <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}"
                     onclick="switchTab('tab-data', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -3275,7 +3275,7 @@
                 </div>
 
                 {{-- Unverified Notice Banner on Home (if applicable) --}}
-                @if(!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified')
+                @if(!($hasKycBypass ?? (isset($kyc) && $kyc && $kyc->status === 'verified')))
                     <div
                         style="background:linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border:1.5px solid #fcd34d; border-radius:16px; padding:0.9rem 1.1rem; margin-bottom:1.15rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem;">
                         <div style="display:flex; align-items:center; gap:0.65rem;">
@@ -3289,7 +3289,7 @@
                             </div>
                             <div>
                                 <strong style="font-size:0.82rem; color:#92400e; display:block; font-weight:800;">Verifikasi Identitas e-KYC</strong>
-                                <span style="font-size:0.72rem; color:#b45309; line-height:1.4; display:block;">Wajib untuk menjual tiket event, konser, pameran, dll, atau aktif sebagai crew/volunteer.</span>
+                                <span style="font-size:0.72rem; color:#b45309; line-height:1.4; display:block;">Wajib untuk membuat dan menjual tiket event konser, pameran, atau festival Anda.</span>
                             </div>
                         </div>
                         <a href="{{ route('creator.kyc.index') }}"
@@ -3297,10 +3297,32 @@
                             Verifikasi
                         </a>
                     </div>
+                @elseif(!empty($isAssignedStaff) && (!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified'))
+                    <div
+                        style="background:linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border:1.5px solid #a7f3d0; border-radius:16px; padding:0.9rem 1.1rem; margin-bottom:1.15rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.65rem;">
+                            <div
+                                style="width:34px; height:34px; border-radius:50%; background:#bbf7d0; display:flex; align-items:center; justify-content:center; color:#15803d; flex-shrink:0;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    <polyline points="9 12 11 14 15 10" />
+                                </svg>
+                            </div>
+                            <div>
+                                <strong style="font-size:0.82rem; color:#166534; display:block; font-weight:800;">Akses Kru / Volunteer Event Aktif</strong>
+                                <span style="font-size:0.72rem; color:#15803d; line-height:1.4; display:block;">Anda terdaftar sebagai panitia tiket. Akses QR Scanner & kehadiran otomatis aktif tanpa syarat e-KYC.</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="switchTab('tab-scanner', document.querySelector('.tab-btn[onclick*=\'tab-scanner\']')); if(typeof updateBottomNav==='function') updateBottomNav('scanner');"
+                            style="background:#16a34a; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.72rem; font-weight:700; cursor:pointer; flex-shrink:0;">
+                            Scan Tiket
+                        </button>
+                    </div>
                 @endif
 
-                {{-- Cards khusus KYC verified --}}
-                @if(isset($kyc) && $kyc->status === 'verified')
+                {{-- Cards khusus KYC verified atau kru event yang ditugaskan --}}
+                @if($hasKycBypass ?? (isset($kyc) && $kyc->status === 'verified'))
 
                 {{-- 2. Highlight Card (Your Weekly Progress style from Image 2) --}}
                 <div class="home-highlight-card"
@@ -3648,7 +3670,7 @@
             <div id="tab-scanner" class="payout-tab-pane"
                 style="display: {{ $activeTab === 'scanner' ? 'block' : 'none' }};">
 
-                @if(!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified')
+                @if(!($hasKycBypass ?? (isset($kyc) && $kyc && $kyc->status === 'verified')))
                     <div
                         style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #fcd34d; border-radius: 18px; padding: 1.75rem 1.5rem; text-align: center; margin-top: 0.5rem;">
                         <div
@@ -3674,6 +3696,12 @@
                         </a>
                     </div>
                 @else
+                    @if(!empty($isAssignedStaff) && (!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified'))
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                            <span style="font-size:0.75rem; color:#15803d; font-weight:600;">Mode Panitia / Volunteer Event: Bebas e-KYC untuk scan tiket masuk.</span>
+                        </div>
+                    @endif
 
                     {{-- Quick Mobile Stats Chips (Hanya tampil di tab scanner) --}}
                     <div class="scanner-mobile-stats-row">
@@ -4379,14 +4407,14 @@
                                         <span>Panitia Terdaftar (<span
                                                 id="simpleStaffTotalCount">{{ isset($gateStaffList) ? $gateStaffList->count() : 0 }}</span>)</span>
                                     </div>
-                                    <button type="button" onclick="loadAllStaff()"
-                                        style="background:none; border:none; color:#1eb349; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
+                                    <button type="button" onclick="loadAllStaff(true)" id="btnSyncStaff"
+                                        style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; padding:4px 10px; border-radius:8px; transition:all 0.15s ease;">
+                                        <svg id="syncStaffIcon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"
+                                            viewBox="0 0 24 24" style="transition:transform 0.5s ease;">
                                             <polyline points="23 4 23 10 17 10"></polyline>
                                             <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                                         </svg>
-                                        <span>Muat Ulang</span>
+                                        <span>Sinkronkan</span>
                                     </button>
                                 </div>
 
@@ -4398,11 +4426,9 @@
                                                 <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
                                                     <div
                                                         style="width:36px; height:36px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0; overflow:hidden;">
-                                                        @if($st->user && $st->user->avatar)
-                                                            <img src="{{ asset('storage/' . $st->user->avatar) }}" alt="{{ $st->name }}" style="width:100%; height:100%; object-fit:cover;">
-                                                        @else
-                                                            {{ strtoupper(substr($st->name, 0, 2)) }}
-                                                        @endif
+                                                        <img src="{{ $st->avatar_url }}" alt="{{ $st->name }}"
+                                                            style="width:100%; height:100%; object-fit:cover;"
+                                                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($st->name) }}&background=1eb349&color=ffffff&bold=true&size=128';">
                                                     </div>
                                                     <div style="min-width:0;">
                                                         <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
@@ -4416,6 +4442,16 @@
                                                             <span style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px;">
                                                                 {{ $st->role_position ?? 'Gate Scanner' }}
                                                             </span>
+                                                            @if($st->user_id)
+                                                                <span style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:3px;" title="Akun Buyle.id Terverifikasi & Tersinkron">
+                                                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                                                                    Tersinkron
+                                                                </span>
+                                                            @else
+                                                                <span style="background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0; font-size:0.68rem; font-weight:600; padding:1px 6px; border-radius:4px;">
+                                                                    Manual
+                                                                </span>
+                                                            @endif
                                                         </div>
                                                         <span
                                                             style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem; margin-top:2px;">
@@ -4468,9 +4504,10 @@
     {{-- ══ MOBILE BOTTOM NAVIGATION BAR (like /pos page) ══ --}}
     @php
         $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
+        $canAccessData = $hasKycBypass ?? ($isKycVerified || !empty($isAssignedStaff));
     @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
-        <div class="scanner-bottom-nav-bar" style="{{ !$isKycVerified ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
+        <div class="scanner-bottom-nav-bar" style="{{ !$canAccessData ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
             {{-- 1. Home (Pojok Kiri) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'home' ? 'active' : '' }}" id="scanNavHome"
                 onclick="switchTab('tab-home', this); updateBottomNav('home')" title="Home">
@@ -4480,7 +4517,7 @@
                 </svg>
             </button>
 
-            @if($isKycVerified)
+            @if($canAccessData)
             {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'data' ? 'active' : '' }}" id="scanNavData"
                 onclick="switchTab('tab-data', this); updateBottomNav('data')" title="Data Kehadiran">
@@ -5243,11 +5280,14 @@
                     });
                     const data = await res.json();
                     if (data.success && data.user) {
+                        const fallbackAv = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.user.name)}&background=1eb349&color=ffffff&bold=true&size=64`;
+                        const av = data.user.avatar || fallbackAv;
                         preview.innerHTML = `
-                            <span style="color:#16a34a; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                                ${data.user.name} (@${data.user.username})
-                            </span>
+                            <div style="display:inline-flex; align-items:center; gap:6px; background:#ecfdf5; border:1px solid #a7f3d0; padding:4px 8px; border-radius:6px; margin-top:3px;">
+                                <img src="${av}" alt="${data.user.name}" style="width:20px; height:20px; border-radius:50%; object-fit:cover;" onerror="this.onerror=null; this.src='${fallbackAv}';">
+                                <span style="color:#15803d; font-size:0.75rem; font-weight:700;">${data.user.name} (@${data.user.username})</span>
+                                <span style="background:#16a34a; color:#fff; font-size:0.62rem; font-weight:700; padding:1px 6px; border-radius:999px; display:inline-flex; align-items:center; gap:2px;"><svg width="8" height="8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Tersinkron</span>
+                            </div>
                         `;
                     } else {
                         preview.innerHTML = `
@@ -5308,9 +5348,14 @@
             }
         }
 
-        async function loadAllStaff() {
+        async function loadAllStaff(isManualSync = false) {
             const container = document.getElementById('simpleStaffListContainer');
             const countBadge = document.getElementById('simpleStaffTotalCount');
+            const syncIcon = document.getElementById('syncStaffIcon');
+            if (syncIcon) {
+                syncIcon.style.transform = 'rotate(360deg)';
+                setTimeout(() => { if (syncIcon) syncIcon.style.transform = ''; }, 600);
+            }
             if (!container) return;
 
             try {
@@ -5329,13 +5374,21 @@
                     data.staff.forEach(st => {
                         const statusClass = st.is_active ? 'badge-used' : 'badge-cancelled';
                         const statusText = st.is_active ? 'Aktif' : 'Nonaktif';
-                        const initial = (st.name || 'P').substring(0, 2).toUpperCase();
                         const evName = st.product ? st.product.name : 'Event Tiket';
                         const uHandle = st.user && st.user.username ? `(@${st.user.username})` : '';
                         const pos = st.role_position || 'Gate Scanner';
-                        const avatarHtml = (st.user && st.user.avatar)
-                            ? `<img src="/storage/${st.user.avatar}" alt="${st.name}" style="width:100%; height:100%; object-fit:cover;">`
-                            : initial;
+                        const isSynced = st.is_synced || !!st.user_id;
+
+                        const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(st.name || 'Staff')}&background=1eb349&color=ffffff&bold=true&size=128`;
+                        const avatarSrc = st.avatar_url || (st.user && st.user.avatar 
+                            ? (st.user.avatar.startsWith('http') ? st.user.avatar : `/storage/${st.user.avatar.replace(/^storage\//, '')}`)
+                            : fallbackAvatar);
+
+                        const avatarHtml = `<img src="${avatarSrc}" alt="${st.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='${fallbackAvatar}';">`;
+
+                        const syncBadge = isSynced
+                            ? `<span style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:3px;" title="Akun Buyle.id Terverifikasi & Tersinkron"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Tersinkron</span>`
+                            : `<span style="background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0; font-size:0.68rem; font-weight:600; padding:1px 6px; border-radius:4px;">Manual</span>`;
 
                         html += `
                             <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
@@ -5352,6 +5405,7 @@
                                             <span style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px;">
                                                 ${pos}
                                             </span>
+                                            ${syncBadge}
                                         </div>
                                         <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem; margin-top:2px;">
                                             <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>

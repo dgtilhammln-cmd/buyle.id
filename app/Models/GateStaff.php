@@ -57,4 +57,16 @@ class GateStaff extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * Dapatkan URL avatar staf panitia yang valid & tersinkronisasi.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->user && $this->user->avatar_url) {
+            return $this->user->avatar_url;
+        }
+        $name = urlencode($this->name ?: 'Staff');
+        return "https://ui-avatars.com/api/?name={$name}&background=1eb349&color=ffffff&bold=true&size=128";
+    }
 }

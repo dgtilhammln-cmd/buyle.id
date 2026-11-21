@@ -23,6 +23,16 @@ class TicketScannerController extends Controller
         $kyc = \App\Models\CreatorKyc::where('user_id', $sellerId)->first();
         $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
 
+        // Event tiket yang ditugaskan kepada user ini sebagai panitia aktif (Gate Scanner, Volunteer, Crew, dll)
+        $assignedEventIds = \App\Models\GateStaff::where('user_id', $sellerId)
+            ->where('is_active', true)
+            ->pluck('product_id')
+            ->toArray();
+
+        // Staf / Volunteer yang ditugaskan ke event mendapatkan akses operasional tanpa syarat e-KYC
+        $isAssignedStaff = !empty($assignedEventIds);
+        $hasKycBypass    = $isKycVerified || $isAssignedStaff;
+
         $selectedEventId = $request->input('event_id');
         $statusFilter = $request->input('status');
         $search = trim($request->input('search', ''));
@@ -30,20 +40,14 @@ class TicketScannerController extends Controller
         if (in_array($rawTab, ['settings', 'rekening', 'profile'])) {
             return redirect()->route('creator.ticket.profile');
         } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
-            // Unverified KYC user cannot access data or gate tab
-            if (!$isKycVerified && in_array($rawTab, ['data', 'gate'])) {
+            // Pengguna tanpa verifikasi KYC dan bukan kru/panitia tidak dapat membuka tab data atau gate
+            if (!$hasKycBypass && in_array($rawTab, ['data', 'gate'])) {
                 return redirect()->route('creator.ticket.scanner', ['tab' => 'home']);
             }
             $activeTab = $rawTab;
         } else {
             $activeTab = 'home';
         }
-
-        // Event tiket yang ditugaskan kepada user ini sebagai panitia aktif (Gate Scanner, dll)
-        $assignedEventIds = \App\Models\GateStaff::where('user_id', $sellerId)
-            ->where('is_active', true)
-            ->pluck('product_id')
-            ->toArray();
 
         // Ambil daftar event/produk bertipe ticket milik creator ini ATAU yang ditugaskan sebagai panitia
         $events = Product::where(function ($q) use ($sellerId, $assignedEventIds) {
@@ -233,7 +237,7 @@ class TicketScannerController extends Controller
         ];
 
         $gateStaffList = \App\Models\GateStaff::where('creator_id', $sellerId)
-            ->with('product:id,name,event_date')
+            ->with(['product:id,name,event_date', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id,avatar'])
             ->orderBy('id', 'desc')
             ->get();
 
@@ -261,6 +265,9 @@ class TicketScannerController extends Controller
             'totalCreatorCapacity',
             'allTicketsCached',
             'kyc',
+            'isKycVerified',
+            'isAssignedStaff',
+            'hasKycBypass',
             'gateStaffList',
             'primaryEvent',
             'daysUntilEvent',

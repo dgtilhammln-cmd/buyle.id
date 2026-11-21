@@ -33,6 +33,8 @@ class EnsureOnboardingCompleted
         if (
             $request->is('onboarding*') ||
             $request->is('creator/onboarding*') ||
+            $request->is('creator/event-attendance*') ||
+            $request->is('creator/scanner*') ||
             $request->is('checkout*') ||
             $request->is('keranjang*') ||
             $request->is('cart*') ||

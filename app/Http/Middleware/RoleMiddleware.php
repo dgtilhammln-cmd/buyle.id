@@ -38,8 +38,13 @@ class RoleMiddleware
                 return redirect()->route('creator.pos.index')->with('error', 'Akses Terbatas: Akun staf kasir hanya diizinkan membuka modul Kasir POS.');
             }
 
-            // Jika buyer mencoba membuka menu creator/seller, arahkan ke onboarding (yang sekarang akan mengubah role secara otomatis dan melempar ke /creator/profile)
+            // Jika buyer mencoba membuka menu creator/seller, izinkan jika bertugas sebagai panitia tiket aktif
             if ($role === 'seller' && $userRole === 'buyer') {
+                $isStaff = \App\Models\GateStaff::where('user_id', auth()->id())->where('is_active', true)->exists();
+                $routeName = $request->route() ? $request->route()->getName() : '';
+                if ($isStaff && str_starts_with($routeName, 'creator.ticket.')) {
+                    return $next($request);
+                }
                 return redirect()->route('creator.onboarding');
             }
 

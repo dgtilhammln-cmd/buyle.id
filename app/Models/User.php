@@ -236,4 +236,20 @@ class User extends Authenticatable
         }
         return null;
     }
+
+    /**
+     * URL Avatar pengguna yang valid (support http/https, Google Avatar, Creator Profile avatar, dan disk storage).
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        $raw = $this->avatar ?: ($this->creatorProfile?->avatar ?? null);
+        if (!$raw) {
+            return null;
+        }
+        if (str_starts_with($raw, 'http://') || str_starts_with($raw, 'https://')) {
+            return $raw;
+        }
+        $clean = ltrim(preg_replace('#^storage/#', '', $raw), '/');
+        return asset('storage/' . $clean);
+    }
 }

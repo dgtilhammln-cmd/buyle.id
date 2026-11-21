@@ -149,7 +149,7 @@ class GateStaffController extends Controller
             }
         }
 
-        $avatarUrl = $user->avatar ? asset('storage/' . $user->avatar) : null;
+        $avatarUrl = $user->avatar_url ?: ("https://ui-avatars.com/api/?name=" . urlencode($user->name) . "&background=1eb349&color=ffffff&bold=true&size=128");
         $storeName = $user->creatorProfile?->store_name ?? $user->name;
 
         return response()->json([
@@ -163,7 +163,7 @@ class GateStaffController extends Controller
                 'store'    => $storeName,
                 'role'     => $user->role,
             ],
-            'message' => "User @{$user->username} ({$user->name}) ditemukan.",
+            'message' => "User @{$user->username} ({$user->name}) ditemukan & siap disinkronkan.",
         ]);
     }
 
@@ -175,9 +175,14 @@ class GateStaffController extends Controller
     {
         $creatorId = auth()->id();
         $staff = GateStaff::where('creator_id', $creatorId)
-            ->with(['product:id,name,event_date', 'user:id,name,username,avatar'])
+            ->with(['product:id,name,event_date', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id,avatar'])
             ->orderBy('id', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($st) {
+                $st->avatar_url = $st->avatar_url;
+                $st->is_synced  = (bool) $st->user_id;
+                return $st;
+            });
 
         return response()->json([
             'success' => true,
@@ -195,9 +200,14 @@ class GateStaffController extends Controller
         $this->authorizeCreator($product);
 
         $staff = GateStaff::where('product_id', $product->id)
-            ->with(['product:id,name', 'user:id,name,username,avatar'])
+            ->with(['product:id,name', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id,avatar'])
             ->orderBy('id', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($st) {
+                $st->avatar_url = $st->avatar_url;
+                $st->is_synced  = (bool) $st->user_id;
+                return $st;
+            });
 
         return response()->json(['success' => true, 'staff' => $staff, 'count' => $staff->count()]);
     }
