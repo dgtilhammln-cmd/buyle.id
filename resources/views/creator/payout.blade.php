@@ -1106,16 +1106,84 @@
 
     @php
         $banks = [
-            'E-Wallet' => ['GoPay', 'OVO', 'Dana', 'ShopeePay', 'LinkAja', 'AstraPay'],
-            'Bank Nasional' => ['Bank BCA', 'Bank Mandiri', 'Bank BRI', 'Bank BNI', 'Bank BSI', 'CIMB Niaga', 'Permata Bank', 'Bank Danamon', 'Bank BTN', 'Bank Panin', 'OCBC NISP', 'Bank Maybank', 'Bank Mega', 'Bank Sinarmas'],
-            'Bank Digital' => ['Bank Jago', 'SeaBank', 'Blu by BCA Digital', 'Jenius / SMBC', 'Allo Bank', 'Bank Neo Commerce', 'Line Bank (KEB Hana)', 'Superbank'],
-            'Bank Daerah' => ['Bank DKI', 'Bank BJB', 'Bank Jatim', 'Bank Jateng', 'Bank Sumut', 'Bank Nagari', 'Bank Kalbar', 'Bank Sulselbar'],
+            'E-Wallet' => [
+                'GoPay',
+                'ShopeePay',
+                'DANA',
+                'OVO',
+                'LinkAja',
+                'AstraPay',
+                'Jenius Pay',
+            ],
+            'Bank Digital' => [
+                'Bank Jago',
+                'Bank Jago Syariah',
+                'SMBC Indonesia (Jenius)',
+                'SeaBank',
+                'blu by BCA Digital',
+                'Allo Bank',
+                'Bank Neo Commerce (BNC)',
+                'Bank Aladin Syariah',
+                'Superbank',
+                'Krom Bank',
+                'MNC Bank',
+                'Bank Amar',
+                'Bank Saqu',
+            ],
+            'Bank BUMN' => [
+                'BRI',
+                'BNI',
+                'Mandiri',
+                'BTN',
+                'BSI (Bank Syariah Indonesia)',
+            ],
+            'Bank Swasta Nasional' => [
+                'BCA',
+                'BCA Syariah',
+                'CIMB Niaga',
+                'CIMB Niaga Syariah',
+                'Danamon',
+                'Danamon Syariah',
+                'Permata',
+                'Permata Syariah',
+                'OCBC',
+                'OCBC Syariah',
+                'Maybank',
+                'Maybank Syariah',
+                'ANZ Panin',
+                'Panin Bank',
+                'UOB Indonesia',
+                'Bank Mega',
+                'Bank Mega Syariah',
+                'BTPN Syariah',
+                'KB Bank (Bukopin)',
+                'Sinarmas',
+                'Mayapada International',
+                'Muamalat Indonesia',
+            ],
+            'Bank Pembangunan Daerah (BPD)' => [
+                'BJB (Jawa Barat dan Banten)',
+                'Bank BJB Syariah',
+                'Bank Jatim',
+                'Bank Jatim Syariah',
+                'Bank Jateng',
+                'Bank Jateng Syariah',
+                'BPD Bali',
+                'Bank Sumut',
+                'Bank Sumut Syariah',
+                'Bank Nagari',
+                'Bank Nagari Syariah',
+                'Bankaltimtara',
+                'Bankaltimtara Syariah',
+                'Bank Papua',
+            ],
         ];
         $bankTypeColors = [
             'E-Wallet' => ['bg' => '#EFF6FF', 'color' => '#1D4ED8'],
-            'Bank Nasional' => ['bg' => '#F0FDF4', 'color' => '#166534'],
             'Bank Digital' => ['bg' => '#FFF7ED', 'color' => '#C2410C'],
-            'Bank Daerah' => ['bg' => '#F5F3FF', 'color' => '#6D28D9'],
+            'Bank BUMN' => ['bg' => '#F0FDF4', 'color' => '#166534'],
+            'Bank Swasta Nasional' => ['bg' => '#FEF3C7', 'color' => '#B45309'],
+            'Bank Pembangunan Daerah (BPD)' => ['bg' => '#F5F3FF', 'color' => '#6D28D9'],
         ];
         $allBanks = collect($banks)->flatMap(fn($b) => $b)->values()->toArray();
         $savedBank = $seller->bank_name ?? '';
@@ -1343,7 +1411,7 @@
                                                                     onclick="selectBank('{{ $bankItem }}', '{{ $groupName }}')">
                                                                     {{ $bankItem }}
                                                                     <span
-                                                                        class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank Daerah' ? 'DAERAH' : 'BANK')) }}</span>
+                                                                        class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank BUMN' ? 'BUMN' : ($groupName === 'Bank Swasta Nasional' ? 'SWASTA' : 'BPD'))) }}</span>
                                                                 </div>
                                                             @endforeach
                                                         @endforeach
@@ -1489,7 +1557,7 @@
                                                         onclick="selectBank2('{{ $bankItem }}')">
                                                         {{ $bankItem }}
                                                         <span
-                                                            class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank Daerah' ? 'DAERAH' : 'BANK')) }}</span>
+                                                            class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank BUMN' ? 'BUMN' : ($groupName === 'Bank Swasta Nasional' ? 'SWASTA' : 'BPD'))) }}</span>
                                                     </div>
                                                 @endforeach
                                             @endforeach

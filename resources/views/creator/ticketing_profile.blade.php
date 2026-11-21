@@ -1006,14 +1006,29 @@
                         <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Bank / E-Wallet</label>
                         <select name="bank_name" required style="width:100%; height:42px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:12px; font-size:0.84rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
                             <option value="">— Pilih Bank / E-Wallet —</option>
-                            <optgroup label="Bank Nasional">
-                                @foreach(['BCA', 'Mandiri', 'BRI', 'BNI', 'CIMB Niaga', 'Danamon', 'Permata', 'BSI', 'BTN', 'Maybank', 'Panin', 'OCBC NISP', 'Bank Neo Commerce', 'Jenius (SMBC)'] as $bank)
-                                    <option value="{{ $bank }}" {{ $seller->bank_name === $bank ? 'selected' : '' }}>{{ $bank }}</option>
+                            <optgroup label="E-Wallet">
+                                @foreach(['GoPay', 'ShopeePay', 'DANA', 'OVO', 'LinkAja', 'AstraPay', 'Jenius Pay'] as $ewallet)
+                                    <option value="{{ $ewallet }}" {{ (old('bank_name', $seller->bank_name) === $ewallet || strtolower($seller->bank_name ?? '') === strtolower($ewallet)) ? 'selected' : '' }}>{{ $ewallet }}</option>
                                 @endforeach
                             </optgroup>
-                            <optgroup label="E-Wallet">
-                                @foreach(['GoPay', 'OVO', 'Dana', 'ShopeePay', 'LinkAja', 'Flip'] as $ewallet)
-                                    <option value="{{ $ewallet }}" {{ $seller->bank_name === $ewallet ? 'selected' : '' }}>{{ $ewallet }}</option>
+                            <optgroup label="Bank Digital">
+                                @foreach(['Bank Jago', 'Bank Jago Syariah', 'SMBC Indonesia (Jenius)', 'SeaBank', 'blu by BCA Digital', 'Allo Bank', 'Bank Neo Commerce (BNC)', 'Bank Aladin Syariah', 'Superbank', 'Krom Bank', 'MNC Bank', 'Bank Amar', 'Bank Saqu'] as $bank)
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Bank BUMN">
+                                @foreach(['BRI', 'BNI', 'Mandiri', 'BTN', 'BSI (Bank Syariah Indonesia)'] as $bank)
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Bank Swasta Nasional">
+                                @foreach(['BCA', 'BCA Syariah', 'CIMB Niaga', 'CIMB Niaga Syariah', 'Danamon', 'Danamon Syariah', 'Permata', 'Permata Syariah', 'OCBC', 'OCBC Syariah', 'Maybank', 'Maybank Syariah', 'ANZ Panin', 'Panin Bank', 'UOB Indonesia', 'Bank Mega', 'Bank Mega Syariah', 'BTPN Syariah', 'KB Bank (Bukopin)', 'Sinarmas', 'Mayapada International', 'Muamalat Indonesia'] as $bank)
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
+                                @endforeach
+                            </optgroup>
+                            <optgroup label="Bank Pembangunan Daerah (BPD)">
+                                @foreach(['BJB (Jawa Barat dan Banten)', 'Bank BJB Syariah', 'Bank Jatim', 'Bank Jatim Syariah', 'Bank Jateng', 'Bank Jateng Syariah', 'BPD Bali', 'Bank Sumut', 'Bank Sumut Syariah', 'Bank Nagari', 'Bank Nagari Syariah', 'Bankaltimtara', 'Bankaltimtara Syariah', 'Bank Papua'] as $bank)
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
                                 @endforeach
                             </optgroup>
                         </select>

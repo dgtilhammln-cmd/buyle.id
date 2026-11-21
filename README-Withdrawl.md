@@ -205,51 +205,78 @@ Jika terjadi situasi force majeure atau event terbukti dibatalkan oleh pihak pen
 
 Sistem hanya mengizinkan institusi keuangan resmi berizin Bank Indonesia (BI) dan Otoritas Jasa Keuangan (OJK). Opsi tidak resmi dan koperasi dihilangkan untuk menjaga validitas nomor rekening.
 
-### 4.1 Daftar Institusi Terverifikasi (+35 Opsi Resmi)
+### 4.1 Daftar Institusi Terverifikasi (+55 Opsi Resmi)
 
 1. E-Wallet Resmi:
    - GoPay
-   - OVO
-   - Dana
    - ShopeePay
+   - DANA
+   - OVO
    - LinkAja
    - AstraPay
+   - Jenius Pay
 
-2. Bank Nasional / Terbesar:
-   - Bank BCA
-   - Bank Mandiri
-   - Bank BRI
-   - Bank BNI
-   - Bank BSI (Syariah Indonesia)
-   - CIMB Niaga
-   - Permata Bank
-   - Bank Danamon
-   - Bank BTN
-   - Bank Panin
-   - OCBC NISP
-   - Bank Maybank
-   - Bank Mega
-   - Bank Sinarmas
-
-3. Bank Digital Populer:
+2. Bank Digital Populer:
    - Bank Jago
+   - Bank Jago Syariah
+   - SMBC Indonesia (Jenius)
    - SeaBank
-   - Blu by BCA Digital
-   - Jenius / SMBC
+   - blu by BCA Digital
    - Allo Bank
-   - Bank Neo Commerce
-   - Line Bank (KEB Hana)
+   - Bank Neo Commerce (BNC)
+   - Bank Aladin Syariah
    - Superbank
+   - Krom Bank
+   - MNC Bank
+   - Bank Amar
+   - Bank Saqu
 
-4. Bank Pembangunan Daerah:
-   - Bank DKI
-   - Bank BJB
+3. Bank BUMN:
+   - BRI
+   - BNI
+   - Mandiri
+   - BTN
+   - BSI (Bank Syariah Indonesia)
+
+4. Bank Swasta Nasional:
+   - BCA
+   - BCA Syariah
+   - CIMB Niaga
+   - CIMB Niaga Syariah
+   - Danamon
+   - Danamon Syariah
+   - Permata
+   - Permata Syariah
+   - OCBC
+   - OCBC Syariah
+   - Maybank
+   - Maybank Syariah
+   - ANZ Panin
+   - Panin Bank
+   - UOB Indonesia
+   - Bank Mega
+   - Bank Mega Syariah
+   - BTPN Syariah
+   - KB Bank (Bukopin)
+   - Sinarmas
+   - Mayapada International
+   - Muamalat Indonesia
+
+5. Bank Pembangunan Daerah (BPD):
+   - BJB (Jawa Barat dan Banten)
+   - Bank BJB Syariah
    - Bank Jatim
+   - Bank Jatim Syariah
    - Bank Jateng
+   - Bank Jateng Syariah
+   - BPD Bali
    - Bank Sumut
+   - Bank Sumut Syariah
    - Bank Nagari
-   - Bank Kalbar
-   - Bank Sulselbar
+   - Bank Nagari Syariah
+   - Bankaltimtara
+   - Bankaltimtara Syariah
+   - Bank Papua
 
 ### 4.2 Komponen UI: Searchable Dropdown dengan Live Search
 - Dropdown memiliki pencarian cepat di bagian atas.
