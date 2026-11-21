@@ -2026,7 +2026,7 @@
                         </div>
 
                         {{-- PRICE --}}
-                        @if($service->isTraktir() || $service->isPayWhatYouWant() || $service->price > 0 || $service->sale_price !== null)
+                        @if($service->isTraktir() || $service->isPayWhatYouWant() || $service->isFree() || $service->price > 0 || $service->sale_price !== null)
                             <div class="pd-price-box">
                                 @if($service->isTraktir())
                                     <div>
@@ -2288,9 +2288,9 @@
                                 @if($service->variantOptions && $service->variantOptions->count() > 0)
                                     @php
                                         $hasVariants = true;
-                                        $isFreeProduct = $service->sale_price !== null && (float) $service->sale_price <= 0;
+                                        $isFreeProduct = $service->isFree() || ($service->sale_price !== null && (float) $service->sale_price <= 0);
                                         $basePrice = (!$isFreeProduct && $service->sale_price > 0 && $service->sale_price < $service->price)
-                                            ? (float) $service->sale_price : (float) $service->price;
+                                            ? (float) $service->sale_price : (float) ($service->price ?? 0);
                                         $defaultProductImage = !empty($imgs[0]) ? $imgs[0] : ($service->image ? asset('storage/' . $service->image) : asset('images/service-default.jpg'));
                                     @endphp
                                     <div id="pd-variant-section" style="display:none;">
@@ -2474,13 +2474,15 @@
                                                 {{ $service->ticket_war_start->isoFormat('D MMMM Y, HH:mm') }} WIB</span>
                                         </button>
                                         <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
-                                            <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
-                                                onclick="submitPdCart('cart')">
-                                                Tambah Keranjang
-                                            </button>
+                                            @if(!$service->isFree() && !($service->sale_price !== null && (float) $service->sale_price <= 0))
+                                                <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
+                                                    onclick="submitPdCart('cart')">
+                                                    Tambah Keranjang
+                                                </button>
+                                            @endif
                                             <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;"
                                                 onclick="submitPdCart('buy')">
-                                                Beli Sekarang
+                                                {{ $service->isFree() || ($service->sale_price !== null && (float) $service->sale_price <= 0) ? 'Klaim Gratis' : 'Beli Sekarang' }}
                                             </button>
                                         </div>
                                     </div>
@@ -2980,11 +2982,13 @@
 
                                 @else
                                     <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
-                                        <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
-                                            @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0)
-                                            disabled @endif onclick="submitPdCart('cart')">
-                                            Tambah Keranjang
-                                        </button>
+                                        @if(!$service->isFree() && !($service->sale_price !== null && (float) $service->sale_price <= 0))
+                                            <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
+                                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0)
+                                                disabled @endif onclick="submitPdCart('cart')">
+                                                Tambah Keranjang
+                                            </button>
+                                        @endif
                                         <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;"
                                             @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0)
                                             disabled @endif onclick="submitPdCart('buy')">
@@ -4956,13 +4960,15 @@
         </div>
 
         {{-- MOBILE STICKY BAR --}}
-        @if($service->price > 0)
+        @if($service->price > 0 || $service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0))
             <div class="pd-sticky-bar">
-                <button type="button" onclick="submitPdCart('cart')" class="pd-btn pd-btn-outline" @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
-                    Keranjang
-                </button>
-                <button type="button" onclick="submitPdCart('buy')" class="pd-btn pd-btn-primary" @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
-                    Beli Sekarang
+                @if(!$service->isFree() && !($service->sale_price !== null && (float)$service->sale_price <= 0))
+                    <button type="button" onclick="submitPdCart('cart')" class="pd-btn pd-btn-outline" @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                        Keranjang
+                    </button>
+                @endif
+                <button type="button" onclick="submitPdCart('buy')" class="pd-btn pd-btn-primary" style="{{ ($service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0)) ? 'flex:1; width:100%;' : '' }}" @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                    {{ ($service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0)) ? 'Klaim Gratis' : 'Beli Sekarang' }}
                 </button>
             </div>
         @endif
