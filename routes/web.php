@@ -1129,6 +1129,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Ticket Detail JSON (untuk modal)
     Route::get('/scanner/ticket-detail/{ticket}', [\App\Http\Controllers\TicketScannerController::class, 'ticketDetail'])->name('creator.ticket.scanner.detail');
     // Gate Staff CRUD (Creator only)
+    Route::get('/scanner/check-staff-username', [\App\Http\Controllers\GateStaffController::class, 'checkUsername'])->name('ticket.scanner.staff.check-username');
     Route::get('/scanner/all-staff', [\App\Http\Controllers\GateStaffController::class, 'allStaff'])->name('ticket.scanner.staff.all');
     Route::get('/scanner/staff/{product}', [\App\Http\Controllers\GateStaffController::class, 'index'])->name('ticket.scanner.staff.index');
     Route::post('/scanner/staff/{product}', [\App\Http\Controllers\GateStaffController::class, 'store'])->name('ticket.scanner.staff.store');

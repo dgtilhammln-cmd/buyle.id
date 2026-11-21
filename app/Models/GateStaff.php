@@ -13,8 +13,10 @@ class GateStaff extends Model
     protected $fillable = [
         'product_id',
         'creator_id',
+        'user_id',
         'name',
         'gate_number',
+        'role_position',
         'pin',
         'is_active',
     ];
@@ -49,5 +51,10 @@ class GateStaff extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creator_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -39,20 +39,34 @@ class TicketScannerController extends Controller
             $activeTab = 'home';
         }
 
-        // Ambil daftar event/produk bertipe ticket milik creator ini (menggunakan seller_id)
-        $events = Product::where('seller_id', $sellerId)
+        // Event tiket yang ditugaskan kepada user ini sebagai panitia aktif (Gate Scanner, dll)
+        $assignedEventIds = \App\Models\GateStaff::where('user_id', $sellerId)
+            ->where('is_active', true)
+            ->pluck('product_id')
+            ->toArray();
+
+        // Ambil daftar event/produk bertipe ticket milik creator ini ATAU yang ditugaskan sebagai panitia
+        $events = Product::where(function ($q) use ($sellerId, $assignedEventIds) {
+                $q->where('seller_id', $sellerId);
+                if (!empty($assignedEventIds)) {
+                    $q->orWhereIn('id', $assignedEventIds);
+                }
+            })
             ->where('product_type', 'ticket')
             ->with(['variantOptions.values'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Query dasar tiket milik creator (baik sebagai seller tiket atau seller produk)
+        // Query dasar tiket milik creator (baik sebagai seller tiket, pemilik produk, ATAU panitia yang ditugaskan)
         $baseQuery = TicketPass::with(['product', 'buyer', 'organizer', 'order'])
-            ->where(function ($q) use ($sellerId) {
+            ->where(function ($q) use ($sellerId, $assignedEventIds) {
                 $q->where('seller_id', $sellerId)
                   ->orWhereHas('product', function ($pq) use ($sellerId) {
                       $pq->where('seller_id', $sellerId);
                   });
+                if (!empty($assignedEventIds)) {
+                    $q->orWhereIn('product_id', $assignedEventIds);
+                }
             });
 
         // Seluruh tiket milik creator ini untuk Offline/Crowded In-Memory Client Cache
@@ -281,13 +295,22 @@ class TicketScannerController extends Controller
 
         try {
             DB::transaction(function () use ($tokensToSearch, $rawInput, &$result) {
-                // 1. Cari tiket KHUSUS milik creator yang sedang login (baik sebagai seller_id tiket atau pemilik produk)
+                $sellerId = auth()->id();
+                $assignedEventIds = \App\Models\GateStaff::where('user_id', $sellerId)
+                    ->where('is_active', true)
+                    ->pluck('product_id')
+                    ->toArray();
+
+                // 1. Cari tiket KHUSUS milik creator yang sedang login (baik sebagai seller_id tiket, pemilik produk, ATAU panitia yang ditugaskan)
                 $ticket = TicketPass::with(['product.seller', 'buyer'])
-                    ->where(function ($q) {
-                        $q->where('seller_id', auth()->id())
-                          ->orWhereHas('product', function ($pq) {
-                              $pq->where('seller_id', auth()->id());
+                    ->where(function ($q) use ($sellerId, $assignedEventIds) {
+                        $q->where('seller_id', $sellerId)
+                          ->orWhereHas('product', function ($pq) use ($sellerId) {
+                              $pq->where('seller_id', $sellerId);
                           });
+                        if (!empty($assignedEventIds)) {
+                            $q->orWhereIn('product_id', $assignedEventIds);
+                        }
                     })
                     ->where(function ($q) use ($tokensToSearch) {
                         foreach ($tokensToSearch as $t) {
@@ -372,10 +395,16 @@ class TicketScannerController extends Controller
                 }
 
                 // 5. Tiket valid — tandai sebagai used
+                $staffRecord = \App\Models\GateStaff::where('user_id', $sellerId)
+                    ->where('product_id', $ticket->product_id)
+                    ->first();
+
                 $ticket->update([
-                    'status'        => 'used',
-                    'checked_in_at' => now(),
-                    'checked_in_by' => auth()->id(),
+                    'status'                => 'used',
+                    'checked_in_at'         => now(),
+                    'checked_in_by'         => $sellerId,
+                    'scanned_by_staff_name' => $staffRecord ? (auth()->user()->name . ' (' . ($staffRecord->role_position ?? 'Gate Scanner') . ')') : $ticket->scanned_by_staff_name,
+                    'scanned_at_gate'       => $staffRecord ? ($staffRecord->gate_number ?: 1) : $ticket->scanned_at_gate,
                 ]);
 
                 $result = response()->json([
@@ -471,8 +500,12 @@ class TicketScannerController extends Controller
     public function toggleCheckin(Request $request, TicketPass $ticket)
     {
         $sellerId = auth()->id();
+        $isAssignedStaff = \App\Models\GateStaff::where('user_id', $sellerId)
+            ->where('product_id', $ticket->product_id)
+            ->where('is_active', true)
+            ->exists();
         
-        if ($ticket->seller_id != $sellerId && $ticket->product?->seller_id != $sellerId) {
+        if ($ticket->seller_id != $sellerId && $ticket->product?->seller_id != $sellerId && !$isAssignedStaff) {
             if ($request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
             }
@@ -513,7 +546,12 @@ class TicketScannerController extends Controller
     public function ticketDetail(TicketPass $ticket): JsonResponse
     {
         $sellerId = auth()->id();
-        if ($ticket->seller_id != $sellerId && $ticket->product?->seller_id != $sellerId) {
+        $isAssignedStaff = \App\Models\GateStaff::where('user_id', $sellerId)
+            ->where('product_id', $ticket->product_id)
+            ->where('is_active', true)
+            ->exists();
+
+        if ($ticket->seller_id != $sellerId && $ticket->product?->seller_id != $sellerId && !$isAssignedStaff) {
             return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
         }
 

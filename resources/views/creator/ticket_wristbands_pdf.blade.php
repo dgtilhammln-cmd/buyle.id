@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Tiket - {{ $event ? $event->name : 'Semua Event' }}</title>
     @php
-        $findFont = function($filename) {
+        $findFont = function ($filename) {
             $paths = [
                 public_path('fonts/' . $filename),
                 base_path('public/fonts/' . $filename),
@@ -18,57 +19,59 @@
             return null;
         };
 
-        $regularFont  = $findFont('Montserrat-Regular.ttf');
-        $mediumFont   = $findFont('Montserrat-Medium.ttf');
+        $regularFont = $findFont('Montserrat-Regular.ttf');
+        $mediumFont = $findFont('Montserrat-Medium.ttf');
         $semiboldFont = $findFont('Montserrat-SemiBold.ttf');
-        $boldFont     = $findFont('Montserrat-Bold.ttf');
+        $boldFont = $findFont('Montserrat-Bold.ttf');
 
-        $b64Regular  = $regularFont ? base64_encode(file_get_contents($regularFont)) : null;
-        $b64Medium   = $mediumFont ? base64_encode(file_get_contents($mediumFont)) : null;
+        $b64Regular = $regularFont ? base64_encode(file_get_contents($regularFont)) : null;
+        $b64Medium = $mediumFont ? base64_encode(file_get_contents($mediumFont)) : null;
         $b64SemiBold = $semiboldFont ? base64_encode(file_get_contents($semiboldFont)) : null;
-        $b64Bold     = $boldFont ? base64_encode(file_get_contents($boldFont)) : null;
+        $b64Bold = $boldFont ? base64_encode(file_get_contents($boldFont)) : null;
     @endphp
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 
         @if($b64Regular)
-        @font-face {
-            font-family: 'Montserrat';
-            font-style: normal;
-            font-weight: 400;
-            src: url('data:font/truetype;charset=utf-8;base64,{{ $b64Regular }}') format('truetype');
-        }
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 400;
+                src: url('data:font/truetype;charset=utf-8;base64,{{ $b64Regular }}') format('truetype');
+            }
+
         @endif
 
         @if($b64Medium)
-        @font-face {
-            font-family: 'Montserrat';
-            font-style: normal;
-            font-weight: 500;
-            src: url('data:font/truetype;charset=utf-8;base64,{{ $b64Medium }}') format('truetype');
-        }
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 500;
+                src: url('data:font/truetype;charset=utf-8;base64,{{ $b64Medium }}') format('truetype');
+            }
+
         @endif
 
         @if($b64SemiBold)
-        @font-face {
-            font-family: 'Montserrat';
-            font-style: normal;
-            font-weight: 600;
-            src: url('data:font/truetype;charset=utf-8;base64,{{ $b64SemiBold }}') format('truetype');
-        }
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 600;
+                src: url('data:font/truetype;charset=utf-8;base64,{{ $b64SemiBold }}') format('truetype');
+            }
+
         @endif
 
         @if($b64Bold)
-        @font-face {
-            font-family: 'Montserrat';
-            font-style: normal;
-            font-weight: 700;
-            src: url('data:font/truetype;charset=utf-8;base64,{{ $b64Bold }}') format('truetype');
-        }
-        @endif
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 700;
+                src: url('data:font/truetype;charset=utf-8;base64,{{ $b64Bold }}') format('truetype');
+            }
 
-        @page {
+        @endif @page {
             margin: 10mm 8mm 10mm 8mm;
             size: A4 portrait;
         }
@@ -157,6 +160,7 @@
         }
     </style>
 </head>
+
 <body>
 
     @php
@@ -171,7 +175,8 @@
                         <td class="ticket-cell">
                             <div class="ticket-card">
                                 <div class="qr-box">
-                                    <img src="{{ \App\Http\Controllers\QrCodeController::generateBase64($ticket->ticket_code) }}" class="qr-img" alt="QR Code">
+                                    <img src="{{ \App\Http\Controllers\QrCodeController::generateBase64($ticket->ticket_code) }}"
+                                        class="qr-img" alt="QR Code">
                                 </div>
                                 <div class="ticket-code">{{ $ticket->ticket_code }}</div>
                                 <div class="ticket-holder">
@@ -193,4 +198,5 @@
     @endforeach
 
 </body>
+
 </html>

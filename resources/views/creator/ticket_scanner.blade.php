@@ -4308,42 +4308,46 @@
                                                         <label class="staff-field-label">
                                                             Pilih Event Tiket
                                                         </label>
-                                                        <select id="simpleStaffProductId" required class="staff-form-control staff-form-select">
+                                                        <select id="simpleStaffProductId" required class="staff-form-control staff-form-select" onchange="checkStaffUsernameLive()">
                                                             @foreach($events as $ev)
                                                                 <option value="{{ $ev->id }}">{{ $ev->name }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
 
-                                                    {{-- Input Nama Panitia --}}
+                                                    {{-- Input Cari via Username --}}
                                                     <div class="staff-field-group">
                                                         <label class="staff-field-label">
-                                                            Nama Panitia
-                                                        </label>
-                                                        <input type="text" id="simpleStaffName" required
-                                                            placeholder="Contoh: Panitia Gate 1 / Budi"
-                                                            class="staff-form-control">
-                                                    </div>
-
-                                                    {{-- Input Password Panitia --}}
-                                                    <div class="staff-field-group">
-                                                        <label class="staff-field-label">
-                                                            Password Panitia
+                                                            Username Panitia (@...)
                                                         </label>
                                                         <div style="position:relative; display:flex; align-items:center;">
-                                                            <input type="password" id="simpleStaffPassword" required
-                                                                placeholder="Minimal 4 karakter"
+                                                            <span style="position:absolute; left:0.75rem; color:#94a3b8; font-weight:700; font-size:0.85rem; pointer-events:none;">@</span>
+                                                            <input type="text" id="simpleStaffUsername" required
+                                                                placeholder="username akun"
+                                                                autocomplete="off"
+                                                                oninput="checkStaffUsernameLive()"
                                                                 class="staff-form-control"
-                                                                style="padding-right: 2.2rem;">
-                                                            <button type="button" onclick="toggleSimplePwd()"
-                                                                style="position:absolute; right:0.5rem; background:none; border:none; color:#94a3b8; cursor:pointer; padding:0.2rem; display:flex; align-items:center;">
-                                                                <svg id="eyeSimpleStaff" width="15" height="15" fill="none"
-                                                                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                                                    <circle cx="12" cy="12" r="3" />
-                                                                </svg>
-                                                            </button>
+                                                                style="padding-left: 1.8rem; padding-right: 2rem;">
+                                                            <div id="simpleStaffUsernameSpinner" style="position:absolute; right:0.65rem; display:none;">
+                                                                <svg style="animation:spin 1s linear infinite; width:14px; height:14px; color:#1eb349;" fill="none" viewBox="0 0 24 24"><circle style="opacity:0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity:0.75;" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+                                                            </div>
                                                         </div>
+                                                        <div id="simpleStaffUserPreview" style="font-size:0.72rem; margin-top:0.3rem; min-height:16px;"></div>
+                                                    </div>
+
+                                                    {{-- Input Posisi / Divisi Panitia --}}
+                                                    <div class="staff-field-group">
+                                                        <label class="staff-field-label">
+                                                            Posisi / Divisi
+                                                        </label>
+                                                        <select id="simpleStaffRolePosition" required class="staff-form-control staff-form-select">
+                                                            <option value="Gate Scanner" selected>Gate Scanner (Pemeriksa Tiket)</option>
+                                                            <option value="Ticketing">Ticketing & Loket</option>
+                                                            <option value="Registrasi">Registrasi & Akreditasi</option>
+                                                            <option value="Perlengkapan">Perlengkapan & Stage</option>
+                                                            <option value="Keamanan">Keamanan & Crowd Control</option>
+                                                            <option value="Lainnya">Lainnya / Umum</option>
+                                                        </select>
                                                     </div>
 
                                                     {{-- Submit Button --}}
@@ -4393,16 +4397,28 @@
                                                 style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                                                 <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
                                                     <div
-                                                        style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
-                                                        {{ strtoupper(substr($st->name, 0, 2)) }}
+                                                        style="width:36px; height:36px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0; overflow:hidden;">
+                                                        @if($st->user && $st->user->avatar)
+                                                            <img src="{{ asset('storage/' . $st->user->avatar) }}" alt="{{ $st->name }}" style="width:100%; height:100%; object-fit:cover;">
+                                                        @else
+                                                            {{ strtoupper(substr($st->name, 0, 2)) }}
+                                                        @endif
                                                     </div>
                                                     <div style="min-width:0;">
-                                                        <strong
-                                                            style="color:#0f172a; font-size:0.84rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                                            {{ $st->name }}
-                                                        </strong>
+                                                        <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                                                            <strong
+                                                                style="color:#0f172a; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                                {{ $st->name }}
+                                                            </strong>
+                                                            @if($st->user && $st->user->username)
+                                                                <span style="font-size:0.72rem; color:#64748b; font-weight:500;">({{ '@' . $st->user->username }})</span>
+                                                            @endif
+                                                            <span style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px;">
+                                                                {{ $st->role_position ?? 'Gate Scanner' }}
+                                                            </span>
+                                                        </div>
                                                         <span
-                                                            style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                            style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem; margin-top:2px;">
                                                             <span
                                                                 style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">{{ $st->product ? $st->product->name : 'Event' }}</span>
                                                         </span>
@@ -5200,35 +5216,69 @@
             });
         }
 
-        function toggleSimplePwd() {
-            const pwd = document.getElementById('simpleStaffPassword');
-            const icon = document.getElementById('eyeSimpleStaff');
-            if (!pwd) return;
-            if (pwd.type === 'password') {
-                pwd.type = 'text';
-                icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-            } else {
-                pwd.type = 'password';
-                icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        let _staffCheckTimer = null;
+
+        function checkStaffUsernameLive() {
+            clearTimeout(_staffCheckTimer);
+            const input = document.getElementById('simpleStaffUsername');
+            const preview = document.getElementById('simpleStaffUserPreview');
+            const spinner = document.getElementById('simpleStaffUsernameSpinner');
+            const productSelect = document.getElementById('simpleStaffProductId');
+            if (!input || !preview) return;
+
+            const val = input.value.trim().replace(/^@/, '');
+            if (!val) {
+                preview.innerHTML = '';
+                if (spinner) spinner.style.display = 'none';
+                return;
             }
+
+            if (spinner) spinner.style.display = 'block';
+
+            _staffCheckTimer = setTimeout(async () => {
+                const productId = productSelect ? productSelect.value : '';
+                try {
+                    const res = await fetch(`/creator/scanner/check-staff-username?username=${encodeURIComponent(val)}&product_id=${encodeURIComponent(productId)}`, {
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.user) {
+                        preview.innerHTML = `
+                            <span style="color:#16a34a; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                ${data.user.name} (@${data.user.username})
+                            </span>
+                        `;
+                    } else {
+                        preview.innerHTML = `
+                            <span style="color:#dc2626; font-weight:500;">
+                                ${data.message || 'Akun tidak ditemukan.'}
+                            </span>
+                        `;
+                    }
+                } catch (e) {
+                    preview.innerHTML = `<span style="color:#94a3b8;">Gagal memeriksa username.</span>`;
+                } finally {
+                    if (spinner) spinner.style.display = 'none';
+                }
+            }, 350);
         }
 
         async function submitSimpleAddStaff(e) {
             if (e) e.preventDefault();
             const productId = document.getElementById('simpleStaffProductId') ? document.getElementById('simpleStaffProductId').value : null;
-            const nameInput = document.getElementById('simpleStaffName');
-            const pwdInput = document.getElementById('simpleStaffPassword');
+            const usernameInput = document.getElementById('simpleStaffUsername');
+            const roleSelect = document.getElementById('simpleStaffRolePosition');
             const btn = document.getElementById('btnSubmitSimpleStaff');
 
             if (!productId) return alert('Pilih event tiket terlebih dahulu.');
-            const name = nameInput.value.trim();
-            const password = pwdInput.value.trim();
+            const username = usernameInput ? usernameInput.value.trim().replace(/^@/, '') : '';
+            const rolePosition = roleSelect ? roleSelect.value : 'Gate Scanner';
 
-            if (!name) return alert('Nama panitia wajib diisi.');
-            if (!password || password.length < 4) return alert('Password panitia minimal 4 karakter.');
+            if (!username) return alert('Username panitia wajib diisi.');
 
             btn.disabled = true;
-            btn.innerHTML = 'Menyimpan...';
+            btn.innerHTML = 'Mendaftarkan...';
 
             try {
                 const res = await fetch(`/creator/scanner/staff/${productId}`, {
@@ -5238,12 +5288,13 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify({ name: name, password: password })
+                    body: JSON.stringify({ username: username, role_position: rolePosition })
                 });
                 const data = await res.json();
                 if (data.success) {
-                    nameInput.value = '';
-                    pwdInput.value = '';
+                    usernameInput.value = '';
+                    const preview = document.getElementById('simpleStaffUserPreview');
+                    if (preview) preview.innerHTML = '';
                     loadAllStaff();
                     alert(data.message || 'Panitia berhasil ditambahkan.');
                 } else {
@@ -5280,39 +5331,50 @@
                         const statusText = st.is_active ? 'Aktif' : 'Nonaktif';
                         const initial = (st.name || 'P').substring(0, 2).toUpperCase();
                         const evName = st.product ? st.product.name : 'Event Tiket';
+                        const uHandle = st.user && st.user.username ? `(@${st.user.username})` : '';
+                        const pos = st.role_position || 'Gate Scanner';
+                        const avatarHtml = (st.user && st.user.avatar)
+                            ? `<img src="/storage/${st.user.avatar}" alt="${st.name}" style="width:100%; height:100%; object-fit:cover;">`
+                            : initial;
 
                         html += `
-                                                        <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-                                                            <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
-                                                                <div style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0;">
-                                                                    ${initial}
-                                                                </div>
-                                                                <div style="min-width:0;">
-                                                                    <strong style="color:#0f172a; font-size:0.84rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                                                        ${st.name}
-                                                                    </strong>
-                                                                    <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                                        <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
-                                                                <button type="button" onclick="toggleStaffSimple('${st.product_id}', ${st.id}, this)"
-                                                                    class="badge-status ${statusClass}"
-                                                                    style="cursor:pointer; border:none; font-size:0.72rem; padding:0.25rem 0.65rem; font-weight:700;">
-                                                                    ${statusText}
-                                                                </button>
-                                                                <button type="button" onclick="deleteStaffSimple('${st.product_id}', ${st.id}, '${st.name.replace(/'/g, "\\'")}')"
-                                                                    title="Hapus Panitia"
-                                                                    style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
-                                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                                    </svg>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    `;
+                            <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                                <div style="display:flex; align-items:center; gap:0.75rem; min-width:0; flex:1;">
+                                    <div style="width:36px; height:36px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; flex-shrink:0; overflow:hidden;">
+                                        ${avatarHtml}
+                                    </div>
+                                    <div style="min-width:0;">
+                                        <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                                            <strong style="color:#0f172a; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                ${st.name}
+                                            </strong>
+                                            ${uHandle ? `<span style="font-size:0.72rem; color:#64748b; font-weight:500;">${uHandle}</span>` : ''}
+                                            <span style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px;">
+                                                ${pos}
+                                            </span>
+                                        </div>
+                                        <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem; margin-top:2px;">
+                                            <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
+                                    <button type="button" onclick="toggleStaffSimple('${st.product_id}', ${st.id}, this)"
+                                        class="badge-status ${statusClass}"
+                                        style="cursor:pointer; border:none; font-size:0.72rem; padding:0.25rem 0.65rem; font-weight:700;">
+                                        ${statusText}
+                                    </button>
+                                    <button type="button" onclick="deleteStaffSimple('${st.product_id}', ${st.id}, '${st.name.replace(/'/g, "\\'")}')"
+                                        title="Hapus Panitia"
+                                        style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
                     });
                     container.innerHTML = html;
                 }

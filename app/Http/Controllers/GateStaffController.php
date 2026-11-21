@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CreatorNotification;
 use App\Models\GateStaff;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -88,6 +91,83 @@ class GateStaffController extends Controller
     }
 
     /**
+     * Cari username creator/user buyle.id untuk pendaftaran panitia (Creator only).
+     * GET /creator/scanner/check-staff-username?username=...&product_id=...
+     */
+    public function checkUsername(Request $request): JsonResponse
+    {
+        $rawUsername = trim($request->query('username', ''));
+        $productId   = $request->query('product_id');
+        $username    = ltrim($rawUsername, '@');
+
+        if (empty($username)) {
+            return response()->json([
+                'success' => false,
+                'valid'   => false,
+                'message' => 'Masukkan username untuk mencari akun.',
+            ], 422);
+        }
+
+        $user = User::with('creatorProfile')
+            ->where(function ($q) use ($username) {
+                $q->where('username', $username)
+                  ->orWhere('email', $username);
+            })
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'valid'   => false,
+                'message' => "Akun @{$username} tidak ditemukan di Buyle.id.",
+            ], 404);
+        }
+
+        if ($user->id === auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'valid'   => false,
+                'message' => 'Anda adalah penyelenggara event ini, tidak dapat mendaftarkan akun sendiri sebagai panitia.',
+            ], 422);
+        }
+
+        // Cek jika sudah terdaftar di event ini
+        if ($productId) {
+            $already = GateStaff::where('product_id', $productId)
+                ->where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id)
+                      ->orWhere('name', $user->name);
+                })
+                ->first();
+
+            if ($already) {
+                return response()->json([
+                    'success' => false,
+                    'valid'   => false,
+                    'message' => "User @{$user->username} sudah terdaftar sebagai panitia ({$already->role_position}) di event ini.",
+                ], 422);
+            }
+        }
+
+        $avatarUrl = $user->avatar ? asset('storage/' . $user->avatar) : null;
+        $storeName = $user->creatorProfile?->store_name ?? $user->name;
+
+        return response()->json([
+            'success' => true,
+            'valid'   => true,
+            'user'    => [
+                'id'       => $user->id,
+                'name'     => $user->name,
+                'username' => $user->username ?? $user->email,
+                'avatar'   => $avatarUrl,
+                'store'    => $storeName,
+                'role'     => $user->role,
+            ],
+            'message' => "User @{$user->username} ({$user->name}) ditemukan.",
+        ]);
+    }
+
+    /**
      * Daftar seluruh staff panitia milik Creator di semua event tiketnya.
      * GET /creator/scanner/all-staff
      */
@@ -95,7 +175,7 @@ class GateStaffController extends Controller
     {
         $creatorId = auth()->id();
         $staff = GateStaff::where('creator_id', $creatorId)
-            ->with('product:id,name,event_date')
+            ->with(['product:id,name,event_date', 'user:id,name,username,avatar'])
             ->orderBy('id', 'desc')
             ->get();
 
@@ -115,7 +195,7 @@ class GateStaffController extends Controller
         $this->authorizeCreator($product);
 
         $staff = GateStaff::where('product_id', $product->id)
-            ->with('product:id,name')
+            ->with(['product:id,name', 'user:id,name,username,avatar'])
             ->orderBy('id', 'desc')
             ->get();
 
@@ -123,7 +203,7 @@ class GateStaffController extends Controller
     }
 
     /**
-     * Tambah staff panitia baru dengan Nama & Password kustom (Creator only).
+     * Tambah staff panitia baru via Username & Posisi/Divisi (Creator only).
      * POST /creator/scanner/staff/{product}
      */
     public function store(Request $request, Product $product): JsonResponse
@@ -135,42 +215,91 @@ class GateStaffController extends Controller
             return response()->json(['success' => false, 'message' => 'Maksimal 30 panitia per event tiket.'], 422);
         }
 
-        $name     = trim($request->input('name', ''));
-        $password = trim($request->input('password', ''));
-        $gate     = (int) $request->input('gate_number', 1);
+        $rawUsername  = trim($request->input('username', ''));
+        $username     = ltrim($rawUsername, '@');
+        $rolePosition = trim($request->input('role_position', 'Gate Scanner'));
+        $gate         = (int) $request->input('gate_number', 1);
 
-        if (empty($name)) {
-            return response()->json(['success' => false, 'message' => 'Nama panitia wajib diisi.'], 422);
-        }
-        if (empty($password)) {
-            return response()->json(['success' => false, 'message' => 'Password panitia wajib diisi.'], 422);
-        }
-        if (strlen($password) < 4) {
-            return response()->json(['success' => false, 'message' => 'Password panitia minimal 4 karakter.'], 422);
+        if (empty($rolePosition)) {
+            $rolePosition = 'Gate Scanner';
         }
 
-        // Simpan password dalam bentuk hash di kolom pin
+        if (empty($username)) {
+            return response()->json(['success' => false, 'message' => 'Username panitia wajib diisi.'], 422);
+        }
+
+        // Cari user di database
+        $user = User::where('username', $username)
+            ->orWhere('email', $username)
+            ->first();
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => "Akun @{$username} tidak ditemukan di Buyle.id."], 404);
+        }
+
+        if ($user->id === auth()->id()) {
+            return response()->json(['success' => false, 'message' => 'Anda adalah penyelenggara event ini, tidak dapat mendaftarkan diri sendiri sebagai panitia.'], 422);
+        }
+
+        // Cek duplikasi
+        $already = GateStaff::where('product_id', $product->id)
+            ->where(function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhere('name', $user->name);
+            })
+            ->first();
+
+        if ($already) {
+            return response()->json(['success' => false, 'message' => "User @{$user->username} sudah terdaftar sebagai panitia ({$already->role_position}) di event ini."], 422);
+        }
+
+        // Simpan staff
         $staff = GateStaff::create([
-            'product_id'  => $product->id,
-            'creator_id'  => auth()->id(),
-            'name'        => $name,
-            'gate_number' => $gate,
-            'pin'         => Hash::make($password),
-            'is_active'   => true,
+            'product_id'    => $product->id,
+            'creator_id'    => auth()->id(),
+            'user_id'       => $user->id,
+            'name'          => $user->name,
+            'gate_number'   => $gate ?: 1,
+            'role_position' => $rolePosition,
+            'pin'           => $user->password ?? Hash::make(Str::random(16)),
+            'is_active'     => true,
         ]);
+
+        // Kirim Notifikasi ke Creator yang di-invite
+        try {
+            CreatorNotification::create([
+                'user_id'    => $user->id,
+                'type'       => 'event_staff_invited',
+                'title'      => 'Penugasan Panitia Event: ' . $product->name,
+                'message'    => "Anda telah ditugaskan sebagai {$rolePosition} untuk event \"{$product->name}\" oleh " . (auth()->user()->name ?? 'Penyelenggara') . ".",
+                'action_url' => route('creator.ticket.scanner', ['tab' => 'scanner', 'event_id' => $product->id]),
+                'data'       => [
+                    'event_id'      => $product->id,
+                    'event_name'    => $product->name,
+                    'role_position' => $rolePosition,
+                    'invited_by'    => auth()->user()->name,
+                ],
+                'is_read'    => false,
+            ]);
+            Cache::forget('creator_unread_notif_' . $user->id);
+        } catch (\Throwable $e) {
+            \Log::warning('Gagal membuat notifikasi panitia: ' . $e->getMessage());
+        }
 
         return response()->json([
             'success'    => true,
-            'message'    => "Panitia {$name} berhasil didaftarkan.",
+            'message'    => "Panitia @{$user->username} ({$rolePosition}) berhasil didaftarkan dan notifikasi telah dikirimkan.",
             'staff_id'   => $staff->id,
             'staff_name' => $staff->name,
             'staff'      => [
-                'id'         => $staff->id,
-                'name'       => $staff->name,
-                'product_id' => $product->id,
-                'event_name' => $product->name,
-                'is_active'  => $staff->is_active,
-                'created_at' => $staff->created_at ? $staff->created_at->format('d M Y H:i') : null,
+                'id'            => $staff->id,
+                'name'          => $staff->name,
+                'username'      => $user->username ?? $user->email,
+                'role_position' => $staff->role_position,
+                'product_id'    => $product->id,
+                'event_name'    => $product->name,
+                'is_active'     => $staff->is_active,
+                'created_at'    => $staff->created_at ? $staff->created_at->format('d M Y H:i') : null,
             ],
         ]);
     }
