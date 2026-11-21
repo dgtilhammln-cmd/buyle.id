@@ -62,8 +62,7 @@ class TicketWarQueueController extends Controller
         // ══ BATAS PERIODE WAR TIKET ══════════════════════════════════════════
         // Durasi periode war ditetapkan oleh PLATFORM, bukan kreator: 3 jam.
         // Setelah war_start + 3 jam → antrean otomatis NONAKTIF, langsung admitted.
-        $warEnd = $product->ticket_war_start->copy()->addHours(3);
-        if (now()->gte($warEnd)) {
+        if (!$product->isTicketWarActive()) {
             return response()->json([
                 'status'  => 'admitted',
                 'token'   => null,

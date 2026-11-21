@@ -39,8 +39,8 @@ class CartController extends Controller
             $customPrice = null;
             $product = \App\Models\Product::findOrFail($request->product_id);
 
-            // Validasi Server-Side Admission Token jika produk mengaktifkan jadwal War Tiket
-            if ($product->isTicketWar() && $product->isTicketWarOpen()) {
+            // Validasi Server-Side Admission Token HANYA jika sedang dalam periode War Tiket aktif (0-3 jam)
+            if ($product->isTicketWarActive()) {
                 $warService = app(\App\Services\TicketWarQueueService::class);
                 $admissionToken = $request->input('admission_token') 
                     ?? session('war_admission_token_' . $product->id);

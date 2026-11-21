@@ -720,7 +720,7 @@ class Product extends Model
     }
 
     /**
-     * Apakah produk ini memiliki jadwal War Tiket aktif
+     * Apakah produk ini memiliki jadwal War Tiket
      */
     public function isTicketWar(): bool
     {
@@ -733,6 +733,21 @@ class Product extends Model
     public function isTicketWarOpen(): bool
     {
         return $this->isTicketWar() && now()->gte($this->ticket_war_start);
+    }
+
+    /**
+     * Apakah saat ini sedang dalam PERIODE WAR TIKET (antrean aktif).
+     * Dibatasi maksimal 3 jam setelah ticket_war_start (kebijakan platform).
+     * Setelah 3 jam lewat, antrean dinonaktifkan & tiket bisa langsung dibeli normal.
+     */
+    public function isTicketWarActive(): bool
+    {
+        if (!$this->isTicketWarOpen()) {
+            return false;
+        }
+
+        $warEnd = $this->ticket_war_start->copy()->addHours(3);
+        return now()->lt($warEnd);
     }
 
     /**

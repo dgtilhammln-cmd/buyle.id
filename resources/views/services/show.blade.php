@@ -1897,6 +1897,8 @@
                 $hasWarFeature = $isTicket && !empty($service->ticket_war_start);
                 $isWarActive = $hasWarFeature && now()->lt($service->ticket_war_start);
                 $warTimestamp = $isWarActive ? $service->ticket_war_start->timestamp * 1000 : 0;
+                $isWarQueueActive = $service->isTicketWarActive();
+                $warEndTimestamp = (!empty($service->ticket_war_start)) ? $service->ticket_war_start->copy()->addHours(3)->timestamp * 1000 : 0;
 
                 // Deteksi event expired — khusus tipe ticket (cek hingga tanggal berakhir jika multi-day)
                 $eventRaw = ($service->event_end_date ?: $service->event_date) ?: (!empty($service->data_json['event_date']) ? $service->data_json['event_date'] : null);
@@ -4032,8 +4034,12 @@
                                     var _bwrPollTimer = null;
 
                                     function triggerCartSubmissionWithQueue(action) {
-                                        var hasWar = {{ ($hasWarFeature ?? false) ? 'true' : 'false' }};
-                                        if (!hasWar) {
+                                        var isWarQueueActive = {{ ($isWarQueueActive ?? false) ? 'true' : 'false' }};
+                                        var warEnd = {{ $warEndTimestamp ?? 0 }};
+                                        var now = Date.now();
+                                        // Antrean HANYA aktif jika sedang dalam batas periode war 3 jam sejak dibuka
+                                        var shouldQueue = isWarQueueActive || (warEnd > 0 && now < warEnd && {{ !empty($service->ticket_war_start) ? ($service->ticket_war_start->timestamp * 1000) : 0 }} <= now);
+                                        if (!shouldQueue) {
                                             executeFinalCartSubmit(action);
                                             return;
                                         }

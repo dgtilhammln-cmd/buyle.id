@@ -366,12 +366,16 @@ class CheckoutService
                         throw new Exception("Penjualan tiket \"{$product->name}\" baru akan dibuka pada " . $product->ticket_war_start->format('d M Y, H:i') . " WIB.");
                     }
 
-                    // Validasi Server-Side Admission Token jika jadwal war tiket aktif
-                    $warService = app(\App\Services\TicketWarQueueService::class);
-                    $admToken = $data['admission_token'] 
-                        ?? session('war_admission_token_' . $product->id);
-                    if (!$warService->validateToken($admToken, $product->id)) {
-                        throw new Exception("Sesi antrean war tiket \"{$product->name}\" tidak valid atau telah kedaluwarsa. Mohon antre kembali melalui tombol Beli Tiket.");
+                    // Periode war = 3 jam (dikontrol platform).
+                    // Validasi token HANYA jika sedang dalam periode war aktif (0-3 jam).
+                    // Setelah lewat 3 jam, antrean nonaktif & tiket bisa langsung dipesan.
+                    if ($product->isTicketWarActive()) {
+                        $warService = app(\App\Services\TicketWarQueueService::class);
+                        $admToken = $data['admission_token']
+                            ?? session('war_admission_token_' . $product->id);
+                        if (!$warService->validateToken($admToken, $product->id)) {
+                            throw new Exception("Sesi antrean war tiket \"{$product->name}\" tidak valid atau telah kedaluwarsa. Mohon antre kembali melalui tombol Beli Tiket.");
+                        }
                     }
                 }
 
@@ -417,7 +421,7 @@ class CheckoutService
 
                 // Konsumsi Admission Token saat order item berhasil diamankan (Single-Use Token)
                 // Pertahankan slot checkout tetap terisi sampai pembayaran sukses / batal
-                if ($product->product_type === 'ticket' && !empty($product->ticket_war_start)) {
+                if ($product->product_type === 'ticket' && $product->isTicketWarActive()) {
                     $warService = app(\App\Services\TicketWarQueueService::class);
                     $admToken = $data['admission_token'] 
                         ?? session('war_admission_token_' . $product->id);
