@@ -976,21 +976,7 @@
                                                 otomatis.</span>
                                         </div>
 
-                                        <div class="form-group" style="margin-top:0.5rem;">
-                                            <label class="form-label"
-                                                style="display:flex; align-items:center; gap:0.4rem; color:#b45309;">
-                                                <svg width="15" height="15" fill="none" stroke="#d97706" stroke-width="2"
-                                                    viewBox="0 0 24 24">
-                                                    <circle cx="12" cy="12" r="10" />
-                                                    <polyline points="12 6 12 12 16 14" />
-                                                </svg>
-                                                Durasi Periode War Tiket (Jam)
-                                            </label>
-                                            <input type="number" name="ticket_war_duration_hours" min="1" max="72"
-                                                value="{{ old('ticket_war_duration_hours', 3) }}"
-                                                class="form-input" placeholder="Default: 3 jam">
-                                            <span class="form-hint">Berapa lama sistem antrean war aktif setelah jadwal dibuka. Setelah durasi ini berakhir, pembeli langsung bisa checkout tanpa antrean. <strong>Contoh: war tiket 3 jam, isi 3.</strong></span>
-                                        </div>
+
 
                                         <div class="form-group" style="margin-top:0.5rem;">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">

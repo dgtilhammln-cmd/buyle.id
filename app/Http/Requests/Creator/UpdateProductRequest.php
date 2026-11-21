@@ -57,7 +57,6 @@ class UpdateProductRequest extends FormRequest
             'instagram_username'  => ['nullable', 'string', 'max:100'],
             'tiktok_username'     => ['nullable', 'string', 'max:100'],
             'ticket_war_start'          => ['nullable', 'date'],
-            'ticket_war_duration_hours' => ['nullable', 'integer', 'min:1', 'max:72'],
             'max_tickets_per_order'     => ['nullable', 'integer', 'min:1', 'max:20'],
 
             // Syarat klaim produk gratis (Follow sosmed & Join grup)

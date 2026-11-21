@@ -29,7 +29,7 @@ class Product extends Model
         'terms_conditions', 'instagram_username', 'tiktok_username',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
-        'ticket_war_start', 'ticket_war_duration_hours', 'max_tickets_per_order',
+        'ticket_war_start', 'max_tickets_per_order',
         // Free Product Follow & Join Requirement
         'require_follow_join',
         'require_screenshot_proof',
@@ -68,7 +68,6 @@ class Product extends Model
         'event_date'     => 'date',
         'event_end_date' => 'date',
         'ticket_war_start' => 'datetime',
-        'ticket_war_duration_hours' => 'integer',
         'max_tickets_per_order' => 'integer',
         'gate_scanner_enabled' => 'boolean',
         'gate_bypass_time'     => 'boolean',
