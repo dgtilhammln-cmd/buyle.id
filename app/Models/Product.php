@@ -32,6 +32,7 @@ class Product extends Model
         'ticket_war_start', 'max_tickets_per_order',
         // Free Product Follow & Join Requirement
         'require_follow_join',
+        'require_screenshot_proof',
         'social_follow_url', 'community_join_url', // Legacy fallback
         'follow_instagram_url', 'follow_tiktok_url', 'follow_x_url', 'follow_youtube_url',
         'join_whatsapp_url', 'join_telegram_url', 'join_discord_url',
@@ -70,6 +71,7 @@ class Product extends Model
         'gate_scanner_enabled' => 'boolean',
         'gate_bypass_time'     => 'boolean',
         'require_follow_join'  => 'boolean',
+        'require_screenshot_proof' => 'boolean',
         // Pricing models casts
         'pwyw_min_price'       => 'decimal:2',
         'pwyw_suggested_price' => 'decimal:2',

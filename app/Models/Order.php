@@ -30,6 +30,7 @@ class Order extends Model
         'cashier_id',
         'cashier_name',
         'notes',
+        'claim_proof',
         'source',
         'utm_source',
         'utm_medium',

@@ -2510,6 +2510,7 @@
                                                 'courier_name' => $shipment?->courier_name ?? '',
                                                 'tracking_number' => $shipment?->tracking_number ?? '',
                                                 'update_url' => route('creator.sales.report.update_order', $order->id),
+                                                'claim_proof' => $order->claim_proof ? asset('storage/' . $order->claim_proof) : null,
                                             ]);
                                         @endphp
                                         <div style="display:flex; align-items:center; gap:0.4rem;">
@@ -3149,6 +3150,7 @@
                                     'courier_name' => $shipment?->courier_name ?? '',
                                     'tracking_number' => $shipment?->tracking_number ?? '',
                                     'update_url' => route('creator.sales.report.update_order', $order->id),
+                                    'claim_proof' => $order->claim_proof ? asset('storage/' . $order->claim_proof) : null,
                                 ]);
                             @endphp
                             <tr class="pos-order-row">
@@ -3594,6 +3596,24 @@
                 }
             }
 
+            // Bukti Screenshot Klaim Gratis Box
+            const claimProofBox = document.getElementById('od_claim_proof_box');
+            const claimProofImg = document.getElementById('od_claim_proof_img');
+            const claimProofLink = document.getElementById('od_claim_proof_link');
+            const claimProofDownload = document.getElementById('od_claim_proof_download');
+            const claimProofEnlarge = document.getElementById('od_claim_proof_enlarge');
+            if (claimProofBox) {
+                if (data.claim_proof) {
+                    if (claimProofImg) claimProofImg.src = data.claim_proof;
+                    if (claimProofLink) claimProofLink.href = data.claim_proof;
+                    if (claimProofDownload) claimProofDownload.href = data.claim_proof;
+                    if (claimProofEnlarge) claimProofEnlarge.href = data.claim_proof;
+                    claimProofBox.style.display = 'block';
+                } else {
+                    claimProofBox.style.display = 'none';
+                }
+            }
+
             // Toggle status & shipping form for physical products only (digital/service/ticket auto-completed)
             const odForm = document.getElementById('od_form');
             if (isPhysical) {
@@ -3921,6 +3941,31 @@
                         Catatan Pesanan / Pembeli
                     </div>
                     <div id="od_notes_content" style="font-size:0.85rem; color:#78350f; font-weight:600; line-height:1.5;">
+                    </div>
+                </div>
+
+                <!-- Bukti Screenshot Klaim Gratis (if available) -->
+                <div id="od_claim_proof_box"
+                    style="display:none; background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:14px; padding:1rem; margin-bottom:1rem;">
+                    <div style="font-size:0.72rem; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.6rem; display:flex; align-items:center; gap:5px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        📷 Bukti Screenshot Klaim Gratis
+                    </div>
+                    <a id="od_claim_proof_link" href="#" target="_blank" rel="noopener">
+                        <img id="od_claim_proof_img" src="" alt="Bukti Screenshot"
+                            style="max-width:100%; max-height:260px; border-radius:10px; border:1.5px solid #BBF7D0; display:block; cursor:zoom-in;">
+                    </a>
+                    <div style="margin-top:0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <a id="od_claim_proof_download" href="#" download target="_blank"
+                            style="font-size:0.72rem; font-weight:700; color:#15803D; background:#DCFCE7; border:1px solid #86EFAC; padding:3px 10px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Unduh Bukti
+                        </a>
+                        <a id="od_claim_proof_enlarge" href="#" target="_blank"
+                            style="font-size:0.72rem; font-weight:700; color:#1D4ED8; background:#EFF6FF; border:1px solid #BFDBFE; padding:3px 10px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                            Perbesar
+                        </a>
                     </div>
                 </div>
 

@@ -633,9 +633,13 @@
         @php
             // Cek apakah ada produk gratis dengan syarat follow/join di keranjang
             $hasFreeRequirements = false;
+            $requiresScreenshot = false;
             $claimSteps = [];
             foreach ($summary['items'] as $itemIdx => $item) {
                 if ($item->product && $item->product->require_follow_join && $summary['subtotal'] <= 0) {
+                    if (!empty($item->product->require_screenshot_proof)) {
+                        $requiresScreenshot = true;
+                    }
                     $activeReqs = method_exists($item->product, 'getActiveFreeRequirements')
                         ? $item->product->getActiveFreeRequirements()
                         : [];
@@ -1292,23 +1296,6 @@
                             </div>
                         @endif
 
-                        {{-- Card: Info Pengiriman Digital --}}
-                        <div class="co-section" style="margin-bottom:1.5rem;background:#F0FDF4;border:1px solid #BBF7D0;">
-                            <div class="co-section-title" style="color:#15803D;">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                    <polyline points="13 2 13 9 20 9"></polyline>
-                                </svg>
-                                Pengiriman Otomatis Produk Digital / Tiket / Jasa Digital
-                            </div>
-                            <div style="font-size:0.85rem;color:#166534;line-height:1.5;">
-                                Akses file digital, tiket event, atau instruksi layanan jasa Anda akan otomatis dikirimkan
-                                langsung ke <strong>Email</strong> Anda setelah pembayaran berhasil.
-                            </div>
-                        </div>
-                    @endif
-
                     @if($summary['subtotal'] <= 0 && $hasFreeRequirements)
                         {{-- SYARAT KLAIM PRODUK GRATIS (LEAD MAGNET) --}}
                         <div class="co-section" id="freeClaimRequirementsSection"
@@ -1320,6 +1307,9 @@
                                     <polyline points="9 12 11 14 15 10" />
                                 </svg>
                                 Syarat Klaim Produk Gratis ({{ count($claimSteps) }})
+                                @if($requiresScreenshot)
+                                    <span style="margin-left:0.5rem;background:#DCFCE7;color:#15803D;font-size:0.65rem;font-weight:800;padding:2px 8px;border-radius:999px;border:1px solid #86EFAC;letter-spacing:0.3px;">🔒 Validasi Ketat</span>
+                                @endif
                             </div>
                             <p style="font-size: 0.82rem; color: #475569; margin: 0 0 1rem; line-height: 1.45;">
                                 Kreator memberikan produk ini secara gratis sebagai apresiasi. Silakan selesaikan syarat di
@@ -1409,6 +1399,59 @@
                                         </div>
                                     </div>
                                 @endforeach
+                            </div>
+
+                            {{-- UPLOAD BUKTI SCREENSHOT (hanya jika kreator aktifkan validasi ketat) --}}
+                            @if($requiresScreenshot)
+                                <div id="screenshotUploadBox" style="margin-top:1.25rem; background:#fff; border:2px dashed #86EFAC; border-radius:14px; padding:1.1rem 1rem;">
+                                    <div style="font-size:0.8rem; font-weight:800; color:#15803D; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                                        Upload Screenshot Bukti Follow / Gabung <span style="color:#DC2626;margin-left:2px;">*</span>
+                                    </div>
+                                    <p style="font-size:0.73rem; color:#64748B; margin:0 0 0.75rem; line-height:1.45;">
+                                        Kreator mengharuskan bukti screenshot. Foto akan dikompresi otomatis (&le;120 KB). Format: JPG, PNG, WebP.
+                                    </p>
+                                    <label for="screenshotFileInput"
+                                        style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem; padding:1rem; background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:10px; cursor:pointer; text-align:center; transition:background 0.2s;"
+                                        id="screenshotDropLabel">
+                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        <span style="font-size:0.8rem; font-weight:700; color:#15803D;">Ketuk untuk pilih foto</span>
+                                        <span style="font-size:0.68rem; color:#94A3B8;">atau seret file ke sini</span>
+                                        <input type="file" id="screenshotFileInput" accept="image/*" capture="environment" style="display:none;">
+                                    </label>
+                                    <div id="screenshotPreviewBox" style="display:none; margin-top:0.75rem;">
+                                        <div style="position:relative; display:inline-block; max-width:100%;">
+                                            <img id="screenshotPreviewImg" src="" alt="Preview" style="max-width:100%; max-height:220px; border-radius:10px; border:1.5px solid #BBF7D0; display:block;">
+                                            <button type="button" onclick="clearScreenshot()" style="position:absolute; top:6px; right:6px; background:#DC2626; color:#fff; border:none; border-radius:50%; width:26px; height:26px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">&times;</button>
+                                        </div>
+                                        <div style="margin-top:0.5rem; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                                            <span id="screenshotSizeBadge" style="font-size:0.7rem; font-weight:700; background:#DCFCE7; color:#15803D; padding:2px 8px; border-radius:6px; border:1px solid #86EFAC;"></span>
+                                            <span style="font-size:0.68rem; color:#94A3B8;">✓ Siap diupload</span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="claim_proof_screenshot" id="claimProofScreenshotInput">
+                                </div>
+                            @else
+                                <input type="hidden" name="claim_proof_screenshot" id="claimProofScreenshotInput" value="">
+                            @endif
+
+                        </div>
+                    @endif
+
+                    {{-- Card: Info Pengiriman Digital --}}
+                    @if($summary['checkout_type'] === 'digital')
+                        <div class="co-section" style="margin-bottom:1.5rem;background:#F0FDF4;border:1px solid #BBF7D0;">
+                            <div class="co-section-title" style="color:#15803D;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
+                                Pengiriman Otomatis Produk Digital / Tiket / Jasa Digital
+                            </div>
+                            <div style="font-size:0.85rem;color:#166534;line-height:1.5;">
+                                Akses file digital, tiket event, atau instruksi layanan jasa Anda akan otomatis dikirimkan
+                                langsung ke <strong>Email</strong> Anda setelah pembayaran berhasil.
                             </div>
                         </div>
                     @endif
@@ -2472,6 +2515,28 @@
             const hasPhysicalProduct = (checkoutType === 'goods');
             const isGuest = @json(auth()->guest());
 
+            // Validate screenshot proof jika validasi ketat aktif
+            if (SCREENSHOT_REQUIRED) {
+                const ssInput = document.getElementById('claimProofScreenshotInput');
+                if (!ssInput || !ssInput.value) {
+                    e.preventDefault();
+                    const box = document.getElementById('screenshotUploadBox');
+                    if (box) { box.style.borderColor = '#DC2626'; box.scrollIntoView({behavior:'smooth', block:'center'}); }
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Upload Bukti Screenshot',
+                            text: 'Kreator mewajibkan upload screenshot bukti follow/gabung sebelum klaim produk gratis ini.',
+                            confirmButtonColor: '#1eb349',
+                            confirmButtonText: 'Upload Sekarang'
+                        });
+                    } else {
+                        alert('Mohon upload screenshot bukti follow/gabung terlebih dahulu.');
+                    }
+                    return;
+                }
+            }
+
             // Validate guest contact info
             if (isGuest) {
                 const guestEmail = document.querySelector('input[name="guest_email"]')?.value?.trim();
@@ -3052,6 +3117,66 @@
         // ──────────────────────────────────────────────────────────
         const FREE_TIMER_MS = 5000;
         const freeTimerState = {};
+
+        // ── Screenshot Proof Upload + Canvas Compression ──────────────
+        const SCREENSHOT_REQUIRED = @json($requiresScreenshot ?? false);
+
+        function clearScreenshot() {
+            document.getElementById('claimProofScreenshotInput').value = '';
+            document.getElementById('screenshotPreviewBox').style.display = 'none';
+            document.getElementById('screenshotPreviewImg').src = '';
+            document.getElementById('screenshotDropLabel').style.display = 'flex';
+            document.getElementById('screenshotFileInput').value = '';
+        }
+
+        function compressAndPreviewScreenshot(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const MAX_W = 1080;
+                    let w = img.width, h = img.height;
+                    if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    const dataUrl = canvas.toDataURL('image/webp', 0.72);
+                    document.getElementById('claimProofScreenshotInput').value = dataUrl;
+                    document.getElementById('screenshotPreviewImg').src = dataUrl;
+                    document.getElementById('screenshotPreviewBox').style.display = 'block';
+                    document.getElementById('screenshotDropLabel').style.display = 'none';
+                    // Hitung ukuran estimasi
+                    const bytes = Math.round((dataUrl.length * 3) / 4);
+                    const kb = Math.round(bytes / 1024);
+                    document.getElementById('screenshotSizeBadge').textContent = kb + ' KB';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('screenshotFileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        compressAndPreviewScreenshot(this.files[0]);
+                    }
+                });
+            }
+            const dropLabel = document.getElementById('screenshotDropLabel');
+            if (dropLabel) {
+                dropLabel.addEventListener('dragover', function(e){ e.preventDefault(); this.style.background='#DCFCE7'; });
+                dropLabel.addEventListener('dragleave', function(){ this.style.background='#F0FDF4'; });
+                dropLabel.addEventListener('drop', function(e){
+                    e.preventDefault(); this.style.background='#F0FDF4';
+                    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                        compressAndPreviewScreenshot(e.dataTransfer.files[0]);
+                    }
+                });
+            }
+        });
 
         function startTimer(stepId) {
             if (freeTimerState[stepId]) return;

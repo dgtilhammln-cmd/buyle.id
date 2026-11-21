@@ -14,6 +14,9 @@ use App\Models\Setting;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Exception;
 
 class CheckoutService
@@ -261,6 +264,27 @@ class CheckoutService
             || !empty($ticketHoldersInput);
         $orderPrefix = $isTicketOrder ? 'TIX' : 'MKT';
 
+        // Simpan file bukti screenshot jika ada (klaim produk / tiket gratis dengan validasi ketat)
+        $claimProofPath = null;
+        $claimProofScreenshot = $data['claim_proof_screenshot'] ?? request()->input('claim_proof_screenshot');
+        if (!empty($claimProofScreenshot)) {
+            try {
+                $raw = $claimProofScreenshot;
+                if (preg_match('/^data:image\/(\w+);base64,/', $raw, $matches)) {
+                    $raw = substr($raw, strpos($raw, ',') + 1);
+                }
+                $decoded = base64_decode($raw);
+                if ($decoded !== false) {
+                    $filename = 'claim_proofs/proof_' . strtolower($orderPrefix) . '_' . time() . '_' . Str::random(6) . '.webp';
+                    Storage::disk('public')->put($filename, $decoded);
+                    $claimProofPath = $filename;
+                    $shippingAddressArray['claim_proof'] = $filename;
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Failed saving claim proof screenshot: ' . $e->getMessage());
+            }
+        }
+
         DB::beginTransaction();
 
         try {
@@ -276,6 +300,7 @@ class CheckoutService
                 'admin_fee'        => $adminFee,
                 'discount'         => $discount,
                 'total'            => $total,
+                'claim_proof'      => $claimProofPath,
                 'shipping_address' => $shippingAddressArray,
                 'notes'            => $notes,
                 'utm_source'       => session('utm_source'),

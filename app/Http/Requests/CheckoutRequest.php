@@ -45,6 +45,7 @@ class CheckoutRequest extends FormRequest
             'idempotency_key'      => 'nullable|string|max:100',
             'admission_token'      => 'nullable|string',
             'buy_now'              => 'nullable|integer',
+            'claim_proof_screenshot' => 'nullable|string',
         ];
 
         if (!auth()->check()) {

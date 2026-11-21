@@ -55,6 +55,7 @@ class StoreProductRequest extends FormRequest
 
             // Syarat klaim produk gratis (Follow sosmed & Join grup)
             'require_follow_join'   => ['nullable', 'boolean'],
+            'require_screenshot_proof' => ['nullable', 'boolean'],
             'follow_instagram_url'  => ['nullable', 'url', 'max:500'],
             'follow_tiktok_url'     => ['nullable', 'url', 'max:500'],
             'follow_x_url'          => ['nullable', 'url', 'max:500'],
@@ -175,6 +176,7 @@ class StoreProductRequest extends FormRequest
             'is_featured'        => $this->boolean('is_featured', false),
             'is_buyle_checkout' => $this->input('product_type') === 'makanan' ? true : $this->boolean('is_buyle_checkout', true),
             'require_follow_join' => $this->boolean('require_follow_join', false),
+            'require_screenshot_proof' => $this->boolean('require_screenshot_proof', false),
             'stock'       => ($this->has('stock') && $this->input('stock') !== null && $this->input('stock') !== '') ? (int) $this->input('stock') : null,
             'weight'      => (int) ($this->input('weight') ?? 0),
             'length'      => (float) ($this->input('length') ?? 0),

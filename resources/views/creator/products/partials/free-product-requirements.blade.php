@@ -193,6 +193,32 @@
                 </div>
             </div>
         </div>
+
+        {{-- SEKSI 3: METODE VALIDASI SYARAT (OPSI UPLOAD BUKTI SCREENSHOT) --}}
+        <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #f1f5f9;">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;">
+                <div style="flex:1;">
+                    <div style="font-size:0.84rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <svg width="17" height="17" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <span>Wajibkan Upload Screenshot Bukti</span>
+                        <span style="font-size:0.65rem; font-weight:800; color:#166534; background:#dcfce7; padding:2px 7px; border-radius:999px;">Validasi Ketat</span>
+                    </div>
+                    <div style="font-size:0.73rem; color:#64748b; line-height:1.45;">
+                        Jika aktif, pembeli / peserta <strong>wajib melampirkan screenshot</strong> bukti follow/join sebelum tiket dapat diklaim. Bukti otomatis terkompresi dan dapat Anda review langsung di Dashboard Ticketing & Laporan Pesanan.
+                    </div>
+                </div>
+                <div style="position:relative; width:44px; height:24px; flex-shrink:0; margin-top:2px;">
+                    <input type="checkbox" name="require_screenshot_proof" id="require_screenshot_proof_toggle" value="1"
+                        {{ old('require_screenshot_proof', $product->require_screenshot_proof ?? false) ? 'checked' : '' }}
+                        style="opacity:0; width:0; height:0;">
+                    <span class="toggle-slider-s"></span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

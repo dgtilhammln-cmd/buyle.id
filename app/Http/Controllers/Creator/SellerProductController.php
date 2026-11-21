@@ -182,10 +182,12 @@ class SellerProductController extends Controller
 
         if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
+            $data['require_screenshot_proof'] = $data['require_follow_join'] ? $request->boolean('require_screenshot_proof') : false;
             $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
             $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
         } else {
             $data['require_follow_join'] = false;
+            $data['require_screenshot_proof'] = false;
             $data['social_follow_url']   = null;
             $data['community_join_url']  = null;
         }
@@ -375,10 +377,12 @@ class SellerProductController extends Controller
 
         if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
+            $data['require_screenshot_proof'] = $data['require_follow_join'] ? $request->boolean('require_screenshot_proof') : false;
             $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
             $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
         } else {
             $data['require_follow_join'] = false;
+            $data['require_screenshot_proof'] = false;
             $data['social_follow_url']   = null;
             $data['community_join_url']  = null;
         }
