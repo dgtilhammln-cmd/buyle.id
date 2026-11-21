@@ -1295,6 +1295,8 @@
 
                             </div>
                         @endif
+                    @endif
+                    {{-- END: Conditional Checkout Form by Product Type --}}
 
                     @if($summary['subtotal'] <= 0 && $hasFreeRequirements)
                         {{-- SYARAT KLAIM PRODUK GRATIS (LEAD MAGNET) --}}
