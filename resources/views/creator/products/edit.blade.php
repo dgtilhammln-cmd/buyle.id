@@ -520,6 +520,56 @@
 @endsection
 
 @section('content')
+
+    {{-- ════ Mobile Header (aman Notch & Dynamic Island iOS) ════ --}}
+    <div class="cr-prod-form-mob-header">
+        <button type="button" class="prod-mobile-btn" onclick="handleProdFormMobileBack()" title="Kembali">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        <h2 class="prod-mobile-title">Edit Produk</h2>
+        <div style="width:40px;flex-shrink:0;"></div>
+    </div>
+
+    <style>
+        .cr-prod-form-mob-header { display: none; }
+        @media (max-width: 991px) {
+            .cr-prod-form-mob-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                padding: max(0.65rem, calc(0.5rem + env(safe-area-inset-top, 0px))) 0 1rem;
+                margin-bottom: 0.25rem;
+            }
+            .cr-prod-form-mob-header .prod-mobile-btn {
+                width: 40px; height: 40px; border-radius: 50%;
+                background: #ffffff; border: 1.5px solid #f1ece4;
+                display: flex; align-items: center; justify-content: center;
+                color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+                cursor: pointer; text-decoration: none; transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+            .cr-prod-form-mob-header .prod-mobile-btn:active { transform: scale(0.92); }
+            .cr-prod-form-mob-header .prod-mobile-title {
+                margin: 0; font-size: 1.1rem; font-weight: 800; color: #0f172a;
+                letter-spacing: -0.01em; font-family: 'Montserrat', sans-serif;
+                text-align: center; flex: 1;
+            }
+        }
+    </style>
+
+    <script>
+        function handleProdFormMobileBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "{{ route('creator.products.index') }}";
+            }
+        }
+    </script>
+
     <div class="prof-layout">
 
         <div class="prof-sidebar">
