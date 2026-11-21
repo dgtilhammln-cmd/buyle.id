@@ -2267,6 +2267,59 @@
             justify-content: space-between;
             margin-bottom: 0.65rem;
             width: 100%;
+            position: relative;
+        }
+
+        .pos-header-left {
+            display: flex;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .pos-header-logo-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .pos-header-logo-center img {
+            height: 32px;
+            max-height: 36px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .pos-header-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            z-index: 2;
+        }
+
+        @media (max-width: 767px) {
+            .pos-ref-header {
+                min-height: 44px;
+            }
+            .pos-header-logo-center {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                pointer-events: auto;
+                width: auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .pos-header-logo-center {
+                position: static;
+                transform: none;
+                margin-left: 12px;
+                margin-right: auto;
+            }
         }
 
         .pos-ref-menu-btn {
@@ -3706,9 +3759,8 @@
 
                         <div class="prof-card-body">
                             <!-- 1. Header (Screen 1 Reference 100% Match) -->
-                            <div class="pos-ref-header"
-                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-                                <div style="display:flex; align-items:center; gap:10px;">
+                            <div class="pos-ref-header">
+                                <div class="pos-header-left">
                                     <a href="{{ route('creator.dashboard') }}" class="pos-ref-menu-btn"
                                         title="Kembali ke Dashboard">
                                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -3716,7 +3768,12 @@
                                             <polyline points="15 18 9 12 15 6"></polyline>
                                         </svg>
                                     </a>
-                                    <h1 class="pos-ref-title" style="margin:0;">Buyle POS</h1>
+                                </div>
+
+                                <div class="pos-header-logo-center">
+                                    <a href="{{ route('creator.pos') }}" title="Buyle POS" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">
+                                        <img src="{{ asset('logobuylepos.png') }}" alt="Buyle POS" onerror="this.onerror=null; this.src='/logobuylepos.png';">
+                                    </a>
                                 </div>
 
                                 <!-- Tablet & Desktop Tab Switchers -->
@@ -3760,15 +3817,17 @@
                                     </a>
                                 </div>
 
-                                <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-ref-add-btn"
-                                    id="posBtnHeaderAdd" title="Kelola Produk di Buyle"
-                                    style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #e2e8f0; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <line x1="12" y1="5" x2="12" y2="19" />
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                    </svg>
-                                </a>
+                                <div class="pos-header-right">
+                                    <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-ref-add-btn"
+                                        id="posBtnHeaderAdd" title="Kelola Produk di Buyle"
+                                        style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #e2e8f0; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
 
                             <!-- Mini Stats Cards (Saldo Deposit & Revenue Hari Ini) -->

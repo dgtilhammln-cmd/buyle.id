@@ -647,7 +647,9 @@
                     <span>Lihat Undangan</span>
                 </a>
             @elseif($wedding)
-                <span class="wb-btn-preview-link" style="background:#fef2f2; border-color:#fecaca; color:#dc2626; cursor:not-allowed;" title="Undangan belum aktif. Selesaikan pembayaran terlebih dahulu.">
+                <span class="wb-btn-preview-link"
+                    style="background:#fef2f2; border-color:#fecaca; color:#dc2626; cursor:not-allowed;"
+                    title="Undangan belum aktif. Selesaikan pembayaran terlebih dahulu.">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -715,55 +717,71 @@
 
     {{-- Gateway Pembayaran jika Pasangan Aktif Belum Bayar --}}
     @if($wedding && $wedding->payment_status !== 'paid')
-        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:24px; padding:3.5rem 2rem; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.04); max-width:680px; margin:1.5rem auto 3rem;">
-            <div style="width:76px; height:76px; border-radius:24px; background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.08)); border:1.5px solid #fde68a; display:inline-flex; align-items:center; justify-content:center; color:#d97706; margin-bottom:1.5rem;">
+        <div
+            style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:24px; padding:3.5rem 2rem; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.04); max-width:680px; margin:1.5rem auto 3rem;">
+            <div
+                style="width:76px; height:76px; border-radius:24px; background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.08)); border:1.5px solid #fde68a; display:inline-flex; align-items:center; justify-content:center; color:#d97706; margin-bottom:1.5rem;">
                 <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
             </div>
-            <div style="font-size:0.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:0.4rem;">
+            <div
+                style="font-size:0.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:0.4rem;">
                 Aktivasi Paket Diperlukan
             </div>
-            <h3 style="font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;">
-                {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp; {{ $wedding->bride_nickname ?? $wedding->bride_name }}
+            <h3
+                style="font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;">
+                {{ $wedding->groom_nickname ?? $wedding->groom_name }} &amp;
+                {{ $wedding->bride_nickname ?? $wedding->bride_name }}
             </h3>
             <p style="font-size:0.86rem; color:#64748b; line-height:1.6; max-width:500px; margin:0 auto 1.75rem;">
-                Form kustomisasi mempelai, buku tamu, QR check-in, amplop digital, dan link undangan publik akan otomatis terbuka segera setelah pembayaran paket diselesaikan.
+                Form kustomisasi mempelai, buku tamu, QR check-in, amplop digital, dan link undangan publik akan otomatis
+                terbuka segera setelah pembayaran paket diselesaikan.
             </p>
 
             {{-- Ringkasan Order Pasangan Ini --}}
             @php
-                $pendingPricing = \App\Http\Controllers\Creator\WeddingController::computePrice((int)($wedding->guest_limit ?? 20));
+                $pendingPricing = \App\Http\Controllers\Creator\WeddingController::computePrice((int) ($wedding->guest_limit ?? 20));
             @endphp
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1.25rem 1.5rem; max-width:440px; margin:0 auto 2rem; text-align:left;">
-                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+            <div
+                style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1.25rem 1.5rem; max-width:440px; margin:0 auto 2rem; text-align:left;">
+                <div
+                    style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
                     <span>URL Undangan</span>
                     <strong style="color:#0f172a; font-family:monospace;">buyle.id/wedding/{{ $wedding->slug }}</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+                <div
+                    style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
                     <span>Kuota Undangan</span>
                     <strong style="color:#1eb349;">{{ $wedding->guest_limit ?? 20 }} Tamu (Pack)</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+                <div
+                    style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
                     <span>Biaya Undangan (Rp 1.500/pax)</span>
                     <span>Rp {{ number_format($pendingPricing['subtotal'], 0, ',', '.') }}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
+                <div
+                    style="display:flex; justify-content:space-between; font-size:0.84rem; color:#475569; margin-bottom:0.5rem;">
                     <span>Biaya Layanan (Platform & Admin)</span>
-                    <span>+Rp {{ number_format($pendingPricing['admin_fee'] + $pendingPricing['platform_fee'], 0, ',', '.') }}</span>
+                    <span>+Rp
+                        {{ number_format($pendingPricing['admin_fee'] + $pendingPricing['platform_fee'], 0, ',', '.') }}</span>
                 </div>
-                <hr style="border:none; border-top:1px dashed #cbd5e1; margin:0.6rem 0;"/>
+                <hr style="border:none; border-top:1px dashed #cbd5e1; margin:0.6rem 0;" />
                 <div style="display:flex; justify-content:space-between; font-size:1.05rem; font-weight:800; color:#0f172a;">
                     <span>Total Pembayaran</span>
-                    <span style="color:#1eb349;">Rp {{ number_format($wedding->paid_amount ?: $pendingPricing['total'], 0, ',', '.') }}</span>
+                    <span style="color:#1eb349;">Rp
+                        {{ number_format($wedding->paid_amount ?: $pendingPricing['total'], 0, ',', '.') }}</span>
                 </div>
             </div>
 
             <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
                 <button onclick="payPendingWedding({{ $wedding->id }})" id="btn-pay-pending-{{ $wedding->id }}"
-                        style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.95rem 2.4rem; border-radius:14px; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 6px 20px rgba(30,179,73,0.35); display:inline-flex; align-items:center; gap:8px;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; padding:0.95rem 2.4rem; border-radius:14px; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 6px 20px rgba(30,179,73,0.35); display:inline-flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                        <rect x="1" y="4" width="22" height="16" rx="2" />
+                        <line x1="1" y1="10" x2="23" y2="10" />
+                    </svg>
                     <span>Bayar Sekarang via Midtrans</span>
                 </button>
             </div>
@@ -775,2216 +793,2249 @@
         {{-- Layout Web Builder --}}
         <div class="bio-layout">
 
-        {{-- Sidebar Tab Column --}}
-        <div class="bio-sidebar-column">
-            <div class="bio-sidebar-card">
-                <div class="bio-tabs-list">
-                    <button class="tab-btn {{ $activeTab === 'tab-info' ? 'active' : '' }}" data-tab="tab-info">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                        <span class="tab-text-full">Mempelai & Acara</span>
-                        <small class="tab-text-mob">Acara</small>
-                    </button>
-
-                    <button class="tab-btn {{ $activeTab === 'tab-theme' ? 'active' : '' }}" data-tab="tab-theme">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
-                            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
-                            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
-                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
-                        </svg>
-                        <span class="tab-text-full">Pilih Tema Undangan</span>
-                        <small class="tab-text-mob">Tema</small>
-                    </button>
-
-                    <button class="tab-btn {{ $activeTab === 'tab-checkin' ? 'active' : '' }}" data-tab="tab-checkin">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-                            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
-                            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-                        </svg>
-                        <span class="tab-text-full">Buku Tamu & Check-in</span>
-                        <small class="tab-text-mob">Check-in</small>
-                    </button>
-
-                    <button class="tab-btn {{ $activeTab === 'tab-guests' ? 'active' : '' }}" data-tab="tab-guests">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        <span class="tab-text-full">Daftar Tamu & WA</span>
-                        <small class="tab-text-mob">Tamu</small>
-                    </button>
-
-                    <button class="tab-btn {{ $activeTab === 'tab-map' ? 'active' : '' }}" data-tab="tab-map">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                            <line x1="8" y1="2" x2="8" y2="18"></line>
-                            <line x1="16" y1="6" x2="16" y2="22"></line>
-                        </svg>
-                        <span class="tab-text-full">Peta Sebaran Tamu</span>
-                        <small class="tab-text-mob">Peta</small>
-                        @if(isset($mapGuests) && $mapGuests->count() > 0)
-                            <span
-                                style="background:#10b981; color:#fff; font-size:0.65rem; font-weight:800; padding:1px 6px; border-radius:99px; margin-left:auto;">{{ $mapGuests->count() }}</span>
-                        @endif
-                    </button>
-
-                    <button class="tab-btn {{ $activeTab === 'tab-envelope' ? 'active' : '' }}" data-tab="tab-envelope">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                            <line x1="2" y1="10" x2="22" y2="10"></line>
-                        </svg>
-                        <span class="tab-text-full">Amplop Digital</span>
-                        <small class="tab-text-mob">Amplop</small>
-                    </button>
-
-                    <button class="tab-btn {{ $activeTab === 'tab-wishes' ? 'active' : '' }}" data-tab="tab-wishes">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        <span class="tab-text-full">Doa &amp; Ucapan Tamu</span>
-                        <small class="tab-text-mob">Doa</small>
-                    </button>
-
-                    <button class="tab-btn {{ $activeTab === 'tab-photobooth' ? 'active' : '' }}" data-tab="tab-photobooth">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
-                            </path>
-                            <circle cx="12" cy="13" r="4"></circle>
-                        </svg>
-                        <span class="tab-text-full">Photobooth Barcode &amp; Frame</span>
-                        <small class="tab-text-mob">Photobooth</small>
-                    </button>
-                </div>
-            </div>
-
-            {{-- Quota Progress Bar --}}
-            @if($wedding)
-                <div class="bio-sidebar-card" style="padding:1rem;">
-                    <div
-                        style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center;">
-                        <span>Kuota Undangan</span>
-                        <span style="color:#{{ $wedding->remainingGuestSlots() === 0 ? 'ef4444' : '1eb349' }};">
-                            {{ $totalGuests }} / {{ $wedding->guest_limit }}
-                        </span>
-                    </div>
-                    @php
-                        $pct = $wedding->guest_limit > 0 ? min(100, round($totalGuests / $wedding->guest_limit * 100)) : 0;
-                        $barColor = $pct >= 90 ? '#ef4444' : ($pct >= 70 ? '#f59e0b' : '#1eb349');
-                    @endphp
-                    <div style="background:#f1f5f9;border-radius:99px;height:8px;overflow:hidden;">
-                        <div
-                            style="width:{{ $pct }}%;height:100%;background:{{ $barColor }};border-radius:99px;transition:width .4s;">
-                        </div>
-                    </div>
-                    <div style="font-size:0.7rem;color:#94a3b8;margin-top:0.35rem;">Tersisa
-                        {{ $wedding->remainingGuestSlots() }} slot</div>
-                    @if($wedding->remainingGuestSlots() < 20)
-                        <button onclick="document.getElementById('modal-add-couple').style.display='flex'"
-                            style="margin-top:0.5rem;width:100%;padding:0.4rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <line x1="12" y1="19" x2="12" y2="5"></line>
-                                <polyline points="5 12 12 5 19 12"></polyline>
-                            </svg>
-                            Upgrade Kuota
-                        </button>
-                    @endif
-                </div>
-            @endif
-
-            {{-- Reception Gate Quick Info Box --}}
-            <div class="bio-sidebar-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1;">
-                <div
-                    style="font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
-                    <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    Akses Meja Penerima Tamu
-                </div>
-                <div style="font-size:0.72rem; color:#64748b; margin-bottom:0.75rem; line-height:1.4;">
-                    Berikan link ini ke panitia di venue. Panitia cukup memasukkan 4-digit PIN tanpa perlu akun login.
-                </div>
-                <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                    <div
-                        style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:0.4rem 0.6rem; border-radius:8px; border:1px solid #e2e8f0; font-size:0.75rem;">
-                        <span style="color:#64748b; font-weight:600;">PIN:</span>
-                        <span
-                            style="font-weight:800; font-family:monospace; color:#0f172a; font-size:0.9rem;">{{ $wedding->reception_pin }}</span>
-                    </div>
-                    <a href="{{ $receptionUrl }}" target="_blank"
-                        style="display:flex; align-items:center; justify-content:center; gap:0.35rem; font-size:0.75rem; font-weight:700; color:#166534; background:#dcfce7; padding:0.5rem; border-radius:8px; text-decoration:none;">
-                        Buka Scanner Meja Tamu
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Content Column --}}
-        <div class="bio-content">
-
-            {{-- ═══════════════════════════════════════════════════════════
-            TAB 1: MEMPELAI & DETAIL ACARA
-            ═══════════════════════════════════════════════════════════════ --}}
-            <div class="tab-pane {{ $activeTab === 'tab-info' ? 'active' : '' }}" id="tab-info">
-                <form action="{{ route('creator.wedding.update-info') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-
-                    {{-- Card URL Slug & Header --}}
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                                        <path
-                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                                        </path>
-                                    </svg>
-                                </div>
-                                <span>Tautan Web Undangan &amp; PIN</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.25rem;">
-                                <div class="form-group">
-                                    <label class="form-label">Slug URL Undangan</label>
-                                    <div
-                                        style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; overflow:hidden;">
-                                        <span
-                                            style="padding:0 0.85rem; font-size:0.8rem; font-weight:700; color:#64748b; background:#f1f5f9; border-right:1px solid #e2e8f0;">{{ url('/wedding') }}/</span>
-                                        <input type="text" name="slug" value="{{ old('slug', $wedding->slug) }}"
-                                            class="form-input" style="border:none; background:transparent;" required>
-                                    </div>
-                                    <span class="form-hint">Tautan resmi yang akan dibagikan ke seluruh tamu
-                                        undangan.</span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">PIN Panitia Resepsi (4 Digit)</label>
-                                    <input type="text" name="reception_pin"
-                                        value="{{ old('reception_pin', $wedding->reception_pin) }}" maxlength="6"
-                                        class="form-input"
-                                        style="font-weight:800; font-family:monospace; text-align:center; font-size:1.05rem;"
-                                        required>
-                                    <span class="form-hint">Digunakan panitia untuk akses scan tamu.</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label class="form-label">Judul Acara / Tagline</label>
-                                <input type="text" name="event_title"
-                                    value="{{ old('event_title', $wedding->event_title) }}"
-                                    placeholder="Contoh: The Wedding Celebration of" class="form-input" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Card Pasangan Mempelai --}}
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                        </path>
-                                    </svg>
-                                </div>
-                                <span>Informasi Mempelai Pria &amp; Wanita</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
-                                {{-- Mempelai Pria --}}
-                                <div
-                                    style="background:#f8fafc; padding:1.25rem; border-radius:14px; border:1px solid #e2e8f0;">
-                                    <div
-                                        style="font-size:0.875rem; font-weight:800; color:#0f172a; margin-bottom:1rem; display:flex; align-items:center; gap:0.4rem;">
-                                        <span style="width:8px; height:8px; border-radius:50%; background:#0284c7;"></span>
-                                        Mempelai Pria (Groom)
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Lengkap &amp; Gelar</label>
-                                        <input type="text" name="groom_name"
-                                            value="{{ old('groom_name', $wedding->groom_name) }}"
-                                            placeholder="Rian Pratama, S.Kom" class="form-input" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Panggilan</label>
-                                        <input type="text" name="groom_nickname"
-                                            value="{{ old('groom_nickname', $wedding->groom_nickname) }}" placeholder="Rian"
-                                            class="form-input" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Orang Tua</label>
-                                        <input type="text" name="groom_parents"
-                                            value="{{ old('groom_parents', $wedding->groom_parents) }}"
-                                            placeholder="Putra pertama dari Bpk. Budi &amp; Ibu Siti" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Instagram Handle</label>
-                                        <input type="text" name="groom_instagram"
-                                            value="{{ old('groom_instagram', $wedding->groom_instagram) }}"
-                                            placeholder="@rianpratama" class="form-input">
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Foto Mempelai Pria</label>
-                                        <input type="file" name="groom_photo" accept="image/*" class="form-input"
-                                            style="padding-top:0.4rem;">
-                                    </div>
-                                </div>
-
-                                {{-- Mempelai Wanita --}}
-                                <div
-                                    style="background:#fdf2f8; padding:1.25rem; border-radius:14px; border:1px solid #fbcfe8;">
-                                    <div
-                                        style="font-size:0.875rem; font-weight:800; color:#831843; margin-bottom:1rem; display:flex; align-items:center; gap:0.4rem;">
-                                        <span style="width:8px; height:8px; border-radius:50%; background:#e11d48;"></span>
-                                        Mempelai Wanita (Bride)
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Lengkap &amp; Gelar</label>
-                                        <input type="text" name="bride_name"
-                                            value="{{ old('bride_name', $wedding->bride_name) }}"
-                                            placeholder="Anisa Rahmawati, S.E" class="form-input" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Panggilan</label>
-                                        <input type="text" name="bride_nickname"
-                                            value="{{ old('bride_nickname', $wedding->bride_nickname) }}"
-                                            placeholder="Anisa" class="form-input" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Orang Tua</label>
-                                        <input type="text" name="bride_parents"
-                                            value="{{ old('bride_parents', $wedding->bride_parents) }}"
-                                            placeholder="Putri kedua dari Bpk. Hendra &amp; Ibu Maria" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Instagram Handle</label>
-                                        <input type="text" name="bride_instagram"
-                                            value="{{ old('bride_instagram', $wedding->bride_instagram) }}"
-                                            placeholder="@anisarahma" class="form-input">
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Foto Mempelai Wanita</label>
-                                        <input type="file" name="bride_photo" accept="image/*" class="form-input"
-                                            style="padding-top:0.4rem;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Card Jadwal Akad & Resepsi --}}
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                                    </svg>
-                                </div>
-                                <span>Waktu &amp; Lokasi Acara</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
-                                {{-- Akad / Pemberkatan --}}
-                                <div>
-                                    <div
-                                        style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.4rem;">
-                                        1. Akad Nikah / Pemberkatan
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Waktu Akad</label>
-                                        <input type="datetime-local" name="ceremony_date"
-                                            value="{{ $wedding->ceremony_date ? $wedding->ceremony_date->format('Y-m-d\TH:i') : '' }}"
-                                            class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Tempat / Masjid / Gereja</label>
-                                        <input type="text" name="ceremony_location_name"
-                                            value="{{ old('ceremony_location_name', $wedding->ceremony_location_name) }}"
-                                            placeholder="Masjid Agung Al-Falah" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Alamat Lengkap</label>
-                                        <textarea name="ceremony_address" class="form-input" rows="2"
-                                            placeholder="Jl. Diponegoro No. 10...">{{ old('ceremony_address', $wedding->ceremony_address) }}</textarea>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">URL Google Maps Akad</label>
-                                        <input type="url" name="ceremony_map_url"
-                                            value="{{ old('ceremony_map_url', $wedding->ceremony_map_url ?: ($wedding->data_json['ceremony_map_url'] ?? '')) }}"
-                                            placeholder="https://maps.app.goo.gl/..." class="form-input">
-                                        <span class="form-hint">Tautan petunjuk arah Google Maps lokasi akad.</span>
-                                    </div>
-                                </div>
-
-                                {{-- Resepsi Pernikahan --}}
-                                <div>
-                                    <div
-                                        style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.4rem;">
-                                        2. Resepsi Pernikahan
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Waktu Resepsi</label>
-                                        <input type="datetime-local" name="event_date"
-                                            value="{{ $wedding->event_date ? $wedding->event_date->format('Y-m-d\TH:i') : '' }}"
-                                            class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Gedung / Ballroom</label>
-                                        <input type="text" name="event_location_name"
-                                            value="{{ old('event_location_name', $wedding->event_location_name) }}"
-                                            placeholder="Grand Ballroom Hotel Mulia" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Alamat Lengkap Venue</label>
-                                        <textarea name="event_address" class="form-input" rows="2"
-                                            placeholder="Jl. Jenderal Sudirman No. 45...">{{ old('event_address', $wedding->event_address) }}</textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">URL Google Maps</label>
-                                        <input type="url" name="event_map_url"
-                                            value="{{ old('event_map_url', $wedding->event_map_url) }}"
-                                            placeholder="https://maps.app.goo.gl/..." class="form-input">
-                                    </div>
-                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
-                                        <div class="form-group" style="margin-bottom:0;">
-                                            <label class="form-label">Latitude Peta</label>
-                                            <input type="text" name="event_latitude" id="inputLat"
-                                                value="{{ old('event_latitude', $wedding->event_latitude) }}"
-                                                placeholder="-6.2088" class="form-input">
-                                        </div>
-                                        <div class="form-group" style="margin-bottom:0;">
-                                            <label class="form-label">Longitude Peta</label>
-                                            <input type="text" name="event_longitude" id="inputLng"
-                                                value="{{ old('event_longitude', $wedding->event_longitude) }}"
-                                                placeholder="106.8456" class="form-input">
-                                        </div>
-                                    </div>
-                                    <div
-                                        style="margin-top:0.5rem; display:flex; justify-content:space-between; align-items:center;">
-                                        <span class="form-hint">Digunakan untuk merender peta interaktif di halaman
-                                            tamu.</span>
-                                        <button type="button" onclick="getCurrentLocationGps()"
-                                            style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-size:0.7rem; font-weight:700; color:#334155; padding:2px 8px; cursor:pointer;">
-                                            Ambil GPS HP / Laptop
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Card Musik Latar Undangan (Backsound MP3) --}}
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path d="M9 18V5l12-2v13"></path>
-                                        <circle cx="6" cy="18" r="3"></circle>
-                                        <circle cx="18" cy="16" r="3"></circle>
-                                    </svg>
-                                </div>
-                                <span>Musik Latar Undangan (Backsound MP3)</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
-                                <div>
-                                    <div class="form-group">
-                                        <label class="form-label">Upload File Musik (.mp3, .wav, maks 20MB)</label>
-                                        <input type="file" name="music_file" accept="audio/*" class="form-input"
-                                            style="padding-top:0.4rem;">
-                                        <span class="form-hint">Unggah rekaman audio romantis pilihan Anda dari HP /
-                                            laptop.</span>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Atau Masukkan Tautan Musik (URL MP3)</label>
-                                        <input type="url" name="music_url" id="musicUrlField"
-                                            value="{{ old('music_url', $wedding->music_url) }}"
-                                            placeholder="https://domain.com/musik-wedding.mp3" class="form-input">
-                                        <span class="form-hint">Dapat diisi URL file MP3 online yang dapat diputar
-                                            langsung.</span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="form-group">
-                                        <label class="form-label">Pilih Lagu Rekomendasi (Bebas Royalti)</label>
-                                        <select class="form-input"
-                                            onchange="document.getElementById('musicUrlField').value = this.value; document.getElementById('audioPreviewElem').src = this.value; document.getElementById('previewWrap').style.display = 'block';">
-                                            <option value="">-- Pilih Musik Rekomendasi --</option>
-                                            <option
-                                                value="https://assets.mixkit.co/music/preview/mixkit-wedding-waltz-piano-694.mp3">
-                                                Romantic Wedding Waltz (Piano)</option>
-                                            <option
-                                                value="https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3">
-                                                Serene Acoustic Melody</option>
-                                            <option
-                                                value="https://assets.mixkit.co/music/preview/mixkit-love-story-piano-695.mp3">
-                                                Love Story Ballad (Piano)</option>
-                                        </select>
-                                    </div>
-                                    <div id="previewWrap"
-                                        style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-top:0.5rem; {{ $wedding->music_url ? '' : 'display:none;' }}">
-                                        <div
-                                            style="font-size:0.75rem; font-weight:700; color:#166534; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.35rem;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24">
-                                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07">
-                                                </path>
-                                            </svg>
-                                            Pratinjau Musik:
-                                        </div>
-                                        <audio id="audioPreviewElem" controls style="width:100%; height:36px;"
-                                            src="{{ $wedding->music_url }}"></audio>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Card Tampilan Cover Undangan --}}
-                    <div class="prof-card" style="margin-bottom:0;">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <rect x="3" y="3" width="18" height="18" rx="3"></rect>
-                                        <path d="M3 9h18"></path>
-                                        <path d="M9 21V9"></path>
-                                    </svg>
-                                </div>
-                                <span>Pengaturan Cover &amp; Card Tamu</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            @php
-                                $isGuestCardOn = ($wedding->data_json['show_guest_card'] ?? true);
-                            @endphp
-                            <div
-                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; padding:0.4rem 0;">
-                                <div style="max-width:540px;">
-                                    <div
-                                        style="font-size:0.9rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px;">
-                                        <span>Tampilkan Card "Kepada Yth. Tamu Undangan"</span>
-                                        <span id="guestCardBadge"
-                                            class="badge-pill {{ $isGuestCardOn ? 'success' : 'secondary' }}"
-                                            style="font-size:0.68rem; padding:2px 8px;">
-                                            {{ $isGuestCardOn ? 'Aktif (Tampil)' : 'Nonaktif (Sembunyi)' }}
-                                        </span>
-                                    </div>
-                                    <div style="font-size:0.75rem; color:#64748b; margin-top:4px; line-height:1.45;">
-                                        Jika <strong>dinonaktifkan</strong>, card <em>"Kepada Yth. Bapak/Ibu/Saudara/i: Tamu
-                                            Undangan"</em> di cover depan otomatis disembunyikan dan diganti dengan
-                                        <strong>nama pengantin yang terpusat (center) &amp; lebih proporsional</strong>.
-                                    </div>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    {{-- Hidden input fallback: memastikan nilai 0 terkirim bila checkbox uncheck --}}
-                                    <input type="hidden" name="show_guest_card" value="0">
-                                    <label for="chkShowGuestCard"
-                                        style="position:relative; display:inline-flex; align-items:center; width:52px; height:28px; background:{{ $isGuestCardOn ? '#10b981' : '#cbd5e1' }}; border-radius:99px; cursor:pointer; transition:all 0.25s ease; padding:3px; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);"
-                                        id="guestCardTrack">
-                                        <input type="checkbox" id="chkShowGuestCard" name="show_guest_card" value="1" {{ $isGuestCardOn ? 'checked' : '' }}
-                                            onchange="handleGuestCardToggle(this.checked)"
-                                            style="opacity:0; width:0; height:0; position:absolute;">
-                                        <span id="guestCardKnob"
-                                            style="display:block; width:22px; height:22px; background:#ffffff; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.25); transform:translateX({{ $isGuestCardOn ? '24px' : '0px' }}); transition:transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex; justify-content:flex-end;">
-                        <button type="submit" class="wb-btn-primary" style="padding:0.75rem 2rem; font-size:0.9rem;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+            {{-- Sidebar Tab Column --}}
+            <div class="bio-sidebar-column">
+                <div class="bio-sidebar-card">
+                    <div class="bio-tabs-list">
+                        <button class="tab-btn {{ $activeTab === 'tab-info' ? 'active' : '' }}" data-tab="tab-info">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
                                 viewBox="0 0 24 24">
-                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                                <polyline points="7 3 7 8 15 8"></polyline>
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                             </svg>
-                            Simpan Perubahan
+                            <span class="tab-text-full">Mempelai & Acara</span>
+                            <small class="tab-text-mob">Acara</small>
                         </button>
-                    </div>
-                </form>
-            </div>
 
-            {{-- ═══════════════════════════════════════════════════════════
-                 TAB: PILIH TEMA UNDANGAN
-            ═══════════════════════════════════════════════════════════════ --}}
-            <div class="tab-pane {{ $activeTab === 'tab-theme' ? 'active' : '' }}" id="tab-theme">
-                <div class="bio-card">
-                    <div class="bio-card-header">
-                        <div class="bio-card-title">
-                            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                        <button class="tab-btn {{ $activeTab === 'tab-theme' ? 'active' : '' }}" data-tab="tab-theme">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
                                 <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
                                 <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
                                 <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
                                 <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
-                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
-                            </svg>
-                            <h3>Pilih Tema Desain Undangan Digital</h3>
-                        </div>
-                        <span style="font-size:0.75rem; color:#64748b; font-weight:600;">
-                            Tema aktif: <strong style="color:#1eb349;">{{ ucwords(str_replace('_', ' ', $wedding->theme ?? 'classic_gold')) }}</strong>
-                        </span>
-                    </div>
-
-                    <p style="font-size:0.83rem; color:#64748b; margin-bottom:1.5rem; line-height:1.5;">
-                        Pilih palet warna dan nuansa visual yang sesuai dengan konsep pernikahan Anda. Semua teks, animasi buka amplop, tombol RSVP, dan ornamen akan otomatis menyesuaikan tema yang dipilih secara real-time.
-                    </p>
-
-                    @php
-                        $themes = [
-                            [
-                                'key' => 'classic_gold',
-                                'title' => 'Classic Gold & Dark Marble',
-                                'tag' => 'Mewah & Elegan (Default)',
-                                'desc' => 'Nuansa marmer hitam dengan aksen emas champagne berkilau, tipografi Cinzel & Alex Brush premium.',
-                                'bg_preview' => 'linear-gradient(135deg, #06080c 0%, #1a150a 50%, #291d08 100%)',
-                                'badge_bg' => '#fef3c7',
-                                'badge_color' => '#92400e',
-                                'accent_color' => '#d4af37',
-                                'circles' => ['#d4af37', '#f3e5ab', '#06080c'],
-                            ],
-                            [
-                                'key' => 'romantic_rose',
-                                'title' => 'Romantic Rose Gold',
-                                'tag' => 'Romantis & Manis',
-                                'desc' => 'Perpaduan warna rose gold hangat dan blush pink pastel lembut yang memancarkan keanggunan cinta.',
-                                'bg_preview' => 'linear-gradient(135deg, #120a10 0%, #2b111e 50%, #4c1d35 100%)',
-                                'badge_bg' => '#fce7f3',
-                                'badge_color' => '#9d174d',
-                                'accent_color' => '#f472b6',
-                                'circles' => ['#fb7185', '#f472b6', '#fce7f3'],
-                            ],
-                            [
-                                'key' => 'sage_botanical',
-                                'title' => 'Sage Botanical Garden',
-                                'tag' => 'Modern & Natural',
-                                'desc' => 'Nuansa hijau sage alami dan earthy botanical yang menenangkan, modern, dan bernuansa outdoor intimate.',
-                                'bg_preview' => 'linear-gradient(135deg, #08110b 0%, #14281a 50%, #1f3d27 100%)',
-                                'badge_bg' => '#dcfce7',
-                                'badge_color' => '#166534',
-                                'accent_color' => '#4ade80',
-                                'circles' => ['#22c55e', '#86efac', '#f0fdf4'],
-                            ],
-                            [
-                                'key' => 'royal_navy',
-                                'title' => 'Royal Midnight Navy',
-                                'tag' => 'Megah & Berwibawa',
-                                'desc' => 'Kemewahan warna biru malam royal navy berpadu dengan sentuhan silver perak yang gagah dan eksklusif.',
-                                'bg_preview' => 'linear-gradient(135deg, #060a12 0%, #0d1e38 50%, #17325c 100%)',
-                                'badge_bg' => '#dbeafe',
-                                'badge_color' => '#1e40af',
-                                'accent_color' => '#60a5fa',
-                                'circles' => ['#3b82f6', '#93c5fd', '#f0f9ff'],
-                            ],
-                            [
-                                'key' => 'clean_minimalist',
-                                'title' => 'Modern Minimalist Editorial',
-                                'tag' => 'Simpel & Timeless',
-                                'desc' => 'Desain minimalis bersih dengan estetika editorial majalah, tipografi serif modern, dan kesan kontemporer berkelas.',
-                                'bg_preview' => 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%)',
-                                'badge_bg' => '#f4f4f5',
-                                'badge_color' => '#27272a',
-                                'accent_color' => '#e4e4e7',
-                                'circles' => ['#ffffff', '#a1a1aa', '#27272a'],
-                            ],
-                        ];
-                        $activeThemeKey = $wedding->theme ?? 'classic_gold';
-                    @endphp
-
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem;">
-                        @foreach($themes as $t)
-                            @php $isCurrent = ($activeThemeKey === $t['key']); @endphp
-                            <div style="background:#ffffff; border:{{ $isCurrent ? '2.5px solid #1eb349' : '1.5px solid #e2e8f0' }}; border-radius:18px; padding:1.25rem; display:flex; flex-direction:column; justify-content:space-between; transition:all .2s; box-shadow:{{ $isCurrent ? '0 8px 24px rgba(30,179,73,0.15)' : '0 2px 8px rgba(0,0,0,0.03)' }}; position:relative;">
-                                @if($isCurrent)
-                                    <div style="position:absolute; top:12px; right:12px; background:#1eb349; color:#fff; font-size:0.68rem; font-weight:800; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(30,179,73,0.4);">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                                        Tema Aktif
-                                    </div>
-                                @endif
-
-                                <div>
-                                    {{-- Banner Visual Mini Preview --}}
-                                    <div style="background:{{ $t['bg_preview'] }}; border-radius:12px; height:100px; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.08);">
-                                        @foreach($t['circles'] as $c)
-                                            <span style="width:28px; height:28px; border-radius:50%; background:{{ $c }}; border:2px solid rgba(255,255,255,0.25); display:inline-block; box-shadow:0 3px 8px rgba(0,0,0,0.3);"></span>
-                                        @endforeach
-                                    </div>
-
-                                    <div style="display:inline-block; background:{{ $t['badge_bg'] }}; color:{{ $t['badge_color'] }}; font-size:0.68rem; font-weight:800; padding:2px 8px; border-radius:6px; margin-bottom:0.4rem;">
-                                        {{ $t['tag'] }}
-                                    </div>
-                                    <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem; font-family:'Montserrat',sans-serif;">
-                                        {{ $t['title'] }}
-                                    </h4>
-                                    <p style="font-size:0.78rem; color:#64748b; line-height:1.45; margin-bottom:1.25rem;">
-                                        {{ $t['desc'] }}
-                                    </p>
-                                </div>
-
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <form action="{{ route('creator.wedding.theme.update') }}" method="POST" style="flex:1;">
-                                        @csrf
-                                        <input type="hidden" name="w" value="{{ $wedding->id }}">
-                                        <input type="hidden" name="theme" value="{{ $t['key'] }}">
-                                        @if($isCurrent)
-                                            <button type="button" disabled style="width:100%; padding:0.65rem; background:#ecfdf5; color:#059669; border:1.5px solid #a7f3d0; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:default; display:flex; align-items:center; justify-content:center; gap:5px;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                                                Sedang Digunakan
-                                            </button>
-                                        @else
-                                            <button type="submit" style="width:100%; padding:0.65rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 3px 10px rgba(30,179,73,0.25); transition:transform .15s;">
-                                                Gunakan Tema Ini
-                                            </button>
-                                        @endif
-                                    </form>
-
-                                    @if($wedding->payment_status === 'paid')
-                                        <a href="{{ $publicWeddingUrl }}" target="_blank" style="padding:0.65rem 0.85rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; color:#475569; font-size:0.78rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Lihat Tampilan">
-                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            {{-- ═══════════════════════════════════════════════════════════
-            TAB 2: BUKU TAMU & CHECK-IN
-            ═══════════════════════════════════════════════════════════════ --}}
-            <div class="tab-pane {{ $activeTab === 'tab-checkin' ? 'active' : '' }}" id="tab-checkin">
-
-                {{-- Stats Grid --}}
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
-                        <div class="stat-meta">
-                            <span class="stat-val">{{ number_format($totalGuests) }}</span>
-                            <span class="stat-lbl">Tamu Terdaftar</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                        <div class="stat-meta">
-                            <span class="stat-val">{{ number_format($checkedInCount) }}</span>
-                            <span class="stat-lbl">Tamu Check-in</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon amber">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                        </div>
-                        <div class="stat-meta">
-                            <span
-                                class="stat-val">{{ $totalGuests > 0 ? round(($checkedInCount / $totalGuests) * 100) : 0 }}%</span>
-                            <span class="stat-lbl">Tingkat Kehadiran</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon rose">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                        </div>
-                        <div class="stat-meta">
-                            <span class="stat-val">{{ number_format($totalWishes) }}</span>
-                            <span class="stat-lbl">Doa &amp; Ucapan</span>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Fast Check-in Bar --}}
-                <div class="prof-card" style="border: 2px solid #1eb349; background: #f0fdf4;">
-                    <div class="card-body" style="padding:1.25rem 1.75rem;">
-                        <div
-                            style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
-                            <div>
-                                <div
-                                    style="font-weight:800; font-size:1rem; color:#166534; display:flex; align-items:center; gap:0.5rem;">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
-                                        viewBox="0 0 24 24">
-                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                    </svg>
-                                    Cari &amp; Quick Check-in Tamu
-                                </div>
-                                <div style="font-size:0.75rem; color:#15803d; margin-top:2px;">
-                                    Ketik kode QR tamu (misal: <code>WED-ABCD12</code>) atau ID tamu untuk verifikasi
-                                    instan.
-                                </div>
-                            </div>
-                            <div style="display:flex; gap:0.5rem; flex:1; max-width:420px;">
-                                <input type="text" id="quickCheckinCode" placeholder="Masukkan Kode QR Tamu..."
-                                    class="form-input"
-                                    style="background:#fff; border-color:#86efac; font-family:monospace; font-weight:700;">
-                                <button type="button" onclick="submitQuickCheckin()" class="wb-btn-primary"
-                                    style="white-space:nowrap;">
-                                    Check-in
-                                </button>
-                            </div>
-                        </div>
-                        <div id="quickCheckinResult" style="margin-top:0.75rem; display:none;"></div>
-                    </div>
-                </div>
-
-                {{-- Tabel Tamu yang Sudah Hadir --}}
-                <div class="prof-card">
-                    <div class="prof-card-head">
-                        <div class="head-title-wrap">
-                            <div class="head-icon">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                            </div>
-                            <span>Daftar Tamu yang Telah Hadir (Check-in Realtime)</span>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding:0;">
-                        <div class="data-table-wrap" style="border:none;">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Tamu</th>
-                                        <th>Kategori / Grup</th>
-                                        <th>Pax Hadir</th>
-                                        <th>Waktu Hadir</th>
-                                        <th>Penerima Tamu</th>
-                                        <th>Kode QR</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $checkedGuests = $guests->where('is_checked_in', true);
-                                    @endphp
-                                    @forelse($checkedGuests as $g)
-                                        <tr>
-                                            <td>
-                                                <div style="font-weight:700; color:#0f172a;">{{ $g->name }}</div>
-                                                <div style="font-size:0.7rem; color:#64748b;">{{ $g->phone ?: '-' }}</div>
-                                            </td>
-                                            <td><span class="badge-pill warning">{{ $g->group_name ?: 'Tamu Undangan' }}</span>
-                                            </td>
-                                            <td><strong>{{ $g->actual_pax ?? $g->pax }}</strong> orang</td>
-                                            <td>{{ $g->checked_in_at ? $g->checked_in_at->format('H:i') . ' WIB' : '-' }}</td>
-                                            <td><span
-                                                    style="font-size:0.75rem; color:#475569;">{{ $g->checked_in_by ?: 'Panitia' }}</span>
-                                            </td>
-                                            <td><code
-                                                    style="font-size:0.75rem; background:#f1f5f9; padding:2px 6px; border-radius:4px;">{{ $g->qr_code }}</code>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" style="text-align:center; padding:2.5rem; color:#94a3b8;">
-                                                Belum ada tamu yang check-in saat ini.
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- ═══════════════════════════════════════════════════════════
-            TAB 3: DAFTAR TAMU & WHATSAPP BLAST
-            ═══════════════════════════════════════════════════════════════ --}}
-            <div class="tab-pane {{ $activeTab === 'tab-guests' ? 'active' : '' }}" id="tab-guests">
-
-                {{-- Form Input Tamu --}}
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
-
-                    {{-- Tambah 1 Tamu --}}
-                    <div class="prof-card" style="margin-bottom:0;">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="8.5" cy="7" r="4"></circle>
-                                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                                    </svg>
-                                </div>
-                                <span>Tambah 1 Tamu Undangan</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <form action="{{ route('creator.wedding.guest.store') }}" method="POST">
-                                @csrf
-                                <div class="form-group">
-                                    <label class="form-label">Nama Tamu Undangan *</label>
-                                    <input type="text" name="name" placeholder="Bpk. Ir. Joko &amp; Keluarga"
-                                        class="form-input" required>
-                                </div>
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
-                                    <div class="form-group">
-                                        <label class="form-label">Nomor WhatsApp</label>
-                                        <input type="text" name="phone" placeholder="08123456789" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Jumlah Pax</label>
-                                        <input type="number" name="pax" value="2" min="1" max="20" class="form-input">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Grup / Kategori</label>
-                                    <input type="text" name="group_name" placeholder="Keluarga / Sahabat / Kantor"
-                                        class="form-input">
-                                </div>
-                                <button type="submit" class="wb-btn-primary" style="width:100%; justify-content:center;">
-                                    Simpan Tamu
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    {{-- Import via CSV / Excel --}}
-                    <div class="prof-card" style="margin-bottom:0;">
-                        <div class="prof-card-head">
-                            <div class="head-title-wrap">
-                                <div class="head-icon">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                        <line x1="12" y1="18" x2="12" y2="12"></line>
-                                        <line x1="9" y1="15" x2="15" y2="15"></line>
-                                    </svg>
-                                </div>
-                                <span>Import via CSV / Excel</span>
-                            </div>
-                            <a href="data:text/csv;charset=utf-8,Nama,No_WhatsApp,Pax,Grup%0ABpk.+Rahmat+%26+Rekan,081234567890,2,VIP%0ASiti+Nurhaliza%2C+M.Pd,085678901234,1,Keluarga%0ADimas+%26+Partner,081987654321,2,Teman+Kantor"
-                                download="contoh_format_tamu_undangan.csv"
-                                style="font-size:0.75rem; font-weight:700; color:#166534; background:#dcfce7; padding:0.35rem 0.75rem; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Unduh Template
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <form action="{{ route('creator.wedding.guest.import') }}" method="POST"
-                                enctype="multipart/form-data">
-                                @csrf
-                                <div class="form-group">
-                                    <label class="form-label">Pilih File Spreadsheet (CSV / Excel)</label>
-                                    <input type="file" name="file" accept=".csv, .xlsx, .xls, .txt" class="form-input"
-                                        style="padding-top:0.4rem;">
-                                    <span class="form-hint">Sistem otomatis mendeteksi kolom: <strong>Nama</strong>,
-                                        <strong>No WhatsApp</strong>, <strong>Pax</strong>, dan
-                                        <strong>Grup</strong>.</span>
-                                </div>
-
-                                {{-- Contoh Format Tabel Visual --}}
-                                <div
-                                    style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-bottom:1rem;">
-                                    <div
-                                        style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                        </svg>
-                                        Contoh Struktur Kolom File Spreadsheet:
-                                    </div>
-                                    <div style="overflow-x:auto;">
-                                        <table
-                                            style="width:100%; border-collapse:collapse; font-size:0.72rem; text-align:left;">
-                                            <thead>
-                                                <tr style="background:#e2e8f0; color:#334155;">
-                                                    <th style="padding:4px 6px; border:1px solid #cbd5e1;">Nama (Wajib)</th>
-                                                    <th style="padding:4px 6px; border:1px solid #cbd5e1;">No WhatsApp</th>
-                                                    <th
-                                                        style="padding:4px 6px; border:1px solid #cbd5e1; text-align:center;">
-                                                        Pax</th>
-                                                    <th style="padding:4px 6px; border:1px solid #cbd5e1;">Grup / Kategori
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">
-                                                        Bpk. Rahmat &amp; Rekan</td>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">081234567890</td>
-                                                    <td
-                                                        style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">
-                                                        2</td>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">VIP</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">
-                                                        Siti Nurhaliza, M.Pd</td>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">085678901234</td>
-                                                    <td
-                                                        style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">
-                                                        1</td>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">Keluarga</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">
-                                                        Dimas &amp; Partner</td>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">081987654321</td>
-                                                    <td
-                                                        style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">
-                                                        2</td>
-                                                    <td style="padding:4px 6px; border:1px solid #e2e8f0;">Teman Kantor</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div style="font-size:0.68rem; color:#64748b; margin-top:0.4rem; line-height:1.3;">
-                                        * Pax otomatis 1 jika tak diisi. Format nomor mendukung awalan 08 atau 62.
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="wb-btn-primary" style="width:100%; justify-content:center;">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3"
-                                        viewBox="0 0 24 24">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="7 10 12 15 17 10"></polyline>
-                                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                                    </svg>
-                                    Impor Tamu via CSV / Excel
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-
-                {{-- Tabel Seluruh Tamu Undangan --}}
-                <div class="prof-card">
-                    <div class="prof-card-head">
-                        <div class="head-title-wrap">
-                            <div class="head-icon">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                            <span>Daftar Seluruh Tamu Undangan ({{ $totalGuests }})</span>
-                        </div>
-                        <div>
-                            <form method="GET" action="{{ route('creator.wedding.index') }}"
-                                style="display:flex; gap:0.4rem;">
-                                <input type="hidden" name="tab" value="tab-guests">
-                                <input type="text" name="q" value="{{ request('q') }}"
-                                    placeholder="Cari nama atau telepon..." class="form-input"
-                                    style="height:34px; font-size:0.75rem; width:180px;">
-                                <button type="submit" class="wb-btn-primary"
-                                    style="padding:0 0.75rem; height:34px; font-size:0.75rem;">Cari</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding:0;">
-                        <div class="data-table-wrap" style="border:none;">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Tamu</th>
-                                        <th>Grup</th>
-                                        <th>Pax</th>
-                                        <th>Status Kehadiran</th>
-                                        <th>Kode QR</th>
-                                        <th style="text-align:right;">Aksi &amp; WhatsApp</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($guests as $guest)
-                                        @php
-                                            $guestInviteUrl = route('wedding.show', ['slug' => $wedding->slug, 'to' => $guest->name, 'code' => $guest->qr_code]);
-                                            $waText = "Halo {$guest->name},\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami:\n\n*{$wedding->groom_nickname} & {$wedding->bride_nickname}*\n\nBuka tautan undangan berikut:\n{$guestInviteUrl}\n\nKode Masuk QR Anda: {$guest->qr_code}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir.\n\nTerima kasih!";
-                                            $waUrl = "https://api.whatsapp.com/send?" . ($guest->phone ? "phone=" . preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $guest->phone)) . "&" : "") . "text=" . urlencode($waText);
-                                        @endphp
-                                        <tr>
-                                            <td>
-                                                <div style="font-weight:700; color:#0f172a;">{{ $guest->name }}</div>
-                                                <div style="font-size:0.7rem; color:#64748b;">
-                                                    {{ $guest->phone ?: 'Tanpa nomor telepon' }}
-                                                </div>
-                                            </td>
-                                            <td><span
-                                                    class="badge-pill warning">{{ $guest->group_name ?: 'Tamu Undangan' }}</span>
-                                            </td>
-                                            <td>{{ $guest->pax ?: 1 }} pax</td>
-                                            <td>
-                                                @if($guest->is_checked_in)
-                                                    <span class="badge-pill success">Hadir
-                                                        ({{ $guest->checked_in_at ? $guest->checked_in_at->format('H:i') : 'Yes' }})</span>
-                                                @else
-                                                    <span class="badge-pill" style="background:#f1f5f9; color:#64748b;">Belum
-                                                        Hadir</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <code
-                                                    style="font-size:0.75rem; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:700;">{{ $guest->qr_code }}</code>
-                                            </td>
-                                            <td style="text-align:right; white-space:nowrap;">
-                                                <a href="{{ $waUrl }}" target="_blank" class="wb-btn-primary"
-                                                    style="background:#25d366; padding:0.35rem 0.65rem; font-size:0.75rem;"
-                                                    title="Kirim Undangan WhatsApp">
-                                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path
-                                                            d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
-                                                    </svg>
-                                                    Kirim WA
-                                                </a>
-                                                <button type="button" onclick="copyGuestLink('{{ $guestInviteUrl }}')"
-                                                    class="wb-btn-preview-link"
-                                                    style="padding:0.35rem 0.65rem; font-size:0.75rem;" title="Salin Tautan">
-                                                    Salin Link
-                                                </button>
-                                                <form action="{{ route('creator.wedding.guest.destroy', $guest->id) }}"
-                                                    method="POST" style="display:inline;"
-                                                    onsubmit="return confirm('Hapus tamu ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        style="background:none; border:none; color:#ef4444; cursor:pointer; padding:0.35rem;">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor"
-                                                            stroke-width="2" viewBox="0 0 24 24">
-                                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                                            <path
-                                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" style="text-align:center; padding:2rem; color:#94a3b8;">
-                                                Belum ada data tamu. Silakan tambah tamu manual atau gunakan bulk import.
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                        <div style="padding:1rem;">
-                            {{ $guests->links() }}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- ═══════════════════════════════════════════════════════════
-            TAB 4: AMPLOP DIGITAL & HADIAH
-            ═══════════════════════════════════════════════════════════════ --}}
-            <div class="tab-pane {{ $activeTab === 'tab-envelope' ? 'active' : '' }}" id="tab-envelope">
-
-                {{-- Setup Rekening & QRIS --}}
-                <div class="prof-card">
-                    <div class="prof-card-head">
-                        <div class="head-title-wrap">
-                            <div class="head-icon">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                                    <line x1="2" y1="10" x2="22" y2="10"></line>
-                                </svg>
-                            </div>
-                            <span>Pengaturan Amplop Digital &amp; Donasi</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('creator.wedding.update-envelope') }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-
-                            <div class="form-group"
-                                style="background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:1.25rem;">
-                                <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
-                                    <input type="checkbox" name="digital_envelope_enabled" value="1" {{ $wedding->digital_envelope_enabled ? 'checked' : '' }}
-                                        style="width:18px; height:18px; accent-color:#1eb349;">
-                                    <div>
-                                        <div style="font-weight:700; font-size:0.875rem; color:#0f172a;">Aktifkan Fitur
-                                            Amplop Digital</div>
-                                        <div style="font-size:0.72rem; color:#64748b;">Tamu undangan dapat mengirimkan
-                                            hadiah tanda kasih langsung via transfer bank atau scan QRIS.</div>
-                                    </div>
-                                </label>
-                            </div>
-
-                            @php
-                                $rekeningActive = $wedding->data_json['envelope_rekening_enabled'] ?? true;
-                            @endphp
-
-                            {{-- Toggle Mode: Rekening Manual vs Midtrans Gateway --}}
-                            <div class="form-group"
-                                style="background:#f1f5f9; padding:1.15rem; border-radius:12px; border:1px solid #cbd5e1; margin-bottom:1.25rem;">
-                                <div
-                                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-                                    <div style="max-width:540px;">
-                                        <div
-                                            style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:6px;">
-                                            <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2.2"
-                                                viewBox="0 0 24 24">
-                                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                                                <line x1="2" y1="10" x2="22" y2="10"></line>
-                                            </svg>
-                                            <span>Metode Pembayaran Amplop Digital</span>
-                                        </div>
-                                        <div style="font-size:0.75rem; color:#475569; margin-top:4px; line-height:1.45;">
-                                            Jika <strong>Rekening Bank dinonaktifkan</strong>, sistem otomatis menggunakan
-                                            <strong>Payment Gateway Midtrans</strong> (QRIS, GoPay, OVO, Virtual Account).
-                                            Form amplop akan terintegrasi langsung pada Konfirmasi Kehadiran &amp; Ucapan
-                                            dengan pop-up Snap otomatis.
-                                        </div>
-                                    </div>
-                                    <label
-                                        style="display:inline-flex; align-items:center; gap:0.6rem; cursor:pointer; background:#ffffff; padding:8px 16px; border-radius:99px; border:1.5px solid #cbd5e1; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                                        <input type="checkbox" name="envelope_rekening_enabled" value="1"
-                                            id="envelopeRekeningToggle" {{ $rekeningActive ? 'checked' : '' }}
-                                            onchange="toggleRekeningForm(this.checked)"
-                                            style="width:18px; height:18px; accent-color:#2563eb;">
-                                        <span style="font-weight:700; font-size:0.8rem; color:#1e293b;"
-                                            id="rekeningToggleLabel">{{ $rekeningActive ? 'Rekening Manual Aktif' : 'Pakai Midtrans (Rekening Off)' }}</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            {{-- Midtrans Active Notice --}}
-                            <div id="midtransInfoWrap"
-                                style="{{ $rekeningActive ? 'display:none;' : '' }} background:#eff6ff; border:1.5px dashed #93c5fd; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
-                                <div style="display:flex; align-items:flex-start; gap:10px;">
-                                    <span
-                                        style="background:#3b82f6; color:#fff; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; flex-shrink:0;">✓</span>
-                                    <div>
-                                        <div style="font-weight:800; font-size:0.82rem; color:#1e40af;">Mode Midtrans
-                                            Payment Gateway Aktif</div>
-                                        <div style="font-size:0.74rem; color:#1e3a8a; margin-top:2px; line-height:1.4;">
-                                            Rekening bank manual disembunyikan dari halaman tamu. Tamu dapat mengirim amplop
-                                            langsung di form <strong>Konfirmasi Kehadiran &amp; Ucapan</strong> (bisa diisi
-                                            0 jika tidak memberi amplop). Pop-up Midtrans Snap akan muncul saat nominal
-                                            diketikkan.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- Form Rekening Bank & QRIS Manual --}}
-                            <div id="manualRekeningWrap" style="{{ $rekeningActive ? '' : 'display:none;' }}">
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem;">
-                                    <div>
-                                        <div class="form-group">
-                                            <label class="form-label">Nama Bank</label>
-                                            <input type="text" name="bank_name"
-                                                value="{{ old('bank_name', $wedding->bank_name) }}"
-                                                placeholder="Contoh: BCA / Bank Mandiri / BRI" class="form-input">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Nomor Rekening</label>
-                                            <input type="text" name="bank_account_number"
-                                                value="{{ old('bank_account_number', $wedding->bank_account_number) }}"
-                                                placeholder="Contoh: 1234567890" class="form-input">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Atas Nama Pemilik Rekening</label>
-                                            <input type="text" name="bank_account_name"
-                                                value="{{ old('bank_account_name', $wedding->bank_account_name) }}"
-                                                placeholder="Contoh: Rian Pratama" class="form-input">
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div class="form-group">
-                                            <label class="form-label">Unggah Gambar QRIS (JPG / PNG)</label>
-                                            <input type="file" name="qris_image" accept="image/*" class="form-input"
-                                                style="padding-top:0.4rem;">
-                                            <span class="form-hint">Tamu dapat men-scan kode QRIS ini menggunakan aplikasi
-                                                mobile banking atau e-wallet apa saja.</span>
-                                        </div>
-                                        @if($wedding->qris_image)
-                                            <div
-                                                style="margin-top:0.5rem; text-align:center; background:#f8fafc; padding:0.75rem; border-radius:12px; border:1px solid #e2e8f0;">
-                                                <div
-                                                    style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.4rem;">
-                                                    Pratinjau QRIS Aktif:</div>
-                                                <img src="{{ asset('storage/' . $wedding->qris_image) }}" alt="QRIS"
-                                                    style="max-height:140px; border-radius:8px;">
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
-                                <button type="submit" class="wb-btn-primary">
-                                    Simpan Pengaturan Amplop
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                {{-- Riwayat Amplop Digital Masuk --}}
-                <div class="prof-card">
-                    <div class="prof-card-head"
-                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <div class="head-title-wrap">
-                            <div class="head-icon">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                            </div>
-                            <span>Riwayat Amplop Digital Masuk</span>
-                        </div>
-                        <div>
-                            <span
-                                style="background:#ecfdf5; border:1.5px solid #a7f3d0; color:#065f46; font-size:0.82rem; font-weight:800; padding:6px 16px; border-radius:99px;">
-                                Total Diterima Bersih: Rp {{ number_format($totalGifts, 0, ',', '.') }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding:0;">
-                        <div class="data-table-wrap" style="border:none;">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Pengirim</th>
-                                        <th>Nominal Bersih Diterima</th>
-                                        <th>Metode</th>
-                                        <th>Status</th>
-                                        <th>Waktu</th>
-                                        <th>Pesan Tanda Kasih</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($gifts as $gift)
-                                        @php
-                                            $isSuccess = ($gift->payment_status === 'settlement');
-                                            $isRecentPending = ($gift->payment_status === 'pending' && $gift->created_at->diffInMinutes(now()) <= 30);
-                                        @endphp
-                                        <tr>
-                                            <td><strong>{{ $gift->sender_name }}</strong></td>
-                                            <td>
-                                                <span style="font-weight:800; color: {{ $isSuccess ? '#166534' : '#64748b' }};">
-                                                    Rp {{ number_format($gift->amount, 0, ',', '.') }}
-                                                </span>
-                                            </td>
-                                            <td><span
-                                                    style="font-size:0.75rem; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 8px; border-radius:6px;">{{ strtoupper($gift->payment_method ?: 'TRANSFER') }}</span>
-                                            </td>
-                                            <td>
-                                                @if($isSuccess)
-                                                    <span class="badge-pill success">Berhasil</span>
-                                                @elseif($isRecentPending)
-                                                    <span class="badge-pill warning">Menunggu Pembayaran</span>
-                                                @else
-                                                    <span class="badge-pill danger">Gagal</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $gift->created_at->format('d/m/Y H:i') }}</td>
-                                            <td style="color:#64748b; font-style:italic;">"{{ $gift->message ?: '-' }}"</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" style="text-align:center; padding:2rem; color:#94a3b8;">
-                                                Belum ada data amplop digital yang masuk.
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    </div>
-
-    {{-- ═══════════════════════════════════════════════════════════
-    TAB 5: DOA & INSTASTORY GENERATOR
-    ═══════════════════════════════════════════════════════════════ --}}
-    <div class="tab-pane {{ $activeTab === 'tab-wishes' ? 'active' : '' }}" id="tab-wishes">
-
-        <div class="prof-card">
-            <div class="prof-card-head">
-                <div class="head-title-wrap">
-                    <div class="head-icon">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                    </div>
-                    <span>Doa &amp; Ucapan Tamu (InstaStory Card Generator)</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:1rem;">
-                    @forelse($wishes as $wish)
-                        <div
-                            style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-                            <div>
-                                <div
-                                    style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
-                                    <div>
-                                        <div style="font-weight:800; font-size:0.9rem; color:#0f172a;">
-                                            {{ $wish->sender_name }}
-                                        </div>
-                                        <div style="font-size:0.7rem; color:#64748b;">
-                                            {{ $wish->created_at->diffForHumans() }}
-                                        </div>
-                                    </div>
-                                    <div style="display:flex; gap:6px; align-items:center;">
-                                        @if($wish->envelope_amount > 0)
-                                            <span class="badge-pill"
-                                                style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-weight:800; font-size:0.75rem;">
-                                                Amplop: Rp {{ number_format($wish->envelope_amount, 0, ',', '.') }}
-                                            </span>
-                                        @endif
-                                        <span
-                                            class="badge-pill {{ $wish->attendance_status === 'hadir' ? 'success' : 'warning' }}">
-                                            {{ ucfirst($wish->attendance_status) }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <p
-                                    style="font-size:0.825rem; color:#334155; line-height:1.5; font-style:italic; margin:0.75rem 0;">
-                                    "{{ $wish->message }}"
-                                </p>
-                            </div>
-                            <div
-                                style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f1f5f9; padding-top:0.75rem; margin-top:0.75rem;">
-                                <button type="button"
-                                    onclick="generateStoryCard('{{ addslashes($wish->sender_name) }}', '{{ addslashes($wish->message) }}', '{{ $wedding->groom_nickname }} & {{ $wedding->bride_nickname }}')"
-                                    class="wb-btn-primary"
-                                    style="padding:0.4rem 0.85rem; font-size:0.75rem; background:linear-gradient(135deg, #e1306c 0%, #f77737 100%);">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                                    </svg>
-                                    Buat Story Card (9:16)
-                                </button>
-                                <form action="{{ route('creator.wedding.wish.destroy', $wish->id) }}" method="POST"
-                                    onsubmit="return confirm('Hapus ucapan ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        style="background:none; border:none; color:#ef4444; font-size:0.75rem; cursor:pointer; font-weight:600;">Hapus</button>
-                                </form>
-                            </div>
-                        </div>
-                    @empty
-                        <div style="grid-column: 1 / -1; text-align:center; padding:3rem; color:#94a3b8;">
-                            Belum ada ucapan doa yang dikirimkan oleh tamu undangan.
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    {{-- ═══════════════════════════════════════════════════════════
-    TAB 6: PHOTOBOOTH BARCODE & FRAME GENERATOR
-    ═══════════════════════════════════════════════════════════════ --}}
-    <div class="tab-pane {{ $activeTab === 'tab-photobooth' ? 'active' : '' }}" id="tab-photobooth">
-        @if($wedding)
-
-            {{-- Photobooth Hero Card --}}
-            <div class="prof-card" style="margin-bottom:1.25rem; overflow:hidden; position:relative;">
-                <div
-                    style="position:absolute; top:0; right:0; width:300px; height:100%; background:linear-gradient(135deg, rgba(30,179,73,0.08) 0%, rgba(165,207,55,0.04) 100%); pointer-events:none;">
-                </div>
-                <div class="card-body" style="padding:1.5rem;">
-                    <div style="display:flex; align-items:flex-start; gap:1.25rem; flex-wrap:wrap;">
-                        {{-- Camera Icon --}}
-                        <div
-                            style="flex-shrink:0; width:56px; height:56px; background:linear-gradient(135deg,#1eb349,#a5cf37); border-radius:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(30,179,73,0.3);">
-                            <svg width="26" height="26" fill="none" stroke="#ffffff" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                <path
+                                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z">
                                 </path>
-                                <circle cx="12" cy="13" r="4"></circle>
                             </svg>
-                        </div>
-                        <div style="flex:1; min-width:220px;">
-                            <div
-                                style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; font-family:'Montserrat',sans-serif;">
-                                Photobooth Live Camera</div>
-                            <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin-bottom:1rem;">Tamu scan QR
-                                barcode di venue, kamera langsung terbuka, pilih frame pernikahan eksklusif, jepret foto, dan
-                                share ke Instagram Story secara instan - tanpa install aplikasi.</p>
+                            <span class="tab-text-full">Pilih Tema Undangan</span>
+                            <small class="tab-text-mob">Tema</small>
+                        </button>
 
-                            <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-                                {{-- Open Photobooth --}}
-                                <a href="{{ $photoboothUrl }}" target="_blank"
-                                    style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1.1rem; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; border-radius:10px; font-size:0.8rem; font-weight:700; text-decoration:none; box-shadow:0 4px 12px rgba(30,179,73,0.3); font-family:'Montserrat',sans-serif;">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                        <polyline points="15 3 21 3 21 9"></polyline>
-                                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                                    </svg>
-                                    Preview Photobooth
-                                </a>
-                                {{-- Copy Link --}}
-                                <button type="button" onclick="copyGuestLink('{{ $photoboothUrl }}')"
-                                    style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1.1rem; background:#f8fafc; border:1.5px solid #e2e8f0; color:#334155; border-radius:10px; font-size:0.8rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif;">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                    </svg>
-                                    Salin Link
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- QR Code Stand Banner & Custom Frame Info --}}
-            <div class="prof-card" style="margin-bottom:1.25rem;">
-                <div class="prof-card-head">
-                    <div class="head-title-wrap">
-                        <div class="head-icon" style="background:#eff6ff; color:#3b82f6;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                        <button class="tab-btn {{ $activeTab === 'tab-checkin' ? 'active' : '' }}" data-tab="tab-checkin">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
                                 viewBox="0 0 24 24">
                                 <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
                                 <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
                                 <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
                                 <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
                             </svg>
-                        </div>
-                        <span>QR Code Stand Photobooth Venue</span>
+                            <span class="tab-text-full">Buku Tamu & Check-in</span>
+                            <small class="tab-text-mob">Check-in</small>
+                        </button>
+
+                        <button class="tab-btn {{ $activeTab === 'tab-guests' ? 'active' : '' }}" data-tab="tab-guests">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span class="tab-text-full">Daftar Tamu & WA</span>
+                            <small class="tab-text-mob">Tamu</small>
+                        </button>
+
+                        <button class="tab-btn {{ $activeTab === 'tab-map' ? 'active' : '' }}" data-tab="tab-map">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                <line x1="8" y1="2" x2="8" y2="18"></line>
+                                <line x1="16" y1="6" x2="16" y2="22"></line>
+                            </svg>
+                            <span class="tab-text-full">Peta Sebaran Tamu</span>
+                            <small class="tab-text-mob">Peta</small>
+                            @if(isset($mapGuests) && $mapGuests->count() > 0)
+                                <span
+                                    style="background:#10b981; color:#fff; font-size:0.65rem; font-weight:800; padding:1px 6px; border-radius:99px; margin-left:auto;">{{ $mapGuests->count() }}</span>
+                            @endif
+                        </button>
+
+                        <button class="tab-btn {{ $activeTab === 'tab-envelope' ? 'active' : '' }}" data-tab="tab-envelope">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                            <span class="tab-text-full">Amplop Digital</span>
+                            <small class="tab-text-mob">Amplop</small>
+                        </button>
+
+                        <button class="tab-btn {{ $activeTab === 'tab-wishes' ? 'active' : '' }}" data-tab="tab-wishes">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span class="tab-text-full">Doa &amp; Ucapan Tamu</span>
+                            <small class="tab-text-mob">Doa</small>
+                        </button>
+
+                        <button class="tab-btn {{ $activeTab === 'tab-photobooth' ? 'active' : '' }}" data-tab="tab-photobooth">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                </path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <span class="tab-text-full">Photobooth Barcode &amp; Frame</span>
+                            <small class="tab-text-mob">Photobooth</small>
+                        </button>
                     </div>
                 </div>
-                <div class="card-body" style="padding:1.5rem;">
-                    <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap; justify-content:center;">
+
+                {{-- Quota Progress Bar --}}
+                @if($wedding)
+                    <div class="bio-sidebar-card" style="padding:1rem;">
+                        <div
+                            style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center;">
+                            <span>Kuota Undangan</span>
+                            <span style="color:#{{ $wedding->remainingGuestSlots() === 0 ? 'ef4444' : '1eb349' }};">
+                                {{ $totalGuests }} / {{ $wedding->guest_limit }}
+                            </span>
+                        </div>
                         @php
-                            $pbUrl = route('wedding.photobooth', $wedding->slug);
-                            $qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&format=png&ecc=M&data=' . urlencode($pbUrl);
+                            $pct = $wedding->guest_limit > 0 ? min(100, round($totalGuests / $wedding->guest_limit * 100)) : 0;
+                            $barColor = $pct >= 90 ? '#ef4444' : ($pct >= 70 ? '#f59e0b' : '#1eb349');
                         @endphp
-                        <div style="text-align:center;">
+                        <div style="background:#f1f5f9;border-radius:99px;height:8px;overflow:hidden;">
                             <div
-                                style="display:inline-block; padding:12px; background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
-                                <img src="{{ $qrApiUrl }}" alt="QR Photobooth" width="180" height="180"
-                                    style="display:block; border-radius:8px;" loading="lazy">
+                                style="width:{{ $pct }}%;height:100%;background:{{ $barColor }};border-radius:99px;transition:width .4s;">
                             </div>
-                            <div style="margin-top:0.75rem;">
-                                <a href="{{ $qrApiUrl }}" download="QR_Photobooth_{{ $wedding->slug }}.png" target="_blank"
-                                    style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe; border-radius:8px; font-size:0.78rem; font-weight:700; text-decoration:none;">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                        </div>
+                        <div style="font-size:0.7rem;color:#94a3b8;margin-top:0.35rem;">Tersisa
+                            {{ $wedding->remainingGuestSlots() }} slot
+                        </div>
+                        @if($wedding->remainingGuestSlots() < 20)
+                            <button onclick="document.getElementById('modal-add-couple').style.display='flex'"
+                                style="margin-top:0.5rem;width:100%;padding:0.4rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                                    <polyline points="5 12 12 5 19 12"></polyline>
+                                </svg>
+                                Upgrade Kuota
+                            </button>
+                        @endif
+                    </div>
+                @endif
+
+                {{-- Reception Gate Quick Info Box --}}
+                <div class="bio-sidebar-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1;">
+                    <div
+                        style="font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
+                        <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        Akses Meja Penerima Tamu
+                    </div>
+                    <div style="font-size:0.72rem; color:#64748b; margin-bottom:0.75rem; line-height:1.4;">
+                        Berikan link ini ke panitia di venue. Panitia cukup memasukkan 4-digit PIN tanpa perlu akun login.
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:0.4rem 0.6rem; border-radius:8px; border:1px solid #e2e8f0; font-size:0.75rem;">
+                            <span style="color:#64748b; font-weight:600;">PIN:</span>
+                            <span
+                                style="font-weight:800; font-family:monospace; color:#0f172a; font-size:0.9rem;">{{ $wedding->reception_pin }}</span>
+                        </div>
+                        <a href="{{ $receptionUrl }}" target="_blank"
+                            style="display:flex; align-items:center; justify-content:center; gap:0.35rem; font-size:0.75rem; font-weight:700; color:#166534; background:#dcfce7; padding:0.5rem; border-radius:8px; text-decoration:none;">
+                            Buka Scanner Meja Tamu
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Content Column --}}
+            <div class="bio-content">
+
+                {{-- ═══════════════════════════════════════════════════════════
+                TAB 1: MEMPELAI & DETAIL ACARA
+                ═══════════════════════════════════════════════════════════════ --}}
+                <div class="tab-pane {{ $activeTab === 'tab-info' ? 'active' : '' }}" id="tab-info">
+                    <form action="{{ route('creator.wedding.update-info') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+
+                        {{-- Card URL Slug & Header --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">
+                                <div class="head-title-wrap">
+                                    <div class="head-icon">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                                            <path
+                                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <span>Tautan Web Undangan &amp; PIN</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.25rem;">
+                                    <div class="form-group">
+                                        <label class="form-label">Slug URL Undangan</label>
+                                        <div
+                                            style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; overflow:hidden;">
+                                            <span
+                                                style="padding:0 0.85rem; font-size:0.8rem; font-weight:700; color:#64748b; background:#f1f5f9; border-right:1px solid #e2e8f0;">{{ url('/wedding') }}/</span>
+                                            <input type="text" name="slug" value="{{ old('slug', $wedding->slug) }}"
+                                                class="form-input" style="border:none; background:transparent;" required>
+                                        </div>
+                                        <span class="form-hint">Tautan resmi yang akan dibagikan ke seluruh tamu
+                                            undangan.</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">PIN Panitia Resepsi (4 Digit)</label>
+                                        <input type="text" name="reception_pin"
+                                            value="{{ old('reception_pin', $wedding->reception_pin) }}" maxlength="6"
+                                            class="form-input"
+                                            style="font-weight:800; font-family:monospace; text-align:center; font-size:1.05rem;"
+                                            required>
+                                        <span class="form-hint">Digunakan panitia untuk akses scan tamu.</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label class="form-label">Judul Acara / Tagline</label>
+                                    <input type="text" name="event_title"
+                                        value="{{ old('event_title', $wedding->event_title) }}"
+                                        placeholder="Contoh: The Wedding Celebration of" class="form-input" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Card Pasangan Mempelai --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">
+                                <div class="head-title-wrap">
+                                    <div class="head-icon">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <span>Informasi Mempelai Pria &amp; Wanita</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+                                    {{-- Mempelai Pria --}}
+                                    <div
+                                        style="background:#f8fafc; padding:1.25rem; border-radius:14px; border:1px solid #e2e8f0;">
+                                        <div
+                                            style="font-size:0.875rem; font-weight:800; color:#0f172a; margin-bottom:1rem; display:flex; align-items:center; gap:0.4rem;">
+                                            <span style="width:8px; height:8px; border-radius:50%; background:#0284c7;"></span>
+                                            Mempelai Pria (Groom)
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Lengkap &amp; Gelar</label>
+                                            <input type="text" name="groom_name"
+                                                value="{{ old('groom_name', $wedding->groom_name) }}"
+                                                placeholder="Rian Pratama, S.Kom" class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Panggilan</label>
+                                            <input type="text" name="groom_nickname"
+                                                value="{{ old('groom_nickname', $wedding->groom_nickname) }}" placeholder="Rian"
+                                                class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Orang Tua</label>
+                                            <input type="text" name="groom_parents"
+                                                value="{{ old('groom_parents', $wedding->groom_parents) }}"
+                                                placeholder="Putra pertama dari Bpk. Budi &amp; Ibu Siti" class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Instagram Handle</label>
+                                            <input type="text" name="groom_instagram"
+                                                value="{{ old('groom_instagram', $wedding->groom_instagram) }}"
+                                                placeholder="@rianpratama" class="form-input">
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">Foto Mempelai Pria</label>
+                                            <input type="file" name="groom_photo" accept="image/*" class="form-input"
+                                                style="padding-top:0.4rem;">
+                                        </div>
+                                    </div>
+
+                                    {{-- Mempelai Wanita --}}
+                                    <div
+                                        style="background:#fdf2f8; padding:1.25rem; border-radius:14px; border:1px solid #fbcfe8;">
+                                        <div
+                                            style="font-size:0.875rem; font-weight:800; color:#831843; margin-bottom:1rem; display:flex; align-items:center; gap:0.4rem;">
+                                            <span style="width:8px; height:8px; border-radius:50%; background:#e11d48;"></span>
+                                            Mempelai Wanita (Bride)
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Lengkap &amp; Gelar</label>
+                                            <input type="text" name="bride_name"
+                                                value="{{ old('bride_name', $wedding->bride_name) }}"
+                                                placeholder="Anisa Rahmawati, S.E" class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Panggilan</label>
+                                            <input type="text" name="bride_nickname"
+                                                value="{{ old('bride_nickname', $wedding->bride_nickname) }}"
+                                                placeholder="Anisa" class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Orang Tua</label>
+                                            <input type="text" name="bride_parents"
+                                                value="{{ old('bride_parents', $wedding->bride_parents) }}"
+                                                placeholder="Putri kedua dari Bpk. Hendra &amp; Ibu Maria" class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Instagram Handle</label>
+                                            <input type="text" name="bride_instagram"
+                                                value="{{ old('bride_instagram', $wedding->bride_instagram) }}"
+                                                placeholder="@anisarahma" class="form-input">
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">Foto Mempelai Wanita</label>
+                                            <input type="file" name="bride_photo" accept="image/*" class="form-input"
+                                                style="padding-top:0.4rem;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Card Jadwal Akad & Resepsi --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">
+                                <div class="head-title-wrap">
+                                    <div class="head-icon">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span>Waktu &amp; Lokasi Acara</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+                                    {{-- Akad / Pemberkatan --}}
+                                    <div>
+                                        <div
+                                            style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.4rem;">
+                                            1. Akad Nikah / Pemberkatan
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Waktu Akad</label>
+                                            <input type="datetime-local" name="ceremony_date"
+                                                value="{{ $wedding->ceremony_date ? $wedding->ceremony_date->format('Y-m-d\TH:i') : '' }}"
+                                                class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Tempat / Masjid / Gereja</label>
+                                            <input type="text" name="ceremony_location_name"
+                                                value="{{ old('ceremony_location_name', $wedding->ceremony_location_name) }}"
+                                                placeholder="Masjid Agung Al-Falah" class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Alamat Lengkap</label>
+                                            <textarea name="ceremony_address" class="form-input" rows="2"
+                                                placeholder="Jl. Diponegoro No. 10...">{{ old('ceremony_address', $wedding->ceremony_address) }}</textarea>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">URL Google Maps Akad</label>
+                                            <input type="url" name="ceremony_map_url"
+                                                value="{{ old('ceremony_map_url', $wedding->ceremony_map_url ?: ($wedding->data_json['ceremony_map_url'] ?? '')) }}"
+                                                placeholder="https://maps.app.goo.gl/..." class="form-input">
+                                            <span class="form-hint">Tautan petunjuk arah Google Maps lokasi akad.</span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Resepsi Pernikahan --}}
+                                    <div>
+                                        <div
+                                            style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.4rem;">
+                                            2. Resepsi Pernikahan
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Waktu Resepsi</label>
+                                            <input type="datetime-local" name="event_date"
+                                                value="{{ $wedding->event_date ? $wedding->event_date->format('Y-m-d\TH:i') : '' }}"
+                                                class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Gedung / Ballroom</label>
+                                            <input type="text" name="event_location_name"
+                                                value="{{ old('event_location_name', $wedding->event_location_name) }}"
+                                                placeholder="Grand Ballroom Hotel Mulia" class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Alamat Lengkap Venue</label>
+                                            <textarea name="event_address" class="form-input" rows="2"
+                                                placeholder="Jl. Jenderal Sudirman No. 45...">{{ old('event_address', $wedding->event_address) }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">URL Google Maps</label>
+                                            <input type="url" name="event_map_url"
+                                                value="{{ old('event_map_url', $wedding->event_map_url) }}"
+                                                placeholder="https://maps.app.goo.gl/..." class="form-input">
+                                        </div>
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+                                            <div class="form-group" style="margin-bottom:0;">
+                                                <label class="form-label">Latitude Peta</label>
+                                                <input type="text" name="event_latitude" id="inputLat"
+                                                    value="{{ old('event_latitude', $wedding->event_latitude) }}"
+                                                    placeholder="-6.2088" class="form-input">
+                                            </div>
+                                            <div class="form-group" style="margin-bottom:0;">
+                                                <label class="form-label">Longitude Peta</label>
+                                                <input type="text" name="event_longitude" id="inputLng"
+                                                    value="{{ old('event_longitude', $wedding->event_longitude) }}"
+                                                    placeholder="106.8456" class="form-input">
+                                            </div>
+                                        </div>
+                                        <div
+                                            style="margin-top:0.5rem; display:flex; justify-content:space-between; align-items:center;">
+                                            <span class="form-hint">Digunakan untuk merender peta interaktif di halaman
+                                                tamu.</span>
+                                            <button type="button" onclick="getCurrentLocationGps()"
+                                                style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-size:0.7rem; font-weight:700; color:#334155; padding:2px 8px; cursor:pointer;">
+                                                Ambil GPS HP / Laptop
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Card Musik Latar Undangan (Backsound MP3) --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">
+                                <div class="head-title-wrap">
+                                    <div class="head-icon">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M9 18V5l12-2v13"></path>
+                                            <circle cx="6" cy="18" r="3"></circle>
+                                            <circle cx="18" cy="16" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <span>Musik Latar Undangan (Backsound MP3)</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+                                    <div>
+                                        <div class="form-group">
+                                            <label class="form-label">Upload File Musik (.mp3, .wav, maks 20MB)</label>
+                                            <input type="file" name="music_file" accept="audio/*" class="form-input"
+                                                style="padding-top:0.4rem;">
+                                            <span class="form-hint">Unggah rekaman audio romantis pilihan Anda dari HP /
+                                                laptop.</span>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">Atau Masukkan Tautan Musik (URL MP3)</label>
+                                            <input type="url" name="music_url" id="musicUrlField"
+                                                value="{{ old('music_url', $wedding->music_url) }}"
+                                                placeholder="https://domain.com/musik-wedding.mp3" class="form-input">
+                                            <span class="form-hint">Dapat diisi URL file MP3 online yang dapat diputar
+                                                langsung.</span>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="form-group">
+                                            <label class="form-label">Pilih Lagu Rekomendasi (Bebas Royalti)</label>
+                                            <select class="form-input"
+                                                onchange="document.getElementById('musicUrlField').value = this.value; document.getElementById('audioPreviewElem').src = this.value; document.getElementById('previewWrap').style.display = 'block';">
+                                                <option value="">-- Pilih Musik Rekomendasi --</option>
+                                                <option
+                                                    value="https://assets.mixkit.co/music/preview/mixkit-wedding-waltz-piano-694.mp3">
+                                                    Romantic Wedding Waltz (Piano)</option>
+                                                <option
+                                                    value="https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3">
+                                                    Serene Acoustic Melody</option>
+                                                <option
+                                                    value="https://assets.mixkit.co/music/preview/mixkit-love-story-piano-695.mp3">
+                                                    Love Story Ballad (Piano)</option>
+                                            </select>
+                                        </div>
+                                        <div id="previewWrap"
+                                            style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-top:0.5rem; {{ $wedding->music_url ? '' : 'display:none;' }}">
+                                            <div
+                                                style="font-size:0.75rem; font-weight:700; color:#166534; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.35rem;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07">
+                                                    </path>
+                                                </svg>
+                                                Pratinjau Musik:
+                                            </div>
+                                            <audio id="audioPreviewElem" controls style="width:100%; height:36px;"
+                                                src="{{ $wedding->music_url }}"></audio>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Card Tampilan Cover Undangan --}}
+                        <div class="prof-card" style="margin-bottom:0;">
+                            <div class="prof-card-head">
+                                <div class="head-title-wrap">
+                                    <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                                            <path d="M3 9h18"></path>
+                                            <path d="M9 21V9"></path>
+                                        </svg>
+                                    </div>
+                                    <span>Pengaturan Cover &amp; Card Tamu</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @php
+                                    $isGuestCardOn = ($wedding->data_json['show_guest_card'] ?? true);
+                                @endphp
+                                <div
+                                    style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; padding:0.4rem 0;">
+                                    <div style="max-width:540px;">
+                                        <div
+                                            style="font-size:0.9rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                                            <span>Tampilkan Card "Kepada Yth. Tamu Undangan"</span>
+                                            <span id="guestCardBadge"
+                                                class="badge-pill {{ $isGuestCardOn ? 'success' : 'secondary' }}"
+                                                style="font-size:0.68rem; padding:2px 8px;">
+                                                {{ $isGuestCardOn ? 'Aktif (Tampil)' : 'Nonaktif (Sembunyi)' }}
+                                            </span>
+                                        </div>
+                                        <div style="font-size:0.75rem; color:#64748b; margin-top:4px; line-height:1.45;">
+                                            Jika <strong>dinonaktifkan</strong>, card <em>"Kepada Yth. Bapak/Ibu/Saudara/i: Tamu
+                                                Undangan"</em> di cover depan otomatis disembunyikan dan diganti dengan
+                                            <strong>nama pengantin yang terpusat (center) &amp; lebih proporsional</strong>.
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        {{-- Hidden input fallback: memastikan nilai 0 terkirim bila checkbox uncheck --}}
+                                        <input type="hidden" name="show_guest_card" value="0">
+                                        <label for="chkShowGuestCard"
+                                            style="position:relative; display:inline-flex; align-items:center; width:52px; height:28px; background:{{ $isGuestCardOn ? '#10b981' : '#cbd5e1' }}; border-radius:99px; cursor:pointer; transition:all 0.25s ease; padding:3px; box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);"
+                                            id="guestCardTrack">
+                                            <input type="checkbox" id="chkShowGuestCard" name="show_guest_card" value="1" {{ $isGuestCardOn ? 'checked' : '' }}
+                                                onchange="handleGuestCardToggle(this.checked)"
+                                                style="opacity:0; width:0; height:0; position:absolute;">
+                                            <span id="guestCardKnob"
+                                                style="display:block; width:22px; height:22px; background:#ffffff; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.25); transform:translateX({{ $isGuestCardOn ? '24px' : '0px' }}); transition:transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end;">
+                            <button type="submit" class="wb-btn-primary" style="padding:0.75rem 2rem; font-size:0.9rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                    <polyline points="7 3 7 8 15 8"></polyline>
+                                </svg>
+                                Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- ═══════════════════════════════════════════════════════════
+                TAB: PILIH TEMA UNDANGAN
+                ═══════════════════════════════════════════════════════════════ --}}
+                <div class="tab-pane {{ $activeTab === 'tab-theme' ? 'active' : '' }}" id="tab-theme">
+                    <div class="bio-card">
+                        <div class="bio-card-header">
+                            <div class="bio-card-title">
+                                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+                                    <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+                                    <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+                                    <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+                                    <path
+                                        d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z">
+                                    </path>
+                                </svg>
+                                <h3>Pilih Tema Desain Undangan Digital</h3>
+                            </div>
+                            <span style="font-size:0.75rem; color:#64748b; font-weight:600;">
+                                Tema aktif: <strong
+                                    style="color:#1eb349;">{{ ucwords(str_replace('_', ' ', $wedding->theme ?? 'classic_gold')) }}</strong>
+                            </span>
+                        </div>
+
+                        <p style="font-size:0.83rem; color:#64748b; margin-bottom:1.5rem; line-height:1.5;">
+                            Pilih palet warna dan nuansa visual yang sesuai dengan konsep pernikahan Anda. Semua teks, animasi
+                            buka amplop, tombol RSVP, dan ornamen akan otomatis menyesuaikan tema yang dipilih secara real-time.
+                        </p>
+
+                        @php
+                            $themes = [
+                                [
+                                    'key' => 'classic_gold',
+                                    'title' => 'Classic Gold & Dark Marble',
+                                    'tag' => 'Mewah & Elegan (Default)',
+                                    'desc' => 'Nuansa marmer hitam dengan aksen emas champagne berkilau, tipografi Cinzel & Alex Brush premium.',
+                                    'bg_preview' => 'linear-gradient(135deg, #06080c 0%, #1a150a 50%, #291d08 100%)',
+                                    'badge_bg' => '#fef3c7',
+                                    'badge_color' => '#92400e',
+                                    'accent_color' => '#d4af37',
+                                    'circles' => ['#d4af37', '#f3e5ab', '#06080c'],
+                                ],
+                                [
+                                    'key' => 'romantic_rose',
+                                    'title' => 'Romantic Rose Gold',
+                                    'tag' => 'Romantis & Manis',
+                                    'desc' => 'Perpaduan warna rose gold hangat dan blush pink pastel lembut yang memancarkan keanggunan cinta.',
+                                    'bg_preview' => 'linear-gradient(135deg, #120a10 0%, #2b111e 50%, #4c1d35 100%)',
+                                    'badge_bg' => '#fce7f3',
+                                    'badge_color' => '#9d174d',
+                                    'accent_color' => '#f472b6',
+                                    'circles' => ['#fb7185', '#f472b6', '#fce7f3'],
+                                ],
+                                [
+                                    'key' => 'sage_botanical',
+                                    'title' => 'Sage Botanical Garden',
+                                    'tag' => 'Modern & Natural',
+                                    'desc' => 'Nuansa hijau sage alami dan earthy botanical yang menenangkan, modern, dan bernuansa outdoor intimate.',
+                                    'bg_preview' => 'linear-gradient(135deg, #08110b 0%, #14281a 50%, #1f3d27 100%)',
+                                    'badge_bg' => '#dcfce7',
+                                    'badge_color' => '#166534',
+                                    'accent_color' => '#4ade80',
+                                    'circles' => ['#22c55e', '#86efac', '#f0fdf4'],
+                                ],
+                                [
+                                    'key' => 'royal_navy',
+                                    'title' => 'Royal Midnight Navy',
+                                    'tag' => 'Megah & Berwibawa',
+                                    'desc' => 'Kemewahan warna biru malam royal navy berpadu dengan sentuhan silver perak yang gagah dan eksklusif.',
+                                    'bg_preview' => 'linear-gradient(135deg, #060a12 0%, #0d1e38 50%, #17325c 100%)',
+                                    'badge_bg' => '#dbeafe',
+                                    'badge_color' => '#1e40af',
+                                    'accent_color' => '#60a5fa',
+                                    'circles' => ['#3b82f6', '#93c5fd', '#f0f9ff'],
+                                ],
+                                [
+                                    'key' => 'clean_minimalist',
+                                    'title' => 'Modern Minimalist Editorial',
+                                    'tag' => 'Simpel & Timeless',
+                                    'desc' => 'Desain minimalis bersih dengan estetika editorial majalah, tipografi serif modern, dan kesan kontemporer berkelas.',
+                                    'bg_preview' => 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%)',
+                                    'badge_bg' => '#f4f4f5',
+                                    'badge_color' => '#27272a',
+                                    'accent_color' => '#e4e4e7',
+                                    'circles' => ['#ffffff', '#a1a1aa', '#27272a'],
+                                ],
+                            ];
+                            $activeThemeKey = $wedding->theme ?? 'classic_gold';
+                        @endphp
+
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem;">
+                            @foreach($themes as $t)
+                                @php $isCurrent = ($activeThemeKey === $t['key']); @endphp
+                                <div
+                                    style="background:#ffffff; border:{{ $isCurrent ? '2.5px solid #1eb349' : '1.5px solid #e2e8f0' }}; border-radius:18px; padding:1.25rem; display:flex; flex-direction:column; justify-content:space-between; transition:all .2s; box-shadow:{{ $isCurrent ? '0 8px 24px rgba(30,179,73,0.15)' : '0 2px 8px rgba(0,0,0,0.03)' }}; position:relative;">
+                                    @if($isCurrent)
+                                        <div
+                                            style="position:absolute; top:12px; right:12px; background:#1eb349; color:#fff; font-size:0.68rem; font-weight:800; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(30,179,73,0.4);">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                            Tema Aktif
+                                        </div>
+                                    @endif
+
+                                    <div>
+                                        {{-- Banner Visual Mini Preview --}}
+                                        <div
+                                            style="background:{{ $t['bg_preview'] }}; border-radius:12px; height:100px; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.08);">
+                                            @foreach($t['circles'] as $c)
+                                                <span
+                                                    style="width:28px; height:28px; border-radius:50%; background:{{ $c }}; border:2px solid rgba(255,255,255,0.25); display:inline-block; box-shadow:0 3px 8px rgba(0,0,0,0.3);"></span>
+                                            @endforeach
+                                        </div>
+
+                                        <div
+                                            style="display:inline-block; background:{{ $t['badge_bg'] }}; color:{{ $t['badge_color'] }}; font-size:0.68rem; font-weight:800; padding:2px 8px; border-radius:6px; margin-bottom:0.4rem;">
+                                            {{ $t['tag'] }}
+                                        </div>
+                                        <h4
+                                            style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem; font-family:'Montserrat',sans-serif;">
+                                            {{ $t['title'] }}
+                                        </h4>
+                                        <p style="font-size:0.78rem; color:#64748b; line-height:1.45; margin-bottom:1.25rem;">
+                                            {{ $t['desc'] }}
+                                        </p>
+                                    </div>
+
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <form action="{{ route('creator.wedding.theme.update') }}" method="POST" style="flex:1;">
+                                            @csrf
+                                            <input type="hidden" name="w" value="{{ $wedding->id }}">
+                                            <input type="hidden" name="theme" value="{{ $t['key'] }}">
+                                            @if($isCurrent)
+                                                <button type="button" disabled
+                                                    style="width:100%; padding:0.65rem; background:#ecfdf5; color:#059669; border:1.5px solid #a7f3d0; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:default; display:flex; align-items:center; justify-content:center; gap:5px;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <polyline points="20 6 9 17 4 12" />
+                                                    </svg>
+                                                    Sedang Digunakan
+                                                </button>
+                                            @else
+                                                <button type="submit"
+                                                    style="width:100%; padding:0.65rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 3px 10px rgba(30,179,73,0.25); transition:transform .15s;">
+                                                    Gunakan Tema Ini
+                                                </button>
+                                            @endif
+                                        </form>
+
+                                        @if($wedding->payment_status === 'paid')
+                                            <a href="{{ $publicWeddingUrl }}" target="_blank"
+                                                style="padding:0.65rem 0.85rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; color:#475569; font-size:0.78rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:4px;"
+                                                title="Lihat Tampilan">
+                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ═══════════════════════════════════════════════════════════
+                TAB 2: BUKU TAMU & CHECK-IN
+                ═══════════════════════════════════════════════════════════════ --}}
+                <div class="tab-pane {{ $activeTab === 'tab-checkin' ? 'active' : '' }}" id="tab-checkin">
+
+                    {{-- Stats Grid --}}
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="stat-meta">
+                                <span class="stat-val">{{ number_format($totalGuests) }}</span>
+                                <span class="stat-lbl">Tamu Terdaftar</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-meta">
+                                <span class="stat-val">{{ number_format($checkedInCount) }}</span>
+                                <span class="stat-lbl">Tamu Check-in</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon amber">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-meta">
+                                <span
+                                    class="stat-val">{{ $totalGuests > 0 ? round(($checkedInCount / $totalGuests) * 100) : 0 }}%</span>
+                                <span class="stat-lbl">Tingkat Kehadiran</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon rose">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-meta">
+                                <span class="stat-val">{{ number_format($totalWishes) }}</span>
+                                <span class="stat-lbl">Doa &amp; Ucapan</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Fast Check-in Bar --}}
+                    <div class="prof-card" style="border: 2px solid #1eb349; background: #f0fdf4;">
+                        <div class="card-body" style="padding:1.25rem 1.75rem;">
+                            <div
+                                style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+                                <div>
+                                    <div
+                                        style="font-weight:800; font-size:1rem; color:#166534; display:flex; align-items:center; gap:0.5rem;">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                        </svg>
+                                        Cari &amp; Quick Check-in Tamu
+                                    </div>
+                                    <div style="font-size:0.75rem; color:#15803d; margin-top:2px;">
+                                        Ketik kode QR tamu (misal: <code>WED-ABCD12</code>) atau ID tamu untuk verifikasi
+                                        instan.
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:0.5rem; flex:1; max-width:420px;">
+                                    <input type="text" id="quickCheckinCode" placeholder="Masukkan Kode QR Tamu..."
+                                        class="form-input"
+                                        style="background:#fff; border-color:#86efac; font-family:monospace; font-weight:700;">
+                                    <button type="button" onclick="submitQuickCheckin()" class="wb-btn-primary"
+                                        style="white-space:nowrap;">
+                                        Check-in
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="quickCheckinResult" style="margin-top:0.75rem; display:none;"></div>
+                        </div>
+                    </div>
+
+                    {{-- Tabel Tamu yang Sudah Hadir --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <div class="head-title-wrap">
+                                <div class="head-icon">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <polyline points="9 11 12 14 22 4"></polyline>
+                                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                    </svg>
+                                </div>
+                                <span>Daftar Tamu yang Telah Hadir (Check-in Realtime)</span>
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding:0;">
+                            <div class="data-table-wrap" style="border:none;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Tamu</th>
+                                            <th>Kategori / Grup</th>
+                                            <th>Pax Hadir</th>
+                                            <th>Waktu Hadir</th>
+                                            <th>Penerima Tamu</th>
+                                            <th>Kode QR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $checkedGuests = $guests->where('is_checked_in', true);
+                                        @endphp
+                                        @forelse($checkedGuests as $g)
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:700; color:#0f172a;">{{ $g->name }}</div>
+                                                    <div style="font-size:0.7rem; color:#64748b;">{{ $g->phone ?: '-' }}</div>
+                                                </td>
+                                                <td><span class="badge-pill warning">{{ $g->group_name ?: 'Tamu Undangan' }}</span>
+                                                </td>
+                                                <td><strong>{{ $g->actual_pax ?? $g->pax }}</strong> orang</td>
+                                                <td>{{ $g->checked_in_at ? $g->checked_in_at->format('H:i') . ' WIB' : '-' }}</td>
+                                                <td><span
+                                                        style="font-size:0.75rem; color:#475569;">{{ $g->checked_in_by ?: 'Panitia' }}</span>
+                                                </td>
+                                                <td><code
+                                                        style="font-size:0.75rem; background:#f1f5f9; padding:2px 6px; border-radius:4px;">{{ $g->qr_code }}</code>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" style="text-align:center; padding:2.5rem; color:#94a3b8;">
+                                                    Belum ada tamu yang check-in saat ini.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- ═══════════════════════════════════════════════════════════
+                TAB 3: DAFTAR TAMU & WHATSAPP BLAST
+                ═══════════════════════════════════════════════════════════════ --}}
+                <div class="tab-pane {{ $activeTab === 'tab-guests' ? 'active' : '' }}" id="tab-guests">
+
+                    {{-- Form Input Tamu --}}
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+
+                        {{-- Tambah 1 Tamu --}}
+                        <div class="prof-card" style="margin-bottom:0;">
+                            <div class="prof-card-head">
+                                <div class="head-title-wrap">
+                                    <div class="head-icon">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="8.5" cy="7" r="4"></circle>
+                                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                                        </svg>
+                                    </div>
+                                    <span>Tambah 1 Tamu Undangan</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ route('creator.wedding.guest.store') }}" method="POST">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label class="form-label">Nama Tamu Undangan *</label>
+                                        <input type="text" name="name" placeholder="Bpk. Ir. Joko &amp; Keluarga"
+                                            class="form-input" required>
+                                    </div>
+                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+                                        <div class="form-group">
+                                            <label class="form-label">Nomor WhatsApp</label>
+                                            <input type="text" name="phone" placeholder="08123456789" class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Jumlah Pax</label>
+                                            <input type="number" name="pax" value="2" min="1" max="20" class="form-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Grup / Kategori</label>
+                                        <input type="text" name="group_name" placeholder="Keluarga / Sahabat / Kantor"
+                                            class="form-input">
+                                    </div>
+                                    <button type="submit" class="wb-btn-primary" style="width:100%; justify-content:center;">
+                                        Simpan Tamu
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        {{-- Import via CSV / Excel --}}
+                        <div class="prof-card" style="margin-bottom:0;">
+                            <div class="prof-card-head">
+                                <div class="head-title-wrap">
+                                    <div class="head-icon">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                                        </svg>
+                                    </div>
+                                    <span>Import via CSV / Excel</span>
+                                </div>
+                                <a href="data:text/csv;charset=utf-8,Nama,No_WhatsApp,Pax,Grup%0ABpk.+Rahmat+%26+Rekan,081234567890,2,VIP%0ASiti+Nurhaliza%2C+M.Pd,085678901234,1,Keluarga%0ADimas+%26+Partner,081987654321,2,Teman+Kantor"
+                                    download="contoh_format_tamu_undangan.csv"
+                                    style="font-size:0.75rem; font-weight:700; color:#166534; background:#dcfce7; padding:0.35rem 0.75rem; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"
                                         viewBox="0 0 24 24">
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                         <polyline points="7 10 12 15 17 10"></polyline>
                                         <line x1="12" y1="15" x2="12" y2="3"></line>
                                     </svg>
-                                    Unduh QR Stand (PNG)
+                                    Unduh Template
                                 </a>
                             </div>
-                        </div>
-                        <div style="flex:1; min-width:260px;">
-                            <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem;">Cetak &amp;
-                                Pajang di Meja / Pintu Resepsi</div>
-                            <p style="font-size:0.8rem; color:#64748b; line-height:1.6; margin-bottom:0.75rem;">
-                                Tamu cukup arahkan kamera smartphone ke QR Code ini. Halaman Photobooth langsung aktif dengan
-                                kamera live dan frame custom yang Anda upload di bawah.
-                            </p>
-                            <div
-                                style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.6rem 0.85rem; margin-bottom:0.75rem;">
-                                <div
-                                    style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:2px;">
-                                    Tautan Langsung</div>
-                                <code
-                                    style="font-size:0.75rem; color:#1d4ed8; word-break:break-all; font-weight:600;">{{ $pbUrl }}</code>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <div class="card-body">
+                                <form action="{{ route('creator.wedding.guest.import') }}" method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label class="form-label">Pilih File Spreadsheet (CSV / Excel)</label>
+                                        <input type="file" name="file" accept=".csv, .xlsx, .xls, .txt" class="form-input"
+                                            style="padding-top:0.4rem;">
+                                        <span class="form-hint">Sistem otomatis mendeteksi kolom: <strong>Nama</strong>,
+                                            <strong>No WhatsApp</strong>, <strong>Pax</strong>, dan
+                                            <strong>Grup</strong>.</span>
+                                    </div>
 
-            {{-- ── Custom Frame Upload Section ──────────────────────────── --}}
-            <div class="prof-card" style="margin-top:1.25rem;">
-                <div class="prof-card-head"
-                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                    <div class="head-title-wrap">
-                        <div class="head-icon" style="background:#fdf4ff; color:#a855f7;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                            </svg>
-                        </div>
-                        <div>
-                            <span style="font-weight:800; color:#0f172a;">Frame Photobooth</span>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Frame yang dipasang otomatis di Live
-                                Camera tamu. Frame bawaan + custom upload (maks 6).</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if(session('error'))
-                        <div
-                            style="background:#fee2e2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:10px; font-size:0.82rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    @php
-                        $customFrames = $wedding->data_json['photobooth_frames'] ?? [];
-                    @endphp
-
-                    {{-- Galeri Custom Frame yang Sudah Diupload --}}
-                    <div style="margin-bottom:1.25rem;">
-                        @if(count($customFrames) > 0)
-                            <div
-                                style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
-                                @foreach($customFrames as $idx => $framePath)
+                                    {{-- Contoh Format Tabel Visual --}}
                                     <div
-                                        style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:9/16; background:#0f172a; border:2px solid #a855f7; box-shadow:0 4px 16px rgba(168,85,247,0.2);">
-                                        <img src="{{ Storage::url($framePath) }}" alt="Custom Frame {{ $idx + 1 }}"
-                                            style="width:100%; height:100%; object-fit:cover; display:block;">
-                                        {{-- Badge Custom --}}
+                                        style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-bottom:1rem;">
                                         <div
-                                            style="position:absolute; top:6px; left:6px; background:#a855f7; color:#fff; font-size:0.55rem; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase;">
-                                            FRAME {{ $idx + 1 }}</div>
-                                        {{-- Delete Button --}}
-                                        <form action="{{ route('creator.wedding.photobooth-frame.delete', $idx) }}?w={{ $wedding->id }}"
-                                            method="POST" onsubmit="return confirm('Hapus frame custom ini?');"
-                                            style="position:absolute; top:6px; right:6px;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            {{-- No custom frames: show available templates --}}
-                            <div
-                                style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
-                                {{-- 1. Minimalist Arch 3-Photo (Active) --}}
-                                <div
-                                    style="display:flex; align-items:center; gap:1rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #a855f7; border-radius:12px; box-shadow:0 2px 8px rgba(168,85,247,0.1);">
-                                    <div
-                                        style="width:48px; height:86px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #c084fc; flex-shrink:0;">
-                                        <img src="{{ asset('images/frames/minimalist_arch_wedding.png') }}" alt="Minimalist Arch"
-                                            style="width:100%; height:100%; object-fit:cover; display:block;">
-                                    </div>
-                                    <div style="flex:1;">
-                                        <div style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:0.15rem;">
-                                            Minimalist Arch (3 Foto)</div>
-                                        <div style="font-size:0.68rem; color:#64748b; line-height:1.4; margin-bottom:0.4rem;">
-                                            Template estetik 3 jendela (arch &amp; rect) + nama mempelai.</div>
-                                        <div style="display:flex; gap:0.4rem; align-items:center;">
-                                            <span
-                                                style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-size:0.56rem; font-weight:800; padding:2px 7px; border-radius:99px; text-transform:uppercase;">Aktif
-                                                (Auto 3 Foto)</span>
-                                            <a href="{{ asset('images/frames/minimalist_arch_wedding.png') }}"
-                                                download="Minimalist_Arch_Wedding.png"
-                                                style="font-size:0.66rem; font-weight:700; color:#15803d; text-decoration:none;">Unduh
-                                                PNG</a>
+                                            style="font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.35rem;">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                            Contoh Struktur Kolom File Spreadsheet:
+                                        </div>
+                                        <div style="overflow-x:auto;">
+                                            <table
+                                                style="width:100%; border-collapse:collapse; font-size:0.72rem; text-align:left;">
+                                                <thead>
+                                                    <tr style="background:#e2e8f0; color:#334155;">
+                                                        <th style="padding:4px 6px; border:1px solid #cbd5e1;">Nama (Wajib)</th>
+                                                        <th style="padding:4px 6px; border:1px solid #cbd5e1;">No WhatsApp</th>
+                                                        <th
+                                                            style="padding:4px 6px; border:1px solid #cbd5e1; text-align:center;">
+                                                            Pax</th>
+                                                        <th style="padding:4px 6px; border:1px solid #cbd5e1;">Grup / Kategori
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">
+                                                            Bpk. Rahmat &amp; Rekan</td>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0;">081234567890</td>
+                                                        <td
+                                                            style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">
+                                                            2</td>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0;">VIP</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">
+                                                            Siti Nurhaliza, M.Pd</td>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0;">085678901234</td>
+                                                        <td
+                                                            style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">
+                                                            1</td>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0;">Keluarga</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0; font-weight:600;">
+                                                            Dimas &amp; Partner</td>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0;">081987654321</td>
+                                                        <td
+                                                            style="padding:4px 6px; border:1px solid #e2e8f0; text-align:center;">
+                                                            2</td>
+                                                        <td style="padding:4px 6px; border:1px solid #e2e8f0;">Teman Kantor</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div style="font-size:0.68rem; color:#64748b; margin-top:0.4rem; line-height:1.3;">
+                                            * Pax otomatis 1 jika tak diisi. Format nomor mendukung awalan 08 atau 62.
                                         </div>
                                     </div>
-                                </div>
 
-                                {{-- 2. Vintage Digicam --}}
-                                <div
-                                    style="display:flex; align-items:center; gap:1rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px;">
-                                    <div
-                                        style="width:48px; height:86px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #cbd5e1; flex-shrink:0;">
-                                        <img src="{{ asset('images/frames/vintage_digicam_wedding.png') }}" alt="Vintage Digicam"
-                                            style="width:100%; height:100%; object-fit:cover; display:block;">
-                                    </div>
-                                    <div style="flex:1;">
-                                        <div style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:0.15rem;">
-                                            Vintage Digicam</div>
-                                        <div style="font-size:0.68rem; color:#64748b; line-height:1.4; margin-bottom:0.4rem;">Frame
-                                            digital camera Y2K dengan live HUD &amp; buttons.</div>
-                                        <div style="display:flex; gap:0.4rem; align-items:center;">
-                                            <span
-                                                style="background:#f1f5f9; color:#475569; font-size:0.56rem; font-weight:700; padding:2px 7px; border-radius:99px; text-transform:uppercase;">Pilihan
-                                                Kedua</span>
-                                            <a href="{{ asset('images/frames/vintage_digicam_wedding.png') }}"
-                                                download="Vintage_Digicam_Wedding.png"
-                                                style="font-size:0.66rem; font-weight:700; color:#15803d; text-decoration:none;">Unduh
-                                                PNG</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-
-                    {{-- Upload Form --}}
-                    @if(count($customFrames) < 6)
-                        <form action="{{ route('creator.wedding.photobooth-frame.upload') }}?w={{ $wedding->id }}" method="POST"
-                            enctype="multipart/form-data" id="frameUploadForm">
-                            @csrf
-                            <div id="frameDropZone"
-                                style="border:2px dashed #c084fc; border-radius:14px; padding:2rem; text-align:center; background:#fdf4ff; cursor:pointer; transition:all 0.2s ease; position:relative;"
-                                onclick="document.getElementById('frameFileInput').click()"
-                                ondragover="event.preventDefault(); this.style.borderColor='#9333ea'; this.style.background='#f3e8ff';"
-                                ondragleave="this.style.borderColor='#c084fc'; this.style.background='#fdf4ff';"
-                                ondrop="handleFrameDrop(event)">
-                                <input type="file" id="frameFileInput" name="frame" accept="image/png,image/webp,image/jpeg"
-                                    style="display:none;" onchange="previewFrameUpload(event)">
-
-                                <div id="frameDropContent">
-                                    <div
-                                        style="width:44px; height:44px; border-radius:50%; background:#e9d5ff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
-                                        <svg width="22" height="22" fill="none" stroke="#7c3aed" stroke-width="2"
+                                    <button type="submit" class="wb-btn-primary" style="width:100%; justify-content:center;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3"
                                             viewBox="0 0 24 24">
                                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                            <polyline points="17 8 12 3 7 8"></polyline>
-                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
                                         </svg>
-                                    </div>
-                                    <div style="font-size:0.85rem; font-weight:800; color:#581c87; margin-bottom:0.25rem;">Drag
-                                        &amp; Drop Frame PNG di sini</div>
-                                    <div style="font-size:0.75rem; color:#7c3aed; margin-bottom:0.75rem;">atau klik untuk pilih file
-                                    </div>
-                                    <div style="font-size:0.7rem; color:#94a3b8; line-height:1.4;">
-                                        Format: PNG Transparan / WebP &bull; Rasio: 9:16 (1080 x 1920 px) &bull; Maks: 4 MB<br>
-                                        Tersisa <strong>{{ 6 - count($customFrames) }}</strong> slot dari 6 frame custom
-                                    </div>
-                                </div>
-
-                                <div id="framePreviewWrap" style="display:none;">
-                                    <img id="framePreviewImg" src="" alt="Preview"
-                                        style="max-height:200px; border-radius:10px; margin:0 auto 0.75rem; display:block; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
-                                    <div id="framePreviewName"
-                                        style="font-size:0.78rem; font-weight:700; color:#581c87; margin-bottom:0.75rem;"></div>
-                                </div>
+                                        Impor Tamu via CSV / Excel
+                                    </button>
+                                </form>
                             </div>
+                        </div>
 
-                            {{-- Upload Submit Button --}}
-                            <div id="frameUploadActions" style="display:none; margin-top:0.85rem; gap:0.65rem; flex-wrap:wrap;">
-                                <button type="submit"
-                                    style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.55rem 1.25rem; background:linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; border:none; border-radius:10px; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 4px 12px rgba(124,58,237,0.3);">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                    </div>
+
+                    {{-- Tabel Seluruh Tamu Undangan --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <div class="head-title-wrap">
+                                <div class="head-icon">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
                                     </svg>
-                                    Upload Frame Sekarang
-                                </button>
-                                <button type="button" onclick="resetFrameUpload()"
-                                    style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 0.9rem; background:#f1f5f9; border:1.5px solid #e2e8f0; color:#475569; border-radius:10px; font-size:0.8rem; font-weight:600; cursor:pointer;">
-                                    Batal
-                                </button>
+                                </div>
+                                <span>Daftar Seluruh Tamu Undangan ({{ $totalGuests }})</span>
                             </div>
-                        </form>
-                    @else
-                        <div
-                            style="text-align:center; padding:1.5rem; background:#f8fafc; border-radius:12px; color:#64748b; font-size:0.82rem; font-weight:600; border:1.5px dashed #e2e8f0;">
-                            <svg width="24" height="24" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"
-                                style="margin:0 auto 0.5rem; display:block;">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            Slot custom frame sudah penuh (6/6). Hapus salah satu untuk menambah frame baru.
+                            <div>
+                                <form method="GET" action="{{ route('creator.wedding.index') }}"
+                                    style="display:flex; gap:0.4rem;">
+                                    <input type="hidden" name="tab" value="tab-guests">
+                                    <input type="text" name="q" value="{{ request('q') }}"
+                                        placeholder="Cari nama atau telepon..." class="form-input"
+                                        style="height:34px; font-size:0.75rem; width:180px;">
+                                    <button type="submit" class="wb-btn-primary"
+                                        style="padding:0 0.75rem; height:34px; font-size:0.75rem;">Cari</button>
+                                </form>
+                            </div>
                         </div>
-                    @endif
+                        <div class="card-body" style="padding:0;">
+                            <div class="data-table-wrap" style="border:none;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Tamu</th>
+                                            <th>Grup</th>
+                                            <th>Pax</th>
+                                            <th>Status Kehadiran</th>
+                                            <th>Kode QR</th>
+                                            <th style="text-align:right;">Aksi &amp; WhatsApp</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($guests as $guest)
+                                            @php
+                                                $guestInviteUrl = route('wedding.show', ['slug' => $wedding->slug, 'to' => $guest->name, 'code' => $guest->qr_code]);
+                                                $waText = "Halo {$guest->name},\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami:\n\n*{$wedding->groom_nickname} & {$wedding->bride_nickname}*\n\nBuka tautan undangan berikut:\n{$guestInviteUrl}\n\nKode Masuk QR Anda: {$guest->qr_code}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir.\n\nTerima kasih!";
+                                                $waUrl = "https://api.whatsapp.com/send?" . ($guest->phone ? "phone=" . preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $guest->phone)) . "&" : "") . "text=" . urlencode($waText);
+                                            @endphp
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:700; color:#0f172a;">{{ $guest->name }}</div>
+                                                    <div style="font-size:0.7rem; color:#64748b;">
+                                                        {{ $guest->phone ?: 'Tanpa nomor telepon' }}
+                                                    </div>
+                                                </td>
+                                                <td><span
+                                                        class="badge-pill warning">{{ $guest->group_name ?: 'Tamu Undangan' }}</span>
+                                                </td>
+                                                <td>{{ $guest->pax ?: 1 }} pax</td>
+                                                <td>
+                                                    @if($guest->is_checked_in)
+                                                        <span class="badge-pill success">Hadir
+                                                            ({{ $guest->checked_in_at ? $guest->checked_in_at->format('H:i') : 'Yes' }})</span>
+                                                    @else
+                                                        <span class="badge-pill" style="background:#f1f5f9; color:#64748b;">Belum
+                                                            Hadir</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <code
+                                                        style="font-size:0.75rem; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:700;">{{ $guest->qr_code }}</code>
+                                                </td>
+                                                <td style="text-align:right; white-space:nowrap;">
+                                                    <a href="{{ $waUrl }}" target="_blank" class="wb-btn-primary"
+                                                        style="background:#25d366; padding:0.35rem 0.65rem; font-size:0.75rem;"
+                                                        title="Kirim Undangan WhatsApp">
+                                                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                                                        </svg>
+                                                        Kirim WA
+                                                    </a>
+                                                    <button type="button" onclick="copyGuestLink('{{ $guestInviteUrl }}')"
+                                                        class="wb-btn-preview-link"
+                                                        style="padding:0.35rem 0.65rem; font-size:0.75rem;" title="Salin Tautan">
+                                                        Salin Link
+                                                    </button>
+                                                    <form action="{{ route('creator.wedding.guest.destroy', $guest->id) }}"
+                                                        method="POST" style="display:inline;"
+                                                        onsubmit="return confirm('Hapus tamu ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            style="background:none; border:none; color:#ef4444; cursor:pointer; padding:0.35rem;">
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor"
+                                                                stroke-width="2" viewBox="0 0 24 24">
+                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                <path
+                                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                                </path>
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" style="text-align:center; padding:2rem; color:#94a3b8;">
+                                                    Belum ada data tamu. Silakan tambah tamu manual atau gunakan bulk import.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="padding:1rem;">
+                                {{ $guests->links() }}
+                            </div>
+                        </div>
+                    </div>
 
-                    {{-- Panduan Desain Frame --}}
-                    <div
-                        style="margin-top:1rem; padding:0.85rem 1rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;">
-                        <div
-                            style="font-size:0.78rem; font-weight:700; color:#92400e; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3"
-                                viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                            </svg>
-                            Panduan Membuat Frame Custom di Canva:
+                </div>
+
+                {{-- ═══════════════════════════════════════════════════════════
+                TAB 4: AMPLOP DIGITAL & HADIAH
+                ═══════════════════════════════════════════════════════════════ --}}
+                <div class="tab-pane {{ $activeTab === 'tab-envelope' ? 'active' : '' }}" id="tab-envelope">
+
+                    {{-- Setup Rekening & QRIS --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <div class="head-title-wrap">
+                                <div class="head-icon">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                                    </svg>
+                                </div>
+                                <span>Pengaturan Amplop Digital &amp; Donasi</span>
+                            </div>
                         </div>
-                        <ol style="font-size:0.74rem; color:#78350f; line-height:1.7; margin:0; padding-left:1.25rem;">
-                            <li>Buka Canva → pilih template <strong>Instagram Story (1080 x 1920 px)</strong></li>
-                            <li>Desain pinggiran frame (nama pasangan, tanggal, ornamen). Biarkan bagian tengah
-                                <strong>transparan</strong></li>
-                            <li>Download sebagai <strong>PNG Transparan</strong></li>
-                            <li>Upload di sini: frame otomatis terpasang pada Live Camera photobooth tamu</li>
-                        </ol>
+                        <div class="card-body">
+                            <form action="{{ route('creator.wedding.update-envelope') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+
+                                <div class="form-group"
+                                    style="background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:1.25rem;">
+                                    <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+                                        <input type="checkbox" name="digital_envelope_enabled" value="1" {{ $wedding->digital_envelope_enabled ? 'checked' : '' }}
+                                            style="width:18px; height:18px; accent-color:#1eb349;">
+                                        <div>
+                                            <div style="font-weight:700; font-size:0.875rem; color:#0f172a;">Aktifkan Fitur
+                                                Amplop Digital</div>
+                                            <div style="font-size:0.72rem; color:#64748b;">Tamu undangan dapat mengirimkan
+                                                hadiah tanda kasih langsung via transfer bank atau scan QRIS.</div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                @php
+                                    $rekeningActive = $wedding->data_json['envelope_rekening_enabled'] ?? true;
+                                @endphp
+
+                                {{-- Toggle Mode: Rekening Manual vs Midtrans Gateway --}}
+                                <div class="form-group"
+                                    style="background:#f1f5f9; padding:1.15rem; border-radius:12px; border:1px solid #cbd5e1; margin-bottom:1.25rem;">
+                                    <div
+                                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                                        <div style="max-width:540px;">
+                                            <div
+                                                style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                                <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                                                </svg>
+                                                <span>Metode Pembayaran Amplop Digital</span>
+                                            </div>
+                                            <div style="font-size:0.75rem; color:#475569; margin-top:4px; line-height:1.45;">
+                                                Jika <strong>Rekening Bank dinonaktifkan</strong>, sistem otomatis menggunakan
+                                                <strong>Sistem Pembayaran Buyle</strong>.
+                                                Form amplop akan terintegrasi langsung pada Konfirmasi Kehadiran &amp; Ucapan
+                                                dengan pop-up Snap otomatis.
+                                            </div>
+                                        </div>
+                                        <label
+                                            style="display:inline-flex; align-items:center; gap:0.6rem; cursor:pointer; background:#ffffff; padding:8px 16px; border-radius:99px; border:1.5px solid #cbd5e1; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                                            <input type="checkbox" name="envelope_rekening_enabled" value="1"
+                                                id="envelopeRekeningToggle" {{ $rekeningActive ? 'checked' : '' }}
+                                                onchange="toggleRekeningForm(this.checked)"
+                                                style="width:18px; height:18px; accent-color:#2563eb;">
+                                            <span style="font-weight:700; font-size:0.8rem; color:#1e293b;"
+                                                id="rekeningToggleLabel">{{ $rekeningActive ? 'Rekening Manual Aktif' : 'Pakai Midtrans (Rekening Off)' }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {{-- Midtrans Active Notice --}}
+                                <div id="midtransInfoWrap"
+                                    style="{{ $rekeningActive ? 'display:none;' : '' }} background:#eff6ff; border:1.5px dashed #93c5fd; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                                    <div style="display:flex; align-items:flex-start; gap:10px;">
+                                        <span
+                                            style="background:#3b82f6; color:#fff; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; flex-shrink:0;">✓</span>
+                                        <div>
+                                            <div style="font-weight:800; font-size:0.82rem; color:#1e40af;">Mode Midtrans
+                                                Payment Gateway Aktif</div>
+                                            <div style="font-size:0.74rem; color:#1e3a8a; margin-top:2px; line-height:1.4;">
+                                                Rekening bank manual disembunyikan dari halaman tamu. Tamu dapat mengirim amplop
+                                                langsung di form <strong>Konfirmasi Kehadiran &amp; Ucapan</strong> (bisa diisi
+                                                0 jika tidak memberi amplop). Pop-up Midtrans Snap akan muncul saat nominal
+                                                diketikkan.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Form Rekening Bank & QRIS Manual --}}
+                                <div id="manualRekeningWrap" style="{{ $rekeningActive ? '' : 'display:none;' }}">
+                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem;">
+                                        <div>
+                                            <div class="form-group">
+                                                <label class="form-label">Nama Bank</label>
+                                                <input type="text" name="bank_name"
+                                                    value="{{ old('bank_name', $wedding->bank_name) }}"
+                                                    placeholder="Contoh: BCA / Bank Mandiri / BRI" class="form-input">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Nomor Rekening</label>
+                                                <input type="text" name="bank_account_number"
+                                                    value="{{ old('bank_account_number', $wedding->bank_account_number) }}"
+                                                    placeholder="Contoh: 1234567890" class="form-input">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Atas Nama Pemilik Rekening</label>
+                                                <input type="text" name="bank_account_name"
+                                                    value="{{ old('bank_account_name', $wedding->bank_account_name) }}"
+                                                    placeholder="Contoh: Rian Pratama" class="form-input">
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="form-group">
+                                                <label class="form-label">Unggah Gambar QRIS (JPG / PNG)</label>
+                                                <input type="file" name="qris_image" accept="image/*" class="form-input"
+                                                    style="padding-top:0.4rem;">
+                                                <span class="form-hint">Tamu dapat men-scan kode QRIS ini menggunakan aplikasi
+                                                    mobile banking atau e-wallet apa saja.</span>
+                                            </div>
+                                            @if($wedding->qris_image)
+                                                <div
+                                                    style="margin-top:0.5rem; text-align:center; background:#f8fafc; padding:0.75rem; border-radius:12px; border:1px solid #e2e8f0;">
+                                                    <div
+                                                        style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.4rem;">
+                                                        Pratinjau QRIS Aktif:</div>
+                                                    <img src="{{ asset('storage/' . $wedding->qris_image) }}" alt="QRIS"
+                                                        style="max-height:140px; border-radius:8px;">
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
+                                    <button type="submit" class="wb-btn-primary">
+                                        Simpan Pengaturan Amplop
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    {{-- Riwayat Amplop Digital Masuk --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head"
+                            style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div class="head-title-wrap">
+                                <div class="head-icon">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                </div>
+                                <span>Riwayat Amplop Digital Masuk</span>
+                            </div>
+                            <div>
+                                <span
+                                    style="background:#ecfdf5; border:1.5px solid #a7f3d0; color:#065f46; font-size:0.82rem; font-weight:800; padding:6px 16px; border-radius:99px;">
+                                    Total Diterima Bersih: Rp {{ number_format($totalGifts, 0, ',', '.') }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding:0;">
+                            <div class="data-table-wrap" style="border:none;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Pengirim</th>
+                                            <th>Nominal Bersih Diterima</th>
+                                            <th>Metode</th>
+                                            <th>Status</th>
+                                            <th>Waktu</th>
+                                            <th>Pesan Tanda Kasih</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($gifts as $gift)
+                                            @php
+                                                $isSuccess = ($gift->payment_status === 'settlement');
+                                                $isRecentPending = ($gift->payment_status === 'pending' && $gift->created_at->diffInMinutes(now()) <= 30);
+                                            @endphp
+                                            <tr>
+                                                <td><strong>{{ $gift->sender_name }}</strong></td>
+                                                <td>
+                                                    <span style="font-weight:800; color: {{ $isSuccess ? '#166534' : '#64748b' }};">
+                                                        Rp {{ number_format($gift->amount, 0, ',', '.') }}
+                                                    </span>
+                                                </td>
+                                                <td><span
+                                                        style="font-size:0.75rem; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 8px; border-radius:6px;">{{ strtoupper($gift->payment_method ?: 'TRANSFER') }}</span>
+                                                </td>
+                                                <td>
+                                                    @if($isSuccess)
+                                                        <span class="badge-pill success">Berhasil</span>
+                                                    @elseif($isRecentPending)
+                                                        <span class="badge-pill warning">Menunggu Pembayaran</span>
+                                                    @else
+                                                        <span class="badge-pill danger">Gagal</span>
+                                                    @endif
+                                                </td>
+                                                <td>{{ $gift->created_at->format('d/m/Y H:i') }}</td>
+                                                <td style="color:#64748b; font-style:italic;">"{{ $gift->message ?: '-' }}"</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" style="text-align:center; padding:2rem; color:#94a3b8;">
+                                                    Belum ada data amplop digital yang masuk.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+        {{-- ═══════════════════════════════════════════════════════════
+        TAB 5: DOA & INSTASTORY GENERATOR
+        ═══════════════════════════════════════════════════════════════ --}}
+        <div class="tab-pane {{ $activeTab === 'tab-wishes' ? 'active' : '' }}" id="tab-wishes">
+
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <div class="head-title-wrap">
+                        <div class="head-icon">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span>Doa &amp; Ucapan Tamu (InstaStory Card Generator)</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:1rem;">
+                        @forelse($wishes as $wish)
+                            <div
+                                style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                                <div>
+                                    <div
+                                        style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
+                                        <div>
+                                            <div style="font-weight:800; font-size:0.9rem; color:#0f172a;">
+                                                {{ $wish->sender_name }}
+                                            </div>
+                                            <div style="font-size:0.7rem; color:#64748b;">
+                                                {{ $wish->created_at->diffForHumans() }}
+                                            </div>
+                                        </div>
+                                        <div style="display:flex; gap:6px; align-items:center;">
+                                            @if($wish->envelope_amount > 0)
+                                                <span class="badge-pill"
+                                                    style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-weight:800; font-size:0.75rem;">
+                                                    Amplop: Rp {{ number_format($wish->envelope_amount, 0, ',', '.') }}
+                                                </span>
+                                            @endif
+                                            <span
+                                                class="badge-pill {{ $wish->attendance_status === 'hadir' ? 'success' : 'warning' }}">
+                                                {{ ucfirst($wish->attendance_status) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p
+                                        style="font-size:0.825rem; color:#334155; line-height:1.5; font-style:italic; margin:0.75rem 0;">
+                                        "{{ $wish->message }}"
+                                    </p>
+                                </div>
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f1f5f9; padding-top:0.75rem; margin-top:0.75rem;">
+                                    <button type="button"
+                                        onclick="generateStoryCard('{{ addslashes($wish->sender_name) }}', '{{ addslashes($wish->message) }}', '{{ $wedding->groom_nickname }} & {{ $wedding->bride_nickname }}')"
+                                        class="wb-btn-primary"
+                                        style="padding:0.4rem 0.85rem; font-size:0.75rem; background:linear-gradient(135deg, #e1306c 0%, #f77737 100%);">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                        </svg>
+                                        Buat Story Card (9:16)
+                                    </button>
+                                    <form action="{{ route('creator.wedding.wish.destroy', $wish->id) }}" method="POST"
+                                        onsubmit="return confirm('Hapus ucapan ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            style="background:none; border:none; color:#ef4444; font-size:0.75rem; cursor:pointer; font-weight:600;">Hapus</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @empty
+                            <div style="grid-column: 1 / -1; text-align:center; padding:3rem; color:#94a3b8;">
+                                Belum ada ucapan doa yang dikirimkan oleh tamu undangan.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
 
-            {{-- ── 🌟 GALERI FOTO TERJEPRET DARI PHOTOBOOTH TAMU ──────────────── --}}
-            @php
-                $savedPhotos = $wedding->data_json['photobooth_photos'] ?? [];
-            @endphp
-            <div class="prof-card" style="margin-top:1.25rem;" id="photoboothGallerySection">
-                <div class="prof-card-head"
-                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                    <div class="head-title-wrap">
-                        <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
-                        </div>
-                        <div>
-                            <span style="font-weight:800; color:#0f172a;">Galeri Hasil Foto Tamu (Live Photobooth)</span>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Foto yang dijepret oleh tamu dengan
-                                frame custom langsung tersimpan di sini secara real-time.</div>
-                        </div>
+        </div>
+
+        {{-- ═══════════════════════════════════════════════════════════
+        TAB 6: PHOTOBOOTH BARCODE & FRAME GENERATOR
+        ═══════════════════════════════════════════════════════════════ --}}
+        <div class="tab-pane {{ $activeTab === 'tab-photobooth' ? 'active' : '' }}" id="tab-photobooth">
+            @if($wedding)
+
+                {{-- Photobooth Hero Card --}}
+                <div class="prof-card" style="margin-bottom:1.25rem; overflow:hidden; position:relative;">
+                    <div
+                        style="position:absolute; top:0; right:0; width:300px; height:100%; background:linear-gradient(135deg, rgba(30,179,73,0.08) 0%, rgba(165,207,55,0.04) 100%); pointer-events:none;">
                     </div>
-                    <span
-                        style="background:#10b981; color:#fff; font-size:0.72rem; font-weight:800; padding:3px 10px; border-radius:99px;">
-                        {{ count($savedPhotos) }} Foto Tersimpan
-                    </span>
-                </div>
-                <div class="card-body">
-                    @if(count($savedPhotos) > 0)
-                        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:1rem;">
-                            @foreach($savedPhotos as $pIdx => $photo)
-                                <div
-                                    style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04); display:flex; flex-direction:column;">
-                                    <div style="position:relative; aspect-ratio:9/16; background:#0f172a; overflow:hidden;">
-                                        <img src="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}"
-                                            alt="Hasil Foto {{ $pIdx + 1 }}"
-                                            style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy">
-
-                                        {{-- Badges --}}
-                                        <div
-                                            style="position:absolute; top:6px; left:6px; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); color:#fff; font-size:0.6rem; font-weight:700; padding:2px 6px; border-radius:6px;">
-                                            {{ ($photo['shots'] ?? 1) }} Foto
-                                        </div>
-
-                                        {{-- Delete Button --}}
-                                        <form
-                                            action="{{ route('creator.wedding.photobooth-photo.delete', $pIdx) }}?w={{ $wedding->id }}"
-                                            method="POST" onsubmit="return confirm('Hapus foto hasil photobooth ini dari galeri?');"
-                                            style="position:absolute; top:6px; right:6px;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" title="Hapus foto"
-                                                style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <div
-                                        style="padding:0.65rem 0.75rem; display:flex; flex-direction:column; gap:0.4rem; flex:1; justify-content:space-between;">
-                                        <div>
-                                            <div
-                                                style="font-size:0.75rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                                {{ $photo['guest_name'] ?? 'Tamu Undangan' }}
-                                            </div>
-                                            <div style="font-size:0.65rem; color:#94a3b8;">
-                                                @if(!empty($photo['created_at']))
-                                                    {{ \Carbon\Carbon::parse($photo['created_at'])->diffForHumans() }}
-                                                @else
-                                                    Baru saja
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div style="display:flex; gap:0.35rem;">
-                                            <a href="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}" target="_blank"
-                                                style="flex:1; text-align:center; padding:0.3rem 0.4rem; background:#eff6ff; color:#1d4ed8; border-radius:6px; font-size:0.68rem; font-weight:700; text-decoration:none;">
-                                                Lihat
-                                            </a>
-                                            <a href="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}"
-                                                download="Photobooth_{{ $pIdx + 1 }}.jpg"
-                                                style="flex:1; text-align:center; padding:0.3rem 0.4rem; background:#f0fdf4; color:#15803d; border-radius:6px; font-size:0.68rem; font-weight:700; text-decoration:none;">
-                                                Unduh
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div style="text-align:center; padding:2.5rem 1rem; color:#94a3b8;">
+                    <div class="card-body" style="padding:1.5rem;">
+                        <div style="display:flex; align-items:flex-start; gap:1.25rem; flex-wrap:wrap;">
+                            {{-- Camera Icon --}}
                             <div
-                                style="width:48px; height:48px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; color:#94a3b8;">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                    viewBox="0 0 24 24">
+                                style="flex-shrink:0; width:56px; height:56px; background:linear-gradient(135deg,#1eb349,#a5cf37); border-radius:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(30,179,73,0.3);">
+                                <svg width="26" height="26" fill="none" stroke="#ffffff" stroke-width="2" viewBox="0 0 24 24">
                                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
                                     </path>
                                     <circle cx="12" cy="13" r="4"></circle>
                                 </svg>
                             </div>
-                            <div style="font-size:0.85rem; font-weight:700; color:#64748b; margin-bottom:0.25rem;">Belum ada foto
-                                yang terjepret</div>
-                            <div style="font-size:0.75rem; color:#94a3b8; max-width:320px; margin:0 auto; line-height:1.5;">
-                                Tamu yang berfoto di photobooth akan otomatis tersimpan di sini. Bagikan tautan photobooth atau
-                                pasang QR code di venue untuk memulai.
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            {{-- How it Works Steps --}}
-            <div class="prof-card" style="margin-top:1.25rem;">
-                <div class="prof-card-head">
-                    <div class="head-title-wrap">
-                        <div class="head-icon">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                        </div>
-                        <span>Cara Kerja Photobooth di Venue</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
-                        @php
-                            $pbSteps = [
-                                ['num' => '1', 'color' => '#eff6ff', 'stroke' => '#3b82f6', 'icon' => '<rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect>', 'title' => 'Scan QR di Venue', 'desc' => 'Panitia pasang stand QR code di pintu masuk atau meja resepsi'],
-                                ['num' => '2', 'color' => '#fdf4ff', 'stroke' => '#a855f7', 'icon' => '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>', 'title' => 'Kamera Terbuka', 'desc' => 'Browser langsung mengaktifkan kamera depan smartphone tamu'],
-                                ['num' => '3', 'color' => '#fff7ed', 'stroke' => '#f97316', 'icon' => '<rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="12" cy="10" r="3"></circle><path d="M3 20l4-4 2 2 4-4 5 6"></path>', 'title' => 'Pilih Frame & Jepret', 'desc' => 'Tamu pilih template bawaan atau frame custom yang Anda buat'],
-                                ['num' => '4', 'color' => '#f0fdf4', 'stroke' => '#22c55e', 'icon' => '<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>', 'title' => 'Share ke InstaStory', 'desc' => 'Foto langsung dapat didownload atau share ke Instagram Story'],
-                            ];
-                        @endphp
-                        @foreach($pbSteps as $step)
-                            <div
-                                style="display:flex; flex-direction:column; align-items:flex-start; gap:0.5rem; padding:1rem; background:{{ $step['color'] }}; border-radius:12px; border:1px solid {{ $step['stroke'] }}20;">
+                            <div style="flex:1; min-width:220px;">
                                 <div
-                                    style="width:32px; height:32px; border-radius:50%; background:{{ $step['stroke'] }}22; display:flex; align-items:center; justify-content:center;">
-                                    <svg width="16" height="16" fill="none" stroke="{{ $step['stroke'] }}" stroke-width="2"
-                                        viewBox="0 0 24 24">{!! $step['icon'] !!}</svg>
+                                    style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; font-family:'Montserrat',sans-serif;">
+                                    Photobooth Live Camera</div>
+                                <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin-bottom:1rem;">Tamu scan QR
+                                    barcode di venue, kamera langsung terbuka, pilih frame pernikahan eksklusif, jepret foto, dan
+                                    share ke Instagram Story secara instan - tanpa install aplikasi.</p>
+
+                                <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                                    {{-- Open Photobooth --}}
+                                    <a href="{{ $photoboothUrl }}" target="_blank"
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1.1rem; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; border-radius:10px; font-size:0.8rem; font-weight:700; text-decoration:none; box-shadow:0 4px 12px rgba(30,179,73,0.3); font-family:'Montserrat',sans-serif;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                            <polyline points="15 3 21 3 21 9"></polyline>
+                                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                                        </svg>
+                                        Preview Photobooth
+                                    </a>
+                                    {{-- Copy Link --}}
+                                    <button type="button" onclick="copyGuestLink('{{ $photoboothUrl }}')"
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1.1rem; background:#f8fafc; border:1.5px solid #e2e8f0; color:#334155; border-radius:10px; font-size:0.8rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        Salin Link
+                                    </button>
                                 </div>
-                                <div style="font-size:0.8rem; font-weight:800; color:#0f172a;">{{ $step['num'] }}.
-                                    {{ $step['title'] }}</div>
-                                <div style="font-size:0.74rem; color:#475569; line-height:1.4;">{{ $step['desc'] }}</div>
                             </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-        @else
-            <div style="text-align:center; padding:4rem 2rem; color:#94a3b8;">
-                <svg width="48" height="48" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24"
-                    style="margin:0 auto 1rem;">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                    <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-                <div style="font-size:0.9rem; font-weight:700; color:#64748b;">Buat pasangan pernikahan terlebih dahulu</div>
-                <div style="font-size:0.78rem; margin-top:0.25rem;">Photobooth tersedia setelah Anda membuat dan mengaktifkan
-                    pasangan.</div>
-            </div>
-        @endif
-    </div>
-
-    {{-- ═══════════════════════════════════════════════════════════
-    TAB 7: PETA INTERAKTIF SEBARAN TAMU & RSVP BERDASARKAN KOTA
-    ═══════════════════════════════════════════════════════════════ --}}
-    <div class="tab-pane {{ $activeTab === 'tab-map' ? 'active' : '' }}" id="tab-map">
-        <div class="prof-card" style="margin-bottom:1.25rem;">
-            <div class="prof-card-head"
-                style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                <div class="head-title-wrap">
-                    <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                            <line x1="8" y1="2" x2="8" y2="18"></line>
-                            <line x1="16" y1="6" x2="16" y2="22"></line>
-                        </svg>
-                    </div>
-                    <div>
-                        <span style="font-size:0.95rem; font-weight:800; color:#0f172a;">Peta Interaktif Sebaran Tamu &amp;
-                            RSVP</span>
-                        <div style="font-size:0.75rem; color:#64748b; font-weight:500;">Pantau persebaran domisili &amp;
-                            kehadiran tamu undangan dari berbagai kota di Indonesia</div>
-                    </div>
-                </div>
-                <button type="button" onclick="resetMapToIndonesia()" class="wb-btn-secondary"
-                    style="font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.35rem;">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                        <path d="M3 3v5h5" />
-                    </svg>
-                    Reset Peta Indonesia
-                </button>
-            </div>
-
-            <div class="card-body">
-                {{-- Ringkasan Metrik Sebaran --}}
-                <div
-                    style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:0.75rem; margin-bottom:1.25rem;">
-                    <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
-                        <div style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase;">Total RSVP
                         </div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#0f172a;">{{ $mapGuests->count() }}</div>
-                    </div>
-                    <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:0.75rem 1rem;">
-                        <div
-                            style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
-                            <svg width="12" height="12" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Konfirmasi Hadir
-                        </div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#166534;">
-                            {{ $mapGuests->where('status', 'hadir')->count() }}</div>
-                    </div>
-                    <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:12px; padding:0.75rem 1rem;">
-                        <div
-                            style="font-size:0.7rem; color:#991b1b; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
-                            <svg width="12" height="12" fill="none" stroke="#991b1b" stroke-width="2.5" viewBox="0 0 24 24">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                            Tidak Hadir
-                        </div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#991b1b;">
-                            {{ $mapGuests->where('status', 'tidak_hadir')->count() }}</div>
-                    </div>
-                    <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:0.75rem 1rem;">
-                        <div
-                            style="font-size:0.7rem; color:#92400e; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
-                            <svg width="12" height="12" fill="none" stroke="#92400e" stroke-width="2.5" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                                <line x1="12" y1="17" x2="12.01" y2="17" />
-                            </svg>
-                            Ragu-Ragu
-                        </div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#92400e;">
-                            {{ $mapGuests->where('status', 'ragu')->count() }}</div>
-                    </div>
-                    <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
-                        <div
-                            style="font-size:0.7rem; color:#475569; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
-                            <svg width="12" height="12" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            Kota Terdaftar
-                        </div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#0f172a;">{{ $cityStats->count() }}</div>
                     </div>
                 </div>
 
-                {{-- Filter Status di Atas Peta --}}
-                <div
-                    style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
-                    <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-                        <span style="font-size:0.75rem; font-weight:700; color:#475569; margin-right:0.25rem;">Filter
-                            Pin:</span>
-                        <button type="button" onclick="filterMapMarkers('all')" class="map-filter-btn active"
-                            data-filter="all">Semua ({{ $mapGuests->count() }})</button>
-                        <button type="button" onclick="filterMapMarkers('hadir')" class="map-filter-btn"
-                            data-filter="hadir">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Hadir ({{ $mapGuests->where('status', 'hadir')->count() }})
-                        </button>
-                        <button type="button" onclick="filterMapMarkers('tidak_hadir')" class="map-filter-btn"
-                            data-filter="tidak_hadir">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                            Tidak Hadir ({{ $mapGuests->where('status', 'tidak_hadir')->count() }})
-                        </button>
-                        <button type="button" onclick="filterMapMarkers('ragu')" class="map-filter-btn" data-filter="ragu">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                                <line x1="12" y1="17" x2="12.01" y2="17" />
-                            </svg>
-                            Ragu ({{ $mapGuests->where('status', 'ragu')->count() }})
-                        </button>
+                {{-- QR Code Stand Banner & Custom Frame Info --}}
+                <div class="prof-card" style="margin-bottom:1.25rem;">
+                    <div class="prof-card-head">
+                        <div class="head-title-wrap">
+                            <div class="head-icon" style="background:#eff6ff; color:#3b82f6;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                                    <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                                    <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                                    <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                                </svg>
+                            </div>
+                            <span>QR Code Stand Photobooth Venue</span>
+                        </div>
                     </div>
-                    <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
-                        <svg width="13" height="13" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="12" y1="16" x2="12" y2="12" />
-                            <line x1="12" y1="8" x2="12.01" y2="8" />
-                        </svg>
-                        Klik pin untuk melihat nama tamu &amp; pesan doa
-                    </span>
+                    <div class="card-body" style="padding:1.5rem;">
+                        <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap; justify-content:center;">
+                            @php
+                                $pbUrl = route('wedding.photobooth', $wedding->slug);
+                                $qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&format=png&ecc=M&data=' . urlencode($pbUrl);
+                            @endphp
+                            <div style="text-align:center;">
+                                <div
+                                    style="display:inline-block; padding:12px; background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+                                    <img src="{{ $qrApiUrl }}" alt="QR Photobooth" width="180" height="180"
+                                        style="display:block; border-radius:8px;" loading="lazy">
+                                </div>
+                                <div style="margin-top:0.75rem;">
+                                    <a href="{{ $qrApiUrl }}" download="QR_Photobooth_{{ $wedding->slug }}.png" target="_blank"
+                                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe; border-radius:8px; font-size:0.78rem; font-weight:700; text-decoration:none;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                        Unduh QR Stand (PNG)
+                                    </a>
+                                </div>
+                            </div>
+                            <div style="flex:1; min-width:260px;">
+                                <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem;">Cetak &amp;
+                                    Pajang di Meja / Pintu Resepsi</div>
+                                <p style="font-size:0.8rem; color:#64748b; line-height:1.6; margin-bottom:0.75rem;">
+                                    Tamu cukup arahkan kamera smartphone ke QR Code ini. Halaman Photobooth langsung aktif dengan
+                                    kamera live dan frame custom yang Anda upload di bawah.
+                                </p>
+                                <div
+                                    style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.6rem 0.85rem; margin-bottom:0.75rem;">
+                                    <div
+                                        style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:2px;">
+                                        Tautan Langsung</div>
+                                    <code
+                                        style="font-size:0.75rem; color:#1d4ed8; word-break:break-all; font-weight:600;">{{ $pbUrl }}</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- Leaflet Map Container --}}
-                <div
-                    style="position:relative; width:100%; height:500px; border-radius:16px; border:1.5px solid #cbd5e1; overflow:hidden; background:#e2e8f0; box-shadow:0 6px 20px rgba(0,0,0,0.06);">
-                    <div id="guestDistributionMap" style="width:100%; height:100%;"></div>
-                </div>
-
-                {{-- Daftar Kota & Sebaran Tamu --}}
-                <div style="margin-top:1.5rem;">
-                    <div
-                        style="font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-                        <svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="2.3" viewBox="0 0 24 24">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        Sebaran Tamu per Kota ({{ $cityStats->count() }} Kota)
+                {{-- ── Custom Frame Upload Section ──────────────────────────── --}}
+                <div class="prof-card" style="margin-top:1.25rem;">
+                    <div class="prof-card-head"
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div class="head-title-wrap">
+                            <div class="head-icon" style="background:#fdf4ff; color:#a855f7;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <span style="font-weight:800; color:#0f172a;">Frame Photobooth</span>
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Frame yang dipasang otomatis di Live
+                                    Camera tamu. Frame bawaan + custom upload (maks 6).</div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="card-body">
+                        @if(session('error'))
+                            <div
+                                style="background:#fee2e2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.75rem 1rem; border-radius:10px; font-size:0.82rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                {{ session('error') }}
+                            </div>
+                        @endif
 
-                    @if($cityStats->count() > 0)
-                        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:0.75rem;">
-                            @foreach($cityStats as $cStat)
-                                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.9rem; display:flex; align-items:center; justify-content:space-between; transition:all .2s;"
-                                    onmouseover="this.style.borderColor='#10b981';this.style.boxShadow='0 4px 12px rgba(16,185,129,0.1)';"
-                                    onmouseout="this.style.borderColor='#e2e8f0';this.style.boxShadow='none';">
-                                    <div>
+                        @php
+                            $customFrames = $wedding->data_json['photobooth_frames'] ?? [];
+                        @endphp
+
+                        {{-- Galeri Custom Frame yang Sudah Diupload --}}
+                        <div style="margin-bottom:1.25rem;">
+                            @if(count($customFrames) > 0)
+                                <div
+                                    style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
+                                    @foreach($customFrames as $idx => $framePath)
                                         <div
-                                            style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.35rem;">
-                                            <svg width="13" height="13" fill="none" stroke="#10b981" stroke-width="2.2"
-                                                viewBox="0 0 24 24">
-                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                                <circle cx="12" cy="10" r="3" />
-                                            </svg>
-                                            {{ $cStat['city'] }}
+                                            style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:9/16; background:#0f172a; border:2px solid #a855f7; box-shadow:0 4px 16px rgba(168,85,247,0.2);">
+                                            <img src="{{ Storage::url($framePath) }}" alt="Custom Frame {{ $idx + 1 }}"
+                                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                                            {{-- Badge Custom --}}
+                                            <div
+                                                style="position:absolute; top:6px; left:6px; background:#a855f7; color:#fff; font-size:0.55rem; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase;">
+                                                FRAME {{ $idx + 1 }}</div>
+                                            {{-- Delete Button --}}
+                                            <form action="{{ route('creator.wedding.photobooth-frame.delete', $idx) }}?w={{ $wedding->id }}"
+                                                method="POST" onsubmit="return confirm('Hapus frame custom ini?');"
+                                                style="position:absolute; top:6px; right:6px;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </button>
+                                            </form>
                                         </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                {{-- No custom frames: show available templates --}}
+                                <div
+                                    style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:0.85rem; margin-bottom:1.25rem;">
+                                    {{-- 1. Minimalist Arch 3-Photo (Active) --}}
+                                    <div
+                                        style="display:flex; align-items:center; gap:1rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #a855f7; border-radius:12px; box-shadow:0 2px 8px rgba(168,85,247,0.1);">
                                         <div
-                                            style="font-size:0.72rem; color:#64748b; margin-top:3px; display:flex; align-items:center; gap:0.4rem;">
-                                            <span style="color:#166534; font-weight:700;">{{ $cStat['hadir'] }} Hadir</span> &bull;
-                                            <span style="color:#991b1b; font-weight:700;">{{ $cStat['tidak_hadir'] }} Absen</span>
-                                            @if($cStat['ragu'] > 0)
-                                                &bull; <span style="color:#92400e; font-weight:700;">{{ $cStat['ragu'] }} Ragu</span>
-                                            @endif
+                                            style="width:48px; height:86px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #c084fc; flex-shrink:0;">
+                                            <img src="{{ asset('images/frames/minimalist_arch_wedding.png') }}" alt="Minimalist Arch"
+                                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:0.15rem;">
+                                                Minimalist Arch (3 Foto)</div>
+                                            <div style="font-size:0.68rem; color:#64748b; line-height:1.4; margin-bottom:0.4rem;">
+                                                Template estetik 3 jendela (arch &amp; rect) + nama mempelai.</div>
+                                            <div style="display:flex; gap:0.4rem; align-items:center;">
+                                                <span
+                                                    style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-size:0.56rem; font-weight:800; padding:2px 7px; border-radius:99px; text-transform:uppercase;">Aktif
+                                                    (Auto 3 Foto)</span>
+                                                <a href="{{ asset('images/frames/minimalist_arch_wedding.png') }}"
+                                                    download="Minimalist_Arch_Wedding.png"
+                                                    style="font-size:0.66rem; font-weight:700; color:#15803d; text-decoration:none;">Unduh
+                                                    PNG</a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <button type="button"
-                                        onclick="focusCity({{ $cStat['lat'] }}, {{ $cStat['lng'] }}, '{{ addslashes($cStat['city']) }}')"
-                                        style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.72rem; font-weight:700; padding:0.35rem 0.65rem; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3"
+
+                                    {{-- 2. Vintage Digicam --}}
+                                    <div
+                                        style="display:flex; align-items:center; gap:1rem; padding:0.85rem 1rem; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px;">
+                                        <div
+                                            style="width:48px; height:86px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #cbd5e1; flex-shrink:0;">
+                                            <img src="{{ asset('images/frames/vintage_digicam_wedding.png') }}" alt="Vintage Digicam"
+                                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:0.15rem;">
+                                                Vintage Digicam</div>
+                                            <div style="font-size:0.68rem; color:#64748b; line-height:1.4; margin-bottom:0.4rem;">Frame
+                                                digital camera Y2K dengan live HUD &amp; buttons.</div>
+                                            <div style="display:flex; gap:0.4rem; align-items:center;">
+                                                <span
+                                                    style="background:#f1f5f9; color:#475569; font-size:0.56rem; font-weight:700; padding:2px 7px; border-radius:99px; text-transform:uppercase;">Pilihan
+                                                    Kedua</span>
+                                                <a href="{{ asset('images/frames/vintage_digicam_wedding.png') }}"
+                                                    download="Vintage_Digicam_Wedding.png"
+                                                    style="font-size:0.66rem; font-weight:700; color:#15803d; text-decoration:none;">Unduh
+                                                    PNG</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Upload Form --}}
+                        @if(count($customFrames) < 6)
+                            <form action="{{ route('creator.wedding.photobooth-frame.upload') }}?w={{ $wedding->id }}" method="POST"
+                                enctype="multipart/form-data" id="frameUploadForm">
+                                @csrf
+                                <div id="frameDropZone"
+                                    style="border:2px dashed #c084fc; border-radius:14px; padding:2rem; text-align:center; background:#fdf4ff; cursor:pointer; transition:all 0.2s ease; position:relative;"
+                                    onclick="document.getElementById('frameFileInput').click()"
+                                    ondragover="event.preventDefault(); this.style.borderColor='#9333ea'; this.style.background='#f3e8ff';"
+                                    ondragleave="this.style.borderColor='#c084fc'; this.style.background='#fdf4ff';"
+                                    ondrop="handleFrameDrop(event)">
+                                    <input type="file" id="frameFileInput" name="frame" accept="image/png,image/webp,image/jpeg"
+                                        style="display:none;" onchange="previewFrameUpload(event)">
+
+                                    <div id="frameDropContent">
+                                        <div
+                                            style="width:44px; height:44px; border-radius:50%; background:#e9d5ff; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
+                                            <svg width="22" height="22" fill="none" stroke="#7c3aed" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                        </div>
+                                        <div style="font-size:0.85rem; font-weight:800; color:#581c87; margin-bottom:0.25rem;">Drag
+                                            &amp; Drop Frame PNG di sini</div>
+                                        <div style="font-size:0.75rem; color:#7c3aed; margin-bottom:0.75rem;">atau klik untuk pilih file
+                                        </div>
+                                        <div style="font-size:0.7rem; color:#94a3b8; line-height:1.4;">
+                                            Format: PNG Transparan / WebP &bull; Rasio: 9:16 (1080 x 1920 px) &bull; Maks: 4 MB<br>
+                                            Tersisa <strong>{{ 6 - count($customFrames) }}</strong> slot dari 6 frame custom
+                                        </div>
+                                    </div>
+
+                                    <div id="framePreviewWrap" style="display:none;">
+                                        <img id="framePreviewImg" src="" alt="Preview"
+                                            style="max-height:200px; border-radius:10px; margin:0 auto 0.75rem; display:block; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+                                        <div id="framePreviewName"
+                                            style="font-size:0.78rem; font-weight:700; color:#581c87; margin-bottom:0.75rem;"></div>
+                                    </div>
+                                </div>
+
+                                {{-- Upload Submit Button --}}
+                                <div id="frameUploadActions" style="display:none; margin-top:0.85rem; gap:0.65rem; flex-wrap:wrap;">
+                                    <button type="submit"
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.55rem 1.25rem; background:linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; border:none; border-radius:10px; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif; box-shadow:0 4px 12px rgba(124,58,237,0.3);">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                                             viewBox="0 0 24 24">
-                                            <circle cx="11" cy="11" r="8" />
-                                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
                                         </svg>
-                                        Zoom
+                                        Upload Frame Sekarang
                                     </button>
+                                    <button type="button" onclick="resetFrameUpload()"
+                                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 0.9rem; background:#f1f5f9; border:1.5px solid #e2e8f0; color:#475569; border-radius:10px; font-size:0.8rem; font-weight:600; cursor:pointer;">
+                                        Batal
+                                    </button>
+                                </div>
+                            </form>
+                        @else
+                            <div
+                                style="text-align:center; padding:1.5rem; background:#f8fafc; border-radius:12px; color:#64748b; font-size:0.82rem; font-weight:600; border:1.5px dashed #e2e8f0;">
+                                <svg width="24" height="24" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"
+                                    style="margin:0 auto 0.5rem; display:block;">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Slot custom frame sudah penuh (6/6). Hapus salah satu untuk menambah frame baru.
+                            </div>
+                        @endif
+
+                        {{-- Panduan Desain Frame --}}
+                        <div
+                            style="margin-top:1rem; padding:0.85rem 1rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;">
+                            <div
+                                style="font-size:0.78rem; font-weight:700; color:#92400e; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                Panduan Membuat Frame Custom di Canva:
+                            </div>
+                            <ol style="font-size:0.74rem; color:#78350f; line-height:1.7; margin:0; padding-left:1.25rem;">
+                                <li>Buka Canva → pilih template <strong>Instagram Story (1080 x 1920 px)</strong></li>
+                                <li>Desain pinggiran frame (nama pasangan, tanggal, ornamen). Biarkan bagian tengah
+                                    <strong>transparan</strong>
+                                </li>
+                                <li>Download sebagai <strong>PNG Transparan</strong></li>
+                                <li>Upload di sini: frame otomatis terpasang pada Live Camera photobooth tamu</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ── 🌟 GALERI FOTO TERJEPRET DARI PHOTOBOOTH TAMU ──────────────── --}}
+                @php
+                    $savedPhotos = $wedding->data_json['photobooth_photos'] ?? [];
+                @endphp
+                <div class="prof-card" style="margin-top:1.25rem;" id="photoboothGallerySection">
+                    <div class="prof-card-head"
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div class="head-title-wrap">
+                            <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <span style="font-weight:800; color:#0f172a;">Galeri Hasil Foto Tamu (Live Photobooth)</span>
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Foto yang dijepret oleh tamu dengan
+                                    frame custom langsung tersimpan di sini secara real-time.</div>
+                            </div>
+                        </div>
+                        <span
+                            style="background:#10b981; color:#fff; font-size:0.72rem; font-weight:800; padding:3px 10px; border-radius:99px;">
+                            {{ count($savedPhotos) }} Foto Tersimpan
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        @if(count($savedPhotos) > 0)
+                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:1rem;">
+                                @foreach($savedPhotos as $pIdx => $photo)
+                                    <div
+                                        style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04); display:flex; flex-direction:column;">
+                                        <div style="position:relative; aspect-ratio:9/16; background:#0f172a; overflow:hidden;">
+                                            <img src="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}"
+                                                alt="Hasil Foto {{ $pIdx + 1 }}"
+                                                style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy">
+
+                                            {{-- Badges --}}
+                                            <div
+                                                style="position:absolute; top:6px; left:6px; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); color:#fff; font-size:0.6rem; font-weight:700; padding:2px 6px; border-radius:6px;">
+                                                {{ ($photo['shots'] ?? 1) }} Foto
+                                            </div>
+
+                                            {{-- Delete Button --}}
+                                            <form
+                                                action="{{ route('creator.wedding.photobooth-photo.delete', $pIdx) }}?w={{ $wedding->id }}"
+                                                method="POST" onsubmit="return confirm('Hapus foto hasil photobooth ini dari galeri?');"
+                                                style="position:absolute; top:6px; right:6px;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" title="Hapus foto"
+                                                    style="width:26px; height:26px; border-radius:50%; background:rgba(239,68,68,0.9); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div
+                                            style="padding:0.65rem 0.75rem; display:flex; flex-direction:column; gap:0.4rem; flex:1; justify-content:space-between;">
+                                            <div>
+                                                <div
+                                                    style="font-size:0.75rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                    {{ $photo['guest_name'] ?? 'Tamu Undangan' }}
+                                                </div>
+                                                <div style="font-size:0.65rem; color:#94a3b8;">
+                                                    @if(!empty($photo['created_at']))
+                                                        {{ \Carbon\Carbon::parse($photo['created_at'])->diffForHumans() }}
+                                                    @else
+                                                        Baru saja
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div style="display:flex; gap:0.35rem;">
+                                                <a href="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}" target="_blank"
+                                                    style="flex:1; text-align:center; padding:0.3rem 0.4rem; background:#eff6ff; color:#1d4ed8; border-radius:6px; font-size:0.68rem; font-weight:700; text-decoration:none;">
+                                                    Lihat
+                                                </a>
+                                                <a href="{{ $photo['url'] ?? Storage::url($photo['path'] ?? '') }}"
+                                                    download="Photobooth_{{ $pIdx + 1 }}.jpg"
+                                                    style="flex:1; text-align:center; padding:0.3rem 0.4rem; background:#f0fdf4; color:#15803d; border-radius:6px; font-size:0.68rem; font-weight:700; text-decoration:none;">
+                                                    Unduh
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div style="text-align:center; padding:2.5rem 1rem; color:#94a3b8;">
+                                <div
+                                    style="width:48px; height:48px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; color:#94a3b8;">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                        viewBox="0 0 24 24">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                        </path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                </div>
+                                <div style="font-size:0.85rem; font-weight:700; color:#64748b; margin-bottom:0.25rem;">Belum ada foto
+                                    yang terjepret</div>
+                                <div style="font-size:0.75rem; color:#94a3b8; max-width:320px; margin:0 auto; line-height:1.5;">
+                                    Tamu yang berfoto di photobooth akan otomatis tersimpan di sini. Bagikan tautan photobooth atau
+                                    pasang QR code di venue untuk memulai.
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- How it Works Steps --}}
+                <div class="prof-card" style="margin-top:1.25rem;">
+                    <div class="prof-card-head">
+                        <div class="head-title-wrap">
+                            <div class="head-icon">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span>Cara Kerja Photobooth di Venue</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+                            @php
+                                $pbSteps = [
+                                    ['num' => '1', 'color' => '#eff6ff', 'stroke' => '#3b82f6', 'icon' => '<rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect>', 'title' => 'Scan QR di Venue', 'desc' => 'Panitia pasang stand QR code di pintu masuk atau meja resepsi'],
+                                    ['num' => '2', 'color' => '#fdf4ff', 'stroke' => '#a855f7', 'icon' => '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>', 'title' => 'Kamera Terbuka', 'desc' => 'Browser langsung mengaktifkan kamera depan smartphone tamu'],
+                                    ['num' => '3', 'color' => '#fff7ed', 'stroke' => '#f97316', 'icon' => '<rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="12" cy="10" r="3"></circle><path d="M3 20l4-4 2 2 4-4 5 6"></path>', 'title' => 'Pilih Frame & Jepret', 'desc' => 'Tamu pilih template bawaan atau frame custom yang Anda buat'],
+                                    ['num' => '4', 'color' => '#f0fdf4', 'stroke' => '#22c55e', 'icon' => '<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>', 'title' => 'Share ke InstaStory', 'desc' => 'Foto langsung dapat didownload atau share ke Instagram Story'],
+                                ];
+                            @endphp
+                            @foreach($pbSteps as $step)
+                                <div
+                                    style="display:flex; flex-direction:column; align-items:flex-start; gap:0.5rem; padding:1rem; background:{{ $step['color'] }}; border-radius:12px; border:1px solid {{ $step['stroke'] }}20;">
+                                    <div
+                                        style="width:32px; height:32px; border-radius:50%; background:{{ $step['stroke'] }}22; display:flex; align-items:center; justify-content:center;">
+                                        <svg width="16" height="16" fill="none" stroke="{{ $step['stroke'] }}" stroke-width="2"
+                                            viewBox="0 0 24 24">{!! $step['icon'] !!}</svg>
+                                    </div>
+                                    <div style="font-size:0.8rem; font-weight:800; color:#0f172a;">{{ $step['num'] }}.
+                                        {{ $step['title'] }}
+                                    </div>
+                                    <div style="font-size:0.74rem; color:#475569; line-height:1.4;">{{ $step['desc'] }}</div>
                                 </div>
                             @endforeach
                         </div>
-                    @else
-                        <div
-                            style="text-align:center; padding:2rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:14px; color:#64748b;">
-                            <div style="margin-bottom:0.4rem; color:#94a3b8;">
-                                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8"
-                                    viewBox="0 0 24 24">
-                                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-                                    <line x1="8" y1="2" x2="8" y2="18" />
-                                    <line x1="16" y1="6" x2="16" y2="22" />
-                                </svg>
-                            </div>
-                            <div style="font-weight:700; font-size:0.85rem; color:#334155;">Belum Ada Tamu yang Mengisi RSVP
-                                Kota</div>
-                            <p style="font-size:0.75rem; margin:0.3rem 0 0.75rem; color:#94a3b8;">
-                                Ketika tamu membuka undangan dan memilih kota asal (misal: Sidoarjo), pin dan rincian tamu akan
-                                otomatis muncul di peta interaktif ini.
-                            </p>
+                    </div>
+                </div>
+
+            @else
+                <div style="text-align:center; padding:4rem 2rem; color:#94a3b8;">
+                    <svg width="48" height="48" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24"
+                        style="margin:0 auto 1rem;">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    <div style="font-size:0.9rem; font-weight:700; color:#64748b;">Buat pasangan pernikahan terlebih dahulu</div>
+                    <div style="font-size:0.78rem; margin-top:0.25rem;">Photobooth tersedia setelah Anda membuat dan mengaktifkan
+                        pasangan.</div>
+                </div>
+            @endif
+        </div>
+
+        {{-- ═══════════════════════════════════════════════════════════
+        TAB 7: PETA INTERAKTIF SEBARAN TAMU & RSVP BERDASARKAN KOTA
+        ═══════════════════════════════════════════════════════════════ --}}
+        <div class="tab-pane {{ $activeTab === 'tab-map' ? 'active' : '' }}" id="tab-map">
+            <div class="prof-card" style="margin-bottom:1.25rem;">
+                <div class="prof-card-head"
+                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                    <div class="head-title-wrap">
+                        <div class="head-icon" style="background:#ecfdf5; color:#10b981;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                <line x1="8" y1="2" x2="8" y2="18"></line>
+                                <line x1="16" y1="6" x2="16" y2="22"></line>
+                            </svg>
                         </div>
-                    @endif
+                        <div>
+                            <span style="font-size:0.95rem; font-weight:800; color:#0f172a;">Peta Interaktif Sebaran Tamu &amp;
+                                RSVP</span>
+                            <div style="font-size:0.75rem; color:#64748b; font-weight:500;">Pantau persebaran domisili &amp;
+                                kehadiran tamu undangan dari berbagai kota di Indonesia</div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="resetMapToIndonesia()" class="wb-btn-secondary"
+                        style="font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.35rem;">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                            <path d="M3 3v5h5" />
+                        </svg>
+                        Reset Peta Indonesia
+                    </button>
+                </div>
+
+                <div class="card-body">
+                    {{-- Ringkasan Metrik Sebaran --}}
+                    <div
+                        style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:0.75rem; margin-bottom:1.25rem;">
+                        <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
+                            <div style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase;">Total RSVP
+                            </div>
+                            <div style="font-size:1.35rem; font-weight:800; color:#0f172a;">{{ $mapGuests->count() }}</div>
+                        </div>
+                        <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:0.75rem 1rem;">
+                            <div
+                                style="font-size:0.7rem; color:#166534; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Konfirmasi Hadir
+                            </div>
+                            <div style="font-size:1.35rem; font-weight:800; color:#166534;">
+                                {{ $mapGuests->where('status', 'hadir')->count() }}
+                            </div>
+                        </div>
+                        <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:12px; padding:0.75rem 1rem;">
+                            <div
+                                style="font-size:0.7rem; color:#991b1b; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="#991b1b" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                                Tidak Hadir
+                            </div>
+                            <div style="font-size:1.35rem; font-weight:800; color:#991b1b;">
+                                {{ $mapGuests->where('status', 'tidak_hadir')->count() }}
+                            </div>
+                        </div>
+                        <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:0.75rem 1rem;">
+                            <div
+                                style="font-size:0.7rem; color:#92400e; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="#92400e" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                                </svg>
+                                Ragu-Ragu
+                            </div>
+                            <div style="font-size:1.35rem; font-weight:800; color:#92400e;">
+                                {{ $mapGuests->where('status', 'ragu')->count() }}
+                            </div>
+                        </div>
+                        <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
+                            <div
+                                style="font-size:0.7rem; color:#475569; font-weight:700; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                Kota Terdaftar
+                            </div>
+                            <div style="font-size:1.35rem; font-weight:800; color:#0f172a;">{{ $cityStats->count() }}</div>
+                        </div>
+                    </div>
+
+                    {{-- Filter Status di Atas Peta --}}
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                            <span style="font-size:0.75rem; font-weight:700; color:#475569; margin-right:0.25rem;">Filter
+                                Pin:</span>
+                            <button type="button" onclick="filterMapMarkers('all')" class="map-filter-btn active"
+                                data-filter="all">Semua ({{ $mapGuests->count() }})</button>
+                            <button type="button" onclick="filterMapMarkers('hadir')" class="map-filter-btn"
+                                data-filter="hadir">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Hadir ({{ $mapGuests->where('status', 'hadir')->count() }})
+                            </button>
+                            <button type="button" onclick="filterMapMarkers('tidak_hadir')" class="map-filter-btn"
+                                data-filter="tidak_hadir">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                                Tidak Hadir ({{ $mapGuests->where('status', 'tidak_hadir')->count() }})
+                            </button>
+                            <button type="button" onclick="filterMapMarkers('ragu')" class="map-filter-btn" data-filter="ragu">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                                </svg>
+                                Ragu ({{ $mapGuests->where('status', 'ragu')->count() }})
+                            </button>
+                        </div>
+                        <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;">
+                            <svg width="13" height="13" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            Klik pin untuk melihat nama tamu &amp; pesan doa
+                        </span>
+                    </div>
+
+                    {{-- Leaflet Map Container --}}
+                    <div
+                        style="position:relative; width:100%; height:500px; border-radius:16px; border:1.5px solid #cbd5e1; overflow:hidden; background:#e2e8f0; box-shadow:0 6px 20px rgba(0,0,0,0.06);">
+                        <div id="guestDistributionMap" style="width:100%; height:100%;"></div>
+                    </div>
+
+                    {{-- Daftar Kota & Sebaran Tamu --}}
+                    <div style="margin-top:1.5rem;">
+                        <div
+                            style="font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                            <svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="2.3" viewBox="0 0 24 24">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            Sebaran Tamu per Kota ({{ $cityStats->count() }} Kota)
+                        </div>
+
+                        @if($cityStats->count() > 0)
+                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:0.75rem;">
+                                @foreach($cityStats as $cStat)
+                                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.9rem; display:flex; align-items:center; justify-content:space-between; transition:all .2s;"
+                                        onmouseover="this.style.borderColor='#10b981';this.style.boxShadow='0 4px 12px rgba(16,185,129,0.1)';"
+                                        onmouseout="this.style.borderColor='#e2e8f0';this.style.boxShadow='none';">
+                                        <div>
+                                            <div
+                                                style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.35rem;">
+                                                <svg width="13" height="13" fill="none" stroke="#10b981" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                    <circle cx="12" cy="10" r="3" />
+                                                </svg>
+                                                {{ $cStat['city'] }}
+                                            </div>
+                                            <div
+                                                style="font-size:0.72rem; color:#64748b; margin-top:3px; display:flex; align-items:center; gap:0.4rem;">
+                                                <span style="color:#166534; font-weight:700;">{{ $cStat['hadir'] }} Hadir</span> &bull;
+                                                <span style="color:#991b1b; font-weight:700;">{{ $cStat['tidak_hadir'] }} Absen</span>
+                                                @if($cStat['ragu'] > 0)
+                                                    &bull; <span style="color:#92400e; font-weight:700;">{{ $cStat['ragu'] }} Ragu</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                            onclick="focusCity({{ $cStat['lat'] }}, {{ $cStat['lng'] }}, '{{ addslashes($cStat['city']) }}')"
+                                            style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.72rem; font-weight:700; padding:0.35rem 0.65rem; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="11" cy="11" r="8" />
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                            </svg>
+                                            Zoom
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div
+                                style="text-align:center; padding:2rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:14px; color:#64748b;">
+                                <div style="margin-bottom:0.4rem; color:#94a3b8;">
+                                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8"
+                                        viewBox="0 0 24 24">
+                                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+                                        <line x1="8" y1="2" x2="8" y2="18" />
+                                        <line x1="16" y1="6" x2="16" y2="22" />
+                                    </svg>
+                                </div>
+                                <div style="font-weight:700; font-size:0.85rem; color:#334155;">Belum Ada Tamu yang Mengisi RSVP
+                                    Kota</div>
+                                <p style="font-size:0.75rem; margin:0.3rem 0 0.75rem; color:#94a3b8;">
+                                    Ketika tamu membuka undangan dan memilih kota asal (misal: Sidoarjo), pin dan rincian tamu akan
+                                    otomatis muncul di peta interaktif ini.
+                                </p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    </div>
-    </div>
+        </div>
+        </div>
     @endif
 
     {{-- Hidden HTML5 Canvas untuk InstaStory Wish Card Generator --}}
@@ -3322,22 +3373,124 @@
                 {{-- Ringkasan Biaya --}}
                 {{-- CSS tooltip borrow dari gaya /checkout --}}
                 <style>
-                    .wed-fee-wrapper{position:relative;display:inline-flex;align-items:center;}
-                    .wed-fee-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#E2E8F0;color:#475569;font-size:0.65rem;font-weight:700;cursor:pointer;transition:all .2s;user-select:none;line-height:1;margin-left:4px;}
-                    .wed-fee-wrapper:hover .wed-fee-icon,.wed-fee-icon.active{background:#1eb349;color:#fff;}
-                    .wed-fee-popover{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);width:210px;background:#fff;color:#334155;border:1px solid #E2E8F0;padding:10px 12px;border-radius:10px;font-size:0.73rem;line-height:1.4;font-weight:500;box-shadow:0 10px 25px -5px rgba(15,23,42,.12);opacity:0;visibility:hidden;transition:opacity .2s,transform .2s,visibility .2s;z-index:9999;pointer-events:none;text-align:left;white-space:normal;}
-                    .wed-fee-popover::before{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border-width:7px;border-style:solid;border-color:#E2E8F0 transparent transparent transparent;}
-                    .wed-fee-popover::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border-width:6px;border-style:solid;border-color:#fff transparent transparent transparent;}
-                    .wed-fee-wrapper:hover .wed-fee-popover{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);pointer-events:auto;}
-                    .wed-fee-popover-title{font-weight:800;color:#1eb349;margin-bottom:3px;display:block;font-size:0.75rem;}
-                    .wed-summary-row{display:flex;justify-content:space-between;font-size:0.9rem;color:#64748B;margin-bottom:0.5rem;align-items:center;}
-                    .wed-summary-total{display:flex;justify-content:space-between;font-size:1.05rem;font-weight:800;color:#0F172A;margin-top:0.25rem;}
+                    .wed-fee-wrapper {
+                        position: relative;
+                        display: inline-flex;
+                        align-items: center;
+                    }
+
+                    .wed-fee-icon {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 15px;
+                        height: 15px;
+                        border-radius: 50%;
+                        background: #E2E8F0;
+                        color: #475569;
+                        font-size: 0.65rem;
+                        font-weight: 700;
+                        cursor: pointer;
+                        transition: all .2s;
+                        user-select: none;
+                        line-height: 1;
+                        margin-left: 4px;
+                    }
+
+                    .wed-fee-wrapper:hover .wed-fee-icon,
+                    .wed-fee-icon.active {
+                        background: #1eb349;
+                        color: #fff;
+                    }
+
+                    .wed-fee-popover {
+                        position: absolute;
+                        bottom: calc(100% + 8px);
+                        left: 50%;
+                        transform: translateX(-50%) translateY(4px);
+                        width: 210px;
+                        background: #fff;
+                        color: #334155;
+                        border: 1px solid #E2E8F0;
+                        padding: 10px 12px;
+                        border-radius: 10px;
+                        font-size: 0.73rem;
+                        line-height: 1.4;
+                        font-weight: 500;
+                        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, .12);
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: opacity .2s, transform .2s, visibility .2s;
+                        z-index: 9999;
+                        pointer-events: none;
+                        text-align: left;
+                        white-space: normal;
+                    }
+
+                    .wed-fee-popover::before {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        border-width: 7px;
+                        border-style: solid;
+                        border-color: #E2E8F0 transparent transparent transparent;
+                    }
+
+                    .wed-fee-popover::after {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        border-width: 6px;
+                        border-style: solid;
+                        border-color: #fff transparent transparent transparent;
+                    }
+
+                    .wed-fee-wrapper:hover .wed-fee-popover {
+                        opacity: 1;
+                        visibility: visible;
+                        transform: translateX(-50%) translateY(0);
+                        pointer-events: auto;
+                    }
+
+                    .wed-fee-popover-title {
+                        font-weight: 800;
+                        color: #1eb349;
+                        margin-bottom: 3px;
+                        display: block;
+                        font-size: 0.75rem;
+                    }
+
+                    .wed-summary-row {
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 0.9rem;
+                        color: #64748B;
+                        margin-bottom: 0.5rem;
+                        align-items: center;
+                    }
+
+                    .wed-summary-total {
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 1.05rem;
+                        font-weight: 800;
+                        color: #0F172A;
+                        margin-top: 0.25rem;
+                    }
                 </style>
-                <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:1rem;margin-bottom:1.25rem;">
-                    <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.35rem;">
+                <div
+                    style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:1rem;margin-bottom:1.25rem;">
+                    <div
+                        style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.35rem;">
                         <svg width="14" height="14" fill="none" stroke="#475569" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
                         </svg>
                         Ringkasan Biaya
                     </div>
@@ -3347,7 +3500,7 @@
                             <span id="pack-label" style="font-weight:600;color:#334155;">Rp 1.500 × 20 Tamu</span>
                             <span id="pack-val" style="font-weight:600;color:#334155;">Rp 30.000</span>
                         </div>
-                        <hr style="border:none;border-top:1px dashed #e2e8f0;margin:0.5rem 0;"/>
+                        <hr style="border:none;border-top:1px dashed #e2e8f0;margin:0.5rem 0;" />
                         {{-- Platform Fee --}}
                         <div class="wed-summary-row">
                             <span style="display:inline-flex;align-items:center;">
@@ -3356,7 +3509,8 @@
                                     <span class="wed-fee-icon">ⓘ</span>
                                     <div class="wed-fee-popover">
                                         <span class="wed-fee-popover-title">Platform Fee</span>
-                                        Kontribusi untuk pengembangan platform buyle.id agar terus berinovasi dan memberikan pengalaman terbaik.
+                                        Kontribusi untuk pengembangan platform buyle.id agar terus berinovasi dan memberikan
+                                        pengalaman terbaik.
                                     </div>
                                 </span>
                             </span>
@@ -3376,7 +3530,7 @@
                             </span>
                             <span id="admin-fee-val" style="color:#F59E0B;font-weight:600;">+Rp 1.500</span>
                         </div>
-                        <hr style="border:none;border-top:1px solid #e2e8f0;margin:0.6rem 0;"/>
+                        <hr style="border:none;border-top:1px solid #e2e8f0;margin:0.6rem 0;" />
                         <div class="wed-summary-total">
                             <span>Total</span>
                             <span id="total-price" style="color:#1eb349;">Rp 33.000</span>
@@ -3624,10 +3778,10 @@
             return L.divIcon({
                 className: 'custom-guest-pin',
                 html: `
-                        <div style="width:28px; height:28px; background:${color}; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,0.25); border:2px solid #fff;">
-                            <span style="transform:rotate(45deg); display:flex; align-items:center; justify-content:center;">${svgIcon}</span>
-                        </div>
-                    `,
+                            <div style="width:28px; height:28px; background:${color}; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,0.25); border:2px solid #fff;">
+                                <span style="transform:rotate(45deg); display:flex; align-items:center; justify-content:center;">${svgIcon}</span>
+                            </div>
+                        `,
                 iconSize: [28, 28],
                 iconAnchor: [14, 28],
                 popupAnchor: [0, -28]
@@ -3658,20 +3812,20 @@
                         : '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:2px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Masih Ragu');
 
                 const popupHtml = `
-                        <div style="font-family:'Montserrat',sans-serif; min-width:180px; padding:2px;">
-                            <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Tamu Undangan</div>
-                            <div style="font-weight:800; font-size:0.95rem; color:#0f172a; margin:0.15rem 0;">${escapeHtml(item.name)}</div>
-                            <div style="font-size:0.75rem; color:#059669; font-weight:700; margin-bottom:0.4rem; display:flex; align-items:center; gap:3px;">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                ${escapeHtml(item.city)}
+                            <div style="font-family:'Montserrat',sans-serif; min-width:180px; padding:2px;">
+                                <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Tamu Undangan</div>
+                                <div style="font-weight:800; font-size:0.95rem; color:#0f172a; margin:0.15rem 0;">${escapeHtml(item.name)}</div>
+                                <div style="font-size:0.75rem; color:#059669; font-weight:700; margin-bottom:0.4rem; display:flex; align-items:center; gap:3px;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    ${escapeHtml(item.city)}
+                                </div>
+                                <div style="display:inline-block; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:99px; background:${badgeBg}; color:${badgeColor}; margin-bottom:0.5rem;">
+                                    ${statusSvg}
+                                </div>
+                                ${item.message ? `<div style="font-size:0.75rem; color:#475569; font-style:italic; background:#f8fafc; padding:0.4rem 0.6rem; border-radius:8px; border-left:3px solid #10b981;">"${escapeHtml(item.message)}"</div>` : ''}
+                                ${item.time ? `<div style="font-size:0.65rem; color:#94a3b8; margin-top:0.35rem; text-align:right;">${item.time}</div>` : ''}
                             </div>
-                            <div style="display:inline-block; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:99px; background:${badgeBg}; color:${badgeColor}; margin-bottom:0.5rem;">
-                                ${statusSvg}
-                            </div>
-                            ${item.message ? `<div style="font-size:0.75rem; color:#475569; font-style:italic; background:#f8fafc; padding:0.4rem 0.6rem; border-radius:8px; border-left:3px solid #10b981;">"${escapeHtml(item.message)}"</div>` : ''}
-                            ${item.time ? `<div style="font-size:0.65rem; color:#94a3b8; margin-top:0.35rem; text-align:right;">${item.time}</div>` : ''}
-                        </div>
-                    `;
+                        `;
 
                 marker.bindPopup(popupHtml);
                 marker.addTo(guestMap);
@@ -3772,7 +3926,7 @@
             @if($activeTab === 'tab-map')
                 setTimeout(() => initGuestDistributionMap(), 300);
             @endif
-            });
+                });
 
         // Toggle Tampilkan Card Tamu Undangan
         function handleGuestCardToggle(isChecked) {

@@ -770,29 +770,34 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                        backdrop-filter 0.28s ease;
+                backdrop-filter 0.28s ease;
         }
+
         #shareStoreModal.is-open {
             opacity: 1;
             pointer-events: auto;
         }
+
         #shareStoreModal .share-modal-card {
             transform: translateY(28px) scale(0.95);
             opacity: 0;
             transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+                opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform, opacity;
         }
+
         #shareStoreModal.is-open .share-modal-card {
             transform: translateY(0) scale(1);
             opacity: 1;
         }
+
         #shareStoreModal.is-closing .share-modal-card {
             transform: translateY(18px) scale(0.96);
             opacity: 0;
             transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1),
-                        opacity 0.18s cubic-bezier(0.4, 0, 1, 1);
+                opacity 0.18s cubic-bezier(0.4, 0, 1, 1);
         }
+
         #shareStoreModal.is-closing {
             opacity: 0;
             transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1);
@@ -803,7 +808,7 @@
         onclick="if(event.target===this) closeShareStoreModal()">
         <div class="share-modal-card"
             style="background:#ffffff; border-radius:26px; max-width:410px; width:100%; padding:1.75rem 1.5rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative;">
-            
+
             {{-- Tombol X di Pojok Kanan Atas --}}
             <button type="button" onclick="closeShareStoreModal()"
                 style="position:absolute; top:1.1rem; right:1.1rem; width:34px; height:34px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:1.15rem; cursor:pointer; transition:all 0.15s ease;"
@@ -819,20 +824,23 @@
             </div>
             <h3 style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0 0 0.35rem;">Bagikan Digital Store</h3>
             <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.35rem; line-height:1.4;">
-                Salin tautan atau buka langsung Digital Store dan Website Anda.
+                Salin tautan untuk menjangkau banyak order, atau buka langsung Digital Store dan Website Anda.
             </p>
 
             {{-- CARD 1: DIGITAL STORE (https://buyle.id/username) --}}
             <div style="text-align:left; margin-bottom:1rem;">
-                <label style="display:block; font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem;">
+                <label
+                    style="display:block; font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem;">
                     Digital Store
                 </label>
-                <div style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; gap:0.45rem;">
+                <div
+                    style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; gap:0.45rem;">
                     <input type="text" id="shareStoreUrlInput" value="{{ $storeUrl }}" readonly
                         style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.8rem; color:#334155; font-weight:600; outline:none; text-overflow:ellipsis; min-width:0;">
-                    
+
                     {{-- Icon Salin --}}
-                    <button type="button" onclick="copyStoreLink('shareStoreUrlInput', this)" title="Salin Link Digital Store"
+                    <button type="button" onclick="copyStoreLink('shareStoreUrlInput', this)"
+                        title="Salin Link Digital Store"
                         style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s ease;">
                         <i class="ph-bold ph-copy" style="font-size:1.05rem;"></i>
                     </button>
@@ -851,13 +859,15 @@
 
             {{-- CARD 2: WEBSITE (https://buyle.id/c/username) --}}
             <div style="text-align:left; margin-bottom:0.5rem;">
-                <label style="display:block; font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem;">
+                <label
+                    style="display:block; font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem;">
                     Website
                 </label>
-                <div style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; gap:0.45rem;">
+                <div
+                    style="display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.4rem 0.5rem 0.4rem 0.85rem; gap:0.45rem;">
                     <input type="text" id="shareWebsiteUrlInput" value="{{ $websiteUrl }}" readonly
                         style="flex:1; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:0.8rem; color:#334155; font-weight:600; outline:none; text-overflow:ellipsis; min-width:0;">
-                    
+
                     {{-- Icon Salin --}}
                     <button type="button" onclick="copyStoreLink('shareWebsiteUrlInput', this)" title="Salin Link Website"
                         style="width:34px; height:34px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s ease;">
@@ -937,7 +947,8 @@
                         <div class="nina-greeting-wrap">
                             {{-- Icon Avatar Bulat Mirip Image 2 --}}
                             <div class="nina-avatar-container">
-                                <button type="button" class="nina-avatar-trigger" id="ninaAvatarBtn" onclick="toggleNinaDropdown(event)" title="Menu Profil">
+                                <button type="button" class="nina-avatar-trigger" id="ninaAvatarBtn"
+                                    onclick="toggleNinaDropdown(event)" title="Menu Profil">
                                     @if($crAvatarUrl)
                                         <img src="{{ $crAvatarUrl }}" alt="{{ $storeName }}" class="nina-avatar-img">
                                     @else
@@ -956,7 +967,8 @@
                                     <div class="ndc-body">
                                         {{-- 1. Profil -> /profile --}}
                                         <a href="{{ url('/profile') }}" class="ndc-item">
-                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
                                                 <circle cx="12" cy="8" r="4" />
                                                 <path d="M20 21a8 8 0 1 0-16 0" />
                                             </svg>
@@ -965,7 +977,8 @@
 
                                         {{-- 2. Pesanan Saya -> /akun/pesanan --}}
                                         <a href="{{ route('account.orders') }}" class="ndc-item">
-                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
                                                 <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                                                 <line x1="3" y1="6" x2="21" y2="6"></line>
                                                 <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -977,18 +990,21 @@
 
                                         {{-- 3. Beranda Buyle -> / --}}
                                         <a href="{{ url('/') }}" class="ndc-item">
-                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                                <polyline points="9 22 9 12 15 12 15 22"/>
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                <polyline points="9 22 9 12 15 12 15 22" />
                                             </svg>
                                             <span>Beranda Buyle</span>
                                         </a>
 
                                         {{-- 4. Beranda BuyleTIX -> /creator/event-attendance --}}
                                         <a href="{{ route('creator.ticket.scanner') }}" class="ndc-item">
-                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/>
-                                                <path d="M13 5v14"/>
+                                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                                                <path d="M13 5v14" />
                                             </svg>
                                             <span>Beranda BuyleTIX</span>
                                         </a>
@@ -999,7 +1015,8 @@
                                         <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                             @csrf
                                             <button type="submit" class="ndc-item ndc-logout">
-                                                <svg width="17" height="17" fill="none" stroke="#ef4444" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <svg width="17" height="17" fill="none" stroke="#ef4444" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
                                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                                                     <polyline points="16 17 21 12 16 7"></polyline>
                                                     <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -1017,13 +1034,16 @@
                         </div>
 
                         {{-- Tombol Icon Lonceng Notifikasi Pojok Kanan Atas --}}
-                        <a href="{{ route('creator.notif.index') }}" class="nina-notif-btn" id="ninaNotifBtn" title="Notifikasi Toko">
-                            <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <a href="{{ route('creator.notif.index') }}" class="nina-notif-btn" id="ninaNotifBtn"
+                            title="Notifikasi Toko">
+                            <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                             </svg>
                             @if(isset($unreadNotifCount) && $unreadNotifCount > 0)
-                                <span class="nina-notif-badge" id="ninaNotifBadge">{{ $unreadNotifCount > 99 ? '99+' : $unreadNotifCount }}</span>
+                                <span class="nina-notif-badge"
+                                    id="ninaNotifBadge">{{ $unreadNotifCount > 99 ? '99+' : $unreadNotifCount }}</span>
                             @endif
                         </a>
                     </div>
@@ -1090,14 +1110,18 @@
                         <div class="nina-income-header">
                             <span class="nina-income-title">Traffic</span>
                             <div class="traffic-period-picker">
-                                <button type="button" class="nina-income-period" id="trafficPeriodBtn" onclick="toggleTrafficPeriod(event)">
+                                <button type="button" class="nina-income-period" id="trafficPeriodBtn"
+                                    onclick="toggleTrafficPeriod(event)">
                                     <span id="trafficPeriodLabel">Bulan Ini</span>
                                     <i class="ph ph-caret-down" style="font-size:0.7rem;"></i>
                                 </button>
                                 <div id="trafficPeriodMenu" class="traffic-period-menu" style="display: none;">
-                                    <button type="button" class="tpm-item" onclick="setTrafficPeriod('week', 'Minggu Ini')">Minggu Ini</button>
-                                    <button type="button" class="tpm-item active" onclick="setTrafficPeriod('month', 'Bulan Ini')">Bulan Ini</button>
-                                    <button type="button" class="tpm-item" onclick="setTrafficPeriod('year', 'Tahun Ini')">Tahun Ini</button>
+                                    <button type="button" class="tpm-item"
+                                        onclick="setTrafficPeriod('week', 'Minggu Ini')">Minggu Ini</button>
+                                    <button type="button" class="tpm-item active"
+                                        onclick="setTrafficPeriod('month', 'Bulan Ini')">Bulan Ini</button>
+                                    <button type="button" class="tpm-item"
+                                        onclick="setTrafficPeriod('year', 'Tahun Ini')">Tahun Ini</button>
                                 </div>
                             </div>
                         </div>
@@ -1192,10 +1216,10 @@
     <script>
         // ── Traffic Stats Interactive Filter ──
         const trafficStats = {!! json_encode($trafficData ?? [
-            'week'  => ['label' => 'Minggu Ini', 'count' => 0, 'growth' => '+100%'],
-            'month' => ['label' => 'Bulan Ini',  'count' => 0, 'growth' => '+100%'],
-            'year'  => ['label' => 'Tahun Ini',  'count' => 0, 'growth' => '+100%']
-        ]) !!};
+        'week' => ['label' => 'Minggu Ini', 'count' => 0, 'growth' => '+100%'],
+        'month' => ['label' => 'Bulan Ini', 'count' => 0, 'growth' => '+100%'],
+        'year' => ['label' => 'Tahun Ini', 'count' => 0, 'growth' => '+100%']
+    ]) !!};
 
         function toggleTrafficPeriod(e) {
             e.stopPropagation();
@@ -1239,7 +1263,7 @@
         }
 
         // Global click listener to close dropdowns when clicking outside
-        window.addEventListener('click', function(e) {
+        window.addEventListener('click', function (e) {
             const ninaDd = document.getElementById('ninaDropdownMenu');
             if (ninaDd && !e.target.closest('.nina-avatar-container')) {
                 ninaDd.style.opacity = '0';
@@ -1255,8 +1279,8 @@
 
         // Simpan cache unread notif ke perangkat user (tanpa request database berulang)
         try {
-            const currentUnread = {{ (int)($unreadNotifCount ?? 0) }};
+            const currentUnread = {{ (int) ($unreadNotifCount ?? 0) }};
             localStorage.setItem('buyle_cr_unread_notif', currentUnread);
-        } catch (e) {}
+        } catch (e) { }
     </script>
 @endsection

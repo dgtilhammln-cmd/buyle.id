@@ -1,4 +1,3 @@
-
 @extends('creator.layout')
 @section('title', 'Produk Saya')
 @section('page_title', 'Produk Saya')
@@ -39,7 +38,8 @@
     </div>
 
     @if($products->count() > 0)
-      <form id="form-destroy-all-products" action="{{ route('creator.products.destroy-all') }}" method="POST" style="display:inline;">
+      <form id="form-destroy-all-products" action="{{ route('creator.products.destroy-all') }}" method="POST"
+        style="display:inline;">
         @csrf
         @method('DELETE')
         <button type="button" onclick="openDeleteAllModal({{ $products->count() }})" class="btn-danger-sm"
@@ -64,7 +64,8 @@
       <span class="btn-add-text-short">✨</span>
     </button>
 
-    <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}" class="btn-primary prod-add-btn">
+    <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}"
+      class="btn-primary prod-add-btn">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />
@@ -301,9 +302,9 @@
       }
     }
 
-        /* ══════════════════════════════════════════════════════════════
-       FLOATING ACTION BUTTON (SPEED DIAL) - MOBILE ONLY
-       ══════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════════
+         FLOATING ACTION BUTTON (SPEED DIAL) - MOBILE ONLY
+         ══════════════════════════════════════════════════════════════ */
     .prod-speeddial-wrap {
       display: none;
     }
@@ -411,9 +412,11 @@
       .prod-speeddial-wrap.open .prod-speeddial-item[style*="--item-index: 0"] {
         transition-delay: 0.03s;
       }
+
       .prod-speeddial-wrap.open .prod-speeddial-item[style*="--item-index: 1"] {
         transition-delay: 0.08s;
       }
+
       .prod-speeddial-wrap.open .prod-speeddial-item[style*="--item-index: 2"] {
         transition-delay: 0.13s;
       }
@@ -479,15 +482,18 @@
       text-decoration: none;
       transition: all 0.2s;
     }
+
     .status-tab-btn:hover {
       color: #0f172a;
     }
+
     .status-tab-btn.active {
       background: #ffffff;
       color: #0f172a;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
+
     .status-tab-btn .tab-badge {
       font-size: 0.68rem;
       padding: 1px 6px;
@@ -496,6 +502,7 @@
       color: #475569;
       font-weight: 600;
     }
+
     .status-toggle-pill {
       display: inline-flex;
       align-items: center;
@@ -510,24 +517,29 @@
       background: transparent;
       outline: none;
     }
+
     .status-toggle-pill.active {
       background: rgba(16, 185, 129, 0.12);
       color: #059669;
       border-color: rgba(16, 185, 129, 0.25);
     }
+
     .status-toggle-pill.active:hover {
       background: rgba(16, 185, 129, 0.22);
       transform: scale(1.03);
     }
+
     .status-toggle-pill.archived {
       background: rgba(245, 158, 11, 0.12);
       color: #d97706;
       border-color: rgba(245, 158, 11, 0.25);
     }
+
     .status-toggle-pill.archived:hover {
       background: rgba(245, 158, 11, 0.22);
       transform: scale(1.03);
     }
+
     .status-indicator-dot {
       width: 7px;
       height: 7px;
@@ -535,14 +547,17 @@
       display: inline-block;
       transition: background 0.2s;
     }
+
     .status-toggle-pill.active .status-indicator-dot {
       background: #10b981;
       box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
     }
+
     .status-toggle-pill.archived .status-indicator-dot {
       background: #f59e0b;
       box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
     }
+
     .grid-status-btn {
       font-size: 0.62rem;
       font-weight: 700;
@@ -554,14 +569,17 @@
       transition: transform 0.15s, opacity 0.15s;
       backdrop-filter: blur(6px);
     }
+
     .grid-status-btn:hover {
       transform: scale(1.05);
       opacity: 0.95;
     }
+
     .grid-status-btn.active {
       background: rgba(16, 185, 129, 0.95);
       box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
     }
+
     .grid-status-btn.archived {
       background: rgba(245, 158, 11, 0.95);
       box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
@@ -980,15 +998,22 @@
 
     /* ── Lightweight CSS Shimmer Skeletons ──────────────────────── */
     @keyframes buyleSkeletonShimmer {
-      0% { background-position: -600px 0; }
-      100% { background-position: 600px 0; }
+      0% {
+        background-position: -600px 0;
+      }
+
+      100% {
+        background-position: 600px 0;
+      }
     }
+
     .skel-bone {
       background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
       background-size: 1200px 100%;
       animation: buyleSkeletonShimmer 1.5s infinite linear;
       border-radius: 6px;
     }
+
     .skel-card {
       background: #ffffff;
       border: 1.5px solid #f1f5f9;
@@ -1012,10 +1037,12 @@
       opacity: 0;
       transition: opacity 0.2s ease;
     }
+
     .del-confirm-overlay.open {
       display: flex;
       opacity: 1;
     }
+
     .del-confirm-card {
       background: #ffffff;
       border-radius: 24px;
@@ -1028,9 +1055,11 @@
       transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       border: 1.5px solid #fee2e2;
     }
+
     .del-confirm-overlay.open .del-confirm-card {
       transform: scale(1);
     }
+
     .del-confirm-icon-wrap {
       width: 62px;
       height: 62px;
@@ -1044,11 +1073,24 @@
       margin: 0 auto 1.15rem;
       animation: pulseIconSoft 2.2s infinite ease-in-out;
     }
+
     @keyframes pulseIconSoft {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.25); }
-      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.25);
+      }
+
+      70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+      }
+
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+      }
     }
+
     .del-confirm-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 1.15rem;
@@ -1056,6 +1098,7 @@
       color: #0f172a;
       margin: 0 0 0.5rem 0;
     }
+
     .del-confirm-desc {
       font-family: 'Montserrat', sans-serif;
       font-size: 0.84rem;
@@ -1063,15 +1106,18 @@
       line-height: 1.5;
       margin: 0 0 1.5rem 0;
     }
+
     .del-confirm-desc b {
       color: #1e293b;
       font-weight: 700;
     }
+
     .del-confirm-actions {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
+
     .del-btn-cancel {
       flex: 1;
       padding: 0.75rem 1rem;
@@ -1085,10 +1131,12 @@
       cursor: pointer;
       transition: all 0.15s ease;
     }
+
     .del-btn-cancel:hover {
       background: #e2e8f0;
       color: #1e293b;
     }
+
     .del-btn-confirm {
       flex: 1.25;
       padding: 0.75rem 1rem;
@@ -1103,10 +1151,12 @@
       box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
       transition: all 0.15s ease;
     }
+
     .del-btn-confirm:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
     }
+
     .del-btn-confirm:active {
       transform: translateY(0);
     }
@@ -1121,12 +1171,15 @@
       vertical-align: middle;
       transition: transform 0.15s ease;
     }
+
     .prod-chk-custom:hover {
       transform: scale(1.1);
     }
+
     .tr-selected {
       background: #f0fdf4 !important;
     }
+
     .grid-chk-wrap {
       position: absolute;
       top: 8px;
@@ -1140,15 +1193,18 @@
       box-shadow: none !important;
       border: none !important;
     }
+
     .grid-card-item.card-selected {
       border-color: #1eb349 !important;
       box-shadow: 0 0 0 2px rgba(30, 179, 73, 0.25), 0 6px 18px rgba(0, 0, 0, 0.08) !important;
     }
+
     .grid-card-item.card-selected .grid-chk-wrap {
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
     }
+
     .grid-card-item.card-selected .grid-chk-wrap input {
       accent-color: #1eb349 !important;
     }
@@ -1174,11 +1230,13 @@
       pointer-events: none;
       max-width: 95vw;
     }
+
     .bulk-dock-bar.visible {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
       pointer-events: auto;
     }
+
     .bulk-count-pill {
       display: inline-flex;
       align-items: center;
@@ -1190,6 +1248,7 @@
       border-right: 1px solid #e2e8f0;
       white-space: nowrap;
     }
+
     .bulk-count-badge {
       background: #1eb349;
       color: #ffffff;
@@ -1200,12 +1259,14 @@
       min-width: 20px;
       text-align: center;
     }
+
     .bulk-actions-group {
       display: flex;
       align-items: center;
       gap: 0.4rem;
       flex-wrap: nowrap;
     }
+
     .bulk-act-btn {
       display: inline-flex;
       align-items: center;
@@ -1223,40 +1284,48 @@
       white-space: nowrap;
       text-decoration: none;
     }
+
     .bulk-act-btn:hover {
       background: #f1f5f9;
       color: #0f172a;
     }
+
     .bulk-btn-archive {
       background: #fff;
       color: #475569;
       border-color: #e2e8f0;
     }
+
     .bulk-btn-archive:hover {
       background: #f8fafc;
       color: #0f172a;
       border-color: #cbd5e1;
     }
+
     .bulk-btn-activate {
       background: #f0fdf4;
       color: #15803d;
       border-color: #bbf7d0;
     }
+
     .bulk-btn-activate:hover {
       background: #dcfce7;
       color: #166534;
       border-color: #86efac;
     }
+
     .bulk-btn-delete {
       background: #fff;
       color: #dc2626;
       border-color: #fee2e2;
     }
+
     .bulk-btn-delete:hover {
       background: #fef2f2;
       color: #b91c1c;
       border-color: #fecaca;
     }
+
     .bulk-btn-close {
       width: 26px;
       height: 26px;
@@ -1272,10 +1341,12 @@
       padding: 0;
       flex-shrink: 0;
     }
+
     .bulk-btn-close:hover {
       background: #e2e8f0;
       color: #0f172a;
     }
+
     @media (max-width: 640px) {
       .bulk-dock-bar {
         bottom: 16px;
@@ -1285,15 +1356,18 @@
         max-width: 440px;
         justify-content: space-between;
       }
+
       .bulk-count-pill {
         font-size: 0.74rem;
         padding-right: 0.4rem;
       }
+
       .bulk-act-btn {
         padding: 0.38rem 0.6rem;
         font-size: 0.72rem;
         gap: 0.25rem;
       }
+
       .bulk-act-btn svg {
         width: 13px;
         height: 13px;
@@ -1320,6 +1394,7 @@
     .prod-mobile-header {
       display: none;
     }
+
     @media (max-width: 991px) {
       .prod-mobile-header {
         display: flex !important;
@@ -1328,6 +1403,7 @@
         padding: 0.25rem 0 0.35rem;
         margin-bottom: 0;
       }
+
       .prod-mobile-btn {
         width: 40px;
         height: 40px;
@@ -1338,14 +1414,16 @@
         align-items: center;
         justify-content: center;
         color: #0f172a;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
         cursor: pointer;
         text-decoration: none;
         transition: all 0.2s ease;
       }
+
       .prod-mobile-btn:active {
         transform: scale(0.92);
       }
+
       .prod-mobile-title {
         margin: 0;
         font-size: 1.1rem;
@@ -1368,7 +1446,7 @@
           window.location.href = "{{ url('/creator/event-attendance') }}";
           return;
         }
-      } catch(e) {}
+      } catch (e) { }
       if (window.history.length > 1) {
         window.history.back();
       } else {
@@ -1386,7 +1464,7 @@
   {{-- SKELETON LOADING PLACEHOLDER (Smooth & Lightweight) --}}
   <div id="products-skeleton" style="margin-bottom: 2rem;">
     <script>
-      (function() {
+      (function () {
         try {
           var p = localStorage.getItem('admin_services_view') || (window.innerWidth <= 768 ? 'grid' : 'list');
           if (p === 'grid') {
@@ -1394,12 +1472,14 @@
           } else {
             document.write('<style>#skel-list-container{display:block!important;}#skel-grid-container{display:none!important;}</style>');
           }
-        } catch(e) {}
+        } catch (e) { }
       })();
     </script>
     {{-- Tabs & Filters Skeleton --}}
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
-      <div style="display:flex; align-items:center; gap:0.35rem; background:#f1f5f9; padding:0.25rem; border-radius:12px;">
+    <div
+      style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+      <div
+        style="display:flex; align-items:center; gap:0.35rem; background:#f1f5f9; padding:0.25rem; border-radius:12px;">
         <div class="skel-bone" style="width: 85px; height: 32px; border-radius: 9px;"></div>
         <div class="skel-bone" style="width: 75px; height: 32px; border-radius: 9px;"></div>
         <div class="skel-bone" style="width: 95px; height: 32px; border-radius: 9px;"></div>
@@ -1417,7 +1497,8 @@
 
     {{-- LIST SKELETON --}}
     <div id="skel-list-container" class="skel-card" style="padding: 1.25rem;">
-      <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom: 0.75rem; border-bottom: 1.5px solid #f1f5f9; margin-bottom: 0.75rem;">
+      <div
+        style="display:flex; align-items:center; justify-content:space-between; padding-bottom: 0.75rem; border-bottom: 1.5px solid #f1f5f9; margin-bottom: 0.75rem;">
         <div class="skel-bone" style="width: 25px; height: 16px;"></div>
         <div class="skel-bone" style="width: 50px; height: 16px;"></div>
         <div class="skel-bone" style="width: 180px; height: 16px;"></div>
@@ -1428,7 +1509,8 @@
         <div class="skel-bone" style="width: 80px; height: 16px;"></div>
       </div>
       @for($i = 0; $i < 6; $i++)
-        <div style="display:flex; align-items:center; justify-content:space-between; gap: 0.75rem; padding: 0.85rem 0; border-bottom: 1px solid #f8fafc;">
+        <div
+          style="display:flex; align-items:center; justify-content:space-between; gap: 0.75rem; padding: 0.85rem 0; border-bottom: 1px solid #f8fafc;">
           <div class="skel-bone" style="width: 20px; height: 16px;"></div>
           <div class="skel-bone" style="width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;"></div>
           <div style="flex: 1; display:flex; flex-direction:column; gap: 6px; min-width: 140px;">
@@ -1454,7 +1536,8 @@
           <div class="skel-bone" style="width: 100%; aspect-ratio: 1/1; border-radius: 10px; margin-bottom: 0.65rem;"></div>
           <div class="skel-bone" style="width: 85%; height: 13px; margin-bottom: 0.35rem;"></div>
           <div class="skel-bone" style="width: 50%; height: 10px; margin-bottom: 0.75rem;"></div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:0.4rem; border-top:1px solid #f1f5f9;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:0.4rem; border-top:1px solid #f1f5f9;">
             <div class="skel-bone" style="width: 38px; height: 20px; border-radius: 4px;"></div>
             <div style="display:flex; gap: 4px;">
               <div class="skel-bone" style="width: 24px; height: 24px; border-radius: 6px;"></div>
@@ -1469,463 +1552,505 @@
   {{-- REAL PRODUCTS CONTENT CONTAINER --}}
   <div id="products-real-content" style="opacity: 0; transition: opacity 0.25s ease;">
 
-  {{-- 1. SEARCH INPUT BAR + TAB FILTER (Sticky on Mobile) --}}
-  <div class="prod-sticky-bar" id="prodStickyBar">
-  <style>
-    @media (max-width: 1024px) {
-      .prod-sticky-bar {
-        position: -webkit-sticky !important;
-        position: sticky !important;
-        top: 0;
-        z-index: 50;
-        background: #f4f6f8;
-        margin-left: -0.9rem;
-        margin-right: -0.9rem;
-        padding: 0.25rem 0.9rem 0.5rem;
-        box-sizing: border-box;
-        transition: padding-top 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-      }
-      .prod-sticky-bar.is-stuck {
-        padding-top: max(0.5rem, calc(0.25rem + env(safe-area-inset-top, 0px)));
-        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-        border-bottom: 1px solid #e2e8f0;
-      }
-    }
-  </style>
-  <script>
-    (function() {
-      if (window.innerWidth > 1024) return;
-      var bar = document.getElementById('prodStickyBar');
-      if (!bar) return;
-      window.addEventListener('scroll', function() {
-        if (window.scrollY > 30) {
-          bar.classList.add('is-stuck');
-        } else {
-          bar.classList.remove('is-stuck');
+    {{-- 1. SEARCH INPUT BAR + TAB FILTER (Sticky on Mobile) --}}
+    <div class="prod-sticky-bar" id="prodStickyBar">
+      <style>
+        @media (max-width: 1024px) {
+          .prod-sticky-bar {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            top: 0;
+            z-index: 50;
+            background: #f4f6f8;
+            margin-left: -0.9rem;
+            margin-right: -0.9rem;
+            padding: 0.25rem 0.9rem 0.5rem;
+            box-sizing: border-box;
+            transition: padding-top 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+          }
+
+          .prod-sticky-bar.is-stuck {
+            padding-top: max(0.5rem, calc(0.25rem + env(safe-area-inset-top, 0px)));
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+            border-bottom: 1px solid #e2e8f0;
+          }
         }
-      }, { passive: true });
-    })();
-  </script>
+      </style>
+      <script>
+        (function () {
+          if (window.innerWidth > 1024) return;
+          var bar = document.getElementById('prodStickyBar');
+          if (!bar) return;
+          window.addEventListener('scroll', function () {
+            if (window.scrollY > 30) {
+              bar.classList.add('is-stuck');
+            } else {
+              bar.classList.remove('is-stuck');
+            }
+          }, { passive: true });
+        })();
+      </script>
 
-  {{-- 1. SEARCH INPUT BAR (SUPER APP MODERN MINIMALIST) --}}
-  <div class="prod-search-bar-wrap" style="margin-bottom: 0.75rem;">
-    <form action="{{ route('creator.products.index') }}" method="GET" style="display:flex; align-items:center; position:relative; width:100%;">
-      @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
-      @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif
-      @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
-      <div style="position:absolute; left:14px; display:flex; align-items:center; pointer-events:none; color:#94a3b8;">
-        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
+      {{-- 1. SEARCH INPUT BAR (SUPER APP MODERN MINIMALIST) --}}
+      <div class="prod-search-bar-wrap" style="margin-bottom: 0.75rem;">
+        <form action="{{ route('creator.products.index') }}" method="GET"
+          style="display:flex; align-items:center; position:relative; width:100%;">
+          @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
+          @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif
+          @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
+          <div
+            style="position:absolute; left:14px; display:flex; align-items:center; pointer-events:none; color:#94a3b8;">
+            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
+          <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk Anda..."
+            style="width:100%; height:42px; padding:0 38px 0 40px; border-radius:12px; background:#ffffff; border:1px solid #e2e8f0; font-size:0.82rem; font-family:'Montserrat',sans-serif; color:#0f172a; outline:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.02); box-sizing:border-box;"
+            onfocus="this.style.borderColor='#1eb349'; this.style.boxShadow='0 0 0 3px rgba(30,179,73,0.1)';"
+            onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.02)';">
+          @if(request('search'))
+            <a href="{{ route('creator.products.index', array_merge(request()->except('search', 'page'))) }}"
+              style="position:absolute; right:12px; width:22px; height:22px; border-radius:50%; background:#f1f5f9; color:#64748b; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:0.75rem;"
+              title="Hapus pencarian">✕</a>
+          @endif
+        </form>
       </div>
-      <input type="text" name="search" value="{{ request('search') }}"
-        placeholder="Cari produk Anda..."
-        style="width:100%; height:42px; padding:0 38px 0 40px; border-radius:12px; background:#ffffff; border:1px solid #e2e8f0; font-size:0.82rem; font-family:'Montserrat',sans-serif; color:#0f172a; outline:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.02); box-sizing:border-box;"
-        onfocus="this.style.borderColor='#1eb349'; this.style.boxShadow='0 0 0 3px rgba(30,179,73,0.1)';"
-        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.02)';">
-      @if(request('search'))
-        <a href="{{ route('creator.products.index', array_merge(request()->except('search', 'page'))) }}"
-           style="position:absolute; right:12px; width:22px; height:22px; border-radius:50%; background:#f1f5f9; color:#64748b; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:0.75rem;"
-           title="Hapus pencarian">✕</a>
-      @endif
-    </form>
-  </div>
 
-  {{-- 2. STATUS FILTER TAB & FILTER ICON TIPE (1 BARIS SETELAH DIARSIPKAN) --}}
-  @php
-    $typesMap = [
-      'makanan'       => ['name' => 'Makanan / Resto', 'svg' => '<path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line>'],
-      'external_link' => ['name' => 'Digital & Akses', 'svg' => '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'],
-      'physical'      => ['name' => 'Barang Fisik',    'svg' => '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>'],
-      'service'       => ['name' => 'Jasa Layanan',    'svg' => '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>'],
-      'ticket'        => ['name' => 'Tiket Event',     'svg' => '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"></path><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line>'],
-    ];
-    $activeType = request('type');
-    $activeTypeItem = $typesMap[$activeType] ?? null;
-  @endphp
+      {{-- 2. STATUS FILTER TAB & FILTER ICON TIPE (1 BARIS SETELAH DIARSIPKAN) --}}
+      @php
+        $typesMap = [
+          'makanan' => ['name' => 'Makanan / Resto', 'svg' => '<path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line>'],
+          'external_link' => ['name' => 'Digital & Akses', 'svg' => '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'],
+          'physical' => ['name' => 'Barang Fisik', 'svg' => '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>'],
+          'service' => ['name' => 'Jasa Layanan', 'svg' => '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>'],
+          'ticket' => ['name' => 'Tiket Event', 'svg' => '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"></path><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line>'],
+        ];
+        $activeType = request('type');
+        $activeTypeItem = $typesMap[$activeType] ?? null;
+      @endphp
 
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:1.15rem; position:relative;">
-    {{-- Kiri: Tabs Status (Semua, Aktif, Diarsipkan) --}}
-    <div style="display:inline-flex; align-items:center; gap:3px; background:#f1f5f9; padding:3px; border-radius:999px; border:1px solid #e2e8f0; overflow-x:auto; scrollbar-width:none;">
-      <a href="{{ route('creator.products.index', array_merge(request()->except('status', 'page'))) }}"
-         class="status-tab-btn {{ !request('status') ? 'active' : '' }}">
-         Semua <span class="tab-badge">{{ $totalCount ?? $products->total() }}</span>
-      </a>
-      <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'active'])) }}"
-         class="status-tab-btn {{ request('status') === 'active' ? 'active' : '' }}">
-         Aktif <span class="tab-badge">{{ $activeCount ?? 0 }}</span>
-      </a>
-      <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'archived'])) }}"
-         class="status-tab-btn {{ request('status') === 'archived' ? 'active' : '' }}">
-         Diarsipkan <span class="tab-badge">{{ $archivedCount ?? 0 }}</span>
-      </a>
-    </div>
-
-    {{-- Pojok Kanan Setelah Diarsipkan: 1 Button Icon Filter Tipe --}}
-    <div style="position:relative; flex-shrink:0;">
-      <button type="button" id="btnTypeFilterDropdown" onclick="toggleTypeFilterDropdown(event)"
-        style="width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s ease; border:1.5px solid {{ $activeType ? '#0f172a' : '#e2e8f0' }}; background:{{ $activeType ? '#0f172a' : '#ffffff' }}; color:{{ $activeType ? '#ffffff' : '#475569' }}; position:relative; box-shadow:0 1px 3px rgba(0,0,0,0.02);"
-        title="{{ $activeTypeItem ? 'Filter Tipe: ' . $activeTypeItem['name'] : 'Filter Tipe Produk' }}">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-        </svg>
-        @if($activeType)
-          <span style="position:absolute; top:-3px; right:-3px; width:9px; height:9px; border-radius:50%; background:#10b981; border:2px solid #ffffff;"></span>
-        @endif
-      </button>
-
-      {{-- Dropdown Menu Pilihan Tipe --}}
-      <div id="typeFilterDropdownMenu"
-        style="display:none; position:absolute; top:calc(100% + 6px); right:0; min-width:210px; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; box-shadow:0 14px 35px rgba(15,23,42,0.12); z-index:9999; padding:0.45rem;">
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.4rem 0.65rem 0.35rem; border-bottom:1px solid #f1f5f9; margin-bottom:0.35rem;">
-          <span style="font-size:0.7rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em;">Filter Tipe</span>
-          @if($activeType)
-            <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}"
-               style="font-size:0.7rem; color:#ef4444; text-decoration:none; font-weight:600;">Reset</a>
-          @endif
-        </div>
-        <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}"
-           style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.5rem 0.65rem; border-radius:8px; text-decoration:none; font-size:0.78rem; font-weight:{{ !$activeType ? '700' : '500' }}; color:{{ !$activeType ? '#0f172a' : '#475569' }}; background:{{ !$activeType ? '#f1f5f9' : 'transparent' }}; transition:background 0.15s;"
-           onmouseover="if(this.style.background!=='rgb(241, 245, 249)') this.style.background='#f8fafc'"
-           onmouseout="if('{{ !$activeType }}'!=='1') this.style.background='transparent'">
-          <span>Semua Tipe</span>
-          @if(!$activeType)
-            <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          @endif
-        </a>
-
-        @foreach($typesMap as $tKey => $tData)
-          <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => $tKey])) }}"
-             style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.5rem 0.65rem; border-radius:8px; text-decoration:none; font-size:0.78rem; font-weight:{{ $activeType === $tKey ? '700' : '500' }}; color:{{ $activeType === $tKey ? '#0f172a' : '#475569' }}; background:{{ $activeType === $tKey ? '#f1f5f9' : 'transparent' }}; transition:background 0.15s;"
-             onmouseover="if(this.style.background!=='rgb(241, 245, 249)') this.style.background='#f8fafc'"
-             onmouseout="if('{{ $activeType === $tKey }}'!=='1') this.style.background='transparent'">
-            <div style="display:flex; align-items:center; gap:0.55rem;">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                {!! $tData['svg'] !!}
-              </svg>
-              <span>{{ $tData['name'] }}</span>
-            </div>
-            @if($activeType === $tKey)
-              <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            @endif
+      <div
+        style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:1.15rem; position:relative;">
+        {{-- Kiri: Tabs Status (Semua, Aktif, Diarsipkan) --}}
+        <div
+          style="display:inline-flex; align-items:center; gap:3px; background:#f1f5f9; padding:3px; border-radius:999px; border:1px solid #e2e8f0; overflow-x:auto; scrollbar-width:none;">
+          <a href="{{ route('creator.products.index', array_merge(request()->except('status', 'page'))) }}"
+            class="status-tab-btn {{ !request('status') ? 'active' : '' }}">
+            Semua <span class="tab-badge">{{ $totalCount ?? $products->total() }}</span>
           </a>
-        @endforeach
-      </div>
-    </div>
-  </div>
+          <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'active'])) }}"
+            class="status-tab-btn {{ request('status') === 'active' ? 'active' : '' }}">
+            Aktif <span class="tab-badge">{{ $activeCount ?? 0 }}</span>
+          </a>
+          <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'archived'])) }}"
+            class="status-tab-btn {{ request('status') === 'archived' ? 'active' : '' }}">
+            Diarsipkan <span class="tab-badge">{{ $archivedCount ?? 0 }}</span>
+          </a>
+        </div>
 
-  </div>{{-- /.prod-sticky-bar --}}
-
-  @if(request('status') === 'archived')
-    <div style="font-size:0.75rem; color:#64748b; display:flex; align-items:center; gap:0.35rem; background:#f8fafc; padding:0.35rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0; margin-top:-0.5rem; margin-bottom:1rem;">
-      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Produk yang diarsipkan tidak tampil di storefront pembeli.
-    </div>
-  @endif
-
-  {{-- TABLE CARD (LIST VIEW) --}}
-  <div id="view-list" class="view-container"
-    style="background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.04);overflow-x:auto;display:block;">
-    <table style="width:100%;border-collapse:collapse;min-width:1000px;">
-      <thead>
-        <tr style="background:#F8FAFC;">
-          <th style="padding:1rem 0.5rem 1rem 1.25rem; width: 44px; text-align:center; border-bottom:1px solid #F1F5F9;">
-            <input type="checkbox" id="selectAllList" class="prod-chk-custom" title="Pilih Semua di Halaman Ini" onchange="toggleSelectAll(this.checked)">
-          </th>
-          <th
-            style="padding:1rem 1.25rem 1rem 0.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            No</th>
-          <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Gambar</th>
-          <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Nama Layanan</th>
-          <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Stok</th>
-          <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Urutan</th>
-          <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Status</th>
-          <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($products as $s)
-          <tr id="prod-row-{{ $s->id }}" style="border-bottom:1px solid #F8FAFC;transition:background .15s;"
-            onmouseover="if(!this.classList.contains('tr-selected')) this.style.background='#FAFBFF'" 
-            onmouseout="if(!this.classList.contains('tr-selected')) this.style.background='transparent'">
-            <td style="padding:1.25rem 0.5rem 1.25rem 1.25rem; width: 44px; text-align: center;">
-              <input type="checkbox" class="prod-chk-custom prod-item-chk" value="{{ $s->id }}" data-product-id="{{ $s->id }}" data-is-active="{{ $s->is_active ? '1' : '0' }}" onchange="handleProductCheck(this)">
-            </td>
-            <td style="padding:1.25rem 1.25rem 1.25rem 0.5rem;">
+        {{-- Pojok Kanan Setelah Diarsipkan: 1 Button Icon Filter Tipe --}}
+        <div style="position:relative; flex-shrink:0;">
+          <button type="button" id="btnTypeFilterDropdown" onclick="toggleTypeFilterDropdown(event)"
+            style="width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s ease; border:1.5px solid {{ $activeType ? '#0f172a' : '#e2e8f0' }}; background:{{ $activeType ? '#0f172a' : '#ffffff' }}; color:{{ $activeType ? '#ffffff' : '#475569' }}; position:relative; box-shadow:0 1px 3px rgba(0,0,0,0.02);"
+            title="{{ $activeTypeItem ? 'Filter Tipe: ' . $activeTypeItem['name'] : 'Filter Tipe Produk' }}">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            @if($activeType)
               <span
-                style="font-size:.8rem;font-weight: 500;color:#CBD5E1;">{{ str_pad($s->order, 2, '0', STR_PAD_LEFT) }}</span>
-            </td>
-            <td style="padding:1.25rem 1.5rem;">
-              <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
-                style="width:60px;height:44px;object-fit:{{ $s->image ? 'cover' : 'contain' }};border-radius:10px;border:1px solid #E4E7F0;background:#ffffff;padding:{{ $s->image ? '0' : '4px' }};"
-                onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='4px';">
-            </td>
-            <td style="padding:1.25rem 1.5rem;">
-              <div style="font-size:.9rem;font-weight: 500;color:#1E293B;">{{ $s->name }}</div>
-              @if($s->short_desc)
+                style="position:absolute; top:-3px; right:-3px; width:9px; height:9px; border-radius:50%; background:#10b981; border:2px solid #ffffff;"></span>
+            @endif
+          </button>
+
+          {{-- Dropdown Menu Pilihan Tipe --}}
+          <div id="typeFilterDropdownMenu"
+            style="display:none; position:absolute; top:calc(100% + 6px); right:0; min-width:210px; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; box-shadow:0 14px 35px rgba(15,23,42,0.12); z-index:9999; padding:0.45rem;">
+            <div
+              style="display:flex; align-items:center; justify-content:space-between; padding:0.4rem 0.65rem 0.35rem; border-bottom:1px solid #f1f5f9; margin-bottom:0.35rem;">
+              <span
+                style="font-size:0.7rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em;">Filter
+                Tipe</span>
+              @if($activeType)
+                <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}"
+                  style="font-size:0.7rem; color:#ef4444; text-decoration:none; font-weight:600;">Reset</a>
+              @endif
+            </div>
+            <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}"
+              style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.5rem 0.65rem; border-radius:8px; text-decoration:none; font-size:0.78rem; font-weight:{{ !$activeType ? '700' : '500' }}; color:{{ !$activeType ? '#0f172a' : '#475569' }}; background:{{ !$activeType ? '#f1f5f9' : 'transparent' }}; transition:background 0.15s;"
+              onmouseover="if(this.style.background!=='rgb(241, 245, 249)') this.style.background='#f8fafc'"
+              onmouseout="if('{{ !$activeType }}'!=='1') this.style.background='transparent'">
+              <span>Semua Tipe</span>
+              @if(!$activeType)
+                <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              @endif
+            </a>
+
+            @foreach($typesMap as $tKey => $tData)
+              <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => $tKey])) }}"
+                style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.5rem 0.65rem; border-radius:8px; text-decoration:none; font-size:0.78rem; font-weight:{{ $activeType === $tKey ? '700' : '500' }}; color:{{ $activeType === $tKey ? '#0f172a' : '#475569' }}; background:{{ $activeType === $tKey ? '#f1f5f9' : 'transparent' }}; transition:background 0.15s;"
+                onmouseover="if(this.style.background!=='rgb(241, 245, 249)') this.style.background='#f8fafc'"
+                onmouseout="if('{{ $activeType === $tKey }}'!=='1') this.style.background='transparent'">
+                <div style="display:flex; align-items:center; gap:0.55rem;">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    {!! $tData['svg'] !!}
+                  </svg>
+                  <span>{{ $tData['name'] }}</span>
+                </div>
+                @if($activeType === $tKey)
+                  <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                @endif
+              </a>
+            @endforeach
+          </div>
+        </div>
+      </div>
+
+    </div>{{-- /.prod-sticky-bar --}}
+
+    @if(request('status') === 'archived')
+      <div
+        style="font-size:0.75rem; color:#64748b; display:flex; align-items:center; gap:0.35rem; background:#f8fafc; padding:0.35rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0; margin-top:-0.5rem; margin-bottom:1rem;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        Produk yang diarsipkan tidak tampil di storefront pembeli.
+      </div>
+    @endif
+
+    {{-- TABLE CARD (LIST VIEW) --}}
+    <div id="view-list" class="view-container"
+      style="background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.04);overflow-x:auto;display:block;">
+      <table style="width:100%;border-collapse:collapse;min-width:1000px;">
+        <thead>
+          <tr style="background:#F8FAFC;">
+            <th
+              style="padding:1rem 0.5rem 1rem 1.25rem; width: 44px; text-align:center; border-bottom:1px solid #F1F5F9;">
+              <input type="checkbox" id="selectAllList" class="prod-chk-custom" title="Pilih Semua di Halaman Ini"
+                onchange="toggleSelectAll(this.checked)">
+            </th>
+            <th
+              style="padding:1rem 1.25rem 1rem 0.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+              No</th>
+            <th
+              style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+              Gambar</th>
+            <th
+              style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+              Nama Layanan</th>
+            <th
+              style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+              Stok</th>
+            <th
+              style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+              Urutan</th>
+            <th
+              style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+              Status</th>
+            <th
+              style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+              Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($products as $s)
+            <tr id="prod-row-{{ $s->id }}" style="border-bottom:1px solid #F8FAFC;transition:background .15s;"
+              onmouseover="if(!this.classList.contains('tr-selected')) this.style.background='#FAFBFF'"
+              onmouseout="if(!this.classList.contains('tr-selected')) this.style.background='transparent'">
+              <td style="padding:1.25rem 0.5rem 1.25rem 1.25rem; width: 44px; text-align: center;">
+                <input type="checkbox" class="prod-chk-custom prod-item-chk" value="{{ $s->id }}"
+                  data-product-id="{{ $s->id }}" data-is-active="{{ $s->is_active ? '1' : '0' }}"
+                  onchange="handleProductCheck(this)">
+              </td>
+              <td style="padding:1.25rem 1.25rem 1.25rem 0.5rem;">
+                <span
+                  style="font-size:.8rem;font-weight: 500;color:#CBD5E1;">{{ str_pad($s->order, 2, '0', STR_PAD_LEFT) }}</span>
+              </td>
+              <td style="padding:1.25rem 1.5rem;">
+                <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
+                  style="width:60px;height:44px;object-fit:{{ $s->image ? 'cover' : 'contain' }};border-radius:10px;border:1px solid #E4E7F0;background:#ffffff;padding:{{ $s->image ? '0' : '4px' }};"
+                  onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='4px';">
+              </td>
+              <td style="padding:1.25rem 1.5rem;">
+                <div style="font-size:.9rem;font-weight: 500;color:#1E293B;">{{ $s->name }}</div>
+                @if($s->short_desc)
+                  <div
+                    style="font-size:.75rem;color:#94A3B8;margin-top:.2rem;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                    {{ $s->short_desc }}
+                  </div>
+                @endif
+                @if($s->is_whitelabel)
+                  <div style="margin-top:.35rem;">
+                    @if($s->whitelabel_approval_status === 'pending')
+                      <span
+                        style="font-size:.68rem;font-weight: 500;background:#FEF3C7;color:#D97706;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
+                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" />
+                          <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        WL Approval Pending
+                      </span>
+                    @elseif($s->whitelabel_approval_status === 'approved')
+                      <span
+                        style="font-size:.68rem;font-weight: 500;background:#DCFCE7;color:#16A34A;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
+                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        WL Approved (Disetujui)
+                      </span>
+                    @elseif($s->whitelabel_approval_status === 'rejected')
+                      <span
+                        style="font-size:.68rem;font-weight: 500;background:#FEE2E2;color:#DC2626;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;"
+                        title="{{ $s->whitelabel_rejection_reason }}">
+                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                          <line x1="18" y1="6" x2="6" y2="18" />
+                          <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                        WL Ditolak
+                      </span>
+                    @endif
+                  </div>
+                @endif
+              </td>
+              <td style="padding:1.25rem 1.5rem;text-align:center;">
+                <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
+                  @csrf
+                  @method('PATCH')
+                  <input type="number" name="stock" value="{{ $s->stock }}" min="0" placeholder="∞"
+                    onchange="this.form.submit()" title="Kosongkan untuk Unlimited (Stok tidak terbatas)"
+                    style="width:70px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight:600;color:{{ is_null($s->stock) ? '#3B82F6' : ($s->stock > 0 ? '#10B981' : '#EF4444') }};outline:none;background:transparent;">
+                </form>
+              </td>
+              <td style="padding:1.25rem 1.5rem;text-align:center;">
+                <form action="{{ route('creator.products.order', $s->id) }}" method="POST" style="margin:0;">
+                  @csrf
+                  @method('PATCH')
+                  <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()"
+                    style="width:60px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight: 500;color:#334155;outline:none;background:transparent;">
+                </form>
+              </td>
+              <td style="padding:1.25rem 1.5rem;text-align:center;">
+                <form action="{{ route('creator.products.toggle-status', $s->id) }}" method="POST"
+                  class="form-toggle-status" style="margin:0; display:inline-block;" data-product-id="{{ $s->id }}">
+                  @csrf
+                  @method('PATCH')
+                  <button type="submit" class="status-toggle-pill {{ $s->is_active ? 'active' : 'archived' }}"
+                    title="{{ $s->is_active ? 'Status: Aktif. Klik untuk arsipkan produk ini' : 'Status: Diarsipkan. Klik untuk aktifkan produk ini kembali' }}">
+                    <span class="status-indicator-dot"></span>
+                    <span class="status-label-text">{{ $s->is_active ? 'Aktif' : 'Diarsipkan' }}</span>
+                  </button>
+                </form>
+              </td>
+              <td style="padding:1.25rem 1.5rem;text-align:center;">
+                <div style="display:inline-flex;gap:.5rem;align-items:center;">
+                  <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') ? ['from' => request('from')] : [])) }}"
+                    title="Edit"
+                    style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(59,130,246,0.08);border-radius:8px;color:#3B82F6;text-decoration:none;transition:all .2s;"
+                    onmouseover="this.style.background='rgba(59,130,246,0.16)'"
+                    onmouseout="this.style.background='rgba(59,130,246,0.08)'">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </a>
+                  <a href="{{ route('products.show', $s->slug) }}" target="_blank" title="Lihat"
+                    style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(139,92,246,0.08);border-radius:8px;color:#8B5CF6;text-decoration:none;transition:all .2s;"
+                    onmouseover="this.style.background='rgba(139,92,246,0.16)'"
+                    onmouseout="this.style.background='rgba(139,92,246,0.08)'">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                  </a>
+                  <form method="POST" action="{{ route('creator.products.destroy', $s) }}">
+                    @csrf @method('DELETE')
+                    <button type="button" title="Hapus" onclick="openDeleteProductModal(this, '{{ addslashes($s->name) }}')"
+                      style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(239,68,68,0.08);border-radius:8px;color:#EF4444;border:none;cursor:pointer;transition:all .2s;"
+                      onmouseover="this.style.background='rgba(239,68,68,0.16)'"
+                      onmouseout="this.style.background='rgba(239,68,68,0.08)'">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          @endforeach
+          @if($products->count() === 0)
+            <tr>
+              <td colspan="8" style="padding:4rem;text-align:center;">
                 <div
-                  style="font-size:.75rem;color:#94A3B8;margin-top:.2rem;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                  {{ $s->short_desc }}
+                  style="width:56px;height:56px;background:#F1F5F9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                  <svg width="24" height="24" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path
+                      d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+                  </svg>
                 </div>
-              @endif
-              @if($s->is_whitelabel)
-                <div style="margin-top:.35rem;">
-                  @if($s->whitelabel_approval_status === 'pending')
-                    <span
-                      style="font-size:.68rem;font-weight: 500;background:#FEF3C7;color:#D97706;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
-                      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                      </svg>
-                      WL Approval Pending
-                    </span>
-                  @elseif($s->whitelabel_approval_status === 'approved')
-                    <span
-                      style="font-size:.68rem;font-weight: 500;background:#DCFCE7;color:#16A34A;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
-                      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      WL Approved (Disetujui)
-                    </span>
-                  @elseif($s->whitelabel_approval_status === 'rejected')
-                    <span
-                      style="font-size:.68rem;font-weight: 500;background:#FEE2E2;color:#DC2626;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;"
-                      title="{{ $s->whitelabel_rejection_reason }}">
-                      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
-                      WL Ditolak
-                    </span>
-                  @endif
+                <div style="font-size:.9rem;font-weight: 500;color:#334155;">Belum ada produk</div>
+                <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tambah produk" untuk upload.
                 </div>
-              @endif
-            </td>
-            <td style="padding:1.25rem 1.5rem;text-align:center;">
-              <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
-                @csrf
-                @method('PATCH')
-                <input type="number" name="stock" value="{{ $s->stock }}" min="0" placeholder="∞"
-                  onchange="this.form.submit()" title="Kosongkan untuk Unlimited (Stok tidak terbatas)"
-                  style="width:70px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight:600;color:{{ is_null($s->stock) ? '#3B82F6' : ($s->stock > 0 ? '#10B981' : '#EF4444') }};outline:none;background:transparent;">
-              </form>
-            </td>
-            <td style="padding:1.25rem 1.5rem;text-align:center;">
-              <form action="{{ route('creator.products.order', $s->id) }}" method="POST" style="margin:0;">
-                @csrf
-                @method('PATCH')
-                <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()"
-                  style="width:60px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight: 500;color:#334155;outline:none;background:transparent;">
-              </form>
-            </td>
-            <td style="padding:1.25rem 1.5rem;text-align:center;">
-              <form action="{{ route('creator.products.toggle-status', $s->id) }}" method="POST" class="form-toggle-status" style="margin:0; display:inline-block;" data-product-id="{{ $s->id }}">
-                @csrf
-                @method('PATCH')
-                <button type="submit" class="status-toggle-pill {{ $s->is_active ? 'active' : 'archived' }}"
-                  title="{{ $s->is_active ? 'Status: Aktif. Klik untuk arsipkan produk ini' : 'Status: Diarsipkan. Klik untuk aktifkan produk ini kembali' }}">
-                  <span class="status-indicator-dot"></span>
-                  <span class="status-label-text">{{ $s->is_active ? 'Aktif' : 'Diarsipkan' }}</span>
-                </button>
-              </form>
-            </td>
-            <td style="padding:1.25rem 1.5rem;text-align:center;">
-              <div style="display:inline-flex;gap:.5rem;align-items:center;">
-                <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') ? ['from' => request('from')] : [])) }}" title="Edit"
-                  style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(59,130,246,0.08);border-radius:8px;color:#3B82F6;text-decoration:none;transition:all .2s;"
-                  onmouseover="this.style.background='rgba(59,130,246,0.16)'"
-                  onmouseout="this.style.background='rgba(59,130,246,0.08)'">
-                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              </td>
+            </tr>
+          @endif
+        </tbody>
+      </table>
+    </div>
+
+    {{-- GRID VIEW: 7 per row --}}
+    <div id="view-grid" class="view-container" style="display:none; grid-template-columns: repeat(7, 1fr); gap: 0.75rem;">
+      @foreach($products as $s)
+        <div id="prod-card-{{ $s->id }}" class="grid-card-item"
+          style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;"
+          onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'"
+          onmouseout="this.style.transform='translateY(0)';if(!this.classList.contains('card-selected')) this.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)'">
+
+          {{-- Checkbox top-left --}}
+          <div class="grid-chk-wrap" title="Pilih produk">
+            <input type="checkbox" class="prod-chk-custom prod-item-chk" value="{{ $s->id }}" data-product-id="{{ $s->id }}"
+              data-is-active="{{ $s->is_active ? '1' : '0' }}" onchange="handleProductCheck(this)">
+          </div>
+
+          <form action="{{ route('creator.products.toggle-status', $s->id) }}" method="POST" class="form-toggle-status"
+            style="position:absolute;top:6px;right:6px;z-index:10;margin:0;" data-product-id="{{ $s->id }}">
+            @csrf
+            @method('PATCH')
+            <button type="submit" class="grid-status-btn {{ $s->is_active ? 'active' : 'archived' }}"
+              title="{{ $s->is_active ? 'Aktif. Klik untuk arsipkan' : 'Diarsipkan. Klik untuk aktifkan' }}">
+              {{ $s->is_active ? 'Aktif' : 'Diarsipkan' }}
+            </button>
+          </form>
+          <div
+            style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;background:#ffffff;display:flex;align-items:center;justify-content:center;">
+            <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
+              style="width:100%;height:100%;object-fit:{{ $s->image ? 'cover' : 'contain' }};padding:{{ $s->image ? '0' : '1.25rem' }};display:block;"
+              onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='1.25rem';">
+          </div>
+          <div style="padding:0.65rem;flex:1;display:flex;flex-direction:column;">
+            <div
+              style="font-size:0.75rem;font-weight:600;color:#1E293B;margin-bottom:.45rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+              {{ $s->name }}
+            </div>
+
+            <div
+              style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:0.5rem;border-top:1px solid #F1F5F9;">
+              <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
+                <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">STOK:</span>
+                <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
+                  @csrf @method('PATCH')
+                  <input type="number" name="stock" value="{{ $s->stock }}" min="0" placeholder="∞"
+                    onchange="this.form.submit()" title="Kosongkan untuk Unlimited (Stok tidak terbatas)"
+                    style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:{{ is_null($s->stock) ? '#3B82F6' : ($s->stock > 0 ? '#10B981' : '#EF4444') }};outline:none;background:#F8FAFC;">
+                </form>
+
+              </div>
+              <div style="display:flex;gap:.25rem;">
+                <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') ? ['from' => request('from')] : [])) }}"
+                  title="Edit"
+                  style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;color:#3B82F6;transition:all .2s;"
+                  onmouseover="this.style.background='rgba(59,130,246,0.2)'"
+                  onmouseout="this.style.background='rgba(59,130,246,0.1)'">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                </a>
-                <a href="{{ route('products.show', $s->slug) }}" target="_blank" title="Lihat"
-                  style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(139,92,246,0.08);border-radius:8px;color:#8B5CF6;text-decoration:none;transition:all .2s;"
-                  onmouseover="this.style.background='rgba(139,92,246,0.16)'"
-                  onmouseout="this.style.background='rgba(139,92,246,0.08)'">
-                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
                   </svg>
                 </a>
                 <form method="POST" action="{{ route('creator.products.destroy', $s) }}">
                   @csrf @method('DELETE')
                   <button type="button" title="Hapus" onclick="openDeleteProductModal(this, '{{ addslashes($s->name) }}')"
-                    style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(239,68,68,0.08);border-radius:8px;color:#EF4444;border:none;cursor:pointer;transition:all .2s;"
-                    onmouseover="this.style.background='rgba(239,68,68,0.16)'"
-                    onmouseout="this.style.background='rgba(239,68,68,0.08)'">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(239,68,68,0.1);border-radius:8px;color:#EF4444;border:none;cursor:pointer;transition:all .2s;"
+                    onmouseover="this.style.background='rgba(239,68,68,0.2)'"
+                    onmouseout="this.style.background='rgba(239,68,68,0.1)'">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <polyline points="3 6 5 6 21 6" />
                       <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
                     </svg>
                   </button>
                 </form>
               </div>
-            </td>
-          </tr>
-        @endforeach
-        @if($products->count() === 0)
-          <tr>
-            <td colspan="8" style="padding:4rem;text-align:center;">
-              <div
-                style="width:56px;height:56px;background:#F1F5F9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                <svg width="24" height="24" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path
-                    d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-                </svg>
-              </div>
-              <div style="font-size:.9rem;font-weight: 500;color:#334155;">Belum ada produk</div>
-              <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tambah produk" untuk upload.</div>
-            </td>
-          </tr>
-        @endif
-      </tbody>
-    </table>
-  </div>
-
-  {{-- GRID VIEW: 7 per row --}}
-  <div id="view-grid" class="view-container" style="display:none; grid-template-columns: repeat(7, 1fr); gap: 0.75rem;">
-    @foreach($products as $s)
-      <div id="prod-card-{{ $s->id }}" class="grid-card-item"
-        style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;"
-        onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'"
-        onmouseout="this.style.transform='translateY(0)';if(!this.classList.contains('card-selected')) this.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)'">
-        
-        {{-- Checkbox top-left --}}
-        <div class="grid-chk-wrap" title="Pilih produk">
-          <input type="checkbox" class="prod-chk-custom prod-item-chk" value="{{ $s->id }}" data-product-id="{{ $s->id }}" data-is-active="{{ $s->is_active ? '1' : '0' }}" onchange="handleProductCheck(this)">
-        </div>
-
-        <form action="{{ route('creator.products.toggle-status', $s->id) }}" method="POST" class="form-toggle-status" style="position:absolute;top:6px;right:6px;z-index:10;margin:0;" data-product-id="{{ $s->id }}">
-          @csrf
-          @method('PATCH')
-          <button type="submit" class="grid-status-btn {{ $s->is_active ? 'active' : 'archived' }}"
-            title="{{ $s->is_active ? 'Aktif. Klik untuk arsipkan' : 'Diarsipkan. Klik untuk aktifkan' }}">
-            {{ $s->is_active ? 'Aktif' : 'Diarsipkan' }}
-          </button>
-        </form>
-        <div
-          style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;background:#ffffff;display:flex;align-items:center;justify-content:center;">
-          <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
-            style="width:100%;height:100%;object-fit:{{ $s->image ? 'cover' : 'contain' }};padding:{{ $s->image ? '0' : '1.25rem' }};display:block;"
-            onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='1.25rem';">
-        </div>
-        <div style="padding:0.65rem;flex:1;display:flex;flex-direction:column;">
-          <div
-            style="font-size:0.75rem;font-weight:600;color:#1E293B;margin-bottom:.45rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-            {{ $s->name }}
-          </div>
-
-          <div
-            style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:0.5rem;border-top:1px solid #F1F5F9;">
-            <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
-              <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">STOK:</span>
-              <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
-                @csrf @method('PATCH')
-                <input type="number" name="stock" value="{{ $s->stock }}" min="0" placeholder="∞"
-                  onchange="this.form.submit()" title="Kosongkan untuk Unlimited (Stok tidak terbatas)"
-                  style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:{{ is_null($s->stock) ? '#3B82F6' : ($s->stock > 0 ? '#10B981' : '#EF4444') }};outline:none;background:#F8FAFC;">
-              </form>
-              
-            </div>
-            <div style="display:flex;gap:.25rem;">
-              <a href="{{ route('creator.products.edit', array_merge(['product' => $s->id], request('from') ? ['from' => request('from')] : [])) }}" title="Edit"
-                style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;color:#3B82F6;transition:all .2s;"
-                onmouseover="this.style.background='rgba(59,130,246,0.2)'"
-                onmouseout="this.style.background='rgba(59,130,246,0.1)'">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-              </a>
-              <form method="POST" action="{{ route('creator.products.destroy', $s) }}">
-                @csrf @method('DELETE')
-                <button type="button" title="Hapus" onclick="openDeleteProductModal(this, '{{ addslashes($s->name) }}')"
-                  style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(239,68,68,0.1);border-radius:8px;color:#EF4444;border:none;cursor:pointer;transition:all .2s;"
-                  onmouseover="this.style.background='rgba(239,68,68,0.2)'"
-                  onmouseout="this.style.background='rgba(239,68,68,0.1)'">
-                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
-                  </svg>
-                </button>
-              </form>
             </div>
           </div>
         </div>
-      </div>
-    @endforeach
+      @endforeach
 
-    @if($products->count() === 0)
-      <div
-        style="grid-column: 1 / -1; padding:4rem;text-align:center;background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
+      @if($products->count() === 0)
         <div
-          style="width:56px;height:56px;background:#F1F5F9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-          <svg width="24" height="24" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24">
-            <path
-              d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-          </svg>
+          style="grid-column: 1 / -1; padding:4rem;text-align:center;background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
+          <div
+            style="width:56px;height:56px;background:#F1F5F9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+            <svg width="24" height="24" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24">
+              <path
+                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+            </svg>
+          </div>
+          <div style="font-size:.9rem;font-weight: 500;color:#334155;">Belum ada produk</div>
+          <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tambah" untuk mulai.</div>
         </div>
-        <div style="font-size:.9rem;font-weight: 500;color:#334155;">Belum ada produk</div>
-        <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tambah" untuk mulai.</div>
+      @endif
+    </div>
+
+    {{-- PAGINATION LINKS --}}
+    @if(method_exists($products, 'hasPages') && $products->hasPages())
+      <div style="margin-top:1.5rem; display:flex; justify-content:center;">
+        {{ $products->links() }}
       </div>
     @endif
-  </div>
 
-  {{-- PAGINATION LINKS --}}
-  @if(method_exists($products, 'hasPages') && $products->hasPages())
-    <div style="margin-top:1.5rem; display:flex; justify-content:center;">
-      {{ $products->links() }}
+    {{-- FLOATING BULK ACTIONS DOCK BAR --}}
+    <div id="bulkDockBar" class="bulk-dock-bar">
+      <div class="bulk-count-pill">
+        <span id="bulkCountBadge" class="bulk-count-badge">0</span>
+        <span id="bulkCountText">Produk Dipilih</span>
+      </div>
+      <div class="bulk-actions-group">
+        <button type="button" onclick="confirmBulkAction('archive')" class="bulk-act-btn bulk-btn-archive"
+          title="Arsipkan semua produk yang dipilih">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4" />
+          </svg>
+          <span>Arsipkan</span>
+        </button>
+        <button type="button" onclick="confirmBulkAction('activate')" class="bulk-act-btn bulk-btn-activate"
+          title="Aktifkan semua produk yang dipilih">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+          <span>Aktifkan</span>
+        </button>
+        <button type="button" onclick="confirmBulkAction('delete')" class="bulk-act-btn bulk-btn-delete"
+          title="Hapus permanen produk yang dipilih">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
+          <span>Hapus</span>
+        </button>
+        <button type="button" onclick="deselectAllProducts()" class="bulk-btn-close" title="Batalkan pilihan">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
     </div>
-  @endif
-
-  {{-- FLOATING BULK ACTIONS DOCK BAR --}}
-  <div id="bulkDockBar" class="bulk-dock-bar">
-    <div class="bulk-count-pill">
-      <span id="bulkCountBadge" class="bulk-count-badge">0</span>
-      <span id="bulkCountText">Produk Dipilih</span>
-    </div>
-    <div class="bulk-actions-group">
-      <button type="button" onclick="confirmBulkAction('archive')" class="bulk-act-btn bulk-btn-archive" title="Arsipkan semua produk yang dipilih">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
-        <span>Arsipkan</span>
-      </button>
-      <button type="button" onclick="confirmBulkAction('activate')" class="bulk-act-btn bulk-btn-activate" title="Aktifkan semua produk yang dipilih">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-        <span>Aktifkan</span>
-      </button>
-      <button type="button" onclick="confirmBulkAction('delete')" class="bulk-act-btn bulk-btn-delete" title="Hapus permanen produk yang dipilih">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        <span>Hapus</span>
-      </button>
-      <button type="button" onclick="deselectAllProducts()" class="bulk-btn-close" title="Batalkan pilihan">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-  </div>
 
   </div> {{-- Close #products-real-content --}}
 
   {{-- Interactive Delete Confirmation Modal --}}
-  <div id="deleteConfirmOverlay" class="del-confirm-overlay" onclick="if(event.target===this) closeDeleteModal()" style="display:none !important;">
+  <div id="deleteConfirmOverlay" class="del-confirm-overlay" onclick="if(event.target===this) closeDeleteModal()"
+    style="display:none !important;">
     <div class="del-confirm-card" role="dialog" aria-modal="true">
       <div class="del-confirm-icon-wrap">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polyline points="3 6 5 6 21 6" />
           <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           <line x1="10" y1="11" x2="10" y2="17" />
@@ -1933,10 +2058,12 @@
         </svg>
       </div>
       <h3 id="delModalTitle" class="del-confirm-title">Hapus Produk?</h3>
-      <p id="delModalDesc" class="del-confirm-desc">Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan.</p>
+      <p id="delModalDesc" class="del-confirm-desc">Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat
+        dibatalkan.</p>
       <div class="del-confirm-actions">
         <button type="button" onclick="closeDeleteModal()" class="del-btn-cancel">Batal</button>
-        <button type="button" id="delConfirmBtn" onclick="executeDeleteConfirmed()" class="del-btn-confirm">Ya, Hapus</button>
+        <button type="button" id="delConfirmBtn" onclick="executeDeleteConfirmed()" class="del-btn-confirm">Ya,
+          Hapus</button>
       </div>
     </div>
   </div>
@@ -1997,327 +2124,337 @@
     switchView(savedView);
   </script>
 
-@include('partials.scan_menu_modal')
+  @include('partials.scan_menu_modal')
 
-{{-- ===== SMART IMPORT MODAL ===== --}}
-<div class="si-overlay" id="smartImportOverlay" onclick="closeSmartImport(event)" style="display:none !important;">
-  <div class="si-modal" onclick="event.stopPropagation()">
+  {{-- ===== SMART IMPORT MODAL ===== --}}
+  <div class="si-overlay" id="smartImportOverlay" onclick="closeSmartImport(event)" style="display:none !important;">
+    <div class="si-modal" onclick="event.stopPropagation()">
 
-    {{-- Header --}}
-    <div class="si-header">
-      <div class="si-title-wrap">
-        <div class="si-icon-badge">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      {{-- Header --}}
+      <div class="si-header">
+        <div class="si-title-wrap">
+          <div class="si-icon-badge">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="si-title">Smart Import Produk</h3>
+            <p class="si-subtitle">Ekstrak & impor daftar produk otomatis ke katalog Buyle</p>
+          </div>
+        </div>
+        <button class="si-close" onclick="closeSmartImport()" title="Tutup Modal">&#x2715;</button>
+      </div>
+
+      {{-- Tabs Nav --}}
+      <div class="si-tabs-nav">
+        <button class="si-tab active" onclick="switchSiTab('menu-ai', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Scan AI
+        </button>
+        <button class="si-tab" onclick="switchSiTab('tiktokshop', this)">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
+          </svg>
+          TikTok Shop
+        </button>
+        <button class="si-tab" onclick="switchSiTab('marketplace', this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#1eb349" style="vertical-align:middle; margin-right:2px;">
+            <path
+              d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z" />
+          </svg>
+          Tokopedia / Shopee
+        </button>
+        <button class="si-tab" onclick="switchSiTab('lynk', this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#0284c7" style="vertical-align:middle; margin-right:4px;">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          Lynk.id
+        </button>
+      </div>
+
+      {{-- TAB 1: SCAN AI --}}
+      <div class="si-tab-pane active" id="si-menu-ai">
+        <p
+          style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
+          Upload foto menu / daftar produk. AI akan scan dan mengekstrak daftar produk secara otomatis untuk diimpor ke
+          katalog.
+        </p>
+
+        <div id="siPhotoInput">
+          <div class="si-upload-area" id="siUploadArea"
+            style="min-height:160px; display:flex; align-items:center; justify-content:center; padding:1.25rem;">
+
+            {{-- Placeholder when empty --}}
+            <div id="siPhotoPlaceholder" onclick="document.getElementById('siMenuPhotoFile').click()"
+              style="cursor:pointer; text-align:center; width:100%;">
+              <div
+                style="width:48px; height:48px; background:rgba(30,179,73,0.1); color:#1eb349; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p
+                style="font-size:0.875rem; font-weight: 500; color:#0f172a; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;">
+                Klik untuk upload foto menu</p>
+              <p style="font-size:0.75rem; color:#94a3b8; margin:0; font-family:'Montserrat',sans-serif;">JPG, PNG, WEBP —
+                Max 10MB</p>
+            </div>
+
+            {{-- Clean preview when image selected (replaces placeholder completely) --}}
+            <div id="siPhotoPreviewWrap" style="display:none; text-align:center; width:100%;">
+              <img id="siPhotoPreviewImg" src=""
+                style="max-height:180px; border-radius:12px; max-width:100%; object-fit:contain; border:1px solid #e2e8f0; box-shadow:0 4px 12px rgba(0,0,0,0.08); display:block; margin:0 auto 0.75rem;">
+              <div style="display:flex; justify-content:center; gap:0.5rem;">
+                <button type="button" onclick="document.getElementById('siMenuPhotoFile').click()"
+                  style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:0.4rem 0.9rem; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.3rem;">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  Ganti Foto
+                </button>
+                <button type="button" onclick="clearSiMenuPhoto(event)"
+                  style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; padding:0.4rem 0.9rem; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.3rem;">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
+                  Hapus
+                </button>
+              </div>
+            </div>
+
+          </div>
+          <input type="file" id="siMenuPhotoFile" accept="image/*" style="display:none;"
+            onchange="previewSiMenuPhoto(event)">
+        </div>
+
+        <div style="margin-top:1rem;">
+          <label class="si-label">Tipe Produk yang akan diimport</label>
+          <select id="siMenuProductType" class="si-input">
+            <option value="makanan">Makanan / Minuman / Kuliner</option>
+            <option value="physical">Produk Fisik / Barang / UMKM</option>
+            <option value="service">Jasa / Layanan</option>
+            <option value="external_link">Produk Digital</option>
+          </select>
+        </div>
+
+        <button class="si-btn" id="siMenuScanBtn" onclick="runSiMenuScan()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+          Scan & Tampilkan Daftar Menu
+        </button>
+
+        <div class="si-progress" id="siMenuProgress">
+          <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+            id="siMenuProgressText">AI sedang menganalisis menu...</p>
+          <div class="si-progress-bar">
+            <div class="si-progress-fill" id="siMenuProgressFill"></div>
+          </div>
+        </div>
+        <div class="si-result" id="siMenuResult"></div>
+      </div>
+
+      {{-- TAB 2: TIKTOK SHOP --}}
+      <div class="si-tab-pane" id="si-tiktokshop">
+        <p
+          style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
+          Paste URL produk dari TikTok Shop. Sistem akan membaca data nama, harga, deskripsi, dan menyiapkan daftar impor.
+        </p>
+
+        <div
+          style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.85rem 1rem; margin-bottom:1.25rem; font-size:0.78rem; color:#334155; display:flex; gap:0.6rem; align-items:flex-start; font-family:'Montserrat',sans-serif;">
+          <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"
+            style="flex-shrink:0;margin-top:1px;">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span>Gunakan URL produk milik Anda sendiri untuk impor otomatis data produk.</span>
+        </div>
+
+        <label class="si-label">URL Produk TikTok Shop</label>
+        <input type="url" id="siTiktokUrl" class="si-input"
+          placeholder="https://www.tiktok.com/t/xxx atau https://shop.tiktok.com/...">
+        <span
+          style="font-size:0.72rem; color:#94a3b8; margin-top:0.35rem; display:block; font-family:'Montserrat',sans-serif;">Contoh:
+          https://www.tiktok.com/@tokoku/product/123456</span>
+
+        <button class="si-btn" id="siTiktokBtn" onclick="runSiTiktokScrape()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
+          </svg>
+          Import dari TikTok Shop
+        </button>
+
+        <div class="si-progress" id="siTiktokProgress">
+          <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+            id="siTiktokProgressText">Sedang mendeteksi produk TikTok Shop...</p>
+          <div class="si-progress-bar">
+            <div class="si-progress-fill" id="siTiktokProgressFill"></div>
+          </div>
+        </div>
+        <div class="si-result" id="siTiktokResult"></div>
+      </div>
+
+      {{-- TAB 3: TOKOPEDIA / SHOPEE --}}
+      <div class="si-tab-pane" id="si-marketplace">
+        <p
+          style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
+          Paste URL produk dari Tokopedia atau Shopee untuk import data produk Anda.
+        </p>
+
+        <div class="si-source-cards">
+          <div class="si-source-card selected" id="srcTokopedia" onclick="selectMarketplace('tokopedia')">
+            <div
+              style="width:28px; height:28px; background:rgba(66,181,73,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.4rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#42b549">
+                <path
+                  d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z" />
+              </svg>
+            </div>
+            <span>Tokopedia</span>
+          </div>
+          <div class="si-source-card" id="srcShopee" onclick="selectMarketplace('shopee')">
+            <div
+              style="width:28px; height:28px; background:rgba(238,77,45,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.4rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#ee4d2d">
+                <path
+                  d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z" />
+              </svg>
+            </div>
+            <span>Shopee</span>
+          </div>
+        </div>
+
+        <label class="si-label">URL Produk <span id="mpPlatformLabel">Tokopedia</span></label>
+        <input type="url" id="siMarketUrl" class="si-input" placeholder="https://www.tokopedia.com/toko-anda/produk-abc">
+
+        <div
+          style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.85rem 1rem; margin-top:1rem; font-size:0.78rem; color:#334155; display:flex; gap:0.6rem; align-items:flex-start; font-family:'Montserrat',sans-serif;">
+          <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"
+            style="flex-shrink:0;margin-top:1px;">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span>Import hanya untuk produk milik Anda sendiri. Data diproses langsung ke daftar impor.</span>
+        </div>
+
+        <button class="si-btn" id="siMarketBtn" onclick="runSiMarketScrape()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="17 8 12 3 7 8" />
             <line x1="12" y1="3" x2="12" y2="15" />
           </svg>
+          Import dari Marketplace
+        </button>
+
+        <div class="si-progress" id="siMarketProgress">
+          <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+            id="siMarketProgressText">Sedang membaca data marketplace...</p>
+          <div class="si-progress-bar">
+            <div class="si-progress-fill" id="siMarketProgressFill"></div>
+          </div>
         </div>
-        <div>
-          <h3 class="si-title">Smart Import Produk</h3>
-          <p class="si-subtitle">Ekstrak & impor daftar produk otomatis ke katalog Buyle</p>
-        </div>
+        <div class="si-result" id="siMarketResult"></div>
       </div>
-      <button class="si-close" onclick="closeSmartImport()" title="Tutup Modal">&#x2715;</button>
-    </div>
 
-    {{-- Tabs Nav --}}
-    <div class="si-tabs-nav">
-      <button class="si-tab active" onclick="switchSiTab('menu-ai', this)">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
-          <circle cx="12" cy="12" r="3" />
-        </svg>
-        Scan AI
-      </button>
-      <button class="si-tab" onclick="switchSiTab('tiktokshop', this)">
-        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
-        </svg>
-        TikTok Shop
-      </button>
-      <button class="si-tab" onclick="switchSiTab('marketplace', this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1eb349" style="vertical-align:middle; margin-right:2px;">
-          <path
-            d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z" />
-        </svg>
-        Tokopedia / Shopee
-      </button>
-      <button class="si-tab" onclick="switchSiTab('lynk', this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0284c7" style="vertical-align:middle; margin-right:4px;">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-        </svg>
-        Lynk.id
-      </button>
-    </div>
+      {{-- TAB 4: LYNK.ID --}}
+      <div class="si-tab-pane" id="si-lynk">
 
-    {{-- TAB 1: SCAN AI --}}
-    <div class="si-tab-pane active" id="si-menu-ai">
-      <p
-        style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
-        Upload foto menu / daftar produk. AI akan scan dan mengekstrak daftar produk secara otomatis untuk diimpor ke
-        katalog.
-      </p>
+        {{-- LYNK.ID DESKTOP VIEW-SOURCE FLOW --}}
+        <div
+          style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-bottom:1.2rem; display:flex; gap:0.75rem; align-items:flex-start;">
+          <svg width="20" height="20" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24"
+            style="flex-shrink:0; margin-top:2px;">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+            <line x1="8" y1="21" x2="16" y2="21" />
+            <line x1="12" y1="17" x2="12" y2="21" />
+          </svg>
+          <div style="font-size:0.78rem; color:#334155; line-height:1.45;">
+            <strong style="color:#0f172a; display:block; margin-bottom:0.25rem;">Impor Produk Lynk.id via Desktop /
+              PC</strong>
+            1. Masukkan URL &#8594; Klik <strong>Salin Link Source</strong>.<br>
+            2. Buka tab baru &#8594; Paste URL &#8594; Tekan <strong>Ctrl+A &amp; Ctrl+C</strong>.<br>
+            3. Tempel seluruh HTML ke kolom di bawah &#8594; Klik <strong>Import</strong>.
+          </div>
+        </div>
 
-      <div id="siPhotoInput">
-        <div class="si-upload-area" id="siUploadArea"
-          style="min-height:160px; display:flex; align-items:center; justify-content:center; padding:1.25rem;">
-
-          {{-- Placeholder when empty --}}
-          <div id="siPhotoPlaceholder" onclick="document.getElementById('siMenuPhotoFile').click()"
-            style="cursor:pointer; text-align:center; width:100%;">
-            <div
-              style="width:48px; height:48px; background:rgba(30,179,73,0.1); color:#1eb349; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
-              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        {{-- STEP 1: INPUT URL --}}
+        <div style="margin-bottom:1rem;">
+          <label class="si-label" style="margin-bottom:0.3rem;display:block;">URL Produk Lynk.id</label>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0; flex:1;"
+              placeholder="https://lynk.id/username/slug">
+            <button type="button" id="btnCopyViewSource" onclick="copyViewSource()"
+              style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 1rem; border-radius:12px; font-weight: 500; font-size:0.78rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
               </svg>
-            </div>
-            <p
-              style="font-size:0.875rem; font-weight: 500; color:#0f172a; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;">
-              Klik untuk upload foto menu</p>
-            <p style="font-size:0.75rem; color:#94a3b8; margin:0; font-family:'Montserrat',sans-serif;">JPG, PNG, WEBP —
-              Max 10MB</p>
+              Salin Link Source
+            </button>
           </div>
-
-          {{-- Clean preview when image selected (replaces placeholder completely) --}}
-          <div id="siPhotoPreviewWrap" style="display:none; text-align:center; width:100%;">
-            <img id="siPhotoPreviewImg" src=""
-              style="max-height:180px; border-radius:12px; max-width:100%; object-fit:contain; border:1px solid #e2e8f0; box-shadow:0 4px 12px rgba(0,0,0,0.08); display:block; margin:0 auto 0.75rem;">
-            <div style="display:flex; justify-content:center; gap:0.5rem;">
-              <button type="button" onclick="document.getElementById('siMenuPhotoFile').click()"
-                style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:0.4rem 0.9rem; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.3rem;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                Ganti Foto
-              </button>
-              <button type="button" onclick="clearSiMenuPhoto(event)"
-                style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; padding:0.4rem 0.9rem; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.3rem;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <polyline points="3 6 5 6 21 6" />
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                </svg>
-                Hapus
-              </button>
-            </div>
-          </div>
-
-        </div>
-        <input type="file" id="siMenuPhotoFile" accept="image/*" style="display:none;"
-          onchange="previewSiMenuPhoto(event)">
-      </div>
-
-      <div style="margin-top:1rem;">
-        <label class="si-label">Tipe Produk yang akan diimport</label>
-        <select id="siMenuProductType" class="si-input">
-          <option value="makanan">Makanan / Minuman / Kuliner</option>
-          <option value="physical">Produk Fisik / Barang / UMKM</option>
-          <option value="service">Jasa / Layanan</option>
-          <option value="external_link">Produk Digital</option>
-        </select>
-      </div>
-
-      <button class="si-btn" id="siMenuScanBtn" onclick="runSiMenuScan()">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8" />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
-        Scan & Tampilkan Daftar Menu
-      </button>
-
-      <div class="si-progress" id="siMenuProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
-          id="siMenuProgressText">AI sedang menganalisis menu...</p>
-        <div class="si-progress-bar">
-          <div class="si-progress-fill" id="siMenuProgressFill"></div>
-        </div>
-      </div>
-      <div class="si-result" id="siMenuResult"></div>
-    </div>
-
-    {{-- TAB 2: TIKTOK SHOP --}}
-    <div class="si-tab-pane" id="si-tiktokshop">
-      <p
-        style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
-        Paste URL produk dari TikTok Shop. Sistem akan membaca data nama, harga, deskripsi, dan menyiapkan daftar impor.
-      </p>
-
-      <div
-        style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.85rem 1rem; margin-bottom:1.25rem; font-size:0.78rem; color:#334155; display:flex; gap:0.6rem; align-items:flex-start; font-family:'Montserrat',sans-serif;">
-        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"
-          style="flex-shrink:0;margin-top:1px;">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
-        <span>Gunakan URL produk milik Anda sendiri untuk impor otomatis data produk.</span>
-      </div>
-
-      <label class="si-label">URL Produk TikTok Shop</label>
-      <input type="url" id="siTiktokUrl" class="si-input"
-        placeholder="https://www.tiktok.com/t/xxx atau https://shop.tiktok.com/...">
-      <span
-        style="font-size:0.72rem; color:#94a3b8; margin-top:0.35rem; display:block; font-family:'Montserrat',sans-serif;">Contoh:
-        https://www.tiktok.com/@tokoku/product/123456</span>
-
-      <button class="si-btn" id="siTiktokBtn" onclick="runSiTiktokScrape()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
-        </svg>
-        Import dari TikTok Shop
-      </button>
-
-      <div class="si-progress" id="siTiktokProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
-          id="siTiktokProgressText">Sedang mendeteksi produk TikTok Shop...</p>
-        <div class="si-progress-bar">
-          <div class="si-progress-fill" id="siTiktokProgressFill"></div>
-        </div>
-      </div>
-      <div class="si-result" id="siTiktokResult"></div>
-    </div>
-
-    {{-- TAB 3: TOKOPEDIA / SHOPEE --}}
-    <div class="si-tab-pane" id="si-marketplace">
-      <p
-        style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
-        Paste URL produk dari Tokopedia atau Shopee untuk import data produk Anda.
-      </p>
-
-      <div class="si-source-cards">
-        <div class="si-source-card selected" id="srcTokopedia" onclick="selectMarketplace('tokopedia')">
-          <div
-            style="width:28px; height:28px; background:rgba(66,181,73,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.4rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#42b549">
-              <path
-                d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z" />
+          <div id="lynkCopyToast"
+            style="display:none; margin-top:0.5rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.9rem; font-size:0.78rem; color:#166534; font-weight:600; align-items:center; gap:0.5rem;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M20 6L9 17l-5-5" />
             </svg>
+            <span>Link disalin! Buka tab baru <b>(Ctrl+T)</b>, paste <b>(Ctrl+V)</b>, lalu <b>Ctrl+A &rarr; Ctrl+C</b>
+              semua HTML.</span>
           </div>
-          <span>Tokopedia</span>
         </div>
-        <div class="si-source-card" id="srcShopee" onclick="selectMarketplace('shopee')">
-          <div
-            style="width:28px; height:28px; background:rgba(238,77,45,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.4rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ee4d2d">
-              <path
-                d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z" />
-            </svg>
+
+        {{-- STEP 2: PASTE SOURCE HTML --}}
+        <div style="margin-bottom:1rem;">
+          <label class="si-label" style="margin-bottom:0.3rem;display:block;">Paste Source HTML Lynk.id</label>
+          <textarea id="siLynkHtmlCode" class="si-input"
+            style="height:120px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
+            placeholder="Tempel seluruh HTML dari Ctrl+A Ctrl+C di sini..."></textarea>
+        </div>
+
+        <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          Import dari Lynk.id
+        </button>
+
+        <div class="si-progress" id="siLynkProgress">
+          <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+            id="siLynkProgressText">Membaca data produk dari Lynk.id...</p>
+          <div class="si-progress-bar">
+            <div class="si-progress-fill" id="siLynkProgressFill"></div>
           </div>
-          <span>Shopee</span>
         </div>
+        <div class="si-result" id="siLynkResult"></div>
       </div>
 
-      <label class="si-label">URL Produk <span id="mpPlatformLabel">Tokopedia</span></label>
-      <input type="url" id="siMarketUrl" class="si-input" placeholder="https://www.tokopedia.com/toko-anda/produk-abc">
-
-      <div
-        style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.85rem 1rem; margin-top:1rem; font-size:0.78rem; color:#334155; display:flex; gap:0.6rem; align-items:flex-start; font-family:'Montserrat',sans-serif;">
-        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"
-          style="flex-shrink:0;margin-top:1px;">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
+      {{-- Footer Banner --}}
+      <div class="si-footer-banner">
+        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
         </svg>
-        <span>Import hanya untuk produk milik Anda sendiri. Data diproses langsung ke daftar impor.</span>
+        <span>Smart Import membaca daftar produk otomatis & impor langsung ke katalog.</span>
       </div>
 
-      <button class="si-btn" id="siMarketBtn" onclick="runSiMarketScrape()">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-          <polyline points="17 8 12 3 7 8" />
-          <line x1="12" y1="3" x2="12" y2="15" />
-        </svg>
-        Import dari Marketplace
-      </button>
-
-      <div class="si-progress" id="siMarketProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
-          id="siMarketProgressText">Sedang membaca data marketplace...</p>
-        <div class="si-progress-bar">
-          <div class="si-progress-fill" id="siMarketProgressFill"></div>
-        </div>
-      </div>
-      <div class="si-result" id="siMarketResult"></div>
     </div>
-
-    {{-- TAB 4: LYNK.ID --}}
-    <div class="si-tab-pane" id="si-lynk">
-
-      {{-- LYNK.ID DESKTOP VIEW-SOURCE FLOW --}}
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-bottom:1.2rem; display:flex; gap:0.75rem; align-items:flex-start;">
-        <svg width="20" height="20" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-          <line x1="8" y1="21" x2="16" y2="21"/>
-          <line x1="12" y1="17" x2="12" y2="21"/>
-        </svg>
-        <div style="font-size:0.78rem; color:#334155; line-height:1.45;">
-          <strong style="color:#0f172a; display:block; margin-bottom:0.25rem;">Impor Produk Lynk.id via Desktop / PC</strong>
-          1. Masukkan URL &#8594; Klik <strong>Salin Link Source</strong>.<br>
-          2. Buka tab baru &#8594; Paste URL &#8594; Tekan <strong>Ctrl+A &amp; Ctrl+C</strong>.<br>
-          3. Tempel seluruh HTML ke kolom di bawah &#8594; Klik <strong>Import</strong>.
-        </div>
-      </div>
-
-      {{-- STEP 1: INPUT URL --}}
-      <div style="margin-bottom:1rem;">
-        <label class="si-label" style="margin-bottom:0.3rem;display:block;">URL Produk Lynk.id</label>
-        <div style="display:flex; gap:0.5rem; align-items:center;">
-          <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0; flex:1;"
-            placeholder="https://lynk.id/username/slug">
-          <button type="button" id="btnCopyViewSource" onclick="copyViewSource()"
-            style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 1rem; border-radius:12px; font-weight: 500; font-size:0.78rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            Salin Link Source
-          </button>
-        </div>
-        <div id="lynkCopyToast" style="display:none; margin-top:0.5rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.9rem; font-size:0.78rem; color:#166534; font-weight:600; align-items:center; gap:0.5rem;">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <span>Link disalin! Buka tab baru <b>(Ctrl+T)</b>, paste <b>(Ctrl+V)</b>, lalu <b>Ctrl+A &rarr; Ctrl+C</b> semua HTML.</span>
-        </div>
-      </div>
-
-      {{-- STEP 2: PASTE SOURCE HTML --}}
-      <div style="margin-bottom:1rem;">
-        <label class="si-label" style="margin-bottom:0.3rem;display:block;">Paste Source HTML Lynk.id</label>
-        <textarea id="siLynkHtmlCode" class="si-input"
-          style="height:120px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
-          placeholder="Tempel seluruh HTML dari Ctrl+A Ctrl+C di sini..."></textarea>
-      </div>
-
-      <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-        </svg>
-        Import dari Lynk.id
-      </button>
-
-      <div class="si-progress" id="siLynkProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
-          id="siLynkProgressText">Membaca data produk dari Lynk.id...</p>
-        <div class="si-progress-bar">
-          <div class="si-progress-fill" id="siLynkProgressFill"></div>
-        </div>
-      </div>
-      <div class="si-result" id="siLynkResult"></div>
-    </div>
-
-    {{-- Footer Banner --}}
-    <div class="si-footer-banner">
-      <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-      </svg>
-      <span>Smart Import membaca daftar produk otomatis & impor langsung ke katalog.</span>
-    </div>
-
   </div>
-</div>
   {{-- FLOATING ACTION BUTTON (SPEED DIAL - MOBILE ONLY) --}}
   <div class="prod-speeddial-wrap" id="prodSpeedDial">
     {{-- Backdrop overlay --}}
@@ -2326,7 +2463,8 @@
     {{-- Menu Items (Slide up from behind FAB) --}}
     <div class="prod-speeddial-menu">
       {{-- 1. Smart Import --}}
-      <button type="button" onclick="toggleProdSpeedDial(false); openSmartImport();" class="prod-speeddial-item" style="--item-index: 2;" title="Smart Import Produk">
+      <button type="button" onclick="toggleProdSpeedDial(false); openSmartImport();" class="prod-speeddial-item"
+        style="--item-index: 2;" title="Smart Import Produk">
         <span class="prod-speeddial-label">Smart Import</span>
         <span class="prod-speeddial-icon prod-icon-import">
           <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -2338,17 +2476,19 @@
       </button>
 
       {{-- 2. Kelompok Produk --}}
-      <a href="{{ route('creator.groups.index') }}" class="prod-speeddial-item" style="--item-index: 1;" title="Kelompok Produk">
+      <a href="{{ route('creator.groups.index') }}" class="prod-speeddial-item" style="--item-index: 1;"
+        title="Kelompok Produk">
         <span class="prod-speeddial-label">Kelompok Produk</span>
         <span class="prod-speeddial-icon prod-icon-group">
           <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
           </svg>
         </span>
       </a>
 
       {{-- 3. Tambah Produk --}}
-      <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}" class="prod-speeddial-item" style="--item-index: 0;" title="Tambah Produk">
+      <a href="{{ route('creator.products.create', request('from') ? ['from' => request('from')] : []) }}"
+        class="prod-speeddial-item" style="--item-index: 0;" title="Tambah Produk">
         <span class="prod-speeddial-label">Tambah Produk</span>
         <span class="prod-speeddial-icon prod-icon-add">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2360,8 +2500,10 @@
     </div>
 
     {{-- Main Trigger Button (+) --}}
-    <button type="button" class="prod-speeddial-trigger" id="prodSpeedDialTrigger" onclick="toggleProdSpeedDial()" title="Menu Tambah & Kelola" aria-label="Menu Aksi">
-      <svg class="prod-speeddial-plus-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+    <button type="button" class="prod-speeddial-trigger" id="prodSpeedDialTrigger" onclick="toggleProdSpeedDial()"
+      title="Menu Tambah & Kelola" aria-label="Menu Aksi">
+      <svg class="prod-speeddial-plus-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6"
+        viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19"></line>
         <line x1="5" y1="12" x2="19" y2="12"></line>
       </svg>
@@ -2371,710 +2513,710 @@
 @endsection
 
 @section('scripts')
-<script>
-  // Speed Dial FAB
-  function toggleProdSpeedDial(forceState) {
-    var dial = document.getElementById('prodSpeedDial');
-    if (!dial) return;
-    if (typeof forceState === 'boolean') {
-      if (forceState) dial.classList.add('open');
-      else dial.classList.remove('open');
-    } else {
-      dial.classList.toggle('open');
-    }
-  }
-
-  // Smart Import Modal
-  function openSmartImport() {
-    const el = document.getElementById('smartImportOverlay');
-    if (!el) return;
-    el.style.setProperty('display', 'flex', 'important');
-    requestAnimationFrame(() => el.classList.add('open'));
-  }
-  function closeSmartImport(e) {
-    const el = document.getElementById('smartImportOverlay');
-    if (!el) return;
-    if (!e || e.target === el || (e.target && e.target.classList && e.target.classList.contains('si-close'))) {
-      el.classList.remove('open');
-      setTimeout(() => {
-        if (!el.classList.contains('open')) {
-          el.style.setProperty('display', 'none', 'important');
-        }
-      }, 250);
-    }
-  }
-  function switchSiTab(tab, el) {
-    document.querySelectorAll('.si-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.si-tab-pane').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('si-' + tab).classList.add('active');
-  }
-
-  function previewSiMenuPhoto(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      document.getElementById('siPhotoPreviewImg').src = ev.target.result;
-      document.getElementById('siPhotoPlaceholder').style.display = 'none';
-      document.getElementById('siPhotoPreviewWrap').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function clearSiMenuPhoto(e) {
-    if (e) e.stopPropagation();
-    document.getElementById('siMenuPhotoFile').value = '';
-    document.getElementById('siPhotoPreviewImg').src = '';
-    document.getElementById('siPhotoPreviewWrap').style.display = 'none';
-    document.getElementById('siPhotoPlaceholder').style.display = 'block';
-  }
-
-  // Marketplace selector
-  let selectedMarketplace = 'tokopedia';
-  function selectMarketplace(mp) {
-    selectedMarketplace = mp;
-    document.getElementById('srcTokopedia').classList.toggle('selected', mp === 'tokopedia');
-    document.getElementById('srcShopee').classList.toggle('selected', mp === 'shopee');
-    document.getElementById('mpPlatformLabel').textContent = mp === 'tokopedia' ? 'Tokopedia' : 'Shopee';
-    document.getElementById('siMarketUrl').placeholder = mp === 'tokopedia'
-      ? 'https://www.tokopedia.com/toko-anda/produk-abc'
-      : 'https://shopee.co.id/toko-anda/produk-abc';
-  }
-
-  // Open the Scan Menu Result Table Modal (AI SCAN ONLY)
-  function showScannedResultModal(items, categoryOverride) {
-    closeSmartImport();
-    document.getElementById('scan-menu-modal').style.display = 'flex';
-    document.getElementById('scan-step-upload').style.display = 'none';
-    document.getElementById('scan-step-loading').style.display = 'none';
-
-    detectedMenuItems = items.map(it => {
-      if (categoryOverride) it.category = categoryOverride;
-      return it;
-    });
-
-    renderScanItemsTable();
-    document.getElementById('scan-step-result').style.display = 'block';
-    document.getElementById('btn-import-scanned').style.display = 'inline-flex';
-    restoreImportBtn();
-  }
-
-  // Redirect to create form and pre-fill via sessionStorage
-  function redirectToCreateWithData(item, productType) {
-    item.product_type = productType || item.product_type || 'physical';
-    sessionStorage.setItem('smart_imported_item', JSON.stringify(item));
-    window.location.href = '{{ route("creator.products.create") }}?smart_import=1' + ('{{ request("from") }}' === 'pos' ? '&from=pos' : '');
-  }
-
-  // SCAN AI — process uploaded photo directly
-  function runSiMenuScan() {
-    const btn = document.getElementById('siMenuScanBtn');
-    const photoFile = document.getElementById('siMenuPhotoFile').files[0];
-
-    if (!photoFile) { alert('Silakan upload foto menu terlebih dahulu.'); return; }
-
-    btn.disabled = true;
-    document.getElementById('siMenuProgress').style.display = 'block';
-    const csrfToken = '{{ csrf_token() }}';
-
-    const fd = new FormData();
-    fd.append('menu_image', photoFile);
-    fd.append('_token', csrfToken);
-
-    fetch('{{ route("creator.products.scan-menu") }}', {
-      method: 'POST',
-      headers: { 'X-CSRF-TOKEN': csrfToken },
-      body: fd
-    })
-      .then(res => res.json())
-      .then(res => {
-        btn.disabled = false;
-        document.getElementById('siMenuProgress').style.display = 'none';
-        if (res.success && res.items && res.items.length > 0) {
-          showScannedResultModal(res.items, 'Makanan'); // → popup modal
-        } else {
-          alert(res.message || 'Gagal membaca menu dari foto. Pastikan foto jelas dan terang.');
-        }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        document.getElementById('siMenuProgress').style.display = 'none';
-        alert('Gagal scan foto: ' + err.message);
-      });
-  }
-
-  // TIKTOK SHOP — langsung redirect ke form produk
-  function runSiTiktokScrape() {
-    const url = document.getElementById('siTiktokUrl').value;
-    if (!url) { alert('Masukkan URL produk TikTok Shop.'); return; }
-    const btn = document.getElementById('siTiktokBtn');
-    btn.disabled = true;
-    document.getElementById('siTiktokProgress').style.display = 'block';
-    document.getElementById('siTiktokProgressText').textContent = 'Membaca data produk dari TikTok...';
-    const csrfToken = '{{ csrf_token() }}';
-
-    fetch('{{ route("creator.products.scan-url") }}', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-      body: JSON.stringify({ url: url, source: 'tiktokshop' })
-    })
-      .then(res => res.json())
-      .then(res => {
-        btn.disabled = false;
-        document.getElementById('siTiktokProgress').style.display = 'none';
-        if (res.success && res.items && res.items.length > 0) {
-          redirectToCreateWithData(res.items[0], 'physical'); // → form produk langsung
-        } else {
-          alert(res.message || 'Gagal membaca data produk TikTok Shop.');
-        }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        document.getElementById('siTiktokProgress').style.display = 'none';
-        alert('Terjadi kesalahan: ' + err.message);
-      });
-  }
-
-  // MARKETPLACE (Tokopedia / Shopee) — langsung redirect ke form produk
-  function runSiMarketScrape() {
-    const url = document.getElementById('siMarketUrl').value;
-    if (!url) { alert('Masukkan URL produk dari marketplace.'); return; }
-    const btn = document.getElementById('siMarketBtn');
-    btn.disabled = true;
-    document.getElementById('siMarketProgress').style.display = 'block';
-    document.getElementById('siMarketProgressText').textContent = 'Membaca data dari ' + (selectedMarketplace === 'tokopedia' ? 'Tokopedia' : 'Shopee') + '...';
-    const csrfToken = '{{ csrf_token() }}';
-
-    fetch('{{ route("creator.products.scan-url") }}', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-      body: JSON.stringify({ url: url, source: selectedMarketplace })
-    })
-      .then(res => res.json())
-      .then(res => {
-        btn.disabled = false;
-        document.getElementById('siMarketProgress').style.display = 'none';
-        if (res.success && res.items && res.items.length > 0) {
-          redirectToCreateWithData(res.items[0], 'physical'); // → form produk langsung
-        } else {
-          alert(res.message || 'Gagal membaca data produk Marketplace.');
-        }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        document.getElementById('siMarketProgress').style.display = 'none';
-        alert('Terjadi kesalahan: ' + err.message);
-      });
-  }
-
-  function strToBase64(str) {
-    try {
-      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-        return String.fromCharCode('0x' + p1);
-      }));
-    } catch (e) {
-      return '';
-    }
-  }
-
-  // ── Lynk.id: Salin link view-source ke clipboard
-  function copyViewSource() {
-    const url = document.getElementById('siLynkUrl').value.trim();
-    if (!url) {
-      alert('Masukkan URL Lynk.id terlebih dahulu.');
-      return;
-    }
-    const vsUrl = 'view-source:' + url;
-    navigator.clipboard.writeText(vsUrl).then(() => {
-      const toast = document.getElementById('lynkCopyToast');
-      toast.style.display = 'flex';
-      const btn = document.getElementById('btnCopyViewSource');
-      btn.style.background = '#dcfce7';
-      btn.style.color = '#166534';
-      btn.style.borderColor = '#bbf7d0';
-      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Tersalin!`;
-      setTimeout(() => {
-        toast.style.display = 'none';
-        btn.style.background = '#e0f2fe';
-        btn.style.color = '#0284c7';
-        btn.style.borderColor = '#bae6fd';
-        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Salin Link Source`;
-      }, 4000);
-    }).catch(() => {
-      // fallback: prompt copy manual
-      prompt('Salin URL ini lalu buka di tab baru:', vsUrl);
-    });
-  }
-
-  // LYNK.ID — langsung redirect ke form produk sebagai Produk Digital
-  async function runSiLynkScrape() {
-    const urlVal  = document.getElementById('siLynkUrl').value.trim();
-    const htmlVal = document.getElementById('siLynkHtmlCode').value.trim();
-
-    if (!urlVal && !htmlVal) {
-      alert('Masukkan URL Lynk.id atau paste Source HTML terlebih dahulu.');
-      return;
-    }
-
-    const btn = document.getElementById('siLynkBtn');
-    btn.disabled = true;
-    document.getElementById('siLynkProgress').style.display = 'block';
-    const csrfToken = '{{ csrf_token() }}';
-
-    let htmlPayload = htmlVal || '';
-    let targetUrl = urlVal || 'https://lynk.id/imported-product';
-
-    if (!htmlPayload && urlVal) {
-      const proxies = [
-        'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlVal),
-        'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(urlVal)
-      ];
-      for (const pUrl of proxies) {
-        try {
-          const resp = await fetch(pUrl, { signal: AbortSignal.timeout(2000) });
-          if (resp.ok) {
-            const txt = await resp.text();
-            if (txt && txt.length > 500) {
-              htmlPayload = txt;
-              break;
-            }
-          }
-        } catch (e) {
-          // try next proxy
-        }
+  <script>
+    // Speed Dial FAB
+    function toggleProdSpeedDial(forceState) {
+      var dial = document.getElementById('prodSpeedDial');
+      if (!dial) return;
+      if (typeof forceState === 'boolean') {
+        if (forceState) dial.classList.add('open');
+        else dial.classList.remove('open');
+      } else {
+        dial.classList.toggle('open');
       }
     }
 
-    const b64Payload = htmlPayload ? strToBase64(htmlPayload) : '';
+    // Smart Import Modal
+    function openSmartImport() {
+      const el = document.getElementById('smartImportOverlay');
+      if (!el) return;
+      el.style.setProperty('display', 'flex', 'important');
+      requestAnimationFrame(() => el.classList.add('open'));
+    }
+    function closeSmartImport(e) {
+      const el = document.getElementById('smartImportOverlay');
+      if (!el) return;
+      if (!e || e.target === el || (e.target && e.target.classList && e.target.classList.contains('si-close'))) {
+        el.classList.remove('open');
+        setTimeout(() => {
+          if (!el.classList.contains('open')) {
+            el.style.setProperty('display', 'none', 'important');
+          }
+        }, 250);
+      }
+    }
+    function switchSiTab(tab, el) {
+      document.querySelectorAll('.si-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.si-tab-pane').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('si-' + tab).classList.add('active');
+    }
 
-    fetch('{{ route("creator.products.scan-lynk") }}', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-      body: JSON.stringify({ url: targetUrl, html_b64: b64Payload, source: 'lynk' })
-    })
-      .then(async res => {
-        const text = await res.text();
-        let resJson;
-        try {
-          resJson = JSON.parse(text);
-        } catch (e) {
-          throw new Error('Gagal membaca data produk. Silakan coba lagi.');
-        }
-        return resJson;
-      })
-      .then(res => {
-        btn.disabled = false;
-        document.getElementById('siLynkProgress').style.display = 'none';
-        if (res.success && res.items && res.items.length > 0) {
-          redirectToCreateWithData(res.items[0], 'external_link');
-        } else {
-          alert(res.message || 'Gagal membaca data produk Lynk.id.');
-        }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        document.getElementById('siLynkProgress').style.display = 'none';
-        alert(err.message);
+    function previewSiMenuPhoto(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        document.getElementById('siPhotoPreviewImg').src = ev.target.result;
+        document.getElementById('siPhotoPlaceholder').style.display = 'none';
+        document.getElementById('siPhotoPreviewWrap').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearSiMenuPhoto(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('siMenuPhotoFile').value = '';
+      document.getElementById('siPhotoPreviewImg').src = '';
+      document.getElementById('siPhotoPreviewWrap').style.display = 'none';
+      document.getElementById('siPhotoPlaceholder').style.display = 'block';
+    }
+
+    // Marketplace selector
+    let selectedMarketplace = 'tokopedia';
+    function selectMarketplace(mp) {
+      selectedMarketplace = mp;
+      document.getElementById('srcTokopedia').classList.toggle('selected', mp === 'tokopedia');
+      document.getElementById('srcShopee').classList.toggle('selected', mp === 'shopee');
+      document.getElementById('mpPlatformLabel').textContent = mp === 'tokopedia' ? 'Tokopedia' : 'Shopee';
+      document.getElementById('siMarketUrl').placeholder = mp === 'tokopedia'
+        ? 'https://www.tokopedia.com/toko-anda/produk-abc'
+        : 'https://shopee.co.id/toko-anda/produk-abc';
+    }
+
+    // Open the Scan Menu Result Table Modal (AI SCAN ONLY)
+    function showScannedResultModal(items, categoryOverride) {
+      closeSmartImport();
+      document.getElementById('scan-menu-modal').style.display = 'flex';
+      document.getElementById('scan-step-upload').style.display = 'none';
+      document.getElementById('scan-step-loading').style.display = 'none';
+
+      detectedMenuItems = items.map(it => {
+        if (categoryOverride) it.category = categoryOverride;
+        return it;
       });
-  }
 
-  // Interactive Live Status Toggle (Aktif / Arsip)
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.form-toggle-status').forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const btn = form.querySelector('button');
-        btn.style.opacity = '0.5';
-        btn.disabled = true;
+      renderScanItemsTable();
+      document.getElementById('scan-step-result').style.display = 'block';
+      document.getElementById('btn-import-scanned').style.display = 'inline-flex';
+      restoreImportBtn();
+    }
 
-        fetch(form.action, {
-          method: 'POST',
-          headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-          },
-          body: new FormData(form)
-        })
+    // Redirect to create form and pre-fill via sessionStorage
+    function redirectToCreateWithData(item, productType) {
+      item.product_type = productType || item.product_type || 'physical';
+      sessionStorage.setItem('smart_imported_item', JSON.stringify(item));
+      window.location.href = '{{ route("creator.products.create") }}?smart_import=1' + ('{{ request("from") }}' === 'pos' ? '&from=pos' : '');
+    }
+
+    // SCAN AI — process uploaded photo directly
+    function runSiMenuScan() {
+      const btn = document.getElementById('siMenuScanBtn');
+      const photoFile = document.getElementById('siMenuPhotoFile').files[0];
+
+      if (!photoFile) { alert('Silakan upload foto menu terlebih dahulu.'); return; }
+
+      btn.disabled = true;
+      document.getElementById('siMenuProgress').style.display = 'block';
+      const csrfToken = '{{ csrf_token() }}';
+
+      const fd = new FormData();
+      fd.append('menu_image', photoFile);
+      fd.append('_token', csrfToken);
+
+      fetch('{{ route("creator.products.scan-menu") }}', {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': csrfToken },
+        body: fd
+      })
         .then(res => res.json())
-        .then(data => {
-          btn.style.opacity = '1';
+        .then(res => {
           btn.disabled = false;
-          if (data.success) {
-            const isActive = data.is_active;
-            const pid = form.dataset.productId;
-            document.querySelectorAll(`.form-toggle-status[data-product-id="${pid}"]`).forEach(f => {
-              const b = f.querySelector('button');
-              if (b.classList.contains('status-toggle-pill')) {
-                b.className = 'status-toggle-pill ' + (isActive ? 'active' : 'archived');
-                b.title = isActive ? 'Status: Aktif. Klik untuk arsipkan produk ini' : 'Status: Diarsipkan. Klik untuk aktifkan produk ini kembali';
-                const label = b.querySelector('.status-label-text');
-                if (label) label.textContent = isActive ? 'Aktif' : 'Diarsipkan';
-              } else if (b.classList.contains('grid-status-btn')) {
-                b.className = 'grid-status-btn ' + (isActive ? 'active' : 'archived');
-                b.title = isActive ? 'Aktif. Klik untuk arsipkan' : 'Diarsipkan. Klik untuk aktifkan';
-                b.textContent = isActive ? 'Aktif' : 'Diarsipkan';
-              }
-            });
-
-            document.querySelectorAll(`.prod-item-chk[value="${pid}"]`).forEach(c => {
-              c.dataset.isActive = isActive ? '1' : '0';
-            });
-
-            // Update tab badge counters secara realtime
-            const tabActiveBadge = document.querySelector('a.status-tab-btn[href*="status=active"] .tab-badge');
-            const tabArchivedBadge = document.querySelector('a.status-tab-btn[href*="status=archived"] .tab-badge');
-            if (tabActiveBadge && tabArchivedBadge) {
-              let curActive = parseInt(tabActiveBadge.textContent) || 0;
-              let curArchived = parseInt(tabArchivedBadge.textContent) || 0;
-              if (isActive) {
-                tabActiveBadge.textContent = curActive + 1;
-                tabArchivedBadge.textContent = Math.max(0, curArchived - 1);
-              } else {
-                tabActiveBadge.textContent = Math.max(0, curActive - 1);
-                tabArchivedBadge.textContent = curArchived + 1;
-              }
-            }
-
-            // Jika sedang di filter tab spesifik, hapus baris yang statusnya berubah
-            const currentUrlParams = new URLSearchParams(window.location.search);
-            const currentStatusTab = currentUrlParams.get('status');
-            if ((currentStatusTab === 'active' && !isActive) || (currentStatusTab === 'archived' && isActive)) {
-              const row = document.getElementById(`prod-row-${pid}`);
-              const card = document.getElementById(`prod-card-${pid}`);
-              if (row) {
-                row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                row.style.opacity = '0';
-                row.style.transform = 'scale(0.95)';
-                setTimeout(() => row.remove(), 300);
-              }
-              if (card) {
-                card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                card.style.opacity = '0';
-                card.style.transform = 'scale(0.95)';
-                setTimeout(() => card.remove(), 300);
-              }
-            }
+          document.getElementById('siMenuProgress').style.display = 'none';
+          if (res.success && res.items && res.items.length > 0) {
+            showScannedResultModal(res.items, 'Makanan'); // → popup modal
           } else {
-            alert(data.message || 'Gagal memperbarui status produk.');
+            alert(res.message || 'Gagal membaca menu dari foto. Pastikan foto jelas dan terang.');
           }
         })
-        .catch(() => {
-          btn.style.opacity = '1';
+        .catch(err => {
           btn.disabled = false;
-          form.submit();
+          document.getElementById('siMenuProgress').style.display = 'none';
+          alert('Gagal scan foto: ' + err.message);
+        });
+    }
+
+    // TIKTOK SHOP — langsung redirect ke form produk
+    function runSiTiktokScrape() {
+      const url = document.getElementById('siTiktokUrl').value;
+      if (!url) { alert('Masukkan URL produk TikTok Shop.'); return; }
+      const btn = document.getElementById('siTiktokBtn');
+      btn.disabled = true;
+      document.getElementById('siTiktokProgress').style.display = 'block';
+      document.getElementById('siTiktokProgressText').textContent = 'Membaca data produk dari TikTok...';
+      const csrfToken = '{{ csrf_token() }}';
+
+      fetch('{{ route("creator.products.scan-url") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify({ url: url, source: 'tiktokshop' })
+      })
+        .then(res => res.json())
+        .then(res => {
+          btn.disabled = false;
+          document.getElementById('siTiktokProgress').style.display = 'none';
+          if (res.success && res.items && res.items.length > 0) {
+            redirectToCreateWithData(res.items[0], 'physical'); // → form produk langsung
+          } else {
+            alert(res.message || 'Gagal membaca data produk TikTok Shop.');
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          document.getElementById('siTiktokProgress').style.display = 'none';
+          alert('Terjadi kesalahan: ' + err.message);
+        });
+    }
+
+    // MARKETPLACE (Tokopedia / Shopee) — langsung redirect ke form produk
+    function runSiMarketScrape() {
+      const url = document.getElementById('siMarketUrl').value;
+      if (!url) { alert('Masukkan URL produk dari marketplace.'); return; }
+      const btn = document.getElementById('siMarketBtn');
+      btn.disabled = true;
+      document.getElementById('siMarketProgress').style.display = 'block';
+      document.getElementById('siMarketProgressText').textContent = 'Membaca data dari ' + (selectedMarketplace === 'tokopedia' ? 'Tokopedia' : 'Shopee') + '...';
+      const csrfToken = '{{ csrf_token() }}';
+
+      fetch('{{ route("creator.products.scan-url") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify({ url: url, source: selectedMarketplace })
+      })
+        .then(res => res.json())
+        .then(res => {
+          btn.disabled = false;
+          document.getElementById('siMarketProgress').style.display = 'none';
+          if (res.success && res.items && res.items.length > 0) {
+            redirectToCreateWithData(res.items[0], 'physical'); // → form produk langsung
+          } else {
+            alert(res.message || 'Gagal membaca data produk Marketplace.');
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          document.getElementById('siMarketProgress').style.display = 'none';
+          alert('Terjadi kesalahan: ' + err.message);
+        });
+    }
+
+    function strToBase64(str) {
+      try {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+          return String.fromCharCode('0x' + p1);
+        }));
+      } catch (e) {
+        return '';
+      }
+    }
+
+    // ── Lynk.id: Salin link view-source ke clipboard
+    function copyViewSource() {
+      const url = document.getElementById('siLynkUrl').value.trim();
+      if (!url) {
+        alert('Masukkan URL Lynk.id terlebih dahulu.');
+        return;
+      }
+      const vsUrl = 'view-source:' + url;
+      navigator.clipboard.writeText(vsUrl).then(() => {
+        const toast = document.getElementById('lynkCopyToast');
+        toast.style.display = 'flex';
+        const btn = document.getElementById('btnCopyViewSource');
+        btn.style.background = '#dcfce7';
+        btn.style.color = '#166534';
+        btn.style.borderColor = '#bbf7d0';
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Tersalin!`;
+        setTimeout(() => {
+          toast.style.display = 'none';
+          btn.style.background = '#e0f2fe';
+          btn.style.color = '#0284c7';
+          btn.style.borderColor = '#bae6fd';
+          btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Salin Link Source`;
+        }, 4000);
+      }).catch(() => {
+        // fallback: prompt copy manual
+        prompt('Salin URL ini lalu buka di tab baru:', vsUrl);
+      });
+    }
+
+    // LYNK.ID — langsung redirect ke form produk sebagai Produk Digital
+    async function runSiLynkScrape() {
+      const urlVal = document.getElementById('siLynkUrl').value.trim();
+      const htmlVal = document.getElementById('siLynkHtmlCode').value.trim();
+
+      if (!urlVal && !htmlVal) {
+        alert('Masukkan URL Lynk.id atau paste Source HTML terlebih dahulu.');
+        return;
+      }
+
+      const btn = document.getElementById('siLynkBtn');
+      btn.disabled = true;
+      document.getElementById('siLynkProgress').style.display = 'block';
+      const csrfToken = '{{ csrf_token() }}';
+
+      let htmlPayload = htmlVal || '';
+      let targetUrl = urlVal || 'https://lynk.id/imported-product';
+
+      if (!htmlPayload && urlVal) {
+        const proxies = [
+          'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlVal),
+          'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(urlVal)
+        ];
+        for (const pUrl of proxies) {
+          try {
+            const resp = await fetch(pUrl, { signal: AbortSignal.timeout(2000) });
+            if (resp.ok) {
+              const txt = await resp.text();
+              if (txt && txt.length > 500) {
+                htmlPayload = txt;
+                break;
+              }
+            }
+          } catch (e) {
+            // try next proxy
+          }
+        }
+      }
+
+      const b64Payload = htmlPayload ? strToBase64(htmlPayload) : '';
+
+      fetch('{{ route("creator.products.scan-lynk") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify({ url: targetUrl, html_b64: b64Payload, source: 'lynk' })
+      })
+        .then(async res => {
+          const text = await res.text();
+          let resJson;
+          try {
+            resJson = JSON.parse(text);
+          } catch (e) {
+            throw new Error('Gagal membaca data produk. Silakan coba lagi.');
+          }
+          return resJson;
+        })
+        .then(res => {
+          btn.disabled = false;
+          document.getElementById('siLynkProgress').style.display = 'none';
+          if (res.success && res.items && res.items.length > 0) {
+            redirectToCreateWithData(res.items[0], 'external_link');
+          } else {
+            alert(res.message || 'Gagal membaca data produk Lynk.id.');
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          document.getElementById('siLynkProgress').style.display = 'none';
+          alert(err.message);
+        });
+    }
+
+    // Interactive Live Status Toggle (Aktif / Arsip)
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.form-toggle-status').forEach(form => {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const btn = form.querySelector('button');
+          btn.style.opacity = '0.5';
+          btn.disabled = true;
+
+          fetch(form.action, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}',
+              'Accept': 'application/json'
+            },
+            body: new FormData(form)
+          })
+            .then(res => res.json())
+            .then(data => {
+              btn.style.opacity = '1';
+              btn.disabled = false;
+              if (data.success) {
+                const isActive = data.is_active;
+                const pid = form.dataset.productId;
+                document.querySelectorAll(`.form-toggle-status[data-product-id="${pid}"]`).forEach(f => {
+                  const b = f.querySelector('button');
+                  if (b.classList.contains('status-toggle-pill')) {
+                    b.className = 'status-toggle-pill ' + (isActive ? 'active' : 'archived');
+                    b.title = isActive ? 'Status: Aktif. Klik untuk arsipkan produk ini' : 'Status: Diarsipkan. Klik untuk aktifkan produk ini kembali';
+                    const label = b.querySelector('.status-label-text');
+                    if (label) label.textContent = isActive ? 'Aktif' : 'Diarsipkan';
+                  } else if (b.classList.contains('grid-status-btn')) {
+                    b.className = 'grid-status-btn ' + (isActive ? 'active' : 'archived');
+                    b.title = isActive ? 'Aktif. Klik untuk arsipkan' : 'Diarsipkan. Klik untuk aktifkan';
+                    b.textContent = isActive ? 'Aktif' : 'Diarsipkan';
+                  }
+                });
+
+                document.querySelectorAll(`.prod-item-chk[value="${pid}"]`).forEach(c => {
+                  c.dataset.isActive = isActive ? '1' : '0';
+                });
+
+                // Update tab badge counters secara realtime
+                const tabActiveBadge = document.querySelector('a.status-tab-btn[href*="status=active"] .tab-badge');
+                const tabArchivedBadge = document.querySelector('a.status-tab-btn[href*="status=archived"] .tab-badge');
+                if (tabActiveBadge && tabArchivedBadge) {
+                  let curActive = parseInt(tabActiveBadge.textContent) || 0;
+                  let curArchived = parseInt(tabArchivedBadge.textContent) || 0;
+                  if (isActive) {
+                    tabActiveBadge.textContent = curActive + 1;
+                    tabArchivedBadge.textContent = Math.max(0, curArchived - 1);
+                  } else {
+                    tabActiveBadge.textContent = Math.max(0, curActive - 1);
+                    tabArchivedBadge.textContent = curArchived + 1;
+                  }
+                }
+
+                // Jika sedang di filter tab spesifik, hapus baris yang statusnya berubah
+                const currentUrlParams = new URLSearchParams(window.location.search);
+                const currentStatusTab = currentUrlParams.get('status');
+                if ((currentStatusTab === 'active' && !isActive) || (currentStatusTab === 'archived' && isActive)) {
+                  const row = document.getElementById(`prod-row-${pid}`);
+                  const card = document.getElementById(`prod-card-${pid}`);
+                  if (row) {
+                    row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    row.style.opacity = '0';
+                    row.style.transform = 'scale(0.95)';
+                    setTimeout(() => row.remove(), 300);
+                  }
+                  if (card) {
+                    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => card.remove(), 300);
+                  }
+                }
+              } else {
+                alert(data.message || 'Gagal memperbarui status produk.');
+              }
+            })
+            .catch(() => {
+              btn.style.opacity = '1';
+              btn.disabled = false;
+              form.submit();
+            });
         });
       });
     });
-  });
 
-  // Skeleton view alignment & hide transition
-  (function() {
-    const prefView = localStorage.getItem('admin_services_view') || (window.innerWidth <= 768 ? 'grid' : 'list');
-    const sList = document.getElementById('skel-list-container');
-    const sGrid = document.getElementById('skel-grid-container');
-    if (sList && sGrid) {
-      if (prefView === 'grid') {
-        sList.style.display = 'none';
-        sGrid.style.display = 'grid';
-      } else {
-        sList.style.display = 'block';
-        sGrid.style.display = 'none';
+    // Skeleton view alignment & hide transition
+    (function () {
+      const prefView = localStorage.getItem('admin_services_view') || (window.innerWidth <= 768 ? 'grid' : 'list');
+      const sList = document.getElementById('skel-list-container');
+      const sGrid = document.getElementById('skel-grid-container');
+      if (sList && sGrid) {
+        if (prefView === 'grid') {
+          sList.style.display = 'none';
+          sGrid.style.display = 'grid';
+        } else {
+          sList.style.display = 'block';
+          sGrid.style.display = 'none';
+        }
       }
-    }
 
-    function revealProducts() {
-      const skel = document.getElementById('products-skeleton');
-      const real = document.getElementById('products-real-content');
-      if (skel) skel.style.display = 'none';
-      if (real) real.style.opacity = '1';
-    }
+      function revealProducts() {
+        const skel = document.getElementById('products-skeleton');
+        const real = document.getElementById('products-real-content');
+        if (skel) skel.style.display = 'none';
+        if (real) real.style.opacity = '1';
+      }
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      setTimeout(revealProducts, 40);
-    } else {
-      document.addEventListener('DOMContentLoaded', () => setTimeout(revealProducts, 40));
-      window.addEventListener('load', () => setTimeout(revealProducts, 40));
-    }
-  })();
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(revealProducts, 40);
+      } else {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(revealProducts, 40));
+        window.addEventListener('load', () => setTimeout(revealProducts, 40));
+      }
+    })();
 
-  // Bulk Checkbox & Action Dock Logic
-  const selectedProductIds = new Set();
-  let _bulkActionType = null;
+    // Bulk Checkbox & Action Dock Logic
+    const selectedProductIds = new Set();
+    let _bulkActionType = null;
 
-  function handleProductCheck(chk) {
-    const pid = parseInt(chk.value);
-    if (chk.checked) {
-      selectedProductIds.add(pid);
-    } else {
-      selectedProductIds.delete(pid);
-    }
-    syncProductVisuals(pid, chk.checked);
-    updateBulkDock();
-  }
-
-  function syncProductVisuals(pid, isChecked) {
-    document.querySelectorAll(`.prod-item-chk[value="${pid}"]`).forEach(c => c.checked = isChecked);
-
-    const row = document.getElementById(`prod-row-${pid}`);
-    if (row) {
-      if (isChecked) row.classList.add('tr-selected');
-      else row.classList.remove('tr-selected');
-    }
-
-    const card = document.getElementById(`prod-card-${pid}`);
-    if (card) {
-      if (isChecked) card.classList.add('card-selected');
-      else card.classList.remove('card-selected');
-    }
-  }
-
-  function toggleSelectAll(isChecked) {
-    document.querySelectorAll('.prod-item-chk').forEach(chk => {
+    function handleProductCheck(chk) {
       const pid = parseInt(chk.value);
-      if (isChecked) {
+      if (chk.checked) {
         selectedProductIds.add(pid);
       } else {
         selectedProductIds.delete(pid);
       }
-      chk.checked = isChecked;
-      syncProductVisuals(pid, isChecked);
-    });
-    updateBulkDock();
-  }
-
-  function deselectAllProducts() {
-    selectedProductIds.clear();
-    document.querySelectorAll('.prod-item-chk').forEach(c => {
-      c.checked = false;
-      syncProductVisuals(parseInt(c.value), false);
-    });
-    const selectAllList = document.getElementById('selectAllList');
-    if (selectAllList) selectAllList.checked = false;
-    updateBulkDock();
-  }
-
-  function updateBulkDock() {
-    const dock = document.getElementById('bulkDockBar');
-    const badge = document.getElementById('bulkCountBadge');
-    const count = selectedProductIds.size;
-    if (badge) badge.textContent = count;
-
-    if (count > 0) {
-      if (dock) dock.classList.add('visible');
-    } else {
-      if (dock) dock.classList.remove('visible');
+      syncProductVisuals(pid, chk.checked);
+      updateBulkDock();
     }
 
-    const allCheckboxes = document.querySelectorAll('#view-list .prod-item-chk');
-    const selectAllList = document.getElementById('selectAllList');
-    if (selectAllList && allCheckboxes.length > 0) {
-      selectAllList.checked = Array.from(allCheckboxes).every(c => c.checked);
+    function syncProductVisuals(pid, isChecked) {
+      document.querySelectorAll(`.prod-item-chk[value="${pid}"]`).forEach(c => c.checked = isChecked);
+
+      const row = document.getElementById(`prod-row-${pid}`);
+      if (row) {
+        if (isChecked) row.classList.add('tr-selected');
+        else row.classList.remove('tr-selected');
+      }
+
+      const card = document.getElementById(`prod-card-${pid}`);
+      if (card) {
+        if (isChecked) card.classList.add('card-selected');
+        else card.classList.remove('card-selected');
+      }
     }
-  }
 
-  function confirmBulkAction(action) {
-    const count = selectedProductIds.size;
-    if (count === 0) {
-      alert('Pilih minimal satu produk terlebih dahulu.');
-      return;
+    function toggleSelectAll(isChecked) {
+      document.querySelectorAll('.prod-item-chk').forEach(chk => {
+        const pid = parseInt(chk.value);
+        if (isChecked) {
+          selectedProductIds.add(pid);
+        } else {
+          selectedProductIds.delete(pid);
+        }
+        chk.checked = isChecked;
+        syncProductVisuals(pid, isChecked);
+      });
+      updateBulkDock();
     }
 
-    _bulkActionType = action;
-    _activeDeleteForm = 'bulk';
+    function deselectAllProducts() {
+      selectedProductIds.clear();
+      document.querySelectorAll('.prod-item-chk').forEach(c => {
+        c.checked = false;
+        syncProductVisuals(parseInt(c.value), false);
+      });
+      const selectAllList = document.getElementById('selectAllList');
+      if (selectAllList) selectAllList.checked = false;
+      updateBulkDock();
+    }
 
-    const modalTitle = document.getElementById('delModalTitle');
-    const modalDesc = document.getElementById('delModalDesc');
-    const confirmBtn = document.getElementById('delConfirmBtn');
-    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+    function updateBulkDock() {
+      const dock = document.getElementById('bulkDockBar');
+      const badge = document.getElementById('bulkCountBadge');
+      const count = selectedProductIds.size;
+      if (badge) badge.textContent = count;
 
-    if (action === 'delete') {
-      modalTitle.textContent = `Hapus ${count} Produk?`;
-      modalDesc.innerHTML = `Apakah Anda yakin ingin menghapus <b>${count} produk</b> yang dipilih? Tindakan ini permanen dan tidak dapat dibatalkan.`;
-      confirmBtn.textContent = `Ya, Hapus (${count})`;
+      if (count > 0) {
+        if (dock) dock.classList.add('visible');
+      } else {
+        if (dock) dock.classList.remove('visible');
+      }
+
+      const allCheckboxes = document.querySelectorAll('#view-list .prod-item-chk');
+      const selectAllList = document.getElementById('selectAllList');
+      if (selectAllList && allCheckboxes.length > 0) {
+        selectAllList.checked = Array.from(allCheckboxes).every(c => c.checked);
+      }
+    }
+
+    function confirmBulkAction(action) {
+      const count = selectedProductIds.size;
+      if (count === 0) {
+        alert('Pilih minimal satu produk terlebih dahulu.');
+        return;
+      }
+
+      _bulkActionType = action;
+      _activeDeleteForm = 'bulk';
+
+      const modalTitle = document.getElementById('delModalTitle');
+      const modalDesc = document.getElementById('delModalDesc');
+      const confirmBtn = document.getElementById('delConfirmBtn');
+      const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+
+      if (action === 'delete') {
+        modalTitle.textContent = `Hapus ${count} Produk?`;
+        modalDesc.innerHTML = `Apakah Anda yakin ingin menghapus <b>${count} produk</b> yang dipilih? Tindakan ini permanen dan tidak dapat dibatalkan.`;
+        confirmBtn.textContent = `Ya, Hapus (${count})`;
+        confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+        confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+        if (iconWrap) {
+          iconWrap.style.background = '#fef2f2';
+          iconWrap.style.borderColor = '#fecaca';
+          iconWrap.style.color = '#ef4444';
+        }
+      } else if (action === 'archive') {
+        modalTitle.textContent = `Arsipkan ${count} Produk?`;
+        modalDesc.innerHTML = `Apakah Anda yakin ingin mengarsipkan <b>${count} produk</b> yang dipilih? Produk tidak akan muncul di marketplace dan storefront pembeli.`;
+        confirmBtn.textContent = `Ya, Arsipkan (${count})`;
+        confirmBtn.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+        confirmBtn.style.boxShadow = '0 4px 14px rgba(245, 158, 11, 0.35)';
+        if (iconWrap) {
+          iconWrap.style.background = '#fffbeb';
+          iconWrap.style.borderColor = '#fde68a';
+          iconWrap.style.color = '#f59e0b';
+        }
+      } else if (action === 'activate') {
+        modalTitle.textContent = `Aktifkan ${count} Produk?`;
+        modalDesc.innerHTML = `Apakah Anda yakin ingin mengaktifkan kembali <b>${count} produk</b> yang dipilih? Produk akan dapat dibeli kembali.`;
+        confirmBtn.textContent = `Ya, Aktifkan (${count})`;
+        confirmBtn.style.background = 'linear-gradient(135deg, #1eb349, #15803d)';
+        confirmBtn.style.boxShadow = '0 4px 14px rgba(30, 179, 73, 0.35)';
+        if (iconWrap) {
+          iconWrap.style.background = '#f0fdf4';
+          iconWrap.style.borderColor = '#bbf7d0';
+          iconWrap.style.color = '#1eb349';
+        }
+      }
+
+      confirmBtn.disabled = false;
+      const delOverlay = document.getElementById('deleteConfirmOverlay');
+      if (delOverlay) {
+        delOverlay.style.setProperty('display', 'flex', 'important');
+        requestAnimationFrame(() => delOverlay.classList.add('open'));
+      }
+    }
+
+    function executeBulkActionConfirmed() {
+      const confirmBtn = document.getElementById('delConfirmBtn');
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Memproses...';
+
+      const ids = Array.from(selectedProductIds);
+
+      fetch('{{ route("creator.products.bulk-action") }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          action: _bulkActionType,
+          ids: ids
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          } else {
+            alert(data.message || 'Terjadi kesalahan saat memproses produk.');
+            confirmBtn.disabled = false;
+            closeDeleteModal();
+          }
+        })
+        .catch(() => {
+          // Fallback standard HTML form submit
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = '{{ route("creator.products.bulk-action") }}';
+          const csrf = document.createElement('input');
+          csrf.type = 'hidden';
+          csrf.name = '_token';
+          csrf.value = '{{ csrf_token() }}';
+          form.appendChild(csrf);
+
+          const act = document.createElement('input');
+          act.type = 'hidden';
+          act.name = 'action';
+          act.value = _bulkActionType;
+          form.appendChild(act);
+
+          ids.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = id;
+            form.appendChild(input);
+          });
+
+          document.body.appendChild(form);
+          form.submit();
+        });
+    }
+
+    // Interactive Product Delete Confirmation Modal
+    let _activeDeleteForm = null;
+
+    function openDeleteProductModal(btn, productName) {
+      _activeDeleteForm = btn.closest('form');
+      document.getElementById('delModalTitle').textContent = 'Hapus Produk?';
+      document.getElementById('delModalDesc').innerHTML = 'Apakah Anda yakin ingin menghapus produk <b>"' + productName + '"</b>? Data yang dihapus tidak dapat dipulihkan.';
+      const confirmBtn = document.getElementById('delConfirmBtn');
+      confirmBtn.textContent = 'Ya, Hapus';
+      confirmBtn.disabled = false;
       confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
       confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+      const iconWrap = document.querySelector('.del-confirm-icon-wrap');
       if (iconWrap) {
         iconWrap.style.background = '#fef2f2';
         iconWrap.style.borderColor = '#fecaca';
         iconWrap.style.color = '#ef4444';
       }
-    } else if (action === 'archive') {
-      modalTitle.textContent = `Arsipkan ${count} Produk?`;
-      modalDesc.innerHTML = `Apakah Anda yakin ingin mengarsipkan <b>${count} produk</b> yang dipilih? Produk tidak akan muncul di marketplace dan storefront pembeli.`;
-      confirmBtn.textContent = `Ya, Arsipkan (${count})`;
-      confirmBtn.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
-      confirmBtn.style.boxShadow = '0 4px 14px rgba(245, 158, 11, 0.35)';
-      if (iconWrap) {
-        iconWrap.style.background = '#fffbeb';
-        iconWrap.style.borderColor = '#fde68a';
-        iconWrap.style.color = '#f59e0b';
-      }
-    } else if (action === 'activate') {
-      modalTitle.textContent = `Aktifkan ${count} Produk?`;
-      modalDesc.innerHTML = `Apakah Anda yakin ingin mengaktifkan kembali <b>${count} produk</b> yang dipilih? Produk akan dapat dibeli kembali.`;
-      confirmBtn.textContent = `Ya, Aktifkan (${count})`;
-      confirmBtn.style.background = 'linear-gradient(135deg, #1eb349, #15803d)';
-      confirmBtn.style.boxShadow = '0 4px 14px rgba(30, 179, 73, 0.35)';
-      if (iconWrap) {
-        iconWrap.style.background = '#f0fdf4';
-        iconWrap.style.borderColor = '#bbf7d0';
-        iconWrap.style.color = '#1eb349';
+      const overlay = document.getElementById('deleteConfirmOverlay');
+      if (overlay) {
+        overlay.style.setProperty('display', 'flex', 'important');
+        requestAnimationFrame(() => overlay.classList.add('open'));
       }
     }
 
-    confirmBtn.disabled = false;
-    const delOverlay = document.getElementById('deleteConfirmOverlay');
-    if (delOverlay) {
-      delOverlay.style.setProperty('display', 'flex', 'important');
-      requestAnimationFrame(() => delOverlay.classList.add('open'));
-    }
-  }
-
-  function executeBulkActionConfirmed() {
-    const confirmBtn = document.getElementById('delConfirmBtn');
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = 'Memproses...';
-
-    const ids = Array.from(selectedProductIds);
-
-    fetch('{{ route("creator.products.bulk-action") }}', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        action: _bulkActionType,
-        ids: ids
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        window.location.reload();
-      } else {
-        alert(data.message || 'Terjadi kesalahan saat memproses produk.');
-        confirmBtn.disabled = false;
-        closeDeleteModal();
-      }
-    })
-    .catch(() => {
-      // Fallback standard HTML form submit
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '{{ route("creator.products.bulk-action") }}';
-      const csrf = document.createElement('input');
-      csrf.type = 'hidden';
-      csrf.name = '_token';
-      csrf.value = '{{ csrf_token() }}';
-      form.appendChild(csrf);
-
-      const act = document.createElement('input');
-      act.type = 'hidden';
-      act.name = 'action';
-      act.value = _bulkActionType;
-      form.appendChild(act);
-
-      ids.forEach(id => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'ids[]';
-        input.value = id;
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      form.submit();
-    });
-  }
-
-  // Interactive Product Delete Confirmation Modal
-  let _activeDeleteForm = null;
-
-  function openDeleteProductModal(btn, productName) {
-    _activeDeleteForm = btn.closest('form');
-    document.getElementById('delModalTitle').textContent = 'Hapus Produk?';
-    document.getElementById('delModalDesc').innerHTML = 'Apakah Anda yakin ingin menghapus produk <b>"' + productName + '"</b>? Data yang dihapus tidak dapat dipulihkan.';
-    const confirmBtn = document.getElementById('delConfirmBtn');
-    confirmBtn.textContent = 'Ya, Hapus';
-    confirmBtn.disabled = false;
-    confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-    confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
-    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
-    if (iconWrap) {
-      iconWrap.style.background = '#fef2f2';
-      iconWrap.style.borderColor = '#fecaca';
-      iconWrap.style.color = '#ef4444';
-    }
-    const overlay = document.getElementById('deleteConfirmOverlay');
-    if (overlay) {
-      overlay.style.setProperty('display', 'flex', 'important');
-      requestAnimationFrame(() => overlay.classList.add('open'));
-    }
-  }
-
-  function openDeleteAllModal(count) {
-    _activeDeleteForm = document.getElementById('form-destroy-all-products');
-    document.getElementById('delModalTitle').textContent = 'Hapus Semua Produk?';
-    document.getElementById('delModalDesc').innerHTML = 'Apakah Anda yakin ingin menghapus <b>SEMUA ' + count + ' PRODUK</b> digital Anda? Seluruh data produk akan dihapus secara permanen dan tidak dapat dipulihkan.';
-    const confirmBtn = document.getElementById('delConfirmBtn');
-    confirmBtn.textContent = 'Ya, Hapus Semua!';
-    confirmBtn.disabled = false;
-    confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-    confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
-    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
-    if (iconWrap) {
-      iconWrap.style.background = '#fef2f2';
-      iconWrap.style.borderColor = '#fecaca';
-      iconWrap.style.color = '#ef4444';
-    }
-    const overlay = document.getElementById('deleteConfirmOverlay');
-    if (overlay) {
-      overlay.style.setProperty('display', 'flex', 'important');
-      requestAnimationFrame(() => overlay.classList.add('open'));
-    }
-  }
-
-  function closeDeleteModal() {
-    const overlay = document.getElementById('deleteConfirmOverlay');
-    if (overlay) {
-      overlay.classList.remove('open');
-      setTimeout(() => {
-        if (!overlay.classList.contains('open')) {
-          overlay.style.setProperty('display', 'none', 'important');
-        }
-      }, 220);
-    }
-    _activeDeleteForm = null;
-    _bulkActionType = null;
-    const confirmBtn = document.getElementById('delConfirmBtn');
-    if (confirmBtn) {
+    function openDeleteAllModal(count) {
+      _activeDeleteForm = document.getElementById('form-destroy-all-products');
+      document.getElementById('delModalTitle').textContent = 'Hapus Semua Produk?';
+      document.getElementById('delModalDesc').innerHTML = 'Apakah Anda yakin ingin menghapus <b>SEMUA ' + count + ' PRODUK</b> digital Anda? Seluruh data produk akan dihapus secara permanen dan tidak dapat dipulihkan.';
+      const confirmBtn = document.getElementById('delConfirmBtn');
+      confirmBtn.textContent = 'Ya, Hapus Semua!';
+      confirmBtn.disabled = false;
       confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
       confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+      const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+      if (iconWrap) {
+        iconWrap.style.background = '#fef2f2';
+        iconWrap.style.borderColor = '#fecaca';
+        iconWrap.style.color = '#ef4444';
+      }
+      const overlay = document.getElementById('deleteConfirmOverlay');
+      if (overlay) {
+        overlay.style.setProperty('display', 'flex', 'important');
+        requestAnimationFrame(() => overlay.classList.add('open'));
+      }
     }
-    const iconWrap = document.querySelector('.del-confirm-icon-wrap');
-    if (iconWrap) {
-      iconWrap.style.background = '#fef2f2';
-      iconWrap.style.borderColor = '#fecaca';
-      iconWrap.style.color = '#ef4444';
-    }
-  }
 
-  function executeDeleteConfirmed() {
-    if (_activeDeleteForm === 'bulk') {
-      executeBulkActionConfirmed();
-    } else if (_activeDeleteForm) {
+    function closeDeleteModal() {
+      const overlay = document.getElementById('deleteConfirmOverlay');
+      if (overlay) {
+        overlay.classList.remove('open');
+        setTimeout(() => {
+          if (!overlay.classList.contains('open')) {
+            overlay.style.setProperty('display', 'none', 'important');
+          }
+        }, 220);
+      }
+      _activeDeleteForm = null;
+      _bulkActionType = null;
       const confirmBtn = document.getElementById('delConfirmBtn');
-      confirmBtn.textContent = 'Menghapus...';
-      confirmBtn.disabled = true;
-      _activeDeleteForm.submit();
+      if (confirmBtn) {
+        confirmBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+        confirmBtn.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.35)';
+      }
+      const iconWrap = document.querySelector('.del-confirm-icon-wrap');
+      if (iconWrap) {
+        iconWrap.style.background = '#fef2f2';
+        iconWrap.style.borderColor = '#fecaca';
+        iconWrap.style.color = '#ef4444';
+      }
     }
-  }
 
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeDeleteModal();
-  });
-</script>
+    function executeDeleteConfirmed() {
+      if (_activeDeleteForm === 'bulk') {
+        executeBulkActionConfirmed();
+      } else if (_activeDeleteForm) {
+        const confirmBtn = document.getElementById('delConfirmBtn');
+        confirmBtn.textContent = 'Menghapus...';
+        confirmBtn.disabled = true;
+        _activeDeleteForm.submit();
+      }
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeDeleteModal();
+    });
+  </script>
 @endsection

@@ -19,6 +19,7 @@
                 margin: 0 !important;
                 padding: 0 !important;
             }
+
             .cr-main-wrapper {
                 margin-left: 0 !important;
                 padding: 0 !important;
@@ -42,6 +43,7 @@
                 box-shadow: none !important;
                 border-radius: 0 !important;
             }
+
             .menu-hub-container {
                 width: 100% !important;
                 max-width: 100% !important;
@@ -61,9 +63,11 @@
                 background: #ffffff !important;
                 box-shadow: none !important;
             }
+
             .cr-main-wrapper {
                 background: #f8fafc !important;
             }
+
             .menu-hub-container {
                 width: 100% !important;
                 max-width: 720px !important;
@@ -77,6 +81,7 @@
             body {
                 background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             }
+
             .cr-sidebar {
                 display: flex !important;
                 transform: none !important;
@@ -86,6 +91,7 @@
                 width: 240px !important;
                 z-index: 50 !important;
             }
+
             .cr-main-wrapper {
                 margin-left: 240px !important;
                 padding: 1.25rem 0 0 0 !important;
@@ -95,6 +101,7 @@
                 overflow-x: hidden !important;
                 background: transparent !important;
             }
+
             .cr-main-canvas {
                 margin: 0 !important;
                 padding: 1.5rem 2rem 100px 2rem !important;
@@ -105,6 +112,7 @@
                 border-radius: 40px 0 0 0 !important;
                 box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08) !important;
             }
+
             .menu-hub-container {
                 width: 100% !important;
                 max-width: 780px !important;
@@ -581,8 +589,15 @@
         }
 
         @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.96) translateY(8px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
     </style>
 @endsection
@@ -643,7 +658,8 @@
             <div class="tier-banner-left">
                 <div class="tier-sparkle-box">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                        <path
+                            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
                     </svg>
                 </div>
                 <div>
@@ -661,14 +677,23 @@
 
         {{-- Alert Notifikasi Hasil Simpan Rekening / KYC --}}
         @if(session('bank_success'))
-            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.85rem 1.15rem; border-radius:16px; font-weight:700; font-size:0.82rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.6rem;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+            <div
+                style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.85rem 1.15rem; border-radius:16px; font-weight:700; font-size:0.82rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.6rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
                 <span>{{ session('bank_success') }}</span>
             </div>
         @endif
         @if(session('bank_error'))
-            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.85rem 1.15rem; border-radius:16px; font-weight:700; font-size:0.82rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.6rem;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+            <div
+                style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.85rem 1.15rem; border-radius:16px; font-weight:700; font-size:0.82rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.6rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                </svg>
                 <span>{{ session('bank_error') }}</span>
             </div>
         @endif
@@ -678,30 +703,48 @@
             <div class="menu-group-header-row">
                 <div class="menu-item-left">
                     <div class="menu-item-icon highlight">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            <circle cx="12" cy="11" r="3"/>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            <circle cx="12" cy="11" r="3" />
                         </svg>
                     </div>
                     <div>
-                        <div style="font-size:0.88rem; font-weight:800; color:#0f172a; line-height:1.2;">Status Verifikasi Identitas (e-KYC)</div>
-                        <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">Kepatuhan legalitas penyelenggara tiket</div>
+                        <div style="font-size:0.88rem; font-weight:800; color:#0f172a; line-height:1.2;">Status Verifikasi
+                            Identitas (e-KYC)</div>
+                        <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">Kepatuhan legalitas penyelenggara
+                            tiket</div>
                     </div>
                 </div>
                 <div>
                     @if(isset($kyc) && $kyc && $kyc->status === 'verified')
-                        <span class="menu-item-badge badge-green" style="font-weight:800; display:inline-flex; align-items:center; gap:4px;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span class="menu-item-badge badge-green"
+                            style="font-weight:800; display:inline-flex; align-items:center; gap:4px;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
                             Terverifikasi Resmi
                         </span>
                     @elseif(isset($kyc) && $kyc && $kyc->status === 'pending')
-                        <span class="menu-item-badge" style="background:#fef3c7; color:#b45309; font-weight:800; display:inline-flex; align-items:center; gap:4px;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span class="menu-item-badge"
+                            style="background:#fef3c7; color:#b45309; font-weight:800; display:inline-flex; align-items:center; gap:4px;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
                             Menunggu Review
                         </span>
                     @else
-                        <span class="menu-item-badge" style="background:#fee2e2; color:#dc2626; font-weight:800; display:inline-flex; align-items:center; gap:4px;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span class="menu-item-badge"
+                            style="background:#fee2e2; color:#dc2626; font-weight:800; display:inline-flex; align-items:center; gap:4px;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
                             Belum Verifikasi
                         </span>
                     @endif
@@ -712,43 +755,62 @@
                 @if(isset($kyc) && $kyc && $kyc->status === 'verified')
                     <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:0.95rem 1.05rem;">
                         <p style="margin:0 0 0.85rem; font-size:0.76rem; color:#166534; line-height:1.5;">
-                            Akun Anda telah memenuhi standar kepatuhan e-KYC Buyle.id. Seluruh fitur penjualan event tiket berbayar dan pencairan saldo telah aktif secara penuh.
+                            Akun Anda telah memenuhi standar kepatuhan e-KYC Buyle.id. Seluruh fitur penjualan event tiket
+                            berbayar dan pencairan saldo telah aktif secara penuh.
                         </p>
-                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:0.65rem; background:#ffffff; padding:0.85rem 1rem; border-radius:12px; border:1px solid #dcfce7;">
+                        <div
+                            style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:0.65rem; background:#ffffff; padding:0.85rem 1rem; border-radius:12px; border:1px solid #dcfce7;">
                             <div>
-                                <span style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">Nama KTP</span>
-                                <strong style="font-size:0.84rem; color:#0f172a;">{{ $kyc->full_name ?? $seller->name }}</strong>
+                                <span
+                                    style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">Nama
+                                    KTP</span>
+                                <strong
+                                    style="font-size:0.84rem; color:#0f172a;">{{ $kyc->full_name ?? $seller->name }}</strong>
                             </div>
                             <div>
-                                <span style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">NIK</span>
-                                <strong style="font-size:0.84rem; color:#0f172a; font-family:monospace;">{{ isset($kyc->nik) ? substr($kyc->nik, 0, 6) . '******' . substr($kyc->nik, -4) : '-' }}</strong>
+                                <span
+                                    style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">NIK</span>
+                                <strong
+                                    style="font-size:0.84rem; color:#0f172a; font-family:monospace;">{{ isset($kyc->nik) ? substr($kyc->nik, 0, 6) . '******' . substr($kyc->nik, -4) : '-' }}</strong>
                             </div>
                             <div>
-                                <span style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">Provinsi</span>
+                                <span
+                                    style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">Provinsi</span>
                                 <strong style="font-size:0.84rem; color:#0f172a;">{{ $kyc->province ?? '-' }}</strong>
                             </div>
                             <div>
-                                <span style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">Diverifikasi Pada</span>
-                                <strong style="font-size:0.84rem; color:#0f172a;">{{ $kyc->reviewed_at ? $kyc->reviewed_at->format('d M Y H:i') : ($kyc->created_at ? $kyc->created_at->format('d M Y H:i') : '-') }} WIB</strong>
+                                <span
+                                    style="color:#64748b; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px;">Diverifikasi
+                                    Pada</span>
+                                <strong
+                                    style="font-size:0.84rem; color:#0f172a;">{{ $kyc->reviewed_at ? $kyc->reviewed_at->format('d M Y H:i') : ($kyc->created_at ? $kyc->created_at->format('d M Y H:i') : '-') }}
+                                    WIB</strong>
                             </div>
                         </div>
                     </div>
                 @elseif(isset($kyc) && $kyc && $kyc->status === 'pending')
                     <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:0.95rem 1.05rem;">
                         <p style="margin:0 0 0.85rem; font-size:0.76rem; color:#b45309; line-height:1.5;">
-                            Permohonan verifikasi e-KYC Anda telah kami terima dan saat ini sedang ditinjau oleh tim verifikator Buyle.id (maksimal 1x24 jam kerja).
+                            Permohonan verifikasi e-KYC Anda telah kami terima dan saat ini sedang ditinjau oleh tim verifikator
+                            Buyle.id (maksimal 1x24 jam kerja).
                         </p>
-                        <div style="background:#ffffff; padding:0.75rem 0.95rem; border-radius:10px; border:1px solid #fde68a; font-size:0.78rem; color:#0f172a;">
+                        <div
+                            style="background:#ffffff; padding:0.75rem 0.95rem; border-radius:10px; border:1px solid #fde68a; font-size:0.78rem; color:#0f172a;">
                             Diajukan atas nama: <strong>{{ $kyc->full_name ?? $seller->name }}</strong>
                         </div>
                     </div>
                 @else
                     <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:14px; padding:0.95rem 1.05rem;">
                         <p style="margin:0 0 0.85rem; font-size:0.76rem; color:#b91c1c; line-height:1.5;">
-                            Untuk melindungi transaksi pembeli dan mengaktifkan pencairan saldo penjualan tiket, silakan lengkapi verifikasi KTP resmi Anda.
+                            Untuk melindungi transaksi pembeli dan mengaktifkan pencairan saldo penjualan tiket, silakan
+                            lengkapi verifikasi KTP resmi Anda.
                         </p>
-                        <a href="{{ route('creator.kyc.index') }}" style="display:inline-flex; align-items:center; gap:0.4rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; font-size:0.78rem; font-weight:700; padding:0.5rem 1rem; border-radius:10px; text-decoration:none; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <a href="{{ route('creator.kyc.index') }}"
+                            style="display:inline-flex; align-items:center; gap:0.4rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; font-size:0.78rem; font-weight:700; padding:0.5rem 1rem; border-radius:10px; text-decoration:none; box-shadow:0 3px 10px rgba(30,179,73,0.25);">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
                             <span>Lengkapi e-KYC Sekarang</span>
                         </a>
                     </div>
@@ -793,7 +855,9 @@
                         <span class="menu-item-title">Rekening Bank Pencairan</span>
                         <div class="menu-item-sub">
                             @if($seller->bank_name)
-                                {{ $seller->bank_name }} · {{ substr($seller->bank_account_number, 0, 4) . '****' . substr($seller->bank_account_number, -4) }} (a.n {{ $seller->bank_account_name }})
+                                {{ $seller->bank_name }} ·
+                                {{ substr($seller->bank_account_number, 0, 4) . '****' . substr($seller->bank_account_number, -4) }}
+                                (a.n {{ $seller->bank_account_name }})
                             @else
                                 Belum diatur (klik untuk menambahkan)
                             @endif
@@ -817,8 +881,8 @@
                 <div class="menu-item-left">
                     <div class="menu-item-icon">
                         <svg width="16" height="16" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 6 12 12 16 14"/>
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
                         </svg>
                     </div>
                     <span class="menu-item-title">Riwayat Mutasi & Payout</span>
@@ -837,7 +901,8 @@
             <div class="menu-group-item" style="cursor: pointer;" onclick="openPushModal()">
                 <div class="menu-item-left">
                     <div class="menu-item-icon" style="background: #eff6ff; color: #2563eb;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
@@ -848,7 +913,8 @@
                     </div>
                 </div>
                 <div class="menu-item-right">
-                    <span class="menu-item-badge" id="ticketingPushBadge" style="background: #e0f2fe; color: #0284c7;">Cek Status</span>
+                    <span class="menu-item-badge" id="ticketingPushBadge" style="background: #e0f2fe; color: #0284c7;">Cek
+                        Status</span>
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
@@ -860,9 +926,10 @@
                 <div class="menu-item-left">
                     <div class="menu-item-icon">
                         <svg width="16" height="16" fill="none" stroke="#059669" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="2" y1="12" x2="22" y2="12"/>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                         </svg>
                     </div>
                     <div>
@@ -884,7 +951,10 @@
                 <div class="menu-item-left">
                     <div class="menu-item-icon">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
                         </svg>
                     </div>
                     <div>
@@ -907,7 +977,8 @@
                 <button type="submit" class="menu-logout-btn">
                     <div class="menu-item-left">
                         <div class="menu-logout-icon">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
                                 <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
                                 <polyline points="16 17 21 12 16 7"></polyline>
                                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -929,50 +1000,54 @@
         $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
     @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
-        <div class="scanner-bottom-nav-bar" style="{{ !$isKycVerified ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
+        <div class="scanner-bottom-nav-bar"
+            style="{{ !$isKycVerified ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
             {{-- 1. Home --}}
             <a href="{{ route('creator.ticket.scanner', ['tab' => 'home']) }}" class="scanner-nav-item" title="Home">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
             </a>
 
             @if($isKycVerified)
-            {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" class="scanner-nav-item" title="Data Kehadiran">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-                    <rect x="9" y="3" width="6" height="4" rx="2"/>
-                    <path d="m9 14 2 2 4-4"/>
-                </svg>
-            </a>
+                {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
+                <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" class="scanner-nav-item"
+                    title="Data Kehadiran">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                        <rect x="9" y="3" width="6" height="4" rx="2" />
+                        <path d="m9 14 2 2 4-4" />
+                    </svg>
+                </a>
             @endif
 
             {{-- 3. Center Scanner (Floating Circle) --}}
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'scanner']) }}" class="scanner-nav-item scanner-nav-center" title="Live QR Scanner">
+            <a href="{{ route('creator.ticket.scanner', ['tab' => 'scanner']) }}"
+                class="scanner-nav-item scanner-nav-center" title="Live QR Scanner">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                    <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
-                    <rect x="7" y="7" width="10" height="10" rx="1"/>
+                    <path
+                        d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                    <rect x="7" y="7" width="10" height="10" rx="1" />
                 </svg>
             </a>
 
             @if($isKycVerified)
-            {{-- 4. Gate Staff (Gate Door) --}}
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'gate']) }}" class="scanner-nav-item" title="Gate Staff">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/>
-                    <path d="M2 20h20"/>
-                    <circle cx="14" cy="12" r="1" fill="currentColor"/>
-                </svg>
-            </a>
+                {{-- 4. Gate Staff (Gate Door) --}}
+                <a href="{{ route('creator.ticket.scanner', ['tab' => 'gate']) }}" class="scanner-nav-item" title="Gate Staff">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14" />
+                        <path d="M2 20h20" />
+                        <circle cx="14" cy="12" r="1" fill="currentColor" />
+                    </svg>
+                </a>
             @endif
 
             {{-- 5. Profile (ACTIVE dengan Dot Indicator) --}}
             <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item active" title="Profil Organizer">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
                 </svg>
             </a>
         </div>
@@ -981,21 +1056,30 @@
     {{-- ── MODAL REKENING PENCAIRAN (CLOSEABLE & CLEAN) ── --}}
     <div id="rekeningModal" class="profile-custom-modal" style="display: none;" onclick="handleRekeningBackdrop(event)">
         <div class="profile-custom-modal-sheet" id="rekeningModalSheet">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <div style="width:36px; height:36px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#16a34a;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <div
+                        style="width:36px; height:36px; border-radius:10px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#16a34a;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
                             <line x1="1" y1="10" x2="23" y2="10" />
                         </svg>
                     </div>
                     <div>
-                        <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Rekening Pencairan Dana</h4>
-                        <p style="margin:2px 0 0; font-size:0.72rem; color:#64748b;">Tersinkron dengan pencairan saldo tiket</p>
+                        <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Rekening Pencairan Dana
+                        </h4>
+                        <p style="margin:2px 0 0; font-size:0.72rem; color:#64748b;">Tersinkron dengan pencairan saldo tiket
+                        </p>
                     </div>
                 </div>
-                <button type="button" onclick="closeRekeningModal()" style="border:none; background:#f1f5f9; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b;">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <button type="button" onclick="closeRekeningModal()"
+                    style="border:none; background:#f1f5f9; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
 
@@ -1003,56 +1087,81 @@
                 @csrf
                 <div style="display:flex; flex-direction:column; gap:0.95rem;">
                     <div>
-                        <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Bank / E-Wallet</label>
-                        <select name="bank_name" required style="width:100%; height:42px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:12px; font-size:0.84rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
+                        <label
+                            style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Bank
+                            / E-Wallet</label>
+                        <select name="bank_name" required
+                            style="width:100%; height:42px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:12px; font-size:0.84rem; color:#0f172a; background:#fff; font-family:inherit; outline:none;">
                             <option value="">— Pilih Bank / E-Wallet —</option>
                             <optgroup label="E-Wallet">
                                 @foreach(['GoPay', 'ShopeePay', 'DANA', 'OVO', 'LinkAja', 'AstraPay', 'Jenius Pay'] as $ewallet)
-                                    <option value="{{ $ewallet }}" {{ (old('bank_name', $seller->bank_name) === $ewallet || strtolower($seller->bank_name ?? '') === strtolower($ewallet)) ? 'selected' : '' }}>{{ $ewallet }}</option>
+                                    <option value="{{ $ewallet }}" {{ (old('bank_name', $seller->bank_name) === $ewallet || strtolower($seller->bank_name ?? '') === strtolower($ewallet)) ? 'selected' : '' }}>
+                                        {{ $ewallet }}</option>
                                 @endforeach
                             </optgroup>
                             <optgroup label="Bank Digital">
                                 @foreach(['Bank Jago', 'Bank Jago Syariah', 'SMBC Indonesia (Jenius)', 'SeaBank', 'blu by BCA Digital', 'Allo Bank', 'Bank Neo Commerce (BNC)', 'Bank Aladin Syariah', 'Superbank', 'Krom Bank', 'MNC Bank', 'Bank Amar', 'Bank Saqu'] as $bank)
-                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>
+                                        {{ $bank }}</option>
                                 @endforeach
                             </optgroup>
                             <optgroup label="Bank BUMN">
                                 @foreach(['BRI', 'BNI', 'Mandiri', 'BTN', 'BSI (Bank Syariah Indonesia)'] as $bank)
-                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>
+                                        {{ $bank }}</option>
                                 @endforeach
                             </optgroup>
                             <optgroup label="Bank Swasta Nasional">
                                 @foreach(['BCA', 'BCA Syariah', 'CIMB Niaga', 'CIMB Niaga Syariah', 'Danamon', 'Danamon Syariah', 'Permata', 'Permata Syariah', 'OCBC', 'OCBC Syariah', 'Maybank', 'Maybank Syariah', 'ANZ Panin', 'Panin Bank', 'UOB Indonesia', 'Bank Mega', 'Bank Mega Syariah', 'BTPN Syariah', 'KB Bank (Bukopin)', 'Sinarmas', 'Mayapada International', 'Muamalat Indonesia'] as $bank)
-                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>
+                                        {{ $bank }}</option>
                                 @endforeach
                             </optgroup>
                             <optgroup label="Bank Pembangunan Daerah (BPD)">
                                 @foreach(['BJB (Jawa Barat dan Banten)', 'Bank BJB Syariah', 'Bank Jatim', 'Bank Jatim Syariah', 'Bank Jateng', 'Bank Jateng Syariah', 'BPD Bali', 'Bank Sumut', 'Bank Sumut Syariah', 'Bank Nagari', 'Bank Nagari Syariah', 'Bankaltimtara', 'Bankaltimtara Syariah', 'Bank Papua'] as $bank)
-                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>{{ $bank }}</option>
+                                    <option value="{{ $bank }}" {{ (old('bank_name', $seller->bank_name) === $bank || str_replace(['Bank ', ' '], '', strtolower($seller->bank_name ?? '')) === str_replace(['Bank ', ' '], '', strtolower($bank))) ? 'selected' : '' }}>
+                                        {{ $bank }}</option>
                                 @endforeach
                             </optgroup>
                         </select>
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Nomor Rekening / No. HP</label>
-                        <input type="text" name="bank_account_number" inputmode="numeric" value="{{ old('bank_account_number', $seller->bank_account_number) }}" required placeholder="Contoh: 1234567890" style="width:100%; height:42px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:12px; font-size:0.84rem; color:#0f172a; outline:none; font-family:inherit; box-sizing:border-box;">
+                        <label
+                            style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">Nomor
+                            Rekening / No. HP</label>
+                        <input type="text" name="bank_account_number" inputmode="numeric"
+                            value="{{ old('bank_account_number', $seller->bank_account_number) }}" required
+                            placeholder="Contoh: 1234567890"
+                            style="width:100%; height:42px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:12px; font-size:0.84rem; color:#0f172a; outline:none; font-family:inherit; box-sizing:border-box;">
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">
-                            Nama Pemilik Rekening <span style="font-weight:400; color:#64748b; font-size:0.72rem;">(harus sesuai nama akun)</span>
+                        <label
+                            style="display:block; font-size:0.76rem; font-weight:700; color:#374151; margin-bottom:0.35rem;">
+                            Nama Pemilik Rekening <span style="font-weight:400; color:#64748b; font-size:0.72rem;">(harus
+                                sesuai nama akun)</span>
                         </label>
-                        <input type="text" name="bank_account_name" value="{{ old('bank_account_name', $seller->bank_account_name ?? $seller->name) }}" required style="width:100%; height:42px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:12px; font-size:0.84rem; color:#0f172a; outline:none; font-family:inherit; box-sizing:border-box;">
-                        <span style="font-size:0.7rem; color:#64748b; margin-top:0.25rem; display:block;">Nama terdaftar: <strong>{{ $seller->name }}</strong></span>
+                        <input type="text" name="bank_account_name"
+                            value="{{ old('bank_account_name', $seller->bank_account_name ?? $seller->name) }}" required
+                            style="width:100%; height:42px; padding:0 0.75rem; border:1.5px solid #e2e8f0; border-radius:12px; font-size:0.84rem; color:#0f172a; outline:none; font-family:inherit; box-sizing:border-box;">
+                        <span style="font-size:0.7rem; color:#64748b; margin-top:0.25rem; display:block;">Nama terdaftar:
+                            <strong>{{ $seller->name }}</strong></span>
                     </div>
 
                     <div style="display:flex; gap:0.65rem; margin-top:0.5rem;">
-                        <button type="button" onclick="closeRekeningModal()" style="flex:1; height:44px; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer;">
+                        <button type="button" onclick="closeRekeningModal()"
+                            style="flex:1; height:44px; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer;">
                             Batal
                         </button>
-                        <button type="submit" style="flex:2; height:44px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:12px; font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 12px rgba(30,179,73,0.25);">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        <button type="submit"
+                            style="flex:2; height:44px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:12px; font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 3px 12px rgba(30,179,73,0.25);">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                <polyline points="17 21 17 13 7 13 7 21" />
+                                <polyline points="7 3 7 8 15 8" />
+                            </svg>
                             <span>Simpan Rekening</span>
                         </button>
                     </div>
@@ -1066,8 +1175,10 @@
         <div class="profile-custom-modal-sheet" id="pushModalSheet">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <div style="width:38px; height:38px; border-radius:12px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <div
+                        style="width:38px; height:38px; border-radius:12px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
@@ -1077,22 +1188,27 @@
                         <div style="font-size:0.75rem; color:#64748b;">Notifikasi live langsung ke layar HP & PC</div>
                     </div>
                 </div>
-                <button type="button" onclick="closePushModal()" style="background:none; border:none; font-size:1.5rem; color:#94a3b8; cursor:pointer; padding:0 4px;">&times;</button>
+                <button type="button" onclick="closePushModal()"
+                    style="background:none; border:none; font-size:1.5rem; color:#94a3b8; cursor:pointer; padding:0 4px;">&times;</button>
             </div>
 
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1rem; margin-bottom:1.25rem;">
+            <div
+                style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1rem; margin-bottom:1.25rem;">
                 <div style="display:flex; align-items:center; justify-content:space-between;">
                     <div>
                         <div style="font-weight:700; font-size:0.88rem; color:#0f172a;">Izin Notifikasi Layar</div>
-                        <div id="modalPushPermDesc" style="font-size:0.72rem; color:#64748b; margin-top:2px;">Memeriksa status peramban...</div>
+                        <div id="modalPushPermDesc" style="font-size:0.72rem; color:#64748b; margin-top:2px;">Memeriksa
+                            status peramban...</div>
                     </div>
-                    <button type="button" id="btnEnablePush" onclick="requestPushPermission()" style="padding:0.45rem 0.9rem; border-radius:999px; font-size:0.75rem; font-weight:700; border:none; background:#1eb349; color:#fff; cursor:pointer;">
+                    <button type="button" id="btnEnablePush" onclick="requestPushPermission()"
+                        style="padding:0.45rem 0.9rem; border-radius:999px; font-size:0.75rem; font-weight:700; border:none; background:#1eb349; color:#fff; cursor:pointer;">
                         Aktifkan
                     </button>
                 </div>
             </div>
 
-            <div style="font-size:0.75rem; color:#475569; line-height:1.5; margin-bottom:1.25rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:0.85rem;">
+            <div
+                style="font-size:0.75rem; color:#475569; line-height:1.5; margin-bottom:1.25rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:0.85rem;">
                 <div style="font-weight:700; color:#166534; margin-bottom:4px;">✨ Notifikasi Real-time Meliputi:</div>
                 <ul style="margin:0; padding-left:1.2rem; color:#15803d;">
                     <li>Pembelian tiket event baru oleh pengunjung</li>
@@ -1101,7 +1217,8 @@
                 </ul>
             </div>
 
-            <button type="button" onclick="closePushModal()" style="width:100%; height:44px; border-radius:14px; background:#0f172a; color:#ffffff; font-weight:700; font-size:0.85rem; border:none; cursor:pointer;">
+            <button type="button" onclick="closePushModal()"
+                style="width:100%; height:44px; border-radius:14px; background:#0f172a; color:#ffffff; font-weight:700; font-size:0.85rem; border:none; cursor:pointer;">
                 Selesai
             </button>
         </div>
@@ -1143,7 +1260,7 @@
             }
         }
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeRekeningModal();
                 closePushModal();
@@ -1180,12 +1297,11 @@
             try {
                 const res = await Notification.requestPermission();
                 updatePushPermissionUI();
-            } catch (e) {}
+            } catch (e) { }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             updatePushPermissionUI();
         });
     </script>
 @endsection
-
