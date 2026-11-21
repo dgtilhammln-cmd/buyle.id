@@ -110,7 +110,22 @@ class StoreProductRequest extends FormRequest
             }
 
             if ($this->boolean('require_follow_join')) {
-                $hasAny = !empty($this->input('follow_instagram_url'))
+                $customReqs = $this->input('custom_free_requirements');
+                if (is_string($customReqs)) {
+                    $customReqs = json_decode($customReqs, true);
+                }
+                $hasCustom = false;
+                if (is_array($customReqs)) {
+                    foreach ($customReqs as $cr) {
+                        if (!empty($cr['url']) && trim($cr['url']) !== '') {
+                            $hasCustom = true;
+                            break;
+                        }
+                    }
+                }
+
+                $hasAny = $hasCustom
+                    || !empty($this->input('follow_instagram_url'))
                     || !empty($this->input('follow_tiktok_url'))
                     || !empty($this->input('follow_x_url'))
                     || !empty($this->input('follow_youtube_url'))
