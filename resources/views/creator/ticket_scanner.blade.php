@@ -634,10 +634,10 @@
             min-width: 0;
         }
         .visitor-name {
-            font-size: 0.92rem;
-            font-weight: 800;
+            font-size: 0.88rem;
+            font-weight: 600;
             color: #0f172a;
-            line-height: 1.3;
+            line-height: 1.35;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -5394,18 +5394,23 @@
             const modal = document.getElementById('ticketDetailModal');
             if (!modal) return;
 
-            // Reset fields
-            document.getElementById('modalTicketCode').textContent = '...';
-            document.getElementById('modalHolderName').textContent = '...';
-            document.getElementById('modalHolderNik').textContent = '...';
-            document.getElementById('modalHolderPhone').textContent = '...';
-            document.getElementById('modalHolderEmail').textContent = '...';
-            document.getElementById('modalEventName').textContent = '...';
-            document.getElementById('modalEventDate').textContent = '';
-            document.getElementById('modalOrderNumber').textContent = '...';
-            document.getElementById('modalStatusBadge').innerHTML = '';
-            document.getElementById('modalCheckinTimeBox').style.display = 'none';
-            document.getElementById('modalTicketQrImg').src = '';
+            // Reset fields safely
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            };
+            setVal('modalTicketCode', '...');
+            setVal('modalHolderName', '...');
+            setVal('modalHolderNik', '...');
+            setVal('modalHolderPhone', '...');
+            setVal('modalHolderEmail', '...');
+            setVal('modalEventName', '...');
+            setVal('modalEventDate', '');
+            setVal('modalOrderNumber', '...');
+            const statusBadgeEl = document.getElementById('modalStatusBadge');
+            if (statusBadgeEl) statusBadgeEl.innerHTML = '';
+            const checkinTimeBoxEl = document.getElementById('modalCheckinTimeBox');
+            if (checkinTimeBoxEl) checkinTimeBoxEl.style.display = 'none';
 
             modal.style.display = 'flex';
 
