@@ -1355,9 +1355,10 @@
     </div>
 
     @php
-        $isMidtransProd = config('services.midtrans.is_production', false);
+        $midtransService = app(\App\Services\MidtransService::class);
+        $isMidtransProd = $midtransService->isProduction();
         $snapJsUrl = $isMidtransProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
-        $midtransClientKey = config('services.midtrans.client_key');
+        $midtransClientKey = $midtransService->getClientKey();
     @endphp
     @if(!empty($midtransClientKey))
         <script src="{{ $snapJsUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
@@ -1428,22 +1429,43 @@
 
                 if (data.success && data.snap_token) {
                     closeTopUpModal();
-                    if (window.snap) {
+
+                    const triggerSnap = () => {
                         window.snap.pay(data.snap_token, {
-                            onSuccess: function () {
+                            onSuccess: function (result) {
                                 alert('Top up saldo berhasil!');
                                 window.location.reload();
                             },
-                            onPending: function () {
+                            onPending: function (result) {
                                 alert('Menunggu pembayaran Anda selesaikan.');
                                 window.location.reload();
                             },
-                            onError: function () {
+                            onError: function (result) {
                                 alert('Pembayaran gagal atau dibatalkan.');
+                            },
+                            onClose: function () {
+                                // Popup Snap ditutup user
                             }
                         });
+                    };
+
+                    if (window.snap) {
+                        triggerSnap();
                     } else {
-                        window.location.href = `https://app.midtrans.com/snap/v2/vtweb/${data.snap_token}`;
+                        const script = document.createElement('script');
+                        script.src = "{{ $snapJsUrl }}";
+                        script.setAttribute('data-client-key', "{{ $midtransClientKey }}");
+                        script.onload = () => {
+                            if (window.snap) {
+                                triggerSnap();
+                            } else {
+                                window.location.href = `https://app.midtrans.com/snap/v2/vtweb/${data.snap_token}`;
+                            }
+                        };
+                        script.onerror = () => {
+                            window.location.href = `https://app.midtrans.com/snap/v2/vtweb/${data.snap_token}`;
+                        };
+                        document.head.appendChild(script);
                     }
                 } else {
                     err.textContent = data.message || 'Gagal membuat tagihan top up.';
