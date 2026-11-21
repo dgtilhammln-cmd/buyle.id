@@ -343,67 +343,54 @@
             transform: scale(1.05);
         }
 
-        /* Buyle Pay Brand Logo Wrap */
-        .nina-buylepay-logo-wrap {
-            display: inline-flex;
+        /* Buyle Pay Balance Row (Logo di Kiri, Nominal di Paling Kanan + Icon Mata) */
+        .nina-balance-row {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.55rem;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.75rem 0.2rem 0.6rem;
+        }
+
+        .nina-buylepay-logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-shrink: 0;
         }
 
         .nina-buylepay-logo {
-            height: 25px;
+            height: 34px;
             width: auto;
-            max-width: 130px;
+            max-width: 145px;
             object-fit: contain;
             display: block;
-        }
-
-        /* Badge Currency Pill */
-        .nina-currency-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: #ffffff;
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: #334155;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-            margin: 0 auto 0.4rem;
-        }
-
-        .nina-balance-center {
-            text-align: center;
-            padding: 0.2rem 0 0.8rem;
         }
 
         .nina-balance-amount-wrap {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 0.5rem;
+            justify-content: flex-end;
+            gap: 7px;
         }
 
         .nina-balance-amount {
-            font-size: clamp(1.85rem, 4.2vw, 2.35rem);
+            font-size: 1.25rem;
             font-weight: 700;
             color: #0f172a;
-            letter-spacing: -0.025em;
-            line-height: 1.15;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
             margin-bottom: 0;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .nina-btn-toggle-balance {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -422,20 +409,7 @@
             transform: scale(1.05);
         }
 
-        .nina-growth-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: #22c55e;
-            color: #ffffff;
-            padding: 3px 11px;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-        }
-
-        /* Action Pill Bar (Hitam Sleek 3 Tombol: Tarik Saldo, Transfer, Bagikan) */
+        /* Action Pill Bar (Hitam Sleek 3 Tombol: Tarik Saldo, Top Up, Transfer) */
         .nina-action-bar {
             background: #181d27;
             border-radius: 999px;
@@ -443,7 +417,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 1rem;
+            margin-top: 0.85rem;
             gap: 5px;
             box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
         }
@@ -474,6 +448,13 @@
         }
 
         @media (max-width: 480px) {
+            .nina-buylepay-logo {
+                height: 30px;
+                max-width: 120px;
+            }
+            .nina-balance-amount {
+                font-size: 1.12rem;
+            }
             .nina-action-btn {
                 padding: 8px 6px;
                 font-size: 0.72rem;
@@ -1138,7 +1119,222 @@
         </div>
     </div>
 
+    {{-- ── MODAL TOP UP SALDO BUYLE PAY ── --}}
+    <style>
+        #topupModal {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                backdrop-filter 0.28s ease;
+        }
+
+        #topupModal.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #topupModal .topup-modal-card {
+            transform: translateY(28px) scale(0.95);
+            opacity: 0;
+            transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #topupModal.is-open .topup-modal-card {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        #topupModal.is-closing .topup-modal-card {
+            transform: translateY(18px) scale(0.96);
+            opacity: 0;
+            transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1),
+                opacity 0.18s cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        #topupModal.is-closing {
+            opacity: 0;
+            transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1);
+        }
+    </style>
+
+    <div id="topupModal"
+        style="display:flex; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;"
+        onclick="if(event.target===this) closeTopUpModal()">
+        <div class="topup-modal-card"
+            style="background:#ffffff; border-radius:24px; max-width:420px; width:100%; padding:1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; box-sizing:border-box;">
+
+            {{-- Tombol X di Pojok Kanan Atas --}}
+            <button type="button" onclick="closeTopUpModal()"
+                style="position:absolute; top:1.1rem; right:1.1rem; width:34px; height:34px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:1.15rem; cursor:pointer; transition:all 0.15s ease;"
+                onmouseover="this.style.background='#fee2e2'; this.style.color='#ef4444'; this.style.borderColor='#fca5a5';"
+                onmouseout="this.style.background='#f8fafc'; this.style.color='#64748b'; this.style.borderColor='#e2e8f0';"
+                title="Tutup Modal">
+                <i class="ph-bold ph-x"></i>
+            </button>
+
+            {{-- Brand Logo & Header --}}
+            <div style="margin-bottom:0.85rem;">
+                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" style="height:24px; width:auto; object-fit:contain; margin-bottom:0.35rem; display:inline-block;">
+                <h3 style="font-size:1.08rem; font-weight:700; color:#0f172a; margin:0 0 0.2rem;">Top Up Saldo Buyle Pay</h3>
+                <p style="font-size:0.75rem; color:#64748b; margin:0; line-height:1.4;">
+                    Isi saldo instan via QRIS &amp; Virtual Account Bank.
+                </p>
+            </div>
+
+            {{-- Saldo Saat Ini --}}
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between; gap:0.5rem;">
+                <div style="text-align:left;">
+                    <div style="font-size:0.66rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.02em;">Saldo Saat Ini</div>
+                    <div style="font-size:0.95rem; font-weight:700; color:#0f172a; font-family:'Montserrat',sans-serif;">
+                        Rp {{ number_format($availableBalance, 0, ',', '.') }}
+                    </div>
+                </div>
+                <div style="font-size:0.68rem; font-weight:600; color:#15803d; background:#f0fdf4; padding:3px 8px; border-radius:6px; border:1px solid #bbf7d0;">
+                    Instan 24 Jam
+                </div>
+            </div>
+
+            {{-- FORM TOP UP --}}
+            <form id="topupForm" onsubmit="event.preventDefault(); submitTopUp();" style="text-align:left;">
+                <div style="margin-bottom:0.85rem;">
+                    <label style="display:block; font-size:0.72rem; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.35rem;">
+                        Nominal Top Up (Rp) <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="text" id="topupAmountInput"
+                        placeholder="Min. Rp 10.000" inputmode="numeric"
+                        oninput="onTopUpAmountInput(this)"
+                        style="width:100%; box-sizing:border-box; padding:0.6rem 0.85rem; border-radius:12px; border:1.5px solid #e2e8f0; font-size:0.95rem; font-weight:700; color:#0f172a; outline:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif;">
+
+                    {{-- Quick Amount Chips --}}
+                    <div style="display:flex; gap:0.35rem; margin-top:0.45rem; flex-wrap:wrap;">
+                        <button type="button" class="transfer-chip-btn" onclick="setTopUpAmount(20000)">20rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTopUpAmount(50000)">50rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTopUpAmount(100000)">100rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTopUpAmount(250000)">250rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTopUpAmount(500000)">500rb</button>
+                    </div>
+
+                    <div id="topupAmountError" style="display:none; color:#dc2626; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.72rem; margin-top:0.4rem; line-height:1.35;"></div>
+                </div>
+
+                {{-- TOMBOL SUBMIT --}}
+                <button type="submit" id="btnSubmitTopUp"
+                    style="width:100%; height:44px; border-radius:999px; background:#181d27; color:#ffffff; font-size:0.86rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; margin-top:0.5rem; transition:all 0.2s ease; font-family:'Montserrat',sans-serif;">
+                    <span>Lanjut Pembayaran</span>
+                    <i class="ph-bold ph-arrow-right" style="font-size:0.95rem;"></i>
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    @php
+        $isMidtransProd = config('services.midtrans.is_production', false);
+        $snapJsUrl = $isMidtransProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+        $midtransClientKey = config('services.midtrans.client_key');
+    @endphp
+    @if(!empty($midtransClientKey))
+        <script src="{{ $snapJsUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
+    @endif
+
     <script>
+        function openTopUpModal() {
+            const m = document.getElementById('topupModal');
+            if (!m) return;
+            document.getElementById('topupAmountInput').value = '';
+            document.getElementById('topupAmountError').style.display = 'none';
+            m.classList.remove('is-closing');
+            void m.offsetWidth;
+            m.classList.add('is-open');
+        }
+
+        function closeTopUpModal() {
+            const m = document.getElementById('topupModal');
+            if (!m) return;
+            m.classList.remove('is-open');
+            m.classList.add('is-closing');
+            setTimeout(() => {
+                m.classList.remove('is-closing');
+            }, 240);
+        }
+
+        function onTopUpAmountInput(input) {
+            let clean = input.value.replace(/\D/g, '');
+            if (!clean) {
+                input.value = '';
+            } else {
+                input.value = new Intl.NumberFormat('id-ID').format(clean);
+            }
+        }
+
+        function setTopUpAmount(amt) {
+            const input = document.getElementById('topupAmountInput');
+            if (!input) return;
+            input.value = new Intl.NumberFormat('id-ID').format(amt);
+        }
+
+        async function submitTopUp() {
+            const input = document.getElementById('topupAmountInput');
+            const amt = parseInt(input.value.replace(/\D/g, ''), 10) || 0;
+            const err = document.getElementById('topupAmountError');
+            if (amt < 10000) {
+                err.textContent = 'Minimal top up saldo adalah Rp 10.000.';
+                err.style.display = 'block';
+                return;
+            }
+            err.style.display = 'none';
+
+            const btn = document.getElementById('btnSubmitTopUp');
+            btn.disabled = true;
+            btn.innerHTML = `<svg class="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24" style="margin-right:6px;"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="3" stroke-dasharray="32" stroke-linecap="round"></circle></svg> <span>Menyiapkan Tagihan...</span>`;
+
+            try {
+                const res = await fetch(`{{ route('creator.pos.deposit') }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: amt })
+                });
+                const data = await res.json();
+
+                if (data.success && data.snap_token) {
+                    closeTopUpModal();
+                    if (window.snap) {
+                        window.snap.pay(data.snap_token, {
+                            onSuccess: function () {
+                                alert('Top up saldo berhasil!');
+                                window.location.reload();
+                            },
+                            onPending: function () {
+                                alert('Menunggu pembayaran Anda selesaikan.');
+                                window.location.reload();
+                            },
+                            onError: function () {
+                                alert('Pembayaran gagal atau dibatalkan.');
+                            }
+                        });
+                    } else {
+                        window.location.href = `https://app.midtrans.com/snap/v2/vtweb/${data.snap_token}`;
+                    }
+                } else {
+                    err.textContent = data.message || 'Gagal membuat tagihan top up.';
+                    err.style.display = 'block';
+                }
+            } catch (e) {
+                err.textContent = 'Terjadi kesalahan jaringan.';
+                err.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Lanjut Pembayaran</span> <i class="ph-bold ph-arrow-right"></i>`;
+            }
+        }
         function openShareStoreModal() {
             const m = document.getElementById('shareStoreModal');
             if (!m) return;
@@ -1546,23 +1742,29 @@
                             </div>
                         </div>
 
-                        {{-- Tombol Icon Lonceng Notifikasi Pojok Kanan Atas --}}
-                        <a href="{{ route('creator.notif.index') }}" class="nina-notif-btn" id="ninaNotifBtn"
-                            title="Notifikasi Toko">
-                            <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2"
-                                viewBox="0 0 24 24">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg>
-                            @if(isset($unreadNotifCount) && $unreadNotifCount > 0)
-                                <span class="nina-notif-badge"
-                                    id="ninaNotifBadge">{{ $unreadNotifCount > 99 ? '99+' : $unreadNotifCount }}</span>
-                            @endif
-                        </a>
+                        {{-- Aksi Kanan: Tombol Bagikan Toko & Lonceng Notifikasi --}}
+                        <div class="nina-topbar-actions" style="display: flex; align-items: center; gap: 7px;">
+                            <button type="button" class="nina-notif-btn" onclick="openShareStoreModal()" title="Bagikan Digital Store & Website">
+                                <i class="ph-bold ph-share-network" style="font-size: 1.05rem; color: #334155;"></i>
+                            </button>
+
+                            <a href="{{ route('creator.notif.index') }}" class="nina-notif-btn" id="ninaNotifBtn"
+                                title="Notifikasi Toko">
+                                <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                </svg>
+                                @if(isset($unreadNotifCount) && $unreadNotifCount > 0)
+                                    <span class="nina-notif-badge"
+                                        id="ninaNotifBadge">{{ $unreadNotifCount > 99 ? '99+' : $unreadNotifCount }}</span>
+                                @endif
+                            </a>
+                        </div>
                     </div>
 
-                    {{-- Saldo Utama Buyle Pay (Minimalist Clean Typography & Hide/Show) --}}
-                    <div class="nina-balance-center">
+                    {{-- Saldo Utama Buyle Pay: Logo di Kiri, Nominal di Paling Kanan + Icon Mata --}}
+                    <div class="nina-balance-row">
                         <div class="nina-buylepay-logo-wrap" title="Buyle Pay">
                             <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" class="nina-buylepay-logo">
                         </div>
@@ -1575,31 +1777,26 @@
                             </div>
                             <button type="button" class="nina-btn-toggle-balance" id="ninaToggleBalanceBtn"
                                 onclick="toggleNinaBalanceVisibility()" title="Sembunyikan / Tampilkan Saldo">
-                                <i class="ph-bold ph-eye" id="ninaEyeIcon" style="font-size: 0.95rem;"></i>
+                                <i class="ph-bold ph-eye" id="ninaEyeIcon" style="font-size: 0.92rem;"></i>
                             </button>
-                        </div>
-
-                        <div class="nina-growth-pill">
-                            <i class="ph-bold ph-trend-up"></i>
-                            <span>Saldo Siap Ditarik</span>
                         </div>
                     </div>
 
-                    {{-- Dark Action Bar: 3 Tombol (Tarik Saldo, Transfer, Bagikan) --}}
+                    {{-- Dark Action Bar: 3 Tombol (Tarik Saldo, Top Up, Transfer) --}}
                     <div class="nina-action-bar">
                         <a href="{{ route('creator.payout.settings') }}" class="nina-action-btn">
                             <span>Tarik Saldo</span>
                             <i class="ph-bold ph-arrow-up-right" style="font-size: 0.85rem;"></i>
                         </a>
 
+                        <button type="button" class="nina-action-btn" onclick="openTopUpModal()">
+                            <i class="ph-bold ph-plus-circle" style="font-size: 0.88rem;"></i>
+                            <span>Top Up</span>
+                        </button>
+
                         <button type="button" class="nina-action-btn" onclick="openTransferModal()">
                             <i class="ph-bold ph-arrows-left-right" style="font-size: 0.85rem;"></i>
                             <span>Transfer</span>
-                        </button>
-
-                        <button type="button" class="nina-action-btn" onclick="openShareStoreModal()">
-                            <i class="ph-bold ph-share-network" style="font-size: 0.85rem;"></i>
-                            <span>Bagikan</span>
                         </button>
                     </div>
 
