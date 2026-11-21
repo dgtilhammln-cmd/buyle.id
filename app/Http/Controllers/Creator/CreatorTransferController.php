@@ -98,6 +98,16 @@ class CreatorTransferController extends Controller
         ]);
 
         $sender = Auth::user();
+
+        // Wajib set PIN keamanan sebelum transfer saldo
+        if (empty($sender->security_pin) && empty($sender->pos_pin)) {
+            return response()->json([
+                'success'      => false,
+                'message'      => 'Anda wajib mengatur PIN keamanan terlebih dahulu sebelum melakukan transfer saldo.',
+                'pin_required' => true,
+            ], 422);
+        }
+
         $amount = (float) $request->input('amount');
         $notes  = trim($request->input('notes', ''));
 

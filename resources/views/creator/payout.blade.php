@@ -1733,6 +1733,21 @@
             if (localStorage.getItem('buyle_hide_balance') === '1') {
                 applyBalanceVisibility(true);
             }
+
+            // ── Auto-Switch Tab dari URL Query (misal: ?tab=history atau ?tab=riwayat) ──
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab');
+            if (activeTab === 'history' || activeTab === 'riwayat') {
+                const histBtn = document.querySelector('.tab-btn[onclick*="tab-history"]');
+                if (histBtn) {
+                    switchPayoutTab('tab-history', histBtn);
+                }
+            } else if (activeTab === 'bank' || activeTab === 'rekening') {
+                const bankBtn = document.querySelector('.tab-btn[onclick*="tab-bank"]');
+                if (bankBtn) {
+                    switchPayoutTab('tab-bank', bankBtn);
+                }
+            }
         });
 
         // ── Tab Switcher ──

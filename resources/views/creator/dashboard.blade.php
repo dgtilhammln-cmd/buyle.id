@@ -447,6 +447,28 @@
             color: #ffffff;
         }
 
+        .nina-action-btn.nina-action-btn-icon {
+            flex: 0 0 38px;
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nina-action-btn.nina-action-btn-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .nina-action-btn.nina-action-btn-icon i {
+            font-size: 1.05rem;
+        }
+
         @media (max-width: 480px) {
             .nina-buylepay-logo {
                 height: 30px;
@@ -462,6 +484,14 @@
             }
             .nina-action-btn i {
                 font-size: 0.78rem !important;
+            }
+            .nina-action-btn.nina-action-btn-icon {
+                flex: 0 0 34px;
+                width: 34px;
+                height: 34px;
+            }
+            .nina-action-btn.nina-action-btn-icon i {
+                font-size: 0.95rem !important;
             }
         }
 
@@ -536,6 +566,50 @@
             color: #475569;
             text-align: center;
             line-height: 1.2;
+        }
+
+        .nina-mini-card-tix {
+            background: linear-gradient(135deg, #1db349 0%, #84ce00 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.28) !important;
+            box-shadow: 0 4px 14px rgba(29, 179, 73, 0.22) !important;
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        .nina-mini-card-tix:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 8px 20px rgba(29, 179, 73, 0.35) !important;
+        }
+
+        .nina-tix-logo {
+            height: 22px;
+            width: auto;
+            max-width: 86%;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
+            display: block;
+            margin: auto;
+        }
+
+        .nina-mini-card-pos {
+            background: #ffffff !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        .nina-mini-card-pos:hover {
+            transform: translateY(-2px);
+            border-color: #1eb349 !important;
+            box-shadow: 0 6px 16px rgba(30, 179, 73, 0.1) !important;
+        }
+
+        .nina-pos-logo {
+            height: 22px;
+            width: auto;
+            max-width: 86%;
+            object-fit: contain;
+            display: block;
+            margin: auto;
         }
 
         /* Your Income Card */
@@ -906,6 +980,59 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    {{-- ── MODAL PIN KEAMANAN DIWAJIBKAN SEBELUM TARIK / TRANSFER ── --}}
+    <style>
+        #pinRequiredModal {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.28s ease;
+        }
+        #pinRequiredModal.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #pinRequiredModal .pin-req-card {
+            transform: translateY(24px) scale(0.95);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+        }
+        #pinRequiredModal.is-open .pin-req-card {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    </style>
+
+    <div id="pinRequiredModal"
+        style="display:flex; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;"
+        onclick="if(event.target===this) closePinRequiredModal()">
+        <div class="pin-req-card"
+            style="background:#ffffff; border-radius:24px; max-width:390px; width:100%; padding:1.75rem 1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; box-sizing:border-box;">
+            
+            <div style="width:58px; height:58px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; margin:0 auto 1.1rem; color:#16a34a; font-size:1.75rem;">
+                <i class="ph-bold ph-shield-check"></i>
+            </div>
+
+            <h3 style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">
+                Atur PIN Keamanan
+            </h3>
+            
+            <p style="font-size:0.83rem; color:#64748b; line-height:1.55; margin:0 0 1.5rem;">
+                Demi keamanan akun Buyle Pay Anda, Anda wajib mengatur <strong style="color:#0f172a;">6 digit PIN keamanan</strong> terlebih dahulu sebelum melakukan <span id="pinReqActionName">penarikan atau transfer</span> saldo.
+            </p>
+
+            <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                <a href="{{ route('creator.menu') }}#pin"
+                    style="display:block; width:100%; padding:0.85rem; background:linear-gradient(135deg, #1eb349 0%, #16a34a 100%); color:#ffffff; font-weight:600; font-size:0.88rem; border-radius:14px; text-decoration:none; box-shadow:0 4px 14px rgba(30,179,73,0.35); box-sizing:border-box; transition:all 0.2s;">
+                    Atur PIN Sekarang
+                </a>
+                <button type="button" onclick="closePinRequiredModal()"
+                    style="width:100%; padding:0.75rem; background:transparent; border:none; color:#94a3b8; font-weight:600; font-size:0.82rem; cursor:pointer;">
+                    Nanti Saja
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1404,6 +1531,43 @@
         document.addEventListener('DOMContentLoaded', initNinaBalanceState);
         setTimeout(initNinaBalanceState, 50);
 
+        // ── CEK WAJIB SETTING PIN SEBELUM TARIK SALDO & TRANSFER ──
+        const hasSecurityPin = {{ (!empty($seller->security_pin) || !empty($seller->pos_pin)) ? 'true' : 'false' }};
+
+        function handleTarikSaldoClick(e) {
+            if (!hasSecurityPin) {
+                if (e) e.preventDefault();
+                openPinRequiredModal('penarikan');
+                return false;
+            }
+            return true;
+        }
+
+        function handleTransferClick(e) {
+            if (!hasSecurityPin) {
+                if (e) e.preventDefault();
+                openPinRequiredModal('transfer');
+                return false;
+            }
+            openTransferModal();
+        }
+
+        function openPinRequiredModal(actionName) {
+            const m = document.getElementById('pinRequiredModal');
+            if (!m) return;
+            const actionEl = document.getElementById('pinReqActionName');
+            if (actionEl && actionName) {
+                actionEl.textContent = actionName;
+            }
+            m.classList.add('is-open');
+        }
+
+        function closePinRequiredModal() {
+            const m = document.getElementById('pinRequiredModal');
+            if (!m) return;
+            m.classList.remove('is-open');
+        }
+
         // ── LOGIKA MODAL TRANSFER SALDO BUYLE PAY ──
         let currentAvailableBalance = {{ (float) ($availableBalance ?? 0) }};
         let isTransferUserValid = false;
@@ -1411,6 +1575,10 @@
         let transferCheckDebounce = null;
 
         function openTransferModal() {
+            if (!hasSecurityPin) {
+                openPinRequiredModal('transfer');
+                return;
+            }
             const m = document.getElementById('transferModal');
             if (!m) return;
 
@@ -1782,9 +1950,9 @@
                         </div>
                     </div>
 
-                    {{-- Dark Action Bar: 3 Tombol (Tarik Saldo, Top Up, Transfer) --}}
+                    {{-- Dark Action Bar: Tarik Saldo, Top Up, Transfer & Riwayat Icon --}}
                     <div class="nina-action-bar">
-                        <a href="{{ route('creator.payout.settings') }}" class="nina-action-btn">
+                        <a href="{{ route('creator.payout.settings') }}" class="nina-action-btn" onclick="return handleTarikSaldoClick(event)">
                             <span>Tarik Saldo</span>
                             <i class="ph-bold ph-arrow-up-right" style="font-size: 0.85rem;"></i>
                         </a>
@@ -1794,10 +1962,14 @@
                             <span>Top Up</span>
                         </button>
 
-                        <button type="button" class="nina-action-btn" onclick="openTransferModal()">
+                        <button type="button" class="nina-action-btn" onclick="handleTransferClick(event)">
                             <i class="ph-bold ph-arrows-left-right" style="font-size: 0.85rem;"></i>
                             <span>Transfer</span>
                         </button>
+
+                        <a href="{{ route('creator.payout.settings') }}?tab=history" class="nina-action-btn nina-action-btn-icon" title="Riwayat Transaksi">
+                            <i class="ph-bold ph-clock-counter-clockwise"></i>
+                        </a>
                     </div>
 
                 </div>
@@ -1809,13 +1981,14 @@
                     <div class="nina-shortcut-box">
                         <div class="nina-row-title">Shortcut</div>
                         <div class="nina-mini-grid">
-                            <a href="{{ route('creator.ticket.scanner') }}" class="nina-mini-card" title="Buyle TIX">
-                                <i class="ph ph-ticket"></i>
-                                <span>Buyle TIX</span>
+                            <a href="{{ route('creator.ticket.scanner') }}" class="nina-mini-card nina-mini-card-tix" title="Buyle TIX">
+                                <picture style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                                    <source srcset="{{ asset('images/logobuyletix.webp') }}" type="image/webp">
+                                    <img src="{{ asset('images/logobuyletix.png') }}" alt="Buyle TIX" class="nina-tix-logo">
+                                </picture>
                             </a>
-                            <a href="{{ route('creator.pos.index') }}" class="nina-mini-card" title="Kasir POS">
-                                <i class="ph ph-storefront"></i>
-                                <span>POS</span>
+                            <a href="{{ route('creator.pos.index') }}" class="nina-mini-card nina-mini-card-pos" title="Kasir POS">
+                                <img src="{{ asset('images/logobuylepos.png') }}" alt="Buyle POS" class="nina-pos-logo">
                             </a>
                             <a href="{{ route('creator.bio.index') }}" class="nina-mini-card" title="Website Toko">
                                 <i class="ph ph-globe"></i>

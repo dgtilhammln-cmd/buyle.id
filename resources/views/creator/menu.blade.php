@@ -517,7 +517,7 @@
             </a>
 
             {{-- PIN Keamanan Layar PWA --}}
-            <div class="menu-group-item" onclick="openPinModal()" style="cursor: pointer;">
+            <div class="menu-group-item" id="securityPinItem" onclick="openPinModal()" style="cursor: pointer;">
                 <div class="menu-item-left">
                     <div class="menu-item-icon" >
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -527,7 +527,7 @@
                     </div>
                     <div>
                         <span class="menu-item-title" style="display:block;">PIN Keamanan</span>
-                        <span style="font-size: 0.7rem; color: #94a3b8;">Kunci aplikasi tanpa logout</span>
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Kunci aplikasi & verifikasi transaksi</span>
                     </div>
                 </div>
                 <div class="menu-item-right">
@@ -538,30 +538,6 @@
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
-                </div>
-            </div>
-
-            {{-- Enable Fingerprint / Face ID (Persis Sesuai Gambar Referensi 1) --}}
-            <div class="menu-group-item">
-                <div class="menu-item-left">
-                    <div class="menu-item-icon" >
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path
-                                d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.99 7.132">
-                            </path>
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="menu-item-title" style="display:block;">Enable finger Print/Face ID</span>
-                        <span style="font-size: 0.7rem; color: #94a3b8;">Sensor sidik jari / Face Unlock HP</span>
-                    </div>
-                </div>
-                <div class="menu-item-right">
-                    <label class="menu-switch">
-                        <input type="checkbox" id="biometricToggle" {{ $biometricEnabled ? 'checked' : '' }}
-                            onchange="handleBiometricToggle(this)">
-                        <span class="menu-switch-slider"></span>
-                    </label>
                 </div>
             </div>
 
@@ -789,19 +765,7 @@
                     <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box">
                 </div>
 
-                <div
-                    style="display:flex; align-items:center; justify-content:space-between; background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.75rem 1rem; margin-bottom:1.25rem;">
-                    <div style="text-align:left;">
-                        <div style="font-size:0.8rem; font-weight:600; color:#0f172a;">Gunakan Sensor Biometrik</div>
-                        <div style="font-size:0.7rem; color:#94a3b8;">Buka dengan Sidik Jari / Face ID</div>
-                    </div>
-                    <label class="menu-switch">
-                        <input type="checkbox" id="modalBiometricCheckbox" {{ $biometricEnabled ? 'checked' : '' }}>
-                        <span class="menu-switch-slider"></span>
-                    </label>
-                </div>
-
-                <div style="display:flex; gap:0.6rem;">
+                <div style="display:flex; gap:0.6rem; margin-top:1.25rem;">
                     <button type="button" onclick="closePinModal()"
                         style="flex:1; padding:0.75rem; border:1px solid #e2e8f0; border-radius:12px; background:#fff; color:#475569; font-weight:600; font-size:0.82rem; cursor:pointer;">
                         Batal
@@ -868,8 +832,6 @@
                 return;
             }
 
-            const bioChecked = document.getElementById('modalBiometricCheckbox').checked;
-
             try {
                 const res = await fetch('{{ route("creator.pin.update") }}', {
                     method: 'POST',
@@ -878,8 +840,7 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
-                        pin: pin,
-                        biometric_enabled: bioChecked ? 1 : 0
+                        pin: pin
                     })
                 });
 
@@ -897,7 +858,7 @@
         }
 
         async function removePinSecurity() {
-            if (!confirm('Yakin ingin menonaktifkan PIN keamanan dan sensor biometrik?')) return;
+            if (!confirm('Yakin ingin menonaktifkan PIN keamanan?')) return;
 
             try {
                 const res = await fetch('{{ route("creator.pin.remove") }}', {
@@ -918,39 +879,12 @@
             }
         }
 
-        // ── Biometric Sensor Toggle ──
-        async function handleBiometricToggle(checkbox) {
-            const enabled = checkbox.checked;
-
-            // Cek dukungan sensor WebAuthn
-            if (enabled && window.PublicKeyCredential) {
-                try {
-                    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-                    if (!available) {
-                        alert('Sensor biometrik (Fingerprint/Face ID) tidak terdeteksi di perangkat ini.');
-                    }
-                } catch (e) { }
+        // ── Auto-Open PIN Modal jika URL mengandung #pin atau ?pin=1 ──
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash === '#pin' || new URLSearchParams(window.location.search).get('pin') === '1') {
+                openPinModal();
             }
-
-            try {
-                const res = await fetch('{{ route("creator.pin.toggle-biometric") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ enabled: enabled ? 1 : 0 })
-                });
-                const data = await res.json();
-                if (!data.success) {
-                    checkbox.checked = !enabled;
-                    alert(data.message || 'Gagal mengubah pengaturan biometrik.');
-                }
-            } catch (err) {
-                checkbox.checked = !enabled;
-                alert('Kesalahan jaringan.');
-            }
-        }
+        });
 
         // ── Handle Push Notification Web Push Toggle ──
         async function handlePushToggle(checkbox) {

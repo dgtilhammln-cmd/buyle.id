@@ -72,6 +72,12 @@ class SellerPayoutController extends Controller
     public function requestPayout(Request $request)
     {
         $seller = auth()->user();
+
+        // Wajib set PIN keamanan sebelum penarikan saldo
+        if (empty($seller->security_pin) && empty($seller->pos_pin)) {
+            return redirect()->route('creator.menu')->with('error', 'Anda wajib mengatur PIN keamanan terlebih dahulu sebelum melakukan penarikan saldo.');
+        }
+
         $hasSaved = !empty($seller->bank_name) && !empty($seller->bank_account_number) && !empty($seller->bank_account_name);
 
         $rules = [
