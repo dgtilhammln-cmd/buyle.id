@@ -259,7 +259,7 @@ class TicketScannerController extends Controller
         ];
 
         $gateStaffList = \App\Models\GateStaff::where('creator_id', $sellerId)
-            ->with(['product:id,name,event_date', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id,avatar'])
+            ->with(['product:id,name,event_date', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id'])
             ->orderBy('id', 'desc')
             ->get();
 

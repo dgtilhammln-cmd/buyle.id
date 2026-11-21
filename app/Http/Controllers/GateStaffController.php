@@ -175,7 +175,7 @@ class GateStaffController extends Controller
     {
         $creatorId = auth()->id();
         $staff = GateStaff::where('creator_id', $creatorId)
-            ->with(['product:id,name,event_date', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id,avatar'])
+            ->with(['product:id,name,event_date', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id'])
             ->orderBy('id', 'desc')
             ->get()
             ->map(function ($st) {
@@ -200,7 +200,7 @@ class GateStaffController extends Controller
         $this->authorizeCreator($product);
 
         $staff = GateStaff::where('product_id', $product->id)
-            ->with(['product:id,name', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id,avatar'])
+            ->with(['product:id,name', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id'])
             ->orderBy('id', 'desc')
             ->get()
             ->map(function ($st) {

@@ -3311,51 +3311,36 @@
                         </a>
                     </div>
                 @elseif(!empty($isAssignedStaff) && (!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified'))
-                    {{-- Banner Crew/Volunteer (dengan tombol switch ke Mode Creator) --}}
-                    <div
-                        style="background:linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border:1.5px solid #a7f3d0; border-radius:16px; padding:0.9rem 1.1rem; margin-bottom:1.15rem;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
-                            <div style="display:flex; align-items:center; gap:0.65rem; flex:1; min-width:0;">
-                                <div
-                                    style="width:34px; height:34px; border-radius:50%; background:#bbf7d0; display:flex; align-items:center; justify-content:center; color:#15803d; flex-shrink:0;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                        <polyline points="9 12 11 14 15 10" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <strong style="font-size:0.82rem; color:#166534; display:block; font-weight:800;">
-                                        {{ $isCrewMode ? 'Mode Kru / Volunteer' : 'Mode Event Creator' }}
-                                    </strong>
-                                    <span style="font-size:0.72rem; color:#15803d; line-height:1.4; display:block;">
-                                        {{ $isCrewMode
-                                            ? 'Anda terdaftar sebagai panitia tiket. Akses QR Scanner & kehadiran otomatis aktif tanpa syarat e-KYC.'
-                                            : 'Anda sedang melihat tampilan Event Creator. Data event Anda tersedia di sini.' }}
-                                    </span>
-                                </div>
+                    {{-- Banner Status Mode Kru / Creator (Ringkas & Presisi) --}}
+                    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:0.75rem 0.95rem; margin-bottom:1.15rem; display:flex; align-items:center; justify-content:space-between; gap:0.65rem;">
+                        <div style="display:flex; align-items:center; gap:0.55rem; min-width:0;">
+                            <div style="width:30px; height:30px; border-radius:50%; background:#dcfce7; display:flex; align-items:center; justify-content:center; color:#16a34a; flex-shrink:0;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    <polyline points="9 12 11 14 15 10" />
+                                </svg>
                             </div>
-                            <div style="display:flex; gap:0.5rem; align-items:center; flex-shrink:0;">
-                                {{-- Tombol Switch Mode --}}
-                                <form method="POST" action="{{ route('creator.ticket.scanner.switch-mode') }}" style="margin:0;">
-                                    @csrf
-                                    <input type="hidden" name="tab" value="{{ $activeTab }}">
-                                    <button type="submit"
-                                        style="background:{{ $isCrewMode ? '#0f172a' : '#16a34a' }}; color:#fff; border:none; padding:0.4rem 0.8rem; border-radius:8px; font-size:0.7rem; font-weight:700; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:5px;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m10 0h3a2 2 0 0 0 2-2v-3"/>
-                                        </svg>
-                                        {{ $isCrewMode ? 'Mode Creator' : 'Mode Crew' }}
-                                    </button>
-                                </form>
-                                @if($isCrewMode)
-                                <button type="button" onclick="switchTab('tab-scanner', document.querySelector('.tab-btn[onclick*=\'tab-scanner\']')); if(typeof updateBottomNav==='function') updateBottomNav('scanner');"
-                                    style="background:#16a34a; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.72rem; font-weight:700; cursor:pointer; flex-shrink:0;">
-                                    Scan Tiket
-                                </button>
-                                @endif
+                            <div style="min-width:0;">
+                                <div style="font-size:0.8rem; font-weight:800; color:#166534; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    {{ $isCrewMode ? 'Mode Kru Event' : 'Mode Event Creator' }}
+                                </div>
+                                <div style="font-size:0.68rem; color:#15803d; line-height:1.2; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    {{ $isCrewMode ? 'Bebas e-KYC untuk scan tiket' : 'Tampilan penyelenggara event' }}
+                                </div>
                             </div>
                         </div>
+
+                        <form method="POST" action="{{ route('creator.ticket.scanner.switch-mode') }}" style="margin:0; flex-shrink:0;">
+                            @csrf
+                            <input type="hidden" name="tab" value="{{ $activeTab }}">
+                            <button type="submit"
+                                style="background:#ffffff; color:#15803d; border:1.5px solid #86efac; padding:0.35rem 0.65rem; border-radius:999px; font-size:0.68rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(0,0,0,0.03); white-space:nowrap;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                                    <path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/>
+                                </svg>
+                                <span>{{ $isCrewMode ? 'Mode Creator' : 'Mode Kru' }}</span>
+                            </button>
+                        </form>
                     </div>
                 @endif
 
@@ -3762,9 +3747,9 @@
                     </div>
                 @else
                     @if(!empty($isAssignedStaff) && (!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified'))
-                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                            <span style="font-size:0.75rem; color:#15803d; font-weight:600;">{{ $isCrewMode ? 'Mode Kru / Volunteer: Bebas e-KYC untuk scan tiket masuk.' : 'Mode Creator: Scan tiket sebagai penyelenggara.' }}</span>
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.55rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="15" height="15" fill="none" stroke="#16a34a" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                            <span style="font-size:0.72rem; color:#15803d; font-weight:700;">{{ $isCrewMode ? 'Mode Kru: Bebas e-KYC untuk scan tiket' : 'Mode Creator: Scan tiket event' }}</span>
                         </div>
                     @endif
 
