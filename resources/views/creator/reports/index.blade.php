@@ -36,11 +36,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
-
         /* ════════════════════════════════════════
-           Mobile Header – Laporan Penjualan
-           100% SAMA PERSIS dengan Kelola Produk
-        ════════════════════════════════════════ */
+                                       Mobile Header – Laporan Penjualan
+                                       100% SAMA PERSIS dengan Kelola Produk
+                                    ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
@@ -64,7 +63,7 @@
                 align-items: center;
                 justify-content: center;
                 color: #0f172a;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
                 cursor: pointer;
                 text-decoration: none;
                 transition: all 0.2s ease;
@@ -2025,13 +2024,13 @@
         <div style="width: 38px;"></div>
     </div>
     <script>
-    function handleMobileBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = "{{ route('creator.app.index') }}";
+        function handleMobileBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "{{ route('creator.app.index') }}";
+            }
         }
-    }
     </script>
 
     @php
@@ -2040,53 +2039,53 @@
 
         // Sync tier definitions with CreatorProfile::getTierInfo()
         if ($salesVal >= 500000000) {
-            $tierName     = 'FINANCIAL FREEDOM';
+            $tierName = 'FINANCIAL FREEDOM';
             $tierSubtitle = 'Solid Carbon Fiber Ultra-Card';
-            $tierClass    = 'tier-carbon';
-            $tierBadge    = 'Financial Freedom';
+            $tierClass = 'tier-carbon';
+            $tierBadge = 'Financial Freedom';
             $nextTierTarget = null;
-            $nextTierName   = null;
-            $tierProgress   = 100;
+            $nextTierName = null;
+            $tierProgress = 100;
         } elseif ($salesVal >= 200000000) {
-            $tierName     = 'EKSEKUTIF SENIOR';
+            $tierName = 'EKSEKUTIF SENIOR';
             $tierSubtitle = 'Obsidian Matte Black Silver';
-            $tierClass    = 'tier-obsidian';
-            $tierBadge    = 'Eksekutif Senior';
+            $tierClass = 'tier-obsidian';
+            $tierBadge = 'Eksekutif Senior';
             $nextTierTarget = 500000000;
-            $nextTierName   = 'Financial Freedom (500 Juta)';
-            $tierProgress   = round(($salesVal / 500000000) * 100, 1);
+            $nextTierName = 'Financial Freedom (500 Juta)';
+            $tierProgress = round(($salesVal / 500000000) * 100, 1);
         } elseif ($salesVal >= 100000000) {
-            $tierName     = 'EKSEKUTIF MUDA';
+            $tierName = 'EKSEKUTIF MUDA';
             $tierSubtitle = 'Deep Emerald Platinum';
-            $tierClass    = 'tier-emerald';
-            $tierBadge    = 'Enterprise';
+            $tierClass = 'tier-emerald';
+            $tierBadge = 'Enterprise';
             $nextTierTarget = 200000000;
-            $nextTierName   = 'Eksekutif Senior (200 Juta)';
-            $tierProgress   = round(($salesVal / 200000000) * 100, 1);
+            $nextTierName = 'Eksekutif Senior (200 Juta)';
+            $tierProgress = round(($salesVal / 200000000) * 100, 1);
         } elseif ($salesVal >= 50000000) {
-            $tierName     = 'PENGUSAHA MUDA';
+            $tierName = 'PENGUSAHA MUDA';
             $tierSubtitle = 'Rose Gold / Champagne Gold';
-            $tierClass    = 'tier-rosegold';
-            $tierBadge    = 'Pengusaha Muda';
+            $tierClass = 'tier-rosegold';
+            $tierBadge = 'Pengusaha Muda';
             $nextTierTarget = 100000000;
-            $nextTierName   = 'Eksekutif Muda (100 Juta)';
-            $tierProgress   = round(($salesVal / 100000000) * 100, 1);
+            $nextTierName = 'Eksekutif Muda (100 Juta)';
+            $tierProgress = round(($salesVal / 100000000) * 100, 1);
         } elseif ($salesVal >= 10000000) {
-            $tierName     = 'PEJUANG / HUSTLER';
+            $tierName = 'PEJUANG / HUSTLER';
             $tierSubtitle = 'Titanium Gray Metallic';
-            $tierClass    = 'tier-titanium';
-            $tierBadge    = 'Pejuang / Hustler';
+            $tierClass = 'tier-titanium';
+            $tierBadge = 'Pejuang / Hustler';
             $nextTierTarget = 50000000;
-            $nextTierName   = 'Pengusaha Muda (50 Juta)';
-            $tierProgress   = round(($salesVal / 50000000) * 100, 1);
+            $nextTierName = 'Pengusaha Muda (50 Juta)';
+            $tierProgress = round(($salesVal / 50000000) * 100, 1);
         } else {
-            $tierName     = 'PERINTIS';
+            $tierName = 'PERINTIS';
             $tierSubtitle = 'Matte Silver / Brushed Steel';
-            $tierClass    = 'tier-silver';
-            $tierBadge    = 'Perintis';
+            $tierClass = 'tier-silver';
+            $tierBadge = 'Perintis';
             $nextTierTarget = 10000000;
-            $nextTierName   = 'Pejuang / Hustler (10 Juta)';
-            $tierProgress   = round(($salesVal / 10000000) * 100, 1);
+            $nextTierName = 'Pejuang / Hustler (10 Juta)';
+            $tierProgress = round(($salesVal / 10000000) * 100, 1);
         }
     @endphp
 
@@ -2255,9 +2254,11 @@
                     <div class="stat-group-item">
                         <div class="sgi-head">
                             <div class="sgi-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                             </div>
                             <span class="sgi-label">Total Visitor</span>
@@ -2270,17 +2271,20 @@
                         <div class="sgi-head" style="justify-content:space-between;">
                             <div style="display:flex;align-items:center;gap:0.45rem;">
                                 <div class="sgi-icon">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <rect x="2" y="6" width="20" height="12" rx="2"/>
-                                        <circle cx="16" cy="12" r="2"/>
-                                        <path d="M6 12h.01"/>
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                                        <circle cx="16" cy="12" r="2" />
+                                        <path d="M6 12h.01" />
                                     </svg>
                                 </div>
                                 <span class="sgi-label">Saldo</span>
                             </div>
                             <span class="sgi-action-pill">Tarik</span>
                         </div>
-                        <div class="sgi-value" style="font-size:0.95rem;">Rp {{ number_format($availableBalance ?? 0, 0, ',', '.') }}</div>
+                        <div class="sgi-value" style="font-size:0.95rem;">Rp
+                            {{ number_format($availableBalance ?? 0, 0, ',', '.') }}
+                        </div>
                         <div class="sgi-subnote">100% Tanpa Potongan</div>
                     </a>
 
@@ -2288,10 +2292,11 @@
                     <div class="stat-group-item">
                         <div class="sgi-head">
                             <div class="sgi-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                                    <line x1="3" y1="6" x2="21" y2="6"/>
-                                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <path d="M16 10a4 4 0 0 1-8 0" />
                                 </svg>
                             </div>
                             <span class="sgi-label">Transaksi</span>
@@ -2303,9 +2308,10 @@
                     <div class="stat-group-item">
                         <div class="sgi-head">
                             <div class="sgi-icon">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                                 </svg>
                             </div>
                             <span class="sgi-label">Klik Bio</span>
@@ -2324,18 +2330,20 @@
                     <span style="font-size:0.7rem;color:#94a3b8;font-weight:500;">Kunjungan harian</span>
                 </div>
                 <div class="chart-switch-group">
-                    <button type="button" class="chart-switch-btn active" id="chartBtnVisitor" onclick="switchMainChart('visitor')">
+                    <button type="button" class="chart-switch-btn active" id="chartBtnVisitor"
+                        onclick="switchMainChart('visitor')">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                            <path
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                         Visitor
                     </button>
                     <button type="button" class="chart-switch-btn" id="chartBtnOrder" onclick="switchMainChart('order')">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                            <line x1="3" y1="6" x2="21" y2="6"/>
-                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
                         </svg>
                         Order
                     </button>
@@ -3351,27 +3359,27 @@
 
         function switchMainChart(mode) {
             const wrapTraffic = document.getElementById('wrapTrafficChart');
-            const wrapSales   = document.getElementById('wrapSalesChart');
-            const btnVisitor  = document.getElementById('chartBtnVisitor');
-            const btnOrder    = document.getElementById('chartBtnOrder');
-            const titleEl     = document.getElementById('mainChartTitle');
+            const wrapSales = document.getElementById('wrapSalesChart');
+            const btnVisitor = document.getElementById('chartBtnVisitor');
+            const btnOrder = document.getElementById('chartBtnOrder');
+            const titleEl = document.getElementById('mainChartTitle');
 
             if (mode === 'order') {
                 if (wrapTraffic) wrapTraffic.style.display = 'none';
-                if (wrapSales)   wrapSales.style.display   = 'block';
-                if (btnVisitor)  btnVisitor.classList.remove('active');
-                if (btnOrder)    btnOrder.classList.add('active');
-                if (titleEl)     titleEl.textContent = 'Grafik Order / Penjualan';
+                if (wrapSales) wrapSales.style.display = 'block';
+                if (btnVisitor) btnVisitor.classList.remove('active');
+                if (btnOrder) btnOrder.classList.add('active');
+                if (titleEl) titleEl.textContent = 'Grafik Order / Penjualan';
                 // Trigger resize so Chart.js redraws correctly
                 setTimeout(() => {
                     if (window.salesChartInstance) window.salesChartInstance.resize();
                 }, 50);
             } else {
-                if (wrapSales)   wrapSales.style.display   = 'none';
+                if (wrapSales) wrapSales.style.display = 'none';
                 if (wrapTraffic) wrapTraffic.style.display = 'block';
-                if (btnOrder)    btnOrder.classList.remove('active');
-                if (btnVisitor)  btnVisitor.classList.add('active');
-                if (titleEl)     titleEl.textContent = 'Grafik Visitor';
+                if (btnOrder) btnOrder.classList.remove('active');
+                if (btnVisitor) btnVisitor.classList.add('active');
+                if (titleEl) titleEl.textContent = 'Grafik Visitor';
                 setTimeout(() => {
                     if (window.trafficChartInstance) window.trafficChartInstance.resize();
                 }, 50);
@@ -3545,7 +3553,7 @@
 
         function openOrderModal(data) {
             currentOrderData = data;
-            document.getElementById('od_title').innerText = 'Detail Pesanan #' + data.order_number;
+            document.getElementById('od_title').innerText = 'Detail #' + data.order_number;
             document.getElementById('od_date').innerText = 'Tanggal Transaksi: ' + data.date;
             document.getElementById('od_user_name').innerText = data.user_name;
 
@@ -3611,31 +3619,31 @@
                     if (claimProofCount) claimProofCount.textContent = proofs.length;
                     if (claimProofsContainer) {
                         claimProofsContainer.innerHTML = proofs.map(item => `
-                            <div style="background:#fff; border:1.5px solid #BBF7D0; border-radius:10px; padding:0.65rem 0.85rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
-                                <div style="display:flex; align-items:center; gap:0.75rem;">
-                                    <a href="${item.url}" target="_blank" rel="noopener" style="flex-shrink:0;">
-                                        <img src="${item.url}" alt="${item.platform || 'Bukti'}"
-                                            style="width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid #86EFAC; display:block; cursor:zoom-in;">
-                                    </a>
-                                    <div>
-                                        <div style="font-size:0.82rem; font-weight:700; color:#15803D;">${item.platform || 'Platform'}</div>
-                                        <div style="font-size:0.72rem; color:#64748B;">${item.label || 'Bukti Screenshot'}</div>
-                                    </div>
-                                </div>
-                                <div style="display:flex; gap:0.4rem; flex-shrink:0;">
-                                    <a href="${item.url}" download target="_blank"
-                                        style="font-size:0.72rem; font-weight:700; color:#15803D; background:#DCFCE7; border:1px solid #86EFAC; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                        Unduh
-                                    </a>
-                                    <a href="${item.url}" target="_blank"
-                                        style="font-size:0.72rem; font-weight:700; color:#1D4ED8; background:#EFF6FF; border:1px solid #BFDBFE; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                                        Buka
-                                    </a>
-                                </div>
-                            </div>
-                        `).join('');
+                                                        <div style="background:#fff; border:1.5px solid #BBF7D0; border-radius:10px; padding:0.65rem 0.85rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
+                                                            <div style="display:flex; align-items:center; gap:0.75rem;">
+                                                                <a href="${item.url}" target="_blank" rel="noopener" style="flex-shrink:0;">
+                                                                    <img src="${item.url}" alt="${item.platform || 'Bukti'}"
+                                                                        style="width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid #86EFAC; display:block; cursor:zoom-in;">
+                                                                </a>
+                                                                <div>
+                                                                    <div style="font-size:0.82rem; font-weight:700; color:#15803D;">${item.platform || 'Platform'}</div>
+                                                                    <div style="font-size:0.72rem; color:#64748B;">${item.label || 'Bukti Screenshot'}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style="display:flex; gap:0.4rem; flex-shrink:0;">
+                                                                <a href="${item.url}" download target="_blank"
+                                                                    style="font-size:0.72rem; font-weight:700; color:#15803D; background:#DCFCE7; border:1px solid #86EFAC; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                                                    Unduh
+                                                                </a>
+                                                                <a href="${item.url}" target="_blank"
+                                                                    style="font-size:0.72rem; font-weight:700; color:#1D4ED8; background:#EFF6FF; border:1px solid #BFDBFE; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                                                                    Buka
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    `).join('');
                     }
                     claimProofBox.style.display = 'block';
                 } else {
@@ -3658,21 +3666,21 @@
                 let wlBadges = '';
                 if (item.seller_name) {
                     wlBadges += `<span style="background:#F1F5F9;color:#475569;padding:2px 7px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:3px;margin-top:4px;">
-                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                    Pemilik Produk: ${item.seller_name}</span>`;
+                                                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                                                Pemilik Produk: ${item.seller_name}</span>`;
                 }
                 if (item.reseller_name) {
                     wlBadges += `<span style="background:#EFF6FF;color:#2563EB;padding:2px 7px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:3px;margin-top:4px;margin-left:4px;">
-                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                    Reseller Whitelabel: ${item.reseller_name}</span>`;
+                                                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                                                Reseller Whitelabel: ${item.reseller_name}</span>`;
                 }
                 let wlBreakdown = '';
                 if (item.reseller_margin > 0) {
                     wlBreakdown = `<div style="margin-top:5px;background:#F0FDF4;border:1px dashed #86EFAC;color:#166534;padding:4px 8px;border-radius:6px;font-size:0.7rem;line-height:1.8;">
-                                    <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Harga Dasar Whitelabel: Rp ${Number(item.base_price).toLocaleString('id-ID')}</div>
-                                    <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Margin Reseller Whitelabel: <strong>+ Rp ${Number(item.reseller_margin).toLocaleString('id-ID')}</strong></div>
-                                    <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Hak Pemilik Produk: <strong>Rp ${Number(item.creator_earnings).toLocaleString('id-ID')}</strong></div>
-                                </div>`;
+                                                                <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Harga Dasar Whitelabel: Rp ${Number(item.base_price).toLocaleString('id-ID')}</div>
+                                                                <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Margin Reseller Whitelabel: <strong>+ Rp ${Number(item.reseller_margin).toLocaleString('id-ID')}</strong></div>
+                                                                <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Hak Pemilik Produk: <strong>Rp ${Number(item.creator_earnings).toLocaleString('id-ID')}</strong></div>
+                                                            </div>`;
                 }
                 let variantBadge = '';
                 if (item.variant_name) {
@@ -3680,21 +3688,21 @@
                 }
 
                 itemsHtml += `
-                            <div style="padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
-                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                    <div>
-                                        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
-                                            <strong style="color:#0f172a;">${item.name}</strong>
-                                            ${variantBadge}
-                                        </div>
-                                        <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
-                                        <div style="display:flex;flex-wrap:wrap;gap:3px;">${wlBadges}</div>
-                                        ${wlBreakdown}
-                                    </div>
-                                    <div style="font-weight:700; color:#0f172a; white-space:nowrap; margin-left:1rem;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</div>
-                                </div>
-                            </div>
-                        `;
+                                                        <div style="padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
+                                                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                                                <div>
+                                                                    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                                                                        <strong style="color:#0f172a;">${item.name}</strong>
+                                                                        ${variantBadge}
+                                                                    </div>
+                                                                    <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
+                                                                    <div style="display:flex;flex-wrap:wrap;gap:3px;">${wlBadges}</div>
+                                                                    ${wlBreakdown}
+                                                                </div>
+                                                                <div style="font-weight:700; color:#0f172a; white-space:nowrap; margin-left:1rem;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</div>
+                                                            </div>
+                                                        </div>
+                                                    `;
             });
             itemsList.innerHTML = itemsHtml;
             document.getElementById('od_total_price').innerText = 'Rp ' + Number(data.total).toLocaleString('id-ID');
@@ -3843,13 +3851,13 @@
             let itemsHtml = '';
             (data.items || []).forEach(item => {
                 itemsHtml += `
-                            <tr style="border-bottom:1px solid #f1f5f9;">
-                                <td style="padding:8px 0; color:#0f172a; font-weight:600;">${item.name}</td>
-                                <td style="padding:8px 0; text-align:center; color:#475569;">${item.quantity}</td>
-                                <td style="padding:8px 0; text-align:right; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')}</td>
-                                <td style="padding:8px 0; text-align:right; color:#0f172a; font-weight:700;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</td>
-                            </tr>
-                        `;
+                                                        <tr style="border-bottom:1px solid #f1f5f9;">
+                                                            <td style="padding:8px 0; color:#0f172a; font-weight:600;">${item.name}</td>
+                                                            <td style="padding:8px 0; text-align:center; color:#475569;">${item.quantity}</td>
+                                                            <td style="padding:8px 0; text-align:right; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')}</td>
+                                                            <td style="padding:8px 0; text-align:right; color:#0f172a; font-weight:700;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</td>
+                                                        </tr>
+                                                    `;
             });
             itemsBody.innerHTML = itemsHtml;
 
@@ -3934,7 +3942,7 @@
                         <div>
                             <div
                                 style="font-size:0.72rem; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;">
-                                Informasi Pembeli</div>
+                                Data Pembeli</div>
                             <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-top:2px;"
                                 id="od_user_name"></div>
                             <div style="font-size:0.8rem; color:#475569; margin-top:1px;" id="od_user_contact"></div>
@@ -3976,12 +3984,17 @@
                 <!-- Bukti Screenshot Klaim Gratis (Multi-Sosmed Support) -->
                 <div id="od_claim_proof_box"
                     style="display:none; background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:14px; padding:1rem; margin-bottom:1rem;">
-                    <div style="font-size:0.72rem; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.75rem; display:flex; align-items:center; justify-content:space-between;">
+                    <div
+                        style="font-size:0.72rem; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.75rem; display:flex; align-items:center; justify-content:space-between;">
                         <span style="display:flex; align-items:center; gap:5px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                            Bukti Screenshot Klaim Gratis (<span id="od_claim_proof_count">0</span>)
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                            Bukti (<span id="od_claim_proof_count">0</span>)
                         </span>
-                        <span style="font-size:0.68rem; font-weight:700; color:#166534; background:#DCFCE7; padding:2px 6px; border-radius:4px; border:1px solid #86EFAC;">1 per Sosmed</span>
                     </div>
                     <div id="od_claim_proofs_container" style="display:flex; flex-direction:column; gap:0.65rem;">
                         <!-- Dynamically filled by JS -->
@@ -3992,7 +4005,7 @@
                 <div style="margin-bottom:1.25rem;">
                     <div
                         style="font-size:0.72rem; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.5rem;">
-                        Produk Dipesan</div>
+                        Rincian:</div>
                     <div id="od_items_list" style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;"></div>
                     <div
                         style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1rem; background:#f8fafc; border-top:1px solid #e2e8f0; font-weight:800; font-size:0.9rem; color:#0f172a;">

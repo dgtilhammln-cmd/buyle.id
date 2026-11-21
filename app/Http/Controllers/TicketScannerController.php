@@ -39,6 +39,18 @@ class TicketScannerController extends Controller
         $isAssignedStaff = !empty($assignedEventIds);
         $hasKycBypass    = $isKycVerified || $isAssignedStaff;
 
+        // ── View Mode Switch ──────────────────────────────────────────────────
+        // Default: kalau assigned crew → 'crew', kalau tidak → 'creator'
+        // Bisa override via session (dari tombol switch mode di UI)
+        $defaultMode = $isAssignedStaff ? 'crew' : 'creator';
+        $viewMode = session('scanner_view_mode_' . $sellerId, $defaultMode);
+        // Kalau bukan assigned staff, selalu paksa 'creator'
+        if (!$isAssignedStaff) {
+            $viewMode = 'creator';
+        }
+        // Dalam mode creator, tab=data/gate tetap harus punya KYC
+        $isCrewMode = ($viewMode === 'crew');
+
         $selectedEventId = $request->input('event_id');
         $statusFilter = $request->input('status');
         $search = trim($request->input('search', ''));
@@ -46,9 +58,12 @@ class TicketScannerController extends Controller
         if (in_array($rawTab, ['settings', 'rekening', 'profile'])) {
             return redirect()->route('creator.ticket.profile');
         } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
-            // Pengguna tanpa verifikasi KYC dan bukan kru/panitia tidak dapat membuka tab data atau gate
-            // Volunteer/crew (isAssignedStaff tapi belum KYC) juga tidak boleh akses tab data — hanya scanner & home
-            if (!$isKycVerified && in_array($rawTab, ['data', 'gate'])) {
+            // Crew mode: hanya home & scanner yang boleh
+            // Creator mode: data & gate butuh KYC
+            if ($isCrewMode && in_array($rawTab, ['data', 'gate'])) {
+                return redirect()->route('creator.ticket.scanner', ['tab' => 'home']);
+            }
+            if (!$isCrewMode && !$isKycVerified && in_array($rawTab, ['data', 'gate'])) {
                 return redirect()->route('creator.ticket.scanner', ['tab' => 'home']);
             }
             $activeTab = $rawTab;
@@ -280,8 +295,28 @@ class TicketScannerController extends Controller
             'daysUntilEvent',
             'eventDates',
             'allTicketEvents',
-            'myPersonalScanCount'
+            'myPersonalScanCount',
+            'viewMode',
+            'isCrewMode'
         ));
+    }
+
+    /**
+     * Toggle antara Mode Crew dan Mode Creator via session.
+     */
+    public function switchViewMode(\Illuminate\Http\Request $request)
+    {
+        $sellerId = auth()->id();
+        $current = session('scanner_view_mode_' . $sellerId, 'crew');
+        $newMode = $current === 'crew' ? 'creator' : 'crew';
+        session(['scanner_view_mode_' . $sellerId => $newMode]);
+
+        $tab = $request->input('tab', 'home');
+        // Kalau switch ke crew mode dan sedang di tab data/gate → redirect ke home
+        if ($newMode === 'crew' && in_array($tab, ['data', 'gate'])) {
+            $tab = 'home';
+        }
+        return redirect()->route('creator.ticket.scanner', ['tab' => $tab]);
     }
 
     /**
