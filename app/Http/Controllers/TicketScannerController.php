@@ -47,7 +47,8 @@ class TicketScannerController extends Controller
             return redirect()->route('creator.ticket.profile');
         } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
             // Pengguna tanpa verifikasi KYC dan bukan kru/panitia tidak dapat membuka tab data atau gate
-            if (!$hasKycBypass && in_array($rawTab, ['data', 'gate'])) {
+            // Volunteer/crew (isAssignedStaff tapi belum KYC) juga tidak boleh akses tab data — hanya scanner & home
+            if (!$isKycVerified && in_array($rawTab, ['data', 'gate'])) {
                 return redirect()->route('creator.ticket.scanner', ['tab' => 'home']);
             }
             $activeTab = $rawTab;

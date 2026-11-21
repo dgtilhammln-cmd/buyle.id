@@ -4563,7 +4563,8 @@
     {{-- ══ MOBILE BOTTOM NAVIGATION BAR (like /pos page) ══ --}}
     @php
         $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
-        $canAccessData = $hasKycBypass ?? ($isKycVerified || !empty($isAssignedStaff));
+        // Data Kehadiran hanya untuk EO/Promotor yang sudah KYC — volunteer/crew tidak boleh lihat data event
+        $canAccessData = $isKycVerified;
     @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
         <div class="scanner-bottom-nav-bar" style="{{ !$canAccessData ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
