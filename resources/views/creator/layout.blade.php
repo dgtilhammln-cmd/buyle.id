@@ -938,7 +938,8 @@
                                 </path>
                             </svg>
                         </button>
-                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-top:0.75rem;">Sentuh untuk scan ulang</div>
+                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-top:0.75rem;">Sentuh untuk scan
+                            ulang</div>
                         <div style="margin-top:1.25rem;">
                             <a href="{{ route('creator.pos.index') }}"
                                 style="background:none; border:none; color:#64748b; font-size:0.8rem; font-weight:600; text-decoration:none; padding:6px 12px; border-radius:8px; display:inline-block;">
@@ -1186,7 +1187,7 @@
     {{-- SIDEBAR --}}
     <aside class="cr-sidebar" id="crSidebar">
         @php 
-                                    $logo = \App\Models\Setting::get('logo');
+                                                $logo = \App\Models\Setting::get('logo');
             $authUser = auth()->user();
             $isPosCashier = $authUser ? $authUser->isPosCashier() : false;
             $isBuyer = $authUser ? $authUser->role === 'buyer' : false;
@@ -1197,7 +1198,8 @@
         {{-- Brand / Logo Only --}}
         <div class="cr-brand-area">
             @if($logo)
-                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id" style="height:36px; max-width:180px; width:auto; object-fit:contain; display:block;">
+                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id"
+                    style="height:36px; max-width:180px; width:auto; object-fit:contain; display:block;">
             @else
                 <div class="cr-brand-logo-fallback">
                     <div class="cr-brand-logo-dot">B</div>
@@ -1628,12 +1630,13 @@
     {{-- ── Super App Bottom Navigation (Mobile Only - 100% Sesuai Gambar 3) ── --}}
     @php
         $navIsFromPos = request('from') === 'pos';
-        $isProductsFromPos = request()->is('creator/products*') && $navIsFromPos;
+        $isProductsFromPos = request()->is('creator/products*') && !request()->routeIs('creator.products.create') && !request()->routeIs('creator.products.edit') && $navIsFromPos;
         $isPayoutFromPos = (request()->is('creator/payout-settings*') || request()->routeIs('creator.payout.settings')) && $navIsFromPos;
     @endphp
 
     @if($isProductsFromPos || $isPayoutFromPos)
-        {{-- Jika masuk ke halaman produk atau payout dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi, Laporan, Profil) --}}
+        {{-- Jika masuk ke halaman produk atau payout dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi,
+        Laporan, Profil) --}}
         <div class="pos-bottom-nav-wrap" id="posBottomNavWrap"
             style="display: flex !important; position: fixed !important; bottom: max(16px, calc(10px + env(safe-area-inset-bottom, 0px))) !important; left: 14px !important; right: 14px !important; max-width: 440px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
             <div class="pos-bottom-nav-bar"
@@ -1705,8 +1708,9 @@
                 @endif
             </div>
         </div>
-    @elseif(!request()->is('creator/pos*') && !request()->is('creator/event-attendance*') && !request()->routeIs('creator.event.attendance') && !request()->is('creator/bio*'))
-        {{-- Jika bukan POS, bukan event-attendance, dan bukan Web Builder, tampilkan navbar reguler Super App --}}
+    @elseif(!request()->is('creator/pos*') && !request()->is('creator/event-attendance*') && !request()->routeIs('creator.event.attendance') && !request()->is('creator/bio*') && !request()->routeIs('creator.products.create') && !request()->routeIs('creator.products.edit'))
+        {{-- Jika bukan POS, bukan event-attendance, bukan Web Builder, dan bukan Create/Edit Produk, tampilkan navbar
+        reguler Super App --}}
         <nav class="superapp-bottom-nav" id="superappBottomNav">
             @php
                 $bottomNavIsBuyer = auth()->user()->role === 'buyer';
@@ -2189,7 +2193,7 @@
                     @if($hasBiometric)
                         setTimeout(triggerBiometricAuth, 500);
                     @endif
-                    }
+                        }
             }
 
             function updateLockDots() {

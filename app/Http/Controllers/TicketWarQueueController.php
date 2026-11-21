@@ -59,6 +59,20 @@ class TicketWarQueueController extends Controller
             ]);
         }
 
+        // ══ BATAS PERIODE WAR TIKET ══════════════════════════════════════════
+        // Hitung kapan periode war berakhir: war_start + durasi (default 3 jam).
+        // Jika sudah melewati periode war → langsung loloskan tanpa antrean.
+        $warDurationHours = (int) ($product->ticket_war_duration_hours ?? 3);
+        $warEnd = $product->ticket_war_start->copy()->addHours($warDurationHours);
+        if (now()->gte($warEnd)) {
+            return response()->json([
+                'status'  => 'admitted',
+                'token'   => null,
+                'is_war'  => false,
+                'message' => 'Periode war tiket telah berakhir. Silakan langsung checkout.',
+            ]);
+        }
+
         // Opportunistic auto-cleanup fallback: jalankan pengecekan order expired tiket maksimal 1x per 60 detik.
         // Menjamin tiket pending yang hangus otomatis dibatalkan & stok kembali meskipun cronjob cPanel/hPanel mati.
         if (\Illuminate\Support\Facades\Cache::add("war_auto_clean_tick_{$productId}", 1, 60)) {
