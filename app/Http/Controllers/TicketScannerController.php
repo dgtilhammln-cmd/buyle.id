@@ -683,6 +683,10 @@ class TicketScannerController extends Controller
         $eventSlug = $event ? \Illuminate\Support\Str::slug($event->name) : 'semua_event';
         $filename = 'gelang_tiket_' . $eventSlug . '_' . date('Ymd_His') . '.pdf';
 
+        if (!file_exists(storage_path('fonts'))) {
+            @mkdir(storage_path('fonts'), 0775, true);
+        }
+
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('creator.ticket_wristbands_pdf', compact('tickets', 'event'))
             ->setPaper('a4', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
