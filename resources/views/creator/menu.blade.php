@@ -752,17 +752,37 @@
             </div>
             <h3 style="font-size:1.15rem; font-weight:600; color:#0f172a; margin:0 0 0.35rem;">Atur PIN Keamanan</h3>
             <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem; line-height:1.4;">
-                Masukkan 6 angka PIN rahasia untuk membuka aplikasi tanpa perlu login ulang.
+                Masukkan 6 angka PIN rahasia untuk mengamankan akun Buyle Pay kamu.
             </p>
 
             <form id="pinSetupForm" onsubmit="submitPinSetup(event)">
-                <div class="pin-input-boxes">
-                    <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box" autofocus>
-                    <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box">
-                    <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box">
-                    <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box">
-                    <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box">
-                    <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box">
+                {{-- Baris 1: PIN baru --}}
+                <div style="margin-bottom:0.9rem;">
+                    <div style="font-size:0.7rem; font-weight:600; color:#334155; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem;">PIN Baru</div>
+                    <div class="pin-input-boxes" id="pinBoxesFirst">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-first" autofocus>
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-first">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-first">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-first">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-first">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-first">
+                    </div>
+                </div>
+
+                {{-- Baris 2: Konfirmasi PIN --}}
+                <div style="margin-bottom:0.9rem;">
+                    <div style="font-size:0.7rem; font-weight:600; color:#334155; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem;">Konfirmasi PIN</div>
+                    <div class="pin-input-boxes" id="pinBoxesConfirm">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-confirm">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-confirm">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-confirm">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-confirm">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-confirm">
+                        <input type="password" maxlength="1" inputmode="numeric" class="pin-digit-box pin-confirm">
+                    </div>
+                    <div id="pinConfirmError" style="display:none; margin-top:0.45rem; font-size:0.72rem; color:#dc2626; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:0.35rem 0.6rem;">
+                        PIN tidak cocok. Silakan ulangi.
+                    </div>
                 </div>
 
                 <div style="display:flex; gap:0.6rem; margin-top:1.25rem;">
@@ -793,13 +813,15 @@
     <script>
         // ── PIN Modal Logic ──
         const pinModal = document.getElementById('pinSetupModal');
-        const digitInputs = document.querySelectorAll('.pin-digit-box');
+        const firstInputs = document.querySelectorAll('.pin-first');
+        const confirmInputs = document.querySelectorAll('.pin-confirm');
 
         function openPinModal() {
             if (!pinModal) return;
             pinModal.style.display = 'flex';
-            digitInputs.forEach(i => i.value = '');
-            if (digitInputs[0]) digitInputs[0].focus();
+            document.querySelectorAll('.pin-digit-box').forEach(i => i.value = '');
+            document.getElementById('pinConfirmError').style.display = 'none';
+            if (firstInputs[0]) firstInputs[0].focus();
         }
 
         function closePinModal() {
@@ -807,17 +829,38 @@
             pinModal.style.display = 'none';
         }
 
-        // Auto-advance PIN inputs
-        digitInputs.forEach((input, index) => {
+        // Auto-advance: PIN Baru
+        firstInputs.forEach((input, index) => {
             input.addEventListener('input', () => {
-                if (input.value.length === 1 && index < digitInputs.length - 1) {
-                    digitInputs[index + 1].focus();
+                input.value = input.value.replace(/\D/g, '');
+                if (input.value.length === 1 && index < firstInputs.length - 1) {
+                    firstInputs[index + 1].focus();
+                } else if (input.value.length === 1 && index === firstInputs.length - 1) {
+                    confirmInputs[0].focus(); // lompat ke baris konfirmasi
                 }
             });
-
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && input.value === '' && index > 0) {
-                    digitInputs[index - 1].focus();
+                    firstInputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Auto-advance: Konfirmasi PIN
+        confirmInputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                input.value = input.value.replace(/\D/g, '');
+                if (input.value.length === 1 && index < confirmInputs.length - 1) {
+                    confirmInputs[index + 1].focus();
+                }
+                // Sembunyikan error saat user mulai mengetik ulang
+                document.getElementById('pinConfirmError').style.display = 'none';
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                    confirmInputs[index - 1].focus();
+                } else if (e.key === 'Backspace' && input.value === '' && index === 0) {
+                    firstInputs[firstInputs.length - 1].focus();
                 }
             });
         });
@@ -825,12 +868,29 @@
         async function submitPinSetup(e) {
             e.preventDefault();
             let pin = '';
-            digitInputs.forEach(i => pin += i.value);
+            firstInputs.forEach(i => pin += i.value);
+            let pinConfirm = '';
+            confirmInputs.forEach(i => pinConfirm += i.value);
+
+            const errEl = document.getElementById('pinConfirmError');
 
             if (pin.length !== 6) {
                 alert('PIN harus terdiri dari 6 digit angka.');
+                firstInputs[0].focus();
                 return;
             }
+            if (pinConfirm.length !== 6) {
+                alert('Konfirmasi PIN harus diisi lengkap 6 digit.');
+                confirmInputs[0].focus();
+                return;
+            }
+            if (pin !== pinConfirm) {
+                errEl.style.display = 'block';
+                confirmInputs.forEach(i => i.value = '');
+                confirmInputs[0].focus();
+                return;
+            }
+            errEl.style.display = 'none';
 
             try {
                 const res = await fetch('{{ route("creator.pin.update") }}', {
@@ -839,9 +899,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
-                    body: JSON.stringify({
-                        pin: pin
-                    })
+                    body: JSON.stringify({ pin: pin })
                 });
 
                 const data = await res.json();

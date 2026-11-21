@@ -542,6 +542,7 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
             transition: all 0.2s ease;
             gap: 0.35rem;
+            min-height: 68px;
         }
 
         .nina-mini-card:hover {
@@ -572,7 +573,7 @@
             background: linear-gradient(135deg, #1db349 0%, #84ce00 100%) !important;
             border: 1px solid rgba(255, 255, 255, 0.28) !important;
             box-shadow: 0 4px 14px rgba(29, 179, 73, 0.22) !important;
-            padding: 0.75rem 0.5rem !important;
+            padding: 0 0.5rem !important;
         }
 
         .nina-mini-card-tix:hover {
@@ -594,7 +595,7 @@
         .nina-mini-card-pos {
             background: #ffffff !important;
             border: 1px solid rgba(226, 232, 240, 0.9) !important;
-            padding: 0.75rem 0.5rem !important;
+            padding: 0 0.5rem !important;
         }
 
         .nina-mini-card-pos:hover {
@@ -1115,11 +1116,8 @@
 
             {{-- Brand Logo & Header --}}
             <div style="margin-bottom:0.85rem;">
-                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" style="height:24px; width:auto; object-fit:contain; margin-bottom:0.35rem; display:inline-block;">
-                <h3 style="font-size:1.08rem; font-weight:700; color:#0f172a; margin:0 0 0.2rem;">Transfer Saldo Buyle Pay</h3>
-                <p style="font-size:0.75rem; color:#64748b; margin:0; line-height:1.4;">
-                    Kirim saldo instan ke sesama akun Buyle.id tanpa biaya admin (Rp 0).
-                </p>
+                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" style="height:22px; width:auto; object-fit:contain; margin-bottom:0.4rem; display:inline-block;">
+                <h3 style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0;">Transfer</h3>
             </div>
 
             {{-- Info Saldo Pengirim --}}
@@ -1305,11 +1303,8 @@
 
             {{-- Brand Logo & Header --}}
             <div style="margin-bottom:0.85rem;">
-                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" style="height:24px; width:auto; object-fit:contain; margin-bottom:0.35rem; display:inline-block;">
-                <h3 style="font-size:1.08rem; font-weight:700; color:#0f172a; margin:0 0 0.2rem;">Top Up Saldo Buyle Pay</h3>
-                <p style="font-size:0.75rem; color:#64748b; margin:0; line-height:1.4;">
-                    Isi saldo instan via QRIS &amp; Virtual Account Bank.
-                </p>
+                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" style="height:22px; width:auto; object-fit:contain; margin-bottom:0.4rem; display:inline-block;">
+                <h3 style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0;">Top Up</h3>
             </div>
 
             {{-- Saldo Saat Ini --}}
@@ -1988,7 +1983,7 @@
                                 </picture>
                             </a>
                             <a href="{{ route('creator.pos.index') }}" class="nina-mini-card nina-mini-card-pos" title="Kasir POS">
-                                <img src="{{ asset('images/logobuylepos.png') }}" alt="Buyle POS" class="nina-pos-logo">
+                                <img src="{{ asset('images/logobuyleposv2.png') }}" alt="Buyle POS" class="nina-pos-logo">
                             </a>
                             <a href="{{ route('creator.bio.index') }}" class="nina-mini-card" title="Website Toko">
                                 <i class="ph ph-globe"></i>
