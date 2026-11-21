@@ -21,7 +21,7 @@ class TicketScannerController extends Controller
     {
         $sellerId = auth()->id();
         // Jumlah tiket yang di-scan SENDIRI oleh user ini (untuk tampilan volunteer/crew)
-        $myPersonalScanCount = \DB::table('tickets')
+        $myPersonalScanCount = \DB::table('ticket_passes')
             ->where('checked_in_by', $sellerId)
             ->where('status', 'used')
             ->count();
