@@ -3771,7 +3771,7 @@
                                 </div>
 
                                 <div class="pos-header-logo-center">
-                                    <a href="{{ route('creator.pos') }}" title="Buyle POS" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">
+                                    <a href="{{ route('creator.pos.index') }}" title="Buyle POS" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">
                                         <img src="{{ asset('logobuylepos.png') }}" alt="Buyle POS" onerror="this.onerror=null; this.src='/logobuylepos.png';">
                                     </a>
                                 </div>
