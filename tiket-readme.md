@@ -155,27 +155,103 @@ Halaman checkout dilindungi di tingkat database:
 3. **Anti-Calo & Bot Quota Limit**:
    Setiap produk tiket memiliki kolom `max_tickets_per_order` (default: 4 tiket). Pembelian di atas kuota langsung ditolak sebelum database tersentuh.
 
+### C. Sistem Antrean War Tiket (Zero-DB-Write Queue)
+
+Ketika ribuan orang mengklik tombol beli serentak setelah countdown habis, server terlindungi oleh sistem antrian berbasis **Cache** (zero database write).
+
+**File Terkait:**
+- [`app/Services/TicketWarQueueService.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/app/Services/TicketWarQueueService.php)
+- [`app/Http/Controllers/TicketWarQueueController.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/app/Http/Controllers/TicketWarQueueController.php)
+
+#### Alur Sistem Antrean:
+
+```
+[ Pembeli klik "Beli Tiket" ]
+        │
+        ▼ POST /ticket-war-queue/check
+[ TicketWarQueueController ]
+        │
+        ├── Belum waktunya (< war_start)       → status: not_started
+        ├── Sudah > 3 jam pasca war_start       → status: admitted (bypass queue)
+        └── Dalam periode war (0–3 jam):
+               │
+               ├── Slot tersedia (<= max 20)   → status: admitted + token HMAC
+               └── Slot penuh                  → status: waiting (posisi antrean X)
+                        │
+                        ▼ (polling tiap 10–20 detik, jitter acak anti-spike)
+              [ Slot kosong → admitted ]
+```
+
+#### Spesifikasi Teknis:
+| Parameter | Nilai | Keterangan |
+|:---|:---|:---|
+| `MAX_CONCURRENT_CHECKOUT` | 20 | Slot checkout aktif bersamaan |
+| `TOKEN_TTL` | 600 detik (10 menit) | Masa berlaku admission token |
+| `POLL_MIN_INTERVAL` | 10 detik | Polling minimum antrean |
+| `POLL_MAX_INTERVAL` | 20 detik | Polling maksimum (jitter anti-spike) |
+| **Durasi periode war** | **3 jam (hardcode platform)** | Dikontrol buyle.id, bukan kreator |
+
+#### Durasi Periode War — Dikontrol Platform (Bukan Kreator):
+> ⚠️ **Durasi 3 jam adalah kebijakan platform buyle.id**, bukan pilihan kreator. Kreator hanya mengatur **waktu mulai** (`ticket_war_start`). Setelah `war_start + 3 jam`, sistem antrean otomatis **dinonaktifkan** dan checkout langsung tanpa antrian — cocok untuk traffic yang sudah turun setelah periode war berlalu.
+
+```php
+// TicketWarQueueController.php — durasi hardcode 3 jam, tidak ada opsi di dashboard kreator
+$warEnd = $product->ticket_war_start->copy()->addHours(3);
+if (now()->gte($warEnd)) {
+    return response()->json([
+        'status'  => 'admitted',
+        'token'   => null,
+        'is_war'  => false,
+        'message' => 'Periode war tiket telah berakhir. Silakan langsung checkout.',
+    ]);
+}
+```
+
+#### Admission Token (HMAC Cryptographic, Single-Use):
+Setiap pembeli yang mendapat slot checkout menerima **Cryptographic HMAC Admission Token**:
+```php
+$payload   = "{$productId}|{$queueId}|{$expiresAt}";
+$signature = hash_hmac('sha256', $payload, config('app.key'));
+$token     = base64_encode("{$payload}|{$signature}");
+```
+Token ini dikirim ke `checkout` sebagai bukti melewati antrian dengan sah. Tidak dapat dipalsukan atau digunakan ulang.
+
+#### Opportunistic Auto-Cleanup:
+Setiap 60 detik (via Cache lock), controller otomatis menjalankan `tickets:expire-unpaid --minutes=15` untuk membebaskan slot checkout dari order pending yang hangus — meskipun cronjob cPanel/hPanel mati.
+
 ---
 
 ## 🗄️ 4. Skema Database & Migrasi
 
 ### Kolom Baru pada Tabel `products`:
-Migration file: [`database/migrations/2026_10_16_012500_add_ticket_war_fields_to_products_table.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20&%20Deploy/buyle.id%20ex%20alaatrumah/database/migrations/2026_10_16_012500_add_ticket_war_fields_to_products_table.php)
+
+**Migration 1:** [`database/migrations/2026_10_16_012500_add_ticket_war_fields_to_products_table.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/database/migrations/2026_10_16_012500_add_ticket_war_fields_to_products_table.php)
 
 | Kolom | Tipe Data | Keterangan |
 | :--- | :--- | :--- |
-| `ticket_war_start` | `DATETIME NULL` | Waktu spesifik pembukaan penjualan tiket (WIB). Jika diisi, countdown aktif. |
+| `ticket_war_start` | `DATETIME NULL` | Waktu spesifik pembukaan penjualan tiket (WIB). Jika diisi, countdown aktif. Diisi oleh kreator. |
 | `max_tickets_per_order` | `INT NULL DEFAULT 4` | Batas maksimum kuantitas tiket yang dapat dibeli dalam satu transaksi. |
 
+**Migration 2:** [`database/migrations/2026_11_21_215000_add_ticket_war_duration_to_products_table.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/database/migrations/2026_11_21_215000_add_ticket_war_duration_to_products_table.php)
+
+| Kolom | Tipe Data | Keterangan |
+| :--- | :--- | :--- |
+| `ticket_war_duration_hours` | `TINYINT UNSIGNED DEFAULT 3` | Durasi periode war dalam jam. **Dikontrol platform, bukan kreator.** Default 3 jam. Setelah war_start + 3 jam, antrian nonaktif otomatis. |
+
+> Kolom `ticket_war_duration_hours` **tidak di-fillable** dan **tidak ada di form kreator** secara sengaja. Dikontrol platform via DB default. Kreator tidak dapat mengubahnya.
+
 ### Model:
-[`app/Models/Product.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20&%20Deploy/buyle.id%20ex%20alaatrumah/app/Models/Product.php)
-- Ditambahkan ke `$fillable`: `'ticket_war_start'`, `'max_tickets_per_order'`.
-- Ditambahkan ke `$casts`: `'ticket_war_start' => 'datetime'`.
+[`app/Models/Product.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/app/Models/Product.php)
+- `$fillable`: `'ticket_war_start'`, `'max_tickets_per_order'`.
+- `$casts`: `'ticket_war_start' => 'datetime'`, `'max_tickets_per_order' => 'integer'`.
+- `ticket_war_duration_hours` **tidak di-fillable** — dikontrol platform via DB default.
 
 ### Form Creator:
-Pengaturan dapat diedit langsung oleh Creator/Event Organizer di menu Produk:
-- [`resources/views/creator/products/create.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20&%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/products/create.blade.php)
-- [`resources/views/creator/products/edit.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20&%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/products/edit.blade.php)
+Kreator **hanya dapat mengatur** jadwal war tiket (waktu mulai) di menu Produk:
+- Field tersedia: **Jadwal War Tiket** (`ticket_war_start`) dan **Maks Tiket Per Transaksi** (`max_tickets_per_order`).
+- **Durasi periode war TIDAK bisa diubah kreator** — platform yang menentukan (3 jam, hardcode).
+- [`resources/views/creator/products/create.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/products/create.blade.php)
+- [`resources/views/creator/products/edit.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/products/edit.blade.php)
 
 ---
 
