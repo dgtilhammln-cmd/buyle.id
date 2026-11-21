@@ -848,10 +848,13 @@
             .bio-layout {
                 flex-direction: column;
                 gap: 0.75rem;
+                align-items: stretch !important;
+                width: 100% !important;
+                box-sizing: border-box;
             }
 
             .bio-sidebar {
-                width: 100%;
+                width: 100% !important;
                 position: static;
                 border-radius: 0;
                 padding: 0;
@@ -859,6 +862,19 @@
                 box-shadow: none;
                 border: none;
                 margin-bottom: 0.25rem;
+                box-sizing: border-box;
+            }
+
+            .bio-content {
+                width: 100% !important;
+                flex: 1 1 100% !important;
+                min-width: 0 !important;
+                box-sizing: border-box;
+            }
+
+            .payout-tab-pane {
+                width: 100% !important;
+                box-sizing: border-box;
             }
 
             .sidebar-balance-hide,
@@ -943,6 +959,8 @@
             .prof-card {
                 border-radius: 16px;
                 margin-bottom: 0.75rem;
+                width: 100% !important;
+                box-sizing: border-box;
             }
 
             .prof-card-head {
@@ -1065,6 +1083,7 @@
             background: #f1f5f9;
             color: #0f172a;
         }
+        @endif
 
         @media (max-width: 768px) {
             .cr-main-canvas {
@@ -1075,7 +1094,6 @@
                 padding-bottom: max(95px, calc(80px + env(safe-area-inset-bottom, 0px))) !important;
             }
         }
-        @endif
     </style>
 @endsection
 
@@ -1091,7 +1109,7 @@
             </svg>
         </button>
         {{-- Tengah: Judul --}}
-        <h2 class="prod-mobile-title">Rekening & Penarikan</h2>
+        <h2 class="prod-mobile-title">Saldo & Penarikan</h2>
         <div style="width: 38px;"></div>
     </div>
     <script>
@@ -1671,13 +1689,14 @@
                             <div style="padding:0.875rem 1.25rem;font-size:0.78rem;color:#94a3b8;">{{ $requests->links() }}
                             </div>
                         @else
-                            <div style="text-align:center;padding:2.5rem 1rem;color:#94A3B8;">
-                                <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5"
-                                    viewBox="0 0 24 24" style="opacity:0.3;margin-bottom:0.75rem">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                </svg>
-                                <p style="font-size:0.83rem;margin:0;font-weight:600;">Belum ada riwayat pencairan</p>
+                            <div style="text-align:center;padding:3rem 1.5rem;color:#94A3B8;">
+                                <div style="width:52px; height:52px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; margin:0 auto 0.85rem; color:#94a3b8; font-size:1.5rem;">
+                                    <i class="ph ph-receipt"></i>
+                                </div>
+                                <div style="font-size:0.92rem; font-weight:700; color:#0f172a; margin-bottom:0.25rem;">Belum Ada Riwayat Pencairan</div>
+                                <p style="font-size:0.76rem; color:#64748b; margin:0 auto; max-width:280px; line-height:1.45;">
+                                    Semua riwayat pengajuan penarikan dana ke rekening Anda akan ditampilkan di sini.
+                                </p>
                             </div>
                         @endif
                     </div>
