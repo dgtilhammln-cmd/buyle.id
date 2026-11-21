@@ -343,26 +343,20 @@
             transform: scale(1.05);
         }
 
-        /* Badge Tier Pill (Real Synchronized Tier) */
-        .nina-tier-pill {
+        /* Buyle Pay Brand Logo Wrap */
+        .nina-buylepay-logo-wrap {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            background: #ffffff;
-            padding: 3px 12px;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #1e293b;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-            margin: 0 auto 0.5rem;
-            letter-spacing: 0.02em;
+            justify-content: center;
+            margin: 0 auto 0.55rem;
         }
 
-        .nina-tier-pill i {
-            color: #1eb349;
-            font-size: 0.85rem;
+        .nina-buylepay-logo {
+            height: 25px;
+            width: auto;
+            max-width: 130px;
+            object-fit: contain;
+            display: block;
         }
 
         /* Badge Currency Pill */
@@ -386,13 +380,46 @@
             padding: 0.2rem 0 0.8rem;
         }
 
+        .nina-balance-amount-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 0.5rem;
+        }
+
         .nina-balance-amount {
-            font-size: clamp(2rem, 4.5vw, 2.5rem);
+            font-size: clamp(1.85rem, 4.2vw, 2.35rem);
             font-weight: 700;
             color: #0f172a;
             letter-spacing: -0.025em;
             line-height: 1.15;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0;
+            transition: all 0.2s ease;
+        }
+
+        .nina-btn-toggle-balance {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .nina-btn-toggle-balance:hover {
+            color: #0f172a;
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: scale(1.05);
         }
 
         .nina-growth-pill {
@@ -408,7 +435,7 @@
             letter-spacing: 0.01em;
         }
 
-        /* Action Pill Bar (Hitam Sleek Sesuai Gambar Referensi, TANPA BARCODE) */
+        /* Action Pill Bar (Hitam Sleek 3 Tombol: Tarik Saldo, Transfer, Bagikan) */
         .nina-action-bar {
             background: #181d27;
             border-radius: 999px;
@@ -417,7 +444,7 @@
             align-items: center;
             justify-content: space-between;
             margin-top: 1rem;
-            gap: 6px;
+            gap: 5px;
             box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
         }
 
@@ -426,23 +453,35 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
             background: rgba(255, 255, 255, 0.07);
             color: #ffffff;
-            padding: 10px 16px;
+            padding: 9px 10px;
             border-radius: 999px;
             text-decoration: none;
-            font-size: 0.84rem;
+            font-size: 0.8rem;
             font-weight: 500;
             transition: all 0.2s ease;
             border: none;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
         }
 
         .nina-action-btn:hover {
             background: rgba(255, 255, 255, 0.15);
             color: #ffffff;
+        }
+
+        @media (max-width: 480px) {
+            .nina-action-btn {
+                padding: 8px 6px;
+                font-size: 0.72rem;
+                gap: 4px;
+            }
+            .nina-action-btn i {
+                font-size: 0.78rem !important;
+            }
         }
 
         /* ── MIDDLE ROW: SHORTCUT (2x2) + YOUR INCOME SIDE-BY-SIDE (PERSIS REFERENSI) ── */
@@ -889,6 +928,216 @@
         </div>
     </div>
 
+    {{-- ── MODAL TRANSFER SALDO BUYLE PAY ANTAR USER ── --}}
+    <style>
+        #transferModal {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                backdrop-filter 0.28s ease;
+        }
+
+        #transferModal.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #transferModal .transfer-modal-card {
+            transform: translateY(28px) scale(0.95);
+            opacity: 0;
+            transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #transferModal.is-open .transfer-modal-card {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        #transferModal.is-closing .transfer-modal-card {
+            transform: translateY(18px) scale(0.96);
+            opacity: 0;
+            transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1),
+                opacity 0.18s cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        #transferModal.is-closing {
+            opacity: 0;
+            transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        .transfer-chip-btn {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+            padding: 5px 9px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+        }
+
+        .transfer-chip-btn:hover {
+            border-color: #1eb349;
+            color: #1eb349;
+            background: #f0fdf4;
+        }
+    </style>
+
+    <div id="transferModal"
+        style="display:flex; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1.25rem;"
+        onclick="if(event.target===this) closeTransferModal()">
+        <div class="transfer-modal-card"
+            style="background:#ffffff; border-radius:24px; max-width:420px; width:100%; padding:1.5rem; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.22); position:relative; box-sizing:border-box;">
+
+            {{-- Tombol X di Pojok Kanan Atas --}}
+            <button type="button" onclick="closeTransferModal()"
+                style="position:absolute; top:1.1rem; right:1.1rem; width:34px; height:34px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:1.15rem; cursor:pointer; transition:all 0.15s ease;"
+                onmouseover="this.style.background='#fee2e2'; this.style.color='#ef4444'; this.style.borderColor='#fca5a5';"
+                onmouseout="this.style.background='#f8fafc'; this.style.color='#64748b'; this.style.borderColor='#e2e8f0';"
+                title="Tutup Modal">
+                <i class="ph-bold ph-x"></i>
+            </button>
+
+            {{-- Brand Logo & Header --}}
+            <div style="margin-bottom:0.85rem;">
+                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" style="height:24px; width:auto; object-fit:contain; margin-bottom:0.35rem; display:inline-block;">
+                <h3 style="font-size:1.08rem; font-weight:700; color:#0f172a; margin:0 0 0.2rem;">Transfer Saldo Buyle Pay</h3>
+                <p style="font-size:0.75rem; color:#64748b; margin:0; line-height:1.4;">
+                    Kirim saldo instan ke sesama akun Buyle.id tanpa biaya admin (Rp 0).
+                </p>
+            </div>
+
+            {{-- Info Saldo Pengirim --}}
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between; gap:0.5rem; flex-wrap:wrap;">
+                <div style="text-align:left;">
+                    <div style="font-size:0.66rem; font-weight:600; color:#166534; text-transform:uppercase; letter-spacing:0.02em;">Saldo Siap Ditarik</div>
+                    <div id="transferModalAvailableBalance" style="font-size:0.95rem; font-weight:700; color:#15803d; font-family:'Montserrat',sans-serif;">
+                        Rp {{ number_format($availableBalance, 0, ',', '.') }}
+                    </div>
+                </div>
+                <div style="font-size:0.68rem; font-weight:600; color:#166534; background:#dcfce7; padding:3px 8px; border-radius:6px; border:1px solid #86efac;">
+                    ⚡ Bebas Biaya
+                </div>
+            </div>
+
+            {{-- FORM TRANSFER --}}
+            <form id="transferForm" onsubmit="event.preventDefault(); submitTransfer();" style="text-align:left;">
+                
+                {{-- STEP 1: USERNAME TUJUAN --}}
+                <div style="margin-bottom:0.85rem;">
+                    <label style="display:block; font-size:0.72rem; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.35rem;">
+                        Username Penerima <span style="color:#ef4444;">*</span>
+                    </label>
+                    <div style="position:relative; display:flex; align-items:center;">
+                        <span style="position:absolute; left:12px; font-weight:700; color:#94a3b8; font-size:0.88rem; pointer-events:none;">@</span>
+                        <input type="text" id="transferUsernameInput"
+                            placeholder="username_tujuan"
+                            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                            oninput="onTransferUsernameInput(this.value)"
+                            style="width:100%; box-sizing:border-box; padding:0.6rem 2.2rem 0.6rem 1.95rem; border-radius:12px; border:1.5px solid #e2e8f0; font-size:0.85rem; font-weight:600; color:#0f172a; outline:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif;">
+                        
+                        {{-- Loading / Status Spinner --}}
+                        <div id="transferUserStatusIcon" style="position:absolute; right:12px; display:none; align-items:center; justify-content:center;">
+                            <svg class="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#94a3b8" stroke-width="3" stroke-dasharray="32" stroke-linecap="round"></circle></svg>
+                        </div>
+                    </div>
+
+                    {{-- User Preview Card (Muncul otomatis saat valid) --}}
+                    <div id="transferUserPreviewCard" style="display:none; margin-top:0.5rem; background:#f8fafc; border:1.5px solid #86efac; border-radius:12px; padding:0.55rem 0.75rem; align-items:center; gap:0.65rem;">
+                        <div id="transferAvatarWrap" style="width:38px; height:38px; border-radius:50%; background:#22c55e; color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem; flex-shrink:0; overflow:hidden;">
+                            <img id="transferAvatarImg" src="" alt="" style="width:100%; height:100%; object-fit:cover; display:none;">
+                            <span id="transferAvatarInitial">U</span>
+                        </div>
+                        <div style="flex:1; min-width:0;">
+                            <div id="transferUserName" style="font-weight:700; font-size:0.84rem; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+                            <div style="display:flex; align-items:center; gap:4px; margin-top:1px;">
+                                <span id="transferUserBadge" style="font-size:0.7rem; color:#15803d; font-weight:600;"></span>
+                                <svg width="13" height="13" fill="#16a34a" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Error Message Username --}}
+                    <div id="transferUsernameError" style="display:none; color:#dc2626; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.72rem; margin-top:0.4rem; line-height:1.35;"></div>
+                </div>
+
+                {{-- STEP 2: NOMINAL TRANSFER --}}
+                <div style="margin-bottom:0.85rem;">
+                    <label style="display:block; font-size:0.72rem; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.35rem;">
+                        Nominal Transfer (Rp) <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="text" id="transferAmountInput"
+                        placeholder="Contoh: 50.000" inputmode="numeric"
+                        oninput="onTransferAmountInput(this)"
+                        style="width:100%; box-sizing:border-box; padding:0.6rem 0.85rem; border-radius:12px; border:1.5px solid #e2e8f0; font-size:0.95rem; font-weight:700; color:#0f172a; outline:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif;">
+
+                    {{-- Quick Amount Chips --}}
+                    <div style="display:flex; gap:0.35rem; margin-top:0.45rem; flex-wrap:wrap;">
+                        <button type="button" class="transfer-chip-btn" onclick="setTransferAmount(10000)">10rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTransferAmount(25000)">25rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTransferAmount(50000)">50rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTransferAmount(100000)">100rb</button>
+                        <button type="button" class="transfer-chip-btn" onclick="setTransferAmount('all')">Semua Saldo</button>
+                    </div>
+
+                    <div id="transferAmountError" style="display:none; color:#dc2626; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.72rem; margin-top:0.4rem; line-height:1.35;"></div>
+                </div>
+
+                {{-- STEP 3: CATATAN (OPSIONAL) --}}
+                <div style="margin-bottom:1.15rem;">
+                    <label style="display:block; font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.35rem;">
+                        Catatan (Opsional)
+                    </label>
+                    <input type="text" id="transferNotesInput"
+                        placeholder="Misal: Honor kru, bagi hasil tiket..." maxlength="150"
+                        style="width:100%; box-sizing:border-box; padding:0.55rem 0.85rem; border-radius:12px; border:1.5px solid #e2e8f0; font-size:0.8rem; color:#334155; outline:none; font-family:'Montserrat',sans-serif;">
+                </div>
+
+                {{-- TOMBOL SUBMIT --}}
+                <button type="submit" id="btnSubmitTransfer" disabled
+                    style="width:100%; height:44px; border-radius:999px; background:#181d27; color:#ffffff; font-size:0.86rem; font-weight:700; border:none; cursor:not-allowed; display:inline-flex; align-items:center; justify-content:center; gap:6px; opacity:0.5; transition:all 0.2s ease; font-family:'Montserrat',sans-serif;">
+                    <span>Kirim Saldo</span>
+                    <i class="ph-bold ph-paper-plane-tilt" style="font-size:0.95rem;"></i>
+                </button>
+            </form>
+
+            {{-- SUCCESS STATE VIEW --}}
+            <div id="transferSuccessState" style="display:none; padding:0.5rem 0; text-align:center;">
+                <div style="width:52px; height:52px; border-radius:50%; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.6rem;">
+                    <i class="ph-bold ph-check"></i>
+                </div>
+                <h4 style="font-size:1.1rem; font-weight:700; color:#0f172a; margin:0 0 0.35rem;">Transfer Berhasil!</h4>
+                <p id="transferSuccessMsg" style="font-size:0.8rem; color:#475569; margin:0 0 1rem; line-height:1.45;"></p>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; margin-bottom:1.25rem; text-align:left;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem; font-size:0.75rem;">
+                        <span style="color:#64748b;">Nominal:</span>
+                        <span id="transferSuccessAmount" style="font-weight:700; color:#0f172a;"></span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem; font-size:0.75rem;">
+                        <span style="color:#64748b;">Penerima:</span>
+                        <span id="transferSuccessReceiver" style="font-weight:700; color:#15803d;"></span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+                        <span style="color:#64748b;">Kode Ref:</span>
+                        <span id="transferSuccessCode" style="font-family:monospace; font-weight:700; color:#334155;"></span>
+                    </div>
+                </div>
+                <button type="button" onclick="closeTransferModal(); window.location.reload();"
+                    style="width:100%; height:44px; border-radius:999px; background:#181d27; color:#ffffff; font-size:0.86rem; font-weight:700; border:none; cursor:pointer; font-family:'Montserrat',sans-serif;">
+                    Selesai
+                </button>
+            </div>
+
+        </div>
+    </div>
+
     <script>
         function openShareStoreModal() {
             const m = document.getElementById('shareStoreModal');
@@ -927,6 +1176,270 @@
                 input.select();
                 document.execCommand('copy');
             });
+        }
+
+        // ── HIDE / SHOW NOMINAL SALDO BUYLE PAY ──
+        function initNinaBalanceState() {
+            const isHidden = localStorage.getItem('buyle_hide_balance') === 'true';
+            applyNinaBalanceState(isHidden);
+        }
+
+        function toggleNinaBalanceVisibility() {
+            const currentHidden = localStorage.getItem('buyle_hide_balance') === 'true';
+            const newHidden = !currentHidden;
+            localStorage.setItem('buyle_hide_balance', newHidden ? 'true' : 'false');
+            applyNinaBalanceState(newHidden);
+        }
+
+        function applyNinaBalanceState(isHidden) {
+            const el = document.getElementById('ninaBalanceAmount');
+            const icon = document.getElementById('ninaEyeIcon');
+            if (!el) return;
+            if (isHidden) {
+                el.textContent = 'Rp ••••••••';
+                if (icon) icon.className = 'ph-bold ph-eye-slash';
+            } else {
+                el.textContent = el.dataset.formatted || 'Rp 0';
+                if (icon) icon.className = 'ph-bold ph-eye';
+            }
+        }
+
+        // Jalankan saat script selesai dimuat
+        document.addEventListener('DOMContentLoaded', initNinaBalanceState);
+        setTimeout(initNinaBalanceState, 50);
+
+        // ── LOGIKA MODAL TRANSFER SALDO BUYLE PAY ──
+        let currentAvailableBalance = {{ (float) ($availableBalance ?? 0) }};
+        let isTransferUserValid = false;
+        let verifiedTransferUser = null;
+        let transferCheckDebounce = null;
+
+        function openTransferModal() {
+            const m = document.getElementById('transferModal');
+            if (!m) return;
+
+            // Reset form
+            document.getElementById('transferForm').style.display = 'block';
+            document.getElementById('transferSuccessState').style.display = 'none';
+            document.getElementById('transferUsernameInput').value = '';
+            document.getElementById('transferAmountInput').value = '';
+            document.getElementById('transferNotesInput').value = '';
+            document.getElementById('transferUserPreviewCard').style.display = 'none';
+            document.getElementById('transferUsernameError').style.display = 'none';
+            document.getElementById('transferAmountError').style.display = 'none';
+            isTransferUserValid = false;
+            verifiedTransferUser = null;
+            updateTransferSubmitButton();
+
+            m.classList.remove('is-closing');
+            void m.offsetWidth;
+            m.classList.add('is-open');
+        }
+
+        function closeTransferModal() {
+            const m = document.getElementById('transferModal');
+            if (!m) return;
+            m.classList.remove('is-open');
+            m.classList.add('is-closing');
+            setTimeout(() => {
+                m.classList.remove('is-closing');
+            }, 240);
+        }
+
+        function onTransferUsernameInput(val) {
+            clearTimeout(transferCheckDebounce);
+            isTransferUserValid = false;
+            verifiedTransferUser = null;
+            updateTransferSubmitButton();
+
+            const previewCard = document.getElementById('transferUserPreviewCard');
+            const errBox = document.getElementById('transferUsernameError');
+            const statusIcon = document.getElementById('transferUserStatusIcon');
+
+            previewCard.style.display = 'none';
+            errBox.style.display = 'none';
+
+            const cleanVal = val.replace(/^@/, '').trim();
+            if (cleanVal.length < 2) {
+                statusIcon.style.display = 'none';
+                return;
+            }
+
+            statusIcon.style.display = 'flex';
+
+            transferCheckDebounce = setTimeout(async () => {
+                try {
+                    const res = await fetch(`{{ route('creator.transfer.check-user') }}?username=${encodeURIComponent(cleanVal)}`, {
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const data = await res.json();
+                    statusIcon.style.display = 'none';
+
+                    if (data.success && data.valid) {
+                        isTransferUserValid = true;
+                        verifiedTransferUser = data;
+
+                        // Tampilkan Preview Profil
+                        document.getElementById('transferUserName').textContent = data.store_name ? `${data.name} (${data.store_name})` : data.name;
+                        document.getElementById('transferUserBadge').textContent = '@' + data.username;
+
+                        const imgEl = document.getElementById('transferAvatarImg');
+                        const initEl = document.getElementById('transferAvatarInitial');
+                        if (data.avatar_url) {
+                            imgEl.src = data.avatar_url;
+                            imgEl.style.display = 'block';
+                            initEl.style.display = 'none';
+                        } else {
+                            imgEl.style.display = 'none';
+                            initEl.textContent = data.initial || 'U';
+                            initEl.style.display = 'inline';
+                        }
+
+                        previewCard.style.display = 'flex';
+                        errBox.style.display = 'none';
+                    } else {
+                        isTransferUserValid = false;
+                        verifiedTransferUser = null;
+                        previewCard.style.display = 'none';
+                        errBox.textContent = data.message || 'Username tidak valid.';
+                        errBox.style.display = 'block';
+                    }
+                } catch (e) {
+                    statusIcon.style.display = 'none';
+                    isTransferUserValid = false;
+                    errBox.textContent = 'Gagal memeriksa username. Periksa koneksi internet.';
+                    errBox.style.display = 'block';
+                }
+                updateTransferSubmitButton();
+            }, 350);
+        }
+
+        function onTransferAmountInput(input) {
+            let clean = input.value.replace(/\D/g, '');
+            if (!clean) {
+                input.value = '';
+            } else {
+                input.value = new Intl.NumberFormat('id-ID').format(clean);
+            }
+            validateTransferAmount();
+            updateTransferSubmitButton();
+        }
+
+        function setTransferAmount(val) {
+            const input = document.getElementById('transferAmountInput');
+            if (val === 'all') {
+                input.value = new Intl.NumberFormat('id-ID').format(Math.floor(currentAvailableBalance));
+            } else {
+                input.value = new Intl.NumberFormat('id-ID').format(val);
+            }
+            validateTransferAmount();
+            updateTransferSubmitButton();
+        }
+
+        function getTransferRawAmount() {
+            const input = document.getElementById('transferAmountInput');
+            if (!input) return 0;
+            return parseInt(input.value.replace(/\D/g, ''), 10) || 0;
+        }
+
+        function validateTransferAmount() {
+            const errBox = document.getElementById('transferAmountError');
+            const amt = getTransferRawAmount();
+            if (amt <= 0) {
+                errBox.style.display = 'none';
+                return false;
+            }
+            if (amt < 1000) {
+                errBox.textContent = 'Minimal transfer saldo adalah Rp 1.000.';
+                errBox.style.display = 'block';
+                return false;
+            }
+            if (amt > currentAvailableBalance) {
+                errBox.textContent = `Saldo tidak mencukupi. Maksimal: Rp ${new Intl.NumberFormat('id-ID').format(currentAvailableBalance)}.`;
+                errBox.style.display = 'block';
+                return false;
+            }
+            errBox.style.display = 'none';
+            return true;
+        }
+
+        function updateTransferSubmitButton() {
+            const btn = document.getElementById('btnSubmitTransfer');
+            if (!btn) return;
+            const amt = getTransferRawAmount();
+            const isAmountValid = (amt >= 1000 && amt <= currentAvailableBalance);
+
+            if (isTransferUserValid && isAmountValid) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.style.background = '#1eb349';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                btn.style.background = '#181d27';
+            }
+        }
+
+        async function submitTransfer() {
+            if (!isTransferUserValid || !verifiedTransferUser) return;
+            const amt = getTransferRawAmount();
+            if (amt < 1000 || amt > currentAvailableBalance) return;
+
+            const btn = document.getElementById('btnSubmitTransfer');
+            const notes = document.getElementById('transferNotesInput').value;
+
+            btn.disabled = true;
+            btn.innerHTML = `<svg class="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24" style="margin-right:6px;"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="3" stroke-dasharray="32" stroke-linecap="round"></circle></svg> <span>Memproses...</span>`;
+
+            try {
+                const res = await fetch(`{{ route('creator.transfer.process') }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: verifiedTransferUser.username,
+                        amount: amt,
+                        notes: notes
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Update saldo lokal
+                    currentAvailableBalance = data.new_balance;
+                    const balDisplay = document.getElementById('ninaBalanceAmount');
+                    if (balDisplay) {
+                        balDisplay.dataset.raw = data.new_balance;
+                        balDisplay.dataset.formatted = data.formatted_new_balance;
+                        if (localStorage.getItem('buyle_hide_balance') !== 'true') {
+                            balDisplay.textContent = data.formatted_new_balance;
+                        }
+                    }
+                    const modalBal = document.getElementById('transferModalAvailableBalance');
+                    if (modalBal) modalBal.textContent = data.formatted_new_balance;
+
+                    // Switch view to success
+                    document.getElementById('transferForm').style.display = 'none';
+                    document.getElementById('transferSuccessMsg').textContent = data.message;
+                    document.getElementById('transferSuccessAmount').textContent = data.formatted_amount;
+                    document.getElementById('transferSuccessReceiver').textContent = `@${data.receiver.username}`;
+                    document.getElementById('transferSuccessCode').textContent = data.transfer_code;
+                    document.getElementById('transferSuccessState').style.display = 'block';
+                } else {
+                    alert(data.message || 'Gagal melakukan transfer.');
+                    btn.disabled = false;
+                    btn.innerHTML = `<span>Kirim Saldo</span> <i class="ph-bold ph-paper-plane-tilt"></i>`;
+                }
+            } catch (e) {
+                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+                btn.disabled = false;
+                btn.innerHTML = `<span>Kirim Saldo</span> <i class="ph-bold ph-paper-plane-tilt"></i>`;
+            }
         }
     </script>
 @endsection
@@ -1048,14 +1561,22 @@
                         </a>
                     </div>
 
-                    {{-- Saldo Utama (Minimalist Clean Typography) --}}
+                    {{-- Saldo Utama Buyle Pay (Minimalist Clean Typography & Hide/Show) --}}
                     <div class="nina-balance-center">
-                        <div class="nina-tier-pill">
-                            <i class="ph-bold ph-shield-check"></i>
-                            <span>Tier: {{ $tierBadge }}</span>
+                        <div class="nina-buylepay-logo-wrap" title="Buyle Pay">
+                            <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" class="nina-buylepay-logo">
                         </div>
-                        <div class="nina-balance-amount">
-                            Rp {{ number_format($availableBalance, 0, ',', '.') }}
+
+                        <div class="nina-balance-amount-wrap">
+                            <div class="nina-balance-amount" id="ninaBalanceAmount"
+                                data-raw="{{ $availableBalance }}"
+                                data-formatted="Rp {{ number_format($availableBalance, 0, ',', '.') }}">
+                                Rp {{ number_format($availableBalance, 0, ',', '.') }}
+                            </div>
+                            <button type="button" class="nina-btn-toggle-balance" id="ninaToggleBalanceBtn"
+                                onclick="toggleNinaBalanceVisibility()" title="Sembunyikan / Tampilkan Saldo">
+                                <i class="ph-bold ph-eye" id="ninaEyeIcon" style="font-size: 0.95rem;"></i>
+                            </button>
                         </div>
 
                         <div class="nina-growth-pill">
@@ -1064,12 +1585,17 @@
                         </div>
                     </div>
 
-                    {{-- Dark Action Bar: 2 Tombol Saja (Tarik Saldo & Bagikan - TANPA BARCODE) --}}
+                    {{-- Dark Action Bar: 3 Tombol (Tarik Saldo, Transfer, Bagikan) --}}
                     <div class="nina-action-bar">
                         <a href="{{ route('creator.payout.settings') }}" class="nina-action-btn">
                             <span>Tarik Saldo</span>
                             <i class="ph-bold ph-arrow-up-right" style="font-size: 0.85rem;"></i>
                         </a>
+
+                        <button type="button" class="nina-action-btn" onclick="openTransferModal()">
+                            <i class="ph-bold ph-arrows-left-right" style="font-size: 0.85rem;"></i>
+                            <span>Transfer</span>
+                        </button>
 
                         <button type="button" class="nina-action-btn" onclick="openShareStoreModal()">
                             <i class="ph-bold ph-share-network" style="font-size: 0.85rem;"></i>

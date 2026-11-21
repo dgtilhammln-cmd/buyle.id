@@ -115,7 +115,23 @@ class SellerBalanceService
             ->whereIn('status', ['pending', 'approved', 'processed'])
             ->sum('amount');
 
-        $availableBalance = max(0, $clearedGmv - $totalPayout);
+        $outgoingTransfers = 0;
+        $incomingTransfers = 0;
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('internal_transfers')) {
+                $outgoingTransfers = (float) \App\Models\InternalTransfer::where('sender_id', $seller->id)
+                    ->where('status', 'success')
+                    ->sum('amount');
+                $incomingTransfers = (float) \App\Models\InternalTransfer::where('receiver_id', $seller->id)
+                    ->where('status', 'success')
+                    ->sum('amount');
+            }
+        } catch (\Throwable $e) {
+            $outgoingTransfers = 0;
+            $incomingTransfers = 0;
+        }
+
+        $availableBalance = max(0, ($clearedGmv + $incomingTransfers) - ($totalPayout + $outgoingTransfers));
         $totalGmv = $clearedGmv + $directPosSales;
 
         return [
@@ -127,6 +143,8 @@ class SellerBalanceService
             'ticket_escrow_balance'  => 0,
             'total_hold_balance'     => 0,
             'total_payout'           => $totalPayout,
+            'outgoing_transfers'     => $outgoingTransfers,
+            'incoming_transfers'     => $incomingTransfers,
             'upcoming_events'        => [],
         ];
     }

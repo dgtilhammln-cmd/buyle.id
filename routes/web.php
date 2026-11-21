@@ -1052,6 +1052,10 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/payout-request', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'requestPayout'])->name('payout.request');
     Route::post('/payout-to-pos-deposit', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'transferToPosDeposit'])->name('payout.to_pos_deposit');
 
+    // Modul Transfer Saldo Buyle Pay Antar Akun
+    Route::get('/transfer/check-user', [\App\Http\Controllers\Creator\CreatorTransferController::class, 'checkUser'])->name('transfer.check-user');
+    Route::post('/transfer', [\App\Http\Controllers\Creator\CreatorTransferController::class, 'processTransfer'])->name('transfer.process');
+
     // Laporan Penjualan & Manajemen Pesanan
     Route::get('/sales-report', [\App\Http\Controllers\Creator\SellerReportController::class, 'index'])->name('sales.report');
     Route::get('/sales-report/export', [\App\Http\Controllers\Creator\SellerReportController::class, 'export'])->name('sales.report.export');
