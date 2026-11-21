@@ -56,6 +56,7 @@ class StoreProductRequest extends FormRequest
             // Syarat klaim produk gratis (Follow sosmed & Join grup)
             'require_follow_join'   => ['nullable', 'boolean'],
             'require_screenshot_proof' => ['nullable', 'boolean'],
+            'custom_free_requirements' => ['nullable'],
             'follow_instagram_url'  => ['nullable', 'url', 'max:500'],
             'follow_tiktok_url'     => ['nullable', 'url', 'max:500'],
             'follow_x_url'          => ['nullable', 'url', 'max:500'],

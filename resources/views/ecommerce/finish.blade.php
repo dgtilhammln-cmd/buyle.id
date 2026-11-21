@@ -1,531 +1,730 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-:root { --accent: #1eb349; --accent-dark: #a5cf37; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --bg: #F8FAFC; }
-body { background-color: #F8FAFC !important; }
+    <style>
+        :root {
+            --accent: #1eb349;
+            --accent-dark: #a5cf37;
+            --text: #0F172A;
+            --muted: #64748B;
+            --border: #E2E8F0;
+            --bg: #F8FAFC;
+        }
 
-.fin-wrap {
-    max-width: 960px;
-    margin: 80px auto 4rem;
-    padding: 0 1.5rem;
-    font-family: 'Montserrat', sans-serif;
-}
+        body {
+            background-color: #F8FAFC !important;
+        }
 
-.fin-single-card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(30,179,73,0.08), 0 4px 20px rgba(0,0,0,0.04);
-    overflow: hidden;
-}
+        .fin-wrap {
+            max-width: 960px;
+            margin: 80px auto 4rem;
+            padding: 0 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+        }
 
-.fin-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    align-items: stretch;
-}
+        .fin-single-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(30, 179, 73, 0.08), 0 4px 20px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
 
-.fin-left {
-    padding: 3.5rem 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-}
+        .fin-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: stretch;
+        }
 
-.fin-right {
-    background: linear-gradient(145deg, #F8FAFC, #F1F5F9);
-    padding: 3.5rem 3rem;
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-}
+        .fin-left {
+            padding: 3.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
 
-.fin-icon-wrap {
-    width: 80px; height: 80px;
-    background: linear-gradient(135deg, #dcfce7, #bbf7d0); /* Blue primary gradient */
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1.5rem;
-    animation: popIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.fin-icon-wrap.success {
-    background: linear-gradient(135deg, #ECFDF5, #D1FAE5); /* Green for success only */
-}
+        .fin-right {
+            background: linear-gradient(145deg, #F8FAFC, #F1F5F9);
+            padding: 3.5rem 3rem;
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
 
-@keyframes popIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
+        .fin-icon-wrap {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            /* Blue primary gradient */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            animation: popIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+        .fin-icon-wrap.success {
+            background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+            /* Green for success only */
+        }
 
-.fin-title {
-    font-size: 1.75rem; font-weight: 800;
-    color: var(--text); margin-bottom: 0.75rem;
-    line-height: 1.2;
-}
-.fin-sub {
-    font-size: 0.95rem; color: var(--muted);
-    line-height: 1.6; margin-bottom: 2.5rem;
-}
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
 
-.fin-order-box {
-    margin-top: auto;
-    margin-bottom: auto;
-}
-.fin-order-box-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px dashed var(--border);
-}
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
 
-.fin-order-row {
-    display: flex; justify-content: space-between;
-    align-items: center; font-size: 0.95rem;
-    padding: 0.6rem 0;
-}
-.fin-order-row:not(:last-child) { border-bottom: 1px solid #E2E8F0; }
-.fin-order-row .label { color: var(--muted); font-weight: 500; }
-.fin-order-row .value { font-weight: 700; color: var(--text); text-align: right; }
-.fin-order-row .value.total { color: #1eb349 !important; font-size: 1.25rem; font-weight: 800; }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
 
-.btn-pay {
-    display: inline-flex; width: auto; min-width: 220px;
-    align-items: center; justify-content: center; gap: 8px;
-    background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
-    color: #fff !important; border: none; border-radius: 999px;
-    padding: 1rem 2rem; font-size: 1rem; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    font-family: 'Montserrat', sans-serif;
-    text-decoration: none; text-align: center;
-    box-shadow: 0 8px 24px rgba(30,179,73,0.35) !important;
-    margin: 0 auto;
-}
-.btn-pay:hover { 
-    background: linear-gradient(135deg, #17a03d, #8fbf2e) !important;
-    transform: translateY(-2px); 
-    box-shadow: 0 14px 32px rgba(30,179,73,0.45) !important; 
-    color: #fff !important; 
-}
-.btn-pay:active { transform: translateY(0); }
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-.btn-secondary-link {
-    display: inline-block; text-align: center;
-    margin-top: 1.25rem; color: var(--muted);
-    font-size: 0.9rem; text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
-}
-.btn-secondary-link:hover { color: var(--accent); }
+        .fin-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
 
-.fin-status-badge {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.4rem 1rem; border-radius: 999px;
-    font-size: 0.85rem; font-weight: 700;
-    margin-bottom: 1.5rem;
-}
-.badge-success { background: #D1FAE5; color: #065F46; }
-.badge-pending { background: #dcfce7; color: #15803d; } /* Blue badge instead of yellow */
+        .fin-sub {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
 
-.security-note {
-    display: flex; align-items: center; justify-content: center;
-    gap: 0.5rem; margin-top: 2.5rem;
-    color: var(--muted); font-size: 0.8rem;
-    background: #F1F5F9;
-    padding: 0.75rem;
-    border-radius: 8px;
-}
+        .fin-order-box {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
 
-@media(max-width: 768px) {
-    .fin-grid { grid-template-columns: 1fr; }
-    .fin-wrap { margin-top: 60px; }
-    .fin-left { padding: 2.5rem 1.5rem; }
-    .fin-right { border-left: none; border-top: 1px solid var(--border); padding: 2.5rem 1.5rem; }
-}
-</style>
+        .fin-order-box-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px dashed var(--border);
+        }
 
-<div class="fin-wrap">
-    
-    @php
-        $isPaid = ($order->payment && $order->payment->status?->value === 'success')
-            || in_array($order->status?->value, ['confirmed', 'completed', 'processing', 'delivered']);
-        $isPending = !$isPaid && $order->payment && $order->payment->status?->value === 'pending';
+        .fin-order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            padding: 0.6rem 0;
+        }
 
-        // Jalur 1: Produk Fisik (physical, umkm, makanan, barang)
-        $hasPhysical = $order->items->contains(function ($i) {
-            $type = $i->product?->product_type ?? $i->product?->type ?? '';
-            return in_array($type, ['physical', 'product', 'fisik', 'umkm', 'makanan', 'food', 'fnb']);
-        });
+        .fin-order-row:not(:last-child) {
+            border-bottom: 1px solid #E2E8F0;
+        }
 
-        // Jalur 2: Tiket Event (offline atau online)
-        $hasTicket = $order->items->contains(function ($i) {
-            return ($i->product?->product_type ?? '') === 'ticket';
-        });
+        .fin-order-row .label {
+            color: var(--muted);
+            font-weight: 500;
+        }
 
-        // Jalur 3: Produk Digital / External Link / Jasa (non-fisik, non-tiket)
-        $hasDigital = !$hasPhysical && !$hasTicket && $order->items->contains(function ($i) {
-            $type = $i->product?->product_type ?? $i->product?->type ?? '';
-            return in_array($type, ['digital', 'external_link', 'service', 'jasa']) || !empty($i->product?->digital_resource);
-        });
-    @endphp
+        .fin-order-row .value {
+            font-weight: 700;
+            color: var(--text);
+            text-align: right;
+        }
 
-    @if($isPaid && !$hasTicket)
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Pembayaran Berhasil!',
-                    html: `
-                        <div style="font-size:0.9rem; color:#334155; line-height:1.6; text-align:left; margin-top:0.5rem;">
-                            <p style="margin-bottom:0.75rem;">Terima kasih! Pembayaran Anda telah kami terima.</p>
+        .fin-order-row .value.total {
+            color: #1eb349 !important;
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
 
-                            {{-- === JALUR 1: PRODUK FISIK === --}}
-                            @if($hasPhysical)
-                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                    <div><strong>Cek Email Anda:</strong> Konfirmasi pesanan & detail pengiriman dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
-                                </div>
-                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                                    <div><strong>Cek Dashboard Akun:</strong> Pantau status pesanan & nomor resi di menu Pesanan Akun Anda.</div>
-                                </div>
+        .btn-pay {
+            display: inline-flex;
+            width: auto;
+            min-width: 220px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            color: #fff !important;
+            border: none;
+            border-radius: 999px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.35) !important;
+            margin: 0 auto;
+        }
 
-                            {{-- === JALUR 2: TIKET EVENT === --}}
-                            @elseif($hasTicket)
-                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
-                                    <div><strong>E-Tiket Anda Siap!</strong> Akses e-tiket & informasi event lengkap melalui halaman di bawah ini.</div>
-                                </div>
-                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                    <div><strong>Cek Email Anda:</strong> E-tiket & detail event juga telah dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
-                                </div>
+        .btn-pay:hover {
+            background: linear-gradient(135deg, #17a03d, #8fbf2e) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(30, 179, 73, 0.45) !important;
+            color: #fff !important;
+        }
 
-                            {{-- === JALUR 3: PRODUK DIGITAL / JASA === --}}
-                            @else
-                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                    <div><strong>Cek Email Anda:</strong> Link akses & detail produk dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
-                                </div>
-                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                                    <div><strong>Cek Dashboard Akun:</strong> Akses file/link produk kapan saja di menu Pesanan Akun Anda.</div>
-                                </div>
-                            @endif
-                        </div>
-                    `,
-                    confirmButtonColor: '#1eb349',
-                    confirmButtonText: 'Buka Pesanan Akun',
-                    customClass: { popup: 'rounded-xl' }
-                }).then((res) => {
-                    if (res.isConfirmed) {
-                        window.location.href = "{{ route('account.orders') }}";
-                    }
-                });
+        .btn-pay:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary-link {
+            display: inline-block;
+            text-align: center;
+            margin-top: 1.25rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .btn-secondary-link:hover {
+            color: var(--accent);
+        }
+
+        .fin-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-pending {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        /* Blue badge instead of yellow */
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2.5rem;
+            color: var(--muted);
+            font-size: 0.8rem;
+            background: #F1F5F9;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        @media(max-width: 768px) {
+            .fin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fin-wrap {
+                margin-top: 60px;
+            }
+
+            .fin-left {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .fin-right {
+                border-left: none;
+                border-top: 1px solid var(--border);
+                padding: 2.5rem 1.5rem;
+            }
+        }
+    </style>
+
+    <div class="fin-wrap">
+
+        @php
+            $isPaid = ($order->payment && $order->payment->status?->value === 'success')
+                || in_array($order->status?->value, ['confirmed', 'completed', 'processing', 'delivered']);
+            $isPending = !$isPaid && $order->payment && $order->payment->status?->value === 'pending';
+
+            // Jalur 1: Produk Fisik (physical, umkm, makanan, barang)
+            $hasPhysical = $order->items->contains(function ($i) {
+                $type = $i->product?->product_type ?? $i->product?->type ?? '';
+                return in_array($type, ['physical', 'product', 'fisik', 'umkm', 'makanan', 'food', 'fnb']);
             });
-        </script>
-    @endif
 
-    <div class="fin-single-card">
-        <div class="fin-grid">
-            
-            {{-- LEFT COLUMN: Status & Action --}}
-            <div class="fin-left">
-                @if($isPaid)
-                    {{-- PAID STATE --}}
-                    <div class="fin-icon-wrap success">
-                        <svg width="40" height="40" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                        </svg>
-                    </div>
-                    <div class="fin-title" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        Pesanan Berhasil!
-                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                        </svg>
-                    </div>
-                    {{-- ====================================================
-                         JALUR 1: PRODUK FISIK / UMKM
-                         ==================================================== --}}
-                    @if($hasPhysical)
-                        <p class="fin-sub">
-                            Terima kasih sudah berbelanja produk UMKM di buyle.id.<br>
-                            Pesanan Anda telah dikonfirmasi dan sedang disiapkan oleh penjual untuk dikirim.
-                        </p>
+            // Jalur 2: Tiket Event (offline atau online)
+            $hasTicket = $order->items->contains(function ($i) {
+                return ($i->product?->product_type ?? '') === 'ticket';
+            });
 
-                        <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
-                            <h4 style="margin-bottom: 0.75rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">Status Pengiriman Produk Fisik</h4>
-                            <p style="font-size: 0.9rem; margin: 0; opacity: 0.95; line-height: 1.5;">
-                                Penjual sedang menyiapkan barang pesanan Anda. Anda dapat mengecek pembaruan nomor resi dan melacak status pengiriman melalui menu <strong>Riwayat Pesanan</strong>.
-                            </p>
-                        </div>
+            // Jalur 3: Produk Digital / External Link / Jasa (non-fisik, non-tiket)
+            $hasDigital = !$hasPhysical && !$hasTicket && $order->items->contains(function ($i) {
+                $type = $i->product?->product_type ?? $i->product?->type ?? '';
+                return in_array($type, ['digital', 'external_link', 'service', 'jasa']) || !empty($i->product?->digital_resource);
+            });
+        @endphp
 
-                    {{-- ====================================================
-                         JALUR 2: TIKET EVENT (ONLINE & OFFLINE)
-                         ==================================================== --}}
-                    @elseif($hasTicket)
-                        <p class="fin-sub">
-                            Terima kasih telah membeli tiket di buyle.id.<br>
-                            E-tiket Anda sudah siap dan dapat diakses di bawah ini.
-                        </p>
+        @if($isPaid && !$hasTicket)
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Pembayaran Berhasil!',
+                        html: `
+                                <div style="font-size:0.9rem; color:#334155; line-height:1.6; text-align:left; margin-top:0.5rem;">
+                                    <p style="margin-bottom:0.75rem;">Terima kasih! Pembayaran Anda telah kami terima.</p>
 
-                        <div style="background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #ffffff; text-align: left; box-shadow: 0 10px 25px rgba(30,179,73,0.25);">
-                            <h4 style="margin: 0 0 1rem 0; font-weight: 700; font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 0.65rem; display:flex; align-items:center; gap:8px; color: #ffffff;">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
-                                E-Tiket &amp; Info Event
-                            </h4>
-                            @foreach($order->items as $item)
-                                @if($item->product && $item->product->product_type === 'ticket')
-                                    <div style="margin-bottom: 1rem; background: rgba(0,0,0,0.14); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.22);">
-                                        <div style="display:flex; align-items:center; gap:8px; font-size: 0.98rem; font-weight: 700; color: #ffffff; margin-bottom: 0.45rem;">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
-                                            <span>{{ $item->product_name }}</span>
-                                            @php
-                                                $vLabel = $item->variant_name ?? ($item->variantValue ? $item->variantValue->value : null);
-                                            @endphp
-                                            @if($vLabel)
-                                                <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; background:rgba(255,255,255,0.25); color:#ffffff; padding:2px 8px; border-radius:999px; font-weight:600;">
-                                                    {{ $vLabel }}
-                                                </span>
-                                            @endif
+                                    {{-- === JALUR 1: PRODUK FISIK === --}}
+                                    @if($hasPhysical)
+                                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                                <div><strong>Cek Email Anda:</strong> Konfirmasi pesanan & detail pengiriman dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
+                                            </div>
+                                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                                <div><strong>Cek Dashboard Akun:</strong> Pantau status pesanan & nomor resi di menu Pesanan Akun Anda.</div>
+                                            </div>
+
+                                        {{-- === JALUR 2: TIKET EVENT === --}}
+                                    @elseif($hasTicket)
+                                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
+                                                <div><strong>E-Tiket Anda Siap!</strong> Akses e-tiket & informasi event lengkap melalui halaman di bawah ini.</div>
+                                            </div>
+                                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                                <div><strong>Cek Email Anda:</strong> E-tiket & detail event juga telah dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
+                                            </div>
+
+                                        {{-- === JALUR 3: PRODUK DIGITAL / JASA === --}}
+                                    @else
+                                        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                            <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                            <div><strong>Cek Email Anda:</strong> Link akses & detail produk dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
                                         </div>
-                                        
-                                        @if($item->product->event_type === 'online')
-                                            <div style="font-size:0.85rem; color:#f0fdf4; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
-                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                <span><strong>Platform:</strong> {{ $item->product->event_platform ?: 'Online Streaming / Video Conference' }}</span>
-                                            </div>
-                                            <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                                                @if($item->product->event_location)
-                                                    <a href="{{ $item->product->event_location }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #15803d; padding: 0.55rem 1.1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                                        Masuk ke Link Event / Grup →
-                                                    </a>
-                                                @endif
-                                                @php
-                                                    $ticketLink = (auth()->check() && auth()->id() === $order->user_id)
-                                                        ? route('account.orders.show', $order->id)
-                                                        : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
-                                                @endphp
-                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.25); color: #ffffff; padding: 0.55rem 1.1rem; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border:1px solid rgba(255,255,255,0.35);">
-                                                    Lihat E-Tiket Saya
-                                                </a>
-                                            </div>
-                                        @else
-                                            <div style="font-size:0.85rem; color:#f0fdf4; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
-                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                                <span><strong>Venue:</strong> {{ $item->product->event_location ?: 'Lokasi Ditentukan Panitia' }}</span>
-                                            </div>
-                                            <div>
-                                                @php
-                                                    $ticketLink = (auth()->check() && auth()->id() === $order->user_id)
-                                                        ? route('account.orders.show', $order->id)
-                                                        : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
-                                                @endphp
-                                                <a href="{{ $ticketLink }}" style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #15803d; padding: 0.6rem 1.2rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(0,0,0,0.12);">
-                                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                                    Buka & Unduh E-Tiket (QR Code) →
-                                                </a>
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-
-                    {{-- ====================================================
-                         JALUR 3: PRODUK DIGITAL / EXTERNAL LINK / JASA
-                         ==================================================== --}}
-                    @else
-                        <p class="fin-sub">
-                            Terima kasih sudah berbelanja di buyle.id.<br>
-                            Akses produk/jasa Anda melalui link di bawah ini.
-                        </p>
-
-                        <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
-                            <h4 style="margin-bottom: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem; display:flex; align-items:center; gap:8px;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                Akses Produk / Jasa
-                            </h4>
-                            @foreach($order->items as $item)
-                                @if($item->product && $item->product->digital_resource)
-                                    <div style="margin-bottom: 0.75rem; background:rgba(255,255,255,0.12); padding:0.85rem; border-radius:12px; border:1px solid rgba(255,255,255,0.25);">
-                                        <strong style="display:flex; align-items:center; gap:6px; font-size: 0.9rem; margin-bottom: 0.5rem;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                                            {{ $item->product_name }}
-                                            @php $vLabel = $item->variant_name ?? ($item->variantValue ? $item->variantValue->value : null); @endphp
-                                            @if($vLabel)
-                                                <span style="display:inline-flex; align-items:center; gap:3px; font-size:0.75rem; background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; font-weight:600;">
-                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                                                    {{ $vLabel }}
-                                                </span>
-                                            @endif
-                                        </strong>
-                                        <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                            Buka Akses Produk / Jasa Digital →
-                                        </a>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    @endif
-
-                    <div>
-                        <a href="{{ route('account.orders') }}" class="btn-pay" style="background: #0f1f0f;">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                            Riwayat Pesanan
-                        </a>
-                    </div>
-                    <div style="margin-top: 1rem;">
-                        <a href="{{ route('products') }}" class="btn-secondary-link">
-                            Lanjut Belanja &rarr;
-                        </a>
-                    </div>
-
-                @else
-                    {{-- PENDING PAYMENT STATE --}}
-                    <div style="margin: 0 auto 1.5rem; animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1) both; display:flex; justify-content:center;">
-                        @php $logo = \App\Models\Setting::get('logo'); @endphp
-                        @if($logo)
-                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="height:56px;width:auto;object-fit:contain;">
-                        @else
-                            <span style="font-weight:800;color:#1eb349;font-size:1.75rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
-                        @endif
-                    </div>
-                    <div>
-                        <span class="fin-status-badge badge-pending">
-                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10"/></svg>
-                            Menunggu Pembayaran
-                        </span>
-                    </div>
-                    <div class="fin-title">Selesaikan Pembayaran</div>
-                    <p class="fin-sub">
-                        Klik tombol di bawah untuk melanjutkan ke halaman pembayaran.<br>
-                        Pesanan akan otomatis dibatalkan jika belum dibayar dalam <strong>24 jam</strong>.
-                    </p>
-
-                    @if($isPending && $order->payment && $order->payment->midtrans_token)
-                        @php
-                            $midtransIsProd  = \App\Models\Setting::get('midtrans_is_production', config('midtrans.is_production'));
-                            $midtransClientKey = \App\Models\Setting::get('midtrans_client_key') ?: config('midtrans.client_key');
-                            $snapUrl = $midtransIsProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
-                        @endphp
-
-                        {{-- Tombol dengan data-snap-token agar tidak perlu inline script (CSP safe) --}}
-                        <div>
-                            <button
-                                id="pay-button"
-                                class="btn-pay"
-                                data-snap-token="{{ $order->payment->midtrans_token }}">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                                Bayar Sekarang
-                            </button>
-                        </div>
-
-                        {{-- Midtrans Snap JS (external, CSP-safe) --}}
-                        <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
-                        {{-- Payment handler (external JS, no inline script) --}}
-                        <script src="{{ asset('js/snap-pay.js') }}" defer></script>
-
-                        <div>
-                            <a href="{{ route('account.orders') }}" class="btn-secondary-link">
-                                Bayar nanti &rarr; Lihat Pesanan
-                            </a>
-                        </div>
-                    @else
-                        <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;font-size:0.9rem;color:#B91C1C;">
-                            Status Pesanan: <strong style="text-transform:uppercase;">{{ $order->status->label() }}</strong>
-                        </div>
-                        <div>
-                            <a href="{{ route('home') }}" class="btn-pay">
-                                Kembali ke Beranda
-                            </a>
-                        </div>
-                    @endif
-                @endif
-
-                <div class="security-note">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
-                    Pembayaran 100% Aman & Terenkripsi
-                </div>
-            </div>
-
-            {{-- RIGHT COLUMN: Order Summary --}}
-            <div class="fin-right">
-                <div class="fin-order-box">
-                    <div class="fin-order-box-title">Ringkasan Pesanan</div>
-                    
-                    <div class="fin-order-row">
-                        <span class="label">No. Pesanan</span>
-                        <span class="value">#{{ $order->order_number }}</span>
-                    </div>
-                    <div class="fin-order-row">
-                        <span class="label">Tanggal</span>
-                        <span class="value">{{ $order->created_at->format('d M Y, H:i') }}</span>
-                    </div>
-                    <div class="fin-order-row">
-                        <span class="label">Jumlah Item</span>
-                        <span class="value">{{ $order->items->count() }} produk</span>
-                    </div>
-
-                    {{-- Item list breakdown --}}
-                    <div style="margin: 0.85rem 0; padding: 0.75rem 0; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border);">
-                        @foreach($order->items as $item)
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.65rem; font-size:0.88rem;">
-                                <div style="flex:1; padding-right:10px;">
-                                    <div style="font-weight:600; color:var(--text); line-height:1.3;">{{ $item->product_name }}</div>
-                                    @php
-                                        $vLabel = $item->variant_name ?? ($item->variantValue ? ($item->variantValue->option?->name ? $item->variantValue->option->name . ': ' : '') . $item->variantValue->value : null);
-                                    @endphp
-                                    @if($vLabel)
-                                        <div style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; font-weight:600; color:#15803d; background:#ecfdf5; border:1px solid #bbf7d0; border-radius:6px; padding:1px 6px; margin-top:3px;">
-                                            <svg width="11" height="11" fill="none" stroke="#15803d" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                                            {{ $vLabel }}
+                                        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                            <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                            <div><strong>Cek Dashboard Akun:</strong> Akses file/link produk kapan saja di menu Pesanan Akun Anda.</div>
                                         </div>
                                     @endif
-                                    <div style="font-size:0.78rem; color:var(--muted); margin-top:2px;">{{ $item->qty }} &times; Rp {{ number_format($item->price, 0, ',', '.') }}</div>
                                 </div>
-                                <div style="font-weight:700; color:var(--text); white-space:nowrap;">
-                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                                </div>
+                            `,
+                        confirmButtonColor: '#1eb349',
+                        confirmButtonText: 'Buka Pesanan Akun',
+                        customClass: { popup: 'rounded-xl' }
+                    }).then((res) => {
+                        if (res.isConfirmed) {
+                            window.location.href = "{{ route('account.orders') }}";
+                        }
+                    });
+                });
+            </script>
+        @endif
+
+        <div class="fin-single-card">
+            <div class="fin-grid">
+
+                {{-- LEFT COLUMN: Status & Action --}}
+                <div class="fin-left">
+                    @if($isPaid)
+                        {{-- PAID STATE --}}
+                        <div class="fin-icon-wrap success">
+                            <svg width="40" height="40" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="fin-title" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            Pesanan Berhasil!
+                            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                style="color:#1eb349;">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        {{-- ====================================================
+                        JALUR 1: PRODUK FISIK / UMKM
+                        ==================================================== --}}
+                        @if($hasPhysical)
+                            <p class="fin-sub">
+                                Terima kasih sudah berbelanja produk UMKM di buyle.id.<br>
+                                Pesanan Anda telah dikonfirmasi dan sedang disiapkan oleh penjual untuk dikirim.
+                            </p>
+
+                            <div
+                                style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
+                                <h4
+                                    style="margin-bottom: 0.75rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">
+                                    Status Pengiriman Produk Fisik</h4>
+                                <p style="font-size: 0.9rem; margin: 0; opacity: 0.95; line-height: 1.5;">
+                                    Penjual sedang menyiapkan barang pesanan Anda. Anda dapat mengecek pembaruan nomor resi dan
+                                    melacak status pengiriman melalui menu <strong>Riwayat Pesanan</strong>.
+                                </p>
                             </div>
-                        @endforeach
-                    </div>
-                    
-                    @if($order->shipping_cost > 0)
-                    <div class="fin-order-row">
-                        <span class="label">Ongkos Kirim</span>
-                        <span class="value">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
-                    </div>
+
+                            {{-- ====================================================
+                            JALUR 2: TIKET EVENT (ONLINE & OFFLINE)
+                            ==================================================== --}}
+                        @elseif($hasTicket)
+                            <p class="fin-sub">
+                                Terima kasih telah membeli tiket di buyle.id.<br>
+                                E-tiket Anda sudah siap dan dapat diakses di bawah ini.
+                            </p>
+
+                            <div
+                                style="background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #ffffff; text-align: left; box-shadow: 0 10px 25px rgba(30,179,73,0.25);">
+                                <h4
+                                    style="margin: 0 0 1rem 0; font-weight: 700; font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 0.65rem; display:flex; align-items:center; gap:8px; color: #ffffff;">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                                    </svg>
+                                    E-Tiket &amp; Info Event
+                                </h4>
+                                @foreach($order->items as $item)
+                                    @if($item->product && $item->product->product_type === 'ticket')
+                                        <div
+                                            style="margin-bottom: 1rem; background: rgba(0,0,0,0.14); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.22);">
+                                            <div
+                                                style="display:flex; align-items:center; gap:8px; font-size: 0.98rem; font-weight: 700; color: #ffffff; margin-bottom: 0.45rem;">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                                                </svg>
+                                                <span>{{ $item->product_name }}</span>
+                                                @php
+                                                    $vLabel = $item->variant_name ?? ($item->variantValue ? $item->variantValue->value : null);
+                                                @endphp
+                                                @if($vLabel)
+                                                    <span
+                                                        style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; background:rgba(255,255,255,0.25); color:#ffffff; padding:2px 8px; border-radius:999px; font-weight:600;">
+                                                        {{ $vLabel }}
+                                                    </span>
+                                                @endif
+                                            </div>
+
+                                            @if($item->product->event_type === 'online')
+                                                <div
+                                                    style="font-size:0.85rem; color:#f0fdf4; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
+                                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                                        viewBox="0 0 24 24">
+                                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                                        <line x1="8" y1="21" x2="16" y2="21" />
+                                                        <line x1="12" y1="17" x2="12" y2="21" />
+                                                    </svg>
+                                                    <span><strong>Platform:</strong>
+                                                        {{ $item->product->event_platform ?: 'Online Streaming / Video Conference' }}</span>
+                                                </div>
+                                                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                                                    @if($item->product->event_location)
+                                                        <a href="{{ $item->product->event_location }}" target="_blank" rel="noopener noreferrer"
+                                                            style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #15803d; padding: 0.55rem 1.1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                                                viewBox="0 0 24 24">
+                                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                                            </svg>
+                                                            Masuk ke Link Event / Grup →
+                                                        </a>
+                                                    @endif
+                                                    @php
+                                                        $ticketLink = (auth()->check() && auth()->id() === $order->user_id)
+                                                            ? route('account.orders.show', $order->id)
+                                                            : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
+                                                    @endphp
+                                                    <a href="{{ $ticketLink }}"
+                                                        style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.25); color: #ffffff; padding: 0.55rem 1.1rem; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border:1px solid rgba(255,255,255,0.35);">
+                                                        Lihat E-Tiket Saya
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <div
+                                                    style="font-size:0.85rem; color:#f0fdf4; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
+                                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                        <circle cx="12" cy="10" r="3" />
+                                                    </svg>
+                                                    <span><strong>Venue:</strong>
+                                                        {{ $item->product->event_location ?: 'Lokasi Ditentukan Panitia' }}</span>
+                                                </div>
+                                                <div>
+                                                    @php
+                                                        $ticketLink = (auth()->check() && auth()->id() === $order->user_id)
+                                                            ? route('account.orders.show', $order->id)
+                                                            : route('orders.ticket.download.public', ['order' => $order->id, 'token' => hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'))]);
+                                                    @endphp
+                                                    <a href="{{ $ticketLink }}"
+                                                        style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #15803d; padding: 0.6rem 1.2rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(0,0,0,0.12);">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                                            viewBox="0 0 24 24">
+                                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                                            <polyline points="21 15 16 10 5 21" />
+                                                        </svg>
+                                                        Buka & Unduh E-Tiket (QR Code) →
+                                                    </a>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            {{-- ====================================================
+                            JALUR 3: PRODUK DIGITAL / EXTERNAL LINK / JASA
+                            ==================================================== --}}
+                        @else
+                            <p class="fin-sub">
+                                Terima kasih sudah berbelanja di buyle.id.<br>
+                                Akses produk/jasa Anda melalui link di bawah ini.
+                            </p>
+
+                            <div
+                                style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
+                                <h4
+                                    style="margin-bottom: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem; display:flex; align-items:center; gap:8px;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                    </svg>
+                                    Akses Produk / Jasa
+                                </h4>
+                                @foreach($order->items as $item)
+                                    @if($item->product && $item->product->digital_resource)
+                                        <div
+                                            style="margin-bottom: 0.75rem; background:rgba(255,255,255,0.12); padding:0.85rem; border-radius:12px; border:1px solid rgba(255,255,255,0.25);">
+                                            <strong
+                                                style="display:flex; align-items:center; gap:6px; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                    <polyline points="14 2 14 8 20 8" />
+                                                </svg>
+                                                {{ $item->product_name }}
+                                                @php $vLabel = $item->variant_name ?? ($item->variantValue ? $item->variantValue->value : null); @endphp
+                                                @if($vLabel)
+                                                    <span
+                                                        style="display:inline-flex; align-items:center; gap:3px; font-size:0.75rem; background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; font-weight:600;">
+                                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
+                                                            viewBox="0 0 24 24">
+                                                            <path
+                                                                d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                                                            <line x1="7" y1="7" x2="7.01" y2="7" />
+                                                        </svg>
+                                                        {{ $vLabel }}
+                                                    </span>
+                                                @endif
+                                            </strong>
+                                            <a href="{{ $item->product->digital_resource }}" target="_blank"
+                                                style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                                </svg>
+                                                Buka Akses Produk / Jasa Digital →
+                                            </a>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <div>
+                            <a href="{{ route('account.orders') }}" class="btn-pay" style="background: #0f1f0f;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                                </svg>
+                                Riwayat Pesanan
+                            </a>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <a href="{{ route('products') }}" class="btn-secondary-link">
+                                Lanjut Belanja &rarr;
+                            </a>
+                        </div>
+
+                    @else
+                        {{-- PENDING PAYMENT STATE --}}
+                        <div
+                            style="margin: 0 auto 1.5rem; animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1) both; display:flex; justify-content:center;">
+                            @php $logo = \App\Models\Setting::get('logo'); @endphp
+                            @if($logo)
+                                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id"
+                                    style="height:56px;width:auto;object-fit:contain;">
+                            @else
+                                <span
+                                    style="font-weight:800;color:#1eb349;font-size:1.75rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
+                            @endif
+                        </div>
+                        <div>
+                            <span class="fin-status-badge badge-pending">
+                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="10" r="10" />
+                                </svg>
+                                Menunggu Pembayaran
+                            </span>
+                        </div>
+                        <div class="fin-title">Selesaikan Pembayaran</div>
+                        <p class="fin-sub">
+                            Klik tombol di bawah untuk melanjutkan ke halaman pembayaran.<br>
+                            Pesanan akan otomatis dibatalkan jika belum dibayar dalam <strong>24 jam</strong>.
+                        </p>
+
+                        @if($isPending && $order->payment && $order->payment->midtrans_token)
+                            @php
+                                $midtransIsProd = \App\Models\Setting::get('midtrans_is_production', config('midtrans.is_production'));
+                                $midtransClientKey = \App\Models\Setting::get('midtrans_client_key') ?: config('midtrans.client_key');
+                                $snapUrl = $midtransIsProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+                            @endphp
+
+                            {{-- Tombol dengan data-snap-token agar tidak perlu inline script (CSP safe) --}}
+                            <div>
+                                <button id="pay-button" class="btn-pay" data-snap-token="{{ $order->payment->midtrans_token }}">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="5" width="20" height="14" rx="2" ry="2" />
+                                        <line x1="2" y1="10" x2="22" y2="10" />
+                                    </svg>
+                                    Bayar Sekarang
+                                </button>
+                            </div>
+
+                            {{-- Midtrans Snap JS (external, CSP-safe) --}}
+                            <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
+                            {{-- Payment handler (external JS, no inline script) --}}
+                            <script src="{{ asset('js/snap-pay.js') }}" defer></script>
+
+                            <div>
+                                <a href="{{ route('account.orders') }}" class="btn-secondary-link">
+                                    Bayar nanti &rarr; Lihat Pesanan
+                                </a>
+                            </div>
+                        @else
+                            <div
+                                style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;font-size:0.9rem;color:#B91C1C;">
+                                Status Pesanan: <strong style="text-transform:uppercase;">{{ $order->status->label() }}</strong>
+                            </div>
+                            <div>
+                                <a href="{{ route('home') }}" class="btn-pay">
+                                    Kembali ke Beranda
+                                </a>
+                            </div>
+                        @endif
                     @endif
-                    
-                    @if($order->discount > 0)
-                    <div class="fin-order-row">
-                        <span class="label">Diskon</span>
-                        <span class="value" style="color:#10B981;">-Rp {{ number_format($order->discount, 0, ',', '.') }}</span>
-                    </div>
-                    @endif
-                    
-                    <div class="fin-order-row" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px dashed #CBD5E1; border-bottom: none;">
-                        <span class="label" style="font-weight: 600; color: var(--text); font-size: 1.05rem;">Total Tagihan</span>
-                        <span class="value total">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
+
+                    <div class="security-note">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        100% Secure & Encrypted Payment
                     </div>
                 </div>
-            </div>
 
+                {{-- RIGHT COLUMN: Order Summary --}}
+                <div class="fin-right">
+                    <div class="fin-order-box">
+                        <div class="fin-order-box-title">Ringkasan Pesanan</div>
+
+                        <div class="fin-order-row">
+                            <span class="label">No. Pesanan</span>
+                            <span class="value">#{{ $order->order_number }}</span>
+                        </div>
+                        <div class="fin-order-row">
+                            <span class="label">Tanggal</span>
+                            <span class="value">{{ $order->created_at->format('d M Y, H:i') }}</span>
+                        </div>
+                        <div class="fin-order-row">
+                            <span class="label">Jumlah Item</span>
+                            <span class="value">{{ $order->items->count() }} produk</span>
+                        </div>
+
+                        {{-- Item list breakdown --}}
+                        <div
+                            style="margin: 0.85rem 0; padding: 0.75rem 0; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border);">
+                            @foreach($order->items as $item)
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.65rem; font-size:0.88rem;">
+                                    <div style="flex:1; padding-right:10px;">
+                                        <div style="font-weight:600; color:var(--text); line-height:1.3;">
+                                            {{ $item->product_name }}</div>
+                                        @php
+                                            $vLabel = $item->variant_name ?? ($item->variantValue ? ($item->variantValue->option?->name ? $item->variantValue->option->name . ': ' : '') . $item->variantValue->value : null);
+                                        @endphp
+                                        @if($vLabel)
+                                            <div
+                                                style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; font-weight:600; color:#15803d; background:#ecfdf5; border:1px solid #bbf7d0; border-radius:6px; padding:1px 6px; margin-top:3px;">
+                                                <svg width="11" height="11" fill="none" stroke="#15803d" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                                                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                                                </svg>
+                                                {{ $vLabel }}
+                                            </div>
+                                        @endif
+                                        <div style="font-size:0.78rem; color:var(--muted); margin-top:2px;">{{ $item->qty }}
+                                            &times; Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                                    </div>
+                                    <div style="font-weight:700; color:var(--text); white-space:nowrap;">
+                                        Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        @if($order->shipping_cost > 0)
+                            <div class="fin-order-row">
+                                <span class="label">Ongkos Kirim</span>
+                                <span class="value">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
+
+                        @if($order->discount > 0)
+                            <div class="fin-order-row">
+                                <span class="label">Diskon</span>
+                                <span class="value" style="color:#10B981;">-Rp
+                                    {{ number_format($order->discount, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
+
+                        <div class="fin-order-row"
+                            style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px dashed #CBD5E1; border-bottom: none;">
+                            <span class="label" style="font-weight: 600; color: var(--text); font-size: 1.05rem;">Total
+                                Tagihan</span>
+                            <span class="value total">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
 @endsection

@@ -183,11 +183,46 @@ class SellerProductController extends Controller
         if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
             $data['require_screenshot_proof'] = $data['require_follow_join'] ? $request->boolean('require_screenshot_proof') : false;
+
+            $customReqs = $request->input('custom_free_requirements');
+            if (is_string($customReqs)) {
+                $customReqs = json_decode($customReqs, true);
+            }
+            $cleanReqs = [];
+            if ($data['require_follow_join'] && is_array($customReqs)) {
+                foreach ($customReqs as $cr) {
+                    $url = trim($cr['url'] ?? '');
+                    if (!empty($url)) {
+                        $cleanReqs[] = [
+                            'platform' => trim($cr['platform'] ?? 'website'),
+                            'url'      => $url,
+                            'label'    => trim($cr['label'] ?? ''),
+                            'action'   => trim($cr['action'] ?? ''),
+                        ];
+                    }
+                }
+            }
+            $data['custom_free_requirements'] = $data['require_follow_join'] ? $cleanReqs : null;
+
+            if (!empty($cleanReqs)) {
+                foreach ($cleanReqs as $cr) {
+                    $plat = $cr['platform'];
+                    if ($plat === 'instagram' && empty($data['follow_instagram_url'])) $data['follow_instagram_url'] = $cr['url'];
+                    if ($plat === 'tiktok' && empty($data['follow_tiktok_url'])) $data['follow_tiktok_url'] = $cr['url'];
+                    if ($plat === 'x' && empty($data['follow_x_url'])) $data['follow_x_url'] = $cr['url'];
+                    if ($plat === 'youtube' && empty($data['follow_youtube_url'])) $data['follow_youtube_url'] = $cr['url'];
+                    if (($plat === 'whatsapp_channel' || $plat === 'whatsapp_group') && empty($data['join_whatsapp_url'])) $data['join_whatsapp_url'] = $cr['url'];
+                    if (($plat === 'telegram_channel' || $plat === 'telegram_group') && empty($data['join_telegram_url'])) $data['join_telegram_url'] = $cr['url'];
+                    if ($plat === 'discord' && empty($data['join_discord_url'])) $data['join_discord_url'] = $cr['url'];
+                }
+            }
+
             $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
             $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
         } else {
             $data['require_follow_join'] = false;
             $data['require_screenshot_proof'] = false;
+            $data['custom_free_requirements'] = null;
             $data['social_follow_url']   = null;
             $data['community_join_url']  = null;
         }
@@ -378,11 +413,46 @@ class SellerProductController extends Controller
         if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
             $data['require_screenshot_proof'] = $data['require_follow_join'] ? $request->boolean('require_screenshot_proof') : false;
+
+            $customReqs = $request->input('custom_free_requirements');
+            if (is_string($customReqs)) {
+                $customReqs = json_decode($customReqs, true);
+            }
+            $cleanReqs = [];
+            if ($data['require_follow_join'] && is_array($customReqs)) {
+                foreach ($customReqs as $cr) {
+                    $url = trim($cr['url'] ?? '');
+                    if (!empty($url)) {
+                        $cleanReqs[] = [
+                            'platform' => trim($cr['platform'] ?? 'website'),
+                            'url'      => $url,
+                            'label'    => trim($cr['label'] ?? ''),
+                            'action'   => trim($cr['action'] ?? ''),
+                        ];
+                    }
+                }
+            }
+            $data['custom_free_requirements'] = $data['require_follow_join'] ? $cleanReqs : null;
+
+            if (!empty($cleanReqs)) {
+                foreach ($cleanReqs as $cr) {
+                    $plat = $cr['platform'];
+                    if ($plat === 'instagram' && empty($data['follow_instagram_url'])) $data['follow_instagram_url'] = $cr['url'];
+                    if ($plat === 'tiktok' && empty($data['follow_tiktok_url'])) $data['follow_tiktok_url'] = $cr['url'];
+                    if ($plat === 'x' && empty($data['follow_x_url'])) $data['follow_x_url'] = $cr['url'];
+                    if ($plat === 'youtube' && empty($data['follow_youtube_url'])) $data['follow_youtube_url'] = $cr['url'];
+                    if (($plat === 'whatsapp_channel' || $plat === 'whatsapp_group') && empty($data['join_whatsapp_url'])) $data['join_whatsapp_url'] = $cr['url'];
+                    if (($plat === 'telegram_channel' || $plat === 'telegram_group') && empty($data['join_telegram_url'])) $data['join_telegram_url'] = $cr['url'];
+                    if ($plat === 'discord' && empty($data['join_discord_url'])) $data['join_discord_url'] = $cr['url'];
+                }
+            }
+
             $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
             $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
         } else {
             $data['require_follow_join'] = false;
             $data['require_screenshot_proof'] = false;
+            $data['custom_free_requirements'] = null;
             $data['social_follow_url']   = null;
             $data['community_join_url']  = null;
         }

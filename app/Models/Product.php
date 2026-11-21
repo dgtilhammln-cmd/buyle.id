@@ -33,6 +33,7 @@ class Product extends Model
         // Free Product Follow & Join Requirement
         'require_follow_join',
         'require_screenshot_proof',
+        'custom_free_requirements',
         'social_follow_url', 'community_join_url', // Legacy fallback
         'follow_instagram_url', 'follow_tiktok_url', 'follow_x_url', 'follow_youtube_url',
         'join_whatsapp_url', 'join_telegram_url', 'join_discord_url',
@@ -72,6 +73,7 @@ class Product extends Model
         'gate_bypass_time'     => 'boolean',
         'require_follow_join'  => 'boolean',
         'require_screenshot_proof' => 'boolean',
+        'custom_free_requirements' => 'array',
         // Pricing models casts
         'pwyw_min_price'       => 'decimal:2',
         'pwyw_suggested_price' => 'decimal:2',
@@ -793,6 +795,193 @@ class Product extends Model
     }
 
     /**
+     * Metadata master daftar belasan platform sosial media & komunitas yang didukung.
+     */
+    public static function getAvailablePlatforms(): array
+    {
+        return [
+            'instagram' => [
+                'name'             => 'Instagram',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'instagram',
+                'default_label'    => 'Follow Akun Instagram',
+                'default_sublabel' => 'Kunjungi & follow profil Instagram kreator',
+                'placeholder'      => 'https://instagram.com/username',
+                'color'            => '#E1306C',
+            ],
+            'tiktok' => [
+                'name'             => 'TikTok',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'tiktok',
+                'default_label'    => 'Follow Akun TikTok',
+                'default_sublabel' => 'Kunjungi & follow profil TikTok kreator',
+                'placeholder'      => 'https://tiktok.com/@username',
+                'color'            => '#000000',
+            ],
+            'youtube' => [
+                'name'             => 'YouTube',
+                'category'         => 'sosmed',
+                'action'           => 'Subscribe',
+                'icon'             => 'youtube',
+                'default_label'    => 'Subscribe Channel YouTube',
+                'default_sublabel' => 'Kunjungi & subscribe channel YouTube kreator',
+                'placeholder'      => 'https://youtube.com/@channel',
+                'color'            => '#FF0000',
+            ],
+            'x' => [
+                'name'             => 'X (Twitter)',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'x',
+                'default_label'    => 'Follow Akun X (Twitter)',
+                'default_sublabel' => 'Kunjungi & ikuti akun X kreator',
+                'placeholder'      => 'https://x.com/username',
+                'color'            => '#000000',
+            ],
+            'threads' => [
+                'name'             => 'Threads',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'threads',
+                'default_label'    => 'Follow Akun Threads',
+                'default_sublabel' => 'Kunjungi & ikuti akun Threads kreator',
+                'placeholder'      => 'https://threads.net/@username',
+                'color'            => '#000000',
+            ],
+            'facebook' => [
+                'name'             => 'Facebook',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'facebook',
+                'default_label'    => 'Follow / Like Facebook Page',
+                'default_sublabel' => 'Kunjungi & ikuti halaman Facebook kreator',
+                'placeholder'      => 'https://facebook.com/halaman',
+                'color'            => '#1877F2',
+            ],
+            'linkedin' => [
+                'name'             => 'LinkedIn',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'linkedin',
+                'default_label'    => 'Follow Profil / Page LinkedIn',
+                'default_sublabel' => 'Kunjungi & follow akun LinkedIn kreator',
+                'placeholder'      => 'https://linkedin.com/in/username',
+                'color'            => '#0A66C2',
+            ],
+            'whatsapp_channel' => [
+                'name'             => 'WhatsApp Saluran',
+                'category'         => 'community',
+                'action'           => 'Ikuti',
+                'icon'             => 'whatsapp',
+                'default_label'    => 'Ikuti Saluran WhatsApp',
+                'default_sublabel' => 'Dapatkan info update di Saluran WhatsApp',
+                'placeholder'      => 'https://whatsapp.com/channel/...',
+                'color'            => '#25D366',
+            ],
+            'whatsapp_group' => [
+                'name'             => 'WhatsApp Grup',
+                'category'         => 'community',
+                'action'           => 'Join',
+                'icon'             => 'whatsapp',
+                'default_label'    => 'Gabung Grup WhatsApp',
+                'default_sublabel' => 'Bergabung ke komunitas grup WhatsApp kreator',
+                'placeholder'      => 'https://chat.whatsapp.com/...',
+                'color'            => '#25D366',
+            ],
+            'telegram_channel' => [
+                'name'             => 'Telegram Saluran',
+                'category'         => 'community',
+                'action'           => 'Join',
+                'icon'             => 'telegram',
+                'default_label'    => 'Join Channel Telegram',
+                'default_sublabel' => 'Bergabung ke channel Telegram resmi',
+                'placeholder'      => 'https://t.me/nama_channel',
+                'color'            => '#229ED9',
+            ],
+            'telegram_group' => [
+                'name'             => 'Telegram Grup',
+                'category'         => 'community',
+                'action'           => 'Join',
+                'icon'             => 'telegram',
+                'default_label'    => 'Gabung Grup Telegram',
+                'default_sublabel' => 'Bergabung ke ruang obrolan Telegram',
+                'placeholder'      => 'https://t.me/nama_grup',
+                'color'            => '#229ED9',
+            ],
+            'discord' => [
+                'name'             => 'Discord',
+                'category'         => 'community',
+                'action'           => 'Join',
+                'icon'             => 'discord',
+                'default_label'    => 'Join Server Discord',
+                'default_sublabel' => 'Bergabung ke server komunitas Discord',
+                'placeholder'      => 'https://discord.gg/invite_code',
+                'color'            => '#5865F2',
+            ],
+            'spotify' => [
+                'name'             => 'Spotify',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'spotify',
+                'default_label'    => 'Follow Akun / Podcast Spotify',
+                'default_sublabel' => 'Dengarkan & follow Spotify kreator',
+                'placeholder'      => 'https://open.spotify.com/artist/...',
+                'color'            => '#1DB954',
+            ],
+            'github' => [
+                'name'             => 'GitHub',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'github',
+                'default_label'    => 'Follow Profil GitHub',
+                'default_sublabel' => 'Kunjungi & follow profil GitHub kreator',
+                'placeholder'      => 'https://github.com/username',
+                'color'            => '#24292e',
+            ],
+            'pinterest' => [
+                'name'             => 'Pinterest',
+                'category'         => 'sosmed',
+                'action'           => 'Follow',
+                'icon'             => 'pinterest',
+                'default_label'    => 'Follow Akun Pinterest',
+                'default_sublabel' => 'Kunjungi & follow board Pinterest kreator',
+                'placeholder'      => 'https://pinterest.com/username',
+                'color'            => '#BD081C',
+            ],
+            'website' => [
+                'name'             => 'Website / Link Kustom',
+                'category'         => 'other',
+                'action'           => 'Kunjungi',
+                'icon'             => 'website',
+                'default_label'    => 'Kunjungi Tautan Resmi',
+                'default_sublabel' => 'Buka dan jelajahi tautan website kreator',
+                'placeholder'      => 'https://website-anda.com',
+                'color'            => '#16A34A',
+            ],
+        ];
+    }
+
+    /**
+     * Dapatkan metadata untuk satu platform tertentu.
+     */
+    public static function getPlatformRequirementMeta(string $platform): array
+    {
+        $all = self::getAvailablePlatforms();
+        return $all[$platform] ?? [
+            'name'             => ucfirst($platform),
+            'category'         => 'other',
+            'action'           => 'Buka',
+            'icon'             => 'website',
+            'default_label'    => 'Kunjungi Tautan ' . ucfirst($platform),
+            'default_sublabel' => 'Buka tautan yang diberikan kreator',
+            'placeholder'      => 'https://...',
+            'color'            => '#16A34A',
+        ];
+    }
+
+    /**
      * Dapatkan daftar syarat klaim gratis yang aktif (berdasarkan platform yang diisi kreator).
      */
     public function getActiveFreeRequirements(): array
@@ -803,6 +992,36 @@ class Product extends Model
 
         $items = [];
 
+        // 1. Cek dynamic custom_free_requirements (Repeater baru)
+        if (!empty($this->custom_free_requirements) && is_array($this->custom_free_requirements)) {
+            foreach ($this->custom_free_requirements as $idx => $req) {
+                $platform = $req['platform'] ?? 'website';
+                $url = trim($req['url'] ?? '');
+                if (empty($url)) continue;
+
+                $meta = self::getPlatformRequirementMeta($platform);
+                $label = !empty($req['label']) ? trim($req['label']) : $meta['default_label'];
+                $action = !empty($req['action']) ? trim($req['action']) : $meta['action'];
+
+                $items[] = [
+                    'key'      => 'cr_' . $platform . '_' . $idx,
+                    'category' => $meta['category'],
+                    'platform' => $meta['name'],
+                    'action'   => $action,
+                    'label'    => $label,
+                    'sublabel' => $meta['default_sublabel'],
+                    'url'      => $url,
+                    'icon'     => $meta['icon'],
+                    'color'    => $meta['color'],
+                ];
+            }
+
+            if (!empty($items)) {
+                return $items;
+            }
+        }
+
+        // 2. Fallback Backward-Compatibility ke kolom legacy jika custom belum diisi
         // 1. Instagram
         if (!empty($this->follow_instagram_url)) {
             $items[] = [
@@ -814,6 +1033,7 @@ class Product extends Model
                 'sublabel' => 'Kunjungi & follow profil Instagram kreator',
                 'url'      => $this->follow_instagram_url,
                 'icon'     => 'instagram',
+                'color'    => '#E1306C',
             ];
         } elseif (!empty($this->social_follow_url)) {
             $items[] = [
@@ -824,7 +1044,8 @@ class Product extends Model
                 'label'    => 'Follow Akun Sosial Media',
                 'sublabel' => 'Kunjungi & follow profil kreator',
                 'url'      => $this->social_follow_url,
-                'icon'     => 'social',
+                'icon'     => 'website',
+                'color'    => '#16A34A',
             ];
         }
 
@@ -839,6 +1060,7 @@ class Product extends Model
                 'sublabel' => 'Kunjungi & follow profil TikTok kreator',
                 'url'      => $this->follow_tiktok_url,
                 'icon'     => 'tiktok',
+                'color'    => '#000000',
             ];
         }
 
@@ -853,6 +1075,7 @@ class Product extends Model
                 'sublabel' => 'Kunjungi & ikuti akun X kreator',
                 'url'      => $this->follow_x_url,
                 'icon'     => 'x',
+                'color'    => '#000000',
             ];
         }
 
@@ -867,6 +1090,7 @@ class Product extends Model
                 'sublabel' => 'Kunjungi & subscribe channel YouTube kreator',
                 'url'      => $this->follow_youtube_url,
                 'icon'     => 'youtube',
+                'color'    => '#FF0000',
             ];
         }
 
@@ -881,6 +1105,7 @@ class Product extends Model
                 'sublabel' => 'Bergabung ke komunitas WhatsApp kreator',
                 'url'      => $this->join_whatsapp_url,
                 'icon'     => 'whatsapp',
+                'color'    => '#25D366',
             ];
         } elseif (!empty($this->community_join_url)) {
             $items[] = [
@@ -891,7 +1116,8 @@ class Product extends Model
                 'label'    => 'Join Komunitas Kreator',
                 'sublabel' => 'Bergabung ke grup komunitas kreator',
                 'url'      => $this->community_join_url,
-                'icon'     => 'community',
+                'icon'     => 'whatsapp',
+                'color'    => '#25D366',
             ];
         }
 
@@ -906,6 +1132,7 @@ class Product extends Model
                 'sublabel' => 'Bergabung ke channel Telegram kreator',
                 'url'      => $this->join_telegram_url,
                 'icon'     => 'telegram',
+                'color'    => '#229ED9',
             ];
         }
 
@@ -920,6 +1147,7 @@ class Product extends Model
                 'sublabel' => 'Bergabung ke server Discord kreator',
                 'url'      => $this->join_discord_url,
                 'icon'     => 'discord',
+                'color'    => '#5865F2',
             ];
         }
 

@@ -1,5 +1,52 @@
-{{-- SYARAT KLAIM PRODUK GRATIS (HANYA MUNCUL JIKA HARGA = 0) --}}
+{{-- SYARAT KLAIM PRODUK GRATIS (DYNAMIC MULTI-SOSMED REPEATER) --}}
+@php
+    $platformsMaster = \App\Models\Product::getAvailablePlatforms();
+
+    // Siapkan data awal untuk edit mode / old() input
+    $initialRequirements = [];
+    $rawOld = old('custom_free_requirements', $product->custom_free_requirements ?? null);
+
+    if (!empty($rawOld) && is_array($rawOld)) {
+        $initialRequirements = $rawOld;
+    } elseif (!empty($rawOld) && is_string($rawOld)) {
+        $decoded = json_decode($rawOld, true);
+        if (is_array($decoded)) {
+            $initialRequirements = $decoded;
+        }
+    }
+
+    // Fallback: Jika belum ada custom_free_requirements tapi ada data legacy
+    if (empty($initialRequirements) && isset($product) && $product->require_follow_join) {
+        if (!empty($product->follow_instagram_url)) {
+            $initialRequirements[] = ['platform' => 'instagram', 'url' => $product->follow_instagram_url, 'label' => 'Follow Akun Instagram'];
+        } elseif (!empty($product->social_follow_url)) {
+            $initialRequirements[] = ['platform' => 'website', 'url' => $product->social_follow_url, 'label' => 'Follow Akun Sosial Media'];
+        }
+        if (!empty($product->follow_tiktok_url)) {
+            $initialRequirements[] = ['platform' => 'tiktok', 'url' => $product->follow_tiktok_url, 'label' => 'Follow Akun TikTok'];
+        }
+        if (!empty($product->follow_x_url)) {
+            $initialRequirements[] = ['platform' => 'x', 'url' => $product->follow_x_url, 'label' => 'Follow Akun X (Twitter)'];
+        }
+        if (!empty($product->follow_youtube_url)) {
+            $initialRequirements[] = ['platform' => 'youtube', 'url' => $product->follow_youtube_url, 'label' => 'Subscribe Channel YouTube'];
+        }
+        if (!empty($product->join_whatsapp_url)) {
+            $initialRequirements[] = ['platform' => 'whatsapp_channel', 'url' => $product->join_whatsapp_url, 'label' => 'Ikuti Saluran WhatsApp'];
+        } elseif (!empty($product->community_join_url)) {
+            $initialRequirements[] = ['platform' => 'whatsapp_group', 'url' => $product->community_join_url, 'label' => 'Join Komunitas WhatsApp'];
+        }
+        if (!empty($product->join_telegram_url)) {
+            $initialRequirements[] = ['platform' => 'telegram_channel', 'url' => $product->join_telegram_url, 'label' => 'Join Channel Telegram'];
+        }
+        if (!empty($product->join_discord_url)) {
+            $initialRequirements[] = ['platform' => 'discord', 'url' => $product->join_discord_url, 'label' => 'Join Server Discord'];
+        }
+    }
+@endphp
+
 <div id="freeProductRequirementsWrap" class="form-group full" style="display:none; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
+    {{-- Header Toggle --}}
     <label style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
         <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
             <input type="checkbox" name="require_follow_join" id="require_follow_join_toggle" value="1"
@@ -9,32 +56,35 @@
             <span class="toggle-slider-s"></span>
         </div>
         <div style="flex:1;">
-            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Syarat Klaim Produk Gratis</div>
+            <div style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                <span>Syarat Klaim Produk Gratis</span>
+                <span style="font-size:0.65rem; font-weight:800; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:999px;">Multi-Platform</span>
+            </div>
             <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Kumpulkan followers & anggota komunitas Anda sebelum pembeli mengunduh produk gratis ini.</div>
         </div>
     </label>
 
-    <div id="freeRequirementsFields" style="display:none; border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+    <div id="freeRequirementsFields" style="display:none; border-top:1px solid #e2e8f0; padding:1.15rem 1.25rem; background:#ffffff;">
         {{-- Banner Edukasi / Info --}}
-        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.6rem;">
-            <svg width="18" height="18" fill="none" stroke="#d97706" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.6rem;">
+            <svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
                 <circle cx="12" cy="12" r="10"/>
                 <line x1="12" y1="8" x2="12" y2="12"/>
                 <line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            <div style="font-size:0.77rem; color:#92400e; line-height:1.5;">
-                <strong>Isi minimal salah 1 platform</strong>. Calon pembeli hanya akan diwajibkan menyelesaikan syarat yang Anda cantumkan di bawah ini.
+            <div style="font-size:0.77rem; color:#166534; line-height:1.5;">
+                <strong>Pilih dari belasan platform</strong> sosial media atau grup komunitas. Anda dapat menambahkan platform yang sama berulang kali (misal: Follow akun pribadi & akun brand). <strong>Isi minimal 1 platform</strong>.
             </div>
         </div>
 
-        {{-- Error jika toggle ON tapi semua kosong --}}
+        {{-- Error Banner jika kosong saat submit --}}
         <div id="err_free_requirements" style="display:none; background:#fef2f2; border:1px solid #fca5a5; border-radius:12px; padding:0.8rem 1rem; margin-bottom:1.25rem; color:#dc2626; font-size:0.76rem; font-weight:700; align-items:center; gap:0.5rem;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
                 <circle cx="12" cy="12" r="10"/>
                 <line x1="15" y1="9" x2="9" y2="15"/>
                 <line x1="9" y1="9" x2="15" y2="15"/>
             </svg>
-            <span>Mohon isi minimal salah satu tautan media sosial atau grup komunitas di bawah ini.</span>
+            <span>Mohon tambahkan dan isi minimal 1 tautan syarat sosial media / komunitas yang valid.</span>
         </div>
 
         @if($errors->has('require_follow_join'))
@@ -43,159 +93,77 @@
         </div>
         @endif
 
-        {{-- SEKSI 1: SOSIAL MEDIA (FOLLOW) --}}
-        <div style="margin-bottom:1.5rem;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem; border-bottom:1px solid #dcfce7; padding-bottom:0.4rem;">
-                <div style="display:flex; align-items:center; gap:0.45rem;">
-                    <span style="font-size:0.82rem; font-weight:800; color:#14532d; text-transform:uppercase; letter-spacing:0.5px;">1. Akun Sosial Media (Follow)</span>
-                </div>
+        {{-- Quick Add Chips (Shortcut Cepat Belasan Platform) --}}
+        <div style="margin-bottom:1rem;">
+            <div style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.5rem; display:flex; align-items:center; gap:4px;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Tambah Cepat Platform:
             </div>
-
-            <div class="form-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
-                {{-- Instagram --}}
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" style="display:flex; align-items:center; gap:0.45rem; font-size:0.78rem;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                        Instagram
-                    </label>
-                    <input type="url" name="follow_instagram_url" id="follow_instagram_url"
-                        value="{{ old('follow_instagram_url', $product->follow_instagram_url ?? ($product->social_follow_url ?? '')) }}"
-                        class="form-input platform-req-input"
-                        placeholder="https://instagram.com/username">
-                    <span class="form-hint" style="font-size:0.69rem;">Link profil Instagram Anda.</span>
-                    @error('follow_instagram_url')
-                        <span class="form-error" style="color:#dc2626; font-size:0.72rem; font-weight:700;">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                {{-- TikTok --}}
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" style="display:flex; align-items:center; gap:0.45rem; font-size:0.78rem;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#000000">
-                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .57.04.84.11V9.41a6.33 6.33 0 0 0-.84-.06 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.05a8.27 8.27 0 0 0 4.77 1.52V7.12a4.85 4.85 0 0 1-1-.43z"/>
-                        </svg>
-                        TikTok
-                    </label>
-                    <input type="url" name="follow_tiktok_url" id="follow_tiktok_url"
-                        value="{{ old('follow_tiktok_url', $product->follow_tiktok_url ?? '') }}"
-                        class="form-input platform-req-input"
-                        placeholder="https://tiktok.com/@username">
-                    <span class="form-hint" style="font-size:0.69rem;">Link profil TikTok Anda.</span>
-                    @error('follow_tiktok_url')
-                        <span class="form-error" style="color:#dc2626; font-size:0.72rem; font-weight:700;">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                {{-- X / Twitter --}}
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" style="display:flex; align-items:center; gap:0.45rem; font-size:0.78rem;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#000000">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                        X (Twitter)
-                    </label>
-                    <input type="url" name="follow_x_url" id="follow_x_url"
-                        value="{{ old('follow_x_url', $product->follow_x_url ?? '') }}"
-                        class="form-input platform-req-input"
-                        placeholder="https://x.com/username">
-                    <span class="form-hint" style="font-size:0.69rem;">Link akun X Anda.</span>
-                    @error('follow_x_url')
-                        <span class="form-error" style="color:#dc2626; font-size:0.72rem; font-weight:700;">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                {{-- YouTube --}}
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" style="display:flex; align-items:center; gap:0.45rem; font-size:0.78rem;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#FF0000">
-                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                        </svg>
-                        YouTube
-                    </label>
-                    <input type="url" name="follow_youtube_url" id="follow_youtube_url"
-                        value="{{ old('follow_youtube_url', $product->follow_youtube_url ?? '') }}"
-                        class="form-input platform-req-input"
-                        placeholder="https://youtube.com/@channel">
-                    <span class="form-hint" style="font-size:0.69rem;">Link channel YouTube Anda.</span>
-                    @error('follow_youtube_url')
-                        <span class="form-error" style="color:#dc2626; font-size:0.72rem; font-weight:700;">{{ $message }}</span>
-                    @enderror
-                </div>
+            <div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('instagram')" style="border:1px solid #fbcfe8; background:#fdf2f8; color:#db2777; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 📸 Instagram
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('tiktok')" style="border:1px solid #e2e8f0; background:#f8fafc; color:#0f172a; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 🎵 TikTok
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('youtube')" style="border:1px solid #fecaca; background:#fef2f2; color:#dc2626; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + ▶️ YouTube
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('whatsapp_channel')" style="border:1px solid #bbf7d0; background:#f0fdf4; color:#16a34a; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 💬 WA Saluran
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('whatsapp_group')" style="border:1px solid #bbf7d0; background:#f0fdf4; color:#16a34a; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 👥 WA Grup
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('telegram_channel')" style="border:1px solid #bae6fd; background:#f0f9ff; color:#0284c7; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 📢 Telegram
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('x')" style="border:1px solid #e2e8f0; background:#f8fafc; color:#0f172a; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 𝕏 X (Twitter)
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('threads')" style="border:1px solid #e2e8f0; background:#f8fafc; color:#0f172a; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 🧵 Threads
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('discord')" style="border:1px solid #c7d2fe; background:#eef2ff; color:#4f46e5; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 🎮 Discord
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('spotify')" style="border:1px solid #bbf7d0; background:#f0fdf4; color:#15803d; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 🎧 Spotify
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('facebook')" style="border:1px solid #bfdbfe; background:#eff6ff; color:#1d4ed8; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 📘 Facebook
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('linkedin')" style="border:1px solid #bfdbfe; background:#eff6ff; color:#0284c7; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 💼 LinkedIn
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('github')" style="border:1px solid #e2e8f0; background:#f8fafc; color:#1e293b; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 🐙 GitHub
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('pinterest')" style="border:1px solid #fecaca; background:#fef2f2; color:#b91c1c; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 📌 Pinterest
+                </button>
+                <button type="button" class="quick-add-btn" onclick="addRequirementRow('website')" style="border:1px solid #bbf7d0; background:#f0fdf4; color:#16a34a; padding:4px 9px; border-radius:8px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                    + 🌐 Website / Link
+                </button>
             </div>
         </div>
 
-        {{-- SEKSI 2: GRUP KOMUNITAS (JOIN) --}}
-        <div>
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem; border-bottom:1px solid #dcfce7; padding-bottom:0.4rem;">
-                <div style="display:flex; align-items:center; gap:0.45rem;">
-                    <span style="font-size:0.82rem; font-weight:800; color:#14532d; text-transform:uppercase; letter-spacing:0.5px;">2. Grup / Saluran Komunitas (Join)</span>
-                </div>
-                <span style="font-size:0.7rem; color:#15803d; font-weight:600; background:#dcfce7; padding:2px 8px; border-radius:6px;">Pilih yang Anda miliki</span>
-            </div>
+        {{-- REPEATER CONTAINER: DAFTAR KARTU SYARAT --}}
+        <div id="repeaterRequirementsList" style="display:flex; flex-direction:column; gap:0.85rem; margin-bottom:1rem;">
+            {{-- Kartu akan di-render secara dinamis oleh JavaScript --}}
+        </div>
 
-            <div class="form-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
-                {{-- WhatsApp --}}
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" style="display:flex; align-items:center; gap:0.45rem; font-size:0.78rem;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366">
-                            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/>
-                        </svg>
-                        WhatsApp (Grup / Channel)
-                    </label>
-                    <input type="url" name="join_whatsapp_url" id="join_whatsapp_url"
-                        value="{{ old('join_whatsapp_url', $product->join_whatsapp_url ?? ($product->community_join_url ?? '')) }}"
-                        class="form-input platform-req-input"
-                        placeholder="https://chat.whatsapp.com/... atau saluran">
-                    <span class="form-hint" style="font-size:0.69rem;">Tautan undangan grup atau saluran WhatsApp.</span>
-                    @error('join_whatsapp_url')
-                        <span class="form-error" style="color:#dc2626; font-size:0.72rem; font-weight:700;">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                {{-- Telegram --}}
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" style="display:flex; align-items:center; gap:0.45rem; font-size:0.78rem;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#229ED9">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-                        </svg>
-                        Telegram (Channel / Grup)
-                    </label>
-                    <input type="url" name="join_telegram_url" id="join_telegram_url"
-                        value="{{ old('join_telegram_url', $product->join_telegram_url ?? '') }}"
-                        class="form-input platform-req-input"
-                        placeholder="https://t.me/nama_channel">
-                    <span class="form-hint" style="font-size:0.69rem;">Tautan channel atau grup Telegram.</span>
-                    @error('join_telegram_url')
-                        <span class="form-error" style="color:#dc2626; font-size:0.72rem; font-weight:700;">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                {{-- Discord --}}
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" style="display:flex; align-items:center; gap:0.45rem; font-size:0.78rem;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#5865F2">
-                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-                        </svg>
-                        Discord (Server)
-                    </label>
-                    <input type="url" name="join_discord_url" id="join_discord_url"
-                        value="{{ old('join_discord_url', $product->join_discord_url ?? '') }}"
-                        class="form-input platform-req-input"
-                        placeholder="https://discord.gg/invite_code">
-                    <span class="form-hint" style="font-size:0.69rem;">Tautan undangan server Discord.</span>
-                    @error('join_discord_url')
-                        <span class="form-error" style="color:#dc2626; font-size:0.72rem; font-weight:700;">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
+        {{-- Tombol Tambah Syarat Utama (Besar & Mobile-Friendly) --}}
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+            <button type="button" onclick="addRequirementRow('instagram')"
+                style="flex:1; min-height:44px; background:#f0fdf4; border:1.5px dashed #86efac; color:#15803d; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:all 0.2s; padding:0.65rem 1rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ Tambah Syarat Sosmed / Komunitas</span>
+            </button>
         </div>
 
         {{-- SEKSI 3: METODE VALIDASI SYARAT (OPSI UPLOAD BUKTI SCREENSHOT) --}}
-        <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #f1f5f9;">
+        <div style="padding-top:1.25rem; border-top:1px solid #f1f5f9;">
             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;">
                 <div style="flex:1;">
                     <div style="font-size:0.84rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
@@ -208,7 +176,7 @@
                         <span style="font-size:0.65rem; font-weight:800; color:#166534; background:#dcfce7; padding:2px 7px; border-radius:999px;">Validasi Ketat</span>
                     </div>
                     <div style="font-size:0.73rem; color:#64748b; line-height:1.45;">
-                        Jika aktif, pembeli / peserta <strong>wajib melampirkan screenshot</strong> bukti follow/join sebelum tiket dapat diklaim. Bukti otomatis terkompresi dan dapat Anda review langsung di Dashboard Ticketing & Laporan Pesanan.
+                        Jika aktif, pembeli / peserta <strong>wajib melampirkan screenshot</strong> bukti follow/join sebelum tiket/file dapat diklaim. Bukti otomatis terkompresi dan dapat Anda review langsung di Dashboard Ticketing & Laporan Pesanan.
                     </div>
                 </div>
                 <div style="position:relative; width:44px; height:24px; flex-shrink:0; margin-top:2px;">
@@ -223,6 +191,13 @@
 </div>
 
 <script>
+// Data Master Platform dari Backend
+const PLATFORMS_MASTER = @json($platformsMaster);
+
+// Data Inisial dari Database / Old Input
+let requirementsData = @json($initialRequirements);
+let requirementRowCounter = 0;
+
 function checkFreeProductPrice() {
     const priceInput = document.getElementById('input_price');
     const salePriceInput = document.getElementById('input_sale_price');
@@ -238,7 +213,6 @@ function checkFreeProductPrice() {
     const price = rawPrice !== '' ? parseInt(rawPrice, 10) : null;
     const salePrice = rawSalePrice !== '' ? parseInt(rawSalePrice, 10) : null;
 
-    // Produk gratis jika pricingType === 'free', ATAU salePrice === 0 ATAU (salePrice kosong dan price === 0)
     const isFree = pricingType === 'free' || (pricingType === null && ((salePrice !== null && salePrice === 0) || (salePrice === null && price === 0)));
 
     if (isFree) {
@@ -260,7 +234,132 @@ function toggleFreeRequirementsFields(checked) {
     if (!checked) {
         const errBox = document.getElementById('err_free_requirements');
         if (errBox) errBox.style.display = 'none';
+    } else {
+        // Jika belum ada row sama sekali saat toggle di-ON-kan, tambahkan default 1 baris Instagram
+        const list = document.getElementById('repeaterRequirementsList');
+        if (list && list.children.length === 0) {
+            addRequirementRow('instagram');
+        }
     }
+}
+
+function addRequirementRow(defaultPlatform = 'instagram', data = null) {
+    const list = document.getElementById('repeaterRequirementsList');
+    if (!list) return;
+
+    const rowId = 'req_row_' + (++requirementRowCounter);
+    const platform = (data && data.platform) ? data.platform : defaultPlatform;
+    const url = (data && data.url) ? data.url : '';
+    const label = (data && data.label) ? data.label : '';
+    const meta = PLATFORMS_MASTER[platform] || PLATFORMS_MASTER['website'];
+
+    const card = document.createElement('div');
+    card.id = rowId;
+    card.className = 'requirement-repeater-card';
+    card.style.cssText = 'background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); transition:border-color 0.2s;';
+
+    // Buat options untuk select
+    let optionsHtml = '';
+    for (const [key, p] of Object.entries(PLATFORMS_MASTER)) {
+        const isSelected = (key === platform) ? 'selected' : '';
+        optionsHtml += `<option value="${key}" ${isSelected}>${p.name} (${p.action})</option>`;
+    }
+
+    card.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.65rem; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:0.5rem; flex:1; min-width:200px;">
+                <span class="row-num-badge" style="width:22px; height:22px; border-radius:6px; background:#f1f5f9; color:#475569; font-size:0.7rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</span>
+                <select name="custom_free_requirements[${requirementRowCounter}][platform]"
+                    class="form-input platform-select-input"
+                    onchange="onPlatformChanged('${rowId}', this.value)"
+                    style="font-size:0.82rem; font-weight:700; color:#0f172a; padding:0.35rem 0.65rem; border-radius:8px; height:auto; width:auto; max-width:100%; cursor:pointer;">
+                    ${optionsHtml}
+                </select>
+            </div>
+            <button type="button" onclick="removeRequirementRow('${rowId}')"
+                style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.65rem; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:all 0.15s;"
+                title="Hapus Syarat Ini">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                <span>Hapus</span>
+            </button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.45rem;">
+            <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#475569; margin-bottom:2px; display:block;">Tautan / Link Tujuan <span style="color:#ef4444;">*</span></label>
+                <div style="position:relative;">
+                    <input type="url" name="custom_free_requirements[${requirementRowCounter}][url]"
+                        value="${url}"
+                        placeholder="${meta.placeholder}"
+                        class="form-input req-url-input"
+                        required
+                        oninput="hideRequirementsError()"
+                        style="padding-left:2.2rem; font-size:0.82rem;">
+                    <div style="position:absolute; left:0.7rem; top:50%; transform:translateY(-50%); pointer-events:none; color:#94a3b8;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label style="font-size:0.7rem; color:#64748b; margin-bottom:2px; display:flex; justify-content:space-between;">
+                    <span>Label Tombol (Opsional):</span>
+                    <span style="color:#94a3b8; font-size:0.67rem;">Contoh: Follow IG @brand_saya</span>
+                </label>
+                <input type="text" name="custom_free_requirements[${requirementRowCounter}][label]"
+                    value="${label}"
+                    placeholder="${meta.default_label}"
+                    class="form-input"
+                    style="font-size:0.78rem; padding:0.35rem 0.65rem;">
+            </div>
+        </div>
+    `;
+
+    list.appendChild(card);
+    updateRowNumberBadges();
+    hideRequirementsError();
+
+    // Auto focus ke URL jika user klik tombol tambah
+    if (!data) {
+        const urlInp = card.querySelector('.req-url-input');
+        if (urlInp) urlInp.focus();
+    }
+}
+
+function onPlatformChanged(rowId, newPlatform) {
+    const card = document.getElementById(rowId);
+    if (!card) return;
+
+    const meta = PLATFORMS_MASTER[newPlatform] || PLATFORMS_MASTER['website'];
+    const urlInput = card.querySelector('.req-url-input');
+    const labelInput = card.querySelector('input[name*="[label]"]');
+
+    if (urlInput) {
+        urlInput.placeholder = meta.placeholder;
+    }
+    if (labelInput) {
+        labelInput.placeholder = meta.default_label;
+    }
+}
+
+function removeRequirementRow(rowId) {
+    const card = document.getElementById(rowId);
+    if (card) {
+        card.remove();
+        updateRowNumberBadges();
+    }
+}
+
+function updateRowNumberBadges() {
+    const badges = document.querySelectorAll('#repeaterRequirementsList .row-num-badge');
+    badges.forEach((b, idx) => {
+        b.textContent = '#' + (idx + 1);
+    });
+}
+
+function hideRequirementsError() {
+    const errBox = document.getElementById('err_free_requirements');
+    if (errBox) errBox.style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -270,28 +369,32 @@ document.addEventListener('DOMContentLoaded', function() {
     if (priceInput) priceInput.addEventListener('input', checkFreeProductPrice);
     if (salePriceInput) salePriceInput.addEventListener('input', checkFreeProductPrice);
 
+    // Initial populate dari data yang ada
+    if (Array.isArray(requirementsData) && requirementsData.length > 0) {
+        requirementsData.forEach(item => {
+            if (item && item.url) {
+                addRequirementRow(item.platform || 'instagram', item);
+            }
+        });
+    }
+
     // Initial check on page load
     checkFreeProductPrice();
 
-    // Hide error banner when creator types into any platform input
-    const platformInputs = document.querySelectorAll('.platform-req-input');
-    platformInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            const errBox = document.getElementById('err_free_requirements');
-            if (errBox) errBox.style.display = 'none';
-        });
-    });
-
-    // Validasi form submit: CUKUP SALAH 1 AJA DIISI
+    // Validasi form submit: CUKUP MINIMAL 1 SYARAT DENGAN URL VALID
     const form = document.querySelector('form.product-form') || document.querySelector('form[action*="products"]');
     if (form) {
         form.addEventListener('submit', function(e) {
             const wrap = document.getElementById('freeProductRequirementsWrap');
             const toggle = document.getElementById('require_follow_join_toggle');
+
             if (wrap && wrap.style.display !== 'none' && toggle && toggle.checked) {
+                const urlInputs = document.querySelectorAll('#repeaterRequirementsList .req-url-input');
                 let hasFilledAtLeastOne = false;
-                platformInputs.forEach(input => {
-                    if ((input.value || '').trim().length > 0) {
+
+                urlInputs.forEach(input => {
+                    const val = (input.value || '').trim();
+                    if (val.length > 0) {
                         hasFilledAtLeastOne = true;
                     }
                 });
@@ -301,10 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                     e.stopPropagation();
                     if (errBox) errBox.style.display = 'flex';
-                    document.getElementById('freeProductRequirementsWrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // Focus first input
-                    const firstInput = document.getElementById('follow_instagram_url');
-                    if (firstInput) firstInput.focus();
+                    wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return false;
                 } else {
                     if (errBox) errBox.style.display = 'none';
