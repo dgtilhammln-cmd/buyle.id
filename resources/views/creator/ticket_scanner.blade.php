@@ -724,25 +724,37 @@
         }
         .ticket-modal-card {
             background: #ffffff;
-            border-radius: 24px;
+            border-radius: 20px;
             max-width: 480px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.22);
-            padding: 1.5rem;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16);
+            border: 1px solid #e2e8f0;
+            padding: 1.25rem 1.35rem;
             box-sizing: border-box;
-            animation: cardScaleIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: cardScaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Montserrat', sans-serif;
+        }
+        @media (max-width: 480px) {
+            .ticket-modal-card {
+                padding: 1rem;
+                border-radius: 18px;
+                max-width: 95vw;
+            }
         }
         @keyframes cardScaleIn {
-            from { transform: scale(0.94) translateY(12px); opacity: 0; }
+            from { transform: scale(0.95) translateY(10px); opacity: 0; }
             to { transform: scale(1) translateY(0); opacity: 1; }
         }
         .ticket-modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
             padding-bottom: 0.9rem;
             border-bottom: 1px solid #f1f5f9;
         }
@@ -4687,31 +4699,34 @@
         </div>
     </div>
 
-    {{-- MODAL DETAIL DATA PENGUNJUNG --}}
+    {{-- MODAL DETAIL DATA PENGUNJUNG (Minimalis ala /creator/dashboard, Tanpa Barcode) --}}
     <div id="ticketDetailModal" class="ticket-modal-overlay" style="display: none;" onclick="if(event.target === this) closeTicketDetailModal()">
         <div class="ticket-modal-card">
             <div class="ticket-modal-header">
                 <div>
-                    <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #0f172a;">Detail Pengunjung & Tiket</h3>
-                    <p style="margin: 2px 0 0; font-size: 0.75rem; color: #64748b;">Informasi lengkap pemegang tiket</p>
+                    <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #0f172a; font-family:'Montserrat',sans-serif;">Detail Pengunjung & Tiket</h3>
+                    <p style="margin: 2px 0 0; font-size: 0.75rem; color: #64748b; font-family:'Montserrat',sans-serif;">Informasi lengkap pemegang tiket</p>
                 </div>
                 <button type="button" class="ticket-modal-close" onclick="closeTicketDetailModal()" title="Tutup Modal">&times;</button>
             </div>
 
-            <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 1.25rem;">
-                <div style="background: #ffffff; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 0.65rem;">
-                    <img id="modalTicketQrImg" src="" alt="QR Tiket" style="width: 140px; height: 140px; display: block; border-radius: 8px;">
+            {{-- Compact Kode Tiket & Status Badge (Tanpa Barcode) --}}
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 0.65rem 0.85rem; margin-bottom: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.45rem; min-width: 0;">
+                    <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                    </svg>
+                    <span id="modalTicketCode" style="font-family: monospace; font-size: 0.95rem; font-weight: 800; color: #0f172a; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        —
+                    </span>
                 </div>
-                <div id="modalTicketCode" style="font-family: monospace; font-size: 1.05rem; font-weight: 800; color: #0f172a; letter-spacing: 0.05em; background: #f8fafc; padding: 3px 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.5rem;">
-                    —
-                </div>
-                <div id="modalStatusBadge"></div>
+                <div id="modalStatusBadge" style="flex-shrink: 0;"></div>
             </div>
 
             {{-- Box Waktu Check-In bila sudah hadir --}}
             <div id="modalCheckinTimeBox" class="detail-field-box" style="margin-bottom: 0.75rem; background: #f0fdf4; border-color: #bbf7d0; display: none;">
                 <span class="detail-field-label" style="color: #166534;">Waktu Presensi (Check-In)</span>
-                <span id="modalCheckinTime" class="detail-field-value" style="color: #15803d; font-size: 0.95rem;">-</span>
+                <span id="modalCheckinTime" class="detail-field-value" style="color: #15803d; font-size: 0.92rem;">-</span>
                 <span id="modalScannedBy" style="font-size: 0.72rem; color: #166534; margin-top: 1px;"></span>
             </div>
 
@@ -4742,6 +4757,20 @@
                 <div class="detail-field-box">
                     <span class="detail-field-label">No. Pesanan (Order ID)</span>
                     <span id="modalOrderNumber" class="detail-field-value" style="font-family: monospace;">—</span>
+                </div>
+            </div>
+
+            {{-- Bukti Screenshot Klaim Tiket Gratis --}}
+            <div id="modalClaimProofBox" style="display:none; background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:14px; padding:0.85rem; margin-top:0.75rem;">
+                <div style="font-size:0.72rem; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.65rem; display:flex; align-items:center; justify-content:space-between;">
+                    <span style="display:flex; align-items:center; gap:5px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        Bukti Klaim Tiket Gratis (<span id="modalClaimProofCount">0</span>)
+                    </span>
+                    <span style="font-size:0.68rem; font-weight:700; color:#166534; background:#DCFCE7; padding:2px 6px; border-radius:4px; border:1px solid #86EFAC;">1 per Platform</span>
+                </div>
+                <div id="modalClaimProofsContainer" style="display:flex; flex-direction:column; gap:0.55rem;">
+                    {{-- Dynamically filled by JS --}}
                 </div>
             </div>
 
@@ -5415,7 +5444,6 @@
             const checkinBox = document.getElementById('modalCheckinTimeBox');
             const checkinTimeEl = document.getElementById('modalCheckinTime');
             const scannedByEl = document.getElementById('modalScannedBy');
-            const qrImg = document.getElementById('modalTicketQrImg');
 
             if (codeEl) codeEl.textContent = t.code || t.ticket_code || '—';
             if (nameEl) nameEl.textContent = t.holder_name || '—';
@@ -5429,7 +5457,7 @@
             const status = t.status || 'valid';
             if (statusEl) {
                 if (status === 'used') {
-                    statusEl.innerHTML = `<span class="badge-status badge-used"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"/></svg>Checked-In (Hadir)</span>`;
+                    statusEl.innerHTML = `<span class="badge-status badge-used"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:2px;"><polyline points="20 6 9 17 4 12"/></svg>Checked-In</span>`;
                 } else if (status === 'cancelled') {
                     statusEl.innerHTML = `<span class="badge-status badge-cancelled">Dibatalkan</span>`;
                 } else {
@@ -5445,9 +5473,47 @@
                 if (checkinBox) checkinBox.style.display = 'none';
             }
 
-            const code = t.code || t.ticket_code || '';
-            if (qrImg && code) {
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(code)}`;
+            // Render Bukti Screenshot Klaim Tiket Gratis (Multi-Sosmed Support)
+            const claimBox = document.getElementById('modalClaimProofBox');
+            const claimContainer = document.getElementById('modalClaimProofsContainer');
+            const claimCountEl = document.getElementById('modalClaimProofCount');
+            if (claimBox && claimContainer) {
+                const proofs = (t.claim_proofs && t.claim_proofs.length > 0)
+                    ? t.claim_proofs
+                    : (t.claim_proof ? [{ platform: 'Syarat Klaim', label: 'Bukti Follow / Gabung', url: t.claim_proof }] : []);
+
+                if (proofs.length > 0) {
+                    if (claimCountEl) claimCountEl.textContent = proofs.length;
+                    claimContainer.innerHTML = proofs.map(item => `
+                        <div style="background:#fff; border:1px solid #BBF7D0; border-radius:10px; padding:0.55rem 0.75rem; display:flex; align-items:center; justify-content:space-between; gap:0.6rem; flex-wrap:wrap;">
+                            <div style="display:flex; align-items:center; gap:0.65rem;">
+                                <a href="${item.url}" target="_blank" rel="noopener" style="flex-shrink:0;">
+                                    <img src="${item.url}" alt="${item.platform || 'Bukti'}"
+                                        style="width:40px; height:40px; object-fit:cover; border-radius:8px; border:1px solid #86EFAC; display:block; cursor:zoom-in;">
+                                </a>
+                                <div>
+                                    <div style="font-size:0.8rem; font-weight:700; color:#15803D; font-family:'Montserrat',sans-serif;">${item.platform || 'Platform'}</div>
+                                    <div style="font-size:0.7rem; color:#64748B; font-family:'Montserrat',sans-serif;">${item.label || 'Bukti Screenshot'}</div>
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:0.35rem; flex-shrink:0;">
+                                <a href="${item.url}" download target="_blank"
+                                    style="font-size:0.7rem; font-weight:700; color:#15803D; background:#DCFCE7; border:1px solid #86EFAC; padding:3px 8px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px; font-family:'Montserrat',sans-serif;">
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Unduh
+                                </a>
+                                <a href="${item.url}" target="_blank"
+                                    style="font-size:0.7rem; font-weight:700; color:#1D4ED8; background:#EFF6FF; border:1px solid #BFDBFE; padding:3px 8px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:3px; font-family:'Montserrat',sans-serif;">
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                                    Buka
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+                    claimBox.style.display = 'block';
+                } else {
+                    claimBox.style.display = 'none';
+                }
             }
         }
 

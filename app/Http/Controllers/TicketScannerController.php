@@ -47,7 +47,7 @@ class TicketScannerController extends Controller
             ->get();
 
         // Query dasar tiket milik creator (baik sebagai seller tiket atau seller produk)
-        $baseQuery = TicketPass::with(['product', 'buyer', 'organizer'])
+        $baseQuery = TicketPass::with(['product', 'buyer', 'organizer', 'order'])
             ->where(function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId)
                   ->orWhereHas('product', function ($pq) use ($sellerId) {
@@ -60,6 +60,7 @@ class TicketScannerController extends Controller
 
         // Format data cache ringan untuk pencarian super cepat (0ms latency di lapangan)
         $allTicketsCached = $allCreatorTickets->map(function ($t) {
+            $order = $t->order;
             return [
                 'id'            => $t->id,
                 'code'          => $t->ticket_code,
@@ -76,9 +77,11 @@ class TicketScannerController extends Controller
                 'scanned_by'    => $t->scanned_by_staff_name
                     ? ($t->scanned_by_staff_name . ' · Gate ' . $t->scanned_at_gate)
                     : ($t->checked_in_by ? 'Creator Studio' : null),
-                'order_number'  => $t->order?->order_number ?? '-',
+                'order_number'  => $order?->order_number ?? '-',
                 'ticket_type'   => $t->product?->product_type === 'ticket' ? 'Tiket Event' : ($t->product?->product_type ?? 'Tiket Event'),
                 'toggle_url'    => route('creator.ticket.scanner.toggle-checkin', $t->id),
+                'claim_proof'   => $order?->claim_proof ? (str_starts_with($order->claim_proof, 'http') ? $order->claim_proof : asset('storage/' . $order->claim_proof)) : null,
+                'claim_proofs'  => $order?->claim_proofs_list ?? [],
             ];
         });
 
@@ -514,6 +517,9 @@ class TicketScannerController extends Controller
             return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
         }
 
+        $ticket->loadMissing(['order', 'product']);
+        $order = $ticket->order;
+
         return response()->json([
             'success' => true,
             'ticket'  => [
@@ -525,12 +531,14 @@ class TicketScannerController extends Controller
                 'holder_email'  => $ticket->holder_email ?? '—',
                 'event_name'    => $ticket->product?->name ?? '—',
                 'event_date'    => $ticket->product?->event_date ? $ticket->product->event_date->format('d M Y') : '—',
-                'order_number'  => $ticket->order?->order_number ?? '—',
+                'order_number'  => $order?->order_number ?? '—',
                 'status'        => $ticket->status,
                 'checked_in_at' => $ticket->checked_in_at ? $ticket->checked_in_at->format('H:i:s · d M Y') : null,
                 'scanned_by'    => $ticket->scanned_by_staff_name
                     ? ($ticket->scanned_by_staff_name . ' · Gate ' . $ticket->scanned_at_gate)
                     : ($ticket->checked_in_by ? 'Creator Studio' : null),
+                'claim_proof'   => $order?->claim_proof ? (str_starts_with($order->claim_proof, 'http') ? $order->claim_proof : asset('storage/' . $order->claim_proof)) : null,
+                'claim_proofs'  => $order?->claim_proofs_list ?? [],
             ],
         ]);
     }
