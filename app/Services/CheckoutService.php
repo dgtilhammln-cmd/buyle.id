@@ -264,24 +264,66 @@ class CheckoutService
             || !empty($ticketHoldersInput);
         $orderPrefix = $isTicketOrder ? 'TIX' : 'MKT';
 
-        // Simpan file bukti screenshot jika ada (klaim produk / tiket gratis dengan validasi ketat)
+        // Simpan file bukti screenshot jika ada (klaim produk / tiket gratis dengan validasi ketat per-sosmed)
         $claimProofPath = null;
-        $claimProofScreenshot = $data['claim_proof_screenshot'] ?? request()->input('claim_proof_screenshot');
-        if (!empty($claimProofScreenshot)) {
-            try {
-                $raw = $claimProofScreenshot;
-                if (preg_match('/^data:image\/(\w+);base64,/', $raw, $matches)) {
-                    $raw = substr($raw, strpos($raw, ',') + 1);
+        $claimProofsList = [];
+
+        // 1. Cek multi-screenshot per platform sosmed (Format Baru: 1 sosmed 1 bukti)
+        $claimProofScreenshots = $data['claim_proof_screenshots'] ?? request()->input('claim_proof_screenshots');
+        if (is_array($claimProofScreenshots) && !empty($claimProofScreenshots)) {
+            foreach ($claimProofScreenshots as $stepKey => $base64Img) {
+                if (empty($base64Img)) continue;
+                try {
+                    $raw = $base64Img;
+                    if (preg_match('/^data:image\/(\w+);base64,/', $raw, $matches)) {
+                        $raw = substr($raw, strpos($raw, ',') + 1);
+                    }
+                    $decoded = base64_decode($raw);
+                    if ($decoded !== false) {
+                        $cleanKey = preg_replace('/[^a-zA-Z0-9_\-]/', '_', (string) $stepKey);
+                        $filename = 'claim_proofs/proof_' . strtolower($orderPrefix) . '_' . $cleanKey . '_' . time() . '_' . Str::random(5) . '.webp';
+                        Storage::disk('public')->put($filename, $decoded);
+
+                        $platformName = ucfirst(str_replace(['_', '-'], ' ', $stepKey));
+                        $claimProofsList[] = [
+                            'step_id'  => $stepKey,
+                            'platform' => $platformName,
+                            'label'    => 'Syarat ' . $platformName,
+                            'proof'    => $filename,
+                            'url'      => asset('storage/' . $filename),
+                        ];
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning("Failed saving claim proof screenshot for {$stepKey}: " . $e->getMessage());
                 }
-                $decoded = base64_decode($raw);
-                if ($decoded !== false) {
-                    $filename = 'claim_proofs/proof_' . strtolower($orderPrefix) . '_' . time() . '_' . Str::random(6) . '.webp';
-                    Storage::disk('public')->put($filename, $decoded);
-                    $claimProofPath = $filename;
-                    $shippingAddressArray['claim_proof'] = $filename;
+            }
+
+            if (!empty($claimProofsList)) {
+                $claimProofPath = json_encode($claimProofsList);
+                $shippingAddressArray['claim_proofs'] = $claimProofsList;
+                $shippingAddressArray['claim_proof'] = $claimProofsList[0]['proof'];
+            }
+        }
+
+        // 2. Fallback single-screenshot (Format Lama) jika multi-screenshot kosong
+        if (empty($claimProofPath)) {
+            $claimProofScreenshot = $data['claim_proof_screenshot'] ?? request()->input('claim_proof_screenshot');
+            if (!empty($claimProofScreenshot)) {
+                try {
+                    $raw = $claimProofScreenshot;
+                    if (preg_match('/^data:image\/(\w+);base64,/', $raw, $matches)) {
+                        $raw = substr($raw, strpos($raw, ',') + 1);
+                    }
+                    $decoded = base64_decode($raw);
+                    if ($decoded !== false) {
+                        $filename = 'claim_proofs/proof_' . strtolower($orderPrefix) . '_' . time() . '_' . Str::random(6) . '.webp';
+                        Storage::disk('public')->put($filename, $decoded);
+                        $claimProofPath = $filename;
+                        $shippingAddressArray['claim_proof'] = $filename;
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('Failed saving claim proof screenshot: ' . $e->getMessage());
                 }
-            } catch (\Throwable $e) {
-                Log::warning('Failed saving claim proof screenshot: ' . $e->getMessage());
             }
         }
 

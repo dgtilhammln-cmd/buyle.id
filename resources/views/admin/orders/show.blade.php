@@ -434,6 +434,34 @@
                     @endif
                 </div>
 
+                @if(!empty($order->claim_proofs_list))
+                    <div class="od-card" style="margin-top:1.25rem;">
+                        <div class="od-card-title" style="color:#15803D;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                            Bukti Screenshot Klaim Gratis ({{ count($order->claim_proofs_list) }})
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                            @foreach($order->claim_proofs_list as $proofItem)
+                                <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:0.6rem 0.75rem;">
+                                    <div style="display:flex; align-items:center; gap:0.65rem;">
+                                        <a href="{{ $proofItem['url'] }}" target="_blank" rel="noopener">
+                                            <img src="{{ $proofItem['url'] }}" alt="{{ $proofItem['platform'] ?? 'Bukti' }}" style="width:44px; height:44px; object-fit:cover; border-radius:6px; border:1px solid #86EFAC;">
+                                        </a>
+                                        <div>
+                                            <div style="font-size:0.8rem; font-weight:700; color:#15803D;">{{ $proofItem['platform'] ?? 'Platform' }}</div>
+                                            <div style="font-size:0.72rem; color:#64748B;">{{ $proofItem['label'] ?? 'Bukti Screenshot' }}</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:0.35rem;">
+                                        <a href="{{ $proofItem['url'] }}" download target="_blank" class="btn btn-sm btn-outline-success" style="font-size:0.72rem; padding:3px 8px;">Unduh</a>
+                                        <a href="{{ $proofItem['url'] }}" target="_blank" class="btn btn-sm btn-outline-primary" style="font-size:0.72rem; padding:3px 8px;">Buka</a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
             </div>
 
             {{-- Right Col: Status Update & Info --}}

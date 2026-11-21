@@ -218,4 +218,45 @@ class Order extends Model
     {
         return $this->shipping_address['receiver_name'] ?? null;
     }
+
+    /**
+     * Daftar bukti screenshot klaim per platform (mendukung JSON array maupun string legacy single URL).
+     */
+    public function getClaimProofsListAttribute(): array
+    {
+        if (empty($this->claim_proof)) {
+            return [];
+        }
+
+        // Coba decode JSON
+        $decoded = json_decode($this->claim_proof, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return array_map(function ($item) {
+                if (is_array($item)) {
+                    $proof = $item['proof'] ?? ($item['url'] ?? '');
+                    if ($proof && !str_starts_with($proof, 'http')) {
+                        $item['url'] = asset('storage/' . $proof);
+                    } else {
+                        $item['url'] = $proof;
+                    }
+                }
+                return $item;
+            }, $decoded);
+        }
+
+        // Fallback: single file path legacy
+        $url = str_starts_with($this->claim_proof, 'http')
+            ? $this->claim_proof
+            : asset('storage/' . $this->claim_proof);
+
+        return [
+            [
+                'step_id'  => 'legacy',
+                'platform' => 'Syarat Klaim',
+                'label'    => 'Bukti Follow / Join',
+                'proof'    => $this->claim_proof,
+                'url'      => $url,
+            ]
+        ];
+    }
 }

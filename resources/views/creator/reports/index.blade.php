@@ -2510,7 +2510,8 @@
                                                 'courier_name' => $shipment?->courier_name ?? '',
                                                 'tracking_number' => $shipment?->tracking_number ?? '',
                                                 'update_url' => route('creator.sales.report.update_order', $order->id),
-                                                'claim_proof' => $order->claim_proof ? asset('storage/' . $order->claim_proof) : null,
+                                                'claim_proof' => $order->claim_proof ? (str_starts_with($order->claim_proof, 'http') ? $order->claim_proof : asset('storage/' . $order->claim_proof)) : null,
+                                                'claim_proofs' => $order->claim_proofs_list,
                                             ]);
                                         @endphp
                                         <div style="display:flex; align-items:center; gap:0.4rem;">
@@ -3150,7 +3151,8 @@
                                     'courier_name' => $shipment?->courier_name ?? '',
                                     'tracking_number' => $shipment?->tracking_number ?? '',
                                     'update_url' => route('creator.sales.report.update_order', $order->id),
-                                    'claim_proof' => $order->claim_proof ? asset('storage/' . $order->claim_proof) : null,
+                                    'claim_proof' => $order->claim_proof ? (str_starts_with($order->claim_proof, 'http') ? $order->claim_proof : asset('storage/' . $order->claim_proof)) : null,
+                                    'claim_proofs' => $order->claim_proofs_list,
                                 ]);
                             @endphp
                             <tr class="pos-order-row">
@@ -3596,18 +3598,45 @@
                 }
             }
 
-            // Bukti Screenshot Klaim Gratis Box
+            // Bukti Screenshot Klaim Gratis Box (Multi-sosmed support)
             const claimProofBox = document.getElementById('od_claim_proof_box');
-            const claimProofImg = document.getElementById('od_claim_proof_img');
-            const claimProofLink = document.getElementById('od_claim_proof_link');
-            const claimProofDownload = document.getElementById('od_claim_proof_download');
-            const claimProofEnlarge = document.getElementById('od_claim_proof_enlarge');
+            const claimProofsContainer = document.getElementById('od_claim_proofs_container');
+            const claimProofCount = document.getElementById('od_claim_proof_count');
             if (claimProofBox) {
-                if (data.claim_proof) {
-                    if (claimProofImg) claimProofImg.src = data.claim_proof;
-                    if (claimProofLink) claimProofLink.href = data.claim_proof;
-                    if (claimProofDownload) claimProofDownload.href = data.claim_proof;
-                    if (claimProofEnlarge) claimProofEnlarge.href = data.claim_proof;
+                const proofs = (data.claim_proofs && data.claim_proofs.length > 0)
+                    ? data.claim_proofs
+                    : (data.claim_proof ? [{ platform: 'Syarat Klaim', label: 'Bukti Follow/Join', url: data.claim_proof }] : []);
+
+                if (proofs.length > 0) {
+                    if (claimProofCount) claimProofCount.textContent = proofs.length;
+                    if (claimProofsContainer) {
+                        claimProofsContainer.innerHTML = proofs.map(item => `
+                            <div style="background:#fff; border:1.5px solid #BBF7D0; border-radius:10px; padding:0.65rem 0.85rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
+                                <div style="display:flex; align-items:center; gap:0.75rem;">
+                                    <a href="${item.url}" target="_blank" rel="noopener" style="flex-shrink:0;">
+                                        <img src="${item.url}" alt="${item.platform || 'Bukti'}"
+                                            style="width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid #86EFAC; display:block; cursor:zoom-in;">
+                                    </a>
+                                    <div>
+                                        <div style="font-size:0.82rem; font-weight:700; color:#15803D;">${item.platform || 'Platform'}</div>
+                                        <div style="font-size:0.72rem; color:#64748B;">${item.label || 'Bukti Screenshot'}</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:0.4rem; flex-shrink:0;">
+                                    <a href="${item.url}" download target="_blank"
+                                        style="font-size:0.72rem; font-weight:700; color:#15803D; background:#DCFCE7; border:1px solid #86EFAC; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Unduh
+                                    </a>
+                                    <a href="${item.url}" target="_blank"
+                                        style="font-size:0.72rem; font-weight:700; color:#1D4ED8; background:#EFF6FF; border:1px solid #BFDBFE; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                                        Buka
+                                    </a>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
                     claimProofBox.style.display = 'block';
                 } else {
                     claimProofBox.style.display = 'none';
@@ -3944,28 +3973,18 @@
                     </div>
                 </div>
 
-                <!-- Bukti Screenshot Klaim Gratis (if available) -->
+                <!-- Bukti Screenshot Klaim Gratis (Multi-Sosmed Support) -->
                 <div id="od_claim_proof_box"
                     style="display:none; background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:14px; padding:1rem; margin-bottom:1rem;">
-                    <div style="font-size:0.72rem; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.6rem; display:flex; align-items:center; gap:5px;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                        📷 Bukti Screenshot Klaim Gratis
+                    <div style="font-size:0.72rem; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.75rem; display:flex; align-items:center; justify-content:space-between;">
+                        <span style="display:flex; align-items:center; gap:5px;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                            Bukti Screenshot Klaim Gratis (<span id="od_claim_proof_count">0</span>)
+                        </span>
+                        <span style="font-size:0.68rem; font-weight:700; color:#166534; background:#DCFCE7; padding:2px 6px; border-radius:4px; border:1px solid #86EFAC;">1 per Sosmed</span>
                     </div>
-                    <a id="od_claim_proof_link" href="#" target="_blank" rel="noopener">
-                        <img id="od_claim_proof_img" src="" alt="Bukti Screenshot"
-                            style="max-width:100%; max-height:260px; border-radius:10px; border:1.5px solid #BBF7D0; display:block; cursor:zoom-in;">
-                    </a>
-                    <div style="margin-top:0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
-                        <a id="od_claim_proof_download" href="#" download target="_blank"
-                            style="font-size:0.72rem; font-weight:700; color:#15803D; background:#DCFCE7; border:1px solid #86EFAC; padding:3px 10px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            Unduh Bukti
-                        </a>
-                        <a id="od_claim_proof_enlarge" href="#" target="_blank"
-                            style="font-size:0.72rem; font-weight:700; color:#1D4ED8; background:#EFF6FF; border:1px solid #BFDBFE; padding:3px 10px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                            Perbesar
-                        </a>
+                    <div id="od_claim_proofs_container" style="display:flex; flex-direction:column; gap:0.65rem;">
+                        <!-- Dynamically filled by JS -->
                     </div>
                 </div>
 
