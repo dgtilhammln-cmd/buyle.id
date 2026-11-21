@@ -3375,7 +3375,9 @@
                     </div>
                 </div>
 
-                {{-- 3. Side-by-Side Metric Cards (Step to walk & Drink Water from Image 2) --}}
+                {{-- 3. Side-by-Side Metric Cards --}}
+                @if(!($isAssignedStaff ?? false))
+                {{-- EO/Promotor: tampilkan statistik event keseluruhan --}}
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:1.25rem;">
                     {{-- Card 1: Total Tiket --}}
                     <div
@@ -3422,6 +3424,31 @@
                         </div>
                     </div>
                 </div>
+                @else
+                {{-- Volunteer/Crew: hanya tampilkan jumlah scan SENDIRI --}}
+                <div style="margin-bottom:1.25rem;">
+                    <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border:1px solid #bbf7d0; border-radius:18px; padding:1.1rem 1.25rem; display:flex; align-items:center; gap:1rem; box-shadow:0 2px 8px rgba(30,179,73,0.07);">
+                        <div style="width:48px; height:48px; border-radius:50%; background:#1eb349; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 3px 10px rgba(30,179,73,0.3);">
+                            <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.72rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:3px;">Scan Tiket Saya</div>
+                            <div style="display:flex; align-items:baseline; gap:0.4rem;">
+                                <span style="font-size:2rem; font-weight:800; color:#15803d; line-height:1;">{{ number_format($myPersonalScanCount ?? 0) }}</span>
+                                <span style="font-size:0.8rem; color:#166534; font-weight:600;">tiket berhasil</span>
+                            </div>
+                            <div style="font-size:0.68rem; color:#4ade80; font-weight:500; margin-top:2px;">Produktivitas Anda hari ini</div>
+                        </div>
+                        <div style="flex-shrink:0; text-align:center;">
+                            <div style="font-size:0.65rem; color:#166534; font-weight:600; margin-bottom:4px;">RANK</div>
+                            <div style="font-size:1.5rem;">🏆</div>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 {{-- 4. Interactive Horizontal Calendar Strip (August 2025 style from Image 2) --}}
                 <div
@@ -3717,6 +3744,8 @@
                     @endif
 
                     {{-- Quick Mobile Stats Chips (Hanya tampil di tab scanner) --}}
+                    @if(!($isAssignedStaff ?? false))
+                    {{-- EO/Promotor: total event stats --}}
                     <div class="scanner-mobile-stats-row">
                         <div class="sm-stat-card">
                             <div class="sm-stat-icon" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">
@@ -3745,6 +3774,23 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                    {{-- Volunteer/Crew: hanya tampilkan scan pribadi --}}
+                    <div class="scanner-mobile-stats-row">
+                        <div class="sm-stat-card" style="flex:1; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border:1px solid #bbf7d0;">
+                            <div class="sm-stat-icon" style="background:#1eb349; color:#fff; border:none; box-shadow:0 2px 8px rgba(30,179,73,0.3);">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                            </div>
+                            <div class="sm-stat-content">
+                                <span class="sm-stat-label" style="color:#166534; font-weight:700;">Scan Tiket Saya</span>
+                                <span class="sm-stat-val" style="color:#15803d;">{{ number_format($myPersonalScanCount ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     <div class="prof-card">
                         <div class="prof-card-head">

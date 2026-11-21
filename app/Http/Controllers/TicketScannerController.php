@@ -20,6 +20,18 @@ class TicketScannerController extends Controller
     public function index(Request $request)
     {
         $sellerId = auth()->id();
+        // Jumlah tiket yang di-scan SENDIRI oleh user ini (untuk tampilan volunteer/crew)
+        $myPersonalScanCount = \App\Models\OrderItem::whereHas('order', function ($q) use ($sellerId) {
+            $q->whereHas('items.ticket', function ($q2) use ($sellerId) {
+                $q2->where('checked_in_by', $sellerId);
+            });
+        })->count();
+        // Cara lebih sederhana: hitung langsung dari tabel tickets
+        $myPersonalScanCount = \DB::table('tickets')
+            ->where('checked_in_by', $sellerId)
+            ->where('status', 'used')
+            ->count();
+
         $kyc = \App\Models\CreatorKyc::where('user_id', $sellerId)->first();
         $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
 
@@ -272,7 +284,8 @@ class TicketScannerController extends Controller
             'primaryEvent',
             'daysUntilEvent',
             'eventDates',
-            'allTicketEvents'
+            'allTicketEvents',
+            'myPersonalScanCount'
         ));
     }
 
