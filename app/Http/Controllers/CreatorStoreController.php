@@ -45,27 +45,45 @@ class CreatorStoreController extends Controller
             abort(404);
         }
 
-        // Tipe produk digital yang diizinkan tampil di storefront
-        $digitalTypes = ['external_link', 'digital', 'link', 'ebook', 'course', 'license', 'file', 'download'];
+        // Tipe produk yang diizinkan tampil di storefront: HANYA produk digital dan tiket/event
+        $allowedTypes = [
+            // Produk Digital
+            'external_link', 'digital', 'link', 'ebook', 'course', 'license', 'file', 'download',
+            // Tiket & Event
+            'ticket', 'event', 'webinar', 'workshop', 'wisata'
+        ];
+
+        $filterStorefrontProducts = function ($q) use ($allowedTypes) {
+            $q->where(function ($sub) use ($allowedTypes) {
+                $sub->whereIn('product_type', $allowedTypes)
+                    ->orWhere(function ($legacy) {
+                        $legacy->whereNull('product_type')
+                               ->where(function ($leg) {
+                                   $leg->whereIn('type', ['digital', 'ticket'])
+                                       ->orWhereNotNull('event_date');
+                               });
+                    });
+            });
+        };
 
         // 2. Ambil grup produk yang aktif untuk filter kategori
         $groups = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->withCount(['products' => function ($q) use ($digitalTypes) {
-                $q->where('is_active', true)->whereIn('product_type', $digitalTypes);
+            ->withCount(['products' => function ($q) use ($filterStorefrontProducts) {
+                $q->where('is_active', true)->where($filterStorefrontProducts);
             }])
             ->orderBy('order')
             ->get();
 
         $totalProductsCount = Product::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->whereIn('product_type', $digitalTypes)
+            ->where($filterStorefrontProducts)
             ->count();
 
-        // 3. Ambil produk berdasarkan grup (atau semua) — hanya produk digital
+        // 3. Ambil produk berdasarkan grup (atau semua) — hanya produk digital & tiket
         $query = Product::where('seller_id', $seller->id)
             ->where('is_active', true)
-            ->whereIn('product_type', $digitalTypes);
+            ->where($filterStorefrontProducts);
 
         // Fallback ke request('group') untuk support old URL
         $activeGroupSlug = $groupSlug ?? $request->group;
@@ -103,6 +121,7 @@ class CreatorStoreController extends Controller
                 // Pecah query jadi token, coba soundex/similar_text
                 $allNames = Product::where('seller_id', $seller->id)
                     ->where('is_active', true)
+                    ->where($filterStorefrontProducts)
                     ->pluck('name');
 
                 [$bestKeyword, $bestScore] = $this->findBestMatch($rawQ, $allNames->toArray());

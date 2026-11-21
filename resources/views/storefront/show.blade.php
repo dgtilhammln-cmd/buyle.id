@@ -290,6 +290,19 @@
     background: #EF4444; color: #fff; font-size: 0.65rem; font-weight: 700;
     padding: 0.2rem 0.4rem; border-radius: 4px; z-index: 2;
 }
+.sf-ticket-badge {
+    position: absolute; top: 0.5rem; left: 0.5rem;
+    background: linear-gradient(135deg, #7c3aed, #9333ea); color: #fff;
+    font-size: 0.65rem; font-weight: 700;
+    padding: 0.2rem 0.5rem; border-radius: 4px; z-index: 2;
+    display: flex; align-items: center; gap: 3px;
+}
+.sf-card-event-date {
+    font-size: 0.72rem; color: #64748b; font-weight: 500;
+    margin-bottom: 0.3rem;
+    display: flex; align-items: center; gap: 4px;
+}
+.sf-card-ticket .sf-card-price-main { color: #7c3aed !important; }
 .sf-card-report-btn {
     position: absolute; top: 0.5rem; right: 0.5rem;
     width: 26px; height: 26px; border-radius: 50%;
@@ -620,10 +633,19 @@
             {{-- ── Products Grid ── --}}
             <div class="sf-grid">
                 @forelse($products as $product)
-                    <a href="{{ route('products.show', $product->slug) }}" class="sf-card">
+                    @php
+                        $isTicket = in_array($product->product_type, ['ticket', 'event', 'webinar', 'workshop', 'wisata']);
+                        $effectivePrice = ($product->sale_price && $product->sale_price < $product->price) ? $product->sale_price : $product->price;
+                    @endphp
+                    <a href="{{ route('products.show', $product->slug) }}" class="sf-card {{ $isTicket ? 'sf-card-ticket' : '' }}">
                         <div class="sf-card-img">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy">
-                            @if($product->sale_price && $product->sale_price < $product->price)
+                            @if($isTicket)
+                                <div class="sf-ticket-badge">
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 12V22H4V12M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                                    Tiket
+                                </div>
+                            @elseif($product->sale_price && $product->sale_price < $product->price)
                                 @php $discount = round((($product->price - $product->sale_price) / $product->price) * 100); @endphp
                                 <div class="sf-discount-badge">{{ $discount }}%</div>
                             @endif
@@ -636,11 +658,26 @@
                         </div>
                         <div class="sf-card-body">
                             <p class="sf-card-name">{{ $product->name }}</p>
+                            @if($isTicket && $product->event_date)
+                                <div class="sf-card-event-date">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                    {{ \Carbon\Carbon::parse($product->event_date)->translatedFormat('d M Y') }}
+                                    @if($product->event_time)
+                                        · {{ \Carbon\Carbon::parse($product->event_time)->format('H:i') }} WIB
+                                    @endif
+                                </div>
+                            @endif
                             <div class="sf-card-price">
                                 @if($product->sale_price && $product->sale_price < $product->price)
                                     <div class="sf-card-price-strike">Rp{{ number_format($product->price, 0, ',', '.') }}</div>
                                 @endif
-                                <div class="sf-card-price-main">Rp{{ number_format($product->sale_price ?? $product->price, 0, ',', '.') }}</div>
+                                <div class="sf-card-price-main">
+                                    @if($effectivePrice == 0)
+                                        <span style="color:#1eb349;">Gratis</span>
+                                    @else
+                                        Rp{{ number_format($effectivePrice, 0, ',', '.') }}
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </a>
