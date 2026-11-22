@@ -399,6 +399,11 @@ class Product extends Model
         return $this->hasMany(ProductVariantOption::class, 'product_id');
     }
 
+    public function recipes(): HasMany
+    {
+        return $this->hasMany(ProductRecipe::class, 'product_id');
+    }
+
     /**
      * Semua item cart yang mengandung produk ini.
      */
@@ -570,10 +575,17 @@ class Product extends Model
             if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
                 return $this->image;
             }
-            // Langsung kembalikan URL tanpa cek file_exists()
-            // karena Hostinger symlink/path bisa berbeda dari storage_path/public_path
-            // Fallback broken image ditangani oleh onerror di HTML
             return asset('storage/' . ltrim($this->image, '/'));
+        }
+
+        if (!empty($this->gallery) && is_array($this->gallery) && count($this->gallery) > 0) {
+            $first = $this->gallery[0];
+            if (!empty($first)) {
+                if (str_starts_with($first, 'http://') || str_starts_with($first, 'https://')) {
+                    return $first;
+                }
+                return asset('storage/' . ltrim($first, '/'));
+            }
         }
 
         return static::getPlaceholderUrl();

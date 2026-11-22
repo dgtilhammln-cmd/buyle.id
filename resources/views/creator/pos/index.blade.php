@@ -3931,18 +3931,9 @@
                                     @php
                                         $prodPrice = (float) ($prod->sale_price ?: $prod->price);
                                         $nameLower = strtolower($prod->name);
-                                        $imgUrl = null;
-                                        if (isset($prod->image_url) && !empty($prod->image_url) && !str_contains($prod->image_url, 'service-default')) {
-                                            $imgUrl = $prod->image_url;
-                                        } elseif (!empty($prod->image) && strlen(trim($prod->image)) > 1) {
-                                            $rawImg = trim($prod->image);
-                                            if (\Illuminate\Support\Str::startsWith($rawImg, ['http://', 'https://'])) {
-                                                $imgUrl = $rawImg;
-                                            } elseif (\Illuminate\Support\Str::startsWith($rawImg, ['storage/', '/storage/'])) {
-                                                $imgUrl = asset(ltrim($rawImg, '/'));
-                                            } else {
-                                                $imgUrl = asset('storage/' . ltrim($rawImg, '/'));
-                                            }
+                                        $imgUrl = $prod->image_url;
+                                        if (empty($imgUrl) || str_contains($imgUrl, 'service-default') || str_contains($imgUrl, 'buyle-placeholder.svg')) {
+                                            $imgUrl = null;
                                         }
 
                                         // Category Classification Slug
@@ -6947,7 +6938,10 @@
                 @foreach($products as $prod)
                                                             @php
                                                                 $pPrice = (float) ($prod->sale_price ?: $prod->price);
-                                                                $pImg = $prod->image ? (str_starts_with($prod->image, 'http') ? $prod->image : asset('storage/' . $prod->image)) : '';
+                                                                $pImg = $prod->image_url;
+                                                                if (empty($pImg) || str_contains($pImg, 'service-default') || str_contains($pImg, 'buyle-placeholder.svg')) {
+                                                                    $pImg = '';
+                                                                }
                                                                 $pHasVariants = $prod->variantOptions && $prod->variantOptions->count() > 0;
                                                                 $pVariants = [];
                                                                 if ($pHasVariants) {

@@ -100,7 +100,7 @@ self.addEventListener('fetch', (event) => {
 
     // ── 3. Asset statis: Cache first, network fallback ──────────────
     if (
-        url.pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|woff|woff2|ttf)$/) &&
+        url.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico|css|js|woff|woff2|ttf)$/) &&
         url.hostname === self.location.hostname
     ) {
         event.respondWith(

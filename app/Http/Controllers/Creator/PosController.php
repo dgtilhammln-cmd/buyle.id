@@ -589,6 +589,11 @@ class PosController extends Controller
                     $p->decrement('stock', $itemRow['qty']);
                     $p->increment('sold_count', $itemRow['qty']);
                 }
+
+                // Potong stok bahan baku (BOM / Resep F&B) jika produk memiliki resep terdaftar
+                if ($p && $isPaid) {
+                    \App\Models\Material::deductForProduct($p->id, (int) $itemRow['qty'], $order->id, $seller->id);
+                }
             }
 
             // Create Payment record

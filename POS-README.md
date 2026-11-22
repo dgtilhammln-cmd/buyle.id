@@ -113,3 +113,72 @@ Halaman laporan penjualan (`/creator/sales-report`) memiliki 3 tab terpisah yang
 - **Tanpa Emdash:** Tidak menggunakan karakter emdash (`—`) atau endash (`–`).
 - **Desain Seragam & Proporsional:** Mengikuti design language buyle.id (aksen hijau `#1eb349`, font Montserrat, radius kartu `14px-18px`, border netral `#e2e8f0`).
 - **Mobile Friendly:** Seluruh grid, modal, dan tabel menggunakan pembungkus responsive (`overflow-x: auto` dan flex/grid collapse) sehingga nyaman diakses dari smartphone, tablet, maupun layar desktop kasir.
+
+---
+
+## 6. Sistem Inventori Bahan Baku & Resep Menu (F&B / Cafe - Bill of Materials)
+
+Fitur inventori bahan baku dirancang khusus untuk bisnis Food & Beverage (F&B), Coffee Shop, Resto, dan Bakery agar pemilik usaha dapat mengontrol stok bahan mentah, mencegah kebocoran bahan, dan mengetahui HPP secara otomatis.
+
+### A. Konsep Inti
+1. **Pemisahan Menu Jual vs Bahan Baku:**
+   - **Menu Jual:** Produk jadi yang dipilih di kasir POS (contoh: *Kopi Susu Gula Aren*, Rp 20.000).
+   - **Bahan Baku (Raw Material):** Bahan mentah fisik di dapur/bar (contoh: *Biji Kopi Robusta* [gram], *Susu Fresh Milk* [ml], *Gula Aren Cair* [ml], *Cup 12oz* [pcs]).
+2. **Resep Menu (Bill of Materials / BOM):**
+   - Setiap 1 porsi menu jual memiliki formula takaran bahan baku.
+   - Contoh: 1 cup Kopi Susu Aren = 18 gr Biji Kopi + 120 ml Susu + 25 ml Gula Aren + 1 pcs Cup 12oz.
+3. **Pengurangan Stok Otomatis:**
+   - Saat kasir menyelesaikan transaksi POS (baik CASH maupun Cashless), sistem otomatis memotong stok bahan baku sesuai resep dan kuantitas menu yang terjual.
+4. **Buku Besar Mutasi Bahan (Audit Trail):**
+   - Setiap penambahan (restock masuk), pengurangan (penjualan kasir), atau koreksi (waste/rusak/tumpah/opname) dicatat detail dengan riwayat waktu, jumlah, dan user pelaksana.
+
+### B. Arsitektur Database
+
+#### 1. Tabel `materials` (Master Bahan Baku)
+- `id` (BigInt, PK)
+- `seller_id` (BigInt, FK ke `users.id`)
+- `name` (String): Nama bahan baku (contoh: Biji Kopi Espresso Blend)
+- `code` (String, nullable): Kode / SKU internal bahan
+- `category` (String): Kategori bahan (`kering`, `cair_dingin`, `kemasan`, `bumbu`, dll.)
+- `unit` (String): Satuan dasar terkecil (`gram`, `ml`, `pcs`, `lembar`, `kg`, `liter`)
+- `stock` (Decimal 12, 2, default 0): Jumlah sisa stok saat ini
+- `min_stock` (Decimal 12, 2, default 0): Batas peringatan stok menipis (low stock alert)
+- `cost_per_unit` (Decimal 14, 2, default 0): Estimasi harga modal per unit satuan dasar
+- `is_active` (Boolean, default true)
+- `created_at`, `updated_at`
+
+#### 2. Tabel `product_recipes` (Relasi Resep Menu ke Bahan)
+- `id` (BigInt, PK)
+- `product_id` (BigInt, FK ke `products.id`)
+- `material_id` (BigInt, FK ke `materials.id`)
+- `quantity` (Decimal 10, 2): Takaran bahan yang dipakai per 1 porsi produk
+- `notes` (String, nullable): Catatan takaran (opsional)
+- `created_at`, `updated_at`
+
+#### 3. Tabel `material_mutations` (Buku Besar Mutasi Stok Bahan)
+- `id` (BigInt, PK)
+- `material_id` (BigInt, FK ke `materials.id`)
+- `seller_id` (BigInt, FK ke `users.id`)
+- `type` (Enum: `in_purchase`, `out_pos_sale`, `adjustment_waste`, `adjustment_opname`)
+- `amount` (Decimal 12, 2): Kuantitas mutasi (+ untuk masuk, - untuk keluar)
+- `stock_before` (Decimal 12, 2)
+- `stock_after` (Decimal 12, 2)
+- `order_id` (BigInt, nullable, FK ke `orders.id`): Terisi jika mutasi berasal dari penjualan kasir
+- `unit_cost` (Decimal 14, 2, nullable): Harga beli per unit saat restock
+- `reference_note` (String, nullable): No Invoice Supplier, alasan rusak/basi/tumpah
+- `created_at`, `updated_at`
+
+### C. Alur Bertahap (Roadmap)
+
+#### Fase 1 (MVP - Eksekusi Saat Ini):
+- Master data bahan baku (tambah, edit, hapus, filter, pencarian).
+- Header & Toolbar responsif minimalis seragam 100% dengan halaman Produk Saya (`/creator/products`).
+- Form restock cepat (+ Tambah Stok) dengan pencatatan harga beli per satuan.
+- Form modal setting Resep Produk untuk produk tipe makanan/minuman F&B.
+- Pengurangan stok otomatis saat transaksi POS selesai.
+- Indikator visual status stok: Aman (Hijau), Menipis (Kuning), Habis (Merah).
+
+#### Fase 2 (Advanced Analytics):
+- Laporan kalkulasi HPP otomatis (COGS) dan margin laba bersih per menu.
+- Fitur penyesuaian stok opname berkala & waste tracking (catatan bahan basi/tumpah).
+- Notifikasi stok kritis via WhatsApp/Push Notification saat bahan baku mendekati batas minimum.

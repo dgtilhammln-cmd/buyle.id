@@ -1042,6 +1042,14 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // CRUD Kelompok Produk
     Route::resource('groups', \App\Http\Controllers\Creator\CreatorGroupController::class);
 
+    // CRUD Inventori Bahan Baku & Resep Menu (F&B / Cafe)
+    Route::get('/materials', [\App\Http\Controllers\Creator\MaterialController::class, 'index'])->name('materials.index');
+    Route::post('/materials', [\App\Http\Controllers\Creator\MaterialController::class, 'store'])->name('materials.store');
+    Route::put('/materials/{id}', [\App\Http\Controllers\Creator\MaterialController::class, 'update'])->name('materials.update');
+    Route::delete('/materials/{id}', [\App\Http\Controllers\Creator\MaterialController::class, 'destroy'])->name('materials.destroy');
+    Route::post('/materials/{id}/restock', [\App\Http\Controllers\Creator\MaterialController::class, 'restock'])->name('materials.restock');
+    Route::post('/materials/recipe/{productId}', [\App\Http\Controllers\Creator\MaterialController::class, 'saveRecipe'])->name('materials.recipe.save');
+
     // Pengaturan 
     Route::get('/profile', [\App\Http\Controllers\Creator\CreatorProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\Creator\CreatorProfileController::class, 'update'])->name('profile.update');
