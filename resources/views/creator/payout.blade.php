@@ -729,7 +729,7 @@
         .bank-option {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.65rem;
             padding: 0.55rem 0.65rem;
             border-radius: 10px;
             cursor: pointer;
@@ -737,6 +737,34 @@
             font-size: 0.82rem;
             font-weight: 600;
             color: #334155;
+        }
+
+        .bank-logo-icon {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            background: #ffffff;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            padding: 2px;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            display: inline-block;
+        }
+
+        .bank-option.selected .bank-logo-icon {
+            border-color: #ffffff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .bank-select-display {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0f172a;
+            width: 100%;
         }
 
         .bank-option:hover {
@@ -1130,8 +1158,6 @@
                 'DANA',
                 'OVO',
                 'LinkAja',
-                'AstraPay',
-                'Jenius Pay',
             ],
             'Bank Digital' => [
                 'Bank Jago',
@@ -1195,6 +1221,68 @@
                 'Bankaltimtara Syariah',
                 'Bank Papua',
             ],
+        ];
+
+        $bankLogos = [
+            'GoPay'                       => 'gopay.webp',
+            'ShopeePay'                   => 'shopeepay.webp',
+            'DANA'                        => 'dana.webp',
+            'OVO'                         => 'ovo.webp',
+            'LinkAja'                     => 'linkaja.webp',
+            'Bank Jago'                   => 'bank-jago.webp',
+            'Bank Jago Syariah'           => 'bank-jago-syariah.webp',
+            'SMBC Indonesia (Jenius)'     => 'smbc-indonesia-jenius.webp',
+            'SeaBank'                     => 'seabank.webp',
+            'blu by BCA Digital'          => 'blu-by-bca-digital.webp',
+            'Allo Bank'                   => 'allo-bank.webp',
+            'Bank Neo Commerce (BNC)'     => 'bank-neo-commerce-bnc.webp',
+            'Bank Aladin Syariah'         => 'bank-aladin-syariah.webp',
+            'Superbank'                   => 'superbank.webp',
+            'Krom Bank'                   => 'krom-bank.webp',
+            'MNC Bank'                    => 'mnc-bank.webp',
+            'Bank Amar'                   => 'bank-amar.webp',
+            'Bank Saqu'                   => 'bank-saqu.webp',
+            'BRI'                         => 'bri.webp',
+            'BNI'                         => 'bni.webp',
+            'Mandiri'                     => 'mandiri.webp',
+            'BTN'                         => 'btn.webp',
+            'BSI (Bank Syariah Indonesia)'=> 'bsi-bank-syariah-indonesia.webp',
+            'BCA'                         => 'bca.webp',
+            'BCA Syariah'                 => 'bca-syariah.webp',
+            'CIMB Niaga'                  => 'cimb-niaga.webp',
+            'CIMB Niaga Syariah'          => 'cimb-niaga-syariah.webp',
+            'Danamon'                     => 'danamon.svg',
+            'Danamon Syariah'             => 'danamon-syariah.webp',
+            'Permata'                     => 'permata.webp',
+            'Permata Syariah'             => 'permata-syariah.webp',
+            'OCBC'                        => 'ocbc.webp',
+            'OCBC Syariah'                => 'ocbc-syariah.webp',
+            'Maybank'                     => 'maybank.webp',
+            'Maybank Syariah'             => 'maybank-syariah.webp',
+            'ANZ Panin'                   => 'anz-panin.webp',
+            'Panin Bank'                  => 'panin-bank.webp',
+            'UOB Indonesia'               => 'uob-indonesia.webp',
+            'Bank Mega'                   => 'bank-mega.webp',
+            'Bank Mega Syariah'           => 'bank-mega-syariah.webp',
+            'BTPN Syariah'                => 'btpn-syariah.webp',
+            'KB Bank (Bukopin)'           => 'kb-bank-bukopin.webp',
+            'Sinarmas'                    => 'sinarmas.webp',
+            'Mayapada International'      => 'mayapada-international.webp',
+            'Muamalat Indonesia'          => 'muamalat-indonesia.webp',
+            'BJB (Jawa Barat dan Banten)' => 'bjb-jawa-barat-dan-banten.webp',
+            'Bank BJB Syariah'            => 'bank-bjb-syariah.webp',
+            'Bank Jatim'                  => 'bank-jatim.webp',
+            'Bank Jatim Syariah'          => 'bank-jatim-syariah.webp',
+            'Bank Jateng'                 => 'bank-jateng.webp',
+            'Bank Jateng Syariah'         => 'bank-jateng-syariah.webp',
+            'BPD Bali'                    => 'bpd-bali.webp',
+            'Bank Sumut'                  => 'bank-sumut.webp',
+            'Bank Sumut Syariah'          => 'bank-sumut-syariah.webp',
+            'Bank Nagari'                 => 'bank-nagari.svg',
+            'Bank Nagari Syariah'         => 'bank-nagari-syariah.webp',
+            'Bankaltimtara'               => 'bankaltimtara.webp',
+            'Bankaltimtara Syariah'       => 'bankaltimtara-syariah.webp',
+            'Bank Papua'                  => 'bank-papua.webp',
         ];
         $bankTypeColors = [
             'E-Wallet' => ['bg' => '#EFF6FF', 'color' => '#1D4ED8'],
@@ -1356,14 +1444,18 @@
                                         Tujuan Pencairan</div>
                                     <div class="rekening-saved" style="background:#f0fdf4;border:1.5px solid #86efac;">
                                         <div class="rekening-info">
-                                            <div class="rekening-icon" style="background:#16a34a;">
-                                                <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2"
-                                                    viewBox="0 0 24 24">
-                                                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                                                    <circle cx="16" cy="12" r="2" />
-                                                    <path d="M6 12h.01" />
-                                                </svg>
-                                            </div>
+                                            @if($savedBank && isset($bankLogos[$savedBank]))
+                                                <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon" style="width:36px;height:36px;border-radius:8px;padding:3px;" alt="{{ $savedBank }}">
+                                            @else
+                                                <div class="rekening-icon" style="background:#16a34a;">
+                                                    <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2"
+                                                        viewBox="0 0 24 24">
+                                                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                                                        <circle cx="16" cy="12" r="2" />
+                                                        <path d="M6 12h.01" />
+                                                    </svg>
+                                                </div>
+                                            @endif
                                             <div>
                                                 <div style="display:flex;align-items:center;gap:0.4rem;">
                                                     <span class="rekening-bank">{{ $savedBank }}</span>
@@ -1435,7 +1527,10 @@
                                                 <div class="bank-select-trigger" id="bankTrigger"
                                                     onclick="toggleBankDropdown()">
                                                     <div class="bank-select-display" id="bankDisplay">
-                                                        @if($savedBank)
+                                                        @if($savedBank && isset($bankLogos[$savedBank]))
+                                                            <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon" alt="{{ $savedBank }}">
+                                                            <span>{{ $savedBank }}</span>
+                                                        @elseif($savedBank)
                                                             <span>{{ $savedBank }}</span>
                                                         @else
                                                             <span style="color:#94a3b8">Pilih Bank atau E-Wallet</span>
@@ -1460,7 +1555,10 @@
                                                                 <div class="bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}"
                                                                     data-value="{{ $bankItem }}" data-group="{{ $groupName }}"
                                                                     onclick="selectBank('{{ $bankItem }}', '{{ $groupName }}')">
-                                                                    {{ $bankItem }}
+                                                                    @if(isset($bankLogos[$bankItem]))
+                                                                        <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}" class="bank-logo-icon" alt="{{ $bankItem }}">
+                                                                    @endif
+                                                                    <span>{{ $bankItem }}</span>
                                                                     <span
                                                                         class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank BUMN' ? 'BUMN' : ($groupName === 'Bank Swasta Nasional' ? 'SWASTA' : 'BPD'))) }}</span>
                                                                 </div>
@@ -1588,7 +1686,10 @@
                                 <div class="bank-select-wrap" id="bankSelectWrap2">
                                     <div class="bank-select-trigger" id="bankTrigger2" onclick="toggleBankDropdown2()">
                                         <div class="bank-select-display" id="bankDisplay2">
-                                            @if($savedBank)
+                                            @if($savedBank && isset($bankLogos[$savedBank]))
+                                                <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon" alt="{{ $savedBank }}">
+                                                <span>{{ $savedBank }}</span>
+                                            @elseif($savedBank)
                                                 <span>{{ $savedBank }}</span>
                                             @else
                                                 <span style="color:#94a3b8">Pilih Bank atau E-Wallet</span>
@@ -1613,7 +1714,10 @@
                                                     <div class="bank-option2 bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}"
                                                         data-value="{{ $bankItem }}" data-group="{{ $groupName }}"
                                                         onclick="selectBank2('{{ $bankItem }}')">
-                                                        {{ $bankItem }}
+                                                        @if(isset($bankLogos[$bankItem]))
+                                                            <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}" class="bank-logo-icon" alt="{{ $bankItem }}">
+                                                        @endif
+                                                        <span>{{ $bankItem }}</span>
                                                         <span
                                                             class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank BUMN' ? 'BUMN' : ($groupName === 'Bank Swasta Nasional' ? 'SWASTA' : 'BPD'))) }}</span>
                                                     </div>
@@ -1868,6 +1972,7 @@
         }
 
         // ── Bank Dropdown (Form 1) ──
+        const bankLogos = @json($bankLogos);
         let selectedBank = '{{ $savedBank }}';
 
         function toggleBankDropdown() {
@@ -1887,7 +1992,9 @@
         function selectBank(val, group) {
             selectedBank = val;
             document.getElementById('bankHidden').value = val;
-            document.getElementById('bankDisplay').innerHTML = '<span>' + val + '</span>';
+            const logoFile = bankLogos[val];
+            const logoHtml = logoFile ? `<img src="{{ asset('images/banks') }}/${logoFile}" class="bank-logo-icon" alt="${val}"> ` : '';
+            document.getElementById('bankDisplay').innerHTML = logoHtml + '<span>' + val + '</span>';
             document.querySelectorAll('#bankList .bank-option').forEach(el => {
                 el.classList.toggle('selected', el.dataset.value === val);
             });
@@ -1928,7 +2035,9 @@
 
         function selectBank2(val) {
             document.getElementById('bankHidden2').value = val;
-            document.getElementById('bankDisplay2').innerHTML = '<span>' + val + '</span>';
+            const logoFile = bankLogos[val];
+            const logoHtml = logoFile ? `<img src="{{ asset('images/banks') }}/${logoFile}" class="bank-logo-icon" alt="${val}"> ` : '';
+            document.getElementById('bankDisplay2').innerHTML = logoHtml + '<span>' + val + '</span>';
             document.querySelectorAll('#bankList2 .bank-option2').forEach(el => {
                 el.classList.toggle('selected', el.dataset.value === val);
             });
