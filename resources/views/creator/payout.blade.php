@@ -4,11 +4,10 @@
 
 @section('styles')
     <style>
-
         /* ════════════════════════════════════════
-           Mobile Header – Rekening & Penarikan
-           100% SAMA PERSIS dengan Kelola Produk
-        ════════════════════════════════════════ */
+                   Mobile Header – Rekening & Penarikan
+                   100% SAMA PERSIS dengan Kelola Produk
+                ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
@@ -32,7 +31,7 @@
                 align-items: center;
                 justify-content: center;
                 color: #0f172a;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
                 cursor: pointer;
                 text-decoration: none;
                 transition: all 0.2s ease;
@@ -1039,86 +1038,88 @@
         }
 
         @if(request('from') === 'pos')
-        /* ── Tampilan POS Match Header & Safe Area iOS ── */
-        .cr-topbar-header-row {
-            display: none !important;
-        }
+            /* ── Tampilan POS Match Header & Safe Area iOS ── */
+            .cr-topbar-header-row {
+                display: none !important;
+            }
 
-        .cr-sidebar {
-            display: none !important;
-        }
+            .cr-sidebar {
+                display: none !important;
+            }
 
-        .cr-main-wrapper {
-            margin-left: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-        }
+            .cr-main-wrapper {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
 
-        .cr-main-canvas {
-            padding-top: max(0.75rem, calc(0.65rem + env(safe-area-inset-top, 0px))) !important;
-            padding-bottom: max(120px, calc(100px + env(safe-area-inset-bottom, 0px))) !important;
-            max-width: 980px !important;
-            margin: 0 auto !important;
-        }
+            .cr-main-canvas {
+                padding-top: max(0.75rem, calc(0.65rem + env(safe-area-inset-top, 0px))) !important;
+                padding-bottom: max(120px, calc(100px + env(safe-area-inset-bottom, 0px))) !important;
+                max-width: 980px !important;
+                margin: 0 auto !important;
+            }
 
-        .payout-pos-header-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-            padding-top: 0 !important;
-        }
+            .payout-pos-header-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 1.25rem;
+                padding-top: 0 !important;
+            }
 
-        .payout-pos-header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            min-width: 0;
-        }
+            .payout-pos-header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                min-width: 0;
+            }
 
-        .pos-header-page-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin: 0;
-            line-height: 1.2;
-        }
+            .pos-header-page-title {
+                font-size: 1.15rem;
+                font-weight: 700;
+                color: #0f172a;
+                margin: 0;
+                line-height: 1.2;
+            }
 
-        .pos-header-page-sub {
-            font-size: 0.72rem;
-            color: #64748b;
-            margin-top: 2px;
-        }
+            .pos-header-page-sub {
+                font-size: 0.72rem;
+                color: #64748b;
+                margin-top: 2px;
+            }
 
-        .pos-header-icon-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #334155;
-            text-decoration: none;
-            transition: all 0.18s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-            flex-shrink: 0;
-            cursor: pointer;
-        }
+            .pos-header-icon-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #334155;
+                text-decoration: none;
+                transition: all 0.18s ease;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+                flex-shrink: 0;
+                cursor: pointer;
+            }
 
-        .pos-header-icon-btn:hover {
-            background: #f1f5f9;
-            color: #0f172a;
-        }
-        @endif
+            .pos-header-icon-btn:hover {
+                background: #f1f5f9;
+                color: #0f172a;
+            }
 
-        @media (max-width: 768px) {
+        @endif @media (max-width: 768px) {
             .cr-main-canvas {
                 padding-left: 0.85rem !important;
                 padding-right: 0.85rem !important;
             }
-            .bio-layout, .bio-content, .card-section {
+
+            .bio-layout,
+            .bio-content,
+            .card-section {
                 padding-bottom: max(95px, calc(80px + env(safe-area-inset-bottom, 0px))) !important;
             }
         }
@@ -1141,13 +1142,13 @@
         <div style="width: 38px;"></div>
     </div>
     <script>
-    function handlePayoutMobileBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = "{{ route('creator.app.index') }}";
+        function handlePayoutMobileBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "{{ route('creator.app.index') }}";
+            }
         }
-    }
     </script>
 
     @php
@@ -1224,65 +1225,65 @@
         ];
 
         $bankLogos = [
-            'GoPay'                       => 'gopay.webp',
-            'ShopeePay'                   => 'shopeepay.webp',
-            'DANA'                        => 'dana.webp',
-            'OVO'                         => 'ovo.webp',
-            'LinkAja'                     => 'linkaja.webp',
-            'Bank Jago'                   => 'bank-jago.webp',
-            'Bank Jago Syariah'           => 'bank-jago-syariah.webp',
-            'SMBC Indonesia (Jenius)'     => 'smbc-indonesia-jenius.webp',
-            'SeaBank'                     => 'seabank.webp',
-            'blu by BCA Digital'          => 'blu-by-bca-digital.webp',
-            'Allo Bank'                   => 'allo-bank.webp',
-            'Bank Neo Commerce (BNC)'     => 'bank-neo-commerce-bnc.webp',
-            'Bank Aladin Syariah'         => 'bank-aladin-syariah.webp',
-            'Superbank'                   => 'superbank.webp',
-            'Krom Bank'                   => 'krom-bank.webp',
-            'MNC Bank'                    => 'mnc-bank.webp',
-            'Bank Amar'                   => 'bank-amar.webp',
-            'Bank Saqu'                   => 'bank-saqu.webp',
-            'BRI'                         => 'bri.webp',
-            'BNI'                         => 'bni.webp',
-            'Mandiri'                     => 'mandiri.webp',
-            'BTN'                         => 'btn.webp',
-            'BSI (Bank Syariah Indonesia)'=> 'bsi-bank-syariah-indonesia.webp',
-            'BCA'                         => 'bca.webp',
-            'BCA Syariah'                 => 'bca-syariah.webp',
-            'CIMB Niaga'                  => 'cimb-niaga.webp',
-            'CIMB Niaga Syariah'          => 'cimb-niaga-syariah.webp',
-            'Danamon'                     => 'danamon.svg',
-            'Danamon Syariah'             => 'danamon-syariah.webp',
-            'Permata'                     => 'permata.webp',
-            'Permata Syariah'             => 'permata-syariah.webp',
-            'OCBC'                        => 'ocbc.webp',
-            'OCBC Syariah'                => 'ocbc-syariah.webp',
-            'Maybank'                     => 'maybank.webp',
-            'Maybank Syariah'             => 'maybank-syariah.webp',
-            'ANZ Panin'                   => 'anz-panin.webp',
-            'Panin Bank'                  => 'panin-bank.webp',
-            'UOB Indonesia'               => 'uob-indonesia.webp',
-            'Bank Mega'                   => 'bank-mega.webp',
-            'Bank Mega Syariah'           => 'bank-mega-syariah.webp',
-            'BTPN Syariah'                => 'btpn-syariah.webp',
-            'KB Bank (Bukopin)'           => 'kb-bank-bukopin.webp',
-            'Sinarmas'                    => 'sinarmas.webp',
-            'Mayapada International'      => 'mayapada-international.webp',
-            'Muamalat Indonesia'          => 'muamalat-indonesia.webp',
+            'GoPay' => 'gopay.webp',
+            'ShopeePay' => 'shopeepay.webp',
+            'DANA' => 'dana.webp',
+            'OVO' => 'ovo.webp',
+            'LinkAja' => 'linkaja.webp',
+            'Bank Jago' => 'bank-jago.webp',
+            'Bank Jago Syariah' => 'bank-jago-syariah.webp',
+            'SMBC Indonesia (Jenius)' => 'smbc-indonesia-jenius.webp',
+            'SeaBank' => 'seabank.webp',
+            'blu by BCA Digital' => 'blu-by-bca-digital.webp',
+            'Allo Bank' => 'allo-bank.webp',
+            'Bank Neo Commerce (BNC)' => 'bank-neo-commerce-bnc.webp',
+            'Bank Aladin Syariah' => 'bank-aladin-syariah.webp',
+            'Superbank' => 'superbank.webp',
+            'Krom Bank' => 'krom-bank.webp',
+            'MNC Bank' => 'mnc-bank.webp',
+            'Bank Amar' => 'bank-amar.webp',
+            'Bank Saqu' => 'bank-saqu.webp',
+            'BRI' => 'bri.webp',
+            'BNI' => 'bni.webp',
+            'Mandiri' => 'mandiri.webp',
+            'BTN' => 'btn.webp',
+            'BSI (Bank Syariah Indonesia)' => 'bsi-bank-syariah-indonesia.webp',
+            'BCA' => 'bca.webp',
+            'BCA Syariah' => 'bca-syariah.webp',
+            'CIMB Niaga' => 'cimb-niaga.webp',
+            'CIMB Niaga Syariah' => 'cimb-niaga-syariah.webp',
+            'Danamon' => 'danamon.svg',
+            'Danamon Syariah' => 'danamon-syariah.webp',
+            'Permata' => 'permata.webp',
+            'Permata Syariah' => 'permata-syariah.webp',
+            'OCBC' => 'ocbc.webp',
+            'OCBC Syariah' => 'ocbc-syariah.webp',
+            'Maybank' => 'maybank.webp',
+            'Maybank Syariah' => 'maybank-syariah.webp',
+            'ANZ Panin' => 'anz-panin.webp',
+            'Panin Bank' => 'panin-bank.webp',
+            'UOB Indonesia' => 'uob-indonesia.webp',
+            'Bank Mega' => 'bank-mega.webp',
+            'Bank Mega Syariah' => 'bank-mega-syariah.webp',
+            'BTPN Syariah' => 'btpn-syariah.webp',
+            'KB Bank (Bukopin)' => 'kb-bank-bukopin.webp',
+            'Sinarmas' => 'sinarmas.webp',
+            'Mayapada International' => 'mayapada-international.webp',
+            'Muamalat Indonesia' => 'muamalat-indonesia.webp',
             'BJB (Jawa Barat dan Banten)' => 'bjb-jawa-barat-dan-banten.webp',
-            'Bank BJB Syariah'            => 'bank-bjb-syariah.webp',
-            'Bank Jatim'                  => 'bank-jatim.webp',
-            'Bank Jatim Syariah'          => 'bank-jatim-syariah.webp',
-            'Bank Jateng'                 => 'bank-jateng.webp',
-            'Bank Jateng Syariah'         => 'bank-jateng-syariah.webp',
-            'BPD Bali'                    => 'bpd-bali.webp',
-            'Bank Sumut'                  => 'bank-sumut.webp',
-            'Bank Sumut Syariah'          => 'bank-sumut-syariah.webp',
-            'Bank Nagari'                 => 'bank-nagari.svg',
-            'Bank Nagari Syariah'         => 'bank-nagari-syariah.webp',
-            'Bankaltimtara'               => 'bankaltimtara.webp',
-            'Bankaltimtara Syariah'       => 'bankaltimtara-syariah.webp',
-            'Bank Papua'                  => 'bank-papua.webp',
+            'Bank BJB Syariah' => 'bank-bjb-syariah.webp',
+            'Bank Jatim' => 'bank-jatim.webp',
+            'Bank Jatim Syariah' => 'bank-jatim-syariah.webp',
+            'Bank Jateng' => 'bank-jateng.webp',
+            'Bank Jateng Syariah' => 'bank-jateng-syariah.webp',
+            'BPD Bali' => 'bpd-bali.webp',
+            'Bank Sumut' => 'bank-sumut.webp',
+            'Bank Sumut Syariah' => 'bank-sumut-syariah.webp',
+            'Bank Nagari' => 'bank-nagari.svg',
+            'Bank Nagari Syariah' => 'bank-nagari-syariah.webp',
+            'Bankaltimtara' => 'bankaltimtara.webp',
+            'Bankaltimtara Syariah' => 'bankaltimtara-syariah.webp',
+            'Bank Papua' => 'bank-papua.webp',
         ];
         $bankTypeColors = [
             'E-Wallet' => ['bg' => '#EFF6FF', 'color' => '#1D4ED8'],
@@ -1362,15 +1363,18 @@
             </div>
 
             <div class="sidebar-info-card">
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;font-size:0.75rem;font-weight:800;color:#16a34a;margin-bottom:0.35rem;">
+                <div
+                    style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;font-size:0.75rem;font-weight:800;color:#16a34a;margin-bottom:0.35rem;">
                     <span style="display:inline-flex;align-items:center;gap:0.35rem;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                         Biaya Admin
                     </span>
-                    <span style="background: {{ ($freePayoutSlots ?? 0) > 0 ? '#dcfce7' : '#f1f5f9' }}; color: {{ ($freePayoutSlots ?? 0) > 0 ? '#15803d' : '#64748b' }}; border: 1px solid {{ ($freePayoutSlots ?? 0) > 0 ? '#86efac' : '#cbd5e1' }}; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 999px;">
-                        {{ $freePayoutSlots ?? 0 }}x Bebas Admin
+                    <span
+                        style="background: {{ ($freePayoutSlots ?? 0) > 0 ? '#dcfce7' : '#f1f5f9' }}; color: {{ ($freePayoutSlots ?? 0) > 0 ? '#15803d' : '#64748b' }}; border: 1px solid {{ ($freePayoutSlots ?? 0) > 0 ? '#86efac' : '#cbd5e1' }}; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 999px;">
+                        {{ $freePayoutSlots ?? 0 }}x
                     </span>
                 </div>
                 <div style="font-size:0.7rem;color:#64748b;line-height:1.4;">
@@ -1405,22 +1409,30 @@
                     </div>
                     <div class="form-body">
                         {{-- Syarat Ringkas --}}
-                        <div style="background: {{ ($freePayoutSlots ?? 0) > 0 ? '#f0fdf4' : '#f8fafc' }}; border: 1px solid {{ ($freePayoutSlots ?? 0) > 0 ? '#bbf7d0' : '#e2e8f0' }}; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; justify-content:space-between; gap:0.5rem; flex-wrap:wrap;">
+                        <div
+                            style="background: {{ ($freePayoutSlots ?? 0) > 0 ? '#f0fdf4' : '#f8fafc' }}; border: 1px solid {{ ($freePayoutSlots ?? 0) > 0 ? '#bbf7d0' : '#e2e8f0' }}; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; justify-content:space-between; gap:0.5rem; flex-wrap:wrap;">
                             <div style="display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="15" height="15" fill="none" stroke="{{ ($freePayoutSlots ?? 0) > 0 ? '#16a34a' : '#64748b' }}" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <svg width="15" height="15" fill="none"
+                                    stroke="{{ ($freePayoutSlots ?? 0) > 0 ? '#16a34a' : '#64748b' }}" stroke-width="2.5"
+                                    viewBox="0 0 24 24" style="flex-shrink:0;">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                 </svg>
-                                <div style="font-size:0.75rem; color: {{ ($freePayoutSlots ?? 0) > 0 ? '#166534' : '#334155' }}; line-height:1.35;">
-                                    Min. penarikan <strong>Rp 50.000</strong> &bull; Biaya Admin: <strong>{{ ($freePayoutSlots ?? 0) > 0 ? 'Gratis (Rp 0)' : 'Rp 5.000' }}</strong> &bull; Proses 1-3 hari kerja
+                                <div
+                                    style="font-size:0.75rem; color: {{ ($freePayoutSlots ?? 0) > 0 ? '#166534' : '#334155' }}; line-height:1.35;">
+                                    Min. penarikan <strong>Rp 50.000</strong> &bull; Biaya Admin:
+                                    <strong>{{ ($freePayoutSlots ?? 0) > 0 ? 'Gratis (Rp 0)' : 'Rp 5.000' }}</strong> &bull;
+                                    Proses 1-3 hari kerja
                                 </div>
                             </div>
-                            <span style="font-size:0.68rem; font-weight:800; background:{{ ($freePayoutSlots ?? 0) > 0 ? '#16a34a' : '#64748b' }}; color:#fff; padding:2px 8px; border-radius:999px;">
+                            <span
+                                style="font-size:0.68rem; font-weight:800; background:{{ ($freePayoutSlots ?? 0) > 0 ? '#16a34a' : '#64748b' }}; color:#fff; padding:2px 8px; border-radius:999px;">
                                 Sisa Kuota Gratis: {{ $freePayoutSlots ?? 0 }}x
                             </span>
                         </div>
 
                         {{-- Saldo Breakdown Ringkas --}}
-                        <div class="breakdown-box" style="margin-bottom:0.85rem; padding:0.75rem 0.9rem; border-radius:12px;">
+                        <div class="breakdown-box"
+                            style="margin-bottom:0.85rem; padding:0.75rem 0.9rem; border-radius:12px;">
                             <div class="breakdown-row">
                                 <span class="breakdown-key">Total Penjualan (GMV)</span>
                                 <span class="breakdown-val">Rp {{ number_format($gmv, 0, ',', '.') }}</span>
@@ -1429,9 +1441,12 @@
                                 <span class="breakdown-key">Sudah Dicairkan</span>
                                 <span class="breakdown-val muted">Rp {{ number_format($totalPayout, 0, ',', '.') }}</span>
                             </div>
-                            <div class="breakdown-row" style="font-size:0.88rem; padding-top:0.4rem; border-top:1px dashed #e2e8f0; margin-top:0.35rem;">
-                                <span class="breakdown-key" style="font-weight:800; color:#0f172a;">Saldo Siap Ditarik</span>
-                                <span class="breakdown-val green" style="font-weight:800; color:#16a34a;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</span>
+                            <div class="breakdown-row"
+                                style="font-size:0.88rem; padding-top:0.4rem; border-top:1px dashed #e2e8f0; margin-top:0.35rem;">
+                                <span class="breakdown-key" style="font-weight:800; color:#0f172a;">Saldo Siap
+                                    Ditarik</span>
+                                <span class="breakdown-val green" style="font-weight:800; color:#16a34a;">Rp
+                                    {{ number_format($availableBalance, 0, ',', '.') }}</span>
                             </div>
                         </div>
 
@@ -1445,7 +1460,9 @@
                                     <div class="rekening-saved" style="background:#f0fdf4;border:1.5px solid #86efac;">
                                         <div class="rekening-info">
                                             @if($savedBank && isset($bankLogos[$savedBank]))
-                                                <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon" style="width:36px;height:36px;border-radius:8px;padding:3px;" alt="{{ $savedBank }}">
+                                                <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon"
+                                                    style="width:36px;height:36px;border-radius:8px;padding:3px;"
+                                                    alt="{{ $savedBank }}">
                                             @else
                                                 <div class="rekening-icon" style="background:#16a34a;">
                                                     <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2"
@@ -1463,9 +1480,11 @@
                                                         style="background:#dcfce7;color:#15803d;font-size:0.6rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:4px;">TERDAFTAR</span>
                                                 </div>
                                                 <div class="rekening-num" style="color:#0f172a;font-weight:700;font-size:0.85rem;">
-                                                    {{ $savedNum }}</div>
+                                                    {{ $savedNum }}
+                                                </div>
                                                 <div class="rekening-name">Atas Nama:
-                                                    <strong>{{ $savedName ?: $seller->name }}</strong></div>
+                                                    <strong>{{ $savedName ?: $seller->name }}</strong>
+                                                </div>
                                             </div>
                                         </div>
                                         <button type="button" class="btn-ganti" onclick="gantiRekening()" id="btnGantiRek">
@@ -1479,28 +1498,42 @@
                                     </div>
                                 </div>
                             @else
-                                                                    <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:0.5rem 0.75rem; font-size:0.74rem; font-weight:600; color:#92400e; margin-bottom:1rem; display:flex; align-items:center; gap:0.45rem;">
+                                <div
+                                    style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:0.5rem 0.75rem; font-size:0.74rem; font-weight:600; color:#92400e; margin-bottom:1rem; display:flex; align-items:center; gap:0.45rem;">
                                     <span>⚠️</span>
                                     <span>Belum ada rekening. Isi di bawah — otomatis tersimpan.</span>
                                 </div>
                             @endif
 
                             @if(auth()->user()->transfer_cooldown_until && now()->lt(\Carbon\Carbon::parse(auth()->user()->transfer_cooldown_until)))
-                                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:0.75rem 1rem; font-size:0.76rem; font-weight:600; color:#1e40af; margin-bottom:1rem; display:flex; align-items:flex-start; gap:0.5rem; line-height:1.45;">
-                                    <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                <div
+                                    style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:0.75rem 1rem; font-size:0.76rem; font-weight:600; color:#1e40af; margin-bottom:1rem; display:flex; align-items:flex-start; gap:0.5rem; line-height:1.45;">
+                                    <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"
+                                        style="flex-shrink:0; margin-top:1px;">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    </svg>
                                     <div>
                                         <strong>Masa Pendinginan Keamanan Aktif</strong><br>
-                                        Akun dalam perlindungan keamanan hingga {{ \Carbon\Carbon::parse(auth()->user()->transfer_cooldown_until)->isoFormat('D MMMM Y, HH:mm') }} WIB. Penarikan dana dibekukan sementara.
+                                        Akun dalam perlindungan keamanan hingga
+                                        {{ \Carbon\Carbon::parse(auth()->user()->transfer_cooldown_until)->isoFormat('D MMMM Y, HH:mm') }}
+                                        WIB. Penarikan dana dibekukan sementara.
                                     </div>
                                 </div>
                             @endif
 
                             @if(auth()->user()->pin_locked_until && now()->lt(\Carbon\Carbon::parse(auth()->user()->pin_locked_until)))
-                                <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:0.75rem 1rem; font-size:0.76rem; font-weight:600; color:#991b1b; margin-bottom:1rem; display:flex; align-items:flex-start; gap:0.5rem; line-height:1.45;">
-                                    <svg width="18" height="18" fill="none" stroke="#dc2626" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <div
+                                    style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:0.75rem 1rem; font-size:0.76rem; font-weight:600; color:#991b1b; margin-bottom:1rem; display:flex; align-items:flex-start; gap:0.5rem; line-height:1.45;">
+                                    <svg width="18" height="18" fill="none" stroke="#dc2626" stroke-width="2" viewBox="0 0 24 24"
+                                        style="flex-shrink:0; margin-top:1px;">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
                                     <div>
                                         <strong>Akses Transaksi Terkunci</strong><br>
-                                        PIN salah 3x berturut-turut. Akses penarikan dikunci selama {{ now()->diffInMinutes(\Carbon\Carbon::parse(auth()->user()->pin_locked_until)) + 1 }} menit ke depan.
+                                        PIN salah 3x berturut-turut. Akses penarikan dikunci selama
+                                        {{ now()->diffInMinutes(\Carbon\Carbon::parse(auth()->user()->pin_locked_until)) + 1 }}
+                                        menit ke depan.
                                     </div>
                                 </div>
                             @endif
@@ -1514,10 +1547,12 @@
                                         style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;padding:1.1rem;margin-bottom:1.25rem;">
                                         <div
                                             style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                                            <span style="font-size:0.78rem;font-weight:700;color:#0f172a;">Rekening Penarikan</span>
+                                            <span style="font-size:0.78rem;font-weight:700;color:#0f172a;">Rekening
+                                                Penarikan</span>
                                             @if($hasSaved)
                                                 <button type="button" onclick="batalGantiRekening()"
-                                                    style="border:none;background:transparent;color:#dc2626;font-size:0.72rem;font-weight:700;cursor:pointer;">← Pakai Rekening Tersimpan</button>
+                                                    style="border:none;background:transparent;color:#dc2626;font-size:0.72rem;font-weight:700;cursor:pointer;">←
+                                                    Pakai Rekening Tersimpan</button>
                                             @endif
                                         </div>
                                         <div class="form-group">
@@ -1528,7 +1563,8 @@
                                                     onclick="toggleBankDropdown()">
                                                     <div class="bank-select-display" id="bankDisplay">
                                                         @if($savedBank && isset($bankLogos[$savedBank]))
-                                                            <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon" alt="{{ $savedBank }}">
+                                                            <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}"
+                                                                class="bank-logo-icon" alt="{{ $savedBank }}">
                                                             <span>{{ $savedBank }}</span>
                                                         @elseif($savedBank)
                                                             <span>{{ $savedBank }}</span>
@@ -1550,13 +1586,15 @@
                                                     <div class="bank-list-scroll" id="bankList">
                                                         @foreach($banks as $groupName => $groupBanks)
                                                             <div class="bank-group-label bank-group" data-group="{{ $groupName }}">
-                                                                {{ $groupName }}</div>
+                                                                {{ $groupName }}
+                                                            </div>
                                                             @foreach($groupBanks as $bankItem)
                                                                 <div class="bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}"
                                                                     data-value="{{ $bankItem }}" data-group="{{ $groupName }}"
                                                                     onclick="selectBank('{{ $bankItem }}', '{{ $groupName }}')">
                                                                     @if(isset($bankLogos[$bankItem]))
-                                                                        <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}" class="bank-logo-icon" alt="{{ $bankItem }}">
+                                                                        <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}"
+                                                                            class="bank-logo-icon" alt="{{ $bankItem }}">
                                                                     @endif
                                                                     <span>{{ $bankItem }}</span>
                                                                     <span
@@ -1611,12 +1649,14 @@
                                     </div>
                                     <div class="breakdown-row">
                                         <span class="breakdown-key">Biaya Pencairan</span>
-                                        <span class="breakdown-val" id="bdFee" style="color: {{ ($freePayoutSlots ?? 0) > 0 ? '#1eb349' : '#e11d48' }}; font-weight:700;">
+                                        <span class="breakdown-val" id="bdFee"
+                                            style="color: {{ ($freePayoutSlots ?? 0) > 0 ? '#1eb349' : '#e11d48' }}; font-weight:700;">
                                             {{ ($freePayoutSlots ?? 0) > 0 ? 'Gratis (Rp 0 - Slot Bebas Admin)' : 'Rp 5.000 (Biaya Admin)' }}
                                         </span>
                                     </div>
                                     <div class="breakdown-row">
-                                        <span class="breakdown-key" style="font-weight:800;color:#0f172a" id="bdNetLabel">Dana Bersih Diterima</span>
+                                        <span class="breakdown-key" style="font-weight:800;color:#0f172a" id="bdNetLabel">Dana
+                                            Bersih Diterima</span>
                                         <span class="breakdown-val green" id="bdNet">Rp 0</span>
                                     </div>
                                     <div class="breakdown-row">
@@ -1630,8 +1670,7 @@
                                         || (auth()->user()->pin_locked_until && now()->lt(\Carbon\Carbon::parse(auth()->user()->pin_locked_until)));
                                 @endphp
 
-                                <button type="submit" class="btn-submit-payout" id="btnSubmit"
-                                    {{ $isBlockedBySecurity ? 'disabled style=opacity:0.5;cursor:not-allowed;' : '' }}
+                                <button type="submit" class="btn-submit-payout" id="btnSubmit" {{ $isBlockedBySecurity ? 'disabled style=opacity:0.5;cursor:not-allowed;' : '' }}
                                     onclick="return confirm('Konfirmasi pengajuan penarikan dana?')">
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
@@ -1644,14 +1683,17 @@
 
                         @else
                             <div style="text-align:center; padding:1.5rem 1rem; color:#94a3b8;">
-                                <div style="width:44px; height:44px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; margin:0 auto 0.65rem; color:#94a3b8;">
-                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <div
+                                    style="width:44px; height:44px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; margin:0 auto 0.65rem; color:#94a3b8;">
+                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"
+                                        viewBox="0 0 24 24">
                                         <rect x="2" y="6" width="20" height="12" rx="2" />
                                         <circle cx="16" cy="12" r="2" />
                                         <path d="M6 12h.01" />
                                     </svg>
                                 </div>
-                                <h4 style="font-size:0.9rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">Saldo Belum Mencapai Batas Minimal</h4>
+                                <h4 style="font-size:0.9rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">Saldo Belum
+                                    Mencapai Batas Minimal</h4>
                                 <p style="font-size:0.76rem; color:#64748b; margin:0 0 0.5rem 0;">
                                     Minimal penarikan dana Rp 50.000.
                                 </p>
@@ -1673,7 +1715,8 @@
                     </div>
                     <div class="form-body">
                         @if($hasSaved)
-                            <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; border-radius:10px; padding:0.5rem 0.75rem; font-size:0.74rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.45rem;">
+                            <div
+                                style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; border-radius:10px; padding:0.5rem 0.75rem; font-size:0.74rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:0.45rem;">
                                 <span style="font-weight:800; color:#15803d;">✓</span>
                                 <span>Rekening terdaftar aktif untuk tujuan pencairan dana.</span>
                             </div>
@@ -1687,7 +1730,8 @@
                                     <div class="bank-select-trigger" id="bankTrigger2" onclick="toggleBankDropdown2()">
                                         <div class="bank-select-display" id="bankDisplay2">
                                             @if($savedBank && isset($bankLogos[$savedBank]))
-                                                <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon" alt="{{ $savedBank }}">
+                                                <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}"
+                                                    class="bank-logo-icon" alt="{{ $savedBank }}">
                                                 <span>{{ $savedBank }}</span>
                                             @elseif($savedBank)
                                                 <span>{{ $savedBank }}</span>
@@ -1709,13 +1753,15 @@
                                         <div class="bank-list-scroll" id="bankList2">
                                             @foreach($banks as $groupName => $groupBanks)
                                                 <div class="bank-group-label bank-group2" data-group="{{ $groupName }}">
-                                                    {{ $groupName }}</div>
+                                                    {{ $groupName }}
+                                                </div>
                                                 @foreach($groupBanks as $bankItem)
                                                     <div class="bank-option2 bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}"
                                                         data-value="{{ $bankItem }}" data-group="{{ $groupName }}"
                                                         onclick="selectBank2('{{ $bankItem }}')">
                                                         @if(isset($bankLogos[$bankItem]))
-                                                            <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}" class="bank-logo-icon" alt="{{ $bankItem }}">
+                                                            <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}"
+                                                                class="bank-logo-icon" alt="{{ $bankItem }}">
                                                         @endif
                                                         <span>{{ $bankItem }}</span>
                                                         <span
@@ -1786,22 +1832,34 @@
                                         @foreach($requests as $req)
                                             <tr>
                                                 <td style="white-space:nowrap;font-size:0.78rem;color:#64748b">
-                                                    {{ $req->created_at->format('d M Y') }}</td>
+                                                    {{ $req->created_at->format('d M Y') }}
+                                                </td>
                                                 <td style="font-size:0.8rem;font-weight:600;">
                                                     @if(str_contains($req->bank_name, 'Deposit Kasir POS'))
-                                                        <span style="color:#047857; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
-                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                                                        <span
+                                                            style="color:#047857; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
+                                                            <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                                stroke-width="2.5" viewBox="0 0 24 24">
+                                                                <polyline points="17 1 21 5 17 9" />
+                                                                <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                                                                <polyline points="7 23 3 19 7 15" />
+                                                                <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                                                            </svg>
                                                             Deposit Kasir POS
                                                         </span>
-                                                        <br><span style="font-size:0.7rem;color:#059669;font-weight:600;">Transfer Internal</span>
+                                                        <br><span style="font-size:0.7rem;color:#059669;font-weight:600;">Transfer
+                                                            Internal</span>
                                                     @else
-                                                        {{ $req->bank_name }}<br><span style="font-size:0.72rem;color:#94a3b8">{{ $req->bank_account_number }}</span>
+                                                        {{ $req->bank_name }}<br><span
+                                                            style="font-size:0.72rem;color:#94a3b8">{{ $req->bank_account_number }}</span>
                                                     @endif
                                                 </td>
                                                 <td style="font-weight:700;white-space:nowrap">Rp
-                                                    {{ number_format($req->amount, 0, ',', '.') }}</td>
+                                                    {{ number_format($req->amount, 0, ',', '.') }}
+                                                </td>
                                                 <td style="font-weight:800;color:#1eb349;white-space:nowrap">Rp
-                                                    {{ number_format($req->net_amount, 0, ',', '.') }}</td>
+                                                    {{ number_format($req->net_amount, 0, ',', '.') }}
+                                                </td>
                                                 <td>
                                                     @php
                                                         $styles = [
@@ -1822,7 +1880,8 @@
                                                     @if($req->admin_notes && $req->status === 'rejected')
                                                         <div
                                                             style="font-size:0.67rem;color:#94a3b8;margin-top:0.25rem;max-width:130px;line-height:1.3;">
-                                                            {{ $req->admin_notes }}</div>
+                                                            {{ $req->admin_notes }}
+                                                        </div>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -1834,10 +1893,12 @@
                             </div>
                         @else
                             <div style="text-align:center;padding:3rem 1.5rem;color:#94A3B8;">
-                                <div style="width:52px; height:52px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; margin:0 auto 0.85rem; color:#94a3b8; font-size:1.5rem;">
+                                <div
+                                    style="width:52px; height:52px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; margin:0 auto 0.85rem; color:#94a3b8; font-size:1.5rem;">
                                     <i class="ph ph-receipt"></i>
                                 </div>
-                                <div style="font-size:0.92rem; font-weight:700; color:#0f172a; margin-bottom:0.25rem;">Belum Ada Riwayat Pencairan</div>
+                                <div style="font-size:0.92rem; font-weight:700; color:#0f172a; margin-bottom:0.25rem;">Belum Ada
+                                    Riwayat Pencairan</div>
                                 <p style="font-size:0.76rem; color:#64748b; margin:0 auto; max-width:280px; line-height:1.45;">
                                     Semua riwayat pengajuan penarikan dana ke rekening Anda akan ditampilkan di sini.
                                 </p>
@@ -1892,7 +1953,7 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('buyle_hide_balance') === '1') {
                 applyBalanceVisibility(true);
             }
@@ -2112,51 +2173,76 @@
     </script>
 
     {{-- MODAL TRANSFER SALDO TOKO KE DEPOSIT POS --}}
-    <div id="transferPosModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(5px); z-index:99999; align-items:center; justify-content:center; padding:1rem;">
-        <div style="background:#fff; border-radius:20px; width:100%; max-width:460px; box-shadow:0 20px 50px rgba(0,0,0,0.25); overflow:hidden; border:1px solid #e2e8f0;">
-            <div style="padding:1.25rem 1.5rem; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between; background:#fafbfa;">
+    <div id="transferPosModal"
+        style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(5px); z-index:99999; align-items:center; justify-content:center; padding:1rem;">
+        <div
+            style="background:#fff; border-radius:20px; width:100%; max-width:460px; box-shadow:0 20px 50px rgba(0,0,0,0.25); overflow:hidden; border:1px solid #e2e8f0;">
+            <div
+                style="padding:1.25rem 1.5rem; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between; background:#fafbfa;">
                 <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="width:32px; height:32px; border-radius:8px; background:#d1fae5; color:#047857; display:flex; align-items:center; justify-content:center;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <div
+                        style="width:32px; height:32px; border-radius:8px; background:#d1fae5; color:#047857; display:flex; align-items:center; justify-content:center;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <polyline points="17 1 21 5 17 9" />
                             <path d="M3 11V9a4 4 0 0 1 4-4h14" />
                             <polyline points="7 23 3 19 7 15" />
                             <path d="M21 13v2a4 4 0 0 1-4 4H3" />
                         </svg>
                     </div>
-                    <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Pindah ke Deposit Kasir (POS)</h4>
+                    <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Pindah ke Deposit Kasir (POS)
+                    </h4>
                 </div>
-                <button type="button" onclick="closeTransferPosModal()" style="border:none; background:none; font-size:1.4rem; color:#94a3b8; cursor:pointer; line-height:1;">&times;</button>
+                <button type="button" onclick="closeTransferPosModal()"
+                    style="border:none; background:none; font-size:1.4rem; color:#94a3b8; cursor:pointer; line-height:1;">&times;</button>
             </div>
-            
-            <form action="{{ route('creator.payout.to_pos_deposit') }}" method="POST" id="formTransferPos" style="margin:0;">
+
+            <form action="{{ route('creator.payout.to_pos_deposit') }}" method="POST" id="formTransferPos"
+                style="margin:0;">
                 @csrf
                 <div style="padding:1.5rem;">
                     <!-- Perbandingan Saldo -->
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
-                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
-                            <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo Siap Ditarik</div>
-                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-top:2px;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
-                            <div style="font-size:0.65rem; color:#16a34a; font-weight:600; margin-top:1px;">Sumber dana</div>
+                        <div
+                            style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
+                            <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo
+                                Siap Ditarik</div>
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-top:2px;">Rp
+                                {{ number_format($availableBalance, 0, ',', '.') }}
+                            </div>
+                            <div style="font-size:0.65rem; color:#16a34a; font-weight:600; margin-top:1px;">Sumber dana
+                            </div>
                         </div>
-                        <div style="background:#f0fdf4; border:1px solid #a7f3d0; border-radius:12px; padding:0.75rem 1rem;">
-                            <div style="font-size:0.68rem; color:#047857; font-weight:700; text-transform:uppercase;">Deposit Kasir POS</div>
-                            <div style="font-size:1.05rem; font-weight:800; color:#064e3b; margin-top:2px;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</div>
-                            <div style="font-size:0.65rem; color:#059669; font-weight:600; margin-top:1px;">Tujuan saldo</div>
+                        <div
+                            style="background:#f0fdf4; border:1px solid #a7f3d0; border-radius:12px; padding:0.75rem 1rem;">
+                            <div style="font-size:0.68rem; color:#047857; font-weight:700; text-transform:uppercase;">
+                                Deposit Kasir POS</div>
+                            <div style="font-size:1.05rem; font-weight:800; color:#064e3b; margin-top:2px;">Rp
+                                {{ number_format($posBalance ?? 0, 0, ',', '.') }}
+                            </div>
+                            <div style="font-size:0.65rem; color:#059669; font-weight:600; margin-top:1px;">Tujuan saldo
+                            </div>
                         </div>
                     </div>
 
                     <!-- Info Box Transparan -->
-                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:1.25rem; font-size:0.75rem; color:#1e40af; line-height:1.45;">
-                        ⚡ <strong>Instan &amp; Tanpa Biaya:</strong> Saldo siap ditarik Anda akan langsung dialihkan ke kuota deposit kasir POS untuk melayani transaksi uang tunai. Saldo siap ditarik otomatis terpotong detik ini juga.
+                    <div
+                        style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:1.25rem; font-size:0.75rem; color:#1e40af; line-height:1.45;">
+                        ⚡ <strong>Instan &amp; Tanpa Biaya:</strong> Saldo siap ditarik Anda akan langsung dialihkan ke
+                        kuota deposit kasir POS untuk melayani transaksi uang tunai. Saldo siap ditarik otomatis terpotong
+                        detik ini juga.
                     </div>
 
                     <!-- Input Nominal -->
                     <div style="margin-bottom:1rem;">
-                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:6px;">Nominal yang Dipindahkan (Rp)</label>
+                        <label
+                            style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:6px;">Nominal
+                            yang Dipindahkan (Rp)</label>
                         <div style="position:relative;">
-                            <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#64748b;">Rp</span>
-                            <input type="text" id="transferPosDisplay" class="form-input" style="padding-left:38px; height:46px; font-size:1.05rem; font-weight:800; color:#0f172a; border-radius:12px; border:1.5px solid #cbd5e1; width:100%; box-sizing:border-box;"
+                            <span
+                                style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#64748b;">Rp</span>
+                            <input type="text" id="transferPosDisplay" class="form-input"
+                                style="padding-left:38px; height:46px; font-size:1.05rem; font-weight:800; color:#0f172a; border-radius:12px; border:1.5px solid #cbd5e1; width:100%; box-sizing:border-box;"
                                 placeholder="0" oninput="handleTransferPosInput(this)" required>
                             <input type="hidden" name="amount" id="transferPosAmount" value="0">
                         </div>
