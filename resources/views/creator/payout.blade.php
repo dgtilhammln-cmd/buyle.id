@@ -1274,15 +1274,23 @@
             </div>
 
             <div class="sidebar-info-card">
-                <div
-                    style="display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;font-weight:800;color:#16a34a;margin-bottom:0.35rem;">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                    100% Bebas Potongan
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;font-size:0.75rem;font-weight:800;color:#16a34a;margin-bottom:0.35rem;">
+                    <span style="display:inline-flex;align-items:center;gap:0.35rem;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        Biaya Admin
+                    </span>
+                    <span style="background: {{ ($freePayoutSlots ?? 0) > 0 ? '#dcfce7' : '#f1f5f9' }}; color: {{ ($freePayoutSlots ?? 0) > 0 ? '#15803d' : '#64748b' }}; border: 1px solid {{ ($freePayoutSlots ?? 0) > 0 ? '#86efac' : '#cbd5e1' }}; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 999px;">
+                        {{ $freePayoutSlots ?? 0 }}x Bebas Admin
+                    </span>
                 </div>
                 <div style="font-size:0.7rem;color:#64748b;line-height:1.45;">
-                    Dana penjualan creator dicairkan penuh tanpa potongan biaya admin penarikan.
+                    @if(($freePayoutSlots ?? 0) > 0)
+                        Anda memiliki <strong>{{ $freePayoutSlots }}x slot penarikan gratis</strong> tanpa biaya admin. Dapatkan kuota tambahan melalui misi login 7 hari berturut-turut di dashboard!
+                    @else
+                        Kuota gratis Anda saat ini 0x. Penarikan dikenakan biaya admin normal Rp 5.000. Selesaikan login 7 hari di dashboard untuk menambah slot gratis.
+                    @endif
                 </div>
             </div>
         </div>
@@ -1309,13 +1317,18 @@
                     </div>
                     <div class="form-body">
                         {{-- Syarat Ringkas --}}
-                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="15" height="15" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            </svg>
-                            <div style="font-size:0.75rem; color:#166534; line-height:1.35;">
-                                Min. penarikan <strong>Rp 50.000</strong> &bull; 100% utuh tanpa potongan biaya &bull; Proses 1-3 hari kerja
+                        <div style="background: {{ ($freePayoutSlots ?? 0) > 0 ? '#f0fdf4' : '#f8fafc' }}; border: 1px solid {{ ($freePayoutSlots ?? 0) > 0 ? '#bbf7d0' : '#e2e8f0' }}; border-radius:12px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; justify-content:space-between; gap:0.5rem; flex-wrap:wrap;">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="15" height="15" fill="none" stroke="{{ ($freePayoutSlots ?? 0) > 0 ? '#16a34a' : '#64748b' }}" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                                <div style="font-size:0.75rem; color: {{ ($freePayoutSlots ?? 0) > 0 ? '#166534' : '#334155' }}; line-height:1.35;">
+                                    Min. penarikan <strong>Rp 50.000</strong> &bull; Biaya Admin: <strong>{{ ($freePayoutSlots ?? 0) > 0 ? 'Gratis (Rp 0)' : 'Rp 5.000' }}</strong> &bull; Proses 1-3 hari kerja
+                                </div>
                             </div>
+                            <span style="font-size:0.68rem; font-weight:800; background:{{ ($freePayoutSlots ?? 0) > 0 ? '#16a34a' : '#64748b' }}; color:#fff; padding:2px 8px; border-radius:999px;">
+                                Sisa Kuota Gratis: {{ $freePayoutSlots ?? 0 }}x
+                            </span>
                         </div>
 
                         {{-- Saldo Breakdown Ringkas --}}
@@ -1480,11 +1493,12 @@
                                     </div>
                                     <div class="breakdown-row">
                                         <span class="breakdown-key">Biaya Pencairan</span>
-                                        <span class="breakdown-val" style="color:#1eb349;font-weight:700;">Gratis (Rp 0)</span>
+                                        <span class="breakdown-val" id="bdFee" style="color: {{ ($freePayoutSlots ?? 0) > 0 ? '#1eb349' : '#e11d48' }}; font-weight:700;">
+                                            {{ ($freePayoutSlots ?? 0) > 0 ? 'Gratis (Rp 0 - Slot Bebas Admin)' : 'Rp 5.000 (Biaya Admin)' }}
+                                        </span>
                                     </div>
                                     <div class="breakdown-row">
-                                        <span class="breakdown-key" style="font-weight:800;color:#0f172a">Dana Diterima
-                                            (100%)</span>
+                                        <span class="breakdown-key" style="font-weight:800;color:#0f172a" id="bdNetLabel">Dana Bersih Diterima</span>
                                         <span class="breakdown-val green" id="bdNet">Rp 0</span>
                                     </div>
                                     <div class="breakdown-row">
@@ -1778,13 +1792,26 @@
         }
 
         // ── Breakdown Calculator ──
+        const freePayoutSlots = {{ (int) ($freePayoutSlots ?? 0) }};
         function updateBreakdown() {
             const val = parseFloat(document.getElementById('withdrawAmount').value) || 0;
             const box = document.getElementById('withdrawBreakdown');
             if (val >= 50000) {
                 box.style.display = 'block';
+                const adminFee = freePayoutSlots > 0 ? 0 : 5000;
+                const net = Math.max(0, val - adminFee);
                 document.getElementById('bdGross').textContent = 'Rp ' + val.toLocaleString('id-ID');
-                document.getElementById('bdNet').textContent = 'Rp ' + val.toLocaleString('id-ID');
+                const feeEl = document.getElementById('bdFee');
+                if (feeEl) {
+                    if (freePayoutSlots > 0) {
+                        feeEl.textContent = 'Gratis (Rp 0 - Slot Bebas Admin)';
+                        feeEl.style.color = '#1eb349';
+                    } else {
+                        feeEl.textContent = 'Rp 5.000 (Biaya Admin)';
+                        feeEl.style.color = '#e11d48';
+                    }
+                }
+                document.getElementById('bdNet').textContent = 'Rp ' + net.toLocaleString('id-ID');
             } else {
                 box.style.display = 'none';
             }

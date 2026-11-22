@@ -409,6 +409,310 @@
             transform: scale(1.05);
         }
 
+        /* Badge Kuota Bebas Biaya Admin */
+        .nina-free-slot-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4.5px;
+            padding: 3.5px 9px;
+            background: linear-gradient(135deg, rgba(30, 179, 73, 0.12) 0%, rgba(165, 207, 55, 0.18) 100%);
+            border: 1px solid rgba(30, 179, 73, 0.28);
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #15803d;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+
+        .nina-free-slot-badge:hover {
+            background: linear-gradient(135deg, rgba(30, 179, 73, 0.22) 0%, rgba(165, 207, 55, 0.28) 100%);
+            color: #166534;
+            transform: translateY(-1px);
+        }
+
+        /* ── MILESTONE LOGIN 7 HARI (DAILY STREAK REWARD) ── */
+        .nina-milestone-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.15rem 1.25rem;
+            border: 1.5px solid #e2e8f0;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+            margin-bottom: 1.15rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .nina-milestone-card:hover {
+            box-shadow: 0 8px 24px -4px rgba(30, 179, 73, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .nina-milestone-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+            gap: 0.75rem;
+        }
+
+        .nina-milestone-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .nina-milestone-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.3);
+            flex-shrink: 0;
+        }
+
+        .nina-milestone-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+        }
+
+        .nina-milestone-sub {
+            font-size: 0.68rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .nina-milestone-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 9px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #166534;
+            white-space: nowrap;
+        }
+
+        /* 7-DAY STREAK TRACK (100% PERSIS REFERENSI) */
+        .nina-streak-track {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-bottom: 0.75rem;
+        }
+
+        .nina-streak-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.45rem 0.2rem 0.55rem;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1.5px solid transparent;
+            min-height: 82px;
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nina-streak-day-label {
+            font-size: 0.63rem;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+
+        .nina-streak-coin-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            margin: 3px 0;
+            position: relative;
+        }
+
+        .nina-streak-reward-val {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        /* Status: Checked (Hari Lalu Selesai) */
+        .nina-streak-day.is-checked {
+            background: #f0fdf4;
+            border-color: #dcfce7;
+        }
+
+        .nina-streak-day.is-checked .nina-streak-day-label {
+            color: #16a34a;
+        }
+
+        .nina-streak-day.is-checked .nina-streak-reward-val {
+            color: #15803d;
+        }
+
+        .nina-streak-check-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #22c55e;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
+            box-shadow: 0 2px 6px rgba(34, 197, 94, 0.35);
+        }
+
+        /* Status: Today (Hari Ini - Persis Referensi Ber-Top Cap Hijau) */
+        .nina-streak-day.is-today {
+            background: #ffffff;
+            border: 2px solid #1eb349;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.18);
+            transform: translateY(-2px);
+            padding-top: 0;
+            overflow: hidden;
+        }
+
+        .nina-streak-today-cap {
+            width: 100%;
+            background: #1eb349;
+            color: #ffffff;
+            font-size: 0.58rem;
+            font-weight: 800;
+            text-align: center;
+            padding: 3px 0 2px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin-bottom: 2px;
+        }
+
+        .nina-streak-day.is-today .nina-streak-reward-val {
+            color: #15803d;
+            font-weight: 800;
+        }
+
+        .nina-streak-day.is-today .nina-coin-stack {
+            animation: ninaCoinBounce 2s infinite ease-in-out;
+        }
+
+        /* Status: Upcoming */
+        .nina-streak-day.is-upcoming {
+            background: #f8fafc;
+            border-color: #f1f5f9;
+        }
+
+        /* Day 7 (Grand Prize Day) */
+        .nina-streak-day.is-grand-prize {
+            background: linear-gradient(180deg, #fef9c3 0%, #ffffff 100%);
+            border-color: #fde047;
+        }
+
+        .nina-streak-day.is-grand-prize.is-today {
+            border: 2px solid #eab308;
+            box-shadow: 0 4px 16px rgba(234, 179, 8, 0.35);
+        }
+
+        .nina-streak-day.is-grand-prize.is-today .nina-streak-today-cap {
+            background: linear-gradient(135deg, #1eb349 0%, #ca8a04 100%);
+        }
+
+        @keyframes ninaCoinBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* Action / Footer */
+        .nina-streak-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid #f1f5f9;
+            flex-wrap: wrap;
+        }
+
+        .nina-streak-prog-text {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .nina-streak-prog-text strong {
+            color: #15803d;
+        }
+
+        .nina-btn-claim-streak {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(30, 179, 73, 0.35);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: ninaClaimPulse 2s infinite ease-in-out;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .nina-btn-claim-streak:hover {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.45);
+        }
+
+        @keyframes ninaClaimPulse {
+            0%, 100% { box-shadow: 0 2px 8px rgba(30, 179, 73, 0.3); }
+            50% { box-shadow: 0 4px 18px rgba(30, 179, 73, 0.6); }
+        }
+
+        @media (max-width: 480px) {
+            .nina-streak-track {
+                gap: 4px;
+            }
+            .nina-streak-day {
+                min-height: 76px;
+                padding: 0.35rem 0.15rem 0.45rem;
+            }
+            .nina-streak-day-label {
+                font-size: 0.58rem;
+            }
+            .nina-streak-reward-val {
+                font-size: 0.62rem;
+            }
+            .nina-streak-coin-wrap {
+                width: 26px;
+                height: 26px;
+            }
+            .nina-streak-today-cap {
+                font-size: 0.52rem;
+                padding: 2px 0;
+            }
+        }
+
         /* Action Pill Bar (Hitam Sleek 3 Tombol: Tarik Saldo, Top Up, Transfer) */
         .nina-action-bar {
             background: #181d27;
@@ -2045,8 +2349,14 @@
 
                     {{-- Saldo Utama Buyle Pay: Logo di Kiri, Nominal di Paling Kanan + Icon Mata --}}
                     <div class="nina-balance-row">
-                        <div class="nina-buylepay-logo-wrap" title="Buyle Pay">
-                            <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" class="nina-buylepay-logo">
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <div class="nina-buylepay-logo-wrap" title="Buyle Pay">
+                                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" class="nina-buylepay-logo">
+                            </div>
+                            <a href="{{ route('creator.payout.settings') }}" class="nina-free-slot-badge" title="Kuota Bebas Biaya Penarikan Saldo">
+                                <i class="ph-fill ph-ticket"></i>
+                                <span id="balanceFreeSlotsBadge">{{ $freePayoutSlots ?? 3 }}x Bebas Admin</span>
+                            </a>
                         </div>
 
                         <div class="nina-balance-amount-wrap">
@@ -2162,8 +2472,116 @@
 
             </div>
 
-            {{-- ── KOLOM KANAN: RECENT ACTIVITY (RIWAYAT ORDERAN MASUK) ── --}}
+            {{-- ── KOLOM KANAN: MILESTONE LOGIN 7 HARI & RECENT ACTIVITY ── --}}
             <div class="nina-col-right">
+
+                {{-- ── CARD MILESTONE LOGIN 7 HARI (DAILY STREAK) ── --}}
+                <div class="nina-milestone-card" id="ninaMilestoneCard">
+                    <div class="nina-milestone-header">
+                        <div class="nina-milestone-title-wrap">
+                            <div class="nina-milestone-icon">
+                                <i class="ph-fill ph-calendar-check"></i>
+                            </div>
+                            <div>
+                                <div class="nina-milestone-title">Misi Login Harian</div>
+                                <div class="nina-milestone-sub">Login 7 hari berturut-turut & dapatkan +1 Bebas Biaya Penarikan</div>
+                            </div>
+                        </div>
+
+                        <span class="nina-milestone-badge" id="milestoneStreakBadge">
+                            <i class="ph-fill ph-fire" style="color: #ea580c;"></i>
+                            <span>Streak {{ $loginStreak }}/7 Hari</span>
+                        </span>
+                    </div>
+
+                    {{-- 7-Day Streak Track (100% Persis Referensi) --}}
+                    <div class="nina-streak-track">
+                        @for($day = 1; $day <= 7; $day++)
+                            @php
+                                $isPast = $day < $loginStreak;
+                                $isToday = $day == $loginStreak;
+                                $isUpcoming = $day > $loginStreak;
+                                $isGrand = ($day == 7);
+                            @endphp
+                            <div class="nina-streak-day {{ $isPast ? 'is-checked' : '' }} {{ $isToday ? 'is-today' : '' }} {{ $isUpcoming ? 'is-upcoming' : '' }} {{ $isGrand ? 'is-grand-prize' : '' }}">
+                                @if($isToday)
+                                    <div class="nina-streak-today-cap">Today</div>
+                                @else
+                                    <div class="nina-streak-day-label">Day {{ $day }}</div>
+                                @endif
+
+                                <div class="nina-streak-coin-wrap">
+                                    @if($isPast)
+                                        <div class="nina-streak-check-circle">
+                                            <i class="ph-bold ph-check"></i>
+                                        </div>
+                                    @elseif($isToday)
+                                        @if($isGrand)
+                                            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" class="nina-coin-stack">
+                                                <ellipse cx="14" cy="18" rx="8" ry="6" fill="#ca8a04"/>
+                                                <ellipse cx="14" cy="16" rx="8" ry="6" fill="#eab308"/>
+                                                <circle cx="19" cy="14" r="8" fill="#facc15"/>
+                                                <circle cx="19" cy="14" r="6" stroke="#fef08a" stroke-width="1" stroke-dasharray="1.5 1.5"/>
+                                                <path d="M19 10v8M15 14h8" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        @else
+                                            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" class="nina-coin-stack">
+                                                <ellipse cx="14" cy="18" rx="8" ry="6" fill="#15803d"/>
+                                                <ellipse cx="14" cy="16" rx="8" ry="6" fill="#16a34a"/>
+                                                <circle cx="19" cy="14" r="8" fill="#22c55e"/>
+                                                <circle cx="19" cy="14" r="6" stroke="#bbf7d0" stroke-width="1" stroke-dasharray="1.5 1.5"/>
+                                                <path d="M19 10.5v7M15.5 14h7" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                                            </svg>
+                                        @endif
+                                    @else
+                                        @if($isGrand)
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <circle cx="12" cy="12" r="10" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
+                                                <circle cx="12" cy="12" r="7.5" stroke="#ca8a04" stroke-width="1" stroke-dasharray="2 2"/>
+                                                <path d="M12 8v8M8 12h8" stroke="#ca8a04" stroke-width="1.8" stroke-linecap="round"/>
+                                            </svg>
+                                        @else
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <circle cx="12" cy="12" r="10" fill="#22c55e"/>
+                                                <circle cx="12" cy="12" r="7.5" stroke="#ffffff" stroke-width="1.2" stroke-dasharray="2 2"/>
+                                                <path d="M12 8v8M8 12h8" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        @endif
+                                    @endif
+                                </div>
+
+                                <div class="nina-streak-reward-val">
+                                    @if($isGrand)
+                                        +1 Slot
+                                    @else
+                                        {{ $isToday ? '40' : ($day % 2 == 0 ? '20' : '20') }}
+                                    @endif
+                                </div>
+                            </div>
+                        @endfor
+                    </div>
+
+                    {{-- Footer / Klaim Action --}}
+                    <div class="nina-streak-footer">
+                        @if($canClaimStreak)
+                            <div class="nina-streak-prog-text">
+                                🎉 <strong>Milestone 7 Hari Lengkap!</strong> Klaim reward bebas biaya penarikan sekarang.
+                            </div>
+                            <button type="button" class="nina-btn-claim-streak" id="claimStreakBtn" onclick="claimDailyStreak()">
+                                <i class="ph-bold ph-gift"></i>
+                                <span>Klaim +1 Bebas Admin</span>
+                            </button>
+                        @else
+                            <div class="nina-streak-prog-text">
+                                🔥 <strong>Hari ke-{{ $loginStreak }} dari 7</strong> · Tinggal {{ max(0, 7 - $loginStreak) }} hari lagi menuju reward bebas biaya penarikan!
+                            </div>
+                            <span class="nina-milestone-badge" id="milestoneCurrentBadge" title="Total Kuota Gratis Payout">
+                                <i class="ph-fill ph-ticket"></i>
+                                <span>{{ $freePayoutSlots ?? 3 }}x Bebas Admin</span>
+                            </span>
+                        @endif
+                    </div>
+                </div>
 
                 <div class="nina-section-box">
                     <div class="nina-section-title">
@@ -2384,5 +2802,59 @@
                 }
             }, { passive: true });
         })();
+
+        // ── Handler Klaim Milestone Login 7 Hari ──
+        function claimDailyStreak() {
+            const btn = document.getElementById('claimStreakBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Memproses...';
+            }
+
+            fetch('{{ route('creator.streak.claim') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const badge = document.getElementById('balanceFreeSlotsBadge');
+                    if (badge) {
+                        badge.textContent = data.free_slots + 'x Bebas Admin';
+                    }
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '🎉 Selamat!',
+                            text: data.message + ' Total kuota bebas biaya admin Anda sekarang: ' + data.free_slots + 'x.',
+                            confirmButtonColor: '#1eb349'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        alert(data.message + ' Total kuota bebas biaya admin: ' + data.free_slots + 'x.');
+                        window.location.reload();
+                    }
+                } else {
+                    alert(data.message || 'Gagal mengklaim reward.');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="ph-bold ph-gift"></i> Klaim +1 Bebas Admin';
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kendala jaringan saat mengklaim.');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="ph-bold ph-gift"></i> Klaim +1 Bebas Admin';
+                }
+            });
+        }
     </script>
 @endsection

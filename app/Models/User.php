@@ -23,7 +23,8 @@ class User extends Authenticatable
         'pos_pin',
         'business_persona', 'referral_source_type', 'referral_source_name',
         'media_partner_name', 'media_partner_id', 'referral_code', 'referrer_id',
-        'primary_goal', 'onboarding_completed_at', 'username_changed_at'
+        'primary_goal', 'onboarding_completed_at', 'username_changed_at',
+        'free_payout_slots', 'login_streak_count', 'last_login_streak_at', 'streak_claimed_at',
     ];
     protected $hidden = ['password', 'remember_token', 'security_pin', 'pos_pin'];
     use HasFactory, Notifiable;
@@ -251,5 +252,98 @@ class User extends Authenticatable
         }
         $clean = ltrim(preg_replace('#^storage/#', '', $raw), '/');
         return asset('storage/' . $clean);
+    }
+
+    /**
+     * Catat login harian (Daily Login Streak) 7-hari untuk kreator.
+     */
+    public function recordDailyStreak(): array
+    {
+        $today = now()->toDateString();
+        $yesterday = now()->subDay()->toDateString();
+        $lastStreakAt = $this->last_login_streak_at ? \Carbon\Carbon::parse($this->last_login_streak_at)->toDateString() : null;
+
+        if ($lastStreakAt === $today) {
+            // Sudah tercatat hari ini
+            return [
+                'streak'     => max(1, (int) ($this->login_streak_count ?: 1)),
+                'can_claim'  => $this->canClaimStreakReward(),
+                'free_slots' => (int) ($this->free_payout_slots ?? 3),
+                'status'     => 'already_checked_today',
+            ];
+        }
+
+        if ($lastStreakAt === $yesterday) {
+            // Berturut-turut!
+            if ($this->login_streak_count >= 7) {
+                // Jika sudah hari ke-7 kemarin dan sudah diklaim, mulai siklus baru ke 1
+                if (!$this->canClaimStreakReward()) {
+                    $this->login_streak_count = 1;
+                    $this->streak_claimed_at = null;
+                }
+            } else {
+                $this->login_streak_count = min(7, ((int) $this->login_streak_count) + 1);
+            }
+        } else {
+            // Streak terputus atau baru pertama kali
+            $this->login_streak_count = 1;
+            $this->streak_claimed_at = null;
+        }
+
+        $this->last_login_streak_at = $today;
+        if (!isset($this->free_payout_slots)) {
+            $this->free_payout_slots = 3;
+        }
+        $this->save();
+
+        return [
+            'streak'     => (int) $this->login_streak_count,
+            'can_claim'  => $this->canClaimStreakReward(),
+            'free_slots' => (int) $this->free_payout_slots,
+            'status'     => 'updated_today',
+        ];
+    }
+
+    /**
+     * Cek apakah user berhak mengklaim reward streak hari ke-7.
+     */
+    public function canClaimStreakReward(): bool
+    {
+        if ((int) $this->login_streak_count < 7) {
+            return false;
+        }
+        if (empty($this->streak_claimed_at)) {
+            return true;
+        }
+        // Jika sudah pernah klaim sebelum hari ini
+        return \Carbon\Carbon::parse($this->streak_claimed_at)->isBefore(\Carbon\Carbon::parse($this->last_login_streak_at));
+    }
+
+    /**
+     * Klaim reward milestone hari ke-7: +1 slot gratis biaya penarikan.
+     */
+    public function claimStreakReward(): array
+    {
+        if (!$this->canClaimStreakReward()) {
+            return [
+                'success'    => false,
+                'message'    => 'Syarat belum terpenuhi atau reward 7 hari sudah diklaim untuk periode ini.',
+                'free_slots' => (int) ($this->free_payout_slots ?? 3),
+                'streak'     => (int) ($this->login_streak_count ?? 1),
+            ];
+        }
+
+        $this->free_payout_slots = ((int) ($this->free_payout_slots ?? 3)) + 1;
+        $this->streak_claimed_at = now();
+        // Reset streak untuk siklus 7 hari berikutnya
+        $this->login_streak_count = 1;
+        $this->save();
+
+        return [
+            'success'    => true,
+            'message'    => 'Selamat! Anda berhasil mengklaim +1 Slot Bebas Biaya Penarikan Saldo.',
+            'free_slots' => (int) $this->free_payout_slots,
+            'streak'     => (int) $this->login_streak_count,
+        ];
     }
 }

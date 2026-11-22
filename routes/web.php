@@ -1009,6 +1009,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 // 2. Seller Dashboard (Creator)
 Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Creator\SellerController::class, 'dashboard'])->name('dashboard');
+    Route::post('/streak/claim', [\App\Http\Controllers\Creator\SellerController::class, 'claimStreakReward'])->name('streak.claim');
     Route::get('/notif', [\App\Http\Controllers\Creator\CreatorNotificationController::class, 'index'])->name('notif.index');
     Route::post('/notif/mark-all-read', [\App\Http\Controllers\Creator\CreatorNotificationController::class, 'markAllRead'])->name('notif.mark-all-read');
     Route::post('/notif/delete-all', [\App\Http\Controllers\Creator\CreatorNotificationController::class, 'deleteAll'])->name('notif.delete-all');

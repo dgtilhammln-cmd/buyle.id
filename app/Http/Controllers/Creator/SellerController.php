@@ -170,13 +170,39 @@ class SellerController extends Controller
             return \App\Models\CreatorNotification::where('user_id', $seller->id)->where('is_read', false)->count();
         });
 
+        // ── Daily Login Streak Milestone (7 Hari Rekor & Slot Gratis Bebas Admin) ──
+        $streakInfo      = $seller->recordDailyStreak();
+        $freePayoutSlots = (int) ($seller->free_payout_slots ?? 3);
+        $loginStreak     = (int) ($seller->login_streak_count ?? 1);
+        $canClaimStreak  = $seller->canClaimStreakReward();
+
         return view('creator.dashboard', compact(
             'seller', 'gmv', 'platformFee', 'platformFeeRate',
             'totalPayout', 'availableBalance', 'holdBalance', 'ticketEscrowBalance',
             'totalProducts', 'activeProducts',
             'totalTransactions', 'recentSales', 'recentProducts',
-            'tierInfo', 'trafficData', 'unreadNotifCount'
+            'tierInfo', 'trafficData', 'unreadNotifCount',
+            'streakInfo', 'freePayoutSlots', 'loginStreak', 'canClaimStreak'
         ));
+    }
+
+    /**
+     * Klaim Reward Login Harian 7 Hari (+1 Slot Bebas Biaya Penarikan)
+     */
+    public function claimStreakReward(Request $request)
+    {
+        $seller = auth()->user();
+        $result = $seller->claimStreakReward();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json($result);
+        }
+
+        if ($result['success']) {
+            return back()->with('success', $result['message']);
+        }
+
+        return back()->with('error', $result['message']);
     }
 
     /**

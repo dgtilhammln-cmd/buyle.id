@@ -48,6 +48,8 @@ class SellerPayoutController extends Controller
         $availableBalance    = $balanceData['available_balance'];
         $upcomingEvents      = $balanceData['upcoming_events'];
 
+        $freePayoutSlots = (int) ($seller->free_payout_slots ?? 3);
+
         $requests = PayoutRequest::where('seller_id', $seller->id)
             ->latest()
             ->paginate(15);
@@ -65,6 +67,7 @@ class SellerPayoutController extends Controller
             'platformFeeRate',
             'totalPayout',
             'availableBalance',
+            'freePayoutSlots',
             'requests'
         ));
     }
@@ -118,8 +121,10 @@ class SellerPayoutController extends Controller
             return back()->with('error', 'Masih ada permintaan pencairan yang sedang diproses. Tunggu hingga selesai sebelum mengajukan yang baru.');
         }
 
-        $adminFee = 0;
-        $netAmount = $validated['amount'];
+        // Logika Biaya Admin: Gratis jika memiliki kuota free_payout_slots, selain itu Rp 5.000
+        $freeSlots = (int) ($seller->free_payout_slots ?? 0);
+        $adminFee  = $freeSlots > 0 ? 0 : 5000;
+        $netAmount = max(0, $validated['amount'] - $adminFee);
 
         // Simpan info rekening ke profil seller jika baru diinput
         if (!empty($validated['bank_name'])) {
@@ -140,6 +145,14 @@ class SellerPayoutController extends Controller
             'bank_account_name'   => $bankAccountName,
             'status'              => 'pending',
         ]);
+
+        if ($freeSlots > 0) {
+            $seller->decrement('free_payout_slots');
+            $remainingSlots = (int) $seller->fresh()->free_payout_slots;
+            $successMsg = 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan tanpa potongan biaya admin (Sisa kuota bebas biaya: ' . $remainingSlots . 'x). Dana akan dikirim dalam 1-3 hari kerja.';
+        } else {
+            $successMsg = 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan dengan biaya admin Rp 5.000 (Dana bersih diterima: Rp ' . number_format($netAmount, 0, ',', '.') . '). Dana akan dikirim dalam 1-3 hari kerja.';
+        }
 
         // Kirim notifikasi email konfirmasi ke creator
         try {
@@ -164,7 +177,7 @@ class SellerPayoutController extends Controller
             \Log::warning('Gagal kirim notifikasi payout ke Admin: ' . $e->getMessage());
         }
 
-        return back()->with('success', 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan. Dana 100% utuh tanpa potongan akan dikirim dalam 1-3 hari kerja.');
+        return back()->with('success', $successMsg);
     }
 
     /**
