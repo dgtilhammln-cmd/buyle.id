@@ -43,8 +43,8 @@
 
         html,
         body {
-            touch-action: pan-x pan-y;
             -webkit-text-size-adjust: 100%;
+            overscroll-behavior-y: none;
         }
 
         @media (max-width: 768px) {
@@ -2386,6 +2386,8 @@
             }
         }
     </script>
+
+    @include('components.pull-to-refresh')
 </body>
 
 </html>

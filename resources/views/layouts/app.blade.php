@@ -1492,52 +1492,7 @@
     </script>
     @endif
 
-    {{-- ── Pull to Refresh (PWA-style, smooth spinner) ── --}}
-    <div id="ptr-indicator" style="position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;align-items:center;justify-content:center;height:0;overflow:hidden;background:linear-gradient(to bottom,rgba(240,253,244,0.98) 0%,rgba(255,255,255,0) 100%);transition:height 0.2s cubic-bezier(0.25,0.46,0.45,0.94);pointer-events:none;">
-        <div id="ptr-spinner" style="width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 2px 12px rgba(30,179,73,0.18);display:flex;align-items:center;justify-content:center;transform:scale(0);opacity:0;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s ease;">
-            <svg id="ptr-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" style="transition:transform 0.3s ease;"><path d="M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="#1eb349"/></svg>
-        </div>
-    </div>
-    <script>
-    (function(){
-        var startY=0,pulling=false,triggered=false,rafId=null;
-        var el=document.getElementById('ptr-indicator');
-        var sp=document.getElementById('ptr-spinner');
-        var ic=document.getElementById('ptr-icon');
-        var TH=72,MAX=110;
-        document.addEventListener('touchstart',function(e){
-            if(window.scrollY!==0)return;
-            startY=e.touches[0].clientY;pulling=true;triggered=false;
-        },{passive:true});
-        document.addEventListener('touchmove',function(e){
-            if(!pulling)return;
-            var d=Math.min(e.touches[0].clientY-startY,MAX);
-            if(d<=0){pulling=false;reset();return;}
-            var pct=Math.min(d/TH,1);
-            el.style.height=Math.min(d*0.65,68)+'px';
-            sp.style.transform='scale('+(0.5+pct*0.5)+')';
-            sp.style.opacity=pct;
-            ic.style.transform='rotate('+(pct*220)+'deg)';
-            if(d>=TH&&!triggered){triggered=true;sp.style.background='#1eb349';ic.querySelector('path').setAttribute('fill','#fff');if(navigator.vibrate)navigator.vibrate(18);}
-            else if(d<TH&&triggered){triggered=false;sp.style.background='#fff';ic.querySelector('path').setAttribute('fill','#1eb349');}
-        },{passive:true});
-        document.addEventListener('touchend',function(){
-            if(!pulling)return;pulling=false;
-            if(triggered){
-                el.style.height='64px';sp.style.transform='scale(1)';sp.style.opacity='1';
-                ic.style.transition='transform 0.6s linear';
-                var s=0;(function loop(){s+=15;ic.style.transform='rotate('+s+'deg)';rafId=requestAnimationFrame(loop);})();
-                setTimeout(function(){cancelAnimationFrame(rafId);window.location.reload();},650);
-            }else{reset();}
-        },{passive:true});
-        function reset(){
-            el.style.height='0';sp.style.transform='scale(0)';sp.style.opacity='0';
-            sp.style.background='#fff';ic.style.transition='transform 0.3s ease';
-            ic.querySelector('path').setAttribute('fill','#1eb349');
-        }
-    })();
-    </script>
-
+    @include('components.pull-to-refresh')
 </body>
 
 </html>

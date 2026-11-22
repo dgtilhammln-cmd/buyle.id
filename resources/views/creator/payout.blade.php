@@ -5,9 +5,9 @@
 @section('styles')
     <style>
         /* ════════════════════════════════════════
-                       Mobile Header – Rekening & Penarikan
-                       100% SAMA PERSIS dengan Kelola Produk
-                    ════════════════════════════════════════ */
+                           Mobile Header – Rekening & Penarikan
+                           100% SAMA PERSIS dengan Kelola Produk
+                        ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
