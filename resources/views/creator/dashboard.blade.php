@@ -734,22 +734,22 @@
         /* ── INTERACTIVE BUYLE STREAK TOAST (THEMED & SMOOTH) ── */
         .buyle-streak-toast {
             position: fixed;
-            top: 24px;
+            top: max(calc(env(safe-area-inset-top, 44px) + 24px), 80px);
             left: 50%;
             transform: translateX(-50%) translateY(-25px);
-            z-index: 99999;
+            z-index: 999999;
             background: #ffffff;
-            border: 1.5px solid #bbf7d0;
-            box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(30, 179, 73, 0.18);
+            border: 1.5px solid #86efac;
+            box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.18), 0 4px 14px rgba(30, 179, 73, 0.22);
             border-radius: 999px;
-            padding: 8px 18px 8px 10px;
+            padding: 9px 20px 9px 12px;
             display: flex;
             align-items: center;
             gap: 10px;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 90vw;
+            max-width: calc(100vw - 32px);
             box-sizing: border-box;
         }
 
@@ -2870,8 +2870,12 @@
             }, { passive: true });
         })();
 
-        // ── Handler Klaim Milestone Login 7 Hari ──
+        // ── Handler Klaim Milestone Login 7 Hari (Anti Double Claim) ──
+        let isClaimingStreak = false;
         function claimDailyStreak() {
+            if (isClaimingStreak) return;
+            isClaimingStreak = true;
+
             const btn = document.getElementById('claimStreakBtn');
             if (btn) {
                 btn.disabled = true;
@@ -2888,38 +2892,27 @@
             })
             .then(res => res.json())
             .then(data => {
+                isClaimingStreak = false;
                 if (data.success) {
-                    const badge = document.getElementById('milestoneCurrentBadge');
-                    if (badge) {
-                        badge.innerHTML = '<i class="ph-fill ph-ticket"></i> ' + data.free_slots + 'x Bebas Admin';
-                    }
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '🎉 Selamat!',
-                            text: data.message + ' Total kuota bebas biaya admin Anda sekarang: ' + data.free_slots + 'x.',
-                            confirmButtonColor: '#1eb349'
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    } else {
-                        alert(data.message + ' Total kuota bebas biaya admin: ' + data.free_slots + 'x.');
+                    showStreakFeedback('Klaim Berhasil! 🎉', data.message, 'ph-gift');
+                    setTimeout(() => {
                         window.location.reload();
-                    }
+                    }, 1200);
                 } else {
-                    alert(data.message || 'Gagal mengklaim reward.');
+                    showStreakFeedback('Info', data.message || 'Reward sudah pernah diklaim.', 'ph-info');
                     if (btn) {
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="ph-bold ph-gift"></i> Klaim +1 Bebas Admin';
+                        btn.innerHTML = '<i class="ph-bold ph-gift"></i> Klaim Bebas Admin';
                     }
                 }
             })
             .catch(err => {
+                isClaimingStreak = false;
                 console.error(err);
-                alert('Terjadi kendala jaringan saat mengklaim.');
+                showStreakFeedback('Kendala Jaringan', 'Gagal memproses klaim.', 'ph-warning');
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="ph-bold ph-gift"></i> Klaim +1 Bebas Admin';
+                    btn.innerHTML = '<i class="ph-bold ph-gift"></i> Klaim Bebas Admin';
                 }
             });
         }
@@ -2965,7 +2958,7 @@
             }
 
             if (status === 'today') {
-                showStreakFeedback('Hari Ini Aktif', 'Hari ke-' + day + ' tercatat ✓ Lanjutkan besok!', 'ph-check-circle');
+                showStreakFeedback('Hari Ini Sudah Aktif', 'Check-in Hari ke-' + day + ' sudah tersimpan. Lanjutkan besok!', 'ph-check-circle');
             } else if (status === 'past') {
                 showStreakFeedback('Hari ke-' + day, 'Selesai check-in ✓', 'ph-check');
             } else {
