@@ -242,23 +242,34 @@
     /* ── Metric Summary Pills ── */
     .mat-stat-pills {
         display: flex;
-        gap: 0.5rem;
+        align-items: center;
+        gap: 0.35rem;
         margin-bottom: 1.15rem;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+    }
+
+    .mat-stat-pills::-webkit-scrollbar {
+        display: none;
     }
 
     .mat-stat-pill {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 0.35rem 0.75rem;
+        gap: 5px;
+        padding: 0.28rem 0.55rem;
         border-radius: 999px;
-        font-size: 0.74rem;
+        font-size: 0.72rem;
         font-weight: 500;
         border: 1px solid #e2e8f0;
         background: #ffffff;
         color: #475569;
         line-height: 1.2;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .mat-stat-pill strong {
@@ -266,9 +277,10 @@
     }
 
     .mat-stat-pill .dot {
-        width: 7px;
-        height: 7px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
+        flex-shrink: 0;
     }
 
     /* ── Grid Cards & Badges (Matching Products Page) ── */
@@ -1171,23 +1183,23 @@
          ════════════════════════════════════════════════════════════════════ --}}
     <div id="modalRecipe" class="mat-modal">
         <div class="mat-modal-content" style="max-width:580px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
                 <div>
-                    <h3 style="font-size:1.1rem; font-weight:700; color:#0f172a; margin:0;">Formula Resep Menu</h3>
-                    <p id="recipeProductName" style="font-size:0.8rem; color:#64748b; margin:2px 0 0;"></p>
+                    <h3 style="font-size:0.95rem; font-weight:600; color:#0f172a; margin:0;">Formula Resep Menu</h3>
+                    <p id="recipeProductName" style="font-size:0.75rem; color:#64748b; margin:2px 0 0;"></p>
                 </div>
                 <button type="button" onclick="closeModal('modalRecipe')" style="background:none; border:none; color:#94a3b8; font-size:1.25rem; cursor:pointer;">&times;</button>
             </div>
 
             <form id="formRecipe" method="POST">
                 @csrf
-                <div id="recipeRowsContainer" style="margin-bottom:1rem; max-height:360px; overflow-y:auto; padding-right:4px;">
+                <div id="recipeRowsContainer" style="margin-bottom:0.85rem; max-height:360px; overflow-y:auto; padding-right:4px;">
                     <!-- Rows populated dynamically -->
                 </div>
 
-                <div style="margin-bottom:1.25rem;">
-                    <button type="button" onclick="addRecipeRow()" style="background:#f1f5f9; border:1px dashed #cbd5e1; color:#0f172a; font-size:0.78rem; font-weight:700; width:100%; padding:8px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <div style="margin-bottom:1.15rem;">
+                    <button type="button" onclick="addRecipeRow()" style="background:#f1f5f9; border:1px dashed #cbd5e1; color:#0f172a; font-size:0.75rem; font-weight:600; width:100%; padding:7px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         <span>+ Tambah Baris Bahan Baku</span>
                     </button>
                 </div>
@@ -1333,21 +1345,21 @@
         const container = document.getElementById('recipeRowsContainer');
         const idx = currentRecipeRowCount++;
 
-        let matOptions = '<option value="">-- Pilih Bahan Baku --</option>';
+        let matOptions = '<option value="">Pilih Bahan</option>';
         allMaterialsList.forEach(m => {
             const sel = (selectedMatId && m.id == selectedMatId) ? 'selected' : '';
             matOptions += `<option value="${m.id}" data-unit="${m.unit}" ${sel}>${m.name} (${m.unit})</option>`;
         });
 
         const rowHtml = `
-            <div id="recipe-row-${idx}" style="display:flex; gap:8px; align-items:center; margin-bottom:8px; background:#f8fafc; padding:8px 10px; border-radius:10px; border:1px solid #e2e8f0;">
-                <select name="recipes[${idx}][material_id]" required style="flex:2; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-family:inherit;">
+            <div id="recipe-row-${idx}" style="display:flex; gap:6px; align-items:center; margin-bottom:6px; background:#f8fafc; padding:6px 8px; border-radius:8px; border:1px solid #e2e8f0;">
+                <select name="recipes[${idx}][material_id]" required style="flex:2.3; min-width:0; padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.72rem; font-weight:500; color:#0f172a; background:#ffffff; font-family:inherit;">
                     ${matOptions}
                 </select>
-                <div style="flex:1; display:flex; align-items:center; gap:4px;">
-                    <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" required placeholder="Takaran" style="width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-family:inherit; box-sizing:border-box;">
+                <div style="flex:1; min-width:0; display:flex; align-items:center;">
+                    <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" required placeholder="Takaran" style="width:100%; padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.72rem; font-weight:500; color:#0f172a; background:#ffffff; font-family:inherit; box-sizing:border-box;">
                 </div>
-                <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Baris">
+                <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; flex-shrink:0;" title="Hapus Baris">
                     &times;
                 </button>
             </div>

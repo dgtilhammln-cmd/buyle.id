@@ -11780,9 +11780,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h4 style="margin:0; font-size:1.05rem; font-weight:800; color:#0f172a;">Tambah Baru</h4>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Pilih jenis item yang ingin
-                                ditambahkan</div>
+                            <h4 style="margin:0; font-size:0.95rem; font-weight:600; color:#0f172a;">Tambah Baru</h4>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Pilih jenis item yang ingin ditambahkan</div>
                         </div>
                     </div>
                     <button type="button" class="pos-modal-close"
@@ -11793,7 +11792,7 @@
                     <!-- Opsi 1: Kelola Produk & Menu -->
                     <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-add-option-card" style="text-decoration:none;">
                         <div class="pos-add-option-icon">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
                                 <rect x="3" y="3" width="7" height="7" rx="1.5" />
                                 <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -11802,10 +11801,10 @@
                             </svg>
                         </div>
                         <div style="flex:1;">
-                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Kelola Produk & Menu</div>
-                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Tambah atau ubah produk dan harga jual kasir</div>
+                            <div style="font-size:0.86rem; font-weight:600; color:#0f172a;">Kelola Produk & Menu</div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Tambah atau ubah produk dan harga jual kasir</div>
                         </div>
-                        <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="15" height="15" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6" />
                         </svg>
                     </a>
@@ -11813,16 +11812,16 @@
                     <!-- Opsi 2: Inventori Bahan & Resep -->
                     <a href="{{ route('creator.inventories.index', ['from' => 'pos']) }}" class="pos-add-option-card" style="text-decoration:none;">
                         <div class="pos-add-option-icon" style="background:rgba(30,179,73,0.1); border-color:rgba(30,179,73,0.25); color:#1eb349;">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
                                 <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
                         </div>
                         <div style="flex:1;">
-                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Inventori Bahan & Resep</div>
-                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Pantau stok bahan baku & resep menu (BOM)</div>
+                            <div style="font-size:0.86rem; font-weight:600; color:#0f172a;">Inventori Bahan & Resep</div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Pantau stok bahan baku & resep menu (BOM)</div>
                         </div>
-                        <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="15" height="15" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6" />
                         </svg>
                     </a>
