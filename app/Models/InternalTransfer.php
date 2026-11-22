@@ -12,11 +12,13 @@ class InternalTransfer extends Model
 
     protected $fillable = [
         'transfer_code',
+        'idempotency_key',
         'sender_id',
         'receiver_id',
         'amount',
         'notes',
         'status',
+        'ip_address',
     ];
 
     protected $casts = [

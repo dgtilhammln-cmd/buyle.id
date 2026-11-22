@@ -1055,6 +1055,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
 
     // Modul Transfer Saldo Buyle Pay Antar Akun
     Route::get('/transfer/check-user', [\App\Http\Controllers\Creator\CreatorTransferController::class, 'checkUser'])->name('transfer.check-user');
+    Route::post('/transfer/verify-pin', [\App\Http\Controllers\Creator\CreatorTransferController::class, 'verifyTransferPin'])->name('transfer.verify-pin');
     Route::post('/transfer', [\App\Http\Controllers\Creator\CreatorTransferController::class, 'processTransfer'])->name('transfer.process');
 
     // Laporan Penjualan & Manajemen Pesanan

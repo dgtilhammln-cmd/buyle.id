@@ -25,6 +25,7 @@ class User extends Authenticatable
         'media_partner_name', 'media_partner_id', 'referral_code', 'referrer_id',
         'primary_goal', 'onboarding_completed_at', 'username_changed_at',
         'free_payout_slots', 'login_streak_count', 'last_login_streak_at', 'streak_claimed_at',
+        'pin_attempts', 'pin_locked_until', 'transfer_cooldown_until',
     ];
     protected $hidden = ['password', 'remember_token', 'security_pin', 'pos_pin'];
     use HasFactory, Notifiable;
@@ -358,5 +359,10 @@ class User extends Authenticatable
                 'streak'     => (int) $user->login_streak_count,
             ];
         });
+    }
+
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Wallet::class);
     }
 }

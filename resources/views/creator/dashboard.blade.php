@@ -1587,7 +1587,7 @@
             </div>
 
             {{-- FORM TRANSFER --}}
-            <form id="transferForm" onsubmit="event.preventDefault(); submitTransfer();" style="text-align:left;">
+            <form id="transferForm" onsubmit="event.preventDefault(); proceedToTransferPin();" style="text-align:left;">
                 
                 {{-- STEP 1: USERNAME TUJUAN --}}
                 <div style="margin-bottom:0.85rem;">
@@ -1662,10 +1662,62 @@
                 {{-- TOMBOL SUBMIT --}}
                 <button type="submit" id="btnSubmitTransfer" disabled
                     style="width:100%; height:44px; border-radius:999px; background:#181d27; color:#ffffff; font-size:0.86rem; font-weight:700; border:none; cursor:not-allowed; display:inline-flex; align-items:center; justify-content:center; gap:6px; opacity:0.5; transition:all 0.2s ease; font-family:'Montserrat',sans-serif;">
-                    <span>Kirim Saldo</span>
-                    <i class="ph-bold ph-paper-plane-tilt" style="font-size:0.95rem;"></i>
+                    <span>Lanjut ke Verifikasi PIN</span>
+                    <i class="ph-bold ph-arrow-right" style="font-size:0.95rem;"></i>
                 </button>
             </form>
+
+            {{-- STEP VERIFIKASI PIN (buylepay.md 7.4) --}}
+            <div id="transferPinStep" style="display:none; text-align:left;">
+                {{-- Tombol Kembali ke Step Form --}}
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:0.75rem;">
+                    <button type="button" onclick="backToTransferForm()"
+                        style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:4px 8px; cursor:pointer; color:#475569; display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; font-weight:600; font-family:'Montserrat',sans-serif; transition:all 0.15s ease;">
+                        <i class="ph-bold ph-arrow-left"></i>
+                        <span>Ubah Rincian</span>
+                    </button>
+                </div>
+
+                {{-- Ringkasan Transfer --}}
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.75rem 0.95rem; margin-bottom:1rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.45rem;">
+                        <span style="font-size:0.74rem; color:#64748b; font-weight:600;">Penerima</span>
+                        <span id="pinStepReceiverName" style="font-size:0.8rem; font-weight:700; color:#0f172a;">-</span>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.45rem;">
+                        <span style="font-size:0.74rem; color:#64748b; font-weight:600;">Nominal Transfer</span>
+                        <span id="pinStepAmount" style="font-size:0.95rem; font-weight:700; color:#15803d; font-family:'Montserrat',sans-serif;">Rp 0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding-top:0.4rem; border-top:1px dashed #e2e8f0;">
+                        <span style="font-size:0.72rem; color:#64748b;">Biaya Transaksi</span>
+                        <span style="font-size:0.72rem; font-weight:700; color:#16a34a; background:#dcfce7; padding:2px 7px; border-radius:6px;">Rp 0 (Bebas Biaya)</span>
+                    </div>
+                </div>
+
+                {{-- Input 6-Digit PIN Keamanan --}}
+                <div style="margin-bottom:1.15rem;">
+                    <label style="display:block; font-size:0.72rem; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.4rem;">
+                        Masukkan 6-Digit PIN Keamanan <span style="color:#ef4444;">*</span>
+                    </label>
+                    <div style="position:relative;">
+                        <input type="password" id="transferSecurityPinInput" maxlength="6" inputmode="numeric"
+                            autocomplete="new-password" placeholder="••••••"
+                            oninput="onTransferPinInput(this)"
+                            onkeydown="if(event.key==='Enter' && this.value.length===6) submitTransferWithPin()"
+                            style="width:100%; box-sizing:border-box; padding:0.75rem 1rem; border-radius:12px; border:1.5px solid #e2e8f0; font-size:1.4rem; font-weight:700; text-align:center; letter-spacing:0.55em; color:#0f172a; outline:none; font-family:'Montserrat',sans-serif; transition:all 0.15s ease;">
+                    </div>
+
+                    {{-- Error PIN --}}
+                    <div id="transferPinError" style="display:none; color:#dc2626; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:0.45rem 0.65rem; font-size:0.74rem; margin-top:0.45rem; line-height:1.35;"></div>
+                </div>
+
+                {{-- Tombol Konfirmasi PIN --}}
+                <button type="button" id="btnConfirmTransferPin" onclick="submitTransferWithPin()" disabled
+                    style="width:100%; height:44px; border-radius:999px; background:#181d27; color:#ffffff; font-size:0.86rem; font-weight:700; border:none; cursor:not-allowed; display:inline-flex; align-items:center; justify-content:center; gap:6px; opacity:0.5; transition:all 0.2s ease; font-family:'Montserrat',sans-serif;">
+                    <i class="ph-bold ph-lock-key"></i>
+                    <span>Konfirmasi & Kirim Saldo</span>
+                </button>
+            </div>
 
             {{-- SUCCESS STATE VIEW --}}
             <div id="transferSuccessState" style="display:none; padding:0.5rem 0; text-align:center;">
@@ -2081,13 +2133,16 @@
 
             // Reset form
             document.getElementById('transferForm').style.display = 'block';
+            document.getElementById('transferPinStep').style.display = 'none';
             document.getElementById('transferSuccessState').style.display = 'none';
             document.getElementById('transferUsernameInput').value = '';
             document.getElementById('transferAmountInput').value = '';
             document.getElementById('transferNotesInput').value = '';
+            document.getElementById('transferSecurityPinInput').value = '';
             document.getElementById('transferUserPreviewCard').style.display = 'none';
             document.getElementById('transferUsernameError').style.display = 'none';
             document.getElementById('transferAmountError').style.display = 'none';
+            document.getElementById('transferPinError').style.display = 'none';
             isTransferUserValid = false;
             verifiedTransferUser = null;
             updateTransferSubmitButton();
@@ -2243,19 +2298,108 @@
             }
         }
 
-        async function submitTransfer() {
+        function proceedToTransferPin() {
             if (!isTransferUserValid || !verifiedTransferUser) return;
             const amt = getTransferRawAmount();
             if (amt < 1000 || amt > currentAvailableBalance) return;
 
-            const btn = document.getElementById('btnSubmitTransfer');
-            const notes = document.getElementById('transferNotesInput').value;
+            const recName = verifiedTransferUser.store_name ? `${verifiedTransferUser.name} (@${verifiedTransferUser.username})` : `@${verifiedTransferUser.username}`;
+            document.getElementById('pinStepReceiverName').textContent = recName;
+            document.getElementById('pinStepAmount').textContent = `Rp ${new Intl.NumberFormat('id-ID').format(amt)}`;
 
+            const pinInput = document.getElementById('transferSecurityPinInput');
+            pinInput.value = '';
+            document.getElementById('transferPinError').style.display = 'none';
+
+            const btnConfirm = document.getElementById('btnConfirmTransferPin');
+            btnConfirm.disabled = true;
+            btnConfirm.style.opacity = '0.5';
+            btnConfirm.style.cursor = 'not-allowed';
+            btnConfirm.style.background = '#181d27';
+            btnConfirm.innerHTML = `<i class="ph-bold ph-lock-key"></i> <span>Konfirmasi & Kirim Saldo</span>`;
+
+            document.getElementById('transferForm').style.display = 'none';
+            document.getElementById('transferPinStep').style.display = 'block';
+
+            setTimeout(() => pinInput.focus(), 80);
+        }
+
+        function backToTransferForm() {
+            document.getElementById('transferPinStep').style.display = 'none';
+            document.getElementById('transferForm').style.display = 'block';
+        }
+
+        function onTransferPinInput(input) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 6);
+            const errBox = document.getElementById('transferPinError');
+            if (errBox) errBox.style.display = 'none';
+
+            const btn = document.getElementById('btnConfirmTransferPin');
+            if (!btn) return;
+
+            if (input.value.length === 6) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.style.background = '#1eb349';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                btn.style.background = '#181d27';
+            }
+        }
+
+        async function submitTransferWithPin() {
+            const pinInput = document.getElementById('transferSecurityPinInput');
+            const pinVal = pinInput.value.trim();
+            const errBox = document.getElementById('transferPinError');
+
+            if (pinVal.length !== 6) {
+                errBox.textContent = 'Harap masukkan 6 digit PIN keamanan.';
+                errBox.style.display = 'block';
+                return;
+            }
+
+            const btn = document.getElementById('btnConfirmTransferPin');
             btn.disabled = true;
-            btn.innerHTML = `<svg class="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24" style="margin-right:6px;"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="3" stroke-dasharray="32" stroke-linecap="round"></circle></svg> <span>Memproses...</span>`;
+            btn.innerHTML = `<svg class="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24" style="margin-right:6px;"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="3" stroke-dasharray="32" stroke-linecap="round"></circle></svg> <span>Memverifikasi PIN...</span>`;
 
             try {
-                const res = await fetch(`{{ route('creator.transfer.process') }}`, {
+                // Step 1: Verifikasi PIN (buylepay.md 7.4)
+                const pinRes = await fetch(`{{ route('creator.transfer.verify-pin') }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ pin: pinVal })
+                });
+
+                const pinData = await pinRes.json();
+
+                if (!pinRes.ok || !pinData.success) {
+                    errBox.textContent = pinData.message || 'PIN yang Anda masukkan salah.';
+                    errBox.style.display = 'block';
+                    pinInput.value = '';
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                    btn.style.background = '#181d27';
+                    btn.innerHTML = `<i class="ph-bold ph-lock-key"></i> <span>Konfirmasi & Kirim Saldo</span>`;
+                    pinInput.focus();
+                    return;
+                }
+
+                // Step 2: Kirim Saldo dengan PIN Token + Idempotency Key (buylepay.md 7.1)
+                btn.innerHTML = `<svg class="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24" style="margin-right:6px;"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="3" stroke-dasharray="32" stroke-linecap="round"></circle></svg> <span>Mengirim Saldo...</span>`;
+
+                const amt = getTransferRawAmount();
+                const notes = document.getElementById('transferNotesInput').value;
+                const idempotencyKey = 'trf_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+
+                const transferRes = await fetch(`{{ route('creator.transfer.process') }}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2265,41 +2409,53 @@
                     body: JSON.stringify({
                         username: verifiedTransferUser.username,
                         amount: amt,
-                        notes: notes
+                        notes: notes,
+                        pin_token: pinData.pin_token,
+                        idempotency_key: idempotencyKey
                     })
                 });
-                const data = await res.json();
 
-                if (data.success) {
-                    // Update saldo lokal
-                    currentAvailableBalance = data.new_balance;
+                const transferData = await transferRes.json();
+
+                if (transferData.success) {
+                    // Update saldo lokal realtime
+                    currentAvailableBalance = transferData.new_balance;
                     const balDisplay = document.getElementById('ninaBalanceAmount');
                     if (balDisplay) {
-                        balDisplay.dataset.raw = data.new_balance;
-                        balDisplay.dataset.formatted = data.formatted_new_balance;
+                        balDisplay.dataset.raw = transferData.new_balance;
+                        balDisplay.dataset.formatted = transferData.formatted_new_balance;
                         if (localStorage.getItem('buyle_hide_balance') !== 'true') {
-                            balDisplay.textContent = data.formatted_new_balance;
+                            balDisplay.textContent = transferData.formatted_new_balance;
                         }
                     }
                     const modalBal = document.getElementById('transferModalAvailableBalance');
-                    if (modalBal) modalBal.textContent = data.formatted_new_balance;
+                    if (modalBal) modalBal.textContent = transferData.formatted_new_balance;
 
                     // Switch view to success
-                    document.getElementById('transferForm').style.display = 'none';
-                    document.getElementById('transferSuccessMsg').textContent = data.message;
-                    document.getElementById('transferSuccessAmount').textContent = data.formatted_amount;
-                    document.getElementById('transferSuccessReceiver').textContent = `@${data.receiver.username}`;
-                    document.getElementById('transferSuccessCode').textContent = data.transfer_code;
+                    document.getElementById('transferPinStep').style.display = 'none';
+                    document.getElementById('transferSuccessMsg').textContent = transferData.message;
+                    document.getElementById('transferSuccessAmount').textContent = transferData.formatted_amount;
+                    document.getElementById('transferSuccessReceiver').textContent = `@${transferData.receiver.username}`;
+                    document.getElementById('transferSuccessCode').textContent = transferData.transfer_code;
                     document.getElementById('transferSuccessState').style.display = 'block';
                 } else {
-                    alert(data.message || 'Gagal melakukan transfer.');
+                    if (transferData.pin_expired) {
+                        errBox.textContent = 'Sesi PIN telah kedaluwarsa. Silakan masukkan PIN ulang.';
+                        errBox.style.display = 'block';
+                        pinInput.value = '';
+                        pinInput.focus();
+                    } else {
+                        alert(transferData.message || 'Gagal memproses transfer saldo.');
+                        backToTransferForm();
+                    }
                     btn.disabled = false;
-                    btn.innerHTML = `<span>Kirim Saldo</span> <i class="ph-bold ph-paper-plane-tilt"></i>`;
+                    btn.innerHTML = `<i class="ph-bold ph-lock-key"></i> <span>Konfirmasi & Kirim Saldo</span>`;
                 }
             } catch (e) {
-                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+                errBox.textContent = 'Terjadi gangguan koneksi internet. Silakan coba beberapa saat lagi.';
+                errBox.style.display = 'block';
                 btn.disabled = false;
-                btn.innerHTML = `<span>Kirim Saldo</span> <i class="ph-bold ph-paper-plane-tilt"></i>`;
+                btn.innerHTML = `<i class="ph-bold ph-lock-key"></i> <span>Konfirmasi & Kirim Saldo</span>`;
             }
         }
     </script>

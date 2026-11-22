@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
 use App\Models\PayoutRequest;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\CreatorProfile;
 use App\Models\PosBalanceMutation;
@@ -81,6 +82,18 @@ class SellerPayoutController extends Controller
             return redirect()->route('creator.menu')->with('error', 'Anda wajib mengatur PIN keamanan terlebih dahulu sebelum melakukan penarikan saldo.');
         }
 
+        // Cek masa pendinginan (Cool-down) setelah reset PIN (buylepay.md 7.5)
+        if ($seller->transfer_cooldown_until && now()->lt(Carbon::parse($seller->transfer_cooldown_until))) {
+            $formattedTime = Carbon::parse($seller->transfer_cooldown_until)->isoFormat('D MMMM Y, HH:mm');
+            return back()->with('error', "Akun Anda dalam masa pendinginan keamanan hingga {$formattedTime} WIB. Penarikan dana dibekukan sementara.");
+        }
+
+        // Cek apakah PIN terkunci karena salah 3x (buylepay.md 7.4)
+        if ($seller->pin_locked_until && now()->lt(Carbon::parse($seller->pin_locked_until))) {
+            $minutes = now()->diffInMinutes(Carbon::parse($seller->pin_locked_until)) + 1;
+            return back()->with('error', "Akses transaksi Anda sedang dikunci sementara karena kesalahan PIN. Coba lagi dalam {$minutes} menit.");
+        }
+
         $hasSaved = !empty($seller->bank_name) && !empty($seller->bank_account_number) && !empty($seller->bank_account_name);
 
         $rules = [
@@ -104,80 +117,86 @@ class SellerPayoutController extends Controller
             return back()->with('error', 'Silakan pilih atau daftarkan rekening tujuan terlebih dahulu.');
         }
 
-        // Hitung ulang saldo siap ditarik
-        $balanceData      = \App\Services\SellerBalanceService::calculateBalance($seller);
-        $availableBalance = $balanceData['available_balance'];
+        // DB Transaction + Pessimistic Lock (buylepay.md 7.1 — anti double withdrawal)
+        return DB::transaction(function () use ($seller, $validated, $bankName, $bankAccountNumber, $bankAccountName) {
+            $lockedSeller = User::where('id', $seller->id)->lockForUpdate()->firstOrFail();
 
-        if ($validated['amount'] > $availableBalance) {
-            return back()->with('error', 'Jumlah penarikan melebihi saldo yang tersedia (Rp ' . number_format($availableBalance, 0, ',', '.') . '). Minimal penarikan Rp 50.000.');
-        }
+            // Hitung ulang saldo siap ditarik setelah row lock diperoleh
+            $balanceData      = \App\Services\SellerBalanceService::calculateBalance($lockedSeller);
+            $availableBalance = (float) $balanceData['available_balance'];
 
-        // Cek tidak ada payout pending
-        $hasPending = PayoutRequest::where('seller_id', $seller->id)
-            ->where('status', 'pending')
-            ->exists();
+            if ($validated['amount'] > $availableBalance) {
+                return back()->with('error', 'Jumlah penarikan melebihi saldo yang tersedia (Rp ' . number_format($availableBalance, 0, ',', '.') . '). Minimal penarikan Rp 50.000.');
+            }
 
-        if ($hasPending) {
-            return back()->with('error', 'Masih ada permintaan pencairan yang sedang diproses. Tunggu hingga selesai sebelum mengajukan yang baru.');
-        }
+            // Cek tidak ada payout pending (dengan lock)
+            $hasPending = PayoutRequest::where('seller_id', $lockedSeller->id)
+                ->where('status', 'pending')
+                ->lockForUpdate()
+                ->exists();
 
-        // Logika Biaya Admin: Gratis jika memiliki kuota free_payout_slots, selain itu Rp 5.000
-        $freeSlots = (int) ($seller->free_payout_slots ?? 0);
-        $adminFee  = $freeSlots > 0 ? 0 : 5000;
-        $netAmount = max(0, $validated['amount'] - $adminFee);
+            if ($hasPending) {
+                return back()->with('error', 'Masih ada permintaan pencairan yang sedang diproses. Tunggu hingga selesai sebelum mengajukan yang baru.');
+            }
 
-        // Simpan info rekening ke profil seller jika baru diinput
-        if (!empty($validated['bank_name'])) {
-            $seller->update([
+            // Logika Biaya Admin: Gratis jika memiliki kuota free_payout_slots, selain itu Rp 5.000
+            $freeSlots = (int) ($lockedSeller->free_payout_slots ?? 0);
+            $adminFee  = $freeSlots > 0 ? 0 : 5000;
+            $netAmount = max(0, $validated['amount'] - $adminFee);
+
+            // Simpan info rekening ke profil seller jika baru diinput
+            if (!empty($validated['bank_name'])) {
+                $lockedSeller->update([
+                    'bank_name'           => $bankName,
+                    'bank_account_number' => $bankAccountNumber,
+                    'bank_account_name'   => $bankAccountName,
+                ]);
+            }
+
+            PayoutRequest::create([
+                'seller_id'           => $lockedSeller->id,
+                'amount'              => $validated['amount'],
+                'admin_fee'           => $adminFee,
+                'net_amount'          => $netAmount,
                 'bank_name'           => $bankName,
                 'bank_account_number' => $bankAccountNumber,
                 'bank_account_name'   => $bankAccountName,
+                'status'              => 'pending',
             ]);
-        }
 
-        PayoutRequest::create([
-            'seller_id'           => $seller->id,
-            'amount'              => $validated['amount'],
-            'admin_fee'           => $adminFee,
-            'net_amount'          => $netAmount,
-            'bank_name'           => $bankName,
-            'bank_account_number' => $bankAccountNumber,
-            'bank_account_name'   => $bankAccountName,
-            'status'              => 'pending',
-        ]);
-
-        if ($freeSlots > 0) {
-            $seller->decrement('free_payout_slots');
-            $remainingSlots = (int) $seller->fresh()->free_payout_slots;
-            $successMsg = 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan tanpa potongan biaya admin (Sisa kuota bebas biaya: ' . $remainingSlots . 'x). Dana akan dikirim dalam 1-3 hari kerja.';
-        } else {
-            $successMsg = 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan dengan biaya admin Rp 5.000 (Dana bersih diterima: Rp ' . number_format($netAmount, 0, ',', '.') . '). Dana akan dikirim dalam 1-3 hari kerja.';
-        }
-
-        // Kirim notifikasi email konfirmasi ke creator
-        try {
-            $seller->notify(new \App\Notifications\PayoutRequestedNotification($netAmount, $bankName, $bankAccountNumber));
-        } catch (\Throwable $e) {
-            \Log::warning('Gagal kirim notifikasi PayoutRequested: ' . $e->getMessage());
-        }
-
-        // Kirim notifikasi alert real-time ke semua Admin
-        try {
-            $admins = \App\Models\User::whereIn('role', ['admin', 'superadmin'])->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new \App\Notifications\AdminPayoutAlertNotification(
-                    $seller,
-                    $netAmount,
-                    $bankName,
-                    $bankAccountNumber,
-                    $bankAccountName
-                ));
+            if ($freeSlots > 0) {
+                $lockedSeller->decrement('free_payout_slots');
+                $remainingSlots = (int) $lockedSeller->fresh()->free_payout_slots;
+                $successMsg = 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan tanpa potongan biaya admin (Sisa kuota bebas biaya: ' . $remainingSlots . 'x). Dana akan dikirim dalam 1-3 hari kerja.';
+            } else {
+                $successMsg = 'Permintaan pencairan Rp ' . number_format($validated['amount'], 0, ',', '.') . ' berhasil diajukan dengan biaya admin Rp 5.000 (Dana bersih diterima: Rp ' . number_format($netAmount, 0, ',', '.') . '). Dana akan dikirim dalam 1-3 hari kerja.';
             }
-        } catch (\Throwable $e) {
-            \Log::warning('Gagal kirim notifikasi payout ke Admin: ' . $e->getMessage());
-        }
 
-        return back()->with('success', $successMsg);
+            // Kirim notifikasi email konfirmasi ke creator
+            try {
+                $lockedSeller->notify(new \App\Notifications\PayoutRequestedNotification($netAmount, $bankName, $bankAccountNumber));
+            } catch (\Throwable $e) {
+                \Log::warning('Gagal kirim notifikasi PayoutRequested: ' . $e->getMessage());
+            }
+
+            // Kirim notifikasi alert real-time ke semua Admin
+            try {
+                $admins = \App\Models\User::whereIn('role', ['admin', 'superadmin'])->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new \App\Notifications\AdminPayoutAlertNotification(
+                        $lockedSeller,
+                        $netAmount,
+                        $bankName,
+                        $bankAccountNumber,
+                        $bankAccountName
+                    ));
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('Gagal kirim notifikasi payout ke Admin: ' . $e->getMessage());
+            }
+
+            return back()->with('success', $successMsg);
+        });
     }
 
     /**
@@ -217,6 +236,20 @@ class SellerPayoutController extends Controller
 
         $seller = auth()->user();
         $amount = (float) $request->amount;
+
+        // Cek masa pendinginan (Cool-down) setelah reset PIN (buylepay.md 7.5)
+        if ($seller->transfer_cooldown_until && now()->lt(Carbon::parse($seller->transfer_cooldown_until))) {
+            $formattedTime = Carbon::parse($seller->transfer_cooldown_until)->isoFormat('D MMMM Y, HH:mm');
+            $msg = "Akun Anda dalam masa pendinginan keamanan hingga {$formattedTime} WIB. Pemindahan saldo dibekukan sementara.";
+            return request()->wantsJson() ? response()->json(['success' => false, 'message' => $msg], 403) : back()->with('error', $msg);
+        }
+
+        // Cek apakah PIN terkunci karena salah 3x (buylepay.md 7.4)
+        if ($seller->pin_locked_until && now()->lt(Carbon::parse($seller->pin_locked_until))) {
+            $minutes = now()->diffInMinutes(Carbon::parse($seller->pin_locked_until)) + 1;
+            $msg = "Akses transaksi Anda sedang dikunci sementara karena kesalahan PIN. Coba lagi dalam {$minutes} menit.";
+            return request()->wantsJson() ? response()->json(['success' => false, 'message' => $msg], 423) : back()->with('error', $msg);
+        }
 
         try {
             return DB::transaction(function () use ($seller, $amount) {

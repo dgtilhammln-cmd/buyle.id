@@ -1393,6 +1393,26 @@
                                 </div>
                             @endif
 
+                            @if(auth()->user()->transfer_cooldown_until && now()->lt(\Carbon\Carbon::parse(auth()->user()->transfer_cooldown_until)))
+                                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:0.75rem 1rem; font-size:0.76rem; font-weight:600; color:#1e40af; margin-bottom:1rem; display:flex; align-items:flex-start; gap:0.5rem; line-height:1.45;">
+                                    <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    <div>
+                                        <strong>Masa Pendinginan Keamanan Aktif</strong><br>
+                                        Akun dalam perlindungan keamanan hingga {{ \Carbon\Carbon::parse(auth()->user()->transfer_cooldown_until)->isoFormat('D MMMM Y, HH:mm') }} WIB. Penarikan dana dibekukan sementara.
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if(auth()->user()->pin_locked_until && now()->lt(\Carbon\Carbon::parse(auth()->user()->pin_locked_until)))
+                                <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:0.75rem 1rem; font-size:0.76rem; font-weight:600; color:#991b1b; margin-bottom:1rem; display:flex; align-items:flex-start; gap:0.5rem; line-height:1.45;">
+                                    <svg width="18" height="18" fill="none" stroke="#dc2626" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    <div>
+                                        <strong>Akses Transaksi Terkunci</strong><br>
+                                        PIN salah 3x berturut-turut. Akses penarikan dikunci selama {{ now()->diffInMinutes(\Carbon\Carbon::parse(auth()->user()->pin_locked_until)) + 1 }} menit ke depan.
+                                    </div>
+                                </div>
+                            @endif
+
                             <form action="{{ route('creator.payout.request') }}" method="POST" id="withdrawForm">
                                 @csrf
 
@@ -1507,7 +1527,13 @@
                                     </div>
                                 </div>
 
+                                @php
+                                    $isBlockedBySecurity = (auth()->user()->transfer_cooldown_until && now()->lt(\Carbon\Carbon::parse(auth()->user()->transfer_cooldown_until)))
+                                        || (auth()->user()->pin_locked_until && now()->lt(\Carbon\Carbon::parse(auth()->user()->pin_locked_until)));
+                                @endphp
+
                                 <button type="submit" class="btn-submit-payout" id="btnSubmit"
+                                    {{ $isBlockedBySecurity ? 'disabled style=opacity:0.5;cursor:not-allowed;' : '' }}
                                     onclick="return confirm('Konfirmasi pengajuan penarikan dana?')">
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
