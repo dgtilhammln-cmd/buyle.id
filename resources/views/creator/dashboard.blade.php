@@ -436,10 +436,10 @@
         .nina-milestone-card {
             background: #ffffff;
             border-radius: 20px;
-            padding: 1.25rem 1.35rem;
+            padding: 1.15rem 1.25rem;
             border: 1.5px solid #e2e8f0;
             box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
-            margin-bottom: 1.25rem;
+            margin-bottom: 0;
             position: relative;
             overflow: hidden;
             transition: all 0.25s ease;
@@ -504,7 +504,7 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 7px;
-            margin: 0.95rem 0 1rem;
+            margin: 0.85rem 0 0;
         }
 
         .nina-streak-day {
@@ -702,7 +702,7 @@
             }
             .nina-streak-track {
                 gap: 4px;
-                margin: 0.75rem 0 0.85rem;
+                margin: 0.75rem 0 0;
             }
             .nina-streak-day {
                 min-height: 76px;
