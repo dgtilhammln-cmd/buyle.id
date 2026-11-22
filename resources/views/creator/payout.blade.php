@@ -5,9 +5,9 @@
 @section('styles')
     <style>
         /* ════════════════════════════════════════
-                   Mobile Header – Rekening & Penarikan
-                   100% SAMA PERSIS dengan Kelola Produk
-                ════════════════════════════════════════ */
+                       Mobile Header – Rekening & Penarikan
+                       100% SAMA PERSIS dengan Kelola Produk
+                    ════════════════════════════════════════ */
         .cr-mob-page-header {
             display: none;
         }
@@ -704,7 +704,7 @@
         .bank-list-scroll {
             max-height: 260px;
             overflow-y: auto;
-            padding: 0.4rem;
+            padding: 0.4rem 0.4rem 1rem;
         }
 
         .bank-list-scroll::-webkit-scrollbar {
@@ -1370,7 +1370,7 @@
                             viewBox="0 0 24 24">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
-                        Biaya Admin
+                        Free Admin
                     </span>
                     <span
                         style="background: {{ ($freePayoutSlots ?? 0) > 0 ? '#dcfce7' : '#f1f5f9' }}; color: {{ ($freePayoutSlots ?? 0) > 0 ? '#15803d' : '#64748b' }}; border: 1px solid {{ ($freePayoutSlots ?? 0) > 0 ? '#86efac' : '#cbd5e1' }}; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 999px;">
