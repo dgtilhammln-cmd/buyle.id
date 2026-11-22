@@ -718,6 +718,9 @@ Route::get('/deploy-hostinger', function () {
         if (file_exists(base_path('public_html/fix_storage.php'))) {
             @shell_exec('php ' . escapeshellarg(base_path('public_html/fix_storage.php')) . ' 2>&1');
         }
+        if (file_exists(base_path('public/images/banks')) && is_dir(base_path('public_html/images'))) {
+            @shell_exec('cp -r ' . escapeshellarg(base_path('public/images/banks')) . ' ' . escapeshellarg(base_path('public_html/images/')) . ' 2>&1');
+        }
         \Illuminate\Support\Facades\Artisan::call('storage:link');
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'TixHeroSlideSeeder', '--force' => true]);
@@ -1043,12 +1046,22 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::resource('groups', \App\Http\Controllers\Creator\CreatorGroupController::class);
 
     // CRUD Inventori Bahan Baku & Resep Menu (F&B / Cafe)
-    Route::get('/materials', [\App\Http\Controllers\Creator\MaterialController::class, 'index'])->name('materials.index');
-    Route::post('/materials', [\App\Http\Controllers\Creator\MaterialController::class, 'store'])->name('materials.store');
-    Route::put('/materials/{id}', [\App\Http\Controllers\Creator\MaterialController::class, 'update'])->name('materials.update');
-    Route::delete('/materials/{id}', [\App\Http\Controllers\Creator\MaterialController::class, 'destroy'])->name('materials.destroy');
-    Route::post('/materials/{id}/restock', [\App\Http\Controllers\Creator\MaterialController::class, 'restock'])->name('materials.restock');
-    Route::post('/materials/recipe/{productId}', [\App\Http\Controllers\Creator\MaterialController::class, 'saveRecipe'])->name('materials.recipe.save');
+    Route::get('/inventories', [\App\Http\Controllers\Creator\MaterialController::class, 'index'])->name('inventories.index');
+    Route::post('/inventories', [\App\Http\Controllers\Creator\MaterialController::class, 'store'])->name('inventories.store');
+    Route::put('/inventories/{id}', [\App\Http\Controllers\Creator\MaterialController::class, 'update'])->name('inventories.update');
+    Route::delete('/inventories/{id}', [\App\Http\Controllers\Creator\MaterialController::class, 'destroy'])->name('inventories.destroy');
+    Route::post('/inventories/{id}/restock', [\App\Http\Controllers\Creator\MaterialController::class, 'restock'])->name('inventories.restock');
+    Route::post('/inventories/recipe/{productId}', [\App\Http\Controllers\Creator\MaterialController::class, 'saveRecipe'])->name('inventories.recipe.save');
+
+    // Legacy Aliases for /materials (with query string preservation)
+    Route::any('/materials', function (\Illuminate\Http\Request $request) {
+        $qs = $request->getQueryString();
+        return redirect()->to('/creator/inventories' . ($qs ? '?' . $qs : ''), 301);
+    })->name('materials.index');
+    Route::any('/materials/{any}', function (\Illuminate\Http\Request $request) {
+        $qs = $request->getQueryString();
+        return redirect()->to('/creator/inventories' . ($qs ? '?' . $qs : ''), 301);
+    })->where('any', '.*');
 
     // Pengaturan 
     Route::get('/profile', [\App\Http\Controllers\Creator\CreatorProfileController::class, 'edit'])->name('profile.edit');

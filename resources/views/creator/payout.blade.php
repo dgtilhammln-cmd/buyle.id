@@ -702,9 +702,11 @@
         }
 
         .bank-list-scroll {
-            max-height: 260px;
+            max-height: 270px;
             overflow-y: auto;
-            padding: 0.4rem 0.4rem 1rem;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.4rem 0.4rem 3rem;
+            scroll-behavior: smooth;
         }
 
         .bank-list-scroll::-webkit-scrollbar {
@@ -1462,7 +1464,7 @@
                                             @if($savedBank && isset($bankLogos[$savedBank]))
                                                 <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}" class="bank-logo-icon"
                                                     style="width:36px;height:36px;border-radius:8px;padding:3px;"
-                                                    alt="{{ $savedBank }}">
+                                                    alt="{{ $savedBank }}" onerror="this.style.display='none';">
                                             @else
                                                 <div class="rekening-icon" style="background:#16a34a;">
                                                     <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2"
@@ -1564,7 +1566,7 @@
                                                     <div class="bank-select-display" id="bankDisplay">
                                                         @if($savedBank && isset($bankLogos[$savedBank]))
                                                             <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}"
-                                                                class="bank-logo-icon" alt="{{ $savedBank }}">
+                                                                class="bank-logo-icon" alt="{{ $savedBank }}" onerror="this.style.display='none';">
                                                             <span>{{ $savedBank }}</span>
                                                         @elseif($savedBank)
                                                             <span>{{ $savedBank }}</span>
@@ -1594,7 +1596,8 @@
                                                                     onclick="selectBank('{{ $bankItem }}', '{{ $groupName }}')">
                                                                     @if(isset($bankLogos[$bankItem]))
                                                                         <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}"
-                                                                            class="bank-logo-icon" alt="{{ $bankItem }}">
+                                                                            class="bank-logo-icon" alt="{{ $bankItem }}"
+                                                                            onerror="this.style.display='none';">
                                                                     @endif
                                                                     <span>{{ $bankItem }}</span>
                                                                     <span
@@ -1731,7 +1734,7 @@
                                         <div class="bank-select-display" id="bankDisplay2">
                                             @if($savedBank && isset($bankLogos[$savedBank]))
                                                 <img src="{{ asset('images/banks/' . $bankLogos[$savedBank]) }}"
-                                                    class="bank-logo-icon" alt="{{ $savedBank }}">
+                                                    class="bank-logo-icon" alt="{{ $savedBank }}" onerror="this.style.display='none';">
                                                 <span>{{ $savedBank }}</span>
                                             @elseif($savedBank)
                                                 <span>{{ $savedBank }}</span>
@@ -1761,7 +1764,7 @@
                                                         onclick="selectBank2('{{ $bankItem }}')">
                                                         @if(isset($bankLogos[$bankItem]))
                                                             <img src="{{ asset('images/banks/' . $bankLogos[$bankItem]) }}"
-                                                                class="bank-logo-icon" alt="{{ $bankItem }}">
+                                                                class="bank-logo-icon" alt="{{ $bankItem }}" onerror="this.style.display='none';">
                                                         @endif
                                                         <span>{{ $bankItem }}</span>
                                                         <span
@@ -2054,7 +2057,7 @@
             selectedBank = val;
             document.getElementById('bankHidden').value = val;
             const logoFile = bankLogos[val];
-            const logoHtml = logoFile ? `<img src="{{ asset('images/banks') }}/${logoFile}" class="bank-logo-icon" alt="${val}"> ` : '';
+            const logoHtml = logoFile ? `<img src="{{ asset('images/banks') }}/${logoFile}" class="bank-logo-icon" alt="${val}" onerror="this.style.display='none';"> ` : '';
             document.getElementById('bankDisplay').innerHTML = logoHtml + '<span>' + val + '</span>';
             document.querySelectorAll('#bankList .bank-option').forEach(el => {
                 el.classList.toggle('selected', el.dataset.value === val);
@@ -2097,7 +2100,7 @@
         function selectBank2(val) {
             document.getElementById('bankHidden2').value = val;
             const logoFile = bankLogos[val];
-            const logoHtml = logoFile ? `<img src="{{ asset('images/banks') }}/${logoFile}" class="bank-logo-icon" alt="${val}"> ` : '';
+            const logoHtml = logoFile ? `<img src="{{ asset('images/banks') }}/${logoFile}" class="bank-logo-icon" alt="${val}" onerror="this.style.display='none';"> ` : '';
             document.getElementById('bankDisplay2').innerHTML = logoHtml + '<span>' + val + '</span>';
             document.querySelectorAll('#bankList2 .bank-option2').forEach(el => {
                 el.classList.toggle('selected', el.dataset.value === val);

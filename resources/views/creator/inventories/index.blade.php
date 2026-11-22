@@ -1,11 +1,11 @@
 @extends('creator.layout')
-@section('title', 'Inventori Bahan Baku & Resep')
+@section('title', 'Inventori Bahan Baku & Resep Menu')
 @section('page_title', 'Inventori Bahan')
 @section('page_subtitle', $totalCount . ' bahan baku terdaftar (F&B / Cafe)')
 
 @section('topbar_actions')
     <div class="prod-actions-row">
-        <form action="{{ route('creator.materials.index') }}" method="GET" class="prod-search-form">
+        <form action="{{ route('creator.inventories.index') }}" method="GET" class="prod-search-form">
             <input type="hidden" name="tab" value="{{ $tab }}">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari bahan..." class="prod-search-input">
             <button type="submit" class="prod-search-btn" title="Cari">
@@ -58,7 +58,13 @@
 
 @section('styles')
 <style>
-    /* ── Seragam dengan /creator/products ── */
+    /* ── Pos Signature Green Gradient ── */
+    :root {
+        --pos-grad: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+        --pos-grad-hover: linear-gradient(135deg, #18983e 0%, #94bc2f 100%);
+        --pos-shadow: 0 4px 14px rgba(30, 179, 73, 0.28);
+    }
+
     .prod-actions-row {
         display: flex;
         align-items: center;
@@ -128,7 +134,7 @@
     }
 
     .prod-toggle-btn.active {
-        background: #1eb349;
+        background: var(--pos-grad);
         color: #fff;
     }
 
@@ -136,13 +142,13 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: #ecfdf5;
-        color: #059669;
-        border: 1px solid #a7f3d0;
+        background: #f0fdf4;
+        color: #166534;
+        border: 1.5px solid #bbf7d0;
         padding: 0.55rem 0.95rem;
         border-radius: 12px;
         font-size: 0.82rem;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         font-family: inherit;
         transition: all 0.2s;
@@ -150,30 +156,30 @@
     }
 
     .btn-restock-head:hover {
-        background: #d1fae5;
+        background: #dcfce7;
     }
 
     .prod-add-btn {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+        background: var(--pos-grad);
         color: #fff;
         border: none;
         padding: 0.58rem 1.05rem;
         border-radius: 12px;
         font-size: 0.82rem;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         font-family: inherit;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.28);
+        box-shadow: var(--pos-shadow);
         transition: all 0.2s;
         white-space: nowrap;
     }
 
     .prod-add-btn:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.38);
+        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
     }
 
     .btn-add-text-full { display: inline; }
@@ -199,7 +205,7 @@
         border-radius: 10px;
         text-decoration: none;
         font-size: 0.82rem;
-        font-weight: 600;
+        font-weight: 700;
         color: #64748b;
         background: transparent;
         border: none;
@@ -214,20 +220,21 @@
     }
 
     .mat-tab-btn.active {
-        background: #1eb349;
+        background: var(--pos-grad);
         color: #ffffff;
+        box-shadow: 0 2px 8px rgba(30, 179, 73, 0.25);
     }
 
     .mat-tab-badge {
         font-size: 0.68rem;
-        font-weight: 700;
+        font-weight: 800;
         padding: 2px 7px;
         border-radius: 999px;
         background: rgba(0,0,0,0.06);
     }
 
     .mat-tab-btn.active .mat-tab-badge {
-        background: rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.28);
         color: #ffffff;
     }
 
@@ -414,6 +421,27 @@
         .mat-grid {
             grid-template-columns: 1fr !important;
         }
+
+        /* Khusus Mobile pada Tab Resep: Sembunyikan Kategori, Harga & Kolom BOM agar compact & proporsional */
+        .col-recipe-cat,
+        .col-recipe-price,
+        .col-recipe-bom {
+            display: none !important;
+        }
+
+        .col-recipe-product {
+            width: 58% !important;
+            min-width: 0 !important;
+        }
+
+        .col-recipe-action {
+            width: 42% !important;
+            text-align: right !important;
+        }
+
+        .recipe-chips-container {
+            display: none !important;
+        }
     }
 </style>
 @endsection
@@ -421,7 +449,7 @@
 @section('content')
     {{-- Tabs Nav --}}
     <div class="mat-tabs-bar">
-        <a href="{{ route('creator.materials.index', ['tab' => 'materials']) }}" class="mat-tab-btn {{ $tab === 'materials' ? 'active' : '' }}">
+        <a href="{{ route('creator.inventories.index', ['tab' => 'materials']) }}" class="mat-tab-btn {{ $tab === 'materials' ? 'active' : '' }}">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -430,7 +458,7 @@
             Bahan Baku
             <span class="mat-tab-badge">{{ $totalCount }}</span>
         </a>
-        <a href="{{ route('creator.materials.index', ['tab' => 'recipes']) }}" class="mat-tab-btn {{ $tab === 'recipes' ? 'active' : '' }}">
+        <a href="{{ route('creator.inventories.index', ['tab' => 'recipes']) }}" class="mat-tab-btn {{ $tab === 'recipes' ? 'active' : '' }}">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -441,7 +469,7 @@
             Resep Menu (BOM)
             <span class="mat-tab-badge">{{ $products->count() }}</span>
         </a>
-        <a href="{{ route('creator.materials.index', ['tab' => 'mutations']) }}" class="mat-tab-btn {{ $tab === 'mutations' ? 'active' : '' }}">
+        <a href="{{ route('creator.inventories.index', ['tab' => 'mutations']) }}" class="mat-tab-btn {{ $tab === 'mutations' ? 'active' : '' }}">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
@@ -490,7 +518,7 @@
                 </div>
                 <h3 style="font-size:1.05rem; font-weight:700; color:#0f172a; margin-bottom:0.35rem;">Belum Ada Bahan Baku</h3>
                 <p style="font-size:0.82rem; color:#64748b; max-width:400px; margin:0 auto 1.25rem;">
-                    Daftarkan bahan baku fisik untuk cafe/resto Anda (misal biji kopi, susu, cup, sirup) agar stok terpantau otomatis saat transaksi POS.
+                    Daftarkan bahan baku fisik untuk cafe/resto Anda (misal biji kopi, susu, cup, bumbu) agar stok terpantau otomatis saat transaksi POS.
                 </p>
                 <button type="button" onclick="openAddMaterialModal()" class="prod-add-btn" style="margin:0 auto;">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -557,7 +585,7 @@
                                         style="background:#f8fafc; border:1px solid #e2e8f0; color:#475569; padding:5px 8px; border-radius:8px; font-size:0.75rem; cursor:pointer; margin-right:4px;" title="Edit">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     </button>
-                                    <form action="{{ route('creator.materials.destroy', $m->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus bahan ini?');">
+                                    <form action="{{ route('creator.inventories.destroy', $m->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus bahan ini?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" style="background:#fef2f2; border:1px solid #fca5a5; color:#dc2626; padding:5px 8px; border-radius:8px; font-size:0.75rem; cursor:pointer;" title="Hapus">
@@ -623,81 +651,87 @@
     @endif
 
     {{-- ════════════════════════════════════════════════════════════════════
-         TAB 2: RESEP MENU (BILL OF MATERIALS)
+         TAB 2: RESEP MENU (BILL OF MATERIALS) - KHUSUS F&B / MAKANAN & MINUMAN
          ════════════════════════════════════════════════════════════════════ --}}
     @if($tab === 'recipes')
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1rem 1.25rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:12px;">
-            <div style="width:36px; height:36px; border-radius:50%; background:#ecfdf5; color:#1eb349; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.85rem 1.15rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:10px;">
+            <div style="width:34px; height:34px; border-radius:50%; background:#ecfdf5; color:#1eb349; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </div>
-            <div style="font-size:0.8rem; color:#475569; line-height:1.5;">
-                Hubungkan setiap menu dengan bahan bakunya. Saat produk terjual di Kasir POS, stok bahan baku akan <strong>otomatis berkurang</strong> sesuai formula resep yang ditentukan.
+            <div style="font-size:0.78rem; color:#475569; line-height:1.45;">
+                Menampilkan daftar menu makanan &amp; minuman. Saat menu terjual di Kasir POS, stok bahan baku akan <strong>otomatis berkurang</strong> sesuai formula resep.
             </div>
         </div>
 
         @if($products->isEmpty())
             <div style="text-align:center; padding:3rem; background:#fff; border-radius:16px; border:1px dashed #cbd5e1;">
-                <p style="color:#64748b; font-size:0.85rem;">Belum ada produk terdaftar. Tambahkan produk Anda di menu Produk Saya terlebih dahulu.</p>
-                <a href="{{ route('creator.products.create') }}" class="prod-add-btn" style="margin:1rem auto 0; display:inline-flex;">+ Tambah Produk</a>
+                <p style="color:#64748b; font-size:0.85rem;">Belum ada produk bertipe makanan / minuman yang terdaftar.</p>
+                <a href="{{ route('creator.products.create') }}" class="prod-add-btn" style="margin:1rem auto 0; display:inline-flex;">+ Tambah Menu Makanan</a>
             </div>
         @else
             <div class="mat-table-wrap">
-                <table class="mat-table">
+                <table class="mat-table" style="width:100%;">
                     <thead>
                         <tr>
-                            <th>Menu Jual</th>
-                            <th>Kategori</th>
-                            <th>Harga Jual</th>
-                            <th>Bahan Dalam Resep (BOM)</th>
-                            <th style="text-align:right;">Aksi</th>
+                            <th class="col-recipe-product">Menu Jual</th>
+                            <th class="col-recipe-cat">Kategori</th>
+                            <th class="col-recipe-price">Harga</th>
+                            <th class="col-recipe-bom">Bahan Dalam Resep (BOM)</th>
+                            <th class="col-recipe-action" style="text-align:right;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($products as $p)
                             <tr>
-                                <td>
-                                    <div style="display:flex; align-items:center; gap:10px;">
-                                        @if($p->image_url && !str_contains($p->image_url, 'placeholder'))
-                                            <img src="{{ $p->image_url }}" alt="{{ $p->name }}" style="width:40px; height:40px; object-fit:cover; border-radius:8px; border:1px solid #e2e8f0;">
-                                        @else
-                                            <div style="width:40px; height:40px; border-radius:8px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#94a3b8;">
-                                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                                <td class="col-recipe-product">
+                                    <div style="display:flex; align-items:center; gap:9px;">
+                                        <img src="{{ $p->image_url }}" alt="{{ $p->name }}"
+                                            style="width:40px; height:40px; object-fit:cover; border-radius:8px; border:1px solid #e2e8f0; flex-shrink:0; background:#f8fafc;"
+                                            onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='4px';">
+                                        <div style="min-width:0;">
+                                            <div style="font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;">{{ $p->name }}</div>
+                                            <div style="font-size:0.7rem; color:#64748b;">
+                                                <span style="color:#16a34a; font-weight:700;">{{ $p->recipes->count() }} Bahan</span> tertaut
                                             </div>
-                                        @endif
-                                        <div>
-                                            <div style="font-weight:700; color:#0f172a;">{{ $p->name }}</div>
-                                            <div style="font-size:0.72rem; color:#64748b;">{{ $p->recipes->count() }} Bahan Tertaut</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="col-recipe-cat">
                                     <span style="background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:6px; font-size:0.72rem; font-weight:600;">
-                                        {{ $p->category?->name ?? 'Umum' }}
+                                        {{ $p->category?->name ?? 'F&B' }}
                                     </span>
                                 </td>
-                                <td>
+                                <td class="col-recipe-price">
                                     <span style="font-weight:700; color:#0f172a;">
                                         Rp {{ number_format($p->sale_price ?: $p->price, 0, ',', '.') }}
                                     </span>
                                 </td>
-                                <td>
+                                <td class="col-recipe-bom">
                                     @if($p->recipes->isEmpty())
-                                        <span style="color:#94a3b8; font-style:italic; font-size:0.78rem;">Belum ada resep</span>
+                                        <span style="color:#94a3b8; font-style:italic; font-size:0.75rem;">Belum ada resep</span>
                                     @else
-                                        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                                        <div class="recipe-chips-container" style="display:flex; flex-wrap:wrap; gap:4px;">
                                             @foreach($p->recipes as $rc)
-                                                <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.72rem; font-weight:600; padding:2px 6px; border-radius:6px;">
+                                                <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.72rem; font-weight:600; padding:2px 6px; border-radius:6px; white-space:nowrap;">
                                                     {{ $rc->material?->name ?? 'Bahan' }}: {{ (float)$rc->quantity }} {{ $rc->material?->unit }}
                                                 </span>
                                             @endforeach
                                         </div>
                                     @endif
                                 </td>
-                                <td style="text-align:right;">
-                                    <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
-                                        style="background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; padding:6px 12px; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer;">
-                                        Atur Resep
-                                    </button>
+                                <td class="col-recipe-action" style="text-align:right; white-space:nowrap;">
+                                    <div style="display:inline-flex; flex-direction:column; gap:4px; align-items:flex-end;">
+                                        <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
+                                            style="background:var(--pos-grad); border:none; color:#ffffff; padding:6px 12px; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(30,179,73,0.25); font-family:inherit; white-space:nowrap;">
+                                            Atur Resep
+                                        </button>
+                                        @if(!$p->recipes->isEmpty())
+                                            <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
+                                                style="background:#f1f5f9; border:none; color:#475569; padding:3px 8px; border-radius:6px; font-size:0.68rem; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">
+                                                Lihat Resep ({{ $p->recipes->count() }})
+                                            </button>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -779,7 +813,7 @@
                 <button type="button" onclick="closeModal('modalAddMaterial')" style="background:none; border:none; color:#94a3b8; font-size:1.25rem; cursor:pointer;">&times;</button>
             </div>
 
-            <form action="{{ route('creator.materials.store') }}" method="POST">
+            <form action="{{ route('creator.inventories.store') }}" method="POST">
                 @csrf
                 <div style="margin-bottom:0.9rem;">
                     <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama Bahan Baku *</label>
@@ -940,7 +974,7 @@
 
                 <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
                     <button type="button" onclick="closeModal('modalRestock')" style="padding:9px 16px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#475569; font-size:0.82rem; font-weight:600; cursor:pointer;">Batal</button>
-                    <button type="submit" class="prod-add-btn" style="background:#10b981;">+ Simpan Restock</button>
+                    <button type="submit" class="prod-add-btn">+ Simpan Restock</button>
                 </div>
             </form>
         </div>
@@ -1028,7 +1062,7 @@
         document.getElementById('editMatCost').value = mat.cost_per_unit;
 
         const form = document.getElementById('formEditMaterial');
-        form.action = `/creator/materials/${mat.id}`;
+        form.action = `/creator/inventories/${mat.id}`;
 
         openModal('modalEditMaterial');
     }
@@ -1040,7 +1074,7 @@
         }
         const form = document.getElementById('formRestock');
         if (sel && sel.value) {
-            form.action = `/creator/materials/${sel.value}/restock`;
+            form.action = `/creator/inventories/${sel.value}/restock`;
         }
         openModal('modalRestock');
     }
@@ -1052,7 +1086,7 @@
             updateRestockUnit();
         }
         const form = document.getElementById('formRestock');
-        form.action = `/creator/materials/${id}/restock`;
+        form.action = `/creator/inventories/${id}/restock`;
         openModal('modalRestock');
     }
 
@@ -1065,7 +1099,7 @@
             document.getElementById('restockUnitLabel').textContent = unit;
             document.getElementById('restockCostInput').value = cost || '';
             const form = document.getElementById('formRestock');
-            form.action = `/creator/materials/${sel.value}/restock`;
+            form.action = `/creator/inventories/${sel.value}/restock`;
         }
     }
 
@@ -1075,7 +1109,7 @@
     function openRecipeModal(productId, productName, existingRecipes) {
         document.getElementById('recipeProductName').textContent = `Menu: ${productName}`;
         const form = document.getElementById('formRecipe');
-        form.action = `/creator/materials/recipe/${productId}`;
+        form.action = `/creator/inventories/recipe/${productId}`;
 
         const container = document.getElementById('recipeRowsContainer');
         container.innerHTML = '';

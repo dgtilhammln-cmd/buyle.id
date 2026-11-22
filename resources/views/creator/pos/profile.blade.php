@@ -823,6 +823,24 @@
                     </svg>
                 </div>
             </a>
+
+            {{-- Inventori Bahan & Resep --}}
+            <a href="{{ route('creator.inventories.index', ['from' => 'pos']) }}" class="menu-group-item">
+                <div class="menu-item-left">
+                    <div class="menu-item-icon" style="color: #1eb349; background: rgba(30,179,73,0.1);">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <span class="menu-item-title">Inventori Bahan & Resep</span>
+                </div>
+                <div class="menu-item-right">
+                    <span style="font-size:0.68rem; font-weight:700; color:#1eb349; background:rgba(30,179,73,0.1); padding:2px 7px; border-radius:6px; margin-right:6px;">F&B</span>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+            </a>
         </div>
 
         {{-- 5. Group 2: Modul Pengaturan Detail POS --}}

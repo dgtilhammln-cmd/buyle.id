@@ -41,11 +41,36 @@ class MaterialController extends Controller
         $warningCount = $allMats->filter(fn($m) => (float) $m->min_stock > 0 && (float) $m->stock <= (float) $m->min_stock && (float) $m->stock > 0)->count();
         $dangerCount  = $allMats->filter(fn($m) => (float) $m->stock <= 0)->count();
 
-        // ── 2. Data Produk untuk Tab Resep Menu ──
+        // ── 2. Data Produk untuk Tab Resep Menu (Khusus F&B / Makanan & Minuman) ──
+        $excludedTypes = ['digital', 'service', 'ticket', 'external_link', 'digital_download', 'virtual', 'course', 'donation', 'webinar', 'event'];
+        $excludedKeywords = [
+            'konser', 'cbt', 'jasa', 'website', 'aplikasi', 'developer', 'tiket', 'ticket',
+            'event', 'coding', 'source code', 'template', 'software', 'undangan', 'seo',
+            'hosting', 'domain', 'teknis', 'otomatisasi'
+        ];
+
         $products = Product::where('seller_id', $sellerId)
             ->with(['recipes.material', 'category:id,name'])
+            ->where(function ($q) use ($excludedTypes) {
+                $q->whereNotIn('product_type', $excludedTypes)
+                  ->orWhereNull('product_type');
+            })
             ->orderBy('name', 'asc')
             ->get();
+
+        // Filter ketat F&B
+        $products = $products->filter(function ($p) use ($excludedKeywords) {
+            $nameLower = strtolower($p->name ?? '');
+            $catLower  = strtolower($p->category?->name ?? '');
+            $typeLower = strtolower($p->product_type ?? '');
+
+            foreach ($excludedKeywords as $kw) {
+                if (str_contains($nameLower, $kw) || str_contains($catLower, $kw) || str_contains($typeLower, $kw)) {
+                    return false;
+                }
+            }
+            return true;
+        })->values();
 
         // ── 3. Data Riwayat Mutasi ──
         $mutations = MaterialMutation::where('seller_id', $sellerId)
@@ -54,7 +79,7 @@ class MaterialController extends Controller
             ->paginate(25, ['*'], 'mutation_page')
             ->withQueryString();
 
-        return view('creator.materials.index', compact(
+        return view('creator.inventories.index', compact(
             'materials',
             'allMats',
             'products',
@@ -106,7 +131,7 @@ class MaterialController extends Controller
             ]);
         }
 
-        return redirect()->route('creator.materials.index', ['tab' => 'materials'])
+        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
             ->with('success', "Bahan baku {$material->name} berhasil ditambahkan!");
     }
 
@@ -134,7 +159,7 @@ class MaterialController extends Controller
             'notes'         => $request->notes,
         ]);
 
-        return redirect()->route('creator.materials.index', ['tab' => 'materials'])
+        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
             ->with('success', "Bahan baku {$material->name} berhasil diperbarui!");
     }
 
@@ -144,7 +169,7 @@ class MaterialController extends Controller
         $name = $material->name;
         $material->delete();
 
-        return redirect()->route('creator.materials.index', ['tab' => 'materials'])
+        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
             ->with('success', "Bahan baku {$name} telah dihapus.");
     }
 
@@ -164,7 +189,7 @@ class MaterialController extends Controller
 
         $material->restock($qty, $unitCost, $notes);
 
-        return redirect()->route('creator.materials.index', ['tab' => 'materials'])
+        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
             ->with('success', "Berhasil menambahkan {$qty} {$material->unit} ke stok {$material->name}.");
     }
 
@@ -194,7 +219,7 @@ class MaterialController extends Controller
             }
         });
 
-        return redirect()->route('creator.materials.index', ['tab' => 'recipes'])
+        return redirect()->route('creator.inventories.index', ['tab' => 'recipes'])
             ->with('success', "Resep untuk {$product->name} berhasil disimpan!");
     }
 }

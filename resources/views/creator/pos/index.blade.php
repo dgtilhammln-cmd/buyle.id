@@ -3818,15 +3818,15 @@
                                 </div>
 
                                 <div class="pos-header-right">
-                                    <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-ref-add-btn"
-                                        id="posBtnHeaderAdd" title="Kelola Produk di Buyle"
+                                    <button type="button" onclick="openPosAddOptionsModal(event)" class="pos-ref-add-btn"
+                                        id="posBtnHeaderAdd" title="Tambah & Kelola"
                                         style="width:40px; height:40px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1.5px solid #e2e8f0; background:#fff; cursor:pointer; color:#166534; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
                                             viewBox="0 0 24 24">
                                             <line x1="12" y1="5" x2="12" y2="19" />
                                             <line x1="5" y1="12" x2="19" y2="12" />
                                         </svg>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
 
@@ -3978,26 +3978,9 @@
                                         <div class="product-img-wrapper">
                                             @if($imgUrl)
                                                 <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
-                                                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                                <div
-                                                    style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:#ffffff;">
-                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706"
-                                                        stroke-width="1.5">
-                                                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                                        <polyline points="21 15 16 10 5 21" />
-                                                    </svg>
-                                                </div>
+                                                    onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='14px';this.style.background='#ffffff';">
                                             @else
-                                                <div
-                                                    style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#ffffff;">
-                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706"
-                                                        stroke-width="1.5">
-                                                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                                        <polyline points="21 15 16 10 5 21" />
-                                                    </svg>
-                                                </div>
+                                                <img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="{{ $prod->name }}" class="product-img" style="object-fit:contain; padding:14px; background:#ffffff;">
                                             @endif
                                             <div class="product-check-badge" id="card-check-{{ $prod->id }}"
                                                 style="display:none;">
@@ -10564,10 +10547,10 @@
             };
             console.log("%c[Buyle POS Ready] Debug console active. Any error will be logged in full detail.", "color: #16a34a; font-weight: bold;");
 
-            // Direct redirect to Products page
+            // Modal Tambah & Kelola (Produk & Inventori)
             function openPosAddOptionsModal(e) {
                 if (e) { e.preventDefault(); e.stopPropagation(); }
-                window.location.href = "{{ route('creator.products.index', ['from' => 'pos']) }}";
+                openModal('posAddOptionsModal');
             }
 
             // Move bottom navbar to <body> to escape overflow:hidden stacking context
@@ -10759,8 +10742,8 @@
                             if (grid) {
                                 const formattedPrice = new Intl.NumberFormat('id-ID').format(p.price);
                                 const imgHtml = p.image_url
-                                    ? `<img src="${p.image_url}" alt="${p.name}" class="product-img" loading="lazy">`
-                                    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f8fafc;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
+                                    ? `<img src="${p.image_url}" alt="${p.name}" class="product-img" loading="lazy" onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='14px';this.style.background='#ffffff';">`
+                                    : `<img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="${p.name}" class="product-img" style="object-fit:contain;padding:14px;background:#ffffff;">`;
 
                                 const cardHtml = `
                                             <div class="product-card" data-id="${p.id}" data-name="${p.name.toLowerCase()}"
@@ -11807,44 +11790,42 @@
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:10px;">
-                    <!-- Opsi 1: Tambah Produk Baru -->
-                    <button type="button" class="pos-add-option-card" onclick="openQuickProductModal()">
+                    <!-- Opsi 1: Kelola Produk & Menu -->
+                    <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-add-option-card" style="text-decoration:none;">
                         <div class="pos-add-option-icon">
                             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="7" height="7" />
-                                <rect x="14" y="3" width="7" height="7" />
-                                <rect x="14" y="14" width="7" height="7" />
-                                <rect x="3" y="14" width="7" height="7" />
+                                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                                <rect x="3" y="14" width="7" height="7" rx="1.5" />
                             </svg>
                         </div>
                         <div style="flex:1;">
-                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Tambah Produk Baru</div>
-                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Input nama, harga, dan masukkan
-                                langsung ke kasir</div>
+                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Kelola Produk & Menu</div>
+                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Tambah atau ubah produk dan harga jual kasir</div>
                         </div>
                         <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6" />
                         </svg>
-                    </button>
+                    </a>
 
-                    <!-- Opsi 2: Tambah Kelompok Produk -->
-                    <button type="button" class="pos-add-option-card" onclick="openQuickCategoryModal()">
-                        <div class="pos-add-option-icon" style="background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8;">
+                    <!-- Opsi 2: Inventori Bahan & Resep -->
+                    <a href="{{ route('creator.inventories.index', ['from' => 'pos']) }}" class="pos-add-option-card" style="text-decoration:none;">
+                        <div class="pos-add-option-icon" style="background:rgba(30,179,73,0.1); border-color:rgba(30,179,73,0.25); color:#1eb349;">
                             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
                         </div>
                         <div style="flex:1;">
-                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Tambah Kelompok Produk</div>
-                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Buat kategori baru untuk
-                                mengelompokkan menu</div>
+                            <div style="font-size:0.92rem; font-weight:800; color:#0f172a;">Inventori Bahan & Resep</div>
+                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">Pantau stok bahan baku & resep menu (BOM)</div>
                         </div>
                         <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6" />
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
