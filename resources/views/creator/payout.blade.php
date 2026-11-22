@@ -1285,11 +1285,11 @@
                         {{ $freePayoutSlots ?? 0 }}x Bebas Admin
                     </span>
                 </div>
-                <div style="font-size:0.7rem;color:#64748b;line-height:1.45;">
+                <div style="font-size:0.7rem;color:#64748b;line-height:1.4;">
                     @if(($freePayoutSlots ?? 0) > 0)
-                        Anda memiliki <strong>{{ $freePayoutSlots }}x slot penarikan gratis</strong> tanpa biaya admin. Dapatkan kuota tambahan melalui misi login 7 hari berturut-turut di dashboard!
+                        <strong>{{ $freePayoutSlots }}x penarikan bebas admin.</strong> Login 7 hari untuk tambah kuota.
                     @else
-                        Kuota gratis Anda saat ini 0x. Penarikan dikenakan biaya admin normal Rp 5.000. Selesaikan login 7 hari di dashboard untuk menambah slot gratis.
+                        Biaya admin normal Rp 5.000. Login 7 hari untuk slot gratis.
                     @endif
                 </div>
             </div>
