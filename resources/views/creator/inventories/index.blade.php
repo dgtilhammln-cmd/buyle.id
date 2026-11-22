@@ -7,6 +7,7 @@
     <div class="prod-actions-row">
         <form action="{{ route('creator.inventories.index') }}" method="GET" class="prod-search-form">
             <input type="hidden" name="tab" value="{{ $tab }}">
+            @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari bahan..." class="prod-search-input">
             <button type="submit" class="prod-search-btn" title="Cari">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -443,13 +444,71 @@
             display: none !important;
         }
     }
+
+    .prod-mobile-header {
+        display: none;
+    }
+
+    @media (max-width: 991px) {
+        .prod-mobile-header {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: max(0.45rem, env(safe-area-inset-top, 0px));
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .prod-mobile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #f1ece4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .prod-mobile-btn:active {
+            transform: scale(0.92);
+        }
+
+        .prod-mobile-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.01em;
+            text-align: center;
+            flex: 1;
+        }
+    }
 </style>
 @endsection
 
 @section('content')
+    {{-- Mobile Top Header (100% Persis Produk Saya, Cuma Icon Back di Kiri & Safezone iOS) --}}
+    <div class="prod-mobile-header">
+        <button type="button" class="prod-mobile-btn" onclick="handleInventoryMobileBack()" title="Kembali">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        <h2 class="prod-mobile-title">Inventori Bahan</h2>
+        <div style="width: 40px; height: 40px; flex-shrink: 0;"></div>
+    </div>
+
     {{-- Tabs Nav --}}
     <div class="mat-tabs-bar">
-        <a href="{{ route('creator.inventories.index', ['tab' => 'materials']) }}" class="mat-tab-btn {{ $tab === 'materials' ? 'active' : '' }}">
+        <a href="{{ route('creator.inventories.index', array_merge(['tab' => 'materials'], request('from') ? ['from' => request('from')] : [])) }}" class="mat-tab-btn {{ $tab === 'materials' ? 'active' : '' }}">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -458,7 +517,7 @@
             Bahan Baku
             <span class="mat-tab-badge">{{ $totalCount }}</span>
         </a>
-        <a href="{{ route('creator.inventories.index', ['tab' => 'recipes']) }}" class="mat-tab-btn {{ $tab === 'recipes' ? 'active' : '' }}">
+        <a href="{{ route('creator.inventories.index', array_merge(['tab' => 'recipes'], request('from') ? ['from' => request('from')] : [])) }}" class="mat-tab-btn {{ $tab === 'recipes' ? 'active' : '' }}">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -469,7 +528,7 @@
             Resep Menu (BOM)
             <span class="mat-tab-badge">{{ $products->count() }}</span>
         </a>
-        <a href="{{ route('creator.inventories.index', ['tab' => 'mutations']) }}" class="mat-tab-btn {{ $tab === 'mutations' ? 'active' : '' }}">
+        <a href="{{ route('creator.inventories.index', array_merge(['tab' => 'mutations'], request('from') ? ['from' => request('from')] : [])) }}" class="mat-tab-btn {{ $tab === 'mutations' ? 'active' : '' }}">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
@@ -1156,6 +1215,21 @@
     function removeRecipeRow(idx) {
         const row = document.getElementById(`recipe-row-${idx}`);
         if (row) row.remove();
+    }
+
+    function handleInventoryMobileBack() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('from') === 'pos' || document.referrer.includes('/pos')) {
+                window.location.href = "{{ route('creator.pos.index') }}";
+                return;
+            }
+        } catch (e) { }
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "{{ route('creator.pos.index') }}";
+        }
     }
 </script>
 @endsection
