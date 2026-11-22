@@ -47,15 +47,12 @@ class TicketScannerController extends Controller
         $isGateDivision  = stripos($myStaffPosition, 'gate') !== false || stripos($myStaffPosition, 'scan') !== false;
 
         // ── View Mode Switch ──────────────────────────────────────────────────
-        // Default: kalau assigned crew → 'crew', kalau tidak → 'creator'
-        // Bisa override via session (dari tombol switch mode di UI)
-        $defaultMode = $isAssignedStaff ? 'crew' : 'creator';
+        // Default mode:
+        // Jika akun panitia/kru murni (assigned staff dan belum KYC) -> default 'crew'
+        // Jika akun creator/EO (sudah KYC atau pemilik event) -> default 'creator'
+        $defaultMode = ($isAssignedStaff && !$isKycVerified) ? 'crew' : 'creator';
         $viewMode = session('scanner_view_mode_' . $sellerId, $defaultMode);
-        // Kalau bukan assigned staff, selalu paksa 'creator'
-        if (!$isAssignedStaff) {
-            $viewMode = 'creator';
-        }
-        // Dalam mode creator, tab=data/gate tetap harus punya KYC
+        // Dalam mode crew, akses dibatasi ke scanner & profil pribadi
         $isCrewMode = ($viewMode === 'crew');
 
         $selectedEventId = $request->input('event_id');
