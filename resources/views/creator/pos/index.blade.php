@@ -4749,62 +4749,74 @@
                     </div>
                 </div>
 
-                <!-- 2. Info Pelanggan (Cukup Nama, Email, dan Pilih Meja) -->
-                <div
-                    style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:0.85rem; margin-bottom:0.85rem;">
-                    <div
-                        style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
-                        Info Pelanggan
+                <!-- 2. Info Pelanggan (Collapsible: Default Ringkas & Minimalis, Form Muncul Saat Klik Tambah Customer) -->
+                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; margin-bottom:0.85rem; overflow:hidden;">
+                    <!-- Compact Summary Bar (Selalu Tampil Tanpa Menuhin Layar) -->
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.85rem; background:#f8fafc;">
+                        <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+                            <div style="width:26px; height:26px; border-radius:50%; background:#ffffff; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <div style="min-width:0;">
+                                <div style="font-size:0.76rem; font-weight:700; color:#0f172a; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="posCustomerDisplaySummary">Pelanggan Umum</div>
+                                <div style="font-size:0.65rem; color:#64748b; line-height:1.2;" id="posCustomerDisplaySub">Tanpa Meja (Takeaway)</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="togglePosCustomerForm()" id="btnToggleCustomerForm"
+                            style="background:#ffffff; border:1px solid #cbd5e1; color:#166534; padding:4px 9px; border-radius:8px; font-size:0.7rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:inherit; flex-shrink:0;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" id="iconToggleCustomer">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            <span id="textToggleCustomer">+ Tambah Customer</span>
+                        </button>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:8px;">
-                        <!-- Nama Pelanggan -->
-                        <div>
-                            <label
-                                style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Nama</label>
-                            <input type="text" id="posCustomerName" class="form-input"
-                                style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0;"
-                                placeholder="Pelanggan Umum">
-                        </div>
 
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                            <!-- WhatsApp / No. HP Pelanggan -->
+                    <!-- Form Body (Default Tersembunyi, Pop-up Menyesuaikan Otomatis) -->
+                    <div id="posCustomerFormWrapper" style="display:none; padding:0.75rem 0.85rem; border-top:1px solid #f1f5f9; background:#ffffff;">
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            <!-- Nama Pelanggan -->
                             <div>
-                                <label
-                                    style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">WhatsApp
-                                    / No. HP</label>
-                                <input type="tel" id="posCustomerPhone" class="form-input"
-                                    style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0;"
-                                    placeholder="08xxxxxxxxxx">
+                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Nama</label>
+                                <input type="text" id="posCustomerName" class="form-input"
+                                    style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 10px;"
+                                    placeholder="Pelanggan Umum" oninput="updateCustomerSummaryDisplay()">
                             </div>
 
-                            <!-- Pilih Meja -->
-                            <div>
-                                <label
-                                    style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Pilih
-                                    Meja</label>
-                                <select id="posTableQuickSelect" class="form-input"
-                                    style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0; padding:0 8px;"
-                                    onchange="onTableQuickSelectChanged(this.value)">
-                                    <option value="">Tanpa Meja (Takeaway)</option>
-                                    @if(isset($posTables))
-                                        @foreach($posTables as $tbl)
-                                            <option value="{{ $tbl['name'] ?? $tbl }}">{{ $tbl['name'] ?? $tbl }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <input type="hidden" id="posTableNumber" value="">
-                            </div>
-                        </div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                                <!-- WhatsApp / No. HP Pelanggan -->
+                                <div>
+                                    <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">WhatsApp / No. HP</label>
+                                    <input type="tel" id="posCustomerPhone" class="form-input"
+                                        style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 10px;"
+                                        placeholder="08xxxxxxxxxx" oninput="updateCustomerSummaryDisplay()">
+                                </div>
 
-                        <!-- Email E-Receipt (Opsional) -->
-                        <div>
-                            <label
-                                style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Email
-                                (Opsional)</label>
-                            <input type="email" id="posCartCustomerEmail" class="form-input"
-                                style="height:36px; font-size:0.8rem; border-radius:10px; width:100%; border:1.5px solid #e2e8f0;"
-                                placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
-                            <input type="hidden" id="posCustomerEmail" value="">
+                                <!-- Pilih Meja -->
+                                <div>
+                                    <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Pilih Meja</label>
+                                    <select id="posTableQuickSelect" class="form-input"
+                                        style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 8px;"
+                                        onchange="onTableQuickSelectChanged(this.value); updateCustomerSummaryDisplay();">
+                                        <option value="">Tanpa Meja (Takeaway)</option>
+                                        @if(isset($posTables))
+                                            @foreach($posTables as $tbl)
+                                                <option value="{{ $tbl['name'] ?? $tbl }}">{{ $tbl['name'] ?? $tbl }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <input type="hidden" id="posTableNumber" value="">
+                                </div>
+                            </div>
+
+                            <!-- Email E-Receipt (Opsional) -->
+                            <div>
+                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Email (Opsional)</label>
+                                <input type="email" id="posCartCustomerEmail" class="form-input"
+                                    style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 10px;"
+                                    placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
+                                <input type="hidden" id="posCustomerEmail" value="">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -7673,8 +7685,46 @@
                 if (target) target.value = val;
             }
 
+            // Collapsible Customer Form in Payment Modal
+            window.togglePosCustomerForm = function() {
+                const wrapper = document.getElementById('posCustomerFormWrapper');
+                const textEl = document.getElementById('textToggleCustomer');
+                const iconEl = document.getElementById('iconToggleCustomer');
+                if (!wrapper) return;
+                const isHidden = (wrapper.style.display === 'none' || wrapper.style.display === '');
+                if (isHidden) {
+                    wrapper.style.display = 'block';
+                    if (textEl) textEl.innerText = 'Tutup Form';
+                    if (iconEl) iconEl.innerHTML = '<polyline points="18 15 12 9 6 15"/>';
+                    const nameInput = document.getElementById('posCustomerName');
+                    if (nameInput) setTimeout(() => nameInput.focus(), 60);
+                } else {
+                    wrapper.style.display = 'none';
+                    if (textEl) textEl.innerText = '+ Tambah Customer';
+                    if (iconEl) iconEl.innerHTML = '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
+                }
+            };
+
+            window.updateCustomerSummaryDisplay = function() {
+                const nameInput = document.getElementById('posCustomerName');
+                const tableSelect = document.getElementById('posTableQuickSelect');
+                const phoneInput = document.getElementById('posCustomerPhone');
+                const nameDisplay = document.getElementById('posCustomerDisplaySummary');
+                const subDisplay = document.getElementById('posCustomerDisplaySub');
+
+                const nameVal = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : 'Pelanggan Umum';
+                let subVal = (tableSelect && tableSelect.value) ? ('Meja ' + tableSelect.value) : 'Tanpa Meja (Takeaway)';
+                if (phoneInput && phoneInput.value.trim()) {
+                    subVal += ' • ' + phoneInput.value.trim();
+                }
+
+                if (nameDisplay) nameDisplay.innerText = nameVal;
+                if (subDisplay) subDisplay.innerText = subVal;
+            };
+
             // Open Payment Modal
             function openPaymentModal() {
+                updateCustomerSummaryDisplay();
                 renderPaymentModalOrderItems();
                 if (cart.length === 0) {
                     showPosAlert('Keranjang POS Anda masih kosong. Silakan pilih produk terlebih dahulu.', 'Keranjang Kosong', 'warning');
@@ -8445,12 +8495,24 @@
                 document.getElementById('posTableNumber').value = '';
                 document.getElementById('posCustomerPhone').value = '';
                 document.getElementById('posCustomerEmail').value = '';
+                const tableSelect = document.getElementById('posTableQuickSelect');
+                if (tableSelect) tableSelect.value = '';
                 document.getElementById('posDiscountInput').value = '';
                 const presetSelect = document.getElementById('posDiscountPresetSelect');
                 if (presetSelect) presetSelect.value = '';
                 window._selectedDiscountPreset = null;
                 const cartEmail = document.getElementById('posCartCustomerEmail');
                 if (cartEmail) cartEmail.value = '';
+
+                // Reset customer form toggle state
+                const custWrapper = document.getElementById('posCustomerFormWrapper');
+                if (custWrapper) custWrapper.style.display = 'none';
+                const textEl = document.getElementById('textToggleCustomer');
+                if (textEl) textEl.innerText = '+ Tambah Customer';
+                const iconEl = document.getElementById('iconToggleCustomer');
+                if (iconEl) iconEl.innerHTML = '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
+                updateCustomerSummaryDisplay();
+
                 renderCart();
             }
 
