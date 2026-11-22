@@ -727,13 +727,7 @@ Route::get('/deploy-hostinger', function () {
         \Illuminate\Support\Facades\Artisan::call('bio:cache-video-thumbs');
         \Illuminate\Support\Facades\Artisan::call('hero:compress', ['--quality' => 76, '--max-width' => 1280]);
         $heroLog = \Illuminate\Support\Facades\Artisan::output();
-        $foodDump = \App\Models\Product::where('name', 'like', '%Lele%')
-            ->orWhere('name', 'like', '%Ayam%')
-            ->orWhere('name', 'like', '%Nila%')
-            ->orWhere('name', 'like', '%Tahu%')
-            ->orWhere('name', 'like', '%Teh%')
-            ->get(['id', 'name', 'image', 'gallery', 'seller_id'])->toJson(JSON_PRETTY_PRINT);
-        return 'SUKSES! Sync Git & Clear Cache Berhasil.<br><pre>' . $gitOutput . "\n\nFood Products Dump:\n" . $foodDump . "\n\nHero Compress:\n" . $heroLog . '</pre>';
+        return 'SUKSES! Sync Git & Clear Cache Berhasil.<br><pre>' . $gitOutput . "\n\nHero Compress:\n" . $heroLog . '</pre>';
     } catch (\Exception $e) {
         return 'ERROR: ' . $e->getMessage();
     }

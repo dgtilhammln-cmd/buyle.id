@@ -242,28 +242,95 @@
     /* ── Metric Summary Pills ── */
     .mat-stat-pills {
         display: flex;
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
+        gap: 0.5rem;
+        margin-bottom: 1.15rem;
         flex-wrap: wrap;
     }
 
     .mat-stat-pill {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 0.45rem 0.9rem;
+        gap: 6px;
+        padding: 0.35rem 0.75rem;
         border-radius: 999px;
-        font-size: 0.78rem;
-        font-weight: 600;
+        font-size: 0.74rem;
+        font-weight: 500;
         border: 1px solid #e2e8f0;
         background: #ffffff;
         color: #475569;
+        line-height: 1.2;
+    }
+
+    .mat-stat-pill strong {
+        font-weight: 600;
     }
 
     .mat-stat-pill .dot {
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
+    }
+
+    /* ── Grid Cards & Badges (Matching Products Page) ── */
+    .grid-status-btn {
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 0.22rem 0.55rem;
+        border-radius: 100px;
+        color: #fff;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        line-height: 1;
+        letter-spacing: 0.02em;
+    }
+
+    .grid-status-btn.active {
+        background: rgba(16, 185, 129, 0.95);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+    }
+
+    .grid-status-btn.archived {
+        background: rgba(245, 158, 11, 0.95);
+        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
+    }
+
+    .grid-card-item {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        overflow: hidden;
+        border: 1px solid #F1F5F9;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .grid-card-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    #bomViewGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 0.85rem;
+    }
+
+    @media (max-width: 991px) {
+        #bomViewGrid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 0.75rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        #bomViewGrid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.55rem;
+        }
     }
 
     /* ── Grid Cards ── */
@@ -454,9 +521,8 @@
             display: flex !important;
             align-items: center;
             justify-content: space-between;
-            padding-top: max(0.45rem, env(safe-area-inset-top, 0px));
-            padding-bottom: 0.5rem;
-            margin-bottom: 0.65rem;
+            padding: 0.25rem 0 0.35rem;
+            margin-bottom: 0;
         }
 
         .prod-mobile-btn {
@@ -503,7 +569,7 @@
             </svg>
         </button>
         <h2 class="prod-mobile-title">Inventori Bahan</h2>
-        <div style="width: 40px; height: 40px; flex-shrink: 0;"></div>
+        <div style="width: 38px;"></div>
     </div>
 
     {{-- Tabs Nav --}}
@@ -728,7 +794,76 @@
                 <a href="{{ route('creator.products.create') }}" class="prod-add-btn" style="margin:1rem auto 0; display:inline-flex;">+ Tambah Menu Makanan</a>
             </div>
         @else
-            <div class="mat-table-wrap">
+            {{-- VIEW GRID (Card Style 100% Mirip /creator/products) --}}
+            <div id="bomViewGrid" class="view-container">
+                @foreach($products as $p)
+                    <div id="bom-card-{{ $p->id }}" class="grid-card-item">
+                        {{-- Status Badge Resep Top Right --}}
+                        <div style="position:absolute;top:7px;right:7px;z-index:3;">
+                            @if($p->recipes->isEmpty())
+                                <span class="grid-status-btn archived" title="Formula resep belum diatur">Tanpa Resep</span>
+                            @else
+                                <span class="grid-status-btn active" title="{{ $p->recipes->count() }} Bahan Baku Terkait">{{ $p->recipes->count() }} Bahan</span>
+                            @endif
+                        </div>
+
+                        {{-- Kategori Top Left --}}
+                        <div style="position:absolute;top:7px;left:7px;z-index:3;">
+                            <span style="background:rgba(255,255,255,0.92);backdrop-filter:blur(4px);color:#475569;font-size:0.62rem;font-weight:600;padding:2px 6px;border-radius:6px;border:1px solid #e2e8f0;">
+                                {{ $p->category?->name ?? 'F&B' }}
+                            </span>
+                        </div>
+
+                        {{-- Square Image --}}
+                        <div style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;background:#f8fafc;display:flex;align-items:center;justify-content:center;">
+                            <img src="{{ $p->image_url }}" alt="{{ $p->name }}"
+                                style="width:100%;height:100%;object-fit:cover;display:block;"
+                                onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='1.25rem';">
+                        </div>
+
+                        {{-- Card Content --}}
+                        <div style="padding:0.65rem;flex:1;display:flex;flex-direction:column;">
+                            <div style="font-size:0.75rem;font-weight:600;color:#1E293B;margin-bottom:0.25rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2em;" title="{{ $p->name }}">
+                                {{ $p->name }}
+                            </div>
+
+                            <div style="font-size:0.82rem;font-weight:700;color:#16a34a;margin-bottom:0.4rem;">
+                                Rp {{ number_format($p->sale_price ?: $p->price, 0, ',', '.') }}
+                            </div>
+
+                            <div style="margin-top:auto;padding-top:0.45rem;border-top:1px solid #F1F5F9;">
+                                @if($p->recipes->isEmpty())
+                                    <div style="font-size:0.65rem;color:#94a3b8;font-style:italic;margin-bottom:0.45rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                        Formula resep belum diatur
+                                    </div>
+                                @else
+                                    <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.45rem;max-height:38px;overflow:hidden;">
+                                        @foreach($p->recipes->take(2) as $rc)
+                                            <span style="background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;font-size:0.62rem;font-weight:500;padding:1px 5px;border-radius:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;">
+                                                {{ $rc->material?->name ?? 'Bahan' }}: {{ (float)$rc->quantity }} {{ $rc->material?->unit }}
+                                            </span>
+                                        @endforeach
+                                        @if($p->recipes->count() > 2)
+                                            <span style="font-size:0.6rem;color:#64748b;align-self:center;">+{{ $p->recipes->count() - 2 }}</span>
+                                        @endif
+                                    </div>
+                                @endif
+
+                                <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
+                                    style="width:100%;background:var(--pos-grad);border:none;color:#ffffff;padding:6px 8px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:var(--pos-shadow);font-family:inherit;transition:all 0.15s ease;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                    </svg>
+                                    <span>Atur Resep</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- VIEW TABLE (List View Alternatif) --}}
+            <div id="bomViewList" class="mat-table-wrap" style="display:none;">
                 <table class="mat-table" style="width:100%;">
                     <thead>
                         <tr>
@@ -779,18 +914,10 @@
                                     @endif
                                 </td>
                                 <td class="col-recipe-action" style="text-align:right; white-space:nowrap;">
-                                    <div style="display:inline-flex; flex-direction:column; gap:4px; align-items:flex-end;">
-                                        <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
-                                            style="background:var(--pos-grad); border:none; color:#ffffff; padding:6px 12px; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(30,179,73,0.25); font-family:inherit; white-space:nowrap;">
-                                            Atur Resep
-                                        </button>
-                                        @if(!$p->recipes->isEmpty())
-                                            <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
-                                                style="background:#f1f5f9; border:none; color:#475569; padding:3px 8px; border-radius:6px; font-size:0.68rem; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">
-                                                Lihat Resep ({{ $p->recipes->count() }})
-                                            </button>
-                                        @endif
-                                    </div>
+                                    <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
+                                        style="background:var(--pos-grad); border:none; color:#ffffff; padding:6px 12px; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(30,179,73,0.25); font-family:inherit; white-space:nowrap;">
+                                        Atur Resep
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -1078,25 +1205,42 @@
 <script>
     const allMaterialsList = @json($allMats);
 
-    // Switch View List / Grid
+    // Switch View List / Grid (Dukung Tab Bahan Baku & Tab Resep BOM)
     function switchMaterialView(view) {
-        const listEl = document.getElementById('matViewList');
-        const gridEl = document.getElementById('matViewGrid');
+        const matList = document.getElementById('matViewList');
+        const matGrid = document.getElementById('matViewGrid');
+        const bomGrid = document.getElementById('bomViewGrid');
+        const bomList = document.getElementById('bomViewList');
         const btnList = document.getElementById('mat-btn-view-list');
         const btnGrid = document.getElementById('mat-btn-view-grid');
 
         if (view === 'grid') {
-            if (listEl) listEl.style.display = 'none';
-            if (gridEl) gridEl.style.display = 'grid';
+            if (matList) matList.style.display = 'none';
+            if (matGrid) matGrid.style.display = 'grid';
+            if (bomList) bomList.style.display = 'none';
+            if (bomGrid) bomGrid.style.display = 'grid';
             if (btnList) btnList.classList.remove('active');
             if (btnGrid) btnGrid.classList.add('active');
         } else {
-            if (listEl) listEl.style.display = 'block';
-            if (gridEl) gridEl.style.display = 'none';
+            if (matList) matList.style.display = 'block';
+            if (matGrid) matGrid.style.display = 'none';
+            if (bomList) bomList.style.display = 'block';
+            if (bomGrid) bomGrid.style.display = 'none';
             if (btnList) btnList.classList.add('active');
             if (btnGrid) btnGrid.classList.remove('active');
         }
+        try { localStorage.setItem('buyle_inventories_view', view); } catch(e){}
     }
+
+    // Default ke Grid View pada Mobile atau Tab Resep
+    document.addEventListener('DOMContentLoaded', function() {
+        const isMobileInv = window.innerWidth <= 768;
+        const currentTab = @json($tab);
+        let savedInvView = null;
+        try { savedInvView = localStorage.getItem('buyle_inventories_view'); } catch(e){}
+        const activeView = savedInvView || (isMobileInv || currentTab === 'recipes' ? 'grid' : 'list');
+        switchMaterialView(activeView);
+    });
 
     // Modal Control
     function openModal(id) {
