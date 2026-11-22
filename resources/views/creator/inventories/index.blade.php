@@ -528,6 +528,13 @@
         display: none;
     }
 
+    /* Extra bottom padding when POS bottom nav is showing */
+    @if(request('from') === 'pos')
+    .cr-main-canvas {
+        padding-bottom: max(110px, calc(100px + env(safe-area-inset-bottom, 0px))) !important;
+    }
+    @endif
+
     @media (max-width: 991px) {
         .prod-mobile-header {
             display: flex !important;
