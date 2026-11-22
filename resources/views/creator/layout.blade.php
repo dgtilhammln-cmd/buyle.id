@@ -2403,7 +2403,9 @@
         }
     </script>
 
-    @include('components.pull-to-refresh')
+    @unless(request()->is('creator/pos*'))
+        @include('components.pull-to-refresh')
+    @endunless
 </body>
 
 </html>

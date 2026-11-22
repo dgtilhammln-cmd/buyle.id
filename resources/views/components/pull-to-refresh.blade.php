@@ -74,6 +74,9 @@
     // Only run on touch-capable devices
     if (!('ontouchstart' in window) && navigator.maxTouchPoints <= 0) return;
 
+    // Do NOT run pull-to-refresh on POS Kasir screen (prevents accidental cashier reloads)
+    if (window.location.pathname.includes('/creator/pos') || document.querySelector('.pos-wrapper') || document.getElementById('posMobileFloatingBar')) return;
+
     var ptr = document.getElementById('buyle-ptr');
     var arrow = document.getElementById('buyle-ptr-arrow');
     if (!ptr || !arrow) return;

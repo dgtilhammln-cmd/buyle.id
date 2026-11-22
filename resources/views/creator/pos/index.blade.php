@@ -7424,6 +7424,11 @@
                 closeModal('posVariantModal');
             }
 
+            window.handleCartImgError = function(img) {
+                if (!img || !img.parentElement) return;
+                img.parentElement.innerHTML = '<div class="cart-item-img-fallback"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
+            };
+
             // Render Cart HTML & Badges (Mendukung Tampilan Varian & Catatan)
             function renderCart() {
                 const container = document.getElementById('cartItemsContainer');
@@ -7455,7 +7460,7 @@
                                                 <div class="cart-item-row" style="padding: 10px 0; border-bottom: 1px dashed #f1f5f9;">
                                                     <div class="cart-item-thumb">
                                                         ${item.image ? `
-                                                            <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="this.parentElement.innerHTML='<div class=\'cart-item-img-fallback\'><svg width=\'16\' height=\'16\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>';">
+                                                            <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="handleCartImgError(this)">
                                                         ` : `
                                                             <div class="cart-item-img-fallback">
                                                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

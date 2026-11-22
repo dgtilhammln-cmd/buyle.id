@@ -1022,23 +1022,58 @@
                     <div>
                         <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Kategori *</label>
                         <select name="category" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
-                            <option value="kering">Bahan Kering</option>
-                            <option value="cair_dingin">Cair / Segar</option>
-                            <option value="kemasan">Kemasan / Cup</option>
-                            <option value="bumbu">Bumbu & Saus</option>
-                            <option value="lainnya">Lainnya</option>
+                            <optgroup label="Daging & Seafood">
+                                <option value="daging_unggas">Daging & Unggas (Ayam, Sapi, Bebek)</option>
+                                <option value="ikan_seafood">Ikan & Seafood (Lele, Nila, Udang, Cumi)</option>
+                            </optgroup>
+                            <optgroup label="Sayur, Bumbu & Bahan Segar">
+                                <option value="sayuran_jamur">Sayuran, Cabai, Bawang & Jamur</option>
+                                <option value="bumbu_saus_minyak">Bumbu Dapur, Saus, Sambal & Minyak</option>
+                                <option value="telur_tahu_tempe">Telur, Tahu & Tempe</option>
+                            </optgroup>
+                            <optgroup label="Minuman, Kopi & Cafe">
+                                <option value="biji_kopi_teh">Biji Kopi, Daun Teh & Cokelat Bubuk</option>
+                                <option value="susu_dairy">Susu Segar/UHT, Krimer & Keju</option>
+                                <option value="sirup_perisa">Sirup Rasa, Gula Cair & Puree</option>
+                                <option value="topping_minuman">Topping Minuman (Boba, Jelly, Cincau)</option>
+                            </optgroup>
+                            <optgroup label="Bahan Pokok & Tepung">
+                                <option value="beras_mie_pasta">Beras, Mie, Kwetiau & Pasta</option>
+                                <option value="tepung_gula_kering">Tepung Terigu, Gula Pasir & Bahan Kering</option>
+                                <option value="roti_pastry_bakery">Roti, Bun Burger & Kulit Pastry</option>
+                            </optgroup>
+                            <optgroup label="Frozen Food & Olahan">
+                                <option value="frozen_food">Frozen Food (Sosis, Nugget, Bakso, Dimsum)</option>
+                            </optgroup>
+                            <optgroup label="Kemasan & Operasional Dapur">
+                                <option value="kemasan_cup_packaging">Cup Plastik/Paper, Box, Sedotan & Kantong</option>
+                                <option value="gas_arang_operasional">Gas LPG, Arang, Kertas Minyak & Tusuk Sate</option>
+                            </optgroup>
+                            <optgroup label="Lainnya">
+                                <option value="kering">Bahan Kering Lainnya</option>
+                                <option value="cair_dingin">Bahan Basah/Cair Lainnya</option>
+                                <option value="lainnya">Lainnya</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div>
                         <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Satuan Dasar *</label>
                         <select name="unit" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                             <option value="gram">gram (gr)</option>
-                            <option value="ml">mililiter (ml)</option>
-                            <option value="pcs">pcs / buah</option>
-                            <option value="lembar">lembar</option>
                             <option value="kg">kilogram (kg)</option>
+                            <option value="ml">mililiter (ml)</option>
                             <option value="liter">liter (L)</option>
+                            <option value="pcs">pcs / buah</option>
+                            <option value="ekor">ekor</option>
                             <option value="porsi">porsi</option>
+                            <option value="butir">butir</option>
+                            <option value="lembar">lembar</option>
+                            <option value="cup">cup</option>
+                            <option value="sachet">sachet / sdt</option>
+                            <option value="botol">botol</option>
+                            <option value="kaleng">kaleng</option>
+                            <option value="ikat">ikat</option>
+                            <option value="box">box / dus</option>
                         </select>
                     </div>
                 </div>
@@ -1090,23 +1125,58 @@
                     <div>
                         <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Kategori *</label>
                         <select id="editMatCategory" name="category" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
-                            <option value="kering">Bahan Kering</option>
-                            <option value="cair_dingin">Cair / Segar</option>
-                            <option value="kemasan">Kemasan / Cup</option>
-                            <option value="bumbu">Bumbu & Saus</option>
-                            <option value="lainnya">Lainnya</option>
+                            <optgroup label="Daging & Seafood">
+                                <option value="daging_unggas">Daging & Unggas (Ayam, Sapi, Bebek)</option>
+                                <option value="ikan_seafood">Ikan & Seafood (Lele, Nila, Udang, Cumi)</option>
+                            </optgroup>
+                            <optgroup label="Sayur, Bumbu & Bahan Segar">
+                                <option value="sayuran_jamur">Sayuran, Cabai, Bawang & Jamur</option>
+                                <option value="bumbu_saus_minyak">Bumbu Dapur, Saus, Sambal & Minyak</option>
+                                <option value="telur_tahu_tempe">Telur, Tahu & Tempe</option>
+                            </optgroup>
+                            <optgroup label="Minuman, Kopi & Cafe">
+                                <option value="biji_kopi_teh">Biji Kopi, Daun Teh & Cokelat Bubuk</option>
+                                <option value="susu_dairy">Susu Segar/UHT, Krimer & Keju</option>
+                                <option value="sirup_perisa">Sirup Rasa, Gula Cair & Puree</option>
+                                <option value="topping_minuman">Topping Minuman (Boba, Jelly, Cincau)</option>
+                            </optgroup>
+                            <optgroup label="Bahan Pokok & Tepung">
+                                <option value="beras_mie_pasta">Beras, Mie, Kwetiau & Pasta</option>
+                                <option value="tepung_gula_kering">Tepung Terigu, Gula Pasir & Bahan Kering</option>
+                                <option value="roti_pastry_bakery">Roti, Bun Burger & Kulit Pastry</option>
+                            </optgroup>
+                            <optgroup label="Frozen Food & Olahan">
+                                <option value="frozen_food">Frozen Food (Sosis, Nugget, Bakso, Dimsum)</option>
+                            </optgroup>
+                            <optgroup label="Kemasan & Operasional Dapur">
+                                <option value="kemasan_cup_packaging">Cup Plastik/Paper, Box, Sedotan & Kantong</option>
+                                <option value="gas_arang_operasional">Gas LPG, Arang, Kertas Minyak & Tusuk Sate</option>
+                            </optgroup>
+                            <optgroup label="Lainnya">
+                                <option value="kering">Bahan Kering Lainnya</option>
+                                <option value="cair_dingin">Bahan Basah/Cair Lainnya</option>
+                                <option value="lainnya">Lainnya</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div>
                         <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Satuan Dasar *</label>
                         <select id="editMatUnit" name="unit" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                             <option value="gram">gram (gr)</option>
-                            <option value="ml">mililiter (ml)</option>
-                            <option value="pcs">pcs / buah</option>
-                            <option value="lembar">lembar</option>
                             <option value="kg">kilogram (kg)</option>
+                            <option value="ml">mililiter (ml)</option>
                             <option value="liter">liter (L)</option>
+                            <option value="pcs">pcs / buah</option>
+                            <option value="ekor">ekor</option>
                             <option value="porsi">porsi</option>
+                            <option value="butir">butir</option>
+                            <option value="lembar">lembar</option>
+                            <option value="cup">cup</option>
+                            <option value="sachet">sachet / sdt</option>
+                            <option value="botol">botol</option>
+                            <option value="kaleng">kaleng</option>
+                            <option value="ikat">ikat</option>
+                            <option value="box">box / dus</option>
                         </select>
                     </div>
                 </div>
