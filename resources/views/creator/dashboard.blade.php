@@ -2368,14 +2368,8 @@
 
                     {{-- Saldo Utama Buyle Pay: Logo di Kiri, Nominal di Paling Kanan + Icon Mata --}}
                     <div class="nina-balance-row">
-                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <div class="nina-buylepay-logo-wrap" title="Buyle Pay">
-                                <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" class="nina-buylepay-logo">
-                            </div>
-                            <a href="{{ route('creator.payout.settings') }}" class="nina-free-slot-badge" title="Kuota Bebas Biaya Penarikan Saldo">
-                                <i class="ph-fill ph-ticket"></i>
-                                <span id="balanceFreeSlotsBadge">{{ $freePayoutSlots ?? 3 }}x Bebas Admin</span>
-                            </a>
+                        <div class="nina-buylepay-logo-wrap" title="Buyle Pay">
+                            <img src="{{ asset('images/logobuylepay.png') }}" alt="Buyle Pay" class="nina-buylepay-logo">
                         </div>
 
                         <div class="nina-balance-amount-wrap">
@@ -2497,16 +2491,10 @@
                 {{-- ── CARD MILESTONE LOGIN 7 HARI (DAILY STREAK) ── --}}
                 <div class="nina-milestone-card" id="ninaMilestoneCard">
                     <div class="nina-milestone-header">
-                        <div class="nina-milestone-title-wrap">
-                            <div class="nina-milestone-icon">
-                                <i class="ph-fill ph-calendar-check"></i>
-                            </div>
-                            <div class="nina-milestone-title">Check-in 7 Hari</div>
-                        </div>
-
+                        <span class="nina-milestone-title">Daily Streak</span>
                         <span class="nina-milestone-badge" id="milestoneStreakBadge">
                             <i class="ph-fill ph-fire" style="color: #ea580c;"></i>
-                            <span>Streak {{ $loginStreak }}/7 Hari</span>
+                            <span>Hari {{ $loginStreak }}/7</span>
                         </span>
                     </div>
 
@@ -2521,7 +2509,7 @@
                             @endphp
                             <div class="nina-streak-day {{ $isPast ? 'is-checked' : '' }} {{ $isToday ? 'is-today' : '' }} {{ $isUpcoming ? 'is-upcoming' : '' }} {{ $isGrand ? 'is-grand-prize' : '' }}"
                                 onclick="handleStreakDayClick({{ $day }}, '{{ $isPast ? 'past' : ($isToday ? 'today' : 'upcoming') }}', {{ $isGrand ? 'true' : 'false' }})"
-                                title="{{ $isToday ? 'Hari Ini (Check-in Aktif)' : ($isPast ? 'Hari ke-' . $day . ' Selesai' : ($isGrand ? 'Grand Reward: +1 Bebas Biaya Admin' : 'Hari ke-' . $day)) }}">
+                                title="{{ $isToday ? 'Hari Ini' : ($isPast ? 'Hari ke-' . $day . ' Selesai' : ($isGrand ? 'Hari ke-7: Bebas Admin' : 'Hari ke-' . $day)) }}">
                                 @if($isToday)
                                     <div class="nina-streak-today-cap">Today</div>
                                 @else
@@ -2572,33 +2560,21 @@
                                     @if($isGrand)
                                         +1 Slot
                                     @else
-                                        {{ $isToday ? '40' : ($day % 2 == 0 ? '20' : '20') }}
+                                        {{ $isToday ? '40' : '20' }}
                                     @endif
                                 </div>
                             </div>
                         @endfor
                     </div>
 
-                    {{-- Footer Ringkas & Elegan (1 Baris Rapi) --}}
-                    <div class="nina-streak-footer">
-                        @if($canClaimStreak)
-                            <div class="nina-streak-prog-text">
-                                🎉 <strong>Rekor 7 Hari Selesai!</strong>
-                            </div>
+                    @if($canClaimStreak)
+                        <div class="nina-streak-footer" style="justify-content: center; padding-top: 0.75rem;">
                             <button type="button" class="nina-btn-claim-streak" id="claimStreakBtn" onclick="claimDailyStreak()">
                                 <i class="ph-bold ph-gift"></i>
-                                <span>Klaim +1 Bebas Admin</span>
+                                <span>Klaim Bebas Admin</span>
                             </button>
-                        @else
-                            <div class="nina-streak-prog-text">
-                                <strong>{{ max(0, 7 - $loginStreak) }} hari lagi</strong> untuk +1 Bebas Admin
-                            </div>
-                            <span class="nina-milestone-badge" id="milestoneCurrentBadge" title="Total Kuota Gratis Payout">
-                                <i class="ph-fill ph-ticket"></i>
-                                <span>{{ $freePayoutSlots ?? 3 }}x Bebas Admin</span>
-                            </span>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="nina-section-box">
@@ -2840,9 +2816,9 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    const badge = document.getElementById('balanceFreeSlotsBadge');
+                    const badge = document.getElementById('milestoneCurrentBadge');
                     if (badge) {
-                        badge.textContent = data.free_slots + 'x Bebas Admin';
+                        badge.innerHTML = '<i class="ph-fill ph-ticket"></i> ' + data.free_slots + 'x Bebas Admin';
                     }
                     if (typeof Swal !== 'undefined') {
                         Swal.fire({
