@@ -2610,9 +2610,8 @@
                             <i class="ph-bold ph-arrow-up-right" style="font-size: 0.85rem;"></i>
                         </a>
 
-                        <button type="button" class="nina-action-btn" onclick="openTopUpModal()">
-                            <i class="ph-bold ph-plus-circle" style="font-size: 0.88rem;"></i>
-                            <span>Top Up</span>
+                        <button type="button" class="nina-action-btn nina-action-btn-icon" onclick="openTopUpModal()" title="Top Up Saldo">
+                            <i class="ph-bold ph-plus"></i>
                         </button>
 
                         <button type="button" class="nina-action-btn" onclick="handleTransferClick(event)">
