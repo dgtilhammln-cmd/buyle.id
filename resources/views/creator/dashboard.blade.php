@@ -730,6 +730,68 @@
                 font-size: 0.68rem;
             }
         }
+
+        /* ── INTERACTIVE BUYLE STREAK TOAST (THEMED & SMOOTH) ── */
+        .buyle-streak-toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-25px);
+            z-index: 99999;
+            background: #ffffff;
+            border: 1.5px solid #bbf7d0;
+            box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(30, 179, 73, 0.18);
+            border-radius: 999px;
+            padding: 8px 18px 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 90vw;
+            box-sizing: border-box;
+        }
+
+        .buyle-streak-toast.is-show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .buyle-toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.35);
+        }
+
+        .buyle-toast-body {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+        }
+
+        .buyle-toast-title {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.01em;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .buyle-toast-desc {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #15803d;
+            font-family: 'Montserrat', sans-serif;
         }
 
         /* Action Pill Bar (Hitam Sleek 3 Tombol: Tarik Saldo, Top Up, Transfer) */
@@ -2488,6 +2550,17 @@
             {{-- ── KOLOM KANAN: MILESTONE LOGIN 7 HARI & RECENT ACTIVITY ── --}}
             <div class="nina-col-right">
 
+                {{-- Toast Interaktif Khusus Tema Buyle --}}
+                <div id="buyleStreakToast" class="buyle-streak-toast" style="display: none;">
+                    <div class="buyle-toast-icon">
+                        <i class="ph-bold ph-check"></i>
+                    </div>
+                    <div class="buyle-toast-body">
+                        <div class="buyle-toast-title" id="buyleToastTitle">Check-in Harian</div>
+                        <div class="buyle-toast-desc" id="buyleToastDesc">Hari Ini aktif ✓</div>
+                    </div>
+                </div>
+
                 {{-- ── CARD MILESTONE LOGIN 7 HARI (DAILY STREAK) ── --}}
                 <div class="nina-milestone-card" id="ninaMilestoneCard">
                     <div class="nina-milestone-header">
@@ -2851,7 +2924,37 @@
             });
         }
 
-        // ── Handler Klik Interaktif Kartu Streak Harian ──
+        // ── Handler Klik Interaktif Kartu Streak Harian (Themed Toast) ──
+        let buyleToastTimer = null;
+        function showStreakFeedback(title, desc, iconClass = 'ph-check') {
+            const toast = document.getElementById('buyleStreakToast');
+            if (!toast) return;
+
+            const titleEl = document.getElementById('buyleToastTitle');
+            const descEl  = document.getElementById('buyleToastDesc');
+            const iconEl  = toast.querySelector('.buyle-toast-icon i');
+
+            if (titleEl) titleEl.textContent = title;
+            if (descEl)  descEl.textContent  = desc;
+            if (iconEl)  iconEl.className    = 'ph-bold ' + iconClass;
+
+            try {
+                if (navigator.vibrate) navigator.vibrate(35);
+            } catch (e) {}
+
+            toast.style.display = 'flex';
+            void toast.offsetWidth;
+            toast.classList.add('is-show');
+
+            if (buyleToastTimer) clearTimeout(buyleToastTimer);
+            buyleToastTimer = setTimeout(() => {
+                toast.classList.remove('is-show');
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 300);
+            }, 2300);
+        }
+
         function handleStreakDayClick(day, status, isGrand) {
             const currentStreak = {{ (int) ($loginStreak ?? 1) }};
             const canClaim = {{ !empty($canClaimStreak) ? 'true' : 'false' }};
@@ -2862,37 +2965,16 @@
             }
 
             if (status === 'today') {
-                showStreakFeedback('Hari Ini (Hari ke-' + day + ') aktif ✓ Lanjutkan streak besok!');
+                showStreakFeedback('Hari Ini Aktif', 'Hari ke-' + day + ' tercatat ✓ Lanjutkan besok!', 'ph-check-circle');
             } else if (status === 'past') {
-                showStreakFeedback('Hari ke-' + day + ' telah selesai check-in ✓');
+                showStreakFeedback('Hari ke-' + day, 'Selesai check-in ✓', 'ph-check');
             } else {
                 if (isGrand) {
-                    showStreakFeedback('Capai Hari ke-7 untuk mendapatkan +1 Slot Bebas Admin!');
+                    showStreakFeedback('Reward Hari ke-7', '+1 Kuota Bebas Biaya Penarikan', 'ph-gift');
                 } else {
                     const daysLeft = day - currentStreak;
-                    showStreakFeedback('Hari ke-' + day + ' akan terbuka dalam ' + daysLeft + ' hari lagi.');
+                    showStreakFeedback('Hari ke-' + day, 'Terbuka dalam ' + daysLeft + ' hari lagi', 'ph-lock-key');
                 }
-            }
-        }
-
-        function showStreakFeedback(msg) {
-            if (typeof Swal !== 'undefined') {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 2300,
-                    timerProgressBar: false,
-                    background: '#0f172a',
-                    color: '#ffffff',
-                    iconColor: '#22c55e'
-                });
-                Toast.fire({
-                    icon: 'success',
-                    title: msg
-                });
-            } else {
-                alert(msg);
             }
         }
     </script>
