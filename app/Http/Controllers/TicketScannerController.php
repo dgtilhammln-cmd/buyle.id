@@ -1323,6 +1323,9 @@ class TicketScannerController extends Controller
 
         $hasPushSub = \App\Models\PushSubscription::where('user_id', $seller->id)->exists();
 
+        $viewMode = session('scanner_view_mode_' . $sellerId, 'creator');
+        $isCrewMode = ($viewMode === 'crew');
+
         $seo = [
             'title'  => 'Menu & Profil Penyelenggara Event · Buyle.id Ticketing',
             'robots' => 'noindex, nofollow',
@@ -1341,7 +1344,8 @@ class TicketScannerController extends Controller
             'totalEvents',
             'gateStaffCount',
             'hasPushSub',
-            'seo'
+            'seo',
+            'isCrewMode'
         ));
     }
 }

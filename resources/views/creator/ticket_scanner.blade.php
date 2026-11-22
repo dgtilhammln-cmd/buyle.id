@@ -3137,7 +3137,7 @@
                     <span class="tab-text-full">Home Event</span>
                     <small class="tab-text-mob">Home</small>
                 </button>
-                @if($hasKycBypass ?? (isset($kyc) && $kyc && $kyc->status === 'verified'))
+                @if(!($isCrewMode ?? false) && ($isKycVerified ?? false))
                 <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}"
                     onclick="switchTab('tab-data', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -3160,7 +3160,7 @@
                     <span class="tab-text-full">Quick Scanner</span>
                     <small class="tab-text-mob">Scanner</small>
                 </button>
-                @if(isset($kyc) && $kyc && $kyc->status === 'verified')
+                @if(!($isCrewMode ?? false) && ($isKycVerified ?? false))
                 <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}"
                     onclick="switchTab('tab-gate', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -3173,12 +3173,12 @@
                     <small class="tab-text-mob">Gate Staff</small>
                 </button>
                 @endif
-                <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil Penyelenggara">
+                <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
                     </svg>
-                    <span class="tab-text-full">Profil & Rekening</span>
+                    <span class="tab-text-full">Menu & Profil</span>
                     <small class="tab-text-mob">Profil</small>
                     @if(isset($kyc) && $kyc->status === 'verified')
                         <span
@@ -4649,22 +4649,22 @@
     {{-- ══ MOBILE BOTTOM NAVIGATION BAR (like /pos page) ══ --}}
     @php
         $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
-        // Data Kehadiran: tampil di navbar jika KYC verified DAN bukan mode Crew
-        $canAccessData = $isKycVerified && !($isCrewMode ?? false);
+        // Tab Data Kehadiran & Akses Panitia Gate HANYA untuk Mode Creator yang sudah terverifikasi e-KYC
+        $showCreatorAdminTabs = !($isCrewMode ?? false) && $isKycVerified;
     @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
-        <div class="scanner-bottom-nav-bar" style="{{ !$canAccessData ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
+        <div class="scanner-bottom-nav-bar" style="{{ !$showCreatorAdminTabs ? 'grid-template-columns: 1fr 52px 1fr !important;' : 'grid-template-columns: 1fr 1fr 52px 1fr 1fr !important;' }}">
             {{-- 1. Home (Pojok Kiri) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'home' ? 'active' : '' }}" id="scanNavHome"
-                onclick="switchTab('tab-home', this); updateBottomNav('home')" title="Home">
+                onclick="switchTab('tab-home', this); updateBottomNav('home')" title="Home Event">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
             </button>
 
-            @if($canAccessData)
-            {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
+            @if($showCreatorAdminTabs)
+            {{-- 2. Data Kehadiran (Clipboard Checklist - Hanya Creator Mode) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'data' ? 'active' : '' }}" id="scanNavData"
                 onclick="switchTab('tab-data', this); updateBottomNav('data')" title="Data Kehadiran">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -4686,10 +4686,10 @@
                 </svg>
             </button>
 
-            @if($isKycVerified)
-            {{-- 4. Gate Staff (Gate Door) --}}
+            @if($showCreatorAdminTabs)
+            {{-- 4. Akses Gate Panitia (Hanya Creator Mode) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'gate' ? 'active' : '' }}" id="scanNavGate"
-                onclick="switchTab('tab-gate', this); updateBottomNav('gate')" title="Gate Staff">
+                onclick="switchTab('tab-gate', this); updateBottomNav('gate')" title="Akses Gate Panitia">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14" />
                     <path d="M2 20h20" />
@@ -4698,9 +4698,9 @@
             </button>
             @endif
 
-            {{-- 5. Profil Event (Pojok Kanan - Direct ke /creator/ticketing/profile) --}}
+            {{-- 5. Menu & Profil (Pojok Kanan) --}}
             <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item" id="scanNavProfile"
-                title="Menu & Profil Penyelenggara">
+                title="Menu & Profil">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />

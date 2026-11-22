@@ -995,22 +995,23 @@
 
     </div>
 
-    {{-- ── 5-BUTTON BOTTOM NAVIGATION BAR (IDENTICAL TO /creator/event-attendance) ── --}}
+    {{-- ── BOTTOM NAVIGATION BAR (IDENTICAL TO /creator/event-attendance) ── --}}
     @php
         $isKycVerified = isset($kyc) && $kyc && $kyc->status === 'verified';
+        $showCreatorAdminTabs = !($isCrewMode ?? false) && $isKycVerified;
     @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
         <div class="scanner-bottom-nav-bar"
-            style="{{ !$isKycVerified ? 'grid-template-columns: 1fr 52px 1fr !important;' : '' }}">
+            style="{{ !$showCreatorAdminTabs ? 'grid-template-columns: 1fr 52px 1fr !important;' : 'grid-template-columns: 1fr 1fr 52px 1fr 1fr !important;' }}">
             {{-- 1. Home --}}
-            <a href="{{ route('creator.ticket.scanner', ['tab' => 'home']) }}" class="scanner-nav-item" title="Home">
+            <a href="{{ route('creator.ticket.scanner', ['tab' => 'home']) }}" class="scanner-nav-item" title="Home Event">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
             </a>
 
-            @if($isKycVerified)
+            @if($showCreatorAdminTabs)
                 {{-- 2. Data Kehadiran (Clipboard Checklist) --}}
                 <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" class="scanner-nav-item"
                     title="Data Kehadiran">
@@ -1032,9 +1033,9 @@
                 </svg>
             </a>
 
-            @if($isKycVerified)
+            @if($showCreatorAdminTabs)
                 {{-- 4. Gate Staff (Gate Door) --}}
-                <a href="{{ route('creator.ticket.scanner', ['tab' => 'gate']) }}" class="scanner-nav-item" title="Gate Staff">
+                <a href="{{ route('creator.ticket.scanner', ['tab' => 'gate']) }}" class="scanner-nav-item" title="Akses Gate Panitia">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14" />
                         <path d="M2 20h20" />
@@ -1044,7 +1045,7 @@
             @endif
 
             {{-- 5. Profile (ACTIVE dengan Dot Indicator) --}}
-            <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item active" title="Profil Organizer">
+            <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item active" title="Menu & Profil">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
