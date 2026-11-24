@@ -502,9 +502,11 @@
             grid-template-columns: 1fr !important;
         }
 
-        /* Khusus Mobile pada Tab Resep: Sembunyikan Kategori, Harga & Kolom BOM agar compact & proporsional */
+        /* Khusus Mobile pada Tab Resep List View: Sembunyikan kolom sekunder agar tabel tetap ringkas & proporsional */
         .col-recipe-cat,
         .col-recipe-price,
+        .col-recipe-hpp,
+        .col-recipe-margin,
         .col-recipe-bom {
             display: none !important;
         }
@@ -895,10 +897,17 @@
             {{-- VIEW GRID (Card Style 100% Mirip /creator/products) --}}
             <div id="bomViewGrid" class="view-container">
                 @foreach($products as $p)
+                    @php
+                        $sellingPrice = (float) ($p->sale_price ?: $p->price);
+                        $totalHpp = $p->hpp;
+                        $profitMargin = $p->profit_margin;
+                        $marginPercent = $p->margin_percentage;
+                        $hasRecipe = !$p->recipes->isEmpty();
+                    @endphp
                     <div id="bom-card-{{ $p->id }}" class="grid-card-item">
                         {{-- Status Badge Resep Top Right --}}
                         <div style="position:absolute;top:7px;right:7px;z-index:3;">
-                            @if($p->recipes->isEmpty())
+                            @if(!$hasRecipe)
                                 <span class="grid-status-btn archived" title="Formula resep belum diatur">Tanpa Resep</span>
                             @else
                                 <span class="grid-status-btn active" title="{{ $p->recipes->count() }} Bahan Baku Terkait">{{ $p->recipes->count() }} Bahan</span>
@@ -921,16 +930,48 @@
 
                         {{-- Card Content --}}
                         <div style="padding:0.65rem;flex:1;display:flex;flex-direction:column;">
-                            <div style="font-size:0.75rem;font-weight:600;color:#1E293B;margin-bottom:0.25rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2em;" title="{{ $p->name }}">
+                            <div style="font-size:0.75rem;font-weight:600;color:#1E293B;margin-bottom:0.35rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2em;" title="{{ $p->name }}">
                                 {{ $p->name }}
                             </div>
 
-                            <div style="font-size:0.82rem;font-weight:700;color:#16a34a;margin-bottom:0.4rem;">
-                                Rp {{ number_format($p->sale_price ?: $p->price, 0, ',', '.') }}
+                            {{-- Financial Box: Harga Jual, Total HPP, Margin --}}
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:6px 8px; margin-bottom:0.55rem; font-size:0.72rem;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                                    <span style="color:#64748b; font-size:0.68rem; font-weight:600;">Harga Jual:</span>
+                                    <span style="font-weight:700; color:#0f172a;">Rp {{ number_format($sellingPrice, 0, ',', '.') }}</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                                    <span style="color:#64748b; font-size:0.68rem; font-weight:600;">Total HPP:</span>
+                                    @if($hasRecipe)
+                                        <span style="font-weight:700; color:#b45309;">Rp {{ number_format($totalHpp, 0, ',', '.') }}</span>
+                                    @else
+                                        <span style="color:#94a3b8; font-style:italic; font-size:0.65rem;">Rp 0 (Belum ada)</span>
+                                    @endif
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding-top:3px; border-top:1px dashed #cbd5e1;">
+                                    <span style="color:#475569; font-size:0.68rem; font-weight:700;">Margin Laba:</span>
+                                    @if($hasRecipe)
+                                        @if($profitMargin > 0)
+                                            <span style="font-weight:800; color:#16a34a; display:inline-flex; align-items:center; gap:4px;">
+                                                <span>+Rp {{ number_format($profitMargin, 0, ',', '.') }}</span>
+                                                <span style="background:#dcfce7; color:#166534; font-size:0.62rem; font-weight:700; padding:1px 4px; border-radius:4px;">{{ $marginPercent }}%</span>
+                                            </span>
+                                        @elseif($profitMargin < 0)
+                                            <span style="font-weight:800; color:#dc2626; display:inline-flex; align-items:center; gap:4px;">
+                                                <span>-Rp {{ number_format(abs($profitMargin), 0, ',', '.') }}</span>
+                                                <span style="background:#fee2e2; color:#991b1b; font-size:0.62rem; font-weight:700; padding:1px 4px; border-radius:4px;">Rugi</span>
+                                            </span>
+                                        @else
+                                            <span style="font-weight:700; color:#64748b;">Rp 0 (0%)</span>
+                                        @endif
+                                    @else
+                                        <span style="color:#94a3b8; font-size:0.68rem;">-</span>
+                                    @endif
+                                </div>
                             </div>
 
                             <div style="margin-top:auto;padding-top:0.45rem;border-top:1px solid #F1F5F9;">
-                                @if($p->recipes->isEmpty())
+                                @if(!$hasRecipe)
                                     <div style="font-size:0.65rem;color:#94a3b8;font-style:italic;margin-bottom:0.45rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                         Formula resep belum diatur
                                     </div>
@@ -947,7 +988,7 @@
                                     </div>
                                 @endif
 
-                                <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
+                                <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ $sellingPrice }}, {{ json_encode($p->recipes) }})"
                                     style="width:100%;background:var(--pos-grad);border:none;color:#ffffff;padding:6px 8px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:var(--pos-shadow);font-family:inherit;transition:all 0.15s ease;">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
@@ -967,13 +1008,22 @@
                         <tr>
                             <th class="col-recipe-product">Menu Jual</th>
                             <th class="col-recipe-cat">Kategori</th>
-                            <th class="col-recipe-price">Harga</th>
+                            <th class="col-recipe-price">Harga Jual</th>
+                            <th class="col-recipe-hpp">Total HPP</th>
+                            <th class="col-recipe-margin">Margin Laba</th>
                             <th class="col-recipe-bom">Bahan Dalam Resep (BOM)</th>
                             <th class="col-recipe-action" style="text-align:right;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($products as $p)
+                            @php
+                                $sellingPrice = (float) ($p->sale_price ?: $p->price);
+                                $totalHpp = $p->hpp;
+                                $profitMargin = $p->profit_margin;
+                                $marginPercent = $p->margin_percentage;
+                                $hasRecipe = !$p->recipes->isEmpty();
+                            @endphp
                             <tr>
                                 <td class="col-recipe-product">
                                     <div style="display:flex; align-items:center; gap:9px;">
@@ -995,16 +1045,45 @@
                                 </td>
                                 <td class="col-recipe-price">
                                     <span style="font-weight:700; color:#0f172a;">
-                                        Rp {{ number_format($p->sale_price ?: $p->price, 0, ',', '.') }}
+                                        Rp {{ number_format($sellingPrice, 0, ',', '.') }}
                                     </span>
                                 </td>
+                                <td class="col-recipe-hpp">
+                                    @if($hasRecipe)
+                                        <span style="font-weight:700; color:#b45309;">
+                                            Rp {{ number_format($totalHpp, 0, ',', '.') }}
+                                        </span>
+                                    @else
+                                        <span style="color:#94a3b8; font-style:italic; font-size:0.72rem;">Rp 0</span>
+                                    @endif
+                                </td>
+                                <td class="col-recipe-margin">
+                                    @if($hasRecipe)
+                                        @if($profitMargin > 0)
+                                            <div style="display:flex; align-items:center; gap:5px;">
+                                                <span style="font-weight:800; color:#16a34a; font-size:0.8rem;">+Rp {{ number_format($profitMargin, 0, ',', '.') }}</span>
+                                                <span style="background:#dcfce7; color:#166534; font-size:0.65rem; font-weight:700; padding:1px 5px; border-radius:4px;">{{ $marginPercent }}%</span>
+                                            </div>
+                                        @elseif($profitMargin < 0)
+                                            <div style="display:flex; align-items:center; gap:5px;">
+                                                <span style="font-weight:800; color:#dc2626; font-size:0.8rem;">-Rp {{ number_format(abs($profitMargin), 0, ',', '.') }}</span>
+                                                <span style="background:#fee2e2; color:#991b1b; font-size:0.65rem; font-weight:700; padding:1px 5px; border-radius:4px;">Rugi</span>
+                                            </div>
+                                        @else
+                                            <span style="font-weight:700; color:#64748b; font-size:0.75rem;">Rp 0 (0%)</span>
+                                        @endif
+                                    @else
+                                        <span style="color:#94a3b8; font-size:0.75rem;">-</span>
+                                    @endif
+                                </td>
                                 <td class="col-recipe-bom">
-                                    @if($p->recipes->isEmpty())
+                                    @if(!$hasRecipe)
                                         <span style="color:#94a3b8; font-style:italic; font-size:0.75rem;">Belum ada resep</span>
                                     @else
                                         <div class="recipe-chips-container" style="display:flex; flex-wrap:wrap; gap:4px;">
                                             @foreach($p->recipes as $rc)
-                                                <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.72rem; font-weight:600; padding:2px 6px; border-radius:6px; white-space:nowrap;">
+                                                @php $subHpp = (float)($rc->quantity) * (float)($rc->material?->cost_per_unit ?? 0); @endphp
+                                                <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-size:0.72rem; font-weight:600; padding:2px 6px; border-radius:6px; white-space:nowrap;" title="HPP Bahan: Rp {{ number_format($subHpp, 0, ',', '.') }}">
                                                     {{ $rc->material?->name ?? 'Bahan' }}: {{ (float)$rc->quantity }} {{ $rc->material?->unit }}
                                                 </span>
                                             @endforeach
@@ -1012,7 +1091,7 @@
                                     @endif
                                 </td>
                                 <td class="col-recipe-action" style="text-align:right; white-space:nowrap;">
-                                    <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ json_encode($p->recipes) }})"
+                                    <button type="button" onclick="openRecipeModal({{ $p->id }}, '{{ addslashes($p->name) }}', {{ $sellingPrice }}, {{ json_encode($p->recipes) }})"
                                         style="background:var(--pos-grad); border:none; color:#ffffff; padding:6px 12px; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(30,179,73,0.25); font-family:inherit; white-space:nowrap;">
                                         Atur Resep
                                     </button>
@@ -1351,23 +1430,39 @@
          ════════════════════════════════════════════════════════════════════ --}}
     <div id="modalRecipe" class="mat-modal">
         <div class="mat-modal-content" style="max-width:580px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
                 <div>
-                    <h3 style="font-size:0.95rem; font-weight:600; color:#0f172a; margin:0;">Formula Resep Menu</h3>
+                    <h3 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:0;">Formula Resep Menu (BOM)</h3>
                     <p id="recipeProductName" style="font-size:0.75rem; color:#64748b; margin:2px 0 0;"></p>
                 </div>
                 <button type="button" onclick="closeModal('modalRecipe')" style="background:none; border:none; color:#94a3b8; font-size:1.25rem; cursor:pointer;">&times;</button>
             </div>
 
+            {{-- Live Recipe Cost & Margin Bar --}}
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.65rem 0.85rem; margin-bottom:0.85rem; display:grid; grid-template-columns:1fr 1fr 1.2fr; gap:0.5rem; text-align:center;">
+                <div>
+                    <div style="font-size:0.65rem; color:#64748b; font-weight:600;">Harga Jual</div>
+                    <div id="recipeSellingPriceLabel" style="font-size:0.82rem; font-weight:700; color:#0f172a;">Rp 0</div>
+                </div>
+                <div>
+                    <div style="font-size:0.65rem; color:#64748b; font-weight:600;">Total HPP Resep</div>
+                    <div id="recipeTotalHppLabel" style="font-size:0.82rem; font-weight:800; color:#d97706;">Rp 0</div>
+                </div>
+                <div>
+                    <div style="font-size:0.65rem; color:#64748b; font-weight:600;">Estimasi Margin Laba</div>
+                    <div id="recipeMarginLabel" style="font-size:0.82rem; font-weight:800; color:#16a34a;">Rp 0 (0%)</div>
+                </div>
+            </div>
+
             <form id="formRecipe" method="POST">
                 @csrf
                 @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
-                <div id="recipeRowsContainer" style="margin-bottom:0.85rem; max-height:360px; overflow-y:auto; padding-right:4px;">
+                <div id="recipeRowsContainer" style="margin-bottom:0.85rem; max-height:340px; overflow-y:auto; padding-right:4px;">
                     <!-- Rows populated dynamically -->
                 </div>
 
                 <div style="margin-bottom:1.15rem;">
-                    <button type="button" onclick="addRecipeRow()" style="background:#f1f5f9; border:1px dashed #cbd5e1; color:#0f172a; font-size:0.75rem; font-weight:600; width:100%; padding:7px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <button type="button" onclick="addRecipeRow()" style="background:#f1f5f9; border:1px dashed #cbd5e1; color:#0f172a; font-size:0.75rem; font-weight:600; width:100%; padding:8px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         <span>+ Tambah Baris Bahan Baku</span>
                     </button>
@@ -1514,9 +1609,12 @@
 
     // Recipe Modal Builder
     let currentRecipeRowCount = 0;
+    let currentModalSellingPrice = 0;
 
-    function openRecipeModal(productId, productName, existingRecipes) {
+    function openRecipeModal(productId, productName, sellingPrice, existingRecipes) {
+        currentModalSellingPrice = parseFloat(sellingPrice) || 0;
         document.getElementById('recipeProductName').textContent = `Menu: ${productName}`;
+        document.getElementById('recipeSellingPriceLabel').textContent = 'Rp ' + Math.round(currentModalSellingPrice).toLocaleString('id-ID');
         const form = document.getElementById('formRecipe');
         form.action = `/creator/inventories/recipe/${productId}`;
 
@@ -1532,6 +1630,7 @@
             addRecipeRow(); // Add 1 blank row by default
         }
 
+        recalculateRecipeCost();
         openModal('modalRecipe');
     }
 
@@ -1539,32 +1638,87 @@
         const container = document.getElementById('recipeRowsContainer');
         const idx = currentRecipeRowCount++;
 
-        let matOptions = '<option value="">Pilih Bahan</option>';
+        let matOptions = '<option value="" data-cost="0" data-unit="">-- Pilih Bahan Baku --</option>';
         allMaterialsList.forEach(m => {
             const sel = (selectedMatId && m.id == selectedMatId) ? 'selected' : '';
-            matOptions += `<option value="${m.id}" data-unit="${m.unit}" ${sel}>${m.name} (${m.unit})</option>`;
+            const cost = parseFloat(m.cost_per_unit || 0);
+            matOptions += `<option value="${m.id}" data-cost="${cost}" data-unit="${m.unit}" ${sel}>${m.name} (Rp ${cost.toLocaleString('id-ID')}/${m.unit})</option>`;
         });
 
         const rowHtml = `
-            <div id="recipe-row-${idx}" style="display:flex; gap:6px; align-items:center; margin-bottom:6px; background:#f8fafc; padding:6px 8px; border-radius:8px; border:1px solid #e2e8f0;">
-                <select name="recipes[${idx}][material_id]" required style="flex:2.3; min-width:0; padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.72rem; font-weight:500; color:#0f172a; background:#ffffff; font-family:inherit;">
-                    ${matOptions}
-                </select>
-                <div style="flex:1; min-width:0; display:flex; align-items:center;">
-                    <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" required placeholder="Takaran" style="width:100%; padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.72rem; font-weight:500; color:#0f172a; background:#ffffff; font-family:inherit; box-sizing:border-box;">
+            <div id="recipe-row-${idx}" style="background:#f8fafc; padding:8px 10px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <select name="recipes[${idx}][material_id]" onchange="recalculateRecipeCost()" required style="flex:2.3; min-width:0; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit;">
+                        ${matOptions}
+                    </select>
+                    <div style="flex:1; min-width:0;">
+                        <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" oninput="recalculateRecipeCost()" required placeholder="Takaran" style="width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit; box-sizing:border-box;">
+                    </div>
+                    <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; flex-shrink:0;" title="Hapus Baris">
+                        &times;
+                    </button>
                 </div>
-                <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; flex-shrink:0;" title="Hapus Baris">
-                    &times;
-                </button>
+                <div class="recipe-row-subcost" style="font-size:0.68rem; color:#64748b; font-weight:600; margin-top:4px; min-height:1em;"></div>
             </div>
         `;
 
         container.insertAdjacentHTML('beforeend', rowHtml);
+        recalculateRecipeCost();
     }
 
     function removeRecipeRow(idx) {
         const row = document.getElementById(`recipe-row-${idx}`);
-        if (row) row.remove();
+        if (row) {
+            row.remove();
+            recalculateRecipeCost();
+        }
+    }
+
+    function recalculateRecipeCost() {
+        let totalHpp = 0;
+        const rows = document.querySelectorAll('#recipeRowsContainer > div');
+        rows.forEach(row => {
+            const sel = row.querySelector('select');
+            const input = row.querySelector('input[type="number"]');
+            const subcostEl = row.querySelector('.recipe-row-subcost');
+            if (sel && input) {
+                const opt = sel.options[sel.selectedIndex];
+                const cost = opt ? parseFloat(opt.getAttribute('data-cost') || 0) : 0;
+                const unit = opt ? (opt.getAttribute('data-unit') || '') : '';
+                const qty = parseFloat(input.value) || 0;
+                const subtotal = cost * qty;
+                totalHpp += subtotal;
+                if (subcostEl) {
+                    if (sel.value && qty > 0) {
+                        subcostEl.textContent = `Estimasi biaya: ${qty} ${unit} x Rp ${cost.toLocaleString('id-ID')} = Rp ${Math.round(subtotal).toLocaleString('id-ID')}`;
+                    } else {
+                        subcostEl.textContent = '';
+                    }
+                }
+            }
+        });
+
+        const hppLabel = document.getElementById('recipeTotalHppLabel');
+        if (hppLabel) {
+            hppLabel.textContent = 'Rp ' + Math.round(totalHpp).toLocaleString('id-ID');
+        }
+
+        const marginLabel = document.getElementById('recipeMarginLabel');
+        if (marginLabel) {
+            const margin = currentModalSellingPrice - totalHpp;
+            const marginPercent = currentModalSellingPrice > 0 ? ((margin / currentModalSellingPrice) * 100).toFixed(1) : 0;
+            if (totalHpp > 0 || currentModalSellingPrice > 0) {
+                if (margin >= 0) {
+                    marginLabel.style.color = '#16a34a';
+                    marginLabel.textContent = `+Rp ${Math.round(margin).toLocaleString('id-ID')} (${marginPercent}%)`;
+                } else {
+                    marginLabel.style.color = '#dc2626';
+                    marginLabel.textContent = `-Rp ${Math.round(Math.abs(margin)).toLocaleString('id-ID')} (Rugi)`;
+                }
+            } else {
+                marginLabel.textContent = 'Rp 0 (0%)';
+            }
+        }
     }
 
     function handleInventoryMobileBack() {

@@ -405,6 +405,40 @@ class Product extends Model
     }
 
     /**
+     * Hitung total HPP (Harga Pokok Penjualan) berdasarkan formula resep bahan baku (BOM).
+     */
+    public function getHppAttribute(): float
+    {
+        $recipes = $this->relationLoaded('recipes') ? $this->recipes : $this->recipes()->with('material')->get();
+        $totalHpp = 0.0;
+        foreach ($recipes as $recipe) {
+            $costPerUnit = (float) ($recipe->material?->cost_per_unit ?? 0);
+            $qty = (float) $recipe->quantity;
+            $totalHpp += ($costPerUnit * $qty);
+        }
+        return $totalHpp;
+    }
+
+    /**
+     * Hitung nominal margin keuntungan / laba kotor per item produk (Harga Jual - Total HPP).
+     */
+    public function getProfitMarginAttribute(): float
+    {
+        $sellingPrice = (float) ($this->sale_price ?: $this->price);
+        return $sellingPrice - $this->hpp;
+    }
+
+    /**
+     * Hitung persentase margin keuntungan terhadap harga jual (%).
+     */
+    public function getMarginPercentageAttribute(): float
+    {
+        $sellingPrice = (float) ($this->sale_price ?: $this->price);
+        if ($sellingPrice <= 0) return 0.0;
+        return round(($this->profit_margin / $sellingPrice) * 100, 1);
+    }
+
+    /**
      * Semua item cart yang mengandung produk ini.
      */
     public function carts(): HasMany
