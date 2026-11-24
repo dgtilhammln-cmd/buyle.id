@@ -321,7 +321,7 @@
             background: #fff;
             border-radius: 14px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
+            overflow: visible;
             border: 1px solid #F1F5F9;
             display: flex;
             flex-direction: column;
@@ -377,7 +377,9 @@
 
         @media (max-width: 600px) {
             .bom-img-wrapper {
-                min-height: 140px;
+                min-height: 110px;
+                max-height: 160px;
+                aspect-ratio: auto;
             }
         }
 
@@ -813,46 +815,7 @@
         </a>
     </div>
 
-    {{-- Alert Success / Errors --}}
-    @if(session('success'))
-        <div
-            style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
-    @if(session('error'))
-        <div
-            style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            <span>{{ session('error') }}</span>
-        </div>
-    @endif
-    @if($errors->any())
-        <div
-            style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600;">
-            <div style="font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                <span>Mohon periksa data input:</span>
-            </div>
-            <ul style="margin:0; padding-left:1.5rem;">
-                @foreach($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    {{-- Duplicate flash block removed (single notification is shown above tabs) --}}
 
     {{-- ════════════════════════════════════════════════════════════════════
     TAB 1: DAFTAR BAHAN BAKU
@@ -2158,6 +2121,7 @@
             }
             openModal('modalAddMaterial');
         }
+        window.openAddMaterialModal = openAddMaterialModal;
 
         function openEditMaterialModal(mat) {
             document.getElementById('editMatName').value = mat.name;
@@ -2186,6 +2150,7 @@
 
             openModal('modalEditMaterial');
         }
+        window.openEditMaterialModal = openEditMaterialModal;
 
         function openRestockModal() {
             const sel = document.getElementById('restockMatSelect');
@@ -2198,6 +2163,7 @@
             }
             openModal('modalRestock');
         }
+        window.openRestockModal = openRestockModal;
 
         function openRestockSingle(id, name, unit, cost) {
             const sel = document.getElementById('restockMatSelect');
@@ -2209,6 +2175,7 @@
             form.action = `/creator/inventories/${id}/restock`;
             openModal('modalRestock');
         }
+        window.openRestockSingle = openRestockSingle;
 
         function updateRestockUnit() {
             const sel = document.getElementById('restockMatSelect');
@@ -2287,6 +2254,7 @@
             recalculateRecipeCost();
             openModal('modalRecipe');
         }
+        window.openRecipeModal = openRecipeModal;
 
         function addRecipeRow(selectedMatId = null, qty = '', notes = '') {
             const container = document.getElementById('recipeRowsContainer');
@@ -2389,5 +2357,18 @@
                 window.location.href = "{{ route('creator.pos.index') }}";
             }
         }
+        window.handleInventoryMobileBack = handleInventoryMobileBack;
+        // Expose all inline-onclick functions to global scope
+        window.switchMaterialView = switchMaterialView;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.formatRupiahInput = formatRupiahInput;
+        window.toggleConversionBlock = toggleConversionBlock;
+        window.calculateUnitCostFromConversion = calculateUnitCostFromConversion;
+        window.updateRestockUnit = updateRestockUnit;
+        window.onRestockModeChange = onRestockModeChange;
+        window.addRecipeRow = addRecipeRow;
+        window.removeRecipeRow = removeRecipeRow;
+        window.recalculateRecipeCost = recalculateRecipeCost;
     </script>
 @endsection
