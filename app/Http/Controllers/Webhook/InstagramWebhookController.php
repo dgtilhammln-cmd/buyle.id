@@ -60,9 +60,13 @@ class InstagramWebhookController extends Controller
         foreach ($entries as $entry) {
             $entryId = $entry['id'] ?? null;
 
-            // Cari akun IG berdasarkan business_id atau page_id
-            $igAccount = InstagramAccount::where('instagram_business_id', $entryId)
-                ->orWhere('page_id', $entryId)
+            // Cari akun IG berdasarkan business_id atau page_id yang aktif terhubung
+            $igAccount = InstagramAccount::where('is_connected', true)
+                ->where(function ($q) use ($entryId) {
+                    $q->where('instagram_business_id', $entryId)
+                      ->orWhere('page_id', $entryId);
+                })
+                ->latest()
                 ->first();
 
             // Fallback: gunakan akun aktif yang terhubung
@@ -91,7 +95,7 @@ class InstagramWebhookController extends Controller
                     $text           = $val['text'] ?? ($val['message'] ?? '');
                     $from           = $val['from'] ?? [];
                     $media          = $val['media'] ?? [];
-                    $mediaId        = $media['id'] ?? ($val['post_id'] ?? null);
+                    $mediaId        = $media['id'] ?? ($val['media_id'] ?? ($val['post_id'] ?? null));
                     $senderIgId     = $from['id'] ?? ($val['sender_id'] ?? null);
                     $senderUsername = $from['username'] ?? ($from['name'] ?? 'User');
 
@@ -155,9 +159,9 @@ class InstagramWebhookController extends Controller
                     ];
 
                     try {
-                        // dispatch() async agar webhook langsung return 200 tanpa menahan PHP worker.
-                        // Job akan diproses oleh queue worker di background.
-                        ProcessInstagramCommentJob::dispatch($jobPayload);
+                        // dispatchSync: eksekusi langsung agar audit log, counter, dan auto DM langsung terkirim
+                        // tanpa bergantung pada queue worker yang tidak berjalan di shared hosting.
+                        ProcessInstagramCommentJob::dispatchSync($jobPayload);
                     } catch (\Exception $e) {
                         Log::error('[IG Webhook] Error processing comment job', [
                             'error'   => $e->getMessage(),

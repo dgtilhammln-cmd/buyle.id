@@ -1189,6 +1189,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
         Route::get('/callback',         [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'callback'])->name('callback');
         Route::post('/disconnect',      [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'disconnect'])->name('disconnect');
         Route::post('/refresh-token',   [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'refreshToken'])->name('refresh-token');
+        Route::post('/sync-webhooks',   [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'syncWebhooks'])->name('sync-webhooks');
         Route::post('/campaigns',       [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'storeCampaign'])->name('campaigns.store');
         Route::put('/campaigns/{id}',   [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'updateCampaign'])->name('campaigns.update');
         Route::patch('/campaigns/{id}/toggle', [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'toggleCampaign'])->name('campaigns.toggle');

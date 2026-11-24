@@ -200,10 +200,13 @@ class InstagramAutomationController extends Controller
                 ]
             );
 
-            // 4. Daftarkan webhook subscription untuk page
+            // 4. Daftarkan webhook subscription untuk page dan instagram business account
             if (!empty($accountData['page_id'])) {
                 $pageAccessToken = $accountData['page_access_token'] ?? $longLivedToken;
                 $apiService->subscribeWebhooks($accountData['page_id'], $pageAccessToken);
+            }
+            if (!empty($accountData['ig_id'])) {
+                $apiService->subscribeWebhooks($accountData['ig_id'], $longLivedToken);
             }
 
             session()->flash('success', "Akun Instagram @{$account->username} berhasil dihubungkan!");
@@ -257,17 +260,45 @@ class InstagramAutomationController extends Controller
             $tokenData = $apiService->exchangeForLongLivedToken($account->access_token);
             $expiresIn = $tokenData['expires_in'] ?? (60 * 86400);
 
+            $newToken = $tokenData['access_token'];
             $account->update([
-                'access_token'     => $tokenData['access_token'],
+                'access_token'     => $newToken,
                 'token_expires_at' => now()->addSeconds($expiresIn),
             ]);
 
+            // Re-subscribe webhooks ke Meta
+            if (!empty($account->page_id)) {
+                $apiService->subscribeWebhooks($account->page_id, $newToken);
+            }
+            if (!empty($account->instagram_business_id)) {
+                $apiService->subscribeWebhooks($account->instagram_business_id, $newToken);
+            }
+
             return redirect()->route('creator.automation-reply.index')
-                ->with('success', 'Masa berlaku token Instagram berhasil diperpanjang 60 hari ke depan.');
+                ->with('success', 'Masa berlaku token Instagram berhasil diperpanjang 60 hari ke depan dan webhook telah disinkronkan.');
         } catch (\Exception $e) {
             return redirect()->route('creator.automation-reply.index')
                 ->with('error', 'Gagal memperbarui token: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Sinkronkan ulang webhook subscription Instagram secara instan
+     */
+    public function syncWebhooks(Request $request, InstagramApiService $apiService)
+    {
+        $account = InstagramAccount::where('user_id', auth()->id())->first();
+
+        if (!$account || empty($account->access_token) || !$account->is_connected) {
+            return redirect()->route('creator.automation-reply.index')
+                ->with('error', 'Akun Instagram belum terhubung.');
+        }
+
+        $pSub = !empty($account->page_id) ? $apiService->subscribeWebhooks($account->page_id, $account->access_token) : false;
+        $iSub = !empty($account->instagram_business_id) ? $apiService->subscribeWebhooks($account->instagram_business_id, $account->access_token) : false;
+
+        return redirect()->route('creator.automation-reply.index')
+            ->with('success', 'Permintaan sinkronisasi webhook Instagram ke Meta API berhasil dikirimkan!');
     }
 
     /**

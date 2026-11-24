@@ -17,4 +17,7 @@ Schedule::command('tools:clean-temp-images --days=14')->dailyAt('03:30');
 // Batalkan order tiket yang belum dibayar lebih dari 15 menit — kembalikan stok & bebaskan slot war queue
 Schedule::command('tickets:expire-unpaid --minutes=15')->everyFiveMinutes();
 
+// Proses antrean background job secara berkala di shared hosting
+Schedule::command('queue:work --stop-when-empty --max-time=50')->everyMinute();
+
 

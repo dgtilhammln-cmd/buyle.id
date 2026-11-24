@@ -763,13 +763,22 @@
                                 </div>
                             </div>
 
-                            <form action="{{ route('creator.automation-reply.disconnect') }}" method="POST" onsubmit="return confirm('Putuskan koneksi akun Instagram ini?')">
-                                @csrf
-                                <button type="submit" class="btn-danger-outline" style="padding:0.4rem 0.8rem; font-size:0.74rem; border-radius:999px;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                                    Putuskan
-                                </button>
-                            </form>
+                            <div style="display:flex; align-items:center; gap:0.4rem;">
+                                <form action="{{ route('creator.automation-reply.sync-webhooks') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.74rem; border-radius:999px; background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;" title="Sinkronkan ulang subscription webhook ke Meta API">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                                        Sinkronkan Webhook
+                                    </button>
+                                </form>
+                                <form action="{{ route('creator.automation-reply.disconnect') }}" method="POST" onsubmit="return confirm('Putuskan koneksi akun Instagram ini?')">
+                                    @csrf
+                                    <button type="submit" class="btn-danger-outline" style="padding:0.4rem 0.8rem; font-size:0.74rem; border-radius:999px;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                        Putuskan
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @else

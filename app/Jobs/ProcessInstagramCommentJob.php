@@ -88,6 +88,18 @@ class ProcessInstagramCommentJob implements ShouldQueue
             return;
         }
 
+        // Jika mediaId tidak disertakan di payload webhook, coba ambil otomatis dari commentId via Graph API
+        if (empty($mediaId) && !empty($commentId) && !empty($igAccount->access_token)) {
+            try {
+                $resolvedMediaId = $apiService->getCommentMediaId($igAccount->access_token, $commentId);
+                if (!empty($resolvedMediaId)) {
+                    $mediaId = $resolvedMediaId;
+                }
+            } catch (\Exception $e) {
+                Log::warning("[ProcessInstagramCommentJob] Gagal resolve mediaId: " . $e->getMessage());
+            }
+        }
+
         // Cari campaign aktif yang cocok
         $campaigns = AutomationCampaign::where('user_id', $igAccount->user_id)
             ->where('is_active', true)

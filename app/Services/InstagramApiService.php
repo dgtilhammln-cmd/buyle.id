@@ -366,18 +366,74 @@ class InstagramApiService
     }
 
     /**
-     * Subscribe page to webhooks
+     * Subscribe Facebook Page atau Instagram Business Account ke webhooks aplikasi Buyle.id
      */
-    public function subscribeWebhooks(string $pageId, string $pageAccessToken): bool
+    public function subscribeWebhooks(string $targetId, string $accessToken): bool
     {
-        $url = "{$this->apiBase}/{$pageId}/subscribed_apps";
+        $cleanToken = trim($accessToken);
+        $bases = $this->getApiBases($cleanToken);
+        $subscribed = false;
 
-        $response = Http::post($url, [
-            'subscribed_fields' => 'messages,feed,comments,mention',
-            'access_token'      => $pageAccessToken,
-        ]);
+        foreach ($bases as $base) {
+            try {
+                $url = "{$base}/{$targetId}/subscribed_apps";
+                $response = Http::asForm()->post($url, [
+                    'subscribed_fields' => 'messages,feed,comments,mention',
+                    'access_token'      => $cleanToken,
+                ]);
 
-        return $response->successful();
+                if ($response->successful() && ($response->json('success') === true || !empty($response->json('data')))) {
+                    Log::info("[InstagramApiService] subscribeWebhooks sukses untuk ID {$targetId} pada {$url}", [
+                        'response' => $response->json(),
+                    ]);
+                    $subscribed = true;
+                    break;
+                }
+
+                // Coba kirim via Bearer token jika form gagal
+                $responseBearer = Http::withToken($cleanToken)->post($url, [
+                    'subscribed_fields' => 'messages,feed,comments,mention',
+                ]);
+                if ($responseBearer->successful() && ($responseBearer->json('success') === true || !empty($responseBearer->json('data')))) {
+                    Log::info("[InstagramApiService] subscribeWebhooks sukses (Bearer) untuk ID {$targetId} pada {$url}");
+                    $subscribed = true;
+                    break;
+                }
+
+                Log::warning("[InstagramApiService] subscribeWebhooks respons non-sukses untuk {$targetId} pada {$url}", [
+                    'res_form'   => $response->json(),
+                    'res_bearer' => $responseBearer->json(),
+                ]);
+            } catch (\Exception $e) {
+                Log::warning("[InstagramApiService] subscribeWebhooks exception untuk {$targetId}: " . $e->getMessage());
+            }
+        }
+
+        return $subscribed;
+    }
+
+    /**
+     * Dapatkan Media ID dari suatu Comment ID via Graph API
+     */
+    public function getCommentMediaId(string $accessToken, string $commentId): ?string
+    {
+        $cleanToken = trim($accessToken);
+        $bases = $this->getApiBases($cleanToken);
+
+        foreach ($bases as $base) {
+            try {
+                $response = Http::withToken($cleanToken)->get("{$base}/{$commentId}", [
+                    'fields' => 'media{id}',
+                ]);
+                if ($response->successful() && !empty($response->json('media.id'))) {
+                    return (string) $response->json('media.id');
+                }
+            } catch (\Exception $e) {
+                Log::warning("[InstagramApiService] getCommentMediaId error: " . $e->getMessage());
+            }
+        }
+
+        return null;
     }
 
     /**
