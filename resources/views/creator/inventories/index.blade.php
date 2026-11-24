@@ -733,7 +733,8 @@
         </div>
     @endif
     @if($errors->any())
-        <div class="flash-error" style="margin-top: 0.75rem; margin-bottom: 1.25rem; flex-direction: column; align-items: flex-start;">
+        <div class="flash-error"
+            style="margin-top: 0.75rem; margin-bottom: 1.25rem; flex-direction: column; align-items: flex-start;">
             <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10" />
@@ -773,7 +774,7 @@
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            Resep Menu (BOM)
+            Resep Produk / Bill Of Materials
             <span class="mat-tab-badge">{{ $products->count() }}</span>
         </a>
         <a href="{{ route('creator.inventories.index', array_merge(['tab' => 'mutations'], request('from') ? ['from' => request('from')] : [])) }}"
@@ -784,6 +785,47 @@
             Riwayat Mutasi
         </a>
     </div>
+
+    {{-- Alert Success / Errors --}}
+    @if(session('success'))
+        <div
+            style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+    @if(session('error'))
+        <div
+            style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+    @if($errors->any())
+        <div
+            style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600;">
+            <div style="font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>Mohon periksa data input:</span>
+            </div>
+            <ul style="margin:0; padding-left:1.5rem;">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     {{-- ════════════════════════════════════════════════════════════════════
     TAB 1: DAFTAR BAHAN BAKU
@@ -1104,12 +1146,12 @@
                                     @if($hasRecipe)
                                         <span style="font-weight:700; color:#b45309;">Rp {{ number_format($totalHpp, 0, ',', '.') }}</span>
                                     @else
-                                        <span style="color:#94a3b8; font-style:italic; font-size:0.65rem;">Rp 0 (Belum ada)</span>
+                                        <span style="color:#94a3b8; font-style:italic; font-size:0.65rem;">(Belum ada)</span>
                                     @endif
                                 </div>
                                 <div
                                     style="display:flex; justify-content:space-between; align-items:center; padding-top:3px; border-top:1px dashed #cbd5e1;">
-                                    <span style="color:#475569; font-size:0.68rem; font-weight:700;">Margin Laba:</span>
+                                    <span style="color:#475569; font-size:0.68rem; font-weight:700;">Margin:</span>
                                     @if($hasRecipe)
                                         @if($profitMargin > 0)
                                             <span style="font-weight:800; color:#16a34a; display:inline-flex; align-items:center; gap:4px;">
@@ -1165,17 +1207,18 @@
                                 </button>
 
                                 {{-- Sisa Stok Realtime --}}
-                                <div style="font-size:0.64rem; color:#64748b; text-align:center; margin-top:5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                <div
+                                    style="font-size:0.64rem; color:#64748b; text-align:center; margin-top:5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">
                                     <span>Sisa Stok:</span>
                                     @php $rtStock = $p->realtime_stock; @endphp
                                     @if($rtStock !== null)
                                         @if($rtStock > 0)
-                                            <span style="font-weight:800; color:#16a34a;">{{ $rtStock }} porsi</span>
+                                            <span style="font-weight:800; color:#16a34a;">{{ $rtStock }}</span>
                                         @else
-                                            <span style="font-weight:800; color:#dc2626;">0 porsi (Habis)</span>
+                                            <span style="font-weight:800; color:#dc2626;">(Habis)</span>
                                         @endif
                                     @else
-                                        <span style="font-weight:700; color:#475569;">Tanpa batas</span>
+                                        <span style="font-weight:700; color:#475569;">-</span>
                                     @endif
                                 </div>
                             </div>
@@ -1391,14 +1434,18 @@
                 @csrf
                 @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
                 <div style="margin-bottom:0.75rem;">
-                    <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama Bahan Baku *</label>
+                    <label
+                        style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama
+                        Bahan Baku *</label>
                     <input type="text" name="name" required placeholder="Contoh: Biji Kopi Espresso Blend"
                         style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                 </div>
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:0.75rem;">
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Kategori *</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Kategori
+                            *</label>
                         <select name="category" required
                             style="width:100%; height:38px; padding:0 8px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.8rem; font-family:inherit; box-sizing:border-box; background:#fff;">
                             <optgroup label="Daging & Seafood">
@@ -1436,7 +1483,9 @@
                         </select>
                     </div>
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Satuan Dasar *</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Satuan
+                            Dasar *</label>
                         <select name="unit" required
                             style="width:100%; height:38px; padding:0 8px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.8rem; font-family:inherit; box-sizing:border-box; background:#fff;">
                             <option value="gram">gram (gr)</option>
@@ -1460,20 +1509,26 @@
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:0.75rem;">
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Stok Awal</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Stok
+                            Awal</label>
                         <input type="number" step="0.01" name="stock" value="0"
                             style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Stok Minimum Alert</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Stok
+                            Minimum Alert</label>
                         <input type="number" step="0.01" name="min_stock" value="0" placeholder="0 = tanpa alert"
                             style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                     </div>
                 </div>
 
                 {{-- Konversi Satuan Kemasan Beli (Multi-Unit) --}}
-                <div style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:10px 12px; margin-bottom:0.75rem;">
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.76rem; font-weight:700; color:#166534; cursor:pointer; margin:0; user-select:none;">
+                <div
+                    style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:10px 12px; margin-bottom:0.75rem;">
+                    <label
+                        style="display:flex; align-items:center; gap:8px; font-size:0.76rem; font-weight:700; color:#166534; cursor:pointer; margin:0; user-select:none;">
                         <input type="checkbox" id="addHasConversion" name="has_conversion" value="1"
                             onchange="toggleConversionBlock('add', this.checked)"
                             style="width:16px; height:16px; accent-color:#16a34a; margin:0; cursor:pointer; flex-shrink:0;">
@@ -1483,7 +1538,9 @@
                         style="display:none; margin-top:8px; padding-top:8px; border-top:1px dashed #cbd5e1;">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:0.65rem;">
                             <div>
-                                <label style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Satuan Kemasan *</label>
+                                <label
+                                    style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Satuan
+                                    Kemasan *</label>
                                 <select name="purchase_unit" id="addPurchaseUnit"
                                     onchange="calculateUnitCostFromConversion('add')"
                                     style="width:100%; height:36px; padding:0 8px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.78rem; font-family:inherit; box-sizing:border-box; background:#fff;">
@@ -1498,16 +1555,21 @@
                                 </select>
                             </div>
                             <div>
-                                <label style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Isi per Kemasan *</label>
+                                <label
+                                    style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Isi
+                                    per Kemasan *</label>
                                 <input type="number" step="0.01" name="conversion_qty" id="addConversionQty" value="1"
                                     min="1" placeholder="Misal: 24" oninput="calculateUnitCostFromConversion('add')"
                                     style="width:100%; height:36px; padding:0 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.78rem; font-family:inherit; box-sizing:border-box;">
                             </div>
                         </div>
                         <div style="margin-bottom:0.6rem;">
-                            <label style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Harga Beli Kemasan (Rp) *</label>
+                            <label
+                                style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Harga
+                                Beli Kemasan (Rp) *</label>
                             <div style="position:relative; display:flex; align-items:center;">
-                                <span style="position:absolute; left:10px; font-size:0.76rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                                <span
+                                    style="position:absolute; left:10px; font-size:0.76rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
                                 <input type="text" inputmode="numeric" name="purchase_cost" id="addPurchaseCost"
                                     placeholder="0"
                                     oninput="formatRupiahInput(this); calculateUnitCostFromConversion('add');"
@@ -1522,20 +1584,25 @@
                 </div>
 
                 <div style="margin-bottom:1.15rem;">
-                    <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Modal per Satuan Dasar</label>
+                    <label
+                        style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga
+                        Modal per Satuan Dasar</label>
                     <div style="position:relative; display:flex; align-items:center;">
-                        <span style="position:absolute; left:12px; font-size:0.8rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                        <span
+                            style="position:absolute; left:12px; font-size:0.8rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
                         <input type="text" inputmode="numeric" id="addCostPerUnit" name="cost_per_unit" value="0"
                             placeholder="0" oninput="formatRupiahInput(this)"
                             style="width:100%; height:38px; padding:0 12px 0 36px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
                     </div>
-                    <small style="color:#64748b; font-size:0.7rem; margin-top:3px; display:block;">Harga modal dasar yang otomatis dipakai menghitung HPP resep menu.</small>
+                    <small style="color:#64748b; font-size:0.7rem; margin-top:3px; display:block;">Harga modal dasar yang
+                        otomatis dipakai menghitung HPP resep menu.</small>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
                     <button type="button" onclick="closeModal('modalAddMaterial')"
                         style="padding:8px 14px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#475569; font-size:0.8rem; font-weight:600; cursor:pointer;">Batal</button>
-                    <button type="submit" class="prod-add-btn" style="padding:8px 16px; font-size:0.8rem;">Simpan Bahan</button>
+                    <button type="submit" class="prod-add-btn" style="padding:8px 16px; font-size:0.8rem;">Simpan
+                        Bahan</button>
                 </div>
             </form>
         </div>
@@ -1557,14 +1624,18 @@
                 @method('PUT')
                 @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
                 <div style="margin-bottom:0.75rem;">
-                    <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama Bahan Baku *</label>
+                    <label
+                        style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama
+                        Bahan Baku *</label>
                     <input type="text" id="editMatName" name="name" required
                         style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                 </div>
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:0.75rem;">
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Kategori *</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Kategori
+                            *</label>
                         <select id="editMatCategory" name="category" required
                             style="width:100%; height:38px; padding:0 8px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.8rem; font-family:inherit; box-sizing:border-box; background:#fff;">
                             <optgroup label="Daging & Seafood">
@@ -1602,7 +1673,9 @@
                         </select>
                     </div>
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Satuan Dasar *</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Satuan
+                            Dasar *</label>
                         <select id="editMatUnit" name="unit" required
                             style="width:100%; height:38px; padding:0 8px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.8rem; font-family:inherit; box-sizing:border-box; background:#fff;">
                             <option value="gram">gram (gr)</option>
@@ -1626,14 +1699,19 @@
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:0.75rem;">
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Stok Minimum Alert</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Stok
+                            Minimum Alert</label>
                         <input type="number" step="0.01" id="editMatMinStock" name="min_stock"
                             style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Modal Dasar</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga
+                            Modal Dasar</label>
                         <div style="position:relative; display:flex; align-items:center;">
-                            <span style="position:absolute; left:12px; font-size:0.8rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                            <span
+                                style="position:absolute; left:12px; font-size:0.8rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
                             <input type="text" inputmode="numeric" id="editMatCost" name="cost_per_unit"
                                 oninput="formatRupiahInput(this)"
                                 style="width:100%; height:38px; padding:0 12px 0 36px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
@@ -1642,8 +1720,10 @@
                 </div>
 
                 {{-- Konversi Satuan Kemasan Beli (Multi-Unit Edit) --}}
-                <div style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:10px 12px; margin-bottom:1.15rem;">
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.76rem; font-weight:700; color:#166534; cursor:pointer; margin:0; user-select:none;">
+                <div
+                    style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:10px 12px; margin-bottom:1.15rem;">
+                    <label
+                        style="display:flex; align-items:center; gap:8px; font-size:0.76rem; font-weight:700; color:#166534; cursor:pointer; margin:0; user-select:none;">
                         <input type="checkbox" id="editHasConversion" name="has_conversion" value="1"
                             onchange="toggleConversionBlock('edit', this.checked)"
                             style="width:16px; height:16px; accent-color:#16a34a; margin:0; cursor:pointer; flex-shrink:0;">
@@ -1653,7 +1733,9 @@
                         style="display:none; margin-top:8px; padding-top:8px; border-top:1px dashed #cbd5e1;">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:0.65rem;">
                             <div>
-                                <label style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Satuan Kemasan *</label>
+                                <label
+                                    style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Satuan
+                                    Kemasan *</label>
                                 <select name="purchase_unit" id="editPurchaseUnit"
                                     onchange="calculateUnitCostFromConversion('edit')"
                                     style="width:100%; height:36px; padding:0 8px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.78rem; font-family:inherit; box-sizing:border-box; background:#fff;">
@@ -1668,16 +1750,21 @@
                                 </select>
                             </div>
                             <div>
-                                <label style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Isi per Kemasan *</label>
+                                <label
+                                    style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Isi
+                                    per Kemasan *</label>
                                 <input type="number" step="0.01" name="conversion_qty" id="editConversionQty" value="1"
                                     min="1" placeholder="Misal: 24" oninput="calculateUnitCostFromConversion('edit')"
                                     style="width:100%; height:36px; padding:0 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.78rem; font-family:inherit; box-sizing:border-box;">
                             </div>
                         </div>
                         <div style="margin-bottom:0.6rem;">
-                            <label style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Harga Beli Kemasan (Rp) *</label>
+                            <label
+                                style="display:flex; align-items:flex-end; min-height:18px; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Harga
+                                Beli Kemasan (Rp) *</label>
                             <div style="position:relative; display:flex; align-items:center;">
-                                <span style="position:absolute; left:10px; font-size:0.76rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                                <span
+                                    style="position:absolute; left:10px; font-size:0.76rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
                                 <input type="text" inputmode="numeric" name="purchase_cost" id="editPurchaseCost"
                                     placeholder="0"
                                     oninput="formatRupiahInput(this); calculateUnitCostFromConversion('edit');"
@@ -1694,7 +1781,8 @@
                 <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
                     <button type="button" onclick="closeModal('modalEditMaterial')"
                         style="padding:8px 14px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#475569; font-size:0.8rem; font-weight:600; cursor:pointer;">Batal</button>
-                    <button type="submit" class="prod-add-btn" style="padding:8px 16px; font-size:0.8rem;">Perbarui Bahan</button>
+                    <button type="submit" class="prod-add-btn" style="padding:8px 16px; font-size:0.8rem;">Perbarui
+                        Bahan</button>
                 </div>
             </form>
         </div>
@@ -1715,7 +1803,9 @@
                 @csrf
                 @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
                 <div style="margin-bottom:0.75rem;">
-                    <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Pilih Bahan Baku *</label>
+                    <label
+                        style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Pilih
+                        Bahan Baku *</label>
                     <select id="restockMatSelect" onchange="updateRestockUnit()" required
                         style="width:100%; height:38px; padding:0 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.8rem; font-family:inherit; box-sizing:border-box; background:#fff;">
                         @foreach($allMats as $m)
@@ -1733,7 +1823,9 @@
                 {{-- Mode Pilihan Satuan Restock (Jika Bahan Memiliki Konversi Satuan) --}}
                 <div id="restockModeWrap"
                     style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:8px 12px; margin-bottom:0.75rem;">
-                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#166534; margin-bottom:4px;">Pilihan Satuan Restock:</label>
+                    <label
+                        style="display:block; font-size:0.73rem; font-weight:700; color:#166534; margin-bottom:4px;">Pilihan
+                        Satuan Restock:</label>
                     <div style="display:flex; gap:14px; font-size:0.78rem; font-weight:600; color:#0f172a;">
                         <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
                             <input type="radio" name="restock_mode" id="restockModePack" value="pack" checked
@@ -1750,7 +1842,9 @@
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin-bottom:0.75rem;">
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Jumlah Masuk *</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Jumlah
+                            Masuk *</label>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <input type="number" step="0.01" name="amount" required placeholder="0"
                                 style="width:100%; height:38px; padding:0 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
@@ -1759,9 +1853,12 @@
                         </div>
                     </div>
                     <div>
-                        <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Beli Satuan</label>
+                        <label
+                            style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga
+                            Beli Satuan</label>
                         <div style="position:relative; display:flex; align-items:center;">
-                            <span style="position:absolute; left:10px; font-size:0.78rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                            <span
+                                style="position:absolute; left:10px; font-size:0.78rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
                             <input type="text" inputmode="numeric" name="cost_per_unit" id="restockCostInput"
                                 placeholder="0" oninput="formatRupiahInput(this)"
                                 style="width:100%; height:38px; padding:0 10px 0 32px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
@@ -1770,7 +1867,9 @@
                 </div>
 
                 <div style="margin-bottom:1.15rem;">
-                    <label style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Catatan / No. Nota Supplier</label>
+                    <label
+                        style="display:flex; align-items:flex-end; min-height:19px; font-size:0.76rem; font-weight:700; color:#334155; margin-bottom:4px;">Catatan
+                        / No. Nota Supplier</label>
                     <input type="text" name="notes" placeholder="Contoh: Beli dari Toko Grosir Kopi Jaya"
                         style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                 </div>
@@ -1778,7 +1877,8 @@
                 <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
                     <button type="button" onclick="closeModal('modalRestock')"
                         style="padding:8px 14px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#475569; font-size:0.8rem; font-weight:600; cursor:pointer;">Batal</button>
-                    <button type="submit" class="prod-add-btn" style="padding:8px 16px; font-size:0.8rem;">+ Simpan Restock</button>
+                    <button type="submit" class="prod-add-btn" style="padding:8px 16px; font-size:0.8rem;">+ Simpan
+                        Restock</button>
                 </div>
             </form>
         </div>
@@ -2159,21 +2259,21 @@
             });
 
             const rowHtml = `
-                                                                    <div id="recipe-row-${idx}" style="background:#f8fafc; padding:8px 10px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
-                                                                        <div style="display:flex; gap:6px; align-items:center;">
-                                                                            <select name="recipes[${idx}][material_id]" onchange="recalculateRecipeCost()" required style="flex:2.3; min-width:0; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit;">
-                                                                                ${matOptions}
-                                                                            </select>
-                                                                            <div style="flex:1; min-width:0;">
-                                                                                <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" oninput="recalculateRecipeCost()" required placeholder="Takaran" style="width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit; box-sizing:border-box;">
-                                                                            </div>
-                                                                            <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; flex-shrink:0;" title="Hapus Baris">
-                                                                                &times;
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="recipe-row-subcost" style="font-size:0.68rem; color:#64748b; font-weight:600; margin-top:4px; min-height:1em;"></div>
-                                                                    </div>
-                                                                `;
+                                                                                                                    <div id="recipe-row-${idx}" style="background:#f8fafc; padding:8px 10px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
+                                                                                                                        <div style="display:flex; gap:6px; align-items:center;">
+                                                                                                                            <select name="recipes[${idx}][material_id]" onchange="recalculateRecipeCost()" required style="flex:2.3; min-width:0; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit;">
+                                                                                                                                ${matOptions}
+                                                                                                                            </select>
+                                                                                                                            <div style="flex:1; min-width:0;">
+                                                                                                                                <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" oninput="recalculateRecipeCost()" required placeholder="Takaran" style="width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit; box-sizing:border-box;">
+                                                                                                                            </div>
+                                                                                                                            <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; flex-shrink:0;" title="Hapus Baris">
+                                                                                                                                &times;
+                                                                                                                            </button>
+                                                                                                                        </div>
+                                                                                                                        <div class="recipe-row-subcost" style="font-size:0.68rem; color:#64748b; font-weight:600; margin-top:4px; min-height:1em;"></div>
+                                                                                                                    </div>
+                                                                                                                `;
 
             container.insertAdjacentHTML('beforeend', rowHtml);
             recalculateRecipeCost();
