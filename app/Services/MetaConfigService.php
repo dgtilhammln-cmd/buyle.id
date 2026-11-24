@@ -13,7 +13,7 @@ class MetaConfigService
     public static function getAppId(): string
     {
         $val = \App\Models\Setting::where('key', 'instagram_app_id')->value('value');
-        return (string) ($val ?: '1601973478071042');
+        return (string) ($val ?: '1642881397242052');
     }
 
     /**
@@ -23,7 +23,7 @@ class MetaConfigService
     public static function getAppSecret(): string
     {
         $val = \App\Models\Setting::where('key', 'instagram_app_secret')->value('value');
-        return (string) ($val ?: '0cfaccff27e5846187faf60c7b8a1d96');
+        return (string) ($val ?: 'c5dfb3973596cac40db925898c0cfbfd');
     }
 
     /**
@@ -51,36 +51,40 @@ class MetaConfigService
     }
 
     /**
-     * 3 Scope Resmi Instagram API yang aktif di akun Meta Developer
+     * Scope yang dibutuhkan untuk Facebook Login for Business
+     * dengan akses Instagram Business Account
      */
     public static function getRequiredScopes(): array
     {
         return [
-            'instagram_business_basic',
-            'instagram_business_manage_messages',
-            'instagram_business_manage_comments',
+            'instagram_basic',
+            'instagram_manage_messages',
+            'instagram_manage_comments',
+            'pages_show_list',
+            'pages_messaging',
         ];
     }
 
     /**
-     * Generate URL Meta OAuth Login Dialog
-     * Menggunakan Facebook Login for Business endpoint (mendukung Instagram Business Account)
+     * Generate URL Meta OAuth Login Dialog (Instagram Login for Business)
      */
     public static function getOAuthDialogUrl(string $redirectUri, string $state = ''): string
     {
         $appId = self::getAppId();
         $scopes = implode(',', self::getRequiredScopes());
 
+        // Menggunakan endpoint resmi Instagram Authorize untuk Instagram API
         $params = http_build_query([
-            'client_id'     => $appId,
-            'redirect_uri'  => $redirectUri,
-            'response_type' => 'code',
-            'scope'         => $scopes,
-            'state'         => $state,
+            'enable_fb_login'      => '0',
+            'force_authentication' => '1',
+            'client_id'            => $appId,
+            'redirect_uri'         => $redirectUri,
+            'response_type'        => 'code',
+            'scope'                => $scopes,
+            'state'                => $state,
         ]);
 
-        // Gunakan Facebook Login for Business endpoint (sesuai konfigurasi app di Meta Developer)
-        return "https://www.facebook.com/dialog/oauth?" . $params;
+        return "https://www.instagram.com/oauth/authorize?" . $params;
     }
 
     /**
