@@ -1192,7 +1192,7 @@
     {{-- SIDEBAR --}}
     <aside class="cr-sidebar" id="crSidebar">
         @php 
-                                                            $logo = \App\Models\Setting::get('logo');
+                                                                                                            $logo = \App\Models\Setting::get('logo');
             $authUser = auth()->user();
             $isPosCashier = $authUser ? $authUser->isPosCashier() : false;
             $isBuyer = $authUser ? $authUser->role === 'buyer' : false;
@@ -2018,7 +2018,7 @@
                     @if($hasBiometric)
                         setTimeout(triggerBiometricAuth, 500);
                     @endif
-                            }
+                                            }
             }
 
             function updateLockDots() {
