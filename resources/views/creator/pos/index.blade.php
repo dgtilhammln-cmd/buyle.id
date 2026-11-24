@@ -7587,7 +7587,6 @@
                 container.innerHTML = html;
 
                 // Sync Drawer Cart on Mobile & Confirm Sale Modal (Screen 3)
-                const drawerContainer = document.getElementById('drawerCartItemsContainer');
                 const confirmContainer = document.getElementById('confirmBillingItemsContainer');
                 if (confirmContainer) confirmContainer.innerHTML = html;
                 if (drawerContainer) drawerContainer.innerHTML = html;
