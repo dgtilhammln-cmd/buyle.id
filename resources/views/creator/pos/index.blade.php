@@ -3410,7 +3410,7 @@
             }
 
             .pos-desktop-nav-tabs {
-                display: flex !important;
+                display: none !important;
             }
         }
 
@@ -3504,7 +3504,7 @@
             }
 
             .pos-desktop-nav-tabs {
-                display: flex !important;
+                display: none !important;
             }
         }
 
@@ -10664,6 +10664,7 @@
                         setTimeout(function () { if (skel && skel.parentNode) skel.parentNode.removeChild(skel); }, 350);
                     }
                     try {
+                        sessionStorage.removeItem('pos_secret_unlocked');
                         if (typeof renderCartFees === 'function') renderCartFees();
                         if (typeof renderDiscountPresetDropdown === 'function') renderDiscountPresetDropdown();
                         if (typeof renderTablesQuickSelect === 'function') renderTablesQuickSelect();

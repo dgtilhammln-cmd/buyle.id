@@ -15,6 +15,9 @@ class Material extends Model
         'code',
         'category',
         'unit',
+        'purchase_unit',
+        'conversion_qty',
+        'purchase_cost',
         'stock',
         'min_stock',
         'cost_per_unit',
@@ -23,10 +26,12 @@ class Material extends Model
     ];
 
     protected $casts = [
-        'stock'         => 'decimal:2',
-        'min_stock'     => 'decimal:2',
-        'cost_per_unit' => 'decimal:2',
-        'is_active'     => 'boolean',
+        'stock'          => 'decimal:2',
+        'min_stock'      => 'decimal:2',
+        'cost_per_unit'  => 'decimal:2',
+        'conversion_qty' => 'decimal:2',
+        'purchase_cost'  => 'decimal:2',
+        'is_active'      => 'boolean',
     ];
 
     public function seller(): BelongsTo

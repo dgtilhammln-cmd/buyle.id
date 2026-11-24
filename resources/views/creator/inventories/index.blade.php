@@ -833,6 +833,11 @@
                                         {{ number_format($m->stock, 2, ',', '.') }}
                                         <span style="font-size:0.75rem; font-weight:600; color:#64748b;">{{ $m->unit }}</span>
                                     </div>
+                                    @if($m->conversion_qty > 1 && $m->purchase_unit)
+                                        <div style="font-size:0.7rem; color:#16a34a; font-weight:600; margin-top:2px;">
+                                            ≈ {{ number_format($m->stock / $m->conversion_qty, 1, ',', '.') }} {{ $m->purchase_unit }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <td>
                                     <span style="color:#64748b; font-size:0.8rem;">
@@ -840,9 +845,14 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span style="color:#475569; font-weight:600;">
+                                    <span style="color:#475569; font-weight:700;">
                                         Rp {{ number_format($m->cost_per_unit, 0, ',', '.') }}/{{ $m->unit }}
                                     </span>
+                                    @if($m->conversion_qty > 1 && $m->purchase_cost > 0)
+                                        <div style="font-size:0.68rem; color:#94a3b8; margin-top:1px;">
+                                            Rp {{ number_format($m->purchase_cost, 0, ',', '.') }}/{{ $m->purchase_unit }} (isi {{ (float)$m->conversion_qty }})
+                                        </div>
+                                    @endif
                                 </td>
                                 <td>
                                     <span style="background:{{ $st['bg'] }}; color:{{ $st['color'] }}; border:1px solid {{ $st['border'] }}; padding:3px 9px; border-radius:999px; font-size:0.72rem; font-weight:700;">
@@ -895,9 +905,19 @@
                                 <div style="font-size:1.25rem; font-weight:800; color:#0f172a;">
                                     {{ number_format($m->stock, 2, ',', '.') }}
                                     <span style="font-size:0.8rem; font-weight:600; color:#64748b;">{{ $m->unit }}</span>
+                                    @if($m->conversion_qty > 1 && $m->purchase_unit)
+                                        <span style="font-size:0.75rem; font-weight:700; color:#16a34a; margin-left:6px; background:#f0fdf4; border:1px solid #bbf7d0; padding:1px 6px; border-radius:6px;">
+                                            ≈ {{ number_format($m->stock / $m->conversion_qty, 1, ',', '.') }} {{ $m->purchase_unit }}
+                                        </span>
+                                    @endif
                                 </div>
                                 <div style="font-size:0.72rem; color:#64748b; margin-top:4px;">
                                     Estimasi modal: <strong style="color:#0f172a;">Rp {{ number_format($m->cost_per_unit, 0, ',', '.') }}/{{ $m->unit }}</strong>
+                                    @if($m->conversion_qty > 1 && $m->purchase_cost > 0)
+                                        <div style="font-size:0.68rem; color:#64748b; margin-top:2px;">
+                                            Kulakan: <strong>Rp {{ number_format($m->purchase_cost, 0, ',', '.') }}</strong>/{{ $m->purchase_unit }} (isi {{ (float)$m->conversion_qty }} {{ $m->unit }})
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -1303,11 +1323,50 @@
                     </div>
                 </div>
 
+                {{-- Konversi Satuan Kemasan Beli (Multi-Unit) --}}
+                <div style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:10px 12px; margin-bottom:0.9rem;">
+                    <label style="display:flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:700; color:#166534; cursor:pointer; margin:0;">
+                        <input type="checkbox" id="addHasConversion" name="has_conversion" value="1" onchange="toggleConversionBlock('add', this.checked)">
+                        <span>Bahan dibeli dalam kemasan/karton/dus (Konversi Satuan)</span>
+                    </label>
+                    <div id="addConversionBlock" style="display:none; margin-top:10px; padding-top:10px; border-top:1px dashed #cbd5e1;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
+                            <div>
+                                <label style="display:block; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Nama Satuan Kemasan *</label>
+                                <select name="purchase_unit" id="addPurchaseUnit" onchange="calculateUnitCostFromConversion('add')" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-family:inherit; box-sizing:border-box;">
+                                    <option value="dus">dus / karton</option>
+                                    <option value="pack">pack / bungkus</option>
+                                    <option value="karung">karung / sak</option>
+                                    <option value="bal">bal</option>
+                                    <option value="galon">galon</option>
+                                    <option value="botol">botol besar</option>
+                                    <option value="kaleng">kaleng</option>
+                                    <option value="jerigen">jerigen</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Isi per Kemasan *</label>
+                                <input type="number" step="0.01" name="conversion_qty" id="addConversionQty" value="1" min="1" placeholder="Misal: 24" oninput="calculateUnitCostFromConversion('add')" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-family:inherit; box-sizing:border-box;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom:0.6rem;">
+                            <label style="display:block; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Harga Beli per Kemasan (Rp) *</label>
+                            <div style="position:relative; display:flex; align-items:center;">
+                                <span style="position:absolute; left:10px; font-size:0.78rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                                <input type="text" inputmode="numeric" name="purchase_cost" id="addPurchaseCost" placeholder="0" oninput="formatRupiahInput(this); calculateUnitCostFromConversion('add');" style="width:100%; padding:8px 10px 8px 34px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
+                            </div>
+                        </div>
+                        <div id="addCalculatedCostText" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:6px 10px; font-size:0.73rem; color:#166534; font-weight:600;">
+                            💡 Masukkan isi dan harga beli kemasan untuk hitung otomatis modal per unit resep.
+                        </div>
+                    </div>
+                </div>
+
                 <div style="margin-bottom:1.25rem;">
-                    <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Estimasi Harga Beli per Satuan</label>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Estimasi Harga Modal per Satuan Dasar</label>
                     <div style="position:relative; display:flex; align-items:center;">
                         <span style="position:absolute; left:12px; font-size:0.82rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
-                        <input type="text" inputmode="numeric" name="cost_per_unit" value="0" placeholder="0" oninput="formatRupiahInput(this)" style="width:100%; padding:9px 12px 9px 38px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
+                        <input type="text" inputmode="numeric" id="addCostPerUnit" name="cost_per_unit" value="0" placeholder="0" oninput="formatRupiahInput(this)" style="width:100%; padding:9px 12px 9px 38px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
                     </div>
                     <small style="color:#64748b; font-size:0.72rem; margin-top:3px; display:block;">Digunakan untuk menghitung HPP (Harga Pokok Penjualan) per porsi/menu.</small>
                 </div>
@@ -1399,16 +1458,55 @@
                     </div>
                 </div>
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.9rem;">
                     <div>
                         <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Batas Peringatan (Min)</label>
                         <input type="number" step="0.01" id="editMatMinStock" name="min_stock" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Modal per Satuan</label>
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Modal per Satuan Dasar</label>
                         <div style="position:relative; display:flex; align-items:center;">
                             <span style="position:absolute; left:12px; font-size:0.82rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
                             <input type="text" inputmode="numeric" id="editMatCost" name="cost_per_unit" oninput="formatRupiahInput(this)" style="width:100%; padding:9px 12px 9px 38px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Konversi Satuan Kemasan Beli (Multi-Unit Edit) --}}
+                <div style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:10px 12px; margin-bottom:1.25rem;">
+                    <label style="display:flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:700; color:#166534; cursor:pointer; margin:0;">
+                        <input type="checkbox" id="editHasConversion" name="has_conversion" value="1" onchange="toggleConversionBlock('edit', this.checked)">
+                        <span>Bahan dibeli dalam kemasan/karton/dus (Konversi Satuan)</span>
+                    </label>
+                    <div id="editConversionBlock" style="display:none; margin-top:10px; padding-top:10px; border-top:1px dashed #cbd5e1;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
+                            <div>
+                                <label style="display:block; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Nama Satuan Kemasan *</label>
+                                <select name="purchase_unit" id="editPurchaseUnit" onchange="calculateUnitCostFromConversion('edit')" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-family:inherit; box-sizing:border-box;">
+                                    <option value="dus">dus / karton</option>
+                                    <option value="pack">pack / bungkus</option>
+                                    <option value="karung">karung / sak</option>
+                                    <option value="bal">bal</option>
+                                    <option value="galon">galon</option>
+                                    <option value="botol">botol besar</option>
+                                    <option value="kaleng">kaleng</option>
+                                    <option value="jerigen">jerigen</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Isi per Kemasan *</label>
+                                <input type="number" step="0.01" name="conversion_qty" id="editConversionQty" value="1" min="1" placeholder="Misal: 24" oninput="calculateUnitCostFromConversion('edit')" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-family:inherit; box-sizing:border-box;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom:0.6rem;">
+                            <label style="display:block; font-size:0.73rem; font-weight:700; color:#475569; margin-bottom:3px;">Harga Beli per Kemasan (Rp) *</label>
+                            <div style="position:relative; display:flex; align-items:center;">
+                                <span style="position:absolute; left:10px; font-size:0.78rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                                <input type="text" inputmode="numeric" name="purchase_cost" id="editPurchaseCost" placeholder="0" oninput="formatRupiahInput(this); calculateUnitCostFromConversion('edit');" style="width:100%; padding:8px 10px 8px 34px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.8rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
+                            </div>
+                        </div>
+                        <div id="editCalculatedCostText" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:6px 10px; font-size:0.73rem; color:#166534; font-weight:600;">
+                            💡 Masukkan isi dan harga beli kemasan untuk hitung otomatis modal per unit resep.
                         </div>
                     </div>
                 </div>
@@ -1438,9 +1536,31 @@
                     <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Pilih Bahan Baku *</label>
                     <select id="restockMatSelect" onchange="updateRestockUnit()" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                         @foreach($allMats as $m)
-                            <option value="{{ $m->id }}" data-unit="{{ $m->unit }}" data-cost="{{ $m->cost_per_unit }}">{{ $m->name }} (Sisa: {{ (float)$m->stock }} {{ $m->unit }})</option>
+                            <option value="{{ $m->id }}" 
+                                    data-unit="{{ $m->unit }}" 
+                                    data-cost="{{ $m->cost_per_unit }}"
+                                    data-purchase-unit="{{ $m->purchase_unit }}"
+                                    data-conv-qty="{{ (float)$m->conversion_qty }}"
+                                    data-purchase-cost="{{ $m->purchase_cost }}">
+                                {{ $m->name }} (Sisa: {{ (float)$m->stock }} {{ $m->unit }}@if($m->conversion_qty > 1 && $m->purchase_unit) / ≈ {{ number_format($m->stock / $m->conversion_qty, 1, ',', '.') }} {{ $m->purchase_unit }}@endif)
+                            </option>
                         @endforeach
                     </select>
+                </div>
+
+                {{-- Mode Pilihan Satuan Restock (Jika Bahan Memiliki Konversi Satuan) --}}
+                <div id="restockModeWrap" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:8px 12px; margin-bottom:0.9rem;">
+                    <label style="display:block; font-size:0.73rem; font-weight:700; color:#166534; margin-bottom:4px;">Pilihan Satuan Restock:</label>
+                    <div style="display:flex; gap:12px; font-size:0.78rem; font-weight:600; color:#0f172a;">
+                        <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
+                            <input type="radio" name="restock_mode" id="restockModePack" value="pack" checked onchange="onRestockModeChange()">
+                            <span id="restockModePackLabel">Kemasan Kulakan</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
+                            <input type="radio" name="restock_mode" id="restockModeUnit" value="unit" onchange="onRestockModeChange()">
+                            <span id="restockModeUnitLabel">Satuan Resep</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.9rem;">
@@ -1616,7 +1736,60 @@
         } catch (e) {}
     }
 
+    function parseRupiahNumber(val) {
+        if (!val) return 0;
+        const clean = val.toString().replace(/[^0-9]/g, '');
+        return parseFloat(clean) || 0;
+    }
+
+    // ── Multi-Unit Conversion Helper Functions ──
+    function toggleConversionBlock(prefix, isChecked) {
+        const block = document.getElementById(prefix + 'ConversionBlock');
+        if (block) {
+            block.style.display = isChecked ? 'block' : 'none';
+        }
+        if (isChecked) {
+            calculateUnitCostFromConversion(prefix);
+        }
+    }
+
+    function calculateUnitCostFromConversion(prefix) {
+        const costStr = document.getElementById(prefix + 'PurchaseCost')?.value || '0';
+        const purchaseCost = parseRupiahNumber(costStr);
+        const convQtyInput = document.getElementById(prefix + 'ConversionQty');
+        const convQty = parseFloat(convQtyInput?.value) || 1;
+        const purchaseUnit = document.getElementById(prefix + 'PurchaseUnit')?.value || 'kemasan';
+        
+        let baseUnit = 'pcs';
+        if (prefix === 'add') {
+            baseUnit = document.querySelector('select[name="unit"]')?.value || 'pcs';
+        } else {
+            baseUnit = document.getElementById('editMatUnit')?.value || 'pcs';
+        }
+
+        const costPerUnit = convQty > 0 ? (purchaseCost / convQty) : 0;
+        
+        const costInput = prefix === 'add' ? document.getElementById('addCostPerUnit') : document.getElementById('editMatCost');
+        if (costInput && purchaseCost > 0) {
+            costInput.value = formatNumberWithDots(Math.round(costPerUnit));
+        }
+
+        const infoBox = document.getElementById(prefix + 'CalculatedCostText');
+        if (infoBox) {
+            if (purchaseCost > 0 && convQty > 0) {
+                infoBox.innerHTML = `✅ 1 ${purchaseUnit} = <strong>${convQty} ${baseUnit}</strong> &bull; Biaya modal: <strong>Rp ${Math.round(costPerUnit).toLocaleString('id-ID')} / ${baseUnit}</strong>`;
+            } else {
+                infoBox.innerHTML = `💡 Masukkan isi dan harga beli kemasan untuk hitung otomatis modal per ${baseUnit}.`;
+            }
+        }
+    }
+
     function openAddMaterialModal() {
+        const hasConv = document.getElementById('addHasConversion');
+        if (hasConv) {
+            hasConv.checked = false;
+            toggleConversionBlock('add', false);
+        }
         openModal('modalAddMaterial');
     }
 
@@ -1626,6 +1799,21 @@
         document.getElementById('editMatUnit').value = mat.unit;
         document.getElementById('editMatMinStock').value = mat.min_stock;
         document.getElementById('editMatCost').value = formatNumberWithDots(mat.cost_per_unit);
+
+        const hasConv = document.getElementById('editHasConversion');
+        const convQty = parseFloat(mat.conversion_qty) || 1;
+        if (hasConv) {
+            if (convQty > 1 && mat.purchase_unit) {
+                hasConv.checked = true;
+                if (document.getElementById('editPurchaseUnit')) document.getElementById('editPurchaseUnit').value = mat.purchase_unit;
+                if (document.getElementById('editConversionQty')) document.getElementById('editConversionQty').value = convQty;
+                if (document.getElementById('editPurchaseCost')) document.getElementById('editPurchaseCost').value = formatNumberWithDots(mat.purchase_cost || 0);
+                toggleConversionBlock('edit', true);
+            } else {
+                hasConv.checked = false;
+                toggleConversionBlock('edit', false);
+            }
+        }
 
         const form = document.getElementById('formEditMaterial');
         form.action = `/creator/inventories/${mat.id}`;
@@ -1653,20 +1841,57 @@
         }
         const form = document.getElementById('formRestock');
         form.action = `/creator/inventories/${id}/restock`;
-        document.getElementById('restockCostInput').value = formatNumberWithDots(cost);
         openModal('modalRestock');
     }
 
     function updateRestockUnit() {
         const sel = document.getElementById('restockMatSelect');
+        if (!sel || !sel.options.length) return;
         const opt = sel.options[sel.selectedIndex];
-        if (opt) {
-            const unit = opt.getAttribute('data-unit') || '';
-            const cost = opt.getAttribute('data-cost') || '';
-            document.getElementById('restockUnitLabel').textContent = unit;
-            document.getElementById('restockCostInput').value = formatNumberWithDots(cost);
-            const form = document.getElementById('formRestock');
-            form.action = `/creator/inventories/${sel.value}/restock`;
+        if (!opt) return;
+
+        const form = document.getElementById('formRestock');
+        form.action = `/creator/inventories/${sel.value}/restock`;
+
+        const baseUnit = opt.getAttribute('data-unit') || 'pcs';
+        const baseCost = opt.getAttribute('data-cost') || '0';
+        const purchaseUnit = opt.getAttribute('data-purchase-unit') || '';
+        const convQty = parseFloat(opt.getAttribute('data-conv-qty')) || 1;
+        const purchaseCost = opt.getAttribute('data-purchase-cost') || '0';
+
+        const modeWrap = document.getElementById('restockModeWrap');
+        if (convQty > 1 && purchaseUnit) {
+            if (modeWrap) modeWrap.style.display = 'block';
+            const packLabel = document.getElementById('restockModePackLabel');
+            const unitLabel = document.getElementById('restockModeUnitLabel');
+            if (packLabel) packLabel.textContent = `Kemasan Kulakan (${purchaseUnit} @ ${convQty} ${baseUnit})`;
+            if (unitLabel) unitLabel.textContent = `Satuan Resep (${baseUnit})`;
+            onRestockModeChange();
+        } else {
+            if (modeWrap) modeWrap.style.display = 'none';
+            document.getElementById('restockUnitLabel').textContent = baseUnit;
+            document.getElementById('restockCostInput').value = formatNumberWithDots(baseCost);
+        }
+    }
+
+    function onRestockModeChange() {
+        const sel = document.getElementById('restockMatSelect');
+        if (!sel || !sel.options.length) return;
+        const opt = sel.options[sel.selectedIndex];
+        if (!opt) return;
+
+        const baseUnit = opt.getAttribute('data-unit') || 'pcs';
+        const baseCost = opt.getAttribute('data-cost') || '0';
+        const purchaseUnit = opt.getAttribute('data-purchase-unit') || 'dus';
+        const purchaseCost = opt.getAttribute('data-purchase-cost') || '0';
+
+        const isPack = document.getElementById('restockModePack')?.checked;
+        if (isPack) {
+            document.getElementById('restockUnitLabel').textContent = purchaseUnit;
+            document.getElementById('restockCostInput').value = formatNumberWithDots(purchaseCost);
+        } else {
+            document.getElementById('restockUnitLabel').textContent = baseUnit;
+            document.getElementById('restockCostInput').value = formatNumberWithDots(baseCost);
         }
     }
 

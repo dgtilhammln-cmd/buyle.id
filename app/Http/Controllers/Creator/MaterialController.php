@@ -110,6 +110,14 @@ class MaterialController extends Controller
             $val = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
             $request->merge(['cost_per_unit' => $val !== '' ? (float) $val : 0]);
         }
+        if ($request->has('purchase_cost')) {
+            $val = preg_replace('/[^0-9]/', '', (string) $request->purchase_cost);
+            $request->merge(['purchase_cost' => $val !== '' ? (float) $val : 0]);
+        }
+        if ($request->has('conversion_qty')) {
+            $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->conversion_qty));
+            $request->merge(['conversion_qty' => $val !== '' ? (float) $val : 1]);
+        }
         if ($request->has('stock')) {
             $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->stock));
             $request->merge(['stock' => $val !== '' ? (float) $val : 0]);
@@ -120,27 +128,48 @@ class MaterialController extends Controller
         }
 
         $request->validate([
-            'name'          => 'required|string|max:150',
-            'code'          => 'nullable|string|max:50',
-            'category'      => 'required|string|max:50',
-            'unit'          => 'required|string|max:30',
-            'stock'         => 'nullable|numeric|min:0',
-            'min_stock'     => 'nullable|numeric|min:0',
-            'cost_per_unit' => 'nullable|numeric|min:0',
-            'notes'         => 'nullable|string|max:500',
+            'name'           => 'required|string|max:150',
+            'code'           => 'nullable|string|max:50',
+            'category'       => 'required|string|max:50',
+            'unit'           => 'required|string|max:30',
+            'purchase_unit'  => 'nullable|string|max:30',
+            'conversion_qty' => 'nullable|numeric|min:0.01',
+            'purchase_cost'  => 'nullable|numeric|min:0',
+            'stock'          => 'nullable|numeric|min:0',
+            'min_stock'      => 'nullable|numeric|min:0',
+            'cost_per_unit'  => 'nullable|numeric|min:0',
+            'notes'          => 'nullable|string|max:500',
         ]);
 
+        $hasConversion = $request->boolean('has_conversion') || $request->filled('purchase_unit');
+        $conversionQty = $hasConversion ? max(1.0, (float) ($request->conversion_qty ?? 1)) : 1.0;
+        $purchaseUnit  = $hasConversion ? trim((string) $request->purchase_unit) : null;
+        $purchaseCost  = ($hasConversion && $request->filled('purchase_cost')) ? (float) $request->purchase_cost : null;
+
+        // Jika menggunakan kulakan kemasan besar, modal per unit dihitung otomatis dari purchase_cost / conversion_qty
+        $costPerUnit = max(0, (float) ($request->cost_per_unit ?? 0));
+        if ($hasConversion && $purchaseCost && $purchaseCost > 0 && $conversionQty > 0) {
+            $costPerUnit = round($purchaseCost / $conversionQty, 2);
+        }
+
         $initialStock = max(0, (float) ($request->stock ?? 0));
+        if ($hasConversion && $request->get('stock_type') === 'pack') {
+            $initialStock = round($initialStock * $conversionQty, 2);
+        }
+
         $material = Material::create([
-            'seller_id'     => $sellerId,
-            'name'          => $request->name,
-            'code'          => $request->code,
-            'category'      => $request->category,
-            'unit'          => strtolower($request->unit),
-            'stock'         => $initialStock,
-            'min_stock'     => max(0, (float) ($request->min_stock ?? 0)),
-            'cost_per_unit' => max(0, (float) ($request->cost_per_unit ?? 0)),
-            'notes'         => $request->notes,
+            'seller_id'      => $sellerId,
+            'name'           => $request->name,
+            'code'           => $request->code,
+            'category'       => $request->category,
+            'unit'           => strtolower($request->unit),
+            'purchase_unit'  => $purchaseUnit ? strtolower($purchaseUnit) : null,
+            'conversion_qty' => $conversionQty,
+            'purchase_cost'  => $purchaseCost,
+            'stock'          => $initialStock,
+            'min_stock'      => max(0, (float) ($request->min_stock ?? 0)),
+            'cost_per_unit'  => $costPerUnit,
+            'notes'          => $request->notes,
         ]);
 
         if ($initialStock > 0) {
@@ -175,29 +204,53 @@ class MaterialController extends Controller
             $val = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
             $request->merge(['cost_per_unit' => $val !== '' ? (float) $val : 0]);
         }
+        if ($request->has('purchase_cost')) {
+            $val = preg_replace('/[^0-9]/', '', (string) $request->purchase_cost);
+            $request->merge(['purchase_cost' => $val !== '' ? (float) $val : 0]);
+        }
+        if ($request->has('conversion_qty')) {
+            $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->conversion_qty));
+            $request->merge(['conversion_qty' => $val !== '' ? (float) $val : 1]);
+        }
         if ($request->has('min_stock')) {
             $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->min_stock));
             $request->merge(['min_stock' => $val !== '' ? (float) $val : 0]);
         }
 
         $request->validate([
-            'name'          => 'required|string|max:150',
-            'code'          => 'nullable|string|max:50',
-            'category'      => 'required|string|max:50',
-            'unit'          => 'required|string|max:30',
-            'min_stock'     => 'nullable|numeric|min:0',
-            'cost_per_unit' => 'nullable|numeric|min:0',
-            'notes'         => 'nullable|string|max:500',
+            'name'           => 'required|string|max:150',
+            'code'           => 'nullable|string|max:50',
+            'category'       => 'required|string|max:50',
+            'unit'           => 'required|string|max:30',
+            'purchase_unit'  => 'nullable|string|max:30',
+            'conversion_qty' => 'nullable|numeric|min:0.01',
+            'purchase_cost'  => 'nullable|numeric|min:0',
+            'min_stock'      => 'nullable|numeric|min:0',
+            'cost_per_unit'  => 'nullable|numeric|min:0',
+            'notes'          => 'nullable|string|max:500',
         ]);
 
+        $hasConversion = $request->boolean('has_conversion') || $request->filled('purchase_unit');
+        $conversionQty = $hasConversion ? max(1.0, (float) ($request->conversion_qty ?? 1)) : 1.0;
+        $purchaseUnit  = $hasConversion ? trim((string) $request->purchase_unit) : null;
+        $purchaseCost  = ($hasConversion && $request->filled('purchase_cost')) ? (float) $request->purchase_cost : null;
+
+        $costPerUnit = max(0, (float) ($request->cost_per_unit ?? 0));
+        if ($hasConversion && $purchaseCost && $purchaseCost > 0 && $conversionQty > 0) {
+            $costPerUnit = round($purchaseCost / $conversionQty, 2);
+        }
+
         $material->update([
-            'name'          => $request->name,
-            'code'          => $request->code,
-            'category'      => $request->category,
-            'unit'          => strtolower($request->unit),
-            'min_stock'     => max(0, (float) ($request->min_stock ?? 0)),
-            'cost_per_unit' => max(0, (float) ($request->cost_per_unit ?? 0)),
-            'notes'         => $request->notes,
+            'name'           => $request->name,
+            'code'           => $request->code,
+            'category'       => $request->category,
+            'unit'           => strtolower($request->unit),
+            'purchase_unit'  => $purchaseUnit ? strtolower($purchaseUnit) : null,
+            'conversion_qty' => $conversionQty,
+            'purchase_cost'  => $purchaseCost,
+            'min_stock'      => max(0, (float) ($request->min_stock ?? 0)),
+            'cost_per_unit'  => $costPerUnit,
+            'notes'          => $request->notes,
         ]);
 
         $params = ['tab' => 'materials'];
@@ -230,35 +283,64 @@ class MaterialController extends Controller
         $sellerId = $this->getSellerId();
         $material = Material::where('seller_id', $sellerId)->findOrFail($id);
 
-        // Sanitize rupiah and numeric inputs
-        if ($request->has('cost_per_unit')) {
-            $val = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
-            $request->merge(['cost_per_unit' => $val !== '' ? (float) $val : 0]);
+        $restockMode = $request->input('restock_mode', 'base'); // 'pack' or 'base'
+        $rawAmount = (float) str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->amount));
+
+        $conversionQty = (float) ($material->conversion_qty ?: 1);
+
+        if ($restockMode === 'pack' && $conversionQty > 1 && $material->purchase_unit) {
+            $actualQty = round($rawAmount * $conversionQty, 2);
+            $packCostVal = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
+            $packCost = $packCostVal !== '' ? (float) $packCostVal : ($material->purchase_cost ?? 0);
+            $unitCost = ($packCost > 0 && $conversionQty > 0) ? round($packCost / $conversionQty, 2) : $material->cost_per_unit;
+
+            if ($packCost > 0) {
+                $material->update(['purchase_cost' => $packCost]);
+            }
+
+            $userNotes = trim((string) $request->notes);
+            $noteText = "Restock {$rawAmount} {$material->purchase_unit} (+{$actualQty} {$material->unit})" . ($userNotes ? " - {$userNotes}" : "");
+
+            $material->restock($actualQty, $unitCost, $noteText);
+
+            $params = ['tab' => 'materials'];
+            if ($request->filled('from')) {
+                $params['from'] = $request->from;
+            }
+
+            return redirect()->route('creator.inventories.index', $params)
+                ->with('success', "Berhasil restock {$rawAmount} {$material->purchase_unit} (+{$actualQty} {$material->unit}) ke stok {$material->name}.");
+        } else {
+            // Sanitize rupiah and numeric inputs
+            if ($request->has('cost_per_unit')) {
+                $val = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
+                $request->merge(['cost_per_unit' => $val !== '' ? (float) $val : 0]);
+            }
+            if ($request->has('amount')) {
+                $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->amount));
+                $request->merge(['amount' => $val !== '' ? (float) $val : 0]);
+            }
+
+            $request->validate([
+                'amount'        => 'required|numeric|min:0.01',
+                'cost_per_unit' => 'nullable|numeric|min:0',
+                'notes'         => 'nullable|string|max:255',
+            ]);
+
+            $qty      = (float) $request->amount;
+            $unitCost = $request->filled('cost_per_unit') ? (float) $request->cost_per_unit : null;
+            $notes    = $request->notes ?: 'Restock Tambah Stok';
+
+            $material->restock($qty, $unitCost, $notes);
+
+            $params = ['tab' => 'materials'];
+            if ($request->filled('from')) {
+                $params['from'] = $request->from;
+            }
+
+            return redirect()->route('creator.inventories.index', $params)
+                ->with('success', "Berhasil menambahkan {$qty} {$material->unit} ke stok {$material->name}.");
         }
-        if ($request->has('amount')) {
-            $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->amount));
-            $request->merge(['amount' => $val !== '' ? (float) $val : 0]);
-        }
-
-        $request->validate([
-            'amount'        => 'required|numeric|min:0.01',
-            'cost_per_unit' => 'nullable|numeric|min:0',
-            'notes'         => 'nullable|string|max:255',
-        ]);
-
-        $qty      = (float) $request->amount;
-        $unitCost = $request->filled('cost_per_unit') ? (float) $request->cost_per_unit : null;
-        $notes    = $request->notes ?: 'Restock Tambah Stok';
-
-        $material->restock($qty, $unitCost, $notes);
-
-        $params = ['tab' => 'materials'];
-        if ($request->filled('from')) {
-            $params['from'] = $request->from;
-        }
-
-        return redirect()->route('creator.inventories.index', $params)
-            ->with('success', "Berhasil menambahkan {$qty} {$material->unit} ke stok {$material->name}.");
     }
 
     public function saveRecipe(Request $request, $productId)
