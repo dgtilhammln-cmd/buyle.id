@@ -13,7 +13,7 @@ class MetaConfigService
     public static function getAppId(): string
     {
         $val = \App\Models\Setting::where('key', 'instagram_app_id')->value('value');
-        return (string) ($val ?: '1601973478071042');
+        return (string) ($val ?: '1642881397242052');
     }
 
     /**
@@ -23,7 +23,7 @@ class MetaConfigService
     public static function getAppSecret(): string
     {
         $val = \App\Models\Setting::where('key', 'instagram_app_secret')->value('value');
-        return (string) ($val ?: '');
+        return (string) ($val ?: 'c5dfb3973596cac40db925898c0cfbfd');
     }
 
     /**
