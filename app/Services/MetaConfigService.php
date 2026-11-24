@@ -11,7 +11,7 @@ class MetaConfigService
      */
     public static function getAppId(): string
     {
-        return (string) Setting::get('instagram_app_id', '1642881397242052');
+        return (string) Setting::get('instagram_app_id', '1601973478071042');
     }
 
     /**
@@ -19,7 +19,7 @@ class MetaConfigService
      */
     public static function getAppSecret(): string
     {
-        return (string) Setting::get('instagram_app_secret', 'c5dfb3973596cac40db925898c0cfbfd');
+        return (string) Setting::get('instagram_app_secret', '');
     }
 
     /**

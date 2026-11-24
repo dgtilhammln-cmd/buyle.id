@@ -1816,13 +1816,13 @@ function testAiConnection() {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
       <div>
         <label class="form-label">Meta App ID / ID Aplikasi Instagram <span style="color:#E1306C;">*</span></label>
-        <input type="text" name="instagram_app_id" class="form-input" value="{{ $settings['instagram_app_id'] ?? '1642881397242052' }}" placeholder="Contoh: 1642881397242052">
+        <input type="text" name="instagram_app_id" class="form-input" value="{{ $settings['instagram_app_id'] ?? '1601973478071042' }}" placeholder="Contoh: 1601973478071042">
         <p style="font-size:.7rem;color:#94A3B8;margin:.3rem 0 0;">Meta Developer &rarr; Instagram API &rarr; ID aplikasi Instagram</p>
       </div>
 
       <div>
         <label class="form-label">Meta App Secret / Rahasia Aplikasi <span style="color:#E1306C;">*</span></label>
-        <input type="text" name="instagram_app_secret" class="form-input" value="{{ $settings['instagram_app_secret'] ?? 'c5dfb3973596cac40db925898c0cfbfd' }}" placeholder="Kunci Rahasia Aplikasi">
+        <input type="password" name="instagram_app_secret" class="form-input" value="{{ $settings['instagram_app_secret'] ?? '' }}" placeholder="Paste App Secret dari Meta Developer Console" autocomplete="new-password">
         <p style="font-size:.7rem;color:#94A3B8;margin:.3rem 0 0;">Meta Developer &rarr; Instagram API &rarr; Rahasia aplikasi Instagram</p>
       </div>
 
