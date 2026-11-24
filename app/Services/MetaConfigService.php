@@ -8,18 +8,22 @@ class MetaConfigService
 {
     /**
      * Dapatkan App ID dari database (/admin/settings) dengan fallback aman.
+     * Baca langsung dari DB (bypass cache) agar selalu segar setelah update admin.
      */
     public static function getAppId(): string
     {
-        return (string) Setting::get('instagram_app_id', '1601973478071042');
+        $val = \App\Models\Setting::where('key', 'instagram_app_id')->value('value');
+        return (string) ($val ?: '1601973478071042');
     }
 
     /**
      * Dapatkan App Secret dari database (/admin/settings) dengan fallback aman.
+     * Baca langsung dari DB (bypass cache) agar selalu segar setelah update admin.
      */
     public static function getAppSecret(): string
     {
-        return (string) Setting::get('instagram_app_secret', '');
+        $val = \App\Models\Setting::where('key', 'instagram_app_secret')->value('value');
+        return (string) ($val ?: '');
     }
 
     /**

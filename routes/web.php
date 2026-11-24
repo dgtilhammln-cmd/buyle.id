@@ -1229,6 +1229,21 @@ Route::view('/privacy-policy', 'legal.privacy')->name('legal.privacy');
 Route::view('/terms-of-service', 'legal.privacy')->name('legal.terms');
 Route::view('/data-deletion', 'legal.privacy')->name('legal.data-deletion');
 
+// Diagnostic sementara — cek App ID aktif & OAuth URL yang akan dibuka
+Route::get('/debug-meta-oauth', function () {
+    $appId     = \App\Services\MetaConfigService::getAppId();
+    $appSecret = \App\Services\MetaConfigService::getAppSecret();
+    $redirectUri = route('creator.automation-reply.callback');
+    $oauthUrl  = \App\Services\MetaConfigService::getOAuthDialogUrl($redirectUri);
+    return response()->json([
+        'app_id'       => $appId,
+        'secret_set'   => !empty($appSecret) ? 'YES (' . strlen($appSecret) . ' chars)' : 'NO (empty!)',
+        'redirect_uri' => $redirectUri,
+        'oauth_url'    => $oauthUrl,
+        'db_app_id'    => \App\Models\Setting::where('key','instagram_app_id')->value('value'),
+    ]);
+});
+
 // Shortcut OAuth callback
 Route::get('/auth/instagram/callback', function () {
     return redirect()->route('creator.automation-reply.callback', request()->all());
