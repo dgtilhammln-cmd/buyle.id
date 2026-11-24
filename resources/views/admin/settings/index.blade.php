@@ -1800,6 +1800,7 @@ function testAiConnection() {
 
     </div>
   </div>
+</div>{{-- /tab-aplikasi --}}
 {{-- ======== TAB: META / INSTAGRAM ======== --}}
 <div id="tab-instagram" class="tab-section" style="display:none;">
   <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;">
