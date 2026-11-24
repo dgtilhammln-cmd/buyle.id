@@ -2006,10 +2006,17 @@
             }
             openModal('modalRestock');
         }
-        const form = document.getElementById('formRestock');
-        form.action = `/creator/inventories/${id}/restock`;
-        openModal('modalRestock');
-    }
+
+        function openRestockSingle(id, name, unit, cost) {
+            const sel = document.getElementById('restockMatSelect');
+            if (sel) {
+                sel.value = id;
+                updateRestockUnit();
+            }
+            const form = document.getElementById('formRestock');
+            form.action = `/creator/inventories/${id}/restock`;
+            openModal('modalRestock');
+        }
 
     function updateRestockUnit() {
         const sel = document.getElementById('restockMatSelect');
@@ -2039,6 +2046,7 @@
             document.getElementById('restockUnitLabel').textContent = baseUnit;
             document.getElementById('restockCostInput').value = formatNumberWithDots(baseCost);
         }
+    }
 
     function onRestockModeChange() {
         const sel = document.getElementById('restockMatSelect');
@@ -2060,19 +2068,6 @@
             document.getElementById('restockCostInput').value = formatNumberWithDots(baseCost);
         }
     }
-
-        function updateRestockUnit() {
-            const sel = document.getElementById('restockMatSelect');
-            const opt = sel.options[sel.selectedIndex];
-            if (opt) {
-                const unit = opt.getAttribute('data-unit') || '';
-                const cost = opt.getAttribute('data-cost') || '';
-                document.getElementById('restockUnitLabel').textContent = unit;
-                document.getElementById('restockCostInput').value = formatNumberWithDots(cost);
-                const form = document.getElementById('formRestock');
-                form.action = `/creator/inventories/${sel.value}/restock`;
-            }
-        }
 
         // Recipe Modal Builder
         let currentRecipeRowCount = 0;
