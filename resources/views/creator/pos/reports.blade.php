@@ -920,7 +920,7 @@
         box-sizing: border-box !important;
     }
     .pos-nav-item {
-        display: flex !important;
+        display: inline-flex !important;
         flex-direction: row !important;
         align-items: center !important;
         justify-content: center !important;
@@ -933,14 +933,21 @@
         outline: none;
         width: 44px;
         height: 44px;
+        min-width: 44px;
+        flex-shrink: 0 !important;
         border-radius: 50%;
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
     }
     .pos-nav-item svg {
         flex-shrink: 0 !important;
         width: 20px !important;
         height: 20px !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        display: block !important;
     }
     .pos-nav-item.active {
         display: inline-flex !important;
@@ -949,11 +956,16 @@
         justify-content: center !important;
         background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
         color: #ffffff !important;
-        padding: 0.5rem 1.1rem !important;
+        padding: 0 16px !important;
+        height: 44px !important;
+        min-width: fit-content !important;
+        width: auto !important;
+        flex-shrink: 0 !important;
         border-radius: 999px !important;
         box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
-        gap: 6px !important;
-        width: auto !important;
+        gap: 8px !important;
+        white-space: nowrap !important;
+        flex-wrap: nowrap !important;
     }
     .pos-nav-item.active svg {
         color: #ffffff !important;
@@ -961,6 +973,9 @@
         flex-shrink: 0 !important;
         width: 20px !important;
         height: 20px !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        display: block !important;
     }
     .pos-nav-label {
         display: none;
@@ -972,6 +987,7 @@
         color: #ffffff !important;
         letter-spacing: -0.01em !important;
         line-height: 1 !important;
+        white-space: nowrap !important;
     }
 
     /* ── Export Modal (Clean, Compact & Interactive) ── */
@@ -1524,9 +1540,9 @@
             <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item" title="Transaksi">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <rect x="2" y="4" width="20" height="16" rx="2" />
-                    <circle cx="12" cy="12" r="3" />
-                    <line x1="2" y1="9" x2="6" y2="9" />
-                    <line x1="18" y1="15" x2="22" y2="15" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                    <line x1="6" y1="15" x2="10" y2="15" stroke-linecap="round" />
+                    <line x1="14" y1="15" x2="18" y2="15" stroke-linecap="round" />
                 </svg>
                 <span class="pos-nav-label">Transaksi</span>
             </a>

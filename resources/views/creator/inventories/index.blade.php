@@ -624,6 +624,54 @@
         .mat-quick-btn-secondary:active {
             transform: scale(0.96);
         }
+
+        /* Floating Action Buttons on Mobile (Image 3) */
+        .mat-mobile-fab-wrap {
+            display: flex !important;
+            align-items: center;
+            gap: 12px;
+            position: fixed;
+            right: 18px;
+            bottom: max(22px, calc(18px + env(safe-area-inset-bottom, 0px)));
+            z-index: 9999;
+        }
+
+        .mat-mobile-fab-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mat-mobile-fab-btn:active {
+            transform: scale(0.92);
+        }
+
+        .mat-mobile-fab-primary {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42), 0 3px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .mat-mobile-fab-secondary {
+            width: 46px;
+            height: 46px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1.5px solid #bbf7d0;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    .mat-mobile-fab-wrap {
+        display: none;
     }
 </style>
 @endsection
@@ -1474,6 +1522,21 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    {{-- Floating Action Buttons on Mobile (Image 3: $ Restock Masuk & + Tambah Bahan) --}}
+    <div class="mat-mobile-fab-wrap">
+        <button type="button" onclick="openRestockModal()" class="mat-mobile-fab-btn mat-mobile-fab-secondary" title="Restock Masuk">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+        </button>
+        <button type="button" onclick="openAddMaterialModal()" class="mat-mobile-fab-btn mat-mobile-fab-primary" title="Tambah Bahan Baku">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
     </div>
 @endsection
 
