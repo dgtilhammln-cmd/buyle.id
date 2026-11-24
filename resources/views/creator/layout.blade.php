@@ -1473,45 +1473,47 @@
                 </div>
             </div>
 
-            @if(session('success'))
-                <div class="flash-success">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('warning_onboarding'))
-                <div
-                    style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:18px;padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:flex-start;gap:0.85rem;box-shadow:0 2px 12px rgba(245,158,11,0.08);">
-                    <div
-                        style="width:34px;height:34px;border-radius:50%;background:#FEF3C7;color:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            @if(!View::hasSection('custom_flash'))
+                @if(session('success'))
+                    <div class="flash-success">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
                         </svg>
+                        {{ session('success') }}
                     </div>
-                    <div>
-                        <div style="font-size:0.95rem;font-weight: 500;color:#92400E;margin-bottom:0.2rem;">Langkah
-                            Terakhir: Lengkapi Data Creator</div>
-                        <div style="font-size:0.82rem;color:#B45309;line-height:1.5;">{{ session('warning_onboarding') }}
+                @endif
+
+                @if(session('warning_onboarding'))
+                    <div
+                        style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:18px;padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:flex-start;gap:0.85rem;box-shadow:0 2px 12px rgba(245,158,11,0.08);">
+                        <div
+                            style="width:34px;height:34px;border-radius:50%;background:#FEF3C7;color:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-size:0.95rem;font-weight: 500;color:#92400E;margin-bottom:0.2rem;">Langkah
+                                Terakhir: Lengkapi Data Creator</div>
+                            <div style="font-size:0.82rem;color:#B45309;line-height:1.5;">{{ session('warning_onboarding') }}
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endif
+                @endif
 
-            @if(session('error'))
-                <div class="flash-error">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="15" y1="9" x2="9" y2="15" />
-                        <line x1="9" y1="9" x2="15" y2="15" />
-                    </svg>
-                    {{ session('error') }}
-                </div>
+                @if(session('error'))
+                    <div class="flash-error">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="15" y1="9" x2="9" y2="15" />
+                            <line x1="9" y1="9" x2="15" y2="15" />
+                        </svg>
+                        {{ session('error') }}
+                    </div>
+                @endif
             @endif
 
             @yield('content')

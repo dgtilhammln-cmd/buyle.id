@@ -439,6 +439,39 @@ class Product extends Model
     }
 
     /**
+     * Hitung sisa stok porsi menu yang dapat disajikan secara real-time berdasarkan ketersediaan bahan baku (BOM).
+     * Jika menu memiliki formula resep, sisa porsi dibatasi oleh bahan baku yang stoknya paling sedikit (limiting ingredient).
+     */
+    public function getRealtimeStockAttribute(): ?int
+    {
+        $recipes = $this->relationLoaded('recipes') ? $this->recipes : $this->recipes()->with('material')->get();
+
+        if ($recipes->isNotEmpty()) {
+            $maxPortions = null;
+            foreach ($recipes as $recipe) {
+                $reqQty = (float) $recipe->quantity;
+                if ($reqQty <= 0) continue;
+
+                $matStock = (float) ($recipe->material?->stock ?? 0);
+                $available = $matStock > 0 ? (int) floor($matStock / $reqQty) : 0;
+
+                if ($maxPortions === null || $available < $maxPortions) {
+                    $maxPortions = $available;
+                }
+            }
+
+            if ($maxPortions !== null) {
+                if ($this->stock !== null) {
+                    return max(0, min((int) $this->stock, $maxPortions));
+                }
+                return max(0, $maxPortions);
+            }
+        }
+
+        return $this->stock !== null ? (int) $this->stock : null;
+    }
+
+    /**
      * Semua item cart yang mengandung produk ini.
      */
     public function carts(): HasMany

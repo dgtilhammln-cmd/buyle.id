@@ -2,6 +2,7 @@
 @section('title', 'Inventori Bahan Baku & Resep Menu')
 @section('page_title', 'Inventori Bahan')
 @section('page_subtitle', $totalCount . ' bahan baku terdaftar (F&B / Cafe)')
+@section('custom_flash', '1')
 
 @section('topbar_actions')
     <div class="prod-actions-row">
@@ -711,6 +712,44 @@
         <div style="width: 40px;"></div>
     </div>
 
+    {{-- Single Notification: Strictly Below Mobile Header & Above Content/Tabs --}}
+    @if(session('success'))
+        <div class="flash-success" style="margin-top: 0.75rem; margin-bottom: 1.25rem;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="flash-error" style="margin-top: 0.75rem; margin-bottom: 1.25rem;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="flash-error" style="margin-top: 0.75rem; margin-bottom: 1.25rem; flex-direction: column; align-items: flex-start;">
+            <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>Mohon periksa data input:</span>
+            </div>
+            <ul style="margin: 0; padding-left: 1.5rem;">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     {{-- Tabs Nav --}}
     <div class="mat-tabs-bar">
         <a href="{{ route('creator.inventories.index', array_merge(['tab' => 'materials'], request('from') ? ['from' => request('from')] : [])) }}"
@@ -745,47 +784,6 @@
             Riwayat Mutasi
         </a>
     </div>
-
-    {{-- Alert Success / Errors --}}
-    @if(session('success'))
-        <div
-            style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
-    @if(session('error'))
-        <div
-            style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            <span>{{ session('error') }}</span>
-        </div>
-    @endif
-    @if($errors->any())
-        <div
-            style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600;">
-            <div style="font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                <span>Mohon periksa data input:</span>
-            </div>
-            <ul style="margin:0; padding-left:1.5rem;">
-                @foreach($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     {{-- ════════════════════════════════════════════════════════════════════
     TAB 1: DAFTAR BAHAN BAKU
@@ -1165,6 +1163,21 @@
                                     </svg>
                                     <span>Atur Resep</span>
                                 </button>
+
+                                {{-- Sisa Stok Realtime --}}
+                                <div style="font-size:0.64rem; color:#64748b; text-align:center; margin-top:5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                    <span>Sisa Stok:</span>
+                                    @php $rtStock = $p->realtime_stock; @endphp
+                                    @if($rtStock !== null)
+                                        @if($rtStock > 0)
+                                            <span style="font-weight:800; color:#16a34a;">{{ $rtStock }} porsi</span>
+                                        @else
+                                            <span style="font-weight:800; color:#dc2626;">0 porsi (Habis)</span>
+                                        @endif
+                                    @else
+                                        <span style="font-weight:700; color:#475569;">Tanpa batas</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1208,6 +1221,19 @@
                                             <div style="font-size:0.7rem; color:#64748b;">
                                                 <span style="color:#16a34a; font-weight:700;">{{ $p->recipes->count() }} Bahan</span>
                                                 tertaut
+                                            </div>
+                                            <div style="font-size:0.68rem; color:#64748b; margin-top:2px;">
+                                                Sisa Stok:
+                                                @php $rtStock = $p->realtime_stock; @endphp
+                                                @if($rtStock !== null)
+                                                    @if($rtStock > 0)
+                                                        <strong style="color:#16a34a;">{{ $rtStock }} porsi</strong>
+                                                    @else
+                                                        <strong style="color:#dc2626;">0 porsi (Habis)</strong>
+                                                    @endif
+                                                @else
+                                                    <strong>Tanpa batas</strong>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
