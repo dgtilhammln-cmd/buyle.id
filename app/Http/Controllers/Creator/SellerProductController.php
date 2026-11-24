@@ -39,11 +39,14 @@ class SellerProductController extends Controller
 
         $baseQuery = Product::where('seller_id', $seller->id);
 
-        // Jika diakses dari POS Kasir (?from=pos), filter ketat hanya produk tipe makanan / kuliner (F&B)
+        // Jika diakses dari POS Kasir (?from=pos), filter ketat hanya produk tipe makanan / kuliner (F&B) atau fisik non-digital
         if ($isPos) {
             $baseQuery->where(function ($q) {
-                $q->where('product_type', 'makanan')
-                  ->orWhere('category', 'makanan');
+                $q->whereIn('product_type', ['makanan', 'physical'])
+                  ->orWhereHas('category', function ($catQ) {
+                      $catQ->where('name', 'like', '%makanan%')
+                           ->orWhere('slug', 'like', '%makanan%');
+                  });
             });
         }
 
@@ -774,12 +777,18 @@ class SellerProductController extends Controller
             if ($type === 'makanan') {
                 $query->where(function($q) {
                     $q->where('product_type', 'makanan')
-                      ->orWhere('category', 'makanan');
+                      ->orWhereHas('category', function ($catQ) {
+                          $catQ->where('name', 'like', '%makanan%')
+                               ->orWhere('slug', 'like', '%makanan%');
+                      });
                 });
             } else {
                 $query->where(function($q) use ($type) {
                     $q->where('product_type', $type)
-                      ->orWhere('category', $type);
+                      ->orWhereHas('category', function ($catQ) use ($type) {
+                          $catQ->where('name', 'like', "%{$type}%")
+                               ->orWhere('slug', 'like', "%{$type}%");
+                      });
                 });
             }
         }

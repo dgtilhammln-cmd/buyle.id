@@ -848,7 +848,7 @@
                     <line x1="12" y1="5" x2="12" y2="19" />
                     <line x1="5" y1="12" x2="19" y2="12" />
                 </svg>
-                <span>+ Tambah Bahan</span>
+                <span>Tambah Bahan</span>
             </button>
             <button type="button" onclick="openRestockModal()" class="mat-quick-btn-secondary">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -879,7 +879,7 @@
                         <line x1="12" y1="5" x2="12" y2="19" />
                         <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>
-                    <span>+ Tambah Bahan Baku Pertama</span>
+                    <span>Tambah Bahan Baku Pertama</span>
                 </button>
             </div>
         @else
@@ -1097,7 +1097,8 @@
                             {{-- Status Badge Resep Top Right (Inside Image) --}}
                             <div style="position:absolute; top:7px; right:7px; z-index:3; pointer-events:none;">
                                 @if(!$hasRecipe)
-                                    <span class="grid-status-btn archived" style="box-shadow:0 1px 4px rgba(245,158,11,0.4);" title="Formula resep belum diatur">Tanpa Resep</span>
+                                    <span class="grid-status-btn archived" style="box-shadow:0 1px 4px rgba(245,158,11,0.4);"
+                                        title="Formula resep belum diatur">Tanpa Resep</span>
                                 @else
                                     <span class="grid-status-btn active" style="box-shadow:0 1px 4px rgba(30,179,73,0.35);"
                                         title="{{ $p->recipes->count() }} Bahan Baku Terkait">{{ $p->recipes->count() }} Bahan</span>
@@ -1113,12 +1114,11 @@
                             </div>
 
                             @if($hasValidImg)
-                                <img src="{{ $imgUrl }}" alt="{{ $p->name }}" class="bom-img" loading="lazy"
-                                    style="object-fit:cover;"
+                                <img src="{{ $imgUrl }}" alt="{{ $p->name }}" class="bom-img" loading="lazy" style="object-fit:cover;"
                                     onerror="this.onerror=null; this.src='{{ \App\Models\Product::getPlaceholderUrl() }}'; this.style.objectFit='contain'; this.style.padding='16px'; this.style.background='#ffffff';">
                             @else
-                                <img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="{{ $p->name }}" class="bom-img" loading="lazy"
-                                    style="object-fit:contain; padding:16px; background:#f8fafc;"
+                                <img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="{{ $p->name }}" class="bom-img"
+                                    loading="lazy" style="object-fit:contain; padding:16px; background:#f8fafc;"
                                     onerror="this.onerror=null; this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div style=\'color:#94a3b8; display:flex; align-items:center; justify-content:center;\'><svg width=\'36\' height=\'36\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.5\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>');">
                             @endif
                         </div>
@@ -1914,7 +1914,7 @@
                     <div id="recipeTotalHppLabel" style="font-size:0.82rem; font-weight:800; color:#d97706;">Rp 0</div>
                 </div>
                 <div>
-                    <div style="font-size:0.65rem; color:#64748b; font-weight:600;">Estimasi Margin Laba</div>
+                    <div style="font-size:0.65rem; color:#64748b; font-weight:600;">Margin</div>
                     <div id="recipeMarginLabel" style="font-size:0.82rem; font-weight:800; color:#16a34a;">Rp 0 (0%)</div>
                 </div>
             </div>
@@ -1935,7 +1935,7 @@
                             <line x1="12" y1="5" x2="12" y2="19" />
                             <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
-                        <span>+ Tambah Baris Bahan Baku</span>
+                        <span>Tambah Resep Bahan Baku</span>
                     </button>
                 </div>
 
@@ -1943,7 +1943,7 @@
                     style="display:flex; justify-content:flex-end; gap:0.5rem; border-top:1px solid #f1f5f9; padding-top:1rem;">
                     <button type="button" onclick="closeModal('modalRecipe')"
                         style="padding:9px 16px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#475569; font-size:0.82rem; font-weight:600; cursor:pointer;">Tutup</button>
-                    <button type="submit" class="prod-add-btn">Simpan Formula Resep</button>
+                    <button type="submit" class="prod-add-btn">Simpan</button>
                 </div>
             </form>
         </div>
@@ -2268,21 +2268,21 @@
             });
 
             const rowHtml = `
-                                                                                                                    <div id="recipe-row-${idx}" style="background:#f8fafc; padding:8px 10px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
-                                                                                                                        <div style="display:flex; gap:6px; align-items:center;">
-                                                                                                                            <select name="recipes[${idx}][material_id]" onchange="recalculateRecipeCost()" required style="flex:2.3; min-width:0; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit;">
-                                                                                                                                ${matOptions}
-                                                                                                                            </select>
-                                                                                                                            <div style="flex:1; min-width:0;">
-                                                                                                                                <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" oninput="recalculateRecipeCost()" required placeholder="Takaran" style="width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit; box-sizing:border-box;">
-                                                                                                                            </div>
-                                                                                                                            <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; flex-shrink:0;" title="Hapus Baris">
-                                                                                                                                &times;
-                                                                                                                            </button>
-                                                                                                                        </div>
-                                                                                                                        <div class="recipe-row-subcost" style="font-size:0.68rem; color:#64748b; font-weight:600; margin-top:4px; min-height:1em;"></div>
-                                                                                                                    </div>
-                                                                                                                `;
+                                                                                                                                                                <div id="recipe-row-${idx}" style="background:#f8fafc; padding:8px 10px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
+                                                                                                                                                                    <div style="display:flex; gap:6px; align-items:center;">
+                                                                                                                                                                        <select name="recipes[${idx}][material_id]" onchange="recalculateRecipeCost()" required style="flex:2.3; min-width:0; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit;">
+                                                                                                                                                                            ${matOptions}
+                                                                                                                                                                        </select>
+                                                                                                                                                                        <div style="flex:1; min-width:0;">
+                                                                                                                                                                            <input type="number" step="0.01" name="recipes[${idx}][quantity]" value="${qty}" oninput="recalculateRecipeCost()" required placeholder="Takaran" style="width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.75rem; font-weight:600; color:#0f172a; background:#ffffff; font-family:inherit; box-sizing:border-box;">
+                                                                                                                                                                        </div>
+                                                                                                                                                                        <button type="button" onclick="removeRecipeRow(${idx})" style="background:#fee2e2; border:none; color:#dc2626; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; flex-shrink:0;" title="Hapus Baris">
+                                                                                                                                                                            &times;
+                                                                                                                                                                        </button>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="recipe-row-subcost" style="font-size:0.68rem; color:#64748b; font-weight:600; margin-top:4px; min-height:1em;"></div>
+                                                                                                                                                                </div>
+                                                                                                                                                            `;
 
             container.insertAdjacentHTML('beforeend', rowHtml);
             recalculateRecipeCost();

@@ -1527,7 +1527,7 @@ class PosController extends Controller
             'description'         => $request->description ?? '',
             'image'               => $imagePath,
             'is_active'           => true,
-            'product_type'        => 'physical',
+            'product_type'        => 'makanan',
         ]);
 
         $product->loadMissing(['variantOptions.values', 'category']);
