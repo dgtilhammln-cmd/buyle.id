@@ -1278,21 +1278,6 @@
                     </svg> @endif
                 </a>
 
-                <a href="{{ $isBuyer ? '#' : route('creator.inventories.index') }}"
-                    onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                    class="cr-nav-link {{ request()->routeIs('creator.inventories*') || request()->routeIs('creator.materials*') ? 'active' : '' }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
-                    Inventori Bahan
-                    @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg> @endif
-                </a>
 
                 <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
                     class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
