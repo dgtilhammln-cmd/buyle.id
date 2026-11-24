@@ -12,9 +12,18 @@ use Illuminate\Support\Facades\DB;
 
 class MaterialController extends Controller
 {
+    protected function getSellerId(): int
+    {
+        $user = auth()->user();
+        if ($user && method_exists($user, 'isPosCashier') && $user->isPosCashier() && $user->parent_seller_id) {
+            return (int) $user->parent_seller_id;
+        }
+        return (int) auth()->id();
+    }
+
     public function index(Request $request)
     {
-        $sellerId = auth()->id();
+        $sellerId = $this->getSellerId();
         $search   = trim((string) $request->get('search', ''));
         $category = trim((string) $request->get('category', ''));
         $tab      = trim((string) $request->get('tab', 'materials')); // materials, recipes, mutations
@@ -94,6 +103,22 @@ class MaterialController extends Controller
 
     public function store(Request $request)
     {
+        $sellerId = $this->getSellerId();
+
+        // Sanitize rupiah and numeric inputs
+        if ($request->has('cost_per_unit')) {
+            $val = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
+            $request->merge(['cost_per_unit' => $val !== '' ? (float) $val : 0]);
+        }
+        if ($request->has('stock')) {
+            $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->stock));
+            $request->merge(['stock' => $val !== '' ? (float) $val : 0]);
+        }
+        if ($request->has('min_stock')) {
+            $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->min_stock));
+            $request->merge(['min_stock' => $val !== '' ? (float) $val : 0]);
+        }
+
         $request->validate([
             'name'          => 'required|string|max:150',
             'code'          => 'nullable|string|max:50',
@@ -107,7 +132,7 @@ class MaterialController extends Controller
 
         $initialStock = max(0, (float) ($request->stock ?? 0));
         $material = Material::create([
-            'seller_id'     => auth()->id(),
+            'seller_id'     => $sellerId,
             'name'          => $request->name,
             'code'          => $request->code,
             'category'      => $request->category,
@@ -120,7 +145,7 @@ class MaterialController extends Controller
 
         if ($initialStock > 0) {
             MaterialMutation::create([
-                'seller_id'      => auth()->id(),
+                'seller_id'      => $sellerId,
                 'material_id'    => $material->id,
                 'type'           => 'in_purchase',
                 'amount'         => $initialStock,
@@ -131,13 +156,29 @@ class MaterialController extends Controller
             ]);
         }
 
-        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
+        $params = ['tab' => 'materials'];
+        if ($request->filled('from')) {
+            $params['from'] = $request->from;
+        }
+
+        return redirect()->route('creator.inventories.index', $params)
             ->with('success', "Bahan baku {$material->name} berhasil ditambahkan!");
     }
 
     public function update(Request $request, $id)
     {
-        $material = Material::where('seller_id', auth()->id())->findOrFail($id);
+        $sellerId = $this->getSellerId();
+        $material = Material::where('seller_id', $sellerId)->findOrFail($id);
+
+        // Sanitize rupiah and numeric inputs
+        if ($request->has('cost_per_unit')) {
+            $val = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
+            $request->merge(['cost_per_unit' => $val !== '' ? (float) $val : 0]);
+        }
+        if ($request->has('min_stock')) {
+            $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->min_stock));
+            $request->merge(['min_stock' => $val !== '' ? (float) $val : 0]);
+        }
 
         $request->validate([
             'name'          => 'required|string|max:150',
@@ -159,23 +200,45 @@ class MaterialController extends Controller
             'notes'         => $request->notes,
         ]);
 
-        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
+        $params = ['tab' => 'materials'];
+        if ($request->filled('from')) {
+            $params['from'] = $request->from;
+        }
+
+        return redirect()->route('creator.inventories.index', $params)
             ->with('success', "Bahan baku {$material->name} berhasil diperbarui!");
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $material = Material::where('seller_id', auth()->id())->findOrFail($id);
+        $sellerId = $this->getSellerId();
+        $material = Material::where('seller_id', $sellerId)->findOrFail($id);
         $name = $material->name;
         $material->delete();
 
-        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
+        $params = ['tab' => 'materials'];
+        if ($request->filled('from')) {
+            $params['from'] = $request->from;
+        }
+
+        return redirect()->route('creator.inventories.index', $params)
             ->with('success', "Bahan baku {$name} telah dihapus.");
     }
 
     public function restock(Request $request, $id)
     {
-        $material = Material::where('seller_id', auth()->id())->findOrFail($id);
+        $sellerId = $this->getSellerId();
+        $material = Material::where('seller_id', $sellerId)->findOrFail($id);
+
+        // Sanitize rupiah and numeric inputs
+        if ($request->has('cost_per_unit')) {
+            $val = preg_replace('/[^0-9]/', '', (string) $request->cost_per_unit);
+            $request->merge(['cost_per_unit' => $val !== '' ? (float) $val : 0]);
+        }
+        if ($request->has('amount')) {
+            $val = str_replace(',', '.', preg_replace('/[^0-9,\.]/', '', (string) $request->amount));
+            $request->merge(['amount' => $val !== '' ? (float) $val : 0]);
+        }
 
         $request->validate([
             'amount'        => 'required|numeric|min:0.01',
@@ -189,13 +252,19 @@ class MaterialController extends Controller
 
         $material->restock($qty, $unitCost, $notes);
 
-        return redirect()->route('creator.inventories.index', ['tab' => 'materials'])
+        $params = ['tab' => 'materials'];
+        if ($request->filled('from')) {
+            $params['from'] = $request->from;
+        }
+
+        return redirect()->route('creator.inventories.index', $params)
             ->with('success', "Berhasil menambahkan {$qty} {$material->unit} ke stok {$material->name}.");
     }
 
     public function saveRecipe(Request $request, $productId)
     {
-        $product = Product::where('seller_id', auth()->id())->findOrFail($productId);
+        $sellerId = $this->getSellerId();
+        $product = Product::where('seller_id', $sellerId)->findOrFail($productId);
 
         $recipesInput = $request->input('recipes', []);
 
@@ -219,7 +288,12 @@ class MaterialController extends Controller
             }
         });
 
-        return redirect()->route('creator.inventories.index', ['tab' => 'recipes'])
-            ->with('success', "Resep untuk {$product->name} berhasil disimpan!");
+        $params = ['tab' => 'recipes'];
+        if ($request->filled('from')) {
+            $params['from'] = $request->from;
+        }
+
+        return redirect()->route('creator.inventories.index', $params)
+            ->with('success', "Formula resep untuk {$product->name} berhasil disimpan!");
     }
 }

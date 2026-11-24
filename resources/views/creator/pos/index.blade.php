@@ -1367,9 +1367,9 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════
-                                   MOBILE-FIRST POS OVERHAUL (100% Sesuai Mockup Gambar 3-Layar)
-                                   Pure Light Theme - Zero Dark Blocks - Shimmer Skeleton Effect
-                                   ═══════════════════════════════════════════════════════════════ */
+                                       MOBILE-FIRST POS OVERHAUL (100% Sesuai Mockup Gambar 3-Layar)
+                                       Pure Light Theme - Zero Dark Blocks - Shimmer Skeleton Effect
+                                       ═══════════════════════════════════════════════════════════════ */
 
         /* Shimmer Skeleton Animation */
         @keyframes shimmerSkel {
@@ -2222,8 +2222,8 @@
 
 
         /* ═══════════════════════════════════════════════════════════════════════
-                       PIXEL-PERFECT BUYLE POS (100% MATCHING REFERENCE MOCKUP SCREENSHOT)
-                       ═══════════════════════════════════════════════════════════════════════ */
+                           PIXEL-PERFECT BUYLE POS (100% MATCHING REFERENCE MOCKUP SCREENSHOT)
+                           ═══════════════════════════════════════════════════════════════════════ */
 
         /* Background & Container */
         @media (max-width: 767px) {
@@ -2303,6 +2303,7 @@
             .pos-ref-header {
                 min-height: 44px;
             }
+
             .pos-header-logo-center {
                 position: absolute;
                 left: 50%;
@@ -2828,9 +2829,10 @@
         }
 
         .pos-nav-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: center !important;
             border: none;
             background: transparent;
             cursor: pointer;
@@ -2845,7 +2847,17 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        .pos-nav-item svg {
+            flex-shrink: 0 !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
+
         .pos-nav-item.active {
+            display: inline-flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: center !important;
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             color: #ffffff !important;
             padding: 0.5rem 1.1rem !important;
@@ -2855,12 +2867,21 @@
             width: auto !important;
         }
 
+        .pos-nav-item.active svg {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+            flex-shrink: 0 !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
+
         .pos-nav-item.active .pos-nav-label {
-            display: inline-block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.01em;
+            display: inline-block !important;
+            font-size: 0.8rem !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            letter-spacing: -0.01em !important;
+            line-height: 1 !important;
         }
 
         .pos-nav-item:not(.active) {
@@ -3771,8 +3792,10 @@
                                 </div>
 
                                 <div class="pos-header-logo-center">
-                                    <a href="{{ route('creator.pos.index') }}" title="Buyle POS" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">
-                                        <img src="{{ asset('logobuylepos.png') }}" alt="Buyle POS" onerror="this.onerror=null; this.src='/logobuylepos.png';">
+                                    <a href="{{ route('creator.pos.index') }}" title="Buyle POS"
+                                        style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">
+                                        <img src="{{ asset('logobuylepos.png') }}" alt="Buyle POS"
+                                            onerror="this.onerror=null; this.src='/logobuylepos.png';">
                                     </a>
                                 </div>
 
@@ -3980,7 +4003,9 @@
                                                 <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
                                                     onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='14px';this.style.background='#ffffff';">
                                             @else
-                                                <img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="{{ $prod->name }}" class="product-img" style="object-fit:contain; padding:14px; background:#ffffff;">
+                                                <img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="{{ $prod->name }}"
+                                                    class="product-img"
+                                                    style="object-fit:contain; padding:14px; background:#ffffff;">
                                             @endif
                                             <div class="product-check-badge" id="card-check-{{ $prod->id }}"
                                                 style="display:none;">
@@ -4750,34 +4775,46 @@
                 </div>
 
                 <!-- 2. Info Pelanggan (Collapsible: Default Ringkas & Minimalis, Form Muncul Saat Klik Tambah Customer) -->
-                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; margin-bottom:0.85rem; overflow:hidden;">
+                <div
+                    style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; margin-bottom:0.85rem; overflow:hidden;">
                     <!-- Compact Summary Bar (Selalu Tampil Tanpa Menuhin Layar) -->
-                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.85rem; background:#f8fafc;">
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.85rem; background:#f8fafc;">
                         <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-                            <div style="width:26px; height:26px; border-radius:50%; background:#ffffff; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <div
+                                style="width:26px; height:26px; border-radius:50%; background:#ffffff; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
                             </div>
                             <div style="min-width:0;">
-                                <div style="font-size:0.76rem; font-weight:700; color:#0f172a; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="posCustomerDisplaySummary">Pelanggan Umum</div>
-                                <div style="font-size:0.65rem; color:#64748b; line-height:1.2;" id="posCustomerDisplaySub">Tanpa Meja (Takeaway)</div>
+                                <div style="font-size:0.76rem; font-weight:700; color:#0f172a; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                                    id="posCustomerDisplaySummary">Pelanggan Umum</div>
+                                <div style="font-size:0.65rem; color:#64748b; line-height:1.2;" id="posCustomerDisplaySub">
+                                    Tanpa Meja (Takeaway)</div>
                             </div>
                         </div>
                         <button type="button" onclick="togglePosCustomerForm()" id="btnToggleCustomerForm"
                             style="background:#ffffff; border:1px solid #cbd5e1; color:#166534; padding:4px 9px; border-radius:8px; font-size:0.7rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:inherit; flex-shrink:0;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" id="iconToggleCustomer">
-                                <line x1="12" y1="5" x2="12" y2="19"/>
-                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24" id="iconToggleCustomer">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
                             <span id="textToggleCustomer">+ Tambah Customer</span>
                         </button>
                     </div>
 
                     <!-- Form Body (Default Tersembunyi, Pop-up Menyesuaikan Otomatis) -->
-                    <div id="posCustomerFormWrapper" style="display:none; padding:0.75rem 0.85rem; border-top:1px solid #f1f5f9; background:#ffffff;">
+                    <div id="posCustomerFormWrapper"
+                        style="display:none; padding:0.75rem 0.85rem; border-top:1px solid #f1f5f9; background:#ffffff;">
                         <div style="display:flex; flex-direction:column; gap:8px;">
                             <!-- Nama Pelanggan -->
                             <div>
-                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Nama</label>
+                                <label
+                                    style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Nama</label>
                                 <input type="text" id="posCustomerName" class="form-input"
                                     style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 10px;"
                                     placeholder="Pelanggan Umum" oninput="updateCustomerSummaryDisplay()">
@@ -4786,7 +4823,9 @@
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                                 <!-- WhatsApp / No. HP Pelanggan -->
                                 <div>
-                                    <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">WhatsApp / No. HP</label>
+                                    <label
+                                        style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">WhatsApp
+                                        / No. HP</label>
                                     <input type="tel" id="posCustomerPhone" class="form-input"
                                         style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 10px;"
                                         placeholder="08xxxxxxxxxx" oninput="updateCustomerSummaryDisplay()">
@@ -4794,7 +4833,9 @@
 
                                 <!-- Pilih Meja -->
                                 <div>
-                                    <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Pilih Meja</label>
+                                    <label
+                                        style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Pilih
+                                        Meja</label>
                                     <select id="posTableQuickSelect" class="form-input"
                                         style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 8px;"
                                         onchange="onTableQuickSelectChanged(this.value); updateCustomerSummaryDisplay();">
@@ -4811,7 +4852,9 @@
 
                             <!-- Email E-Receipt (Opsional) -->
                             <div>
-                                <label style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Email (Opsional)</label>
+                                <label
+                                    style="font-size:0.68rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Email
+                                    (Opsional)</label>
                                 <input type="email" id="posCartCustomerEmail" class="form-input"
                                     style="height:34px; font-size:0.78rem; border-radius:8px; width:100%; border:1.5px solid #e2e8f0; padding:0 10px;"
                                     placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
@@ -6931,35 +6974,35 @@
             // Master Katalog Produk Lengkap dengan Variasi
             window.posCatalog = {
                 @foreach($products as $prod)
-                                                            @php
-                                                                $pPrice = (float) ($prod->sale_price ?: $prod->price);
-                                                                $pImg = $prod->image_url;
-                                                                if (empty($pImg) || str_contains($pImg, 'service-default') || str_contains($pImg, 'buyle-placeholder.svg')) {
-                                                                    $pImg = '';
-                                                                }
-                                                                $pHasVariants = $prod->variantOptions && $prod->variantOptions->count() > 0;
-                                                                $pVariants = [];
-                                                                if ($pHasVariants) {
-                                                                    foreach ($prod->variantOptions as $opt) {
-                                                                        $vals = [];
-                                                                        foreach ($opt->values as $val) {
-                                                                            $vals[] = [
-                                                                                'id' => $val->id,
-                                                                                'value' => $val->value,
-                                                                                'price_adjustment' => (float) ($val->price_adjustment ?? 0),
-                                                                                'final_price' => (float) $val->finalPrice(),
-                                                                                'stock' => $val->stock,
-                                                                            ];
+                                                                    @php
+                                                                        $pPrice = (float) ($prod->sale_price ?: $prod->price);
+                                                                        $pImg = $prod->image_url;
+                                                                        if (empty($pImg) || str_contains($pImg, 'service-default') || str_contains($pImg, 'buyle-placeholder.svg')) {
+                                                                            $pImg = '';
                                                                         }
-                                                                        $pVariants[] = [
-                                                                            'id' => $opt->id,
-                                                                            'name' => $opt->name,
-                                                                            'values' => $vals,
-                                                                        ];
-                                                                    }
-                                                                }
-                                                            @endphp
-                                                            {{ $prod->id }}: {
+                                                                        $pHasVariants = $prod->variantOptions && $prod->variantOptions->count() > 0;
+                                                                        $pVariants = [];
+                                                                        if ($pHasVariants) {
+                                                                            foreach ($prod->variantOptions as $opt) {
+                                                                                $vals = [];
+                                                                                foreach ($opt->values as $val) {
+                                                                                    $vals[] = [
+                                                                                        'id' => $val->id,
+                                                                                        'value' => $val->value,
+                                                                                        'price_adjustment' => (float) ($val->price_adjustment ?? 0),
+                                                                                        'final_price' => (float) $val->finalPrice(),
+                                                                                        'stock' => $val->stock,
+                                                                                    ];
+                                                                                }
+                                                                                $pVariants[] = [
+                                                                                    'id' => $opt->id,
+                                                                                    'name' => $opt->name,
+                                                                                    'values' => $vals,
+                                                                                ];
+                                                                            }
+                                                                        }
+                                                                    @endphp
+                                                                    {{ $prod->id }}: {
                         id: {{ $prod->id }},
                         name: {!! json_encode($prod->name) !!},
                         price: {{ $pPrice }},
@@ -6968,7 +7011,7 @@
                         variants: {!! json_encode($pVariants) !!}
                     },
                 @endforeach
-                                    };
+                                        };
 
             window.posAllProducts = Object.values(window.posCatalog);
 
@@ -7026,21 +7069,21 @@
 
                 const toast = document.createElement('div');
                 toast.style.cssText = `
-                                                                    background: #0f172a;
-                                                                    color: #ffffff;
-                                                                    padding: 10px 16px;
-                                                                    border-radius: 12px;
-                                                                    font-size: 0.82rem;
-                                                                    font-weight: 600;
-                                                                    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
-                                                                    display: flex;
-                                                                    align-items: center;
-                                                                    gap: 8px;
-                                                                    opacity: 0;
-                                                                    transform: translateY(-10px);
-                                                                    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                                                                    pointer-events: auto;
-                                                                `;
+                                                                        background: #0f172a;
+                                                                        color: #ffffff;
+                                                                        padding: 10px 16px;
+                                                                        border-radius: 12px;
+                                                                        font-size: 0.82rem;
+                                                                        font-weight: 600;
+                                                                        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+                                                                        display: flex;
+                                                                        align-items: center;
+                                                                        gap: 8px;
+                                                                        opacity: 0;
+                                                                        transform: translateY(-10px);
+                                                                        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                                                                        pointer-events: auto;
+                                                                    `;
 
                 let iconColor = type === 'success' ? '#1eb349' : (type === 'error' ? '#ef4444' : '#3b82f6');
                 toast.innerHTML = `<span style="color:${iconColor}; font-weight:800;">●</span> <span>${escapeHtml(message)}</span>`;
@@ -7338,13 +7381,13 @@
                 (p.variants || []).forEach(opt => {
                     const optWrap = document.createElement('div');
                     optWrap.innerHTML = `
-                                                <div style="font-weight:700; font-size:0.78rem; color:#334155; margin-bottom:0.45rem; display:flex; justify-content:space-between;">
-                                                    <span>${escapeHtml(opt.name)}</span>
-                                                    <span style="font-size:0.7rem; color:#94a3b8; font-weight:400;">Pilih salah satu</span>
-                                                </div>
-                                                <div class="variant-pill-grid" style="display:flex; flex-wrap:wrap; gap:8px;" id="opt-pills-${opt.id}">
-                                                </div>
-                                            `;
+                                                    <div style="font-weight:700; font-size:0.78rem; color:#334155; margin-bottom:0.45rem; display:flex; justify-content:space-between;">
+                                                        <span>${escapeHtml(opt.name)}</span>
+                                                        <span style="font-size:0.7rem; color:#94a3b8; font-weight:400;">Pilih salah satu</span>
+                                                    </div>
+                                                    <div class="variant-pill-grid" style="display:flex; flex-wrap:wrap; gap:8px;" id="opt-pills-${opt.id}">
+                                                    </div>
+                                                `;
                     container.appendChild(optWrap);
 
                     const pillsWrap = optWrap.querySelector(`#opt-pills-${opt.id}`);
@@ -7436,7 +7479,7 @@
                 closeModal('posVariantModal');
             }
 
-            window.handleCartImgError = function(img) {
+            window.handleCartImgError = function (img) {
                 if (!img || !img.parentElement) return;
                 img.parentElement.innerHTML = '<div class="cart-item-img-fallback"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
             };
@@ -7452,10 +7495,10 @@
 
                 if (cart.length === 0) {
                     container.innerHTML = `
-                                                <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                                                    Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
-                                                </div>
-                                            `;
+                                                    <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
+                                                        Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
+                                                    </div>
+                                                `;
                     document.getElementById('btnCheckout').disabled = true;
                     calculateTotals();
                     return;
@@ -7469,42 +7512,42 @@
                     const escapedKey = escapeHtml(item.cartKey || String(item.id));
 
                     html += `
-                                                <div class="cart-item-row" style="padding: 10px 0; border-bottom: 1px dashed #f1f5f9;">
-                                                    <div class="cart-item-thumb">
-                                                        ${item.image ? `
-                                                            <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="handleCartImgError(this)">
-                                                        ` : `
-                                                            <div class="cart-item-img-fallback">
-                                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                                                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                                                                    <polyline points="21 15 16 10 5 21"/>
-                                                                </svg>
-                                                            </div>
-                                                        `}
-                                                    </div>
-                                                    <div class="cart-item-info">
-                                                        <div class="cart-item-title">${escapeHtml(item.name)}</div>
-                                                        ${item.variant_name ? `
-                                                            <div style="font-size:0.71rem; color:#15803d; font-weight:700; margin-top:2px; display:inline-flex; align-items:center; gap:3px; background:#f0fdf4; padding:1px 6px; border-radius:4px;">
-                                                                ${escapeHtml(item.variant_name)}
-                                                            </div>
-                                                        ` : ''}
-                                                        <div style="margin-top:4px;">
-                                                            <input type="text" placeholder="Catatan produk..." value="${escapeHtml(item.notes || '')}" oninput="updateItemNote('${escapedKey}', this.value)" style="width:100%; font-size:0.72rem; padding:3px 6px; border:1px solid #e2e8f0; border-radius:6px; outline:none; background:#f8fafc; color:#334155;">
+                                                    <div class="cart-item-row" style="padding: 10px 0; border-bottom: 1px dashed #f1f5f9;">
+                                                        <div class="cart-item-thumb">
+                                                            ${item.image ? `
+                                                                <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="handleCartImgError(this)">
+                                                            ` : `
+                                                                <div class="cart-item-img-fallback">
+                                                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                                                        <polyline points="21 15 16 10 5 21"/>
+                                                                    </svg>
+                                                                </div>
+                                                            `}
                                                         </div>
-                                                        <div class="cart-item-unit-price" style="margin-top:2px;">Rp ${formatRupiah(itemSub)}</div>
+                                                        <div class="cart-item-info">
+                                                            <div class="cart-item-title">${escapeHtml(item.name)}</div>
+                                                            ${item.variant_name ? `
+                                                                <div style="font-size:0.71rem; color:#15803d; font-weight:700; margin-top:2px; display:inline-flex; align-items:center; gap:3px; background:#f0fdf4; padding:1px 6px; border-radius:4px;">
+                                                                    ${escapeHtml(item.variant_name)}
+                                                                </div>
+                                                            ` : ''}
+                                                            <div style="margin-top:4px;">
+                                                                <input type="text" placeholder="Catatan produk..." value="${escapeHtml(item.notes || '')}" oninput="updateItemNote('${escapedKey}', this.value)" style="width:100%; font-size:0.72rem; padding:3px 6px; border:1px solid #e2e8f0; border-radius:6px; outline:none; background:#f8fafc; color:#334155;">
+                                                            </div>
+                                                            <div class="cart-item-unit-price" style="margin-top:2px;">Rp ${formatRupiah(itemSub)}</div>
+                                                        </div>
+                                                        <div class="cart-qty-ctrl">
+                                                            <button type="button" class="btn-qty" onclick="updateQty('${escapedKey}', -1)">-</button>
+                                                            <span class="qty-num">${item.qty}</span>
+                                                            <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty('${escapedKey}', 1)">+</button>
+                                                            <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem('${escapedKey}')" style="border:none; background:none; cursor:pointer;" title="Hapus">
+                                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div class="cart-qty-ctrl">
-                                                        <button type="button" class="btn-qty" onclick="updateQty('${escapedKey}', -1)">-</button>
-                                                        <span class="qty-num">${item.qty}</span>
-                                                        <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty('${escapedKey}', 1)">+</button>
-                                                        <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem('${escapedKey}')" style="border:none; background:none; cursor:pointer;" title="Hapus">
-                                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            `;
+                                                `;
                 });
 
                 container.innerHTML = html;
@@ -7686,7 +7729,7 @@
             }
 
             // Collapsible Customer Form in Payment Modal
-            window.togglePosCustomerForm = function() {
+            window.togglePosCustomerForm = function () {
                 const wrapper = document.getElementById('posCustomerFormWrapper');
                 const textEl = document.getElementById('textToggleCustomer');
                 const iconEl = document.getElementById('iconToggleCustomer');
@@ -7705,7 +7748,7 @@
                 }
             };
 
-            window.updateCustomerSummaryDisplay = function() {
+            window.updateCustomerSummaryDisplay = function () {
                 const nameInput = document.getElementById('posCustomerName');
                 const tableSelect = document.getElementById('posTableQuickSelect');
                 const phoneInput = document.getElementById('posCustomerPhone');
@@ -8246,18 +8289,18 @@
                         const itemSubtotal = parseInt(item.subtotal) || (itemPrice * itemQty);
 
                         itemsHtml += `
-                                                            <div style="margin-bottom: 7px; line-height: 1.35;">
-                                                                <div style="font-weight: 700; font-size: 11.5px; color: #000;">
-                                                                    ${idx + 1}. ${escapeHtml(item.product_name)}
-                                                                    ${item.variant_name ? `<span style="font-weight: normal; font-size: 10px; color: #16a34a;"> (${escapeHtml(item.variant_name)})</span>` : ''}
+                                                                <div style="margin-bottom: 7px; line-height: 1.35;">
+                                                                    <div style="font-weight: 700; font-size: 11.5px; color: #000;">
+                                                                        ${idx + 1}. ${escapeHtml(item.product_name)}
+                                                                        ${item.variant_name ? `<span style="font-weight: normal; font-size: 10px; color: #16a34a;"> (${escapeHtml(item.variant_name)})</span>` : ''}
+                                                                    </div>
+                                                                    ${item.notes ? `<div style="font-size: 9.5px; color: #555; font-style: italic; margin-left: 12px;">* ${escapeHtml(item.notes)}</div>` : ''}
+                                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #222; margin-top: 1px;">
+                                                                        <span style="letter-spacing: 0.2px;">${itemQty} x ${formatRupiah(itemPrice)}</span>
+                                                                        <span style="font-weight: 700; color: #000;">Rp ${formatRupiah(itemSubtotal)}</span>
+                                                                    </div>
                                                                 </div>
-                                                                ${item.notes ? `<div style="font-size: 9.5px; color: #555; font-style: italic; margin-left: 12px;">* ${escapeHtml(item.notes)}</div>` : ''}
-                                                                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #222; margin-top: 1px;">
-                                                                    <span style="letter-spacing: 0.2px;">${itemQty} x ${formatRupiah(itemPrice)}</span>
-                                                                    <span style="font-weight: 700; color: #000;">Rp ${formatRupiah(itemSubtotal)}</span>
-                                                                </div>
-                                                            </div>
-                                                        `;
+                                                            `;
                     });
                     numberedItemsWrap.innerHTML = itemsHtml || '<div style="text-align:center; color:#666; font-size:11px;">(Tidak ada item)</div>';
                 }
@@ -8269,15 +8312,15 @@
                     (order.items || []).forEach(item => {
                         const itemQty = item.qty ?? item.quantity ?? 1;
                         legacyRows += `
-                                                            <tr>
-                                                                <td class="text-start" style="font-weight:700;">
-                                                                    ${escapeHtml(item.product_name)}
-                                                                    <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
-                                                                </td>
-                                                                <td class="text-center" style="vertical-align:top;">${itemQty}</td>
-                                                                <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
-                                                            </tr>
-                                                        `;
+                                                                <tr>
+                                                                    <td class="text-start" style="font-weight:700;">
+                                                                        ${escapeHtml(item.product_name)}
+                                                                        <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
+                                                                    </td>
+                                                                    <td class="text-center" style="vertical-align:top;">${itemQty}</td>
+                                                                    <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
+                                                                </tr>
+                                                            `;
                     });
                     legacyTableBody.innerHTML = legacyRows;
                 }
@@ -8317,22 +8360,22 @@
                             if (amt > 0) {
                                 const rateSuffix = f.type === 'percent' ? ` (${f.value}%)` : '';
                                 feeHtml += `
-                                                                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px; color:#475569;">
-                                                                        <span>${escapeHtml(f.name)}${rateSuffix}</span>
-                                                                        <span style="font-weight:600;">Rp ${formatRupiah(amt)}</span>
-                                                                    </div>
-                                                                `;
+                                                                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px; color:#475569;">
+                                                                            <span>${escapeHtml(f.name)}${rateSuffix}</span>
+                                                                            <span style="font-weight:600;">Rp ${formatRupiah(amt)}</span>
+                                                                        </div>
+                                                                    `;
                             }
                         });
                         elCustomFeesWrap.innerHTML = feeHtml;
                         elCustomFeesWrap.style.display = feeHtml ? 'block' : 'none';
                     } else if (serviceFeeVal > 0) {
                         elCustomFeesWrap.innerHTML = `
-                                                            <div style="display: flex; justify-content: space-between; margin-bottom: 3px; color:#475569;">
-                                                                <span>Biaya Layanan</span>
-                                                                <span style="font-weight:600;">Rp ${formatRupiah(serviceFeeVal)}</span>
-                                                            </div>
-                                                        `;
+                                                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px; color:#475569;">
+                                                                    <span>Biaya Layanan</span>
+                                                                    <span style="font-weight:600;">Rp ${formatRupiah(serviceFeeVal)}</span>
+                                                                </div>
+                                                            `;
                         elCustomFeesWrap.style.display = 'block';
                     } else {
                         elCustomFeesWrap.innerHTML = '';
@@ -8607,49 +8650,49 @@
                 const iframeDoc = doc.document || doc;
                 iframeDoc.open();
                 iframeDoc.write(`<!DOCTYPE html>
-                                                    <html>
-                                                    <head>
-                                                        <title>Struk POS</title>
-                                                        <meta charset="utf-8">
-                                                        <style>
-                                                            @page { size: 80mm auto; margin: 0; }
-                                                            body { 
-                                                                font-family: 'Courier New', Courier, monospace; 
-                                                                font-size: 11px; 
-                                                                color: #000000; 
-                                                                margin: 0; 
-                                                                padding: 4mm 3mm; 
-                                                                width: 72mm; 
-                                                                background: #ffffff; 
-                                                                line-height: 1.3;
-                                                            }
-                                                            table { width: 100%; border-collapse: collapse; }
-                                                            td, th { padding: 1.5px 0; }
-                                                            .text-end { text-align: right; }
-                                                            .text-center { text-align: center; }
-                                                            .text-start { text-align: left; }
-                                                            .no-print { display: none !important; }
-                                                            img { 
-                                                                max-width: 150px; 
-                                                                max-height: 48px; 
-                                                                object-fit: contain; 
-                                                                display: block; 
-                                                                margin: 0 auto 4px auto; 
-                                                                filter: grayscale(100%) contrast(150%);
-                                                            }
-                                                            #recStatusBadge {
-                                                                display: inline-block;
-                                                                padding: 2px 6px;
-                                                                border: 1px solid #000;
-                                                                font-size: 10px;
-                                                                font-weight: 800;
-                                                            }
-                                                        </style>
-                                                        </head>
-                                                    <body>
-                                                        ${content}
-                                                    </body>
-                                                    </html>`);
+                                                        <html>
+                                                        <head>
+                                                            <title>Struk POS</title>
+                                                            <meta charset="utf-8">
+                                                            <style>
+                                                                @page { size: 80mm auto; margin: 0; }
+                                                                body { 
+                                                                    font-family: 'Courier New', Courier, monospace; 
+                                                                    font-size: 11px; 
+                                                                    color: #000000; 
+                                                                    margin: 0; 
+                                                                    padding: 4mm 3mm; 
+                                                                    width: 72mm; 
+                                                                    background: #ffffff; 
+                                                                    line-height: 1.3;
+                                                                }
+                                                                table { width: 100%; border-collapse: collapse; }
+                                                                td, th { padding: 1.5px 0; }
+                                                                .text-end { text-align: right; }
+                                                                .text-center { text-align: center; }
+                                                                .text-start { text-align: left; }
+                                                                .no-print { display: none !important; }
+                                                                img { 
+                                                                    max-width: 150px; 
+                                                                    max-height: 48px; 
+                                                                    object-fit: contain; 
+                                                                    display: block; 
+                                                                    margin: 0 auto 4px auto; 
+                                                                    filter: grayscale(100%) contrast(150%);
+                                                                }
+                                                                #recStatusBadge {
+                                                                    display: inline-block;
+                                                                    padding: 2px 6px;
+                                                                    border: 1px solid #000;
+                                                                    font-size: 10px;
+                                                                    font-weight: 800;
+                                                                }
+                                                            </style>
+                                                            </head>
+                                                        <body>
+                                                            ${content}
+                                                        </body>
+                                                        </html>`);
                 iframeDoc.close();
 
                 setTimeout(() => {
@@ -8794,16 +8837,16 @@
                             const prevWrap = document.getElementById('qrisPreviewContainer');
                             if (prevWrap) {
                                 prevWrap.innerHTML = `
-                                                        <div id="qrisPreviewPlaceholder" style="text-align:center; padding:8px; color:#94a3b8; font-size:0.68rem;">
-                                                            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 4px auto; display:block;">
-                                                                <rect x="3" y="3" width="7" height="7"></rect>
-                                                                <rect x="14" y="3" width="7" height="7"></rect>
-                                                                <rect x="14" y="14" width="7" height="7"></rect>
-                                                                <rect x="3" y="14" width="7" height="7"></rect>
-                                                            </svg>
-                                                            Belum ada QRIS
-                                                        </div>
-                                                    `;
+                                                            <div id="qrisPreviewPlaceholder" style="text-align:center; padding:8px; color:#94a3b8; font-size:0.68rem;">
+                                                                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 4px auto; display:block;">
+                                                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                                                </svg>
+                                                                Belum ada QRIS
+                                                            </div>
+                                                        `;
                             }
                             const btnRemove = document.getElementById('btnRemoveQris');
                             if (btnRemove) btnRemove.style.display = 'none';
@@ -8905,45 +8948,45 @@
 
                 if (!posFeesData || posFeesData.length === 0) {
                     container.innerHTML = `
-                                                        <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
-                                                            Belum ada biaya / pajak ditambahkan.<br>Klik <strong>+ Tambah Biaya / Pajak</strong> untuk menambah.
-                                                        </div>`;
+                                                            <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
+                                                                Belum ada biaya / pajak ditambahkan.<br>Klik <strong>+ Tambah Biaya / Pajak</strong> untuk menambah.
+                                                            </div>`;
                     renderFeeSimulation();
                     updateFeesBadgeCount();
                     return;
                 }
 
                 container.innerHTML = posFeesData.map((fee, idx) => `
-                                                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
-                                                        <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
-                                                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
-                                                                <input type="checkbox" ${fee.is_active ? 'checked' : ''}
-                                                                    onchange="toggleFeeActive(${idx}, this.checked)"
-                                                                    style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
-                                                            </label>
-                                                            <div style="min-width:0;">
-                                                                <div style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                                                    ${escapeHtml(fee.name)}
-                                                                </div>
-                                                                <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">
-                                                                    ${fee.type === 'percent' ? fee.value + '%' : 'Rp ' + formatRupiah(fee.value)} (${fee.type === 'percent' ? 'Persentase' : 'Nominal Tetap'})
+                                                        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
+                                                            <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                                                                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
+                                                                    <input type="checkbox" ${fee.is_active ? 'checked' : ''}
+                                                                        onchange="toggleFeeActive(${idx}, this.checked)"
+                                                                        style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
+                                                                </label>
+                                                                <div style="min-width:0;">
+                                                                    <div style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                                        ${escapeHtml(fee.name)}
+                                                                    </div>
+                                                                    <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">
+                                                                        ${fee.type === 'percent' ? fee.value + '%' : 'Rp ' + formatRupiah(fee.value)} (${fee.type === 'percent' ? 'Persentase' : 'Nominal Tetap'})
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                                <input type="number" value="${fee.value}" min="0" step="any"
+                                                                    style="width:70px; height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 6px; font-size:0.78rem; font-weight:600; text-align:right;"
+                                                                    onchange="updateFeeValue(${idx}, this.value)">
+                                                                <select onchange="updateFeeType(${idx}, this.value)"
+                                                                    style="height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 4px; font-size:0.72rem; font-weight:600; color:#334155;">
+                                                                    <option value="percent" ${fee.type === 'percent' ? 'selected' : ''}>%</option>
+                                                                    <option value="nominal" ${fee.type === 'nominal' ? 'selected' : ''}>Rp</option>
+                                                                </select>
+                                                                <button onclick="removeFeeRow(${idx})"
+                                                                    style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                                                            </div>
                                                         </div>
-                                                        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                            <input type="number" value="${fee.value}" min="0" step="any"
-                                                                style="width:70px; height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 6px; font-size:0.78rem; font-weight:600; text-align:right;"
-                                                                onchange="updateFeeValue(${idx}, this.value)">
-                                                            <select onchange="updateFeeType(${idx}, this.value)"
-                                                                style="height:30px; border:1px solid #e2e8f0; border-radius:6px; padding:0 4px; font-size:0.72rem; font-weight:600; color:#334155;">
-                                                                <option value="percent" ${fee.type === 'percent' ? 'selected' : ''}>%</option>
-                                                                <option value="nominal" ${fee.type === 'nominal' ? 'selected' : ''}>Rp</option>
-                                                            </select>
-                                                            <button onclick="removeFeeRow(${idx})"
-                                                                style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
-                                                        </div>
-                                                    </div>
-                                                `).join('');
+                                                    `).join('');
 
                 renderFeeSimulation();
                 updateFeesBadgeCount();
@@ -9035,12 +9078,12 @@
                     simEl.innerHTML = `<span style="color:#94a3b8;">Tidak ada biaya tambahan aktif.</span>`;
                 } else {
                     simEl.innerHTML = `
-                                                        <div>Subtotal: Rp ${formatRupiah(exampleSubtotal)}</div>
-                                                        ${lines.map(l => `<div style="color:#0369a1;">+ ${l}</div>`).join('')}
-                                                        <div style="color:#64748b; font-size:0.72rem;">+ Platform/Admin Fee: Rp ${formatRupiah(systemFee)}</div>
-                                                        <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #cbd5e1; font-weight:900; color:#1eb349;">
-                                                            Grand Total: Rp ${formatRupiah(grandTotal)}
-                                                        </div>`;
+                                                            <div>Subtotal: Rp ${formatRupiah(exampleSubtotal)}</div>
+                                                            ${lines.map(l => `<div style="color:#0369a1;">+ ${l}</div>`).join('')}
+                                                            <div style="color:#64748b; font-size:0.72rem;">+ Platform/Admin Fee: Rp ${formatRupiah(systemFee)}</div>
+                                                            <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #cbd5e1; font-weight:900; color:#1eb349;">
+                                                                Grand Total: Rp ${formatRupiah(grandTotal)}
+                                                            </div>`;
                 }
             }
 
@@ -9098,9 +9141,9 @@
                         ? (subtotal * (parseFloat(fee.value) || 0)) / 100
                         : (parseFloat(fee.value) || 0);
                     return `<div class="summary-row" style="font-size:0.78rem; color:#475569;">
-                                                        <span>${escapeHtml(fee.name)}${fee.type === 'percent' ? ' (' + fee.value + '%)' : ''}</span>
-                                                        <span style="font-weight:600;">+Rp ${formatRupiah(amount)}</span>
-                                                    </div>`;
+                                                            <span>${escapeHtml(fee.name)}${fee.type === 'percent' ? ' (' + fee.value + '%)' : ''}</span>
+                                                            <span style="font-weight:600;">+Rp ${formatRupiah(amount)}</span>
+                                                        </div>`;
                 }).join('');
             }
 
@@ -9114,9 +9157,9 @@
 
                 if (!posDiscountsData || posDiscountsData.length === 0) {
                     container.innerHTML = `
-                                                        <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
-                                                            Belum ada promo / diskon dibuat.<br>Klik <strong>+ Buat Diskon Baru</strong> untuk membuat promo pertama.
-                                                        </div>`;
+                                                            <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">
+                                                                Belum ada promo / diskon dibuat.<br>Klik <strong>+ Buat Diskon Baru</strong> untuk membuat promo pertama.
+                                                            </div>`;
                     updateDiscountsBadgeCount();
                     return;
                 }
@@ -9129,30 +9172,30 @@
                         ? disc.value + '%'
                         : 'Rp ' + formatRupiah(disc.value);
                     return `
-                                                    <div id="discountCard-${idx}" style="background:#ffffff; border:1.5px solid ${disc.is_active ? '#bbf7d0' : '#e2e8f0'}; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
-                                                        <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
-                                                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
-                                                                <input type="checkbox" ${disc.is_active ? 'checked' : ''}
-                                                                    onchange="toggleDiscountActive(${idx}, this.checked)"
-                                                                    style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
-                                                            </label>
-                                                            <div style="min-width:0;">
-                                                                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                                                                    <span style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(disc.name)}</span>
-                                                                    <span style="font-size:0.68rem; background:${disc.is_active ? '#dcfce7' : '#f1f5f9'}; color:${disc.is_active ? '#15803d' : '#64748b'}; font-weight:700; padding:1px 7px; border-radius:999px; flex-shrink:0;">${disc.is_active ? 'Aktif' : 'Nonaktif'}</span>
-                                                                </div>
-                                                                <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
-                                                                    Potongan <strong>${valueLabel}</strong> &nbsp;·&nbsp; ${scopeLabel}
+                                                        <div id="discountCard-${idx}" style="background:#ffffff; border:1.5px solid ${disc.is_active ? '#bbf7d0' : '#e2e8f0'}; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;">
+                                                            <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                                                                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
+                                                                    <input type="checkbox" ${disc.is_active ? 'checked' : ''}
+                                                                        onchange="toggleDiscountActive(${idx}, this.checked)"
+                                                                        style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;">
+                                                                </label>
+                                                                <div style="min-width:0;">
+                                                                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                                                        <span style="font-size:0.82rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(disc.name)}</span>
+                                                                        <span style="font-size:0.68rem; background:${disc.is_active ? '#dcfce7' : '#f1f5f9'}; color:${disc.is_active ? '#15803d' : '#64748b'}; font-weight:700; padding:1px 7px; border-radius:999px; flex-shrink:0;">${disc.is_active ? 'Aktif' : 'Nonaktif'}</span>
+                                                                    </div>
+                                                                    <div style="font-size:0.7rem; color:#64748b; margin-top:2px;">
+                                                                        Potongan <strong>${valueLabel}</strong> &nbsp;·&nbsp; ${scopeLabel}
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                            <button onclick="openEditDiscountDrawer(${idx})"
-                                                                style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; border-radius:6px; padding:4px 9px; font-size:0.7rem; font-weight:700; cursor:pointer;">Edit</button>
-                                                            <button onclick="removeDiscount(${idx})"
-                                                                style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
-                                                        </div>
-                                                    </div>`;
+                                                            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                                <button onclick="openEditDiscountDrawer(${idx})"
+                                                                    style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; border-radius:6px; padding:4px 9px; font-size:0.7rem; font-weight:700; cursor:pointer;">Edit</button>
+                                                                <button onclick="removeDiscount(${idx})"
+                                                                    style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:0.9rem;">×</button>
+                                                            </div>
+                                                        </div>`;
                 }).join('');
                 updateDiscountsBadgeCount();
                 // Also update the cart preset dropdown
@@ -9296,13 +9339,13 @@
                     return;
                 }
                 list.innerHTML = products.map(p => `
-                                                    <label style="display:flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:600; color:#1e293b; cursor:pointer; padding:5px 4px; border-radius:6px; transition:background 0.15s;">
-                                                        <input type="checkbox" value="${p.id}"
-                                                            style="width:15px; height:15px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;"
-                                                            onchange="updateDiscountSelectedCount()">
-                                                        <span>${escapeHtml(p.name)}</span>
-                                                    </label>
-                                                `).join('');
+                                                        <label style="display:flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:600; color:#1e293b; cursor:pointer; padding:5px 4px; border-radius:6px; transition:background 0.15s;">
+                                                            <input type="checkbox" value="${p.id}"
+                                                                style="width:15px; height:15px; accent-color:#1eb349; cursor:pointer; flex-shrink:0;"
+                                                                onchange="updateDiscountSelectedCount()">
+                                                            <span>${escapeHtml(p.name)}</span>
+                                                        </label>
+                                                    `).join('');
             }
 
             function filterDiscountProductPicker() {
@@ -9774,14 +9817,14 @@
 
                 if (cashiers.length === 0) {
                     wrap.innerHTML = `
-                                                        <div id="cashierEmptyNotice" style="text-align:center; padding:2rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
-                                                            <div style="width:40px; height:40px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; color:#94a3b8;">
-                                                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                                            <div id="cashierEmptyNotice" style="text-align:center; padding:2rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
+                                                                <div style="width:40px; height:40px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; color:#94a3b8;">
+                                                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                                                </div>
+                                                                <div style="font-size:0.85rem; font-weight:700; color:#334155;">Belum Ada Akun Staf Kasir</div>
+                                                                <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Klik tombol "+ Tambah Staf Kasir" di atas untuk menambahkan staf yang bertugas.</div>
                                                             </div>
-                                                            <div style="font-size:0.85rem; font-weight:700; color:#334155;">Belum Ada Akun Staf Kasir</div>
-                                                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Klik tombol "+ Tambah Staf Kasir" di atas untuk menambahkan staf yang bertugas.</div>
-                                                        </div>
-                                                    `;
+                                                        `;
                     return;
                 }
 
@@ -9801,43 +9844,43 @@
                     const cJson = JSON.stringify(c).replace(/"/g, '&quot;');
 
                     html += `
-                                                        <div class="cashier-card-item" id="cashierRow-${c.id}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
-                                                            <div style="display:flex; align-items:center; gap:12px; min-width:0;">
-                                                                <div style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:800; color:#334155; flex-shrink:0;">
-                                                                    ${initials}
-                                                                </div>
-                                                                <div style="min-width:0;">
-                                                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                                                        <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(c.name)}</span>
-                                                                        <span style="font-size:0.7rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
-                                                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                                                            ${escapeHtml(c.email || c.username || '')}
-                                                                        </span>
-                                                                        ${statusBadge}
+                                                            <div class="cashier-card-item" id="cashierRow-${c.id}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
+                                                                <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                                                                    <div style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; border:1.5px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:800; color:#334155; flex-shrink:0;">
+                                                                        ${initials}
                                                                     </div>
-                                                                    <div style="display:flex; align-items:center; gap:12px; font-size:0.72rem; color:#64748b; margin-top:3px; flex-wrap:wrap;">
-                                                                        <span style="display:inline-flex; align-items:center; gap:4px; color:#475569; font-weight:600;">
-                                                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                                                            ${escapeHtml(roleTitle)}
-                                                                        </span>
-                                                                        ${shiftHtml}
+                                                                    <div style="min-width:0;">
+                                                                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                                            <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(c.name)}</span>
+                                                                            <span style="font-size:0.7rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+                                                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                                                                ${escapeHtml(c.email || c.username || '')}
+                                                                            </span>
+                                                                            ${statusBadge}
+                                                                        </div>
+                                                                        <div style="display:flex; align-items:center; gap:12px; font-size:0.72rem; color:#64748b; margin-top:3px; flex-wrap:wrap;">
+                                                                            <span style="display:inline-flex; align-items:center; gap:4px; color:#475569; font-weight:600;">
+                                                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                                                                ${escapeHtml(roleTitle)}
+                                                                            </span>
+                                                                            ${shiftHtml}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                                <button type="button" class="btn-outline-bio" style="padding:4px 9px; font-size:0.72rem; border-radius:6px;" onclick="editCashierData(${cJson})" title="Edit Kasir">
-                                                                    Edit
-                                                                </button>
-                                                                <button type="button" style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; cursor:pointer; font-weight:600;" onclick="toggleCashierActive(${c.id})" title="Aktifkan / Nonaktifkan">
-                                                                    ${toggleLabel}
-                                                                </button>
-                                                                <button type="button" style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;" onclick="deleteCashier(${c.id}, '${escapeHtml(c.name)}')" title="Hapus Staf">
-                                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                                                </button>
+                                                                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                                    <button type="button" class="btn-outline-bio" style="padding:4px 9px; font-size:0.72rem; border-radius:6px;" onclick="editCashierData(${cJson})" title="Edit Kasir">
+                                                                        Edit
+                                                                    </button>
+                                                                    <button type="button" style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; cursor:pointer; font-weight:600;" onclick="toggleCashierActive(${c.id})" title="Aktifkan / Nonaktifkan">
+                                                                        ${toggleLabel}
+                                                                    </button>
+                                                                    <button type="button" style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;" onclick="deleteCashier(${c.id}, '${escapeHtml(c.name)}')" title="Hapus Staf">
+                                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    `;
+                                                        `;
                 });
                 wrap.innerHTML = html;
             }
@@ -9933,19 +9976,19 @@
 
                 if (!posTablesData || posTablesData.length === 0) {
                     container.innerHTML = `
-                                                        <div style="text-align:center; padding:2.5rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
-                                                            <div style="width:44px; height:44px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto; color:#94a3b8;">
-                                                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                                    <path d="M3 9h18M9 21V9" />
-                                                                </svg>
+                                                            <div style="text-align:center; padding:2.5rem 1rem; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px;">
+                                                                <div style="width:44px; height:44px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto; color:#94a3b8;">
+                                                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                                        <path d="M3 9h18M9 21V9" />
+                                                                    </svg>
+                                                                </div>
+                                                                <div style="font-size:0.88rem; font-weight:700; color:#334155;">Belum Ada Meja Ditambahkan</div>
+                                                                <div style="font-size:0.75rem; color:#64748b; margin-top:3px; max-width:380px; margin-left:auto; margin-right:auto;">
+                                                                    Klik tombol <strong>+ Tambah Meja</strong> di atas untuk membuat meja dan men-download barcode QR tiap meja.
+                                                                </div>
                                                             </div>
-                                                            <div style="font-size:0.88rem; font-weight:700; color:#334155;">Belum Ada Meja Ditambahkan</div>
-                                                            <div style="font-size:0.75rem; color:#64748b; margin-top:3px; max-width:380px; margin-left:auto; margin-right:auto;">
-                                                                Klik tombol <strong>+ Tambah Meja</strong> di atas untuk membuat meja dan men-download barcode QR tiap meja.
-                                                            </div>
-                                                        </div>
-                                                    `;
+                                                        `;
                     updateTablesBadgeCount();
                     return;
                 }
@@ -9953,42 +9996,42 @@
                 container.innerHTML = posTablesData.map((table, idx) => {
                     const tableUrl = posBioBaseUrl + (posBioBaseUrl.includes('?') ? '&' : '?') + 'meja=' + encodeURIComponent(table.name);
                     return `
-                                                        <div class="table-card-item" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
-                                                            <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
-                                                                <div id="tableQrThumb_${idx}" style="width:40px; height:40px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
-                                                                <div style="min-width:0;">
-                                                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                                                        <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(table.name)}</span>
-                                                                        ${table.seats ? `<span style="font-size:0.7rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-weight:600;">${table.seats} Kursi</span>` : ''}
-                                                                        ${table.area ? `<span style="font-size:0.7rem; color:#15803d; background:#dcfce7; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; font-weight:600;">${escapeHtml(table.area)}</span>` : ''}
-                                                                    </div>
-                                                                    <div style="font-size:0.7rem; color:#94a3b8; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:380px;">
-                                                                        ${escapeHtml(tableUrl)}
+                                                            <div class="table-card-item" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s ease;">
+                                                                <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                                                                    <div id="tableQrThumb_${idx}" style="width:40px; height:40px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; padding:2px;"></div>
+                                                                    <div style="min-width:0;">
+                                                                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                                            <span style="font-size:0.88rem; font-weight:800; color:#0f172a;">${escapeHtml(table.name)}</span>
+                                                                            ${table.seats ? `<span style="font-size:0.7rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-weight:600;">${table.seats} Kursi</span>` : ''}
+                                                                            ${table.area ? `<span style="font-size:0.7rem; color:#15803d; background:#dcfce7; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; font-weight:600;">${escapeHtml(table.area)}</span>` : ''}
+                                                                        </div>
+                                                                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:380px;">
+                                                                            ${escapeHtml(tableUrl)}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                                <button type="button" class="btn-outline-bio" onclick="downloadTableQr(${idx})"
-                                                                    style="padding:4px 10px; font-size:0.72rem; border-radius:6px; text-decoration:none;"
-                                                                    title="Download Barcode QR Meja ini">
-                                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                                                    Download Barcode
-                                                                </button>
-                                                                <a href="${tableUrl}" target="_blank"
-                                                                    style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"
-                                                                    title="Buka Link di Tab Baru">
-                                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                                                    Tes Link
-                                                                </a>
-                                                                <button type="button" onclick="deleteTable(${idx})"
-                                                                    style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;"
-                                                                    title="Hapus Meja">
-                                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                                                </button>
+                                                                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                                    <button type="button" class="btn-outline-bio" onclick="downloadTableQr(${idx})"
+                                                                        style="padding:4px 10px; font-size:0.72rem; border-radius:6px; text-decoration:none;"
+                                                                        title="Download Barcode QR Meja ini">
+                                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                                                        Download Barcode
+                                                                    </button>
+                                                                    <a href="${tableUrl}" target="_blank"
+                                                                        style="padding:4px 9px; font-size:0.72rem; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc; color:#334155; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;"
+                                                                        title="Buka Link di Tab Baru">
+                                                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                                                        Tes Link
+                                                                    </a>
+                                                                    <button type="button" onclick="deleteTable(${idx})"
+                                                                        style="padding:4px 8px; font-size:0.72rem; border-radius:6px; border:1px solid #fee2e2; background:#fff1f2; color:#e11d48; cursor:pointer; font-weight:700;"
+                                                                        title="Hapus Meja">
+                                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    `;
+                                                        `;
                 }).join('');
 
                 // Generate thumbnails for each table
@@ -10541,24 +10584,24 @@
                 }
 
                 printWin.document.write(`<!DOCTYPE html>
-                                                    <html>
-                                                    <head>
-                                                        <title>Rekap Closing Shift - {{ $storeName }}</title>
-                                                        <style>
-                                                            @page { size: 80mm auto; margin: 0; }
-                                                            body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
-                                                            table { width: 100%; border-collapse: collapse; }
-                                                            td { padding: 1px 0; }
-                                                            .text-end, [style*="text-align: right"] { text-align: right; }
-                                                            .text-center, [style*="text-align: center"] { text-align: center; }
-                                                            .no-print { display: none !important; }
-                                                            img { display: none !important; }
-                                                        </style>
-                                                        </head>
-                                                    <body>
-                                                        ${content}
-                                                    </body>
-                                                    </html>`);
+                                                        <html>
+                                                        <head>
+                                                            <title>Rekap Closing Shift - {{ $storeName }}</title>
+                                                            <style>
+                                                                @page { size: 80mm auto; margin: 0; }
+                                                                body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
+                                                                table { width: 100%; border-collapse: collapse; }
+                                                                td { padding: 1px 0; }
+                                                                .text-end, [style*="text-align: right"] { text-align: right; }
+                                                                .text-center, [style*="text-align: center"] { text-align: center; }
+                                                                .no-print { display: none !important; }
+                                                                img { display: none !important; }
+                                                            </style>
+                                                            </head>
+                                                        <body>
+                                                            ${content}
+                                                        </body>
+                                                        </html>`);
                 printWin.document.close();
                 printWin.focus();
                 setTimeout(() => {
@@ -10813,32 +10856,32 @@
                                     : `<img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="${p.name}" class="product-img" style="object-fit:contain;padding:14px;background:#ffffff;">`;
 
                                 const cardHtml = `
-                                            <div class="product-card" data-id="${p.id}" data-name="${p.name.toLowerCase()}"
-                                                data-price="${p.price}" data-category="all" data-image="${p.image_url || ''}"
-                                                onclick="handleProductClick(${p.id})">
-                                                <div class="product-img-wrapper">
-                                                    ${imgHtml}
-                                                    <div class="product-qty-badge" id="badge-qty-${p.id}" style="display:none;position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;font-size:0.65rem;font-weight:700;min-width:20px;height:20px;border-radius:10px;align-items:center;justify-content:center;padding:0 5px;z-index:5;">0</div>
-                                                    <div class="product-check-badge" id="card-check-${p.id}" style="display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1eb349,#a5cf37);align-items:center;justify-content:center;z-index:5;">
-                                                        <svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                                <div class="product-card" data-id="${p.id}" data-name="${p.name.toLowerCase()}"
+                                                    data-price="${p.price}" data-category="all" data-image="${p.image_url || ''}"
+                                                    onclick="handleProductClick(${p.id})">
+                                                    <div class="product-img-wrapper">
+                                                        ${imgHtml}
+                                                        <div class="product-qty-badge" id="badge-qty-${p.id}" style="display:none;position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;font-size:0.65rem;font-weight:700;min-width:20px;height:20px;border-radius:10px;align-items:center;justify-content:center;padding:0 5px;z-index:5;">0</div>
+                                                        <div class="product-check-badge" id="card-check-${p.id}" style="display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1eb349,#a5cf37);align-items:center;justify-content:center;z-index:5;">
+                                                            <svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div style="padding:0.5rem 0.6rem 0.45rem;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
-                                                    <div class="product-name">${p.name}</div>
-                                                    <div class="product-card-bottom">
-                                                        <div class="product-price">Rp ${formattedPrice}</div>
-                                                        <button type="button" class="card-btn-add" id="card-add-btn-${p.id}" onclick="event.stopPropagation(); handleProductClick(${p.id});">
-                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                                        </button>
-                                                        <div class="card-stepper" id="card-stepper-${p.id}" style="display:none;">
-                                                            <button type="button" class="card-stepper-btn minus" onclick="event.stopPropagation(); handleCardStepper(${p.id}, -1);"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-                                                            <span class="card-stepper-num" id="card-qty-num-${p.id}">1</span>
-                                                            <button type="button" class="card-stepper-btn plus" onclick="event.stopPropagation(); handleCardStepper(${p.id}, 1);"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                                                    <div style="padding:0.5rem 0.6rem 0.45rem;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+                                                        <div class="product-name">${p.name}</div>
+                                                        <div class="product-card-bottom">
+                                                            <div class="product-price">Rp ${formattedPrice}</div>
+                                                            <button type="button" class="card-btn-add" id="card-add-btn-${p.id}" onclick="event.stopPropagation(); handleProductClick(${p.id});">
+                                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                            </button>
+                                                            <div class="card-stepper" id="card-stepper-${p.id}" style="display:none;">
+                                                                <button type="button" class="card-stepper-btn minus" onclick="event.stopPropagation(); handleCardStepper(${p.id}, -1);"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                                                                <span class="card-stepper-num" id="card-qty-num-${p.id}">1</span>
+                                                                <button type="button" class="card-stepper-btn plus" onclick="event.stopPropagation(); handleCardStepper(${p.id}, 1);"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        `;
+                                            `;
                                 grid.insertAdjacentHTML('afterbegin', cardHtml);
                             }
 
@@ -11263,15 +11306,15 @@
                                 const actionsDiv = card.querySelector('.pos-trans-actions');
                                 if (actionsDiv) {
                                     actionsDiv.innerHTML = `
-                                                <button type="button" class="pos-action-btn btn-paid" disabled title="Sudah Lunas">
-                                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                                                </button>
-                                                <button type="button" class="pos-action-btn btn-complete" onclick="event.stopPropagation(); posMarkCompleted(${orderId}, this)" title="Tandai Pesanan Selesai / Sudah Disajikan">
-                                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                        <polyline points="20 6 9 17 4 12"/>
-                                                        <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
-                                                    </svg>
-                                                </button>`;
+                                                    <button type="button" class="pos-action-btn btn-paid" disabled title="Sudah Lunas">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                                    </button>
+                                                    <button type="button" class="pos-action-btn btn-complete" onclick="event.stopPropagation(); posMarkCompleted(${orderId}, this)" title="Tandai Pesanan Selesai / Sudah Disajikan">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <polyline points="20 6 9 17 4 12"/>
+                                                            <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                                                        </svg>
+                                                    </button>`;
                                 }
                                 card.classList.add('new-order-flash');
                                 updatePosTransactionsMetrics();
@@ -11306,12 +11349,12 @@
                                 const actionsDiv = card.querySelector('.pos-trans-actions');
                                 if (actionsDiv) {
                                     actionsDiv.innerHTML = `
-                                                <button type="button" class="pos-action-btn btn-complete" disabled title="Pesanan Selesai">
-                                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                        <polyline points="20 6 9 17 4 12"/>
-                                                        <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
-                                                    </svg>
-                                                </button>`;
+                                                    <button type="button" class="pos-action-btn btn-complete" disabled title="Pesanan Selesai">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <polyline points="20 6 9 17 4 12"/>
+                                                            <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                                                        </svg>
+                                                    </button>`;
                                 }
                                 // Animasi halus & otomatis meluncur ke posisi teratas dari kelompok pesanan selesai
                                 card.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease';
@@ -11384,55 +11427,55 @@
                 let actionsBtns = '';
                 if (!isPaid && isCash) {
                     actionsBtns = `<button type="button" class="pos-action-btn btn-cash-pending" onclick="event.stopPropagation(); posMarkPaid(${ord.id}, this)" title="Tandai Pembayaran Diterima">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M12 10v4m-2-2h4"/><path d="M6 10h.01M18 10h.01"/></svg>
-                                </button>`;
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M12 10v4m-2-2h4"/><path d="M6 10h.01M18 10h.01"/></svg>
+                                    </button>`;
                 } else if (isPaid && !isComp) {
                     actionsBtns = `
-                                    <button type="button" class="pos-action-btn btn-paid" disabled title="Sudah Lunas">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                                    </button>
-                                    <button type="button" class="pos-action-btn btn-complete" onclick="event.stopPropagation(); posMarkCompleted(${ord.id}, this)" title="Tandai Selesai">
+                                        <button type="button" class="pos-action-btn btn-paid" disabled title="Sudah Lunas">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </button>
+                                        <button type="button" class="pos-action-btn btn-complete" onclick="event.stopPropagation(); posMarkCompleted(${ord.id}, this)" title="Tandai Selesai">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                                <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
+                                            </svg>
+                                        </button>`;
+                } else if (isComp) {
+                    actionsBtns = `<button type="button" class="pos-action-btn btn-complete" disabled title="Selesai">
                                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                             <polyline points="20 6 9 17 4 12"/>
                                             <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
                                         </svg>
                                     </button>`;
-                } else if (isComp) {
-                    actionsBtns = `<button type="button" class="pos-action-btn btn-complete" disabled title="Selesai">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <polyline points="20 6 9 17 4 12"/>
-                                        <polyline points="20 10 9 21 4 16" style="opacity:0.5;"/>
-                                    </svg>
-                                </button>`;
                 }
 
                 return `<div class="pos-trans-card new-order-flash" id="pos-trans-card-${ord.id}"
-                                        data-id="${ord.id}" data-paid="${isPaid ? '1' : '0'}" data-completed="${isComp ? '1' : '0'}"
-                                        data-pay-method="${ord.payment_method || 'cash'}"
-                                        data-search="${(ord.order_number || ord.id)} ${ord.customer_name || ''}"
-                                        data-date="${ord.created_date}" data-timestamp="${ord.timestamp}">
-                                <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
-                                    <div class="pos-trans-card-top" style="flex:1;">
-                                        <span class="pos-trans-sale-num">
-                                            ${selfBadge}#${ord.order_number}
-                                            ${ord.table_number ? `<span style="font-size:0.68rem;color:#64748b;font-weight:600;margin-left:4px;">· Meja ${ord.table_number}</span>` : ''}
-                                        </span>
-                                        <span class="pos-trans-amount">${total}</span>
+                                            data-id="${ord.id}" data-paid="${isPaid ? '1' : '0'}" data-completed="${isComp ? '1' : '0'}"
+                                            data-pay-method="${ord.payment_method || 'cash'}"
+                                            data-search="${(ord.order_number || ord.id)} ${ord.customer_name || ''}"
+                                            data-date="${ord.created_date}" data-timestamp="${ord.timestamp}">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
+                                        <div class="pos-trans-card-top" style="flex:1;">
+                                            <span class="pos-trans-sale-num">
+                                                ${selfBadge}#${ord.order_number}
+                                                ${ord.table_number ? `<span style="font-size:0.68rem;color:#64748b;font-weight:600;margin-left:4px;">· Meja ${ord.table_number}</span>` : ''}
+                                            </span>
+                                            <span class="pos-trans-amount">${total}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="pos-trans-card-mid" style="cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
-                                    <span style="font-size:0.75rem;color:#334155;font-weight:600;">${ord.customer_name || 'Pelanggan Umum'}${tableStr}</span>
-                                    <span style="font-size:0.7rem;color:#64748b;">${ord.items_count} item</span>
-                                </div>
-                                <div style="font-size:0.75rem;color:#475569;margin:3px 0 5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">${ord.items_text}</div>
-                                <div class="pos-trans-time" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
-                                    <div style="display:flex;align-items:center;gap:5px;flex:1;min-width:0;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
-                                        <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.65rem;font-weight:700;color:#fff;background:${badge};white-space:nowrap;">${badgeLbl}</span>
-                                        <span style="font-size:0.68rem;color:#94a3b8;white-space:nowrap;">${ord.created_at}</span>
+                                    <div class="pos-trans-card-mid" style="cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
+                                        <span style="font-size:0.75rem;color:#334155;font-weight:600;">${ord.customer_name || 'Pelanggan Umum'}${tableStr}</span>
+                                        <span style="font-size:0.7rem;color:#64748b;">${ord.items_count} item</span>
                                     </div>
-                                    <div class="pos-trans-actions" style="margin-top:0;">${actionsBtns}</div>
-                                </div>
-                            </div>`;
+                                    <div style="font-size:0.75rem;color:#475569;margin:3px 0 5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">${ord.items_text}</div>
+                                    <div class="pos-trans-time" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                                        <div style="display:flex;align-items:center;gap:5px;flex:1;min-width:0;cursor:pointer;" onclick="openPosOrderReceipt(${ord.id})">
+                                            <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.65rem;font-weight:700;color:#fff;background:${badge};white-space:nowrap;">${badgeLbl}</span>
+                                            <span style="font-size:0.68rem;color:#94a3b8;white-space:nowrap;">${ord.created_at}</span>
+                                        </div>
+                                        <div class="pos-trans-actions" style="margin-top:0;">${actionsBtns}</div>
+                                    </div>
+                                </div>`;
             }
 
             async function pollLiveOrders() {
@@ -11520,16 +11563,16 @@
                     totalQty += item.qty;
                     const sub = item.price * item.qty;
                     html += `
-                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:5px 0; border-bottom:1px dashed #e2e8f0;">
-                                        <div style="flex:1; padding-right:8px;">
-                                            <div style="font-weight:700; color:#0f172a;">${escapeHtml(item.name)}</div>
-                                            ${item.variantName ? `<span style="font-size:0.68rem; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; display:inline-block; margin-top:2px;">${escapeHtml(item.variantName)}</span>` : ''}
-                                            ${item.notes ? `<div style="font-size:0.68rem; color:#64748b; font-style:italic;">* ${escapeHtml(item.notes)}</div>` : ''}
-                                            <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">${item.qty} x Rp ${formatRupiah(item.price)}</div>
+                                        <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:5px 0; border-bottom:1px dashed #e2e8f0;">
+                                            <div style="flex:1; padding-right:8px;">
+                                                <div style="font-weight:700; color:#0f172a;">${escapeHtml(item.name)}</div>
+                                                ${item.variantName ? `<span style="font-size:0.68rem; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; display:inline-block; margin-top:2px;">${escapeHtml(item.variantName)}</span>` : ''}
+                                                ${item.notes ? `<div style="font-size:0.68rem; color:#64748b; font-style:italic;">* ${escapeHtml(item.notes)}</div>` : ''}
+                                                <div style="font-size:0.7rem; color:#64748b; margin-top:1px;">${item.qty} x Rp ${formatRupiah(item.price)}</div>
+                                            </div>
+                                            <div style="font-weight:800; color:#0f172a; white-space:nowrap;">Rp ${formatRupiah(sub)}</div>
                                         </div>
-                                        <div style="font-weight:800; color:#0f172a; white-space:nowrap;">Rp ${formatRupiah(sub)}</div>
-                                    </div>
-                                `;
+                                    `;
                 });
                 container.innerHTML = html || '<div style="color:#94a3b8; text-align:center; padding:8px;">(Keranjang Kosong)</div>';
                 if (itemsCountEl) itemsCountEl.innerText = `${totalQty} Items`;
@@ -11848,7 +11891,8 @@
                         </div>
                         <div>
                             <h4 style="margin:0; font-size:0.95rem; font-weight:600; color:#0f172a;">Tambah Baru</h4>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Pilih jenis item yang ingin ditambahkan</div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Pilih jenis item yang ingin
+                                ditambahkan</div>
                         </div>
                     </div>
                     <button type="button" class="pos-modal-close"
@@ -11857,7 +11901,8 @@
 
                 <div style="display:flex; flex-direction:column; gap:10px;">
                     <!-- Opsi 1: Kelola Produk & Menu -->
-                    <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-add-option-card" style="text-decoration:none;">
+                    <a href="{{ route('creator.products.index', ['from' => 'pos']) }}" class="pos-add-option-card"
+                        style="text-decoration:none;">
                         <div class="pos-add-option-icon">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
@@ -11869,7 +11914,8 @@
                         </div>
                         <div style="flex:1;">
                             <div style="font-size:0.86rem; font-weight:600; color:#0f172a;">Kelola Produk & Menu</div>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Tambah atau ubah produk dan harga jual kasir</div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Tambah atau ubah produk dan harga
+                                jual kasir</div>
                         </div>
                         <svg width="15" height="15" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6" />
@@ -11877,8 +11923,10 @@
                     </a>
 
                     <!-- Opsi 2: Inventori Bahan & Resep -->
-                    <a href="{{ route('creator.inventories.index', ['from' => 'pos']) }}" class="pos-add-option-card" style="text-decoration:none;">
-                        <div class="pos-add-option-icon" style="background:rgba(30,179,73,0.1); border-color:rgba(30,179,73,0.25); color:#1eb349;">
+                    <a href="{{ route('creator.inventories.index', ['from' => 'pos']) }}" class="pos-add-option-card"
+                        style="text-decoration:none;">
+                        <div class="pos-add-option-icon"
+                            style="background:rgba(30,179,73,0.1); border-color:rgba(30,179,73,0.25); color:#1eb349;">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
                                 <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -11886,7 +11934,8 @@
                         </div>
                         <div style="flex:1;">
                             <div style="font-size:0.86rem; font-weight:600; color:#0f172a;">Inventori Bahan & Resep</div>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Pantau stok bahan baku & resep menu (BOM)</div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Pantau stok bahan baku & resep
+                                menu (BOM)</div>
                         </div>
                         <svg width="15" height="15" fill="none" stroke="#94a3b8" stroke-width="2.2" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6" />

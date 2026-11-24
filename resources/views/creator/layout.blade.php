@@ -601,55 +601,6 @@
             display: none;
         }
 
-        /* ── POS Bottom Nav (shared style for products/inventories/payout ?from=pos pages) ── */
-        .pos-bottom-nav-wrap {
-            display: flex;
-            position: fixed;
-            bottom: max(16px, calc(10px + env(safe-area-inset-bottom, 0px)));
-            left: 14px;
-            right: 14px;
-            max-width: 440px;
-            margin: 0 auto;
-            z-index: 10000;
-            justify-content: center;
-            pointer-events: none;
-        }
-        .pos-bottom-nav-bar {
-            pointer-events: auto;
-            width: 100%;
-            height: 62px;
-            background: #ffffff;
-            border-radius: 999px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.35rem 0.65rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1.5px solid #f1f5f9;
-            box-sizing: border-box;
-            gap: 6px;
-        }
-        .pos-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: none;
-            cursor: pointer;
-            padding: 0;
-            color: #64748b;
-            text-decoration: none;
-            font-family: inherit;
-            transition: all 0.2s ease;
-        }
-        .pos-nav-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            margin-top: 2px;
-            font-family: inherit;
-        }
-
         @media (max-width: 1024px) {
             body {
                 display: block !important;
@@ -1576,106 +1527,24 @@
         </main>
     </div>
 
-    {{-- ── Super App Bottom Navigation (Mobile Only - 100% Sesuai Gambar 3) ── --}}
+    {{-- ── Super App Bottom Navigation (Mobile Only) ── --}}
     @php
-        $navIsFromPos = request('from') === 'pos';
-        $isProductsFromPos = request()->is('creator/products*') && !request()->routeIs('creator.products.create') && !request()->routeIs('creator.products.edit') && $navIsFromPos;
-        $isPayoutFromPos = (request()->is('creator/payout-settings*') || request()->routeIs('creator.payout.settings')) && $navIsFromPos;
-        $isInventoriesFromPos = request()->is('creator/inventories*') && $navIsFromPos;
+        $isExcludedPage = request()->is('creator/pos*')
+            || request()->is('creator/event-attendance*')
+            || request()->routeIs('creator.event.attendance')
+            || request()->is('creator/bio*')
+            || request()->is('creator/products*')
+            || request()->routeIs('creator.products.*')
+            || request()->is('creator/groups*')
+            || request()->routeIs('creator.groups.*')
+            || request()->is('creator/inventories*')
+            || request()->routeIs('creator.inventories.*')
+            || request()->is('creator/materials*')
+            || request('from') === 'pos';
     @endphp
 
-    @if($isProductsFromPos || $isPayoutFromPos || $isInventoriesFromPos)
-        {{-- Jika masuk ke halaman produk atau payout dari POS (?from=pos), tampilkan bottom navbar POS (Home, Transaksi,
-        Laporan, Profil) --}}
-        <div class="pos-bottom-nav-wrap" id="posBottomNavWrap"
-            style="display: flex !important; position: fixed !important; bottom: max(16px, calc(10px + env(safe-area-inset-bottom, 0px))) !important; left: 14px !important; right: 14px !important; max-width: 440px !important; margin: 0 auto !important; z-index: 10000 !important; justify-content: center !important;">
-            <div class="pos-bottom-nav-bar"
-                style="width: 100% !important; height: 62px !important; background: #ffffff !important; border-radius: 999px !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 0.35rem 0.65rem !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important; border: 1.5px solid #f1f5f9 !important; gap: 6px !important;">
-                <!-- 1. Home / Kasir -->
-                @if($isPayoutFromPos)
-                    <a href="{{ route('creator.pos.index') }}" class="pos-nav-item" id="posNavBtnHome" title="Kasir Home"
-                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
-                    </a>
-                @else
-                    <a href="{{ route('creator.pos.index') }}" class="pos-nav-item {{ !$isInventoriesFromPos ? 'active' : '' }}" id="posNavBtnHome" title="Kasir Home"
-                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; {{ !$isInventoriesFromPos ? 'background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;' : 'width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;' }}">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
-                        @if(!$isInventoriesFromPos)
-                            <span class="pos-nav-label"
-                                style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Home</span>
-                        @endif
-                    </a>
-                @endif
-
-                <!-- 2. Transactions -->
-                <a href="{{ route('creator.pos.index', ['screen' => 'transactions']) }}" class="pos-nav-item"
-                    id="posNavBtnTrans" title="Transaksi"
-                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <rect x="2" y="4" width="20" height="16" rx="2" />
-                        <circle cx="12" cy="12" r="3" />
-                        <line x1="2" y1="9" x2="6" y2="9" />
-                        <line x1="18" y1="15" x2="22" y2="15" />
-                    </svg>
-                </a>
-
-                <!-- 3. Laporan -->
-                <a href="{{ route('creator.pos.reports') }}" class="pos-nav-item" id="posNavBtnReports" title="Laporan POS"
-                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <line x1="18" y1="20" x2="18" y2="10" />
-                        <line x1="12" y1="20" x2="12" y2="4" />
-                        <line x1="6" y1="20" x2="6" y2="14" />
-                    </svg>
-                </a>
-
-                <!-- 4. Inventories (aktif highlight saat di inventories?from=pos) -->
-                <a href="{{ route('creator.inventories.index', ['from' => 'pos']) }}" class="pos-nav-item {{ $isInventoriesFromPos ? 'active' : '' }}" id="posNavBtnInventories" title="Inventori Bahan"
-                    style="text-decoration:none; display:flex; align-items:center; justify-content:center; {{ $isInventoriesFromPos ? 'background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;' : 'width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;' }}">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                        <line x1="12" y1="22.08" x2="12" y2="12"/>
-                    </svg>
-                    @if($isInventoriesFromPos)
-                        <span class="pos-nav-label" style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Stok</span>
-                    @endif
-                </a>
-
-                <!-- 5. Profile -->
-                @if($isPayoutFromPos)
-                    <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item active" id="posNavBtnProfile"
-                        title="Profil Kasir & Toko"
-                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff !important; padding:0.5rem 1.1rem; border-radius:999px; box-shadow:0 4px 14px rgba(30,179,73,0.35); gap:6px;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                        <span class="pos-nav-label"
-                            style="display:inline-block; font-size:0.8rem; font-weight:700; color:#fff;">Profil</span>
-                    </a>
-                @else
-                    <a href="{{ route('creator.pos.profile') }}" class="pos-nav-item" id="posNavBtnProfile"
-                        title="Profil Kasir & Toko"
-                        style="text-decoration:none; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:#f8fafc; color:#64748b;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </a>
-                @endif
-            </div>
-        </div>
-    @elseif(!request()->is('creator/pos*') && !request()->is('creator/event-attendance*') && !request()->routeIs('creator.event.attendance') && !request()->is('creator/bio*') && !request()->routeIs('creator.products.create') && !request()->routeIs('creator.products.edit'))
-        {{-- Jika bukan POS, bukan event-attendance, bukan Web Builder, dan bukan Create/Edit Produk, tampilkan navbar
-        reguler Super App --}}
+    @if(!$isExcludedPage)
+        {{-- Tampilkan navbar reguler Super App hanya pada halaman dashboard reguler creator --}}
         <nav class="superapp-bottom-nav" id="superappBottomNav">
             @php
                 $bottomNavIsBuyer = auth()->user()->role === 'buyer';

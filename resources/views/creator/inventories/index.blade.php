@@ -528,13 +528,6 @@
         display: none;
     }
 
-    /* Extra bottom padding when POS bottom nav is showing */
-    @if(request('from') === 'pos')
-    .cr-main-canvas {
-        padding-bottom: max(110px, calc(100px + env(safe-area-inset-bottom, 0px))) !important;
-    }
-    @endif
-
     @media (max-width: 991px) {
         .prod-mobile-header {
             display: flex !important;
@@ -626,6 +619,25 @@
         <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             <span>{{ session('success') }}</span>
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+    @if($errors->any())
+        <div style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:0.85rem 1.15rem; border-radius:12px; margin-bottom:1.25rem; font-size:0.82rem; font-weight:600;">
+            <div style="font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Mohon periksa data input:</span>
+            </div>
+            <ul style="margin:0; padding-left:1.5rem;">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
@@ -1020,6 +1032,7 @@
 
             <form action="{{ route('creator.inventories.store') }}" method="POST">
                 @csrf
+                @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
                 <div style="margin-bottom:0.9rem;">
                     <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama Bahan Baku *</label>
                     <input type="text" name="name" required placeholder="Contoh: Biji Kopi Espresso Blend" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
@@ -1097,9 +1110,12 @@
                 </div>
 
                 <div style="margin-bottom:1.25rem;">
-                    <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Estimasi Harga Beli per Satuan (Rp)</label>
-                    <input type="number" step="1" name="cost_per_unit" value="0" placeholder="Contoh: 150 (Rp 150/gram)" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
-                    <small style="color:#64748b; font-size:0.72rem;">Digunakan untuk menghitung HPP (Harga Pokok Penjualan) per cangkir.</small>
+                    <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Estimasi Harga Beli per Satuan</label>
+                    <div style="position:relative; display:flex; align-items:center;">
+                        <span style="position:absolute; left:12px; font-size:0.82rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                        <input type="text" inputmode="numeric" name="cost_per_unit" value="0" placeholder="0" oninput="formatRupiahInput(this)" style="width:100%; padding:9px 12px 9px 38px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
+                    </div>
+                    <small style="color:#64748b; font-size:0.72rem; margin-top:3px; display:block;">Digunakan untuk menghitung HPP (Harga Pokok Penjualan) per porsi/menu.</small>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
@@ -1123,6 +1139,7 @@
             <form id="formEditMaterial" method="POST">
                 @csrf
                 @method('PUT')
+                @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
                 <div style="margin-bottom:0.9rem;">
                     <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Nama Bahan Baku *</label>
                     <input type="text" id="editMatName" name="name" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
@@ -1194,8 +1211,11 @@
                         <input type="number" step="0.01" id="editMatMinStock" name="min_stock" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Modal per Satuan (Rp)</label>
-                        <input type="number" step="1" id="editMatCost" name="cost_per_unit" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Modal per Satuan</label>
+                        <div style="position:relative; display:flex; align-items:center;">
+                            <span style="position:absolute; left:12px; font-size:0.82rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                            <input type="text" inputmode="numeric" id="editMatCost" name="cost_per_unit" oninput="formatRupiahInput(this)" style="width:100%; padding:9px 12px 9px 38px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
+                        </div>
                     </div>
                 </div>
 
@@ -1219,6 +1239,7 @@
 
             <form id="formRestock" method="POST">
                 @csrf
+                @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
                 <div style="margin-bottom:0.9rem;">
                     <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Pilih Bahan Baku *</label>
                     <select id="restockMatSelect" onchange="updateRestockUnit()" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
@@ -1237,8 +1258,11 @@
                         </div>
                     </div>
                     <div>
-                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Beli per Satuan (Rp)</label>
-                        <input type="number" step="1" name="cost_per_unit" id="restockCostInput" placeholder="Opsional" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-family:inherit; box-sizing:border-box;">
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:4px;">Harga Beli per Satuan</label>
+                        <div style="position:relative; display:flex; align-items:center;">
+                            <span style="position:absolute; left:12px; font-size:0.82rem; font-weight:700; color:#64748b; pointer-events:none;">Rp</span>
+                            <input type="text" inputmode="numeric" name="cost_per_unit" id="restockCostInput" placeholder="0" oninput="formatRupiahInput(this)" style="width:100%; padding:9px 12px 9px 38px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; font-family:inherit; box-sizing:border-box;">
+                        </div>
                     </div>
                 </div>
 
@@ -1270,6 +1294,7 @@
 
             <form id="formRecipe" method="POST">
                 @csrf
+                @if(request('from')) <input type="hidden" name="from" value="{{ request('from') }}"> @endif
                 <div id="recipeRowsContainer" style="margin-bottom:0.85rem; max-height:360px; overflow-y:auto; padding-right:4px;">
                     <!-- Rows populated dynamically -->
                 </div>
@@ -1342,6 +1367,30 @@
         if (el) el.classList.remove('show');
     }
 
+    function formatNumberWithDots(val) {
+        if (val === undefined || val === null || val === '') return '';
+        const numStr = val.toString().replace(/[^0-9]/g, '');
+        if (!numStr) return '';
+        return parseInt(numStr, 10).toLocaleString('id-ID');
+    }
+
+    function formatRupiahInput(el) {
+        const cursorPosition = el.selectionStart;
+        const originalLength = el.value.length;
+        const raw = el.value.replace(/[^0-9]/g, '');
+        if (!raw) {
+            el.value = '';
+            return;
+        }
+        const formatted = parseInt(raw, 10).toLocaleString('id-ID');
+        el.value = formatted;
+        const newLength = formatted.length;
+        const newPos = Math.max(0, cursorPosition + (newLength - originalLength));
+        try {
+            el.setSelectionRange(newPos, newPos);
+        } catch (e) {}
+    }
+
     function openAddMaterialModal() {
         openModal('modalAddMaterial');
     }
@@ -1351,7 +1400,7 @@
         document.getElementById('editMatCategory').value = mat.category;
         document.getElementById('editMatUnit').value = mat.unit;
         document.getElementById('editMatMinStock').value = mat.min_stock;
-        document.getElementById('editMatCost').value = mat.cost_per_unit;
+        document.getElementById('editMatCost').value = formatNumberWithDots(mat.cost_per_unit);
 
         const form = document.getElementById('formEditMaterial');
         form.action = `/creator/inventories/${mat.id}`;
@@ -1379,6 +1428,7 @@
         }
         const form = document.getElementById('formRestock');
         form.action = `/creator/inventories/${id}/restock`;
+        document.getElementById('restockCostInput').value = formatNumberWithDots(cost);
         openModal('modalRestock');
     }
 
@@ -1389,7 +1439,7 @@
             const unit = opt.getAttribute('data-unit') || '';
             const cost = opt.getAttribute('data-cost') || '';
             document.getElementById('restockUnitLabel').textContent = unit;
-            document.getElementById('restockCostInput').value = cost || '';
+            document.getElementById('restockCostInput').value = formatNumberWithDots(cost);
             const form = document.getElementById('formRestock');
             form.action = `/creator/inventories/${sel.value}/restock`;
         }

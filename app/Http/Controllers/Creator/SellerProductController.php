@@ -35,13 +35,33 @@ class SellerProductController extends Controller
         $search = $request->input('search', $request->input('q'));
         $status = $request->input('status');
         $type   = $request->input('type');
+        $isPos  = $request->input('from') === 'pos';
 
         $baseQuery = Product::where('seller_id', $seller->id);
+
+        // Jika diakses dari POS Kasir, wajib hanya tampilkan produk makanan/minuman (F&B / fisik)
+        if ($isPos) {
+            $excludedTypes = ['digital', 'service', 'ticket', 'external_link', 'digital_download', 'virtual', 'course', 'donation', 'webinar', 'event'];
+            $excludedKeywords = [
+                'konser', 'cbt', 'jasa', 'website', 'aplikasi', 'developer', 'tiket', 'ticket',
+                'event', 'coding', 'source code', 'template', 'software', 'undangan', 'seo',
+                'hosting', 'domain', 'teknis', 'otomatisasi'
+            ];
+            $baseQuery->where(function ($q) use ($excludedTypes) {
+                $q->whereNotIn('product_type', $excludedTypes)
+                  ->orWhereNull('product_type');
+            })->where(function ($q) use ($excludedKeywords) {
+                foreach ($excludedKeywords as $kw) {
+                    $q->where('name', 'not like', "%{$kw}%");
+                }
+            });
+        }
+
         $totalCount    = (clone $baseQuery)->count();
         $activeCount   = (clone $baseQuery)->where('is_active', true)->count();
         $archivedCount = (clone $baseQuery)->where('is_active', false)->count();
 
-        $products = Product::where('seller_id', $seller->id)
+        $products = (clone $baseQuery)
             ->with('category:id,name', 'variantOptions.values')
             ->when($search, function($q, $s) {
                 $q->where(function($sub) use ($s) {

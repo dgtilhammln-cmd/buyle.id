@@ -920,9 +920,10 @@
         box-sizing: border-box !important;
     }
     .pos-nav-item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
         border: none;
         background: transparent;
         cursor: pointer;
@@ -936,7 +937,16 @@
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
     }
+    .pos-nav-item svg {
+        flex-shrink: 0 !important;
+        width: 20px !important;
+        height: 20px !important;
+    }
     .pos-nav-item.active {
+        display: inline-flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
         background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
         color: #ffffff !important;
         padding: 0.5rem 1.1rem !important;
@@ -945,15 +955,23 @@
         gap: 6px !important;
         width: auto !important;
     }
+    .pos-nav-item.active svg {
+        color: #ffffff !important;
+        stroke: #ffffff !important;
+        flex-shrink: 0 !important;
+        width: 20px !important;
+        height: 20px !important;
+    }
     .pos-nav-label {
         display: none;
     }
     .pos-nav-item.active .pos-nav-label {
-        display: inline-block;
-        font-size: 0.8rem;
-        font-weight: 700;
+        display: inline-block !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
         color: #ffffff !important;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.01em !important;
+        line-height: 1 !important;
     }
 
     /* ── Export Modal (Clean, Compact & Interactive) ── */
