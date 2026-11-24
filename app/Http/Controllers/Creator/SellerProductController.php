@@ -39,21 +39,11 @@ class SellerProductController extends Controller
 
         $baseQuery = Product::where('seller_id', $seller->id);
 
-        // Jika diakses dari POS Kasir, wajib hanya tampilkan produk makanan/minuman (F&B / fisik)
+        // Jika diakses dari POS Kasir (?from=pos), filter ketat hanya produk tipe makanan / kuliner (F&B)
         if ($isPos) {
-            $excludedTypes = ['digital', 'service', 'ticket', 'external_link', 'digital_download', 'virtual', 'course', 'donation', 'webinar', 'event'];
-            $excludedKeywords = [
-                'konser', 'cbt', 'jasa', 'website', 'aplikasi', 'developer', 'tiket', 'ticket',
-                'event', 'coding', 'source code', 'template', 'software', 'undangan', 'seo',
-                'hosting', 'domain', 'teknis', 'otomatisasi'
-            ];
-            $baseQuery->where(function ($q) use ($excludedTypes) {
-                $q->whereNotIn('product_type', $excludedTypes)
-                  ->orWhereNull('product_type');
-            })->where(function ($q) use ($excludedKeywords) {
-                foreach ($excludedKeywords as $kw) {
-                    $q->where('name', 'not like', "%{$kw}%");
-                }
+            $baseQuery->where(function ($q) {
+                $q->where('product_type', 'makanan')
+                  ->orWhere('category', 'makanan');
             });
         }
 
