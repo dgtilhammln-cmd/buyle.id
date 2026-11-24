@@ -567,12 +567,102 @@
             text-align: center;
             flex: 1;
         }
+
+        /* Mobile Quick Action Bar & FAB */
+        .mat-mobile-quick-actions {
+            display: none;
+        }
+
+        .mat-mobile-fab-wrap {
+            display: none;
+        }
+
+        @media (max-width: 991px) {
+            .mat-mobile-quick-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+                margin-bottom: 1.15rem;
+            }
+
+            .mat-quick-btn-primary {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                background: var(--pos-grad);
+                color: #ffffff;
+                border: none;
+                padding: 0.62rem 0.85rem;
+                border-radius: 12px;
+                font-size: 0.8rem;
+                font-weight: 700;
+                font-family: inherit;
+                box-shadow: 0 4px 14px rgba(30, 179, 73, 0.28);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .mat-quick-btn-primary:active {
+                transform: scale(0.96);
+            }
+
+            .mat-quick-btn-secondary {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                background: #f0fdf4;
+                color: #166534;
+                border: 1.5px solid #bbf7d0;
+                padding: 0.62rem 0.85rem;
+                border-radius: 12px;
+                font-size: 0.8rem;
+                font-weight: 700;
+                font-family: inherit;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .mat-quick-btn-secondary:active {
+                transform: scale(0.96);
+            }
+
+            .mat-mobile-fab-wrap {
+                display: block;
+                position: fixed;
+                right: 16px;
+                bottom: max(20px, calc(16px + env(safe-area-inset-bottom, 0px)));
+                z-index: 999;
+            }
+
+            .mat-mobile-fab-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                background: var(--pos-grad);
+                color: #ffffff;
+                border: none;
+                padding: 0.72rem 1.15rem;
+                border-radius: 999px;
+                font-size: 0.82rem;
+                font-weight: 700;
+                cursor: pointer;
+                font-family: inherit;
+                box-shadow: 0 8px 24px rgba(30, 179, 73, 0.42), 0 3px 8px rgba(0, 0, 0, 0.12);
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .mat-mobile-fab-btn:active {
+                transform: scale(0.93);
+            }
+        }
     }
 </style>
 @endsection
 
 @section('content')
-    {{-- Mobile Top Header (100% Persis Produk Saya, Cuma Icon Back di Kiri & Safezone iOS) --}}
+    {{-- Mobile Top Header --}}
     <div class="prod-mobile-header">
         <button type="button" class="prod-mobile-btn" onclick="handleInventoryMobileBack()" title="Kembali">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -581,7 +671,19 @@
             </svg>
         </button>
         <h2 class="prod-mobile-title">Inventori Bahan</h2>
-        <div style="width: 38px;"></div>
+        <div style="display:flex; align-items:center; gap:6px;">
+            <button type="button" onclick="openRestockModal()" class="prod-mobile-btn" title="Restock Masuk" style="color:#166534; background:#f0fdf4; border-color:#bbf7d0;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+            </button>
+            <button type="button" onclick="openAddMaterialModal()" class="prod-mobile-btn" style="background:var(--pos-grad); color:#ffffff; border:none; box-shadow:0 3px 10px rgba(30,179,73,0.35);" title="Tambah Bahan Baku">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </div>
     </div>
 
     {{-- Tabs Nav --}}
@@ -663,6 +765,18 @@
                 <span class="dot" style="background:#dc2626;"></span>
                 Habis: <strong>{{ $dangerCount }}</strong>
             </span>
+        </div>
+
+        {{-- Mobile Quick Action Buttons --}}
+        <div class="mat-mobile-quick-actions">
+            <button type="button" onclick="openAddMaterialModal()" class="mat-quick-btn-primary">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ Tambah Bahan</span>
+            </button>
+            <button type="button" onclick="openRestockModal()" class="mat-quick-btn-secondary">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>Restock Masuk</span>
+            </button>
         </div>
 
         @if($materials->isEmpty())
@@ -1312,6 +1426,17 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    {{-- Floating Action Button on Mobile --}}
+    <div class="mat-mobile-fab-wrap">
+        <button type="button" onclick="openAddMaterialModal()" class="mat-mobile-fab-btn" title="Tambah Bahan Baku">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Tambah Bahan</span>
+        </button>
     </div>
 @endsection
 
