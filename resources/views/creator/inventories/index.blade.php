@@ -1941,9 +1941,21 @@
 
         function formatNumberWithDots(val) {
             if (val === undefined || val === null || val === '') return '';
-            const numStr = val.toString().replace(/[^0-9]/g, '');
-            if (!numStr) return '';
-            return parseInt(numStr, 10).toLocaleString('id-ID');
+            if (typeof val === 'number') {
+                return Math.round(val).toLocaleString('id-ID');
+            }
+            let s = val.toString().trim();
+            if (!s) return '';
+            // Jika format desimal dari database seperti '35000.00' (titik adalah desimal, bukan pemisah ribuan)
+            if (s.indexOf('.') !== -1) {
+                const parts = s.split('.');
+                if (parts.length === 2 && (parts[0].length > 3 || parts[1].length !== 3)) {
+                    return Math.round(parseFloat(s) || 0).toLocaleString('id-ID');
+                }
+            }
+            const raw = s.replace(/[^0-9]/g, '');
+            if (!raw) return '';
+            return parseInt(raw, 10).toLocaleString('id-ID');
         }
 
         function formatRupiahInput(el) {
@@ -1964,8 +1976,18 @@
         }
 
         function parseRupiahNumber(val) {
-            if (!val) return 0;
-            const clean = val.toString().replace(/[^0-9]/g, '');
+            if (val === undefined || val === null || val === '') return 0;
+            if (typeof val === 'number') return val;
+            let s = val.toString().trim();
+            if (!s) return 0;
+            // Jika format desimal dari database seperti '35000.00'
+            if (s.indexOf('.') !== -1) {
+                const parts = s.split('.');
+                if (parts.length === 2 && (parts[0].length > 3 || parts[1].length !== 3)) {
+                    return parseFloat(s) || 0;
+                }
+            }
+            const clean = s.replace(/[^0-9]/g, '');
             return parseFloat(clean) || 0;
         }
 
