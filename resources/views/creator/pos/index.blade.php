@@ -380,7 +380,14 @@
             max-height: 260px;
             overflow-y: auto;
             padding-right: 4px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cart-items-container:empty {
+            display: none !important;
+            min-height: 0 !important;
+            margin-bottom: 0 !important;
+            padding: 0 !important;
         }
 
         .cart-item-row {
@@ -3357,8 +3364,14 @@
 
             #cartPanel .cart-items-container {
                 max-height: calc(100vh - 430px) !important;
-                min-height: 160px !important;
                 overflow-y: auto !important;
+            }
+
+            #cartPanel .cart-items-container:empty {
+                display: none !important;
+                min-height: 0 !important;
+                margin-bottom: 0 !important;
+                padding: 0 !important;
             }
 
             .pos-mobile-floating-bar {
@@ -3445,8 +3458,14 @@
 
             #cartPanel .cart-items-container {
                 max-height: calc(100vh - 430px) !important;
-                min-height: 180px !important;
                 overflow-y: auto !important;
+            }
+
+            #cartPanel .cart-items-container:empty {
+                display: none !important;
+                min-height: 0 !important;
+                margin-bottom: 0 !important;
+                padding: 0 !important;
             }
 
             .pos-mobile-floating-bar {
@@ -4104,11 +4123,7 @@
                         <div class="prof-card-body">
 
                             <!-- Cart Items Container -->
-                            <div class="cart-items-container" id="cartItemsContainer">
-                                <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                                    Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
-                                </div>
-                            </div>
+                            <div class="cart-items-container" id="cartItemsContainer" style="display:none;"></div>
 
                             <!-- Summary Box & Fees Calculator -->
                             <div class="summary-box">
@@ -4497,11 +4512,7 @@
             </div>
         </div>
         <div class="pos-drawer-body">
-            <div id="drawerCartItemsContainer">
-                <div class="text-center py-4 text-muted" style="font-size: 0.84rem;">
-                    Keranjang masih kosong.
-                </div>
-            </div>
+            <div id="drawerCartItemsContainer" style="display:none;"></div>
         </div>
         <div style="padding:1rem 1.25rem; background:#ffffff; border-top:1.5px solid #f1f5f9;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
@@ -7494,16 +7505,21 @@
                 });
 
                 if (cart.length === 0) {
-                    container.innerHTML = `
-                                                    <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                                                        Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
-                                                    </div>
-                                                `;
+                    container.innerHTML = '';
+                    container.style.display = 'none';
+                    const drawerContainer = document.getElementById('drawerCartItemsContainer');
+                    if (drawerContainer) {
+                        drawerContainer.innerHTML = '';
+                        drawerContainer.style.display = 'none';
+                    }
                     document.getElementById('btnCheckout').disabled = true;
                     calculateTotals();
                     return;
                 }
 
+                container.style.display = 'block';
+                const drawerContainer = document.getElementById('drawerCartItemsContainer');
+                if (drawerContainer) drawerContainer.style.display = 'block';
                 document.getElementById('btnCheckout').disabled = false;
                 let html = '';
 

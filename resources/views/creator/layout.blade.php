@@ -868,11 +868,16 @@
 
         // PIN HANYA AKTIF saat masuk ke produk atau payout settings dari POS:
         // 1. https://buyle.id/creator/products?from=pos
-        // 2. https://buyle.id/creator/payout-settings?from=pos
+        // 2. https://buyle.id/creator/inventories?from=pos
+        // 3. https://buyle.id/creator/payout-settings?from=pos
         // Kasir POS (/creator/pos) kini langsung terbuka bebas PIN untuk kenyamanan transaksi kasir
         $isPinGuardedRoute = $isFromPos && (
             request()->is('creator/products*')
             || request()->routeIs('creator.products.*')
+            || request()->is('creator/inventories*')
+            || request()->routeIs('creator.inventories.*')
+            || request()->is('creator/materials*')
+            || request()->routeIs('creator.materials.*')
             || request()->is('creator/payout*')
             || request()->routeIs('creator.payout*')
         );
