@@ -354,6 +354,33 @@
             }
         }
 
+        .bom-img-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            min-height: 130px;
+            overflow: hidden;
+            border-bottom: 1px solid #F1F5F9;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .bom-img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .bom-img-wrapper {
+                min-height: 140px;
+            }
+        }
+
         /* ── Grid Cards ── */
         .mat-grid {
             display: grid;
@@ -1098,32 +1125,39 @@
                         $profitMargin = $p->profit_margin;
                         $marginPercent = $p->margin_percentage;
                         $hasRecipe = !$p->recipes->isEmpty();
+                        $imgUrl = $p->image_url;
+                        $hasValidImg = !empty($p->image) && !str_contains($imgUrl, 'service-default') && !str_contains($imgUrl, 'buyle-placeholder.svg');
                     @endphp
                     <div id="bom-card-{{ $p->id }}" class="grid-card-item">
-                        {{-- Status Badge Resep Top Right --}}
-                        <div style="position:absolute;top:7px;right:7px;z-index:3;">
-                            @if(!$hasRecipe)
-                                <span class="grid-status-btn archived" title="Formula resep belum diatur">Tanpa Resep</span>
+                        {{-- Image Wrapper: 1:1 Aspect Ratio + Badges Inside (No Overlap with Title) --}}
+                        <div class="bom-img-wrapper">
+                            {{-- Status Badge Resep Top Right (Inside Image) --}}
+                            <div style="position:absolute; top:7px; right:7px; z-index:3; pointer-events:none;">
+                                @if(!$hasRecipe)
+                                    <span class="grid-status-btn archived" style="box-shadow:0 1px 4px rgba(245,158,11,0.4);" title="Formula resep belum diatur">Tanpa Resep</span>
+                                @else
+                                    <span class="grid-status-btn active" style="box-shadow:0 1px 4px rgba(30,179,73,0.35);"
+                                        title="{{ $p->recipes->count() }} Bahan Baku Terkait">{{ $p->recipes->count() }} Bahan</span>
+                                @endif
+                            </div>
+
+                            {{-- Kategori Top Left (Inside Image) --}}
+                            <div style="position:absolute; top:7px; left:7px; z-index:3; pointer-events:none;">
+                                <span
+                                    style="background:rgba(255,255,255,0.92); backdrop-filter:blur(4px); color:#475569; font-size:0.62rem; font-weight:700; padding:2px 6px; border-radius:6px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+                                    {{ $p->category?->name ?? 'F&B' }}
+                                </span>
+                            </div>
+
+                            @if($hasValidImg)
+                                <img src="{{ $imgUrl }}" alt="{{ $p->name }}" class="bom-img" loading="lazy"
+                                    style="object-fit:cover;"
+                                    onerror="this.onerror=null; this.src='{{ \App\Models\Product::getPlaceholderUrl() }}'; this.style.objectFit='contain'; this.style.padding='16px'; this.style.background='#ffffff';">
                             @else
-                                <span class="grid-status-btn active"
-                                    title="{{ $p->recipes->count() }} Bahan Baku Terkait">{{ $p->recipes->count() }} Bahan</span>
+                                <img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="{{ $p->name }}" class="bom-img" loading="lazy"
+                                    style="object-fit:contain; padding:16px; background:#f8fafc;"
+                                    onerror="this.onerror=null; this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div style=\'color:#94a3b8; display:flex; align-items:center; justify-content:center;\'><svg width=\'36\' height=\'36\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.5\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>');">
                             @endif
-                        </div>
-
-                        {{-- Kategori Top Left --}}
-                        <div style="position:absolute;top:7px;left:7px;z-index:3;">
-                            <span
-                                style="background:rgba(255,255,255,0.92);backdrop-filter:blur(4px);color:#475569;font-size:0.62rem;font-weight:600;padding:2px 6px;border-radius:6px;border:1px solid #e2e8f0;">
-                                {{ $p->category?->name ?? 'F&B' }}
-                            </span>
-                        </div>
-
-                        {{-- Square Image --}}
-                        <div
-                            style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;background:#f8fafc;display:flex;align-items:center;justify-content:center;">
-                            <img src="{{ $p->image_url }}" alt="{{ $p->name }}"
-                                style="width:100%;height:100%;object-fit:cover;display:block;"
-                                onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='1.25rem';">
                         </div>
 
                         {{-- Card Content --}}
@@ -1249,13 +1283,20 @@
                                 $profitMargin = $p->profit_margin;
                                 $marginPercent = $p->margin_percentage;
                                 $hasRecipe = !$p->recipes->isEmpty();
+                                $imgUrl = $p->image_url;
+                                $hasValidImg = !empty($p->image) && !str_contains($imgUrl, 'service-default') && !str_contains($imgUrl, 'buyle-placeholder.svg');
                             @endphp
                             <tr>
                                 <td class="col-recipe-product">
                                     <div style="display:flex; align-items:center; gap:9px;">
-                                        <img src="{{ $p->image_url }}" alt="{{ $p->name }}"
-                                            style="width:40px; height:40px; object-fit:cover; border-radius:8px; border:1px solid #e2e8f0; flex-shrink:0; background:#f8fafc;"
-                                            onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='4px';">
+                                        @if($hasValidImg)
+                                            <img src="{{ $imgUrl }}" alt="{{ $p->name }}"
+                                                style="width:40px; height:40px; object-fit:cover; border-radius:8px; border:1px solid #e2e8f0; flex-shrink:0; background:#f8fafc;"
+                                                onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='4px';this.style.background='#ffffff';">
+                                        @else
+                                            <img src="{{ \App\Models\Product::getPlaceholderUrl() }}" alt="{{ $p->name }}"
+                                                style="width:40px; height:40px; object-fit:contain; padding:4px; border-radius:8px; border:1px solid #e2e8f0; flex-shrink:0; background:#f8fafc;">
+                                        @endif
                                         <div style="min-width:0;">
                                             <div
                                                 style="font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;">
